@@ -201,10 +201,13 @@ cmd_map = {
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
 
+	# Link to the guide.
+	ewcfg.cmd_help: ewcmd.help,
+	ewcfg.cmd_help_alt1: ewcmd.help,
+	ewcfg.cmd_help_alt2: ewcmd.help,
+	ewcfg.cmd_help_alt3: ewcmd.help,
+
 	# Misc
-	#ewcfg.cmd_help: ewcmd.help,
-	#ewcfg.cmd_help_alt1: ewcmd.help,
-	#ewcfg.cmd_help_alt2: ewcmd.help,
 	ewcfg.cmd_howl: ewcmd.cmd_howl,
 	ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
 	ewcfg.cmd_harvest: ewcmd.harvest,
@@ -538,16 +541,17 @@ async def on_message(message):
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
-	try:
-		ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
-			time_last_action = ewcfg.col_time_last_action
-		), (
-			int(time.time()),
-			message.author.id,
-			message.server.id
-		))
-	except:
-		ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
+	if message.server != None:
+		try:
+			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
+				time_last_action = ewcfg.col_time_last_action
+			), (
+				int(time.time()),
+				message.author.id,
+				message.server.id
+			))
+		except:
+			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
 		"""
@@ -588,8 +592,6 @@ async def on_message(message):
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
 
-			# FIXME add this back when the help doc is updated.
-			"""
 			else:
 				time_last = last_helped_times.get(message.author.id, 0)
 
@@ -597,7 +599,6 @@ async def on_message(message):
 				if (time_now - time_last) > 30:
 					last_helped_times[message.author.id] = time_now
 					await ewutils.send_message(client, message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
-			"""
 
 			# Nothing else to do in a DM.
 			return

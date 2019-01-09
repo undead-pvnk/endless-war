@@ -391,6 +391,7 @@ async def playfetch(cmd):
 	resp = await start(cmd = cmd)
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
+	time_now = int(time.time())
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."		
@@ -417,6 +418,7 @@ async def observeslimeoid(cmd):
 	resp = await start(cmd = cmd)
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
+	time_now = int(time.time())
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."		
@@ -464,6 +466,7 @@ async def petslimeoid(cmd):
 	resp = await start(cmd = cmd)
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
+	time_now = int(time.time())
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."		
@@ -495,6 +498,7 @@ async def walkslimeoid(cmd):
 	resp = await start(cmd = cmd)
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
+	time_now = int(time.time())
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."		
@@ -1449,6 +1453,7 @@ async def slimeoid(cmd):
 	member = None
 	selfcheck = True
 	response = ""
+	time_now = int(time.time())
 
 	if cmd.mentions_count == 0:
 		selfcheck = True
@@ -1631,6 +1636,8 @@ async def slimeoidbattle(cmd):
 	if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
 		response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
 
+	time_now = int(time.time())
+
 	if (time_now - challenger_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
 			response = "Your Slimeoid is still recovering from its last defeat!"
 
@@ -1644,7 +1651,7 @@ async def slimeoidbattle(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 		elif challengee.life_state == ewcfg.life_state_corpse:
-			response = "{}'s Slimeoid wont battle for them while they're dead.".format(member.display_name).replace("@", "\{at\}")
+			response = "{}'s Slimeoid won't battle for them while they're dead.".format(member.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged
@@ -2340,8 +2347,7 @@ async def slimeoidbattle(cmd):
 				slimeoid_name=s2name
 			)
 			#store deafeated slimeoid's defet time in the database
-			time_now = int(time.time())
-			challengee_slimeoid.time_defeated = time_now
+			challengee_slimeoid.time_defeated = int(time.time())
 			challengee_slimeoid.persist()
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			await asyncio.sleep(2)
@@ -2357,8 +2363,7 @@ async def slimeoidbattle(cmd):
 				slimeoid_name=s1name
 			)
 			#store deafeated slimeoid's defet time in the database
-			time_now = int(time.time())
-			challenger_slimeoid.time_defeated = time_now
+			challenger_slimeoid.time_defeated = int(time.time())
 			challenger_slimeoid.persist()
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			await asyncio.sleep(2)
