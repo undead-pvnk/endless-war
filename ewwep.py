@@ -420,10 +420,11 @@ async def attack(cmd):
 
 					# Move around slime as a result of the shot.
 					if shootee_data.slimes >= 0:
+						user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+
 						if was_juvenile:
 							user_data.change_slimes(n = slimes_dropped, source = ewcfg.source_killing)
 						else:
-							user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 							user_data.change_slimes(n = slimes_dropped / 2, source = ewcfg.source_killing)
 							boss_slimes += int(slimes_dropped / 2)
 

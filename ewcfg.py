@@ -3335,7 +3335,7 @@ cosmetic_items_list = [
 	),
 	EwCosmeticItem(
 		name = "fursuit",
-		description = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call it’s character design “ugly” or “embarrassing,” but you think it’s perfect.",
+		description = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
