@@ -159,6 +159,7 @@ cmd_map = {
 
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
+	ewcfg.cmd_inspect_alt1: ewitem.item_look,
 
 	# use an item
 	ewcfg.cmd_use: ewitem.item_use,
