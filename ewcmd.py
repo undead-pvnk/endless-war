@@ -1569,6 +1569,16 @@ async def slimeoid(cmd):
 	statname = "chutzpah"
 	response += " It has {} {}.".format(statlevel, statname)
 
+	clout = slimeoid.clout
+	if clout >= 50:
+		response += " A **LIVING LEGEND** on the arena."
+	elif clout >= 30:
+		response += " A **BRUTAL CHAMPION** on the arena."
+	elif clout >= 15:
+		response += " This slimeoid has proven itself on the arena."
+	elif clout == 0:
+		response += " A pitiable baby, this slimeoid has no clout whatsoever."
+
 	if (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
 			response += " It is currently incapacitated after being defeated in the Battle Arena."
 
@@ -2346,9 +2356,18 @@ async def slimeoidbattle(cmd):
 			response += "\n" + s2brain.str_victory.format(
 				slimeoid_name=s2name
 			)
-			#store deafeated slimeoid's defet time in the database
+
+			challenger_slimeoid = EwSlimeoid(member = author)
+			challengee_slimeoid = EwSlimeoid(member = member)
+
+			# Losing slimeoid loses clout and has a time_defeated cooldown.
+			challengee_slimeoid.clout = calculate_clout_loss(challengee_slimeoid.clout)
 			challengee_slimeoid.time_defeated = int(time.time())
 			challengee_slimeoid.persist()
+
+			challenger_slimeoid.clout = calculate_clout_gain(challenger_slimeoid.clout)
+			challenger_slimeoid.persist()
+
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			await asyncio.sleep(2)
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name)
@@ -2362,9 +2381,18 @@ async def slimeoidbattle(cmd):
 			response += "\n" + s1brain.str_victory.format(
 				slimeoid_name=s1name
 			)
-			#store deafeated slimeoid's defet time in the database
+
+			challenger_slimeoid = EwSlimeoid(member = author)
+			challengee_slimeoid = EwSlimeoid(member = member)
+
+			# store defeated slimeoid's defeat time in the database
+			challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
 			challenger_slimeoid.time_defeated = int(time.time())
 			challenger_slimeoid.persist()
+
+			challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
+			challengee_slimeoid.persist()
+
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			await asyncio.sleep(2)
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name)
@@ -2376,3 +2404,29 @@ async def slimeoidbattle(cmd):
 
 		# Send the response to the player.
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+
+# Slimeoids lose more clout for losing at higher levels.
+def calculate_clout_loss(clout):
+	if clout >= 100:
+		clout -= 6
+	elif clout >= 40:
+		clout -= 5
+	elif clout >= 30:
+		clout -= 4
+	elif clout >= 20:
+		clout -= 3
+	elif clout >= 10:
+		clout -= 2
+	elif clout >= 1:
+		clout -= 1
+
+	return clout
+
+def calculate_clout_gain(clout):
+	clout += 2
+
+	if clout > 100:
+		clout = 100
+
+	return clout

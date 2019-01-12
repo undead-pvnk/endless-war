@@ -29,6 +29,7 @@ class EwSlimeoid:
 	intel = 0
 	level = 0
 	time_defeated = 0
+	clout = 0
 
 	#slimeoid = EwSlimeoid(member = cmd.message.author, )
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
@@ -51,7 +52,7 @@ class EwSlimeoid:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
 					ewcfg.col_id_slimeoid,
 					ewcfg.col_id_user,
 					ewcfg.col_id_server,
@@ -70,6 +71,7 @@ class EwSlimeoid:
 					ewcfg.col_intel,
 					ewcfg.col_level,
 					ewcfg.col_time_defeated,
+					ewcfg.col_clout,
 					query_suffix
 				))
 				result = cursor.fetchone();
@@ -94,6 +96,7 @@ class EwSlimeoid:
 					self.intel = result[15]
 					self.level = result[16]
 					self.time_defeated = result[17]
+					self.clout = result[18]
 
 			finally:
 				# Clean up the database handles.
@@ -108,7 +111,7 @@ class EwSlimeoid:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO slimeoids({{}, }, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_slimeoid,
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
@@ -126,7 +129,8 @@ class EwSlimeoid:
 				ewcfg.col_defense,
 				ewcfg.col_intel,
 				ewcfg.col_level,
-				ewcfg.col_time_defeated
+				ewcfg.col_time_defeated,
+				ewcfg.col_clout
 			), (
 				self.id_slimeoid,
 				self.id_user,
@@ -145,7 +149,8 @@ class EwSlimeoid:
 				self.defense,
 				self.intel,
 				self.level,
-				self.time_defeated
+				self.time_defeated,
+				self.clout
 			))
 
 			conn.commit()
