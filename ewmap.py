@@ -516,9 +516,13 @@ async def move(cmd):
 	life_state = user_data.life_state
 	faction = user_data.faction
 
+	# Moving to or from a place not on the map (e.g. the sewers)
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
 		if path.cost > 0:
 			await asyncio.sleep(path.cost)
+
+		if moves_active[cmd.message.author.id] != move_current:
+			return
 
 		user_data = EwUser(member = cmd.message.author)
 
