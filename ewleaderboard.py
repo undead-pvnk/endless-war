@@ -22,10 +22,10 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
-	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty)
+	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
 
-def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5):
+def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
 	try:
 		conn_info = ewutils.databaseConnect()
@@ -58,7 +58,7 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 		cursor.close()
 		ewutils.databaseClose(conn_info)
 
-	return format_board(entries = entries, title = title)
+	return format_board(entries = entries, title = title, divide_by = divide_by)
 
 def make_kingpin_board(server = None, title = ""):
 	entries = []
@@ -121,12 +121,12 @@ def make_district_control_board(id_server, title):
 """
 	convert leaderboard data into a message ready string 
 """
-def format_board(entries = None, title = "", entry_type = "player"):
+def format_board(entries = None, title = "", entry_type = "player", divide_by = 1):
 	result = ""
 	result += board_header(title)
 
 	for entry in entries:
-		result += board_entry(entry, entry_type)
+		result += board_entry(entry, entry_type, divide_by)
 
 	return result
 
@@ -161,7 +161,7 @@ def board_header(title):
 
 	return emote + bar + title + bar + emote + "\n"
 
-def board_entry(entry, entry_type):
+def board_entry(entry, entry_type, divide_by):
 	result = ""
 
 	if entry_type == ewcfg.entry_type_player:
@@ -170,7 +170,7 @@ def board_entry(entry, entry_type):
 
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
-			"{:,}".format(entry[3]),
+			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
 			entry[0]
 		)
 
