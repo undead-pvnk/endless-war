@@ -1337,105 +1337,11 @@ async def spawnslimeoid(cmd):
 				response = "You press the big red button labelled 'SPAWN'. The console lights up and there is a rush of mechanical noise as the fluid drains rapidly out of the gestation tube. The newly born Slimeoid within writhes in confusion before being sucked down an ejection chute and spat out messily onto the laboratory floor at your feet. Happy birthday, {} the Slimeoid!! {}".format(slimeoid.name, ewcfg.emote_slimeheart)
 
 				response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
-				
-				body = ewcfg.body_map.get(slimeoid.body)
-				if body != None:
-					response += " {}".format(body.str_body)
+				response += slimeoid_describe(slimeoid)
 
-				head = ewcfg.head_map.get(slimeoid.head)
-				if head != None:
-					response += " {}".format(head.str_head)
-
-				mobility = ewcfg.mobility_map.get(slimeoid.legs)
-				if mobility != None:
-					response += " {}".format(mobility.str_mobility)
-
-				offense = ewcfg.offense_map.get(slimeoid.weapon)
-				if offense != None:
-					response += " {}".format(offense.str_offense)
-
-				defense = ewcfg.defense_map.get(slimeoid.armor)
-				if defense != None:
-					response += " {}".format(defense.str_armor)
-
-				special = ewcfg.special_map.get(slimeoid.special)
-				if special != None:
-					response += " {}".format(special.str_special)
-
-				brain = ewcfg.brain_map.get(slimeoid.ai)
-				if brain != None:
-					response += " {}".format(brain.str_brain)
-
-				stat = slimeoid.atk
-				if stat == 0:
-					statlevel = "almost no"
-				if stat == 1:
-					statlevel = "just a little bit of"
-				if stat == 2:
-					statlevel = "a decent amount of"
-				if stat == 3:
-					statlevel = "quite a bit of"
-				if stat == 4:
-					statlevel = "a whole lot of"
-				if stat == 5:
-					statlevel = "loads of"
-				if stat == 6:
-					statlevel = "massive amounts of"
-				if stat == 7:
-					statlevel = "seemingly inexhaustible stores of"
-				if stat >= 8:
-					statlevel = "truly godlike levels of"
-				statname = "moxie"
-				response += " It has {} {}.".format(statlevel, statname)
-
-				stat = slimeoid.defense
-				if stat == 0:
-					statlevel = "almost no"
-				if stat == 1:
-					statlevel = "just a little bit of"
-				if stat == 2:
-					statlevel = "a decent amount of"
-				if stat == 3:
-					statlevel = "quite a bit of"
-				if stat == 4:
-					statlevel = "a whole lot of"
-				if stat == 5:
-					statlevel = "loads of"
-				if stat == 6:
-					statlevel = "massive amounts of"
-				if stat == 7:
-					statlevel = "seemingly inexhaustible stores of"
-				if stat >= 8:
-					statlevel = "truly godlike levels of"
-				statname = "grit"
-				response += " It has {} {}.".format(statlevel, statname)
-
-				stat = slimeoid.intel
-				if stat == 0:
-					statlevel = "almost no"
-				if stat == 1:
-					statlevel = "just a little bit of"
-				if stat == 2:
-					statlevel = "a decent amount of"
-				if stat == 3:
-					statlevel = "quite a bit of"
-				if stat == 4:
-					statlevel = "a whole lot of"
-				if stat == 5:
-					statlevel = "loads of"
-				if stat == 6:
-					statlevel = "massive amounts of"
-				if stat == 7:
-					statlevel = "seemingly inexhaustible stores of"
-				if stat >= 8:
-					statlevel = "truly godlike levels of"
-				statname = "chutzpah"
-				response += " It has {} {}.".format(statlevel, statname)
-
-			#	response += "\n\n {}".format()
 				brain = ewcfg.brain_map.get(slimeoid.ai)
 				response += "\n\n" + brain.str_spawn.format(
-				slimeoid_name = slimeoid.name
+					slimeoid_name = slimeoid.name
 				)
 
 			user_data.persist()
@@ -1444,37 +1350,12 @@ async def spawnslimeoid(cmd):
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 
-			
-		
-# Show a player's slimeoid data.
-async def slimeoid(cmd):
-	resp = await start(cmd = cmd)
-	user_data = EwUser(member = cmd.message.author)
-	member = None
-	selfcheck = True
+"""
+	Describe the specified slimeoid. Used for the !slimeoid command and while it's being created.
+"""
+def slimeoid_describe(slimeoid):
 	response = ""
-	time_now = int(time.time())
 
-	if cmd.mentions_count == 0:
-		selfcheck = True
-		slimeoid = EwSlimeoid(member = cmd.message.author)
-	else:
-		selfcheck = False
-		member = cmd.mentions[0]
-		user_data = EwUser(member = member)
-		slimeoid = EwSlimeoid(member = member)
-
-	if slimeoid.life_state == ewcfg.slimeoid_state_forming:
-		if selfcheck == True:
-			response = "Your Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(str(slimeoid.level))
-		else:
-			response = "{}'s Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(member.display_name, str(slimeoid.level))
-	if slimeoid.life_state == ewcfg.slimeoid_state_active:
-		if selfcheck == True:
-			response = "You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
-		else:
-			response = "{} is accompanied by {}, a {}-foot-tall Slimeoid.".format(member.display_name, slimeoid.name, str(slimeoid.level))
-	
 	body = ewcfg.body_map.get(slimeoid.body)
 	if body != None:
 		response += " {}".format(body.str_body)
@@ -1503,6 +1384,8 @@ async def slimeoid(cmd):
 	if brain != None:
 		response += " {}".format(brain.str_brain)
 
+	stat_desc = []
+
 	stat = slimeoid.atk
 	if stat == 0:
 		statlevel = "almost no"
@@ -1522,8 +1405,7 @@ async def slimeoid(cmd):
 		statlevel = "seemingly inexhaustible stores of"
 	if stat >= 8:
 		statlevel = "truly godlike levels of"
-	statname = "moxie"
-	response += " It has {} {}.".format(statlevel, statname)
+	stat_desc.append("{} moxie".format(statlevel))
 
 	stat = slimeoid.defense
 	if stat == 0:
@@ -1544,8 +1426,7 @@ async def slimeoid(cmd):
 		statlevel = "seemingly inexhaustible stores of"
 	if stat >= 8:
 		statlevel = "truly godlike levels of"
-	statname = "grit"
-	response += " It has {} {}.".format(statlevel, statname)
+	stat_desc.append("{} grit".format(statlevel))
 
 	stat = slimeoid.intel
 	if stat == 0:
@@ -1566,8 +1447,9 @@ async def slimeoid(cmd):
 		statlevel = "seemingly inexhaustible stores of"
 	if stat >= 8:
 		statlevel = "truly godlike levels of"
-	statname = "chutzpah"
-	response += " It has {} {}.".format(statlevel, statname)
+	stat_desc.append("{} chutzpah".format(statlevel))
+
+	response += " It has {}.".format(ewutils.formatNiceList(names = stat_desc))
 
 	clout = slimeoid.clout
 	if clout >= 50:
@@ -1579,18 +1461,50 @@ async def slimeoid(cmd):
 	elif clout == 0:
 		response += " A pitiable baby, this slimeoid has no clout whatsoever."
 
-	if (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
+	if (int(time.time()) - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
 			response += " It is currently incapacitated after being defeated in the Battle Arena."
 
-	if slimeoid.life_state == ewcfg.slimeoid_state_none:
+	return response
+		
+# Show a player's slimeoid data.
+async def slimeoid(cmd):
+	resp = await start(cmd = cmd)
+	user_data = EwUser(member = cmd.message.author)
+	member = None
+	selfcheck = True
+	response = ""
+
+	if cmd.mentions_count == 0:
+		selfcheck = True
+		slimeoid = EwSlimeoid(member = cmd.message.author)
+	else:
+		selfcheck = False
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member)
+		slimeoid = EwSlimeoid(member = member)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 		if selfcheck == True:
 			response = "You have not yet created a slimeoid."
 		else:
 			response = "{} has not yet created a slimeoid.".format(member.display_name)
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Slimeoids don't fuck with ghosts."
+	else:
+		if slimeoid.life_state == ewcfg.slimeoid_state_forming:
+			if selfcheck == True:
+				response = "Your Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(str(slimeoid.level))
+			else:
+				response = "{}'s Slimeoid is still forming in the gestation vat. It is about {} feet from end to end.".format(member.display_name, str(slimeoid.level))
+		elif slimeoid.life_state == ewcfg.slimeoid_state_active:
+			if selfcheck == True:
+				response = "You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+			else:
+				response = "{} is accompanied by {}, a {}-foot-tall Slimeoid.".format(member.display_name, slimeoid.name, str(slimeoid.level))
 
+		response += slimeoid_describe(slimeoid)
 
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
