@@ -24,6 +24,44 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	topslimeoids = make_slimeoids_top_board(server = server)
+	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
+
+def make_slimeoids_top_board(server = None):
+	board = "{mega} ▓▓▓▓▓ Top Slimeoids by Clout  ▓▓▓▓▓ {mega}\n".format(
+		mega = "<:megaslime:436877747240042508>"
+	)
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute((
+			"SELECT pl.display_name, sl.name, sl.clout " +
+			"FROM slimeoids AS sl " +
+			"LEFT JOIN players AS pl ON sl.id_user = pl.id_user " +
+			"WHERE sl.id_server = %s AND sl.life_state = 2 " +
+			"ORDER BY sl.clout DESC LIMIT 3"
+		), (
+			server.id,
+		))
+
+		data = cursor.fetchall()
+		if data != None:
+			for row in data:
+				board += "`   {:_>5} | {}'s {}`\n".format(
+					row[2],
+					row[0],
+					row[1]
+				)
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return board
+
 
 def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
@@ -32,13 +70,14 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		cursor.execute("SELECT {name}, {state}, {faction}, {category} FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {category} {order}".format(
+		cursor.execute("SELECT {name}, {state}, {faction}, {category} FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {category} {order} LIMIT {limit}".format(
 			name = ewcfg.col_display_name,
 			state = ewcfg.col_life_state,
 			faction = ewcfg.col_faction,
 			category = category,
 			id_user = ewcfg.col_id_user,
-			order = ('DESC' if lowscores == False else 'ASC')
+			order = ('DESC' if lowscores == False else 'ASC'),
+			limit = rows
 		), (
 			server.id, 
 		))
