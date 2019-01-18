@@ -260,6 +260,18 @@ if debug == True:
 	ewutils.logMsg('Debug mode enabled.')
 
 @client.event
+async def on_member_remove(member):
+	# Kill players who leave the server.
+	try:
+		user_data = EwUser(member = member)
+		user_data.die(cause = ewcfg.cause_leftserver)
+		user_data.persist()
+
+		ewutils.logMsg('Player killed for leaving the server.')
+	except:
+		ewutils.logMsg('Failed to kill member who left the server.')
+
+@client.event
 async def on_ready():
 	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))

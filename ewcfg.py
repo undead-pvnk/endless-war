@@ -671,6 +671,7 @@ cause_grandfoe = 2
 cause_donation = 3
 cause_busted = 4
 cause_suicide = 5
+cause_leftserver = 6
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
