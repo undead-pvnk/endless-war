@@ -28,7 +28,7 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
 
 def make_slimeoids_top_board(server = None):
-	board = "{mega} ▓▓▓▓▓ Top Slimeoids by Clout  ▓▓▓▓▓ {mega}\n".format(
+	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
 		mega = "<:megaslime:436877747240042508>"
 	)
 
