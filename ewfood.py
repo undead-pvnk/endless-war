@@ -4,6 +4,7 @@ import time
 import ewcfg
 import ewitem
 import ewutils
+import ewrolemgr
 from ew import EwUser, EwMarket
 
 """ Food model object """
@@ -160,6 +161,9 @@ async def order(cmd):
 							target_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
 							target_data.ghostbust = True
+							#Bust target if they're a ghost
+							if target_data.life_state == ewcfg.life_state_corpse:
+								target_data.die(cause = ewcfg.cause_busted)
 
 					else:
 						user_data.hunger -= food.recover_hunger
@@ -170,6 +174,9 @@ async def order(cmd):
 							user_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
 							user_data.ghostbust = True
+							#Bust player if they're a ghost
+							if user_data.life_state == ewcfg.life_state_corpse:
+								user_data.die(cause = ewcfg.cause_busted)
 
 				else:  # if it's togo
 					food_items = ewitem.inventory(
@@ -217,6 +224,9 @@ async def order(cmd):
 
 				if target_data != None:
 					target_data.persist()
+					await ewrolemgr.updateRoles(client = cmd.client, member = member)
+
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
