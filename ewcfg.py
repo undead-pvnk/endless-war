@@ -352,7 +352,7 @@ reap_gain = 120000
 
 # Cooldowns
 cd_kill = 5
-cd_spar = 600
+cd_spar = 300
 cd_haunt = 600
 cd_invest = 1200
 cd_boombust = 22
