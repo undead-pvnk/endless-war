@@ -1825,7 +1825,7 @@ food_list = [
 	EwFood(
 		id_food = "milk",
 		alias = [
-			"cow juice"
+			"cowjuice"
 		],
 		recover_hunger = 10,
 		price = 6,
@@ -3237,7 +3237,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bomer hat",
+		name = "bomber hat",
 		description = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian
 	),
@@ -3287,7 +3287,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "cowboy",
+		name = "cowboy hat",
 		description = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian
 	),

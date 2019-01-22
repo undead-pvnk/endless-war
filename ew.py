@@ -291,6 +291,9 @@ class EwUser:
 			try:
 				if item_props['id_food'] == "coleslaw":
 					self.ghostbust = True
+					#Bust player if they're a ghost
+					if self.life_state == ewcfg.life_state_corpse:
+						self.die(cause = ewcfg.cause_busted)
 			except:
 				# An exception will occur if there's no id_food prop in the database. We don't care.
 				pass

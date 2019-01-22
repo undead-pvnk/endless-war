@@ -4,6 +4,7 @@ import time
 import ewutils
 import ewcfg
 import ewstats
+import ewrolemgr
 from ew import EwUser
 from ewplayer import EwPlayer
 
@@ -577,6 +578,7 @@ async def item_use(cmd):
 			user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
