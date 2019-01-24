@@ -104,7 +104,7 @@ class EwDistrict:
 			if not cap_faction_member_present:  # only decay if no members of the currently capturing (or controlling) faction are present
 
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				await self.change_capture_points(-math.ceil(self.max_capture_points / ewcfg.ticks_per_day), ewcfg.actor_decay)
+				await self.change_capture_points(-math.ceil(self.max_capture_points / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
 
 		if self.capture_points < 0:
 			self.capture_points = 0
@@ -265,7 +265,10 @@ class EwDistrict:
 					client = ewutils.get_client()
 
 				if client is not None:
-					await client.edit_channel(channel = channel, topic = new_topic)
+					try:
+						await client.edit_channel(channel = channel, topic = new_topic)
+					except:
+						ewutils.logMsg('Failed to set channel topic for {} to {}'.format(channel.name, new_topic))
 
 			if self.controlling_faction != new_owner:  # if the controlling faction actually changed
 				if new_owner != "":  # if it was captured by a faction instead of being de-captured or decayed
@@ -316,11 +319,12 @@ async def capture_tick(id_server):
 
 		all_districts = cursor.fetchall()
 
-		cursor.execute("SELECT {poi}, {faction}, {life_state}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 1".format(
+		cursor.execute("SELECT {poi}, {faction}, {life_state}, {id_user}, {slimes} FROM users WHERE id_server = %s AND {life_state} > 1".format(
 			poi = ewcfg.col_poi,
 			faction = ewcfg.col_faction,
 			life_state = ewcfg.col_life_state,
-			id_user = ewcfg.col_id_user
+			id_user = ewcfg.col_id_user,
+			slimes = ewcfg.col_slimes
 		), (
 			id_server,
 		))
@@ -356,6 +360,7 @@ async def capture_tick(id_server):
 				player_faction = player[1]
 				player_life_state = player[2]
 				player_id = player[3]
+				player_slimes = player[4]
 
 				if player_poi == district_name and player_life_state == ewcfg.life_state_enlisted:  # if the player is in the district and a gang member
 					try:
@@ -365,7 +370,7 @@ async def capture_tick(id_server):
 
 					#ewutils.logMsg("Online status checked. Time elapsed: %f" % (time.time() - time_old) + " Server: %s" % id_server + " Player: %s" % player_id + " Status: %s" % ("online" if player_online else "offline"))
 
-					if player_online:
+					if player_online and player_slimes >= 10000:
 						if faction_capture != None and faction_capture != player_faction:  # if someone of the opposite faction is in the district
 							faction_capture = 'both'  # standstill, gang violence has to happen
 							capture_speed = 0
@@ -426,14 +431,17 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 			for id_district in ewcfg.capturable_districts:
 				district = EwDistrict(id_server = id_server, district = id_district)
 
-				# if the kingpin is controlling this district
+				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
-
-					# give the kingpin slime based on the district's property class
 					slimegain += ewcfg.district_control_slime_yields[district.property_class]
-
-				await district.decay_capture_points()
 
 			kingpin.change_slimes(n = slimegain)
 			kingpin.persist()
+
 			ewutils.logMsg(kingpin_role + " just received %d" % slimegain + " slime for their captured districts.")
+
+	# Decay capture points.
+	for id_district in ewcfg.capturable_districts:
+		district = EwDistrict(id_server = id_server, district = id_district)
+
+		await district.decay_capture_points()

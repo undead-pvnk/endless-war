@@ -4,6 +4,7 @@ import time
 import ewcfg
 import ewitem
 import ewutils
+import ewrolemgr
 from ew import EwUser, EwMarket
 
 """ Food model object """
@@ -78,7 +79,7 @@ async def menu(cmd):
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = ewcfg.food_vendor_inv[vendor]))
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ players order food, for themselves or somebody else """
 async def order(cmd):
@@ -117,7 +118,10 @@ async def order(cmd):
 
 		if food is not None:
 			# gets a vendor that the item is available and the player currently located in
-			current_vendor = (set(food.vendors).intersection(set(poi.vendors))).pop()
+			try:
+				current_vendor = (set(food.vendors).intersection(set(poi.vendors))).pop()
+			except:
+				current_vendor = None
 
 		if food == None or current_vendor is None or len(current_vendor) < 1:
 			response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
@@ -157,6 +161,9 @@ async def order(cmd):
 							target_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
 							target_data.ghostbust = True
+							#Bust target if they're a ghost
+							if target_data.life_state == ewcfg.life_state_corpse:
+								target_data.die(cause = ewcfg.cause_busted)
 
 					else:
 						user_data.hunger -= food.recover_hunger
@@ -167,6 +174,9 @@ async def order(cmd):
 							user_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
 							user_data.ghostbust = True
+							#Bust player if they're a ghost
+							if user_data.life_state == ewcfg.life_state_corpse:
+								user_data.die(cause = ewcfg.cause_busted)
 
 				else:  # if it's togo
 					food_items = ewitem.inventory(
@@ -178,10 +188,11 @@ async def order(cmd):
 					if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
 						# user_data never got persisted so the player won't lose money unnecessarily
 						response = "You can't carry any more food than that."
-						return await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					item_props = {
 						# not all attributes are necessary to store in the database since the price and vendors list is only needed for buying it
+						'id_food': food.id_food,
 						'food_name': food.str_name,
 						'food_desc': food.str_desc,
 						'recover_hunger': food.recover_hunger,
@@ -213,6 +224,9 @@ async def order(cmd):
 
 				if target_data != None:
 					target_data.persist()
+					await ewrolemgr.updateRoles(client = cmd.client, member = member)
+
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

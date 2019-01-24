@@ -4,6 +4,7 @@ import time
 import ewutils
 import ewcfg
 import ewstats
+import ewrolemgr
 from ew import EwUser
 from ewplayer import EwPlayer
 
@@ -322,40 +323,43 @@ def item_loot(
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		# TODO more elegant solution for tracking this sort of thing -- get amount of poudrins taken for stat tracking
-		cursor.execute("SELECT * FROM items WHERE {id_server} = %s AND {id_user} = %s AND {item_type} = %s".format(
-			id_user = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server,
-			item_type = ewcfg.col_item_type,
+		# Transfer adorned cosmetics
+		cursor.execute((
+			"UPDATE items SET id_user = %s " +
+			"WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
+				"SELECT id_item FROM items_prop " +
+				"WHERE name = 'adorned' AND value = 'true' " +
+			")"
 		), (
-			member.server.id,
-			member.id,
-			ewcfg.it_slimepoudrin
-		))
-		poudrins_looted = cursor.rowcount
-		ewutils.logMsg("Attempting to loot {} poudrins.".format(poudrins_looted))
-		ewstats.change_stat(id_server = member.server.id, id_user = id_user_target, metric = ewcfg.stat_poudrins_looted, n = poudrins_looted)
-
-		# only drop poudrins and adorned cosmetics
-		# there's probably a more elegant way of doing this but this works
-		query = "UPDATE items, items_prop SET {id_user} = %s WHERE {id_server} = %s AND {id_user} = %s AND {soulbound} = 0 AND items_prop.id_item = items.id_item AND ({item_type} = %s OR"" \
-			""({item_type} = %s AND {name} = 'adorned' AND {value} = 'true'))".format(
-			id_user = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server,
-			soulbound = ewcfg.col_soulbound,
-			item_type = ewcfg.col_item_type,
-			name = ewcfg.col_name,
-			value = ewcfg.col_value
-		)
-
-		# Re-assign lootable items to looting user
-		cursor.execute(query, (
 			id_user_target,
-			member.server.id,
 			member.id,
-			ewcfg.it_slimepoudrin,
+			member.server.id,
 			ewcfg.it_cosmetic
 		))
+
+		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
+
+		# Transfer slimepoudrins
+		cursor.execute((
+			"UPDATE items SET id_user = %s " +
+			"WHERE id_user = %s AND id_server = %s AND item_type = %s "
+		), (
+			id_user_target,
+			member.id,
+			member.server.id,
+			ewcfg.it_slimepoudrin
+		))
+
+		poudrins_looted = cursor.rowcount
+
+		ewstats.change_stat(
+			id_server = member.server.id,
+			id_user = id_user_target,
+			metric = ewcfg.stat_poudrins_looted,
+			n = poudrins_looted
+		)
+
+		ewutils.logMsg('Transferred {} slime poudrins.'.format(poudrins_looted))
 
 		conn.commit()
 	finally:
@@ -479,10 +483,10 @@ async def inventory_print(cmd):
 		response = "You are holding:"
 
 	try:
-		await cmd.client.send_message(cmd.message.author, response)
+		await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if len(items) > 0:
 		response = ""
@@ -499,18 +503,18 @@ async def inventory_print(cmd):
 			)
 			if len(response) + len(response_part) > 1492:
 				if can_message_user:
-					await cmd.client.send_message(cmd.message.author, response)
+					await ewutils.send_message(cmd.client, cmd.message.author, response)
 				else:
-					await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				response = ""
 
 			response += response_part
 
-	if can_message_user:
-		await cmd.client.send_message(cmd.message.author, response)
-	else:
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if can_message_user:
+			await ewutils.send_message(cmd.client, cmd.message.author, response)
+		else:
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """
@@ -544,7 +548,7 @@ async def item_look(cmd):
 
 		response = name + "\n\n" + response
 
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -552,7 +556,7 @@ async def item_look(cmd):
 		else:
 			response = "Inspect which item? (check **!inventory**)"
 
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
@@ -573,7 +577,8 @@ async def item_use(cmd):
 			response = user_data.eat(item)
 			user_data.persist()
 
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -581,7 +586,7 @@ async def item_use(cmd):
 		else:
 			response = "Use which item? (check **!inventory**)"
 
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """
 	Assign an existing item to a player
@@ -653,7 +658,14 @@ async def give(cmd):
 		recipient = cmd.mentions[0]
 	else:
 		response = "You have to specify the recipient of the item."
-		return await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	user_data = EwUser(member = author)
+	recipient_data = EwUser(member = recipient)
+
+	if user_data.poi != recipient_data.poi:
+		response = "You must be in the same location as the person you want to gift your item to, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
@@ -669,7 +681,7 @@ async def give(cmd):
 
 			if len(food_items) >= math.ceil(EwUser(member = recipient).slimelevel / ewcfg.max_food_in_inv_mod):
 				response = "They can't carry any more food items."
-				return await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
@@ -683,7 +695,7 @@ async def give(cmd):
 				recipient = recipient.display_name,
 				item = item_sought.get('name')
 			)
-		return await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
@@ -691,4 +703,4 @@ async def give(cmd):
 		else:
 			response = "Give which item? (check **!inventory**)"
 
-		await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

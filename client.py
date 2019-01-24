@@ -74,6 +74,7 @@ cmd_map = {
 
 	# Name your current weapon.
 	ewcfg.cmd_annoint: ewwep.annoint,
+	ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
 
 	# move from juvenile to one of the armies (rowdys or killers)
@@ -158,6 +159,7 @@ cmd_map = {
 
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
+	ewcfg.cmd_inspect_alt1: ewitem.item_look,
 
 	# use an item
 	ewcfg.cmd_use: ewitem.item_use,
@@ -175,6 +177,10 @@ cmd_map = {
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
 
+	# Cancel all moves in progress.
+	ewcfg.cmd_halt: ewmap.halt,
+	ewcfg.cmd_halt_alt1: ewmap.halt,
+
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 
@@ -189,17 +195,20 @@ cmd_map = {
 	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
-  
+
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
 
+	# Link to the guide.
+	ewcfg.cmd_help: ewcmd.help,
+	ewcfg.cmd_help_alt1: ewcmd.help,
+	ewcfg.cmd_help_alt2: ewcmd.help,
+	ewcfg.cmd_help_alt3: ewcmd.help,
+
 	# Misc
-	#ewcfg.cmd_help: ewcmd.help,
-	#ewcfg.cmd_help_alt1: ewcmd.help,
-	#ewcfg.cmd_help_alt2: ewcmd.help,
 	ewcfg.cmd_howl: ewcmd.cmd_howl,
 	ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
 	ewcfg.cmd_harvest: ewcmd.harvest,
@@ -251,7 +260,20 @@ if debug == True:
 	ewutils.logMsg('Debug mode enabled.')
 
 @client.event
+async def on_member_remove(member):
+	# Kill players who leave the server.
+	try:
+		user_data = EwUser(member = member)
+		user_data.die(cause = ewcfg.cause_leftserver)
+		user_data.persist()
+
+		ewutils.logMsg('Player killed for leaving the server.')
+	except:
+		ewutils.logMsg('Failed to kill member who left the server.')
+
+@client.event
 async def on_ready():
+	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
 
 	ewutils.logMsg("Loaded NLACakaNM world map. ({}x{})".format(ewmap.map_width, ewmap.map_height))
@@ -262,11 +284,14 @@ async def on_ready():
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
 
-	await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
+	try:
+		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
+	except:
+		ewutils.logMsg("Failed to change_presence!")
 
 	# Look for a Twitch client_id on disk.
 	# FIXME debug - temporarily disable Twitch integration
-	if False: 
+	if False:
 		twitch_client_id = ewutils.getTwitchClientId()
 
 	# If no twitch client ID is available, twitch integration will be disabled.
@@ -325,9 +350,6 @@ async def on_ready():
 
 	ewutils.logMsg('Ready.')
 
-	ewcfg.set_client(client)
-
-
 	"""
 		Set up for infinite loop to perform periodic tasks.
 	"""
@@ -361,7 +383,7 @@ async def on_ready():
 				# Twitch API call to see if there are any active streams.
 				json_string = ""
 				p = subprocess.Popen(
-					"curl -H 'Client-ID: {}' -X GET 'https://api.twitch.tv/helix/streams?user_login = rowdyfrickerscopkillers' 2>/dev/null".format(twitch_client_id), 
+					"curl -H 'Client-ID: {}' -X GET 'https://api.twitch.tv/helix/streams?user_login = rowdyfrickerscopkillers' 2>/dev/null".format(twitch_client_id),
 					shell = True,
 					stdout = subprocess.PIPE
 				)
@@ -386,7 +408,8 @@ async def on_ready():
 
 						# The stream has transitioned from offline to online. Make an announcement!
 						for channel in channels_announcement:
-							await client.send_message(
+							await ewutils.send_message(
+								client,
 								channel,
 								"ATTENTION CITIZENS. THE **ROWDY FUCKER** AND THE **COP KILLER** ARE **STREAMING**. BEWARE OF INCREASED KILLER AND ROWDY ACTIVITY.\n\n@everyone\n{}".format(
 									"https://www.twitch.tv/rowdyfrickerscopkillers"
@@ -440,6 +463,8 @@ async def on_ready():
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
+					await ewmap.kick(server.id)
+
 					# Post leaderboards at 6am NLACakaNM time.
 					if market_data.clock == 6:
 						await ewleaderboard.post_leaderboards(client = client, server = server)
@@ -482,9 +507,9 @@ async def on_ready():
 					for server in client.servers:
 						for channel in server.channels:
 							if channel.name in msg_channel_names:
-								await client.send_message(channel, "**{}**".format(msg.message))
+								await ewutils.send_message(client, channel, "**{}**".format(msg.message))
 							elif channel.name in msg_channel_names_reverb:
-								await client.send_message(channel, "**Something is happening nearby...\n\n{}**".format(msg.message))
+								await ewutils.send_message(client, channel, "**Something is happening nearby...\n\n{}**".format(msg.message))
 		except:
 			ewutils.logMsg('An error occurred while trying to process the message queue:')
 			traceback.print_exc(file = sys.stdout)
@@ -501,7 +526,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		await client.send_message(message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		#await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):
@@ -527,6 +552,19 @@ async def on_message(message):
 
 	content_tolower = message.content.lower()
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
+
+	# update the player's time_last_action which is used for kicking AFK players out of subzones
+	if message.server != None:
+		try:
+			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
+				time_last_action = ewcfg.col_time_last_action
+			), (
+				int(time.time()),
+				message.author.id,
+				message.server.id
+			))
+		except:
+			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
 		"""
@@ -567,16 +605,13 @@ async def on_message(message):
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
 
-			# FIXME add this back when the help doc is updated.
-			"""
 			else:
 				time_last = last_helped_times.get(message.author.id, 0)
 
 				# Only send the help doc once every thirty seconds. There's no need to spam it.
 				if (time_now - time_last) > 30:
 					last_helped_times[message.author.id] = time_now
-					await client.send_message(message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
-			"""
+					await ewutils.send_message(client, message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
 
 			# Nothing else to do in a DM.
 			return
@@ -590,7 +625,7 @@ async def on_message(message):
 
 			response = "You cannot participate in the ENDLESS WAR while offline."
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, response))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 			return
 
@@ -622,7 +657,7 @@ async def on_message(message):
 
 			item = EwItem(id_item = item_id)
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
 
 		# Creates a poudrin
 		elif debug == True and cmd == '!createpoudrin':
@@ -638,7 +673,7 @@ async def on_message(message):
 
 			item = EwItem(id_item = item_id)
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
 		# Gives the user some slime
 		elif debug == True and cmd == '!getslime':
@@ -647,7 +682,7 @@ async def on_message(message):
 			user_data.change_slimes(n = 10000)
 			user_data.persist()
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
 
 
 
@@ -664,7 +699,7 @@ async def on_message(message):
 					id_item = item.get('id_item')
 				)
 
-			await client.send_message(message.channel, ewutils.formatMessage(message.author, 'ok'))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, 'ok'))
 
 		# AWOOOOO
 		elif re_awoo.match(cmd):
@@ -684,13 +719,16 @@ async def on_message(message):
 
 				if role != None:
 					for user in mentions:
-						await client.replace_roles(user, role)
+						try:
+							await client.replace_roles(user, role)
+						except:
+							ewutils.logMsg('Failed to replace_roles for user {} with {}.'.format(user.display_name, role.name))
 
 					response = 'Done.'
 				else:
 					response = 'Unrecognized role.'
 
-			await client.send_message(cmd.message.channel, ewutils.formatMessage(message.author, response))
+			await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(message.author, response))
 
 		# didn't match any of the command words.
 		else:
@@ -703,9 +741,12 @@ async def on_message(message):
 			elif randint == 3:
 				msg_mistake = "ENDLESS WAR pays you no mind."
 
-			msg = await client.send_message(cmd_obj.message.channel, msg_mistake)
+			msg = await ewutils.send_message(client, cmd_obj.message.channel, msg_mistake)
 			await asyncio.sleep(2)
-			await client.delete_message(msg)
+			try:
+				await client.delete_message(msg)
+			except:
+				pass
 
 	elif content_tolower.find(ewcfg.cmd_howl) >= 0 or content_tolower.find(ewcfg.cmd_howl_alt1) >= 0 or re_awoo.match(content_tolower):
 		""" Howl if !howl is in the message at all. """
@@ -713,6 +754,7 @@ async def on_message(message):
 			message = message,
 			client = client
 		))
+
 
 # find our REST API token
 token = ewutils.getToken()

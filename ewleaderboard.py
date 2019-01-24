@@ -10,35 +10,75 @@ async def post_leaderboards(client = None, server = None):
 	market = EwMarket(id_server = server.id)
 	time = "day {}".format(market.day) 
 
-	await client.send_message(leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
+	await ewutils.send_message(client, leaderboard_channel, "▓▓{} **STATE OF THE CITY:** {} {}▓▓".format(ewcfg.emote_theeye, time, ewcfg.emote_theeye))
 
 	kingpins = make_kingpin_board(server = server, title = ewcfg.leaderboard_kingpins)
-	await client.send_message(leaderboard_channel, kingpins)
+	await ewutils.send_message(client, leaderboard_channel, kingpins)
 	districts = make_district_control_board(id_server = server.id, title = ewcfg.leaderboard_districts)
-	await client.send_message(leaderboard_channel, districts)
+	await ewutils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
-	await client.send_message(leaderboard_channel, topslimes)
+	await ewutils.send_message(client, leaderboard_channel, topslimes)
 	topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecredit, title = ewcfg.leaderboard_slimecredit)
-	await client.send_message(leaderboard_channel, topcoins)
+	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
-	await client.send_message(leaderboard_channel, topghosts)
-	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty)
-	await client.send_message(leaderboard_channel, topbounty)
+	await ewutils.send_message(client, leaderboard_channel, topghosts)
+	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
+	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	topslimeoids = make_slimeoids_top_board(server = server)
+	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
 
-def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5):
+def make_slimeoids_top_board(server = None):
+	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
+		mega = "<:megaslime:436877747240042508>"
+	)
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute((
+			"SELECT pl.display_name, sl.name, sl.clout " +
+			"FROM slimeoids AS sl " +
+			"LEFT JOIN players AS pl ON sl.id_user = pl.id_user " +
+			"WHERE sl.id_server = %s AND sl.life_state = 2 " +
+			"ORDER BY sl.clout DESC LIMIT 3"
+		), (
+			server.id,
+		))
+
+		data = cursor.fetchall()
+		if data != None:
+			for row in data:
+				board += "{} `{:_>3} | {}'s {}`\n".format(
+					"<:blank:492087853702971403>",
+					row[2],
+					row[0],
+					row[1]
+				)
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return board
+
+
+def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
 	try:
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		cursor.execute("SELECT {name}, {state}, {faction}, {category} FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {category} {order}".format(
+		cursor.execute("SELECT {name}, {state}, {faction}, {category} FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {category} {order} LIMIT {limit}".format(
 			name = ewcfg.col_display_name,
 			state = ewcfg.col_life_state,
 			faction = ewcfg.col_faction,
 			category = category,
 			id_user = ewcfg.col_id_user,
-			order = ('DESC' if lowscores == False else 'ASC')
+			order = ('DESC' if lowscores == False else 'ASC'),
+			limit = rows
 		), (
 			server.id, 
 		))
@@ -58,7 +98,7 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 		cursor.close()
 		ewutils.databaseClose(conn_info)
 
-	return format_board(entries = entries, title = title)
+	return format_board(entries = entries, title = title, divide_by = divide_by)
 
 def make_kingpin_board(server = None, title = ""):
 	entries = []
@@ -121,12 +161,12 @@ def make_district_control_board(id_server, title):
 """
 	convert leaderboard data into a message ready string 
 """
-def format_board(entries = None, title = "", entry_type = "player"):
+def format_board(entries = None, title = "", entry_type = "player", divide_by = 1):
 	result = ""
 	result += board_header(title)
 
 	for entry in entries:
-		result += board_entry(entry, entry_type)
+		result += board_entry(entry, entry_type, divide_by)
 
 	return result
 
@@ -161,16 +201,16 @@ def board_header(title):
 
 	return emote + bar + title + bar + emote + "\n"
 
-def board_entry(entry, entry_type):
+def board_entry(entry, entry_type, divide_by):
 	result = ""
 
 	if entry_type == ewcfg.entry_type_player:
 		faction = ewutils.get_faction(life_state = entry[1], faction = entry[2])
-		faction_symbol = ewutils.get_faction_symbol(faction)
+		faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
 
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
-			"{:,}".format(entry[3]),
+			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
 			entry[0]
 		)
 

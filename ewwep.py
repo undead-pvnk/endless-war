@@ -275,6 +275,9 @@ async def attack(cmd):
 
 				ewstats.track_maximum(user = user_data, metric = ewcfg.stat_biggest_bust_level, value = shootee_data.slimelevel)
 
+				# Steal items
+				ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
+
 				# Player was busted.
 				shootee_data.die(cause = ewcfg.cause_busted)
 
@@ -420,10 +423,11 @@ async def attack(cmd):
 
 					# Move around slime as a result of the shot.
 					if shootee_data.slimes >= 0:
+						user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+
 						if was_juvenile:
 							user_data.change_slimes(n = slimes_dropped, source = ewcfg.source_killing)
 						else:
-							user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 							user_data.change_slimes(n = slimes_dropped / 2, source = ewcfg.source_killing)
 							boss_slimes += int(slimes_dropped / 2)
 
@@ -464,26 +468,18 @@ async def attack(cmd):
 						))
 						shootee_data.trauma = weapon.id_weapon
 
-						if slimeoid.level == ewcfg.slimeoid_state_active:
-							brain = ewcfg.brain_map.get(slimeoid.ai)
-							response += "\n\n{}" + brain.str_kill.format(slimeoid_name = shootee_slimeoid.name)
-
-						if shootee_slimeoid.level == ewcfg.slimeoid_state_active:
-							brain = ewcfg.brain_map.get(shootee_slimeoid.ai)
-							response += "\n\n{}" + brain.str_death.format(slimeoid_name = shootee_slimeoid.name)
-
 					else:
 						response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
 
 						shootee_data.trauma = ""
 
-						if slimeoid.life_state == ewcfg.slimeoid_state_active:
-							brain = ewcfg.brain_map.get(slimeoid.ai)
-							response += "\n\n" + brain.str_kill.format(slimeoid_name = shootee_slimeoid.name)
+					if slimeoid.life_state == ewcfg.slimeoid_state_active:
+						brain = ewcfg.brain_map.get(slimeoid.ai)
+						response += "\n\n" + brain.str_kill.format(slimeoid_name = slimeoid.name)
 
-						if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
-							brain = ewcfg.brain_map.get(shootee_slimeoid.ai)
-							response += "\n\n" + brain.str_death.format(slimeoid_name = shootee_slimeoid.name)
+					if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
+						brain = ewcfg.brain_map.get(shootee_slimeoid.ai)
+						response += "\n\n" + brain.str_death.format(slimeoid_name = shootee_slimeoid.name)
 
 					deathreport = "You were {} by {}. {}".format(kill_descriptor, cmd.message.author.display_name, ewcfg.emote_slimeskull)
 					deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member, deathreport)
@@ -558,10 +554,10 @@ async def attack(cmd):
 				await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	if deathreport != "":
 		sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-		await cmd.client.send_message(sewerchannel, deathreport)
+		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 
 """ player kills themself """
@@ -612,10 +608,10 @@ async def suicide(cmd):
 			response = "\*click* Alas, your gun has jammed."
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	if deathreport != "":
 		sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-		await cmd.client.send_message(sewerchannel, deathreport)
+		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 """ Player spars with a friendly player to gain slime. """
 async def spar(cmd):
@@ -756,7 +752,7 @@ async def spar(cmd):
 		response = 'Your fighting spirit is appreciated, but ENDLESS WAR didn\'t understand that name.'
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ equip a weapon """
 async def equip(cmd):
@@ -804,7 +800,7 @@ async def equip(cmd):
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ name a weapon using a slime poudrin """
 async def annoint(cmd):
@@ -852,4 +848,4 @@ async def annoint(cmd):
 				response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
 
 	# Send the response to the player.
-	await cmd.client.send_message(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
