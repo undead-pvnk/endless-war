@@ -9,6 +9,7 @@ import ewrolemgr
 import ewcfg
 
 from ew import EwUser
+from ewdistrict import EwDistrict
 
 # Map of user IDs to their course ID.
 moves_active = {}
@@ -233,7 +234,7 @@ class EwPath:
 """
 	Add coord_next to the path.
 """
-def path_step(path, coord_next, user_data):
+def path_step(path, coord_next, user_data, coord_end):
 	visited_set_y = path.visited.get(coord_next[0])
 	if visited_set_y == None:
 		path.visited[coord_next[0]] = { coord_next[1]: True }
@@ -247,10 +248,27 @@ def path_step(path, coord_next, user_data):
 
 	if cost_next == sem_city or cost_next == sem_city_alias:
 		next_poi = ewcfg.coord_to_poi.get(coord_next)
-		if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
-			cost_next = 5000
-		else:
-			cost_next = 0
+		cost_next = 0
+
+		if next_poi != None:
+			if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
+				cost_next = 5000
+			else:
+				if len(user_data.faction) > 0 and coord_next != coord_end:
+					district = EwDistrict(
+						id_server = user_data.id_server,
+						district = next_poi.id_poi
+					)
+
+					if district != None and len(district.controlling_faction) > 0:
+						if user_data.faction == district.controlling_faction:
+							cost_next = -ewcfg.territory_time_gain
+						else:
+							cost_next = ewcfg.territory_time_gain
+					else:
+						cost_next = 0
+				else:
+					cost_next = 0
 
 	path.steps.append(coord_next)
 	path.cost += cost_next
@@ -260,10 +278,10 @@ def path_step(path, coord_next, user_data):
 """
 	Returns a new path including all of path_base, with the next step coord_next.
 """
-def path_branch(path_base, coord_next, user_data):
+def path_branch(path_base, coord_next, user_data, coord_end):
 	path_next = EwPath(path_from = path_base)
 
-	if path_step(path_next, coord_next, user_data) == False:
+	if path_step(path_next, coord_next, user_data, coord_end) == False:
 		return None
 	
 	return path_next
@@ -300,7 +318,7 @@ def path_to(
 	)
 
 	for neigh in neighbors(coord_start):
-		path_next = path_branch(path_base, neigh, user_data)
+		path_next = path_branch(path_base, neigh, user_data, coord_end)
 		if path_next != None:
 			paths_walking.append(path_next)
 
@@ -329,9 +347,9 @@ def path_to(
 
 				branch = None
 				if path_branches == 0:
-					could_move = path_step(path, neigh, user_data)
+					could_move = path_step(path, neigh, user_data, coord_end)
 				else:
-					branch = path_branch(path_base, neigh, user_data)
+					branch = path_branch(path_base, neigh, user_data, coord_end)
 					if branch != None:
 						could_move = True
 						paths_walking_new.append(branch)
@@ -508,8 +526,8 @@ async def move(cmd):
 		(" It's {} minute{}{} away.".format(
 			minutes,
 			("s" if minutes != 1 else ""),
-			(" and {} seconds".format(seconds) if seconds > 5 else "")
-		) if minutes > 0 else "")
+			(" and {} seconds".format(seconds) if seconds > 4 else "")
+		) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 30 else ""))
 	)))
 
 	life_state = user_data.life_state
@@ -562,6 +580,8 @@ async def move(cmd):
 			pass
 
 	else:
+		boost = 0
+
 		# Perform move.
 		for step in path.steps[1:]:
 			# Check to see if we have been interrupted and need to not move any farther.
@@ -640,10 +660,25 @@ async def move(cmd):
 							"You {} {}.".format(poi_current.str_enter, poi_current.str_name)
 						)
 					)
+
+					if len(user_data.faction) > 0:
+						district = EwDistrict(
+							id_server = user_data.id_server,
+							district = user_data.poi
+						)
+
+						if district != None and len(district.controlling_faction) > 0:
+							if user_data.faction == district.controlling_faction:
+								boost = ewcfg.territory_time_gain
+							else:
+								await asyncio.sleep(ewcfg.territory_time_gain)
 			else:
 				if val > 0:
-					#await asyncio.sleep(val/30)
-					await asyncio.sleep(val)
+					val_actual = val - boost
+					boost = 0
+
+					if val_actual > 0:
+						await asyncio.sleep(val_actual)
 
 		await asyncio.sleep(30)
 		try:

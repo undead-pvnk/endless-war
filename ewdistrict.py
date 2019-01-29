@@ -42,7 +42,10 @@ class EwDistrict:
 				if poi.id_poi == self.name:
 					self.property_class = poi.property_class.lower()
 
-			self.max_capture_points = ewcfg.max_capture_points[self.property_class]
+			if len(self.property_class) > 0:
+				self.max_capture_points = ewcfg.max_capture_points[self.property_class]
+			else:
+				self.max_capture_points = 0
 
 			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points} FROM districts WHERE id_server = %s AND {district} = %s".format(
 				controlling_faction = ewcfg.col_controlling_faction,
