@@ -385,29 +385,30 @@ async def capture_tick(id_server):
 							dc_stat_increase_list.append(player_id)
 
 			if faction_capture not in ['both', None]:  # if only members of one faction is present
-				dist = EwDistrict(id_server = id_server, district = district_name)
+				if district_name in ewcfg.capturable_districts:
+					dist = EwDistrict(id_server = id_server, district = district_name)
 
-				if dist.capture_points < dist.max_capture_points:
-					for stat_recipient in dc_stat_increase_list:
-						ewstats.change_stat(
-							id_server = id_server,
-							id_user = stat_recipient,
-							metric = ewcfg.stat_capture_points_contributed,
-							n = ewcfg.capture_tick_length * capture_speed
-						)
+					if dist.capture_points < dist.max_capture_points:
+						for stat_recipient in dc_stat_increase_list:
+							ewstats.change_stat(
+								id_server = id_server,
+								id_user = stat_recipient,
+								metric = ewcfg.stat_capture_points_contributed,
+								n = ewcfg.capture_tick_length * capture_speed
+							)
 
-				if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
-					await dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+					if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
+						await dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
 
-				elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
-					await dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
-					dist.capturing_faction = faction_capture
+					elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
+						await dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						dist.capturing_faction = faction_capture
 
-				# lower the enemy faction's progress to revert it to neutral (or potentially get it onto your side without becoming neutral first)
-				else:  # if the (de-)capturing faction is not in control
-					await dist.change_capture_points(-(ewcfg.capture_tick_length * capture_speed * ewcfg.decapture_speed_multiplier), faction_capture)
+					# lower the enemy faction's progress to revert it to neutral (or potentially get it onto your side without becoming neutral first)
+					else:  # if the (de-)capturing faction is not in control
+						await dist.change_capture_points(-(ewcfg.capture_tick_length * capture_speed * ewcfg.decapture_speed_multiplier), faction_capture)
 
-				dist.persist()
+					dist.persist()
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally

@@ -254,7 +254,7 @@ def path_step(path, coord_next, user_data, coord_end):
 			if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
 				cost_next = 5000
 			else:
-				if len(user_data.faction) > 0 and coord_next != coord_end:
+				if len(user_data.faction) > 0 and coord_next != coord_end and next_poi.id_poi in ewcfg.capturable_districts:
 					district = EwDistrict(
 						id_server = user_data.id_server,
 						district = next_poi.id_poi
@@ -661,7 +661,7 @@ async def move(cmd):
 						)
 					)
 
-					if len(user_data.faction) > 0:
+					if len(user_data.faction) > 0 and user_data.poi in ewcfg.capturable_districts:
 						district = EwDistrict(
 							id_server = user_data.id_server,
 							district = user_data.poi
