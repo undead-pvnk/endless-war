@@ -434,7 +434,6 @@ def map_draw(path = None, coord = None):
 def inaccessible(user_data = None, poi = None):
 	if(
 		len(poi.factions) > 0 and
-		user_data.life_state != ewcfg.life_state_corpse and
 		len(user_data.faction) > 0 and
 		user_data.faction not in poi.factions
 	) or (
