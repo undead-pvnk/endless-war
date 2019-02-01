@@ -248,12 +248,13 @@ def path_step(path, coord_next, user_data, coord_end):
 
 	if cost_next == sem_city or cost_next == sem_city_alias:
 		next_poi = ewcfg.coord_to_poi.get(coord_next)
-		cost_next = 0
 
-		if next_poi != None:
-			if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
-				cost_next = 5000
-			else:
+		if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
+			cost_next = 5000
+		else:
+			cost_next = 0
+
+			if next_poi != None:
 				if len(user_data.faction) > 0 and coord_next != coord_end and next_poi.id_poi in ewcfg.capturable_districts:
 					district = EwDistrict(
 						id_server = user_data.id_server,

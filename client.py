@@ -218,6 +218,8 @@ cmd_map = {
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
 	ewcfg.cmd_booru: ewcmd.booru,
+	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
+	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
 
 	# Slimeoids

@@ -231,6 +231,8 @@ cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
+cmd_leaderboard = cmd_prefix + 'leaderboard'
+cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'

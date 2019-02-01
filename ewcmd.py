@@ -348,6 +348,12 @@ async def wiki(cmd):
 """
 async def booru(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Booru: http://rfck.booru.org/'))
+
+"""
+	Link to the leaderboards on ew.krakissi.net.
+"""
+async def leaderboard(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
 	
 """ Accept a russian roulette challenge """
 async def accept(cmd):
