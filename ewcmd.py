@@ -188,8 +188,6 @@ def gen_data_text(
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 
-		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
-
 	return response
 
 """ show player information and description """
@@ -268,6 +266,9 @@ async def data(cmd):
 			id_server = member.server.id,
 			display_name = member.display_name
 		)
+
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
+
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
