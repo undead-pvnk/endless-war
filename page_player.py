@@ -47,7 +47,8 @@ print("</div>")
 
 
 # Header bar
-print("<header><h2>{faction}{display_name}</h2></header>".format(
+print("<header><h2>{faction}<a href=player.html?pl={id_user}>{display_name}</a></h2></header>".format(
+	id_user = id_user,
 	display_name = cgi.escape(player.display_name),
 	faction = faction(user_data.faction, user_data.life_state)
 ))
