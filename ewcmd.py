@@ -67,6 +67,33 @@ def is_casino_open(t):
 
 	return True
 
+def gen_score_text(
+	id_user = None,
+	id_server = None,
+	display_name = None
+):
+	response = ""
+
+	user_data = EwUser(
+		id_user = id_user,
+		id_server = id_server
+	)
+	poudrins = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_slimepoudrin
+	)
+	poudrins_count = len(poudrins)
+
+	if user_data.life_state == ewcfg.life_state_grandfoe:
+		# Can't see a raid boss's slime score.
+		response = "{}'s power is beyond your understanding.".format(display_name)
+	else:
+		# return somebody's score
+		response = "{} currently has {:,} slime{}.".format(display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrins_count, ("" if poudrins_count == 1 else "s")) if poudrins_count > 0 else ""))
+
+	return response
+
 """ show player's slime score """
 async def score(cmd):
 	response = ""
@@ -87,26 +114,81 @@ async def score(cmd):
 
 	else:
 		member = cmd.mentions[0]
-		user_data = EwUser(member = member)
-		poudrins = ewitem.inventory(
-			id_user = user_data.id_user,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_slimepoudrin
+		response = gen_score_text(
+			id_user = member.id,
+			id_server = member.server.id,
+			display_name = member.display_name
 		)
-		poudrins_count = len(poudrins)
-
-		if user_data.life_state == ewcfg.life_state_grandfoe:
-			# Can't see a raid boss's slime score.
-			response = "{}'s power is beyond your understanding.".format(member.display_name)
-		else:
-			# return somebody's score
-			response = "{} currently has {:,} slime{}.".format(member.display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrins_count, ("" if poudrins_count == 1 else "s")) if poudrins_count > 0 else ""))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	if member != None:
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
+
+def gen_data_text(
+	id_user = None,
+	id_server = None,
+	display_name = None
+):
+	response = ""
+	user_data = EwUser(
+		id_user = id_user,
+		id_server = id_server
+	)
+	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
+
+	cosmetics = ewitem.inventory(
+		id_user = user_data.id_user,
+		id_server = user_data.id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+	adorned_cosmetics = []
+	for cosmetic in cosmetics:
+		cos = EwItem(id_item = cosmetic.get('id_item'))
+		if cos.item_props['adorned'] == 'true':
+			adorned_cosmetics.append(cosmetic.get('name'))
+
+	if user_data.life_state == ewcfg.life_state_grandfoe:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		if poi != None:
+			response = "{} is {} {}.".format(display_name, poi.str_in, poi.str_name)
+		else:
+			response = "You can't discern anything useful about {}.".format(display_name)
+	else:
+
+		# return somebody's score
+		if user_data.life_state == ewcfg.life_state_corpse:
+			response = "{} is a level {} deadboi.".format(display_name, user_data.slimelevel)
+		else:
+			response = "{} is a level {} slimeboi.".format(display_name, user_data.slimelevel)
+		
+		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
+
+		weapon = ewcfg.weapon_map.get(user_data.weapon)
+		if weapon != None:
+			response += " {} {}{}.".format(ewcfg.str_weapon_wielding, ("" if len(user_data.weaponname) == 0 else "{}, ".format(user_data.weaponname)), weapon.str_weapon)
+			if user_data.weaponskill >= 5:
+				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
+			
+		trauma = ewcfg.weapon_map.get(user_data.trauma)
+		if trauma != None:
+			response += " {}".format(trauma.str_trauma)
+
+		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
+		if user_kills > 0:
+			response += " They have {:,} confirmed kills.".format(user_kills)
+
+		if coinbounty != 0:
+			response += " SlimeCorp offers a bounty of {:,} SlimeCoin for their death.".format(coinbounty)
+
+		if len(adorned_cosmetics) > 0:
+			response += " They have a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+	
+		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
+			response += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+
+	return response
 
 """ show player information and description """
 async def data(cmd):
@@ -116,7 +198,6 @@ async def data(cmd):
 
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
-		market_data = EwMarket(id_server = cmd.message.server.id)
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 
 		cosmetics = ewitem.inventory(
@@ -178,59 +259,11 @@ async def data(cmd):
 
 	else:
 		member = cmd.mentions[0]
-		user_data = EwUser(member = member)
-		market_data = EwMarket(id_server = cmd.message.server.id)
-		slimeoid = EwSlimeoid(member = member)
-
-		cosmetics = ewitem.inventory(
-			id_user = user_data.id_user,
-			id_server = user_data.id_server,
-			item_type_filter = ewcfg.it_cosmetic
+		response = gen_data_text(
+			id_user = member.id,
+			id_server = member.server.id,
+			display_name = member.display_name
 		)
-		adorned_cosmetics = []
-		for cosmetic in cosmetics:
-			cos = EwItem(id_item = cosmetic.get('id_item'))
-			if cos.item_props['adorned'] == 'true':
-				adorned_cosmetics.append(cosmetic.get('name'))
-
-		if user_data.life_state == ewcfg.life_state_grandfoe:
-			poi = ewcfg.id_to_poi.get(user_data.poi)
-			if poi != None:
-				response = "{} is {} {}.".format(member.display_name, poi.str_in, poi.str_name)
-			else:
-				response = "You can't discern anything useful about {}.".format(member.display_name)
-		else:
-
-			# return somebody's score
-			if user_data.life_state == ewcfg.life_state_corpse:
-				response = "{} is a level {} deadboi.".format(member.display_name, user_data.slimelevel)
-			else:
-				response = "{} is a level {} slimeboi.".format(member.display_name, user_data.slimelevel)
-			
-			coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
-
-			weapon = ewcfg.weapon_map.get(user_data.weapon)
-			if weapon != None:
-				response += " {} {}{}.".format(ewcfg.str_weapon_wielding, ("" if len(user_data.weaponname) == 0 else "{}, ".format(user_data.weaponname)), weapon.str_weapon)
-				if user_data.weaponskill >= 5:
-					response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
-				
-			trauma = ewcfg.weapon_map.get(user_data.trauma)
-			if trauma != None:
-				response += " {}".format(trauma.str_trauma)
-
-			user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-			if user_kills > 0:
-				response += " They have {:,} confirmed kills.".format(user_kills)
-
-			if coinbounty != 0:
-				response += " SlimeCorp offers a bounty of {:,} SlimeCoin for their death.".format(coinbounty)
-
-			if len(adorned_cosmetics) > 0:
-				response += " They have a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
-        
-			if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-				response += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
