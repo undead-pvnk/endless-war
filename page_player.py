@@ -39,10 +39,22 @@ print("<article class=story>")
 user_data = EwUser(id_user = id_user, id_server = id_server)
 player = EwPlayer(id_user = id_user)
 
-# Left-hand floating profile section
+# Floating profile section
 print("<div class=profile_float><img src=\"{avatar_url}\" class=profile_avatar>".format(
 	avatar_url = player.avatar
 ))
+
+print("<table>")
+print("<tr><td>Faction</td><td>{icon}{faction}</td></tr>".format(
+	icon = faction(user_data.faction, user_data.life_state),
+	faction = user_data.faction
+
+))
+print("<tr><td>Slime</td><td>{slime:,}</td></tr>".format(slime = user_data.slimes))
+print("<tr><td>SlimeCoin</td><td>{slimecredit:,}</td></tr>".format(slimecredit = user_data.slimecredit))
+print("<tr><td>Bounty</td><td>{bounty:,}</td></tr>".format(bounty = int((user_data.bounty + 1) / ewcfg.slimecoin_exchangerate)))
+print("</table>")
+
 print("</div>")
 
 
@@ -63,16 +75,38 @@ print("<p>{}</p>".format(cgi.escape(ewcmd.gen_data_text(
 	display_name = player.display_name
 ))))
 
-print("<table>")
-print("<tr><td>Faction</td><td>{icon}{faction}</td></tr>".format(
-	icon = faction(user_data.faction, user_data.life_state),
-	faction = user_data.faction
+print("<h3>Statistics</h3>")
+try:
+	conn_info = ewutils.databaseConnect()
+	conn = conn_info.get('conn')
+	cursor = conn.cursor();
 
-))
-print("<tr><td>Slime</td><td>{slime:,}</td></tr>".format(slime = user_data.slimes))
-print("<tr><td>SlimeCoin</td><td>{slimecredit:,}</td></tr>".format(slimecredit = user_data.slimecredit))
-print("<tr><td>Bounty</td><td>{bounty:,}</td></tr>".format(bounty = int((user_data.bounty + 1) / ewcfg.slimecoin_exchangerate)))
-print("</table>")
+	cursor.execute("SELECT {metric}, {value} FROM stats WHERE {id_server} = %s AND {id_user} = %s ORDER BY {metric}".format(
+		value = ewcfg.col_stat_value,
+		metric = ewcfg.col_stat_metric,
+		id_server = ewcfg.col_id_server,
+		id_user = ewcfg.col_id_user
+	), (
+		id_server,
+		id_user
+	))
+
+	print("<table style=\"display: inline-block;\">")
+	rows = cursor.fetchall()
+	for row in rows:
+		print("<tr><td>{metric}</td><td>{value:,}</td></tr>".format(
+			metric = row[0],
+			value = row[1]
+		))
+
+	print("</table>")
+
+except:
+	print("<p><i>Failed to load stats.</i></p>");
+finally:
+	# Clean up the database handles.
+	cursor.close()
+	ewutils.databaseClose(conn_info)
 
 print("</div>")
 print("</article>")
