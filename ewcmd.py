@@ -188,6 +188,8 @@ def gen_data_text(
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
+
 	return response
 
 """ show player information and description """
@@ -256,6 +258,8 @@ async def data(cmd):
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
 
 	else:
 		member = cmd.mentions[0]
