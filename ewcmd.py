@@ -186,7 +186,7 @@ def gen_data_text(
 			response += " They have a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 	
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+			response += " They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 
 	return response
 
