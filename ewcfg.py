@@ -1298,7 +1298,7 @@ food_list = [
 		price = 2,
 		inebriation = 0,
 		str_name = 'bundle of five breadsticks',
-		vendors = [vendor_bar],
+		vendors = [vendor_pizzahut],
 		str_eat = "You gnaw on each stale breadstick like a dog chews on his bone, that is to say for hours and with little purpose. You let it soak underneath a nearby soda machine, "
 				  "allowing the carbonation to eat away at the carbohydrate rod. You swallow the soggy appetizer whole, in one long gulp with no chewing necessary. Nasty!!",
 		str_desc = "A hard slab of five breadsticks, all stuck together to form a stale brick of cheap bread and even cheaper pre-grated parmesan and oregano flakes. "
