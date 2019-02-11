@@ -126,6 +126,9 @@ cmd_map = {
 	# Play slime roulette!
 	ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
 
+        # Play slime skat!
+        ewcfg.cmd_slimeskat: ewcasino.skat,
+
 	# Russian Roulette
 	ewcfg.cmd_russian: ewcasino.russian_roulette,
 	ewcfg.cmd_accept: ewcmd.accept,
