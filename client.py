@@ -123,11 +123,27 @@ cmd_map = {
 	# Play slime roulette!
 	ewcfg.cmd_slimeroulette: ewcasino.roulette,
 
-	# Play slime roulette!
+	# Play slime baccarat!
 	ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
 
         # Play slime skat!
         ewcfg.cmd_slimeskat: ewcasino.skat,
+        ewcfg.cmd_join: ewcmd.join,
+        ewcfg.cmd_decline: ewcmd.decline,
+        ewcfg.cmd_bid: ewcmd.bid,
+        ewcfg.cmd_call: ewcmd.call,
+        ewcfg.cmd_pass: ewcmd.skat_pass,
+        ewcfg.cmd_play: ewcmd.play,
+        ewcfg.cmd_hearts: ewcmd.hearts,
+        ewcfg.cmd_slugs: ewcmd.slugs,
+        ewcfg.cmd_hats: ewcmd.hats,
+        ewcfg.cmd_shields: ewcmd.shields,
+        ewcfg.cmd_grand: ewcmd.grand,
+        ewcfg.cmd_null: ewcmd.null,
+        ewcfg.cmd_take: ewcmd.take,
+        ewcfg.cmd_hand: ewcmd.hand,
+        ewcfg.cmd_choose: ewcmd.choose,
+
 
 	# Russian Roulette
 	ewcfg.cmd_russian: ewcasino.russian_roulette,

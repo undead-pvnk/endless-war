@@ -425,6 +425,77 @@ async def refuse(cmd):
 			challenger.rr_challenger = ""
 			challenger.persist()
 
+async def join(cmd):
+        return
+
+async def decline(cmd):
+        return
+
+
+async def bid(cmd):
+        return
+
+
+async def skat_pass(cmd):
+        return
+
+
+async def call(cmd):
+        return
+        reaction = "<:magsmug:544666444798099475>"
+        await cmd.client.add_reaction(cmd.message,reaction)
+
+async def play(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        await cmd.client.add_reaction(cmd.message,reaction)
+
+async def hearts(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def slugs(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def hats(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def shields(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def grand(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def null(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def take(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def hand(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+async def choose(cmd):
+        return
+        reaction = "hand_splayed:544665899647500308"
+        cmd.client.add_reaction(cmd.message,reaction)
+
+
 
 """
 	Slimeoids
