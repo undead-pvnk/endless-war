@@ -425,75 +425,65 @@ async def refuse(cmd):
 			challenger.rr_challenger = ""
 			challenger.persist()
 
+""" Join a slime skat round """
 async def join(cmd):
         return
 
+""" Decline joining a slime skat round """
 async def decline(cmd):
         return
 
-
+""" Bid in slime skat """
 async def bid(cmd):
         return
 
-
+""" Pass on a bid in slime skat """
 async def skat_pass(cmd):
         return
 
-
+""" Call on a bid in slime skat """
 async def call(cmd):
         return
-        reaction = "<:magsmug:544666444798099475>"
-        await cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a card in slime skat """
 async def play(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        await cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a suit game with hearts as trump in slime skat """
 async def hearts(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a suit game with slugs as trump in slime skat """
 async def slugs(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a suit game with hats as trump in slime skat """
 async def hats(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a suit game with shields as trump in slime skat """
 async def shields(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a grand game in slime skat """
 async def grand(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play a null game in slime skat """
 async def null(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Take the skat """
 async def take(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Play hand (without the skat) in slime skat """
 async def hand(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
+""" Choose 1 or 2 cards to put back into the skat """
 async def choose(cmd):
         return
-        reaction = "hand_splayed:544665899647500308"
-        cmd.client.add_reaction(cmd.message,reaction)
 
 
 

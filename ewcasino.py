@@ -1,4 +1,3 @@
-import discord
 import asyncio
 import random
 import time
@@ -1448,14 +1447,17 @@ async def skat(cmd):
 	suit = ""
 	str_ranksuit = " the **{} of {}**. "
 
-	join_timeout = 30
+	join_timeout = 60
 	bidding_timeout = 120
 	hand_timeout = 120
 	declare_timeout = 120
 	play_timeout = 120
 
-	#if cmd.tokens_count > 2:
-	#	multiplier = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	try:
+		if cmd.tokens_count > 3:
+			multiplier = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	except:
+		multiplier = 1
 
 
 	if cmd.message.channel.name != ewcfg.channel_casino:
@@ -1464,8 +1466,8 @@ async def skat(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count != 2:
-		#Must mention only one player
-		response = "Mention the two players you want to challenge."
+		#Must mention exactly 2 players
+		response = "Mention the two players you want to invite."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	author = cmd.message.author
@@ -1486,9 +1488,9 @@ async def skat(cmd):
 	#	response = "**ENOUGH**"
 	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	#if author.id == member.id:
-	#	response = "You might be looking for !suicide."
-	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+	if author.id == member.id or author.id == member2.id:
+		response = "This is not solitaire, you dumbass."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	challenger = EwUser(member = author)
 	challengee = EwUser(member = member)
@@ -1548,7 +1550,7 @@ async def skat(cmd):
 		accepted = 0
 	
 	if accepted == 0:	    
-		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
+		response = "{}'s brain was too small to understand slime skat.".format(member.display_name).replace("@", "\{at\}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 		challenger.rr_challenger = ""
 		challengee.rr_challenger = ""
@@ -1575,7 +1577,7 @@ async def skat(cmd):
 		accepted = 0
                 
 	if accepted == 0:	
-		response = "{} was too cowardly to accept your challenge.".format(member2.display_name).replace("@", "\{at\}")
+		response = "{}'s brain was too small to understand slime skat.".format(member2.display_name).replace("@", "\{at\}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 		challenger.rr_challenger = ""
 		challengee.rr_challenger = ""
@@ -1600,6 +1602,9 @@ async def skat(cmd):
 			
 			if players[i].slimecredit < maxgame:
 				response = "You don't have enough slimecoin to cover your potential loss. Try lowering the multiplier."
+				for p in players:
+					p.rr_challenger = ""
+					p.persist()
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[i], response))
 
 		front_idx = (round_num + 0) % 3
@@ -1626,9 +1631,9 @@ async def skat(cmd):
 				handles.append(handle)
 			handles_table.append(handles)
 
-		skat = deck
-		skat[0] = str(deck[0]) #the remaining two cards are called the skat
-		skat[1] = str(deck[1]) #the remaining two cards are called the skat
+		skat = deck #the remaining two cards are called the skat
+		skat[0] = str(deck[0]) 
+		skat[1] = str(deck[1]) 
 		
 		#bidding
 		passed = False
@@ -1847,7 +1852,7 @@ async def skat(cmd):
 				if game_multiplier == 2:
 					basevalue = 35
 					game_multiplier = 1
-			response = "Playing a {} type game with a base value of {} and a multiplier of {}.".format(gametype,basevalue,game_multiplier)
+			response = "**Playing a {} type game with a base value of {}.**".format(gametype,basevalue)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 
 			#game loop
@@ -1895,7 +1900,7 @@ async def skat(cmd):
 						await ewutils.edit_message(cmd.client, handles[i], ewutils.formatMessage(members[idx], hand3parts[i]))
 
 				trick_take_idx = idxs[determine_trick_taker(trick, gametype, trumps)]
-				response = "{} takes the trick.".format(members[trick_take_idx].display_name)
+				response = "**{} takes the trick.**".format(members[trick_take_idx].display_name)
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 				if trick_take_idx == active_idx:
 					if gametype == "null":
@@ -1913,7 +1918,7 @@ async def skat(cmd):
 			else:
 				if score > 60:
 					win = True
-					if score > 90:
+					if score >= 90:
 						game_multiplier += 1
 					if score == 120:
 						game_multiplier += 1
@@ -1922,6 +1927,8 @@ async def skat(cmd):
 						game_multiplier += 1
 					if score == 0:
 						game_multiplier += 1
+				response = "You got {} points in your tricks.".format(score)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 			totalvalue = basevalue * game_multiplier
 			if totalvalue < maxbid:
 				response = "You overbid your hand! Your game was worth {} points, but you bid {} points.".format(totalvalue, maxbid)
