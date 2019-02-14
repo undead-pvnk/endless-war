@@ -138,6 +138,7 @@ class EwUser:
 	busted = False
 	rr_challenger = ""
 	time_last_action = 0
+	weaponmarried = False
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -227,6 +228,7 @@ class EwUser:
 		# Clear weapon and weaponskill.
 		self.weapon = ""
 		self.weaponskill = 0
+		self.weaponmarried = False
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)

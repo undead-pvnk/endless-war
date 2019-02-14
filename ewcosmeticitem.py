@@ -41,10 +41,10 @@ async def smelt(cmd):
 		item_type_filter = ewcfg.it_slimepoudrin
 	)
 
-	if len(poudrins) < 3:
+	if len(poudrins) < 2:
 		response = "You don't have enough poudrins to smelt."
 	else:
-		for i in range(3):
+		for i in range(2):
 			ewitem.item_delete(id_item = poudrins[i].get('id_item'))
 
 		patrician_rarity = 20

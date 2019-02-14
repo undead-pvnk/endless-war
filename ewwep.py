@@ -765,6 +765,8 @@ async def equip(cmd):
 		response = "Ghosts can't equip weapons."
 	elif user_data.life_state == ewcfg.life_state_juvenile:
 		response = "Juvies can't equip weapons."
+	elif user_data.weaponmarried == True:
+		response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(user_data.weaponname)
 	else:
 		value = None
 		if cmd.tokens_count > 1:
@@ -848,4 +850,66 @@ async def annoint(cmd):
 				response = "You place your weapon atop the poudrin and annoint it with slime. It is now known as {}!\n\nThe name draws you closer to your weapon. The poudrin was destroyed in the process.".format(annoint_name)
 
 	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def marry(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	weapon = ewcfg.weapon_map.get(user_data.weapon)
+	id_user = cmd.message.author.id
+
+	#Checks to make sure you're in the dojo.
+	if user_data.poi not in [ewcfg.poi_id_dojo]:
+		response = "Do you really expect to just get married on the side of the street in this war torn concrete jungle? No way, you need to see a specialist for this type of thing, someone who can empathize with a man’s love for his arsenal. Maybe someone in the Dojo can help, *hint hint*."
+	#Informs you that you cannot be a fucking faggot.
+	elif cmd.mentions_count > 0:
+		response = "Ewww, gross! You can’t marry another juvenile! That’s just degeneracy, pure and simple. What happened to the old days, where you could put a bullet in someone’s brain for receiving a hug? You people have gone soft on me, I tells ya."
+	#Makes sure you have a weapon to marry.
+	elif weapon is None:
+		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
+	#Makes sure you have a displayed rank 8 or higher weapon.
+	elif user_data.weaponskill > 12:
+		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(user_data.weaponname)
+	else:
+		#Preform the ceremony 2: literally this time
+		response = "You finally decide it’s time to take your relationship with your {} to the next level. You approach the old Dojo Master with your plight, requesting his assistance to circumvent what’s legally intended to be possible and get married to your weapon. He takes a moment to unfur his brow, and when he does he lets out a raspy chuckle. " \
+				   "It’s been a long time since he’s been asked to do something like this, or so he says. You scroll up to the last time you remember reading this flavor text and conclude he must have Alzheimer's or something. Regardless, he agrees." \
+				   "\nHe departs from the main floor of the Dojo, down into a dank cellar that you haven’t seen before. " \
+				   "A few minutes later he returns with doctored legal paperwork in-hand and cartoonish blotches of ink on his face and hands to visually communicate the that fact he’s written on said paper. You see, storytellers use this sort of shorthand to make the narrative flow naturally so that they don’t have to stop and explain every beat of the story explicitly. " \
+				   "It’s nifty stuff like that which makes media such a joy to consume, but I digress. You express your desire to get things done as soon as possible so you can stop reading this wall of text and start shooting people again, so he begins to officiate immediately. A crowd of enemy gangsters, allied gang members, and a few stray neutral juveniles forms around you three as he speaks." \
+				   "\n”We are gathered here today to witness the combined union of {} and {}. Two of the greatest partners in crime and in passion. Through thick and thin, these two have stood together, fought together, and gained experience points together. It was not through mining or fanart that this irreparable pairing was founded-- but through iron and slime. Without the weapon, the wielder would be defenseless, " \
+				   "and without the wielder, the weapon would have no purpose. It is this union that we are here to illegally officially affirm. If there is anyone that feels as though this wedding should not preceed, speak now or forever hold your peace.”" \
+				   "\n Meanwhile, across the city in his ivory tower, a Kingpin laments not being able to figure out how to program this part to be an interactive experience where observers could " \
+				   "!object to potentionally cuck the groom. In the next patch, he promises while crying. In the next patch." \
+				   "\nBack in slightly less embarrassingly self-indulgent exercises, the Dojo Master pronounces you juvenile and armament. You being to tear up, fondly regarding your last kill with the weapon you love so much. You lean down and stroke the length of your partner, while it remains motionless and stationary. Haha, that is SO like it. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!".format(weapon.str_weapon, id_user, user_data.weaponname)
+		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, and you can't change your weapon.
+		user_data.weaponmarried = True
+		user_data.persist()
+	#Returns the respones.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def divorce(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	weapon = ewcfg.weapon_map.get(user_data.weapon)
+
+	# Checks to make sure you're in the dojo.
+	if user_data.poi not in [ewcfg.poi_id_dojo]:
+		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(user_data.weapon.str_weapon)
+	#Makes sure you have a partner to divorce.
+	elif user_data.weaponmarried == False:
+		response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
+	else:
+		#Unpreform the ceremony
+		response = "You decide it’s finally time to end the frankly obviously retarded farce that is your marriage with your {}. Things were good at first, you both wanted the same things out of life. But, that was then and this is now. You reflect briefly on your myriad of woes; the constant bickering, the mundanity of your everyday routine, the total lack of communication. You’re a slave. But, a slave you will be no longer! You know what you must do." \
+				   "\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partneter to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
+				   "So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, user_data.weaponname)
+		#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
+		user_data.weaponmarried = False
+		user_data.weapon = ""
+		user_data.weaponskill = 0
+		fee = (user_data.slimecredit / 2)
+		user_data.change_slimecredit(n = -fee, coinsource = ewcfg.coinsource_revival)
+		user_data.persist()
+
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

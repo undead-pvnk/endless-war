@@ -76,7 +76,6 @@ cmd_map = {
 	ewcfg.cmd_annoint: ewwep.annoint,
 	ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
-
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
 

@@ -233,6 +233,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
+cmd_marry = cmd_prefix + 'marry'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -434,6 +435,8 @@ str_exchange_busy = "You can't {action} right now. Your slimebroker is busy."
 str_food_channelreq = "There's no food here. Go to the Food Court, the Smoker's Cough, the Red Mobster, or the Speakeasy to {action}."
 str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
+str_weapon_married_self = "You are married to"
+str_weapon_married = "They are married to"
 
 # Common database columns
 col_id_server = 'id_server'
@@ -2184,6 +2187,20 @@ food_list = [
 				   "whatever foolish egomaniac with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the life of the ones you love. "
 				   "Chant it’s name, praise the harbinger of death you just acquired from Pizza Hut. Doubled Stuffed Crust. Doubled Stuffed Crust. DOUBLE STUFFED CRUST!! AAAAAAAAAH!!"
 	),
+	EwFood(
+		id_food = "boxofchocolates",
+		alias = [
+			"box",
+			"chocolates",
+		],
+		recover_hunger = 500,
+		price = 25,
+		inebriation = 0,
+		str_name = 'box of chocolates',
+		vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
+		str_eat = "You pop open the lid of the heart-shaped box and shower yourself in warm sugary delicates! Your face and shirt is grazed numerous times by the melted confections, smearing brown all over you. Baby made a mess.",
+		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
+	),
 ]
 
 
@@ -2987,7 +3004,7 @@ poi_list = [
 			"d"
 		],
 		str_name = "The Dojo",
-		str_desc = "A modest, easily overlooked building, but containing all the facilities necessary for becoming a killing machine. Bamboo and parchment walls separate the dojo floor into large tatami-matted sections.\n\nExits into South Sleezeborough.",
+		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
 		channel = channel_dojo,
 		role = "Dojo",
 		coord = (11, 23),
@@ -3341,12 +3358,12 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "sunglasses",
+		name = "pair of sunglasses",
 		description = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "glasses",
+		name = "pair of glasses",
 		description = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian
 	),
@@ -3386,7 +3403,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "3D glasses",
+		name = "pair of 3D glasses",
 		description = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian
 	),
@@ -3401,7 +3418,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "flip flops",
+		name = "pair of flip flops",
 		description = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian
 	),
@@ -3426,7 +3443,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "tam o' shanter'",
+		name = "tam o' shanter",
 		description = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian
 	),
@@ -3489,6 +3506,16 @@ cosmetic_items_list = [
 		name = "earbuds",
 		description = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician
+	),
+	EwCosmeticItem(
+		name = "nurse's outfit",
+		description = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
+		rarity = rarity_plebeian
+	),
+	EwCosmeticItem(
+		name = "heart boxers",
+		description = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
+		rarity = rarity_plebeian
 	)
 ]
 
