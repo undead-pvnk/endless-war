@@ -856,37 +856,69 @@ async def annoint(cmd):
 async def marry(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	weapon = ewcfg.weapon_map.get(user_data.weapon)
-	id_user = cmd.message.author.id
+	display_name = cmd.message.author.id
 
 	#Checks to make sure you're in the dojo.
-	if user_data.poi not in [ewcfg.poi_id_dojo]:
+	if user_data.poi != ewcfg.poi_id_dojo:
 		response = "Do you really expect to just get married on the side of the street in this war torn concrete jungle? No way, you need to see a specialist for this type of thing, someone who can empathize with a man’s love for his arsenal. Maybe someone in the Dojo can help, *hint hint*."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Informs you that you cannot be a fucking faggot.
 	elif cmd.mentions_count > 0:
 		response = "Ewww, gross! You can’t marry another juvenile! That’s just degeneracy, pure and simple. What happened to the old days, where you could put a bullet in someone’s brain for receiving a hug? You people have gone soft on me, I tells ya."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you have a weapon to marry.
 	elif weapon is None:
 		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you have a displayed rank 8 or higher weapon.
-	elif user_data.weaponskill > 12:
+	elif user_data.weaponskill < 12:
 		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(user_data.weaponname)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
+	elif user_data.weaponmarried == True:
+		response = "Ah, to recapture the magic of the first nights together… Sadly, those days are far behind you now. You’ve already had your special day, now it’s time to have the same boring days forever. Aren’t you glad you got married??"
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		#Preform the ceremony 2: literally this time
-		response = "You finally decide it’s time to take your relationship with your {} to the next level. You approach the old Dojo Master with your plight, requesting his assistance to circumvent what’s legally intended to be possible and get married to your weapon. He takes a moment to unfur his brow, and when he does he lets out a raspy chuckle. " \
-				   "It’s been a long time since he’s been asked to do something like this, or so he says. You scroll up to the last time you remember reading this flavor text and conclude he must have Alzheimer's or something. Regardless, he agrees." \
-				   "\nHe departs from the main floor of the Dojo, down into a dank cellar that you haven’t seen before. " \
-				   "A few minutes later he returns with doctored legal paperwork in-hand and cartoonish blotches of ink on his face and hands to visually communicate the that fact he’s written on said paper. You see, storytellers use this sort of shorthand to make the narrative flow naturally so that they don’t have to stop and explain every beat of the story explicitly. " \
-				   "It’s nifty stuff like that which makes media such a joy to consume, but I digress. You express your desire to get things done as soon as possible so you can stop reading this wall of text and start shooting people again, so he begins to officiate immediately. A crowd of enemy gangsters, allied gang members, and a few stray neutral juveniles forms around you three as he speaks." \
-				   "\n”We are gathered here today to witness the combined union of {} and {}. Two of the greatest partners in crime and in passion. Through thick and thin, these two have stood together, fought together, and gained experience points together. It was not through mining or fanart that this irreparable pairing was founded-- but through iron and slime. Without the weapon, the wielder would be defenseless, " \
-				   "and without the wielder, the weapon would have no purpose. It is this union that we are here to illegally officially affirm. If there is anyone that feels as though this wedding should not preceed, speak now or forever hold your peace.”" \
-				   "\n Meanwhile, across the city in his ivory tower, a Kingpin laments not being able to figure out how to program this part to be an interactive experience where observers could " \
-				   "!object to potentionally cuck the groom. In the next patch, he promises while crying. In the next patch." \
-				   "\nBack in slightly less embarrassingly self-indulgent exercises, the Dojo Master pronounces you juvenile and armament. You being to tear up, fondly regarding your last kill with the weapon you love so much. You lean down and stroke the length of your partner, while it remains motionless and stationary. Haha, that is SO like it. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!".format(weapon.str_weapon, id_user, user_data.weaponname)
-		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, and you can't change your weapon.
+		response1 = "You decide it’s finally time to take your relationship with your {} to the next level. You approach the Dojo Master with your plight, requesting his help to circumvent the legal issues of marrying your weapon. He takes a moment to unfurl his brow before letting out a raspy chuckle. He hasn’t been asked to do something like this for a long time, or so he says. You scroll up to the last instance of this flavor text and conclude he must have Alzheimer's or something. Regardless, he agrees.".format(weapon.str_weapon)
+		response2 = "Departing from the main floor of the Dojo, he rounds a corner and disappears for a few minutes before returning with illegally doctor marriage paperwork and cartoonish blotches of ink on his face and hands to visually communicate the hard work he’s put into the forgeries. You see, this is a form of visual shorthand that artists utilize so they don’t have to explain every beat of their narrative explicitly, but I digress."
+		response3 = "You express your desire to get things done as soon as possible so that you can stop reading this boring wall of text and return to your busy agenda of murder, and so he prepares to officiate immediately. You stand next to your darling {}, the only object of your affection in this godforsaken city. You shiver with anticipation for the most anticipated in-game event of your ENDLESS WAR career. A crowd of enemy and allied gangsters alike forms around you three as the Dojo Master begins the ceremony...".format(user_data.weaponname)
+		response4 = "”We are gathered here today to witness the combined union of {} and {}.".format(display_name, user_data.weaponname)
+		response5 = "Two of the greatest threats in the current metagame. No greater partners, no worse adversaries."
+		response6 = "Through thick and thin, these two have stood together, fought together, and gained experience points--otherwise known as “EXP”--together."
+		response7 = "It was not through hours mining or stock exchanges that this union was forged, but through iron and slime."
+		response8 = "Without the weapon, the wielder would be defenseless, and without the wielder, the weapon would have no purpose."
+		response9 = "It is this union that we are here today to officially-illegally affirm.”"
+		response10 = "He takes a pregnant pause to increase the drama, and allow for onlookers to press 1 in preparation."
+		response11 = "“I now pronounce you juvenile and armament!! You may anoint the {}”".format(weapon.str_weapon)
+		response12 = "You begin to tear up, fondly regarding your last kill with your {} that you love so much. You lean down and kiss your new spouse on the handle, anointing an extra two mastery ranks with pure love. It remains completely motionless, because it is an inanimate object. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!".format(user_data.weaponname)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response1))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response2))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response3))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response4))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response5))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response6))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response7))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response8))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response9))
+		await asyncio.sleep(6)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response10))
+		await asyncio.sleep(6)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response11))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response12))
+		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, you get an extra two mastery levels, and you can't change your weapon.
 		user_data.weaponmarried = True
+		skillup = 2
+		user_data.add_weaponskill(n = skillup)
 		user_data.persist()
-	#Returns the respones.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return
 
 
 async def divorce(cmd):
@@ -894,7 +926,7 @@ async def divorce(cmd):
 	weapon = ewcfg.weapon_map.get(user_data.weapon)
 
 	# Checks to make sure you're in the dojo.
-	if user_data.poi not in [ewcfg.poi_id_dojo]:
+	if user_data.poi != ewcfg.poi_id_dojo:
 		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(user_data.weapon.str_weapon)
 	#Makes sure you have a partner to divorce.
 	elif user_data.weaponmarried == False:

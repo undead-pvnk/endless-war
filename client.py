@@ -76,6 +76,10 @@ cmd_map = {
 	ewcfg.cmd_annoint: ewwep.annoint,
 	ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
+	#Marry and divorce your current wepaon.
+	ewcfg.cmd_marry: ewwep.marry,
+	ewcfg.cmd_divorce: ewwep.divorce,
+
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
 

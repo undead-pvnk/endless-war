@@ -234,6 +234,7 @@ cmd_give = cmd_prefix + 'give'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
+cmd_divorce = cmd_prefix + 'divorce'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -486,6 +487,7 @@ col_rrchallenger = 'rr_challenger_id'
 col_time_lastsow = 'time_lastsow'
 col_farm = 'farm'
 col_time_last_action = 'time_last_action'
+col_weaponmarried = 'weaponmarried'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
