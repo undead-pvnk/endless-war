@@ -324,7 +324,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -348,7 +348,7 @@ class EwUser:
 					ewcfg.col_busted,
 					ewcfg.col_rrchallenger,
 					ewcfg.col_time_last_action,
-					ewcfg.col_weaponmarried,
+					ewcfg.col_weaponmarried
 				), (
 					id_user,
 					id_server
@@ -487,7 +487,7 @@ class EwUser:
 				(1 if self.busted else 0),
 				self.rr_challenger,
 				self.time_last_action,
-				(1 if self.weaponmarried else 0),
+				(1 if self.weaponmarried else 0)
 			))
 
 			conn.commit()
