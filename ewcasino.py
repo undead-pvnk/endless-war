@@ -1749,7 +1749,7 @@ async def skat(cmd):
 
 				if msg != None:
 					content = msg.content.lower()
-					if content.startswith("!take"):
+					if content.startswith(ewcfg.cmd_slimeskat_take):
 						hand = 0
 					else:
 						hand = 1
