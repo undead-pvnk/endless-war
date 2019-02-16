@@ -1302,7 +1302,7 @@ def check_skat_bid(message):
 
 		tokens_count = len(tokens)
 		cmd = tokens[0].lower()
-		if cmd == "!pass":
+		if cmd == ewcfg.cmd_slimeskat_pass:
 			return 0
 		elif tokens_count < 2:
 			return -1
@@ -1324,9 +1324,9 @@ def check_skat_call(message):
 
 		tokens_count = len(tokens)
 		cmd = tokens[0].lower()
-		if cmd == "!pass":
+		if cmd == ewcfg.cmd_slimeskat_pass:
 			return 0
-		elif cmd == "!call":
+		elif cmd == ewcfg.cmd_slimeskat_call:
 			return 1
 	return -1
 
@@ -1338,7 +1338,7 @@ def check_skat_hand(message):
 
 def check_skat_choice(message):
 	content = message.content.lower()
-	if content.startswith(ewcfg.cmd_slimeskat_choose) or content.startswith(ewcfg.cmd_slimeskat_discard) or content.startswith(ewcfg.cmd_slimeskat_put):
+	if content.startswith(ewcfg.cmd_slimeskat_choose):
 		return True
 	return False
 
@@ -1369,13 +1369,13 @@ def skat_putback(message, hand, skat):
 
 def check_skat_declare(message):
 	content = message.content.lower()
-	if content.startswith(cmd_slimeskat_slugs) or content.startswith(cmd_slimeskat_shields) or content.startswith(cmd_slimeskat_hearts) or content.startswith(cmd_slimeskat_hats) or content.startswith(cmd_slimeskat_grand) or content.startswith(cmd_slimeskat_null):
+	if content.startswith(ewcfg.cmd_slimeskat_slugs) or content.startswith(ewcfg.cmd_slimeskat_shields) or content.startswith(ewcfg.cmd_slimeskat_hearts) or content.startswith(ewcfg.cmd_slimeskat_hats) or content.startswith(ewcfg.cmd_slimeskat_grand) or content.startswith(ewcfg.cmd_slimeskat_null):
 		return True
 	return False
 
 def check_skat_play(message):
 	content = message.content.lower()
-	if content.startswith(cmd_slimeskat_play):
+	if content.startswith(ewcfg.cmd_slimeskat_play):
 		return True
 	return False
 
@@ -1383,7 +1383,7 @@ def get_skat_play(message,hand):
 	content = message.content.lower()
         # tokenize the message. the command should be the first word.
 	try:
-		tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
+		tokens = shlex.split(content)  # it's split with shlex now because shlex regards text within quotes as a single token
 	except:
 		tokens = content.split(' ')  # if splitting via shlex doesnt work (odd number of quotes), use the old splitting method so it doesnt give an exception
 
