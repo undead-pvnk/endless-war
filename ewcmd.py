@@ -425,65 +425,6 @@ async def refuse(cmd):
 			challenger.rr_challenger = ""
 			challenger.persist()
 
-""" Join a slime skat round """
-async def join(cmd):
-        return
-
-""" Decline joining a slime skat round """
-async def decline(cmd):
-        return
-
-""" Bid in slime skat """
-async def bid(cmd):
-        return
-
-""" Pass on a bid in slime skat """
-async def skat_pass(cmd):
-        return
-
-""" Call on a bid in slime skat """
-async def call(cmd):
-        return
-
-""" Play a card in slime skat """
-async def play(cmd):
-        return
-
-""" Play a suit game with hearts as trump in slime skat """
-async def hearts(cmd):
-        return
-
-""" Play a suit game with slugs as trump in slime skat """
-async def slugs(cmd):
-        return
-
-""" Play a suit game with hats as trump in slime skat """
-async def hats(cmd):
-        return
-
-""" Play a suit game with shields as trump in slime skat """
-async def shields(cmd):
-        return
-
-""" Play a grand game in slime skat """
-async def grand(cmd):
-        return
-
-""" Play a null game in slime skat """
-async def null(cmd):
-        return
-
-""" Take the skat """
-async def take(cmd):
-        return
-
-""" Play hand (without the skat) in slime skat """
-async def hand(cmd):
-        return
-
-""" Choose 1 or 2 cards to put back into the skat """
-async def choose(cmd):
-        return
 
 
 

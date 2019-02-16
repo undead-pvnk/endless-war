@@ -1280,19 +1280,19 @@ def checkiflegal(hand,play,first,trump):
 
 def check_skat_join(message):
 	content = message.content.lower()
-	if content.startswith("!join") or content.startswith("!decline"):
+	if content.startswith(ewcfg.cmd_slimeskat_join) or content.startswith(ewcfg.cmd_slimeskat_decline):
 		return True
 	return False
 
 def check_skat_bidding(message):
 	content = message.content.lower()
-	if content.startswith("!bid") or content.startswith("!pass") or content.startswith("!call"):
+	if content.startswith(ewcfg.cmd_slimeskat_bid) or content.startswith(ewcfg.cmd_slimeskat_pass) or content.startswith(ewcfg.cmd_slimeskat_call):
 		return True
 	return False
 
 def check_skat_bid(message):
 	content = message.content.lower()
-	if content.startswith("!bid") or content.startswith("!pass"):
+	if content.startswith(ewcfg.cmd_slimeskat_bid) or content.startswith(ewcfg.cmd_slimeskat_pass):
 
 	        # tokenize the message. the command should be the first word.
 		try:
@@ -1314,7 +1314,7 @@ def check_skat_bid(message):
 
 def check_skat_call(message):
 	content = message.content.lower()
-	if content.startswith("!call") or content.startswith("!pass"):
+	if content.startswith(ewcfg.cmd_slimeskat_call) or content.startswith(ewcfg.cmd_slimeskat_pass):
 
 	        # tokenize the message. the command should be the first word.
 		try:
@@ -1332,13 +1332,13 @@ def check_skat_call(message):
 
 def check_skat_hand(message):
 	content = message.content.lower()
-	if content.startswith("!hand") or content.startswith("!take"):
+	if content.startswith(ewcfg.cmd_slimeskat_hand) or content.startswith(ewcfg.cmd_slimeskat_take):
 		return True
 	return False
 
 def check_skat_choice(message):
 	content = message.content.lower()
-	if content.startswith("!choose") or content.startswith("!discard") or content.startswith("!put"):
+	if content.startswith(ewcfg.cmd_slimeskat_choose) or content.startswith(ewcfg.cmd_slimeskat_discard) or content.startswith(ewcfg.cmd_slimeskat_put):
 		return True
 	return False
 
@@ -1369,13 +1369,13 @@ def skat_putback(message, hand, skat):
 
 def check_skat_declare(message):
 	content = message.content.lower()
-	if content.startswith("!slugs") or content.startswith("!shields") or content.startswith("!hearts") or content.startswith("!hats") or content.startswith("!grand") or content.startswith("!null"):
+	if content.startswith(cmd_slimeskat_slugs) or content.startswith(cmd_slimeskat_shields) or content.startswith(cmd_slimeskat_hearts) or content.startswith(cmd_slimeskat_hats) or content.startswith(cmd_slimeskat_grand) or content.startswith(cmd_slimeskat_null):
 		return True
 	return False
 
 def check_skat_play(message):
 	content = message.content.lower()
-	if content.startswith("!play"):
+	if content.startswith(cmd_slimeskat_play):
 		return True
 	return False
 
@@ -1474,6 +1474,7 @@ async def skat(cmd):
 	member = cmd.mentions[0]
 	member2 = cmd.mentions[1]
 	
+	members = [author,member, member2]
 
 	#global last_russianrouletted_times
 	#last_used_author = last_russianrouletted_times.get(author.id)
@@ -1526,16 +1527,12 @@ async def skat(cmd):
 		response = "{} doesn't have enough slimecoin to cover their potential loss. Try lowering the multiplier.".format(member2.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	#Assign a challenger so players can't be challenged
-	challenger.rr_challenger = challenger.id_user
-	challengee.rr_challenger = challenger.id_user
-	challengee2.rr_challenger = challenger.id_user
+	for m in members:
+		ewuser = EwUser(member = m)
+		ewuser.rr_challenger = ""
+		ewuser.persist()
 
-	challenger.persist()
-	challengee.persist()
-	challengee2.persist()
-
-	response = "You have been invited by {} to a game of slime skat. Do you !join or !decline?".format(author.display_name).replace("@", "\{at\}")
+	response = "You have been invited by {} to a game of slime skat. Do you {} or {}?".format(author.display_name,ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline).replace("@", "\{at\}")
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
 
 	#Wait for an answer
@@ -1544,7 +1541,7 @@ async def skat(cmd):
 		msg = await cmd.client.wait_for_message(timeout = join_timeout, author = member, check = check_skat_join)
 
 		if msg != None:
-			if msg.content == "!join":
+			if msg.content == ewcfg.cmd_slimeskat_join:
 				accepted = 1
 	except:
 		accepted = 0
@@ -1552,17 +1549,14 @@ async def skat(cmd):
 	if accepted == 0:	    
 		response = "{}'s brain was too small to understand slime skat.".format(member.display_name).replace("@", "\{at\}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-		challenger.rr_challenger = ""
-		challengee.rr_challenger = ""
-		challengee2.rr_challenger = ""
-
-		challenger.persist()
-		challengee.persist()
-		challengee2.persist()
+		for m in members:
+			ewuser = EwUser(member = m)
+			ewuser.rr_challenger = ""
+			ewuser.persist()
 
 		return
         
-	response = "You have been invited by {} to a round of slime skat. Do you !join or !decline?".format(author.display_name).replace("@", "\{at\}")
+	response = "You have been invited by {} to a round of slime skat. Do you {} or {}?".format(author.display_name,ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline).replace("@", "\{at\}")
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member2, response))
 
 	#Wait for an answer
@@ -1571,7 +1565,7 @@ async def skat(cmd):
 		msg = await cmd.client.wait_for_message(timeout = join_timeout, author = member2, check = check_skat_join)
 
 		if msg != None:
-			if msg.content == "!join":
+			if msg.content == ewcfg.cmd_slimeskat_join:
 				accepted = 1
 	except:
 		accepted = 0
@@ -1579,32 +1573,26 @@ async def skat(cmd):
 	if accepted == 0:	
 		response = "{}'s brain was too small to understand slime skat.".format(member2.display_name).replace("@", "\{at\}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-		challenger.rr_challenger = ""
-		challengee.rr_challenger = ""
-		challengee2.rr_challenger = ""
-
-		challenger.persist()
-		challengee.persist()
-		challengee2.persist()
+		for m in members:
+			ewuser = EwUser(member = m)
+			ewuser.rr_challenger = ""
+			ewuser.persist()
 
 		return
 	
-	members = [author,member, member2]
-	players = []
-	for mem in members:
-	        player = EwUser(member = mem)
-	        players.append(player)
 	round_num = 0
 	while True:
 		round_num += 1
 		#Players must have sufficient slimecoin for the game
 		for i in range(3):
+			player = EwUser(member = members[i])
 			
-			if players[i].slimecredit < maxgame:
+			if player.slimecredit < maxgame:
 				response = "You don't have enough slimecoin to cover your potential loss. Try lowering the multiplier."
-				for p in players:
-					p.rr_challenger = ""
-					p.persist()
+				for m in members:
+					ewuser = EwUser(member = m)
+					ewuser.rr_challenger = ""
+					ewuser.persist()
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[i], response))
 
 		front_idx = (round_num + 0) % 3
@@ -1643,7 +1631,7 @@ async def skat(cmd):
 		while not passed:
 			bid = -1
 			
-			response = "Please !bid an amount greater than {} or !pass".format(maxbid)
+			response = "Please {} an amount greater than {} or {}".format(ewcfg.cmd_slimeskat_bid,maxbid,ewcfg.cmd_slimeskat_pass)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[mid_idx],response))
 			try:
 				msg = await cmd.client.wait_for_message(timeout = bidding_timeout, author = members[mid_idx], check = check_skat_bidding)
@@ -1664,7 +1652,7 @@ async def skat(cmd):
 				break
 
 			called = -1
-			response = "Please !call or !pass"
+			response = "Please {} or {}".format(ewcfg.cmd_slimeskat_call,ewcfg.cmd_slimeskat_pass)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[front_idx],response))
 			try:
 				msg = await cmd.client.wait_for_message(timeout = bidding_timeout, author = members[front_idx], check = check_skat_bidding)
@@ -1687,7 +1675,7 @@ async def skat(cmd):
 		while not passed:
 			bid = -1
 			
-			response = "Please !bid an amount greater than {} or !pass".format(maxbid)
+			response = "Please {} an amount greater than {} or {}".format(ewcfg.cmd_slimeskat_bid,maxbid,ewcfg.cmd_slimeskat_pass)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[back_idx],response))
 			try:
 				msg = await cmd.client.wait_for_message(timeout = bidding_timeout, author = members[back_idx], check = check_skat_bidding)
@@ -1707,7 +1695,7 @@ async def skat(cmd):
 				break
 
 			called = -1
-			response = "Please !call or !pass"
+			response = "Please {} or {}".format(ewcfg.cmd_slimeskat_call,ewcfg.cmd_slimeskat_pass)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 			try:
 				msg = await cmd.client.wait_for_message(timeout = bidding_timeout, author = members[active_idx], check = check_skat_bidding)
@@ -1730,7 +1718,7 @@ async def skat(cmd):
 		if maxbid < 18:
 			bid = -1
 			
-			response = "Please !bid an amount greater than {} or !pass".format(maxbid)
+			response = "Please {} an amount greater than {} or {}".format(ewcfg.cmd_slimeskat_bid,maxbid,ewcfg.cmd_slimeskat_pass)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 			try:
 				msg = await cmd.client.wait_for_message(timeout = bidding_timeout, author = members[active_idx], check = check_skat_bidding)
@@ -1753,7 +1741,7 @@ async def skat(cmd):
 			#hand or no
 			active_hand = hands[active_idx]
 			game_multiplier = 1
-			response = "Please !take the skat or play !hand"
+			response = "Please {} the skat or play {}".format(ewcfg.cmd_slimeskat_take,ewcfg.cmd_slimeskat_hand)
 			hand = -1
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 			try:
@@ -1782,7 +1770,7 @@ async def skat(cmd):
 				handles = handles_table[active_idx]
 				for i in range(len(hand3parts)):					
 					await ewutils.edit_message(cmd.client, handles[i], ewutils.formatMessage(members[active_idx], hand3parts[i]))
-				response = "You take the skat. Please !choose two cards from your hand to put back into the skat."
+				response = "You take the skat. Please {} two cards from your hand to put back into the skat.".format(ewcfg.cmd_slimeskat_choose)
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 				while len(active_hand) > 10:
 					putback = False
@@ -1809,7 +1797,7 @@ async def skat(cmd):
 			gametype = "grand"
 			basevalue = 24
 			trumps = ["24","50","11","37"]
-			response = "Please declare what kind of game you are going to play (options are !slugs, !shields, !hearts, !hats, !grand and !null)"
+			response = "Please declare what kind of game you are going to play (options are {}, {}, {}, {}, {} and {})".format(ewcfg.cmd_slimeskat_slugs,ewcfg.cmd_slimeskat_shields,ewcfg.cmd_slimeskat_hearts,ewcfg.cmd_slimeskat_hats,ewcfg.cmd_slimeskat_grand,ewcfg.cmd_slimeskat_null)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 
 			try:
@@ -1817,27 +1805,27 @@ async def skat(cmd):
 
 				if msg != None:
 					content = msg.content.lower()
-					if content.startswith("!hearts"):
+					if content.startswith(ewcfg.cmd_slimeskat_hearts):
 						gametype = "suit"
 						trumps = ["24","50","11","37","1","10","13","12","9","8","7"]
 						basevalue = 10
-					elif content.startswith("!slugs"):
+					elif content.startswith(ewcfg.cmd_slimeskat_slugs):
 						gametype = "suit"
 						trumps = ["24","50","11","37","14","23","26","25","22","21","20"]
 						basevalue = 12
-					elif content.startswith("!hats"):
+					elif content.startswith(ewcfg.cmd_slimeskat_hats):
 						gametype = "suit"
 						trumps = ["24","50","11","37","27","36","39","38","35","34","33"]
 						basevalue = 9
-					elif content.startswith("!shields"):
+					elif content.startswith(ewcfg.cmd_slimeskat_shields):
 						gametype = "suit"
 						trumps = ["24","50","11","37","40","49","52","51","48","47","46"]
 						basevalue = 11
-					elif content.startswith("!grand"):
+					elif content.startswith(ewcfg.cmd_slimeskat_grand):
 						gametype = "grand"
 						trumps = ["24","50","11","37"]
 						basevalue = 24
-					elif content.startswith("!null"):
+					elif content.startswith(ewcfg.cmd_slimeskat_null):
 						gametype = "null"
 						trumps = []
 						basevalue = 23
@@ -1866,7 +1854,7 @@ async def skat(cmd):
 				idxs = [front_idx, mid_idx, back_idx]
 				trick = []
 				for idx in idxs:
-					response = "It's your turn, !play a card."
+					response = "It's your turn, {} a card.".format(ewcfg.cmd_slimeskat_play)
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[idx],response))
 					legalplay = False
 					while not legalplay:
@@ -1955,24 +1943,25 @@ async def skat(cmd):
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 
 			for i in range(3):
+				player = EwUser(member = members[i])
 				if i == active_idx:
-					players[i].change_slimecredit(n = sign * totalsc, coinsource = ewcfg.coinsource_casino)
+					player.change_slimecredit(n = sign * totalsc, coinsource = ewcfg.coinsource_casino)
 				else:
-					players[i].change_slimecredit(n = -1 * (sign * totalsc) / 2, coinsource = ewcfg.coinsource_casino)
-				players[i].persist()
+					player.change_slimecredit(n = -1 * (sign * totalsc) / 2, coinsource = ewcfg.coinsource_casino)
+				player.persist()
 
 		for handles in handles_table:
 			for h in handles:
 				await cmd.client.delete_message(h)
 		onemore = True
 		for mem in members:
-			response = "Game ended. Will you !join for another round or will you !decline?"
+			response = "Game ended. Will you {} for another round or will you {}?".format(ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline)
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(mem,response))
 			try:
 				msg = await cmd.client.wait_for_message(timeout = join_timeout, author = mem, check = check_skat_join)
 
 				if msg != None:
-					if msg.content.lower().startswith("!decline"):
+					if msg.content.lower().startswith(ewcfg.cmd_slimeskat_decline):
 						onemore = False
 				else:
 					onemore = False
@@ -1989,13 +1978,70 @@ async def skat(cmd):
 
 	response = "No more. Your puny brains can't handle this intellectual challenge any longer."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx], response))
-
-	challenger.rr_challenger = ""
-	challengee.rr_challenger = ""
-	challengee2.rr_challenger = ""
-
-	challenger.persist()
-	challengee.persist()
-	challengee2.persist()
+	for m in members:
+		ewuser = EwUser(member = m)
+		ewuser.rr_challenger = ""
+		ewuser.persist()
 
 	return
+
+
+""" Join a slime skat round """
+async def skat_join(cmd):
+        return
+
+""" Decline joining a slime skat round """
+async def skat_decline(cmd):
+        return
+
+""" Bid in slime skat """
+async def skat_bid(cmd):
+        return
+
+""" Pass on a bid in slime skat """
+async def skat_pass(cmd):
+        return
+
+""" Call on a bid in slime skat """
+async def skat_call(cmd):
+        return
+
+""" Play a card in slime skat """
+async def skat_play(cmd):
+        return
+
+""" Play a suit game with hearts as trump in slime skat """
+async def skat_hearts(cmd):
+        return
+
+""" Play a suit game with slugs as trump in slime skat """
+async def skat_slugs(cmd):
+        return
+
+""" Play a suit game with hats as trump in slime skat """
+async def skat_hats(cmd):
+        return
+
+""" Play a suit game with shields as trump in slime skat """
+async def skat_shields(cmd):
+        return
+
+""" Play a grand game in slime skat """
+async def skat_grand(cmd):
+        return
+
+""" Play a null game in slime skat """
+async def skat_null(cmd):
+        return
+
+""" Take the skat """
+async def skat_take(cmd):
+        return
+
+""" Play hand (without the skat) in slime skat """
+async def skat_hand(cmd):
+        return
+
+""" Choose 1 or 2 cards to put back into the skat """
+async def skat_choose(cmd):
+        return
