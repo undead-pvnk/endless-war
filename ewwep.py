@@ -713,6 +713,8 @@ async def spar(cmd):
 
 						if stronger_player.weaponskill < 5:
 							stronger_player.add_weaponskill(n = 1)
+						elif (stronger_player.weaponskill + 1) < weaker_player.weaponskill:
+							stronger_player.add_weaponskill(n = 1)
 
 					weaker_player.time_lastspar = time_now
 
