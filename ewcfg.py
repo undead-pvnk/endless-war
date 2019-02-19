@@ -9,7 +9,7 @@ from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 
 # Global configuration options.
-version = "v2.17slml"
+version = "v2.20valk2p"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -17,6 +17,9 @@ update_hookstillactive = 60 * 60 * 3
 update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
+
+# Time saved moving through friendly territory (or lost in hostile territory).
+territory_time_gain = 5
 
 # Market delta
 max_iw_swing = 30
@@ -150,6 +153,7 @@ cmd_enlist = cmd_prefix + 'enlist'
 cmd_revive = cmd_prefix + 'revive'
 cmd_kill = cmd_prefix + 'kill'
 cmd_shoot = cmd_prefix + 'shoot'
+cnd_shoot_alt1 = 'bonk'
 cmd_attack = cmd_prefix + 'attack'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
@@ -176,6 +180,8 @@ cmd_deadmega = cmd_prefix + 'deadmega'
 cmd_donate = cmd_prefix + 'donate'
 cmd_slimecredit = cmd_prefix + 'slimecoin'
 cmd_slimecredit_alt1 = cmd_prefix + 'slimecredit'
+cmd_slimecredit_alt2 = cmd_prefix + 'coin'
+cmd_slimecredit_alt3 = cmd_prefix + 'sc'
 cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
 cmd_exchangerate_alt1 = cmd_prefix + 'exchange'
@@ -228,6 +234,10 @@ cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
+cmd_leaderboard = cmd_prefix + 'leaderboard'
+cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
+cmd_marry = cmd_prefix + 'marry'
+cmd_divorce = cmd_prefix + 'divorce'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -429,6 +439,8 @@ str_exchange_busy = "You can't {action} right now. Your slimebroker is busy."
 str_food_channelreq = "There's no food here. Go to the Food Court, the Smoker's Cough, the Red Mobster, or the Speakeasy to {action}."
 str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
+str_weapon_married_self = "You are married to"
+str_weapon_married = "They are married to"
 
 # Common database columns
 col_id_server = 'id_server'
@@ -478,6 +490,7 @@ col_rrchallenger = 'rr_challenger_id'
 col_time_lastsow = 'time_lastsow'
 col_farm = 'farm'
 col_time_last_action = 'time_last_action'
+col_weaponmarried = 'weaponmarried'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -854,7 +867,8 @@ weapon_list = [
 		id_weapon = "rifle",
 		alias = [
 			"assaultrifle",
-			"machinegun"
+			"machinegun",
+			"mg"
 		],
 		str_crit = "**Critical hit!!** You unload an entire magazine into the target!!",
 		str_miss = "**You missed!** Not one of your bullets connected!!",
@@ -1112,14 +1126,14 @@ weather_list = [
 ]
 
 # Food vendor names
-vendor_bar = 'bar'
-vendor_pizzahut = 'Pizza Hut'
+vendor_bar = 'bar'	#rate of non-mtn dew drinks are 1 slimecoin to 9 hunger
+vendor_pizzahut = 'Pizza Hut'	#rate of fc vendors are 1 slimecoin to 10 hunger
 vendor_tacobell = 'Taco Bell'
 vendor_kfc = 'KFC'
 vendor_mtndew = 'Mtn Dew Fountain'
 vendor_vendingmachine = 'vending machine'
-vendor_seafood = 'Red Mobster Seafood'
-vendor_diner = "Smoker's Cough"
+vendor_seafood = 'Red Mobster Seafood'	#rate of seafood is 1 slimecoin to 9 hunger
+vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
 
 # A map of name to EwWeather objects.
 weather_map = {}
@@ -1133,8 +1147,8 @@ food_list = [
 		alias = [
 			"tonic",
 		],
-		recover_hunger = 20,
-		price = 18,
+		recover_hunger = 18,
+		price = 2,
 		inebriation = 2,
 		str_name = 'slime n\' tonic',
 		vendors = [vendor_bar],
@@ -1146,13 +1160,14 @@ food_list = [
 		alias = [
 			"colada",
 		],
-		recover_hunger = 25,
-		price = 22,
+		recover_hunger = 27,
+		price = 3,
 		inebriation = 2,
 		str_name = 'slima colada',
 		vendors = [vendor_bar],
-		str_eat = "Slurping down this tropicalish drink gives you a brain freeze. You drink faster to numb the pain.",
-		str_desc = "Perfect for if you like getting caught in acid rain, or if you enjoy gunning down grandmas in the dunes out of town."
+		str_eat = "You slurp down the delicious tropical delicacy and you are temporarily immobilized by a severly, splitting brain freeze. You double down to numb the pain.",
+		str_desc = "Perfect for if you like getting caught in the acid raid, training at the dojo, have half a megaslime, "
+				   "or like gunning down juvies at midnight in the dunes of the Mojave. Not great for much else, though."
 	),
 	EwFood(
 		id_food = "slimekashot",
@@ -1160,13 +1175,13 @@ food_list = [
 			"shot",
 			"slimeka",
 		],
-		recover_hunger = 5,
-		price = 10,
+		recover_hunger = 9,
+		price = 1,
 		inebriation = 2,
 		str_name = 'shot of slimeka',
 		vendors = [vendor_bar],
-		str_eat = "Your throat burns as you toss back a mouthful of the glowing, hissing liquid. You might need a doctor.",
-		str_desc = "Made with 100% unfiltered sludge from the city's harbor. Less internally damaging than a sawed-off shotgun blast to the colon, but not by much."
+		str_eat = "You toss back the glowing, hissing substance, searing the back of your throat and tearing up a bit. You might need to see a doctor.",
+		str_desc = "Made with pure, unrefined sludge from the city’s harbor. Just about as damaging to the colon as a sawed-off shotgun blast."
 	),
 	EwFood(
 		id_food = "cabernetslimeignon",
@@ -1176,65 +1191,68 @@ food_list = [
 			"slimeignon",
 			"bottle",
 		],
-		recover_hunger = 40,
+		recover_hunger = 36,
 		price = 99,
 		inebriation = 4,
 		str_name = 'bottle of vintage cabernet slimeignon',
 		vendors = [vendor_bar],
-		str_eat = "Ahh, you have a keen eye. 19XX was an excellent year. You pop the cork and gingerly have a sniff. Then you gulp the whole bottle down in seconds, because fuck it.",
-		str_desc = "A sophisticated drink for a sophisticated delinquent gangster with blood on his hands such as yourself."
+		str_eat = "Ahh, you have a keen eye. 19XX was an excellent year. You pop the cork and gingerly have a sniff. "
+				  "Then you gulp the whole bottle down in seconds, because fuck it.",
+		str_desc = "A sophisticated drink for a sophisticated delinquent such as yourself. You're so mature for your age."
 	),
 	EwFood(
 		id_food = "slimynipple",
 		alias = [
-			"",
+			"nipple",
 		],
-		recover_hunger = 10,
-		price = 16,
+		recover_hunger = 9,
+		price = 1,
 		inebriation = 2,
 		str_name = 'slimy nipple',
 		vendors = [vendor_bar],
-		str_eat = "You drink the small glass of creamy, greenish layered fluids in one gulp.",
-		str_desc = "Of the drinks with terrible names, this is the least amusing."
+		str_eat = "You gulp down the green, creamy beverage with little care to its multi-layered presentation.",
+		str_desc = "Of all the drinks with shitty names, this one tastes the worst."
 	),
 	EwFood(
 		id_food = "slimeonthebeach",
 		alias = [
 			"beach",
 		],
-		recover_hunger = 30,
-		price = 24,
+		recover_hunger = 27,
+		price = 3,
 		inebriation = 2,
 		str_name = 'slime on the beach',
 		vendors = [vendor_bar],
-		str_eat = "You look pretty stupid holding this fluorescent drink with a lil umbrella in it, but you don't care. Bottoms up!",
-		str_desc = "When you told the bartender you wanted Slime on the Beach, about a dozen other guys at the speakeasy all collectively and hilariously added"
-			" “Yeah, wouldn’t we all”, chuckled under their breath, and beat the shit out of you outside afterward."
+		str_eat = "You look pretty stupid drinking this fluorescent drink with a lil umbrella in it, but you don't care. Bottoms up!",
+		str_desc = "When you told the bartender you wanted slime on the beach, about a dozen other guys at the bar chuckled under their breath and "
+				   "hilariously added “Yeah, wouldn’t we all,” before beating the shit out of you outside afterward."
 	),
 		EwFood(
 		id_food = "goobalibre",
 		alias = [
 			"goo",
 		],
-		recover_hunger = 30,
-		price = 22,
+		recover_hunger = 27,
+		price = 3,
 		inebriation = 2,
-		str_name = 'goo-ba libre',
+		str_name = 'gooba libre',
 		vendors = [vendor_bar],
-		str_eat = "The drink oozes tartly down your throat. It's pretty nasty, but you still like it.",
-		str_desc = "You’re lucky you got this glass so easily. Last time you had tried to convince the bartender you were over 21 for half an hour before you finally cracked and just ordered a coke."
+		str_eat = "You sip the slime and soft drink concoction, causing it to ooze tartly down your throat. Sorta nasty, but you still like it!",
+		str_desc = "A sickening, bright green marriage of slime and Mountain Dew. Last time you attempted to ordered it you had tried to convince the bartender you were over 21 "
+				   "for half an hour, before finally giving up and just ordering the Dew."
 	),
 		EwFood(
 		id_food = "manhattanproject",
 		alias = [
 			"manhattan",
+			"mp",
 		],
-		recover_hunger = 25,
-		price = 20,
-		inebriation = 3,
+		recover_hunger = 45, #hehe dude like 1945 like when we bombed japan haha fuck yeah dude up high
+		price = 5,
+		inebriation = 8,
 		str_name = 'manhattan project',
 		vendors = [vendor_bar],
-		str_eat = "Downing your drink, the alcohol hits your bloodstream with the force of an atomic bomb.",
+		str_eat = "You guzzle your drink before slamming it back down on the countertop. Your courage soars as the alcohol hits your bloodstream with the force of an atomic bomb.",
 		str_desc = "We got tired of waiting for the bombs to drop so we made our own."
 	),
 	EwFood(
@@ -1242,15 +1260,14 @@ food_list = [
 		alias = [
 			"mary",
 		],
-		recover_hunger = 25,
-		price = 20,
+		recover_hunger = 27,
+		price = 3,
 		inebriation = 2,
 		str_name = 'slimy mary',
 		vendors = [vendor_bar],
 		str_eat = "This drink smells pretty nasty even by NLACakaNM standards. But what are you gonna do, NOT drink it?",
-		str_desc = "To get this drink you have to stand in the bathroom with the lights off and your back turned to the mirror. "
-			"Say it’s name three times, turn around and open your eyes. Congratulations your wallet’s missing "
-			"and I'm fucking your girlfriend."
+		str_desc = "This drink contains an easter egg. To find it, all you have to do is stand in your bathroom with the lights off and your back turned from the mirror. "
+				   "Say it’s name three times, turn around and open your eyes. Congratulations! Your wallets missing and I’m fucking your girlfriend."
 	),
 	EwFood(
 		id_food = "slimestout",
@@ -1258,18 +1275,20 @@ food_list = [
 			"stout",
 			"beer",
 		],
-		recover_hunger = 30,
-		price = 21,
+		recover_hunger = 36,
+		price = 3,
 		inebriation = 2,
 		str_name = 'stein of dark slime stout',
 		vendors = [vendor_bar],
-		str_eat = "The bartender pours you a rich, dark-green slime stout from the tap, with a head so thick you could rest a SlimeCoin on it.",
-		str_desc = "Fun fact; Munchy and Ben actually stole the Blarney stone and use it as a doorstop. We are wanted terrorists in Ireland."
+		str_eat = "You chug the heavy liquor with moderate vigor. It’s strong taste causes you to flinch, but in the end your thirst is quenched. "
+				  "You’ve won this bout with the mighty slime stout. Thank you, goodnight.",
+		str_desc = "A rich, dark green slime stout straight from the tap, with a head so thick you could rest a SlimeCoin on it. If it were a physical currency, which it isn’t. "
+				   "It’s a cryptocurrency. Duh, idiot. Maybe SlimeCorp will release a limited edition physical release for all those freak coin collectors out there one day."
 	),
 	EwFood(
 		id_food = "water",
 		alias = [
-			"",
+			"h20",
 		],
 		recover_hunger = 0,
 		price = 0,
@@ -1280,16 +1299,33 @@ food_list = [
 		str_desc = "It’s a room temperature glass of tap water. Abstaining from drinking calories has never tasted this adequate!"
 	),
 	EwFood(
+		id_food = "breadsticks",
+		alias = [
+			"sticks",
+		],
+		recover_hunger = 20,
+		price = 2,
+		inebriation = 0,
+		str_name = 'bundle of five breadsticks',
+		vendors = [vendor_pizzahut],
+		str_eat = "You gnaw on each stale breadstick like a dog chews on his bone, that is to say for hours and with little purpose. You let it soak underneath a nearby soda machine, "
+				  "allowing the carbonation to eat away at the carbohydrate rod. You swallow the soggy appetizer whole, in one long gulp with no chewing necessary. Nasty!!",
+		str_desc = "A hard slab of five breadsticks, all stuck together to form a stale brick of cheap bread and even cheaper pre-grated parmesan and oregano flakes. "
+				   "Eating this is going to require some creative thinking. Hell, you might as well !equip it, you could probably drop it from a two story building and "
+				   "split someone’s fucking skull open with it like an anvil in an old cartoon."
+	),
+	EwFood(
 		id_food = "pizza",
 		alias = [
-			"pizzaslice",
+			"cheese",
+			"slice",
 		],
 		recover_hunger = 40,
-		price = 12,
+		price = 4,
 		inebriation = 0,
-		str_name = 'slice of pizza',
+		str_name = 'slice of cheese pizza',
 		vendors = [vendor_pizzahut],
-		str_eat = "You grab a hot slice of that cheesy pie! Radical!!",
+		str_eat = "You nab a hot, greasy slice of that cheesy pie and cram it into your eager craw! Radical, dude!!",
 		str_desc = "A supposedly hot slice of cheese pizza. Some of it’s pre-grated cheese hasn't fully melted yet, and it’s crust is hard and chewy. Reality is a cruel mistress."
 	),
 	EwFood(
@@ -1297,54 +1333,57 @@ food_list = [
 		alias = [
 			"peperoni",
 		],
-		recover_hunger = 50,
-		price = 13,
+		recover_hunger = 60,
+		price = 6,
 		inebriation = 0,
 		str_name = 'slice of pepperoni pizza',
 		vendors = [vendor_pizzahut],
-		str_eat = "You chomp into the spicy sausage slice, bro! Cowabunga!!",
-		str_desc = "An apparently appetizing slice of pepperoni pizza. It’s crust is limp and soggy from the excess"
-			" grease it's slathered in, which is about the only thing you can taste on it as well."
+		str_eat = "You chomp right into the salty, spicy sausage slice, bro! Cowabunga, my dude!!",
+		str_desc = "An apparently appetizing slice of pepperoni pizza. It’s crust is limp and soggy from the excess grease it's slathered in, which is about the only thing you can taste on it."
 	),
 	EwFood(
 		id_food = "meatlovers",
 		alias = [
-			"meatpizza",
+			"meatlovers",
+			"meat"
 		],
-		recover_hunger = 100,
-		price = 17,
+		recover_hunger = 80,
+		price = 8,
 		inebriation = 0,
-		str_name = 'slice of Meat Lover\'s pizza',
+		str_name = 'slice of Meat Lover\'s® pizza',
 		vendors = [vendor_pizzahut],
-		str_eat = "You scarf down a meaty slice! You're sickened and nauseated by the sheer volume of animal fat you're ingesting! Tubular!!",
+		str_eat = "You happily scarf down this carnivore's delight! You’re neausiating both metaphorically and literally by the sheer volume of animal fat you're ingesting! Tubular!! Hell yes!!",
 		str_desc = "A thoroughly revolting slice Meat Lover's® pizza. You like meat, but you aren't sure if you're ready to love again."
 	),
 	EwFood(
 		id_food = "wings",
 		alias = [
 			"buffalowings",
+			"hotwings",
 		],
-		recover_hunger = 125,
-		price = 19,
+		recover_hunger = 120,
+		price = 12,
 		inebriation = 0,
-		str_name = 'buffalo wings',
+		str_name = 'box of twelve buffalo wings',
 		vendors = [vendor_pizzahut],
-		str_eat = "Aw yeah! Your mouth burns with passion!! Your lips are in agony!! You've never felt so alive!!!",
-		str_desc = "Alright, some quick backstory: https://youtu.be/lqAh0jJTqvo"
+		str_eat = "Hell yeah, bro! Your mouth burns with passion! Your lips are in agony! You accidentally wiped away a tear with a sauce salthered finger and now you’re blind! You’ve never felt so alive!!",
+		str_desc = "Best eaten with several of your closest bros, forming a spicy pact that elevates your meager friendship to the highest form of union one can have with their bros. "
+				   "Forged while eating the hottest chicken wings available and preferably crying in the process, the camaraderie experienced while sweating through the agony together lasts a lifetime. "
+				   "It is a form of matrimony unparalleled in sentimentality, and it is not to be trifled with lightly. Nothing can break a spicy bro pact. Nothing."
 	),
 	EwFood(
 		id_food = "taco",
 		alias = [
 			"softtaco",
 		],
-		recover_hunger = 30,
-		price = 11,
+		recover_hunger = 10,
+		price = 1,
 		inebriation = 0,
 		str_name = 'soft taco',
 		vendors = [vendor_tacobell],
-		str_eat = "It's a taco. Pretty good, you guess. But it's missing something... a blast of flavor perhaps?",
-		str_desc = "A limp, pitiful soft shell taco. Mirroring its own weak exterior, it is the perfect food for weak-willed men"
-			" without the strong moral character needed to tame the wild, wicked blast of flavor in more iconic Taco Bell tacos."
+		str_eat = "You bite into the taco. Pretty good, you guess. It’s missing something… a blast of flavor, perhaps?",
+		str_desc = "A limp, pitiful soft-shelled taco. Mirroring its own flabby, flaccid facade, it is the perfect food for weak-willed men without "
+				   "the strong moral character needed to tame the wild, wicked blast of flavor found in more iconic Taco Bell tacos."
 	),
 	EwFood(
 		id_food = "nachocheesetaco",
@@ -1353,69 +1392,71 @@ food_list = [
 			"nachotaco"
 		],
 		recover_hunger = 30,
-		price = 13,
+		price = 3,
 		inebriation = 0,
 		str_name = 'Nacho Cheese taco',
 		vendors = [vendor_tacobell],
-		str_eat = "You slam your filthy mouth into a cheesy blast of nacho flavor!! *YEEAAAHHHH!!!*",
+		str_eat = "You slam your mouth into a cheesy blast of that iconic Nacho Cheese flavor!! **YEEAAAHHHH!!!!**",
 		str_desc = "This flavor…!! It’s an explosion of artificial cheese flavors and shrapnel sized bits of soggy shell that vaguely reminds you of world famous Nacho Cheese Doritos!!"
 	),
 	EwFood(
 		id_food = "coolranchtaco",
 		alias = [
+			"coolranch",
 			"ranchtaco",
+			"cr"
 		],
 		recover_hunger = 30,
-		price = 13,
+		price = 3,
 		inebriation = 0,
 		str_name = 'Cool Ranch taco',
 		vendors = [vendor_tacobell],
-		str_eat = "You crash your teeth into an explosion of cool ranch taco flavor!! *YEEAAAHHHH!!!*",
-		str_desc = "This flavor…?? It’s a mushy mess of poorly seasoned mystery meat and pre-grated cheese powdered in preservatives"
-			" trapped in a miserable shell that unfortunately reminds you of Doritos’ *other flavor* that isn't Nacho Cheese."
+		str_eat = "You crash your teeth into an explosion of that dark horse Cool Ranch flavor!! Uhhhh... yeeaaahhhh!!",
+		str_desc = "This flavor…?? It’s a mushy mess of poorly seasoned mystery meat and pre-grated cheese trapped in a miserable shell that unfortunately reminds you of Doritos’ *other flavor* that isn't Nacho Cheese."
 	),
 	EwFood(
 		id_food = "quesarito",
 		alias = [
-			"gordita",
+			"qsr",
 		],
-		recover_hunger = 65,
-		price = 15,
+		recover_hunger = 50,
+		price = 5,
 		inebriation = 0,
 		str_name = 'chicken quesarito',
 		vendors = [vendor_tacobell],
-		str_eat = "It's a burrito, or something. It's got cheese in it. Whatever. You eat it and embrace nothingness.",
-		str_desc = "This travesty reminds you of your favorite My Little Pony: Friendship is Magic character Fluttershy for reasons you can't"
-			" quite remember and that are pushed out of your mind from embarrassment before you can remember which"
-			" analysis video you learned the joke from."
+		str_eat = "You bite into a burrito, or something. It's got cheese in it. Whatever. You eat it and embrace nothingness.",
+		str_desc = "This travesty reminds you of your favorite My Little Pony: Friendship is Magic character Fluttershy for reasons you can’t quite remember..."
 	),
 	EwFood(
 		id_food = "steakvolcanoquesomachorito",
 		alias = [
 			"machorito",
 			"quesomachorito"
+			"svqmr"
 		],
-		recover_hunger = 240,
-		price = 29,
+		recover_hunger = 130,
+		price = 13,
 		inebriation = 0,
 		str_name = 'SteakVolcanoQuesoMachoRito',
 		vendors = [vendor_tacobell],
 		str_eat = "It's a big fucking mess of meat, vegetables, tortilla, cheese, and whatever else happened to be around. You gobble it down greedily!!",
-		str_desc = "This pound of greasy, soggy, and flavorless artificially flavored fast food just broke through the damp, leaking"
-			" paper bag you doubled wrapped it in. Guess you're going to have to eat it off the floor."
+		str_desc = "This pound of greasy, soggy, and flavorless artificially flavored fast food just broke through the damp, leaking paper bag they doubled wrapped it in. "
+				   "Guess you're going to have to eat it off the floor."
 	),
 	EwFood(
 		id_food = "coleslaw",
 		alias = [
 			"slaw",
+			"op",
+			"ghst"
 		],
 		recover_hunger = 10,
-		price = 12,
+		price = 1,
 		inebriation = 0,
 		str_name = 'tub of cole slaw',
 		vendors = [vendor_kfc],
-		str_eat = "It's a cup of some gross white cabbage swimming in watery mayo. Why the fuck would you order this?",
-		str_desc = "This side is so horrific you might just start seeing dead people if you eat it."
+		str_eat = "You lap at the cup of some gross white cabbage swimming in watery mayo. Why the fuck would you order this?",
+		str_desc = "This side is so horrific you might just start being able to shoot dead people if you eat it."
 	),
 	EwFood(
 		id_food = "biscuitngravy",
@@ -1424,36 +1465,37 @@ food_list = [
 			"gravy"
 		],
 		recover_hunger = 20,
-		price = 10,
+		price = 2,
 		inebriation = 0,
 		str_name = 'biscuit with a side of gravy',
 		vendors = [vendor_kfc],
-		str_eat = "You get a biscuit and a small bucket of brown gravy. You dip the biscuit, scarf it down, then chug the gravy. *burp.*",
-		str_desc = "A cold biscuit that could break the glass if you threw it at window and scalding hot gravy that they let burn"
-			" away the filth and grime in their pots so they don't have to clean them."
+		str_eat = "You dip the stale biscuit into the miniature bucket of gravy, scarf it down, and then chug the rest. *Burp.*",
+		str_desc = "A cold biscuit that could break the glass if you threw it at window and scalding hot gravy that they let burn away the filth and grime in their pots so they don't have to clean them."
 	),
 	EwFood(
 		id_food = "chickenbucket",
 		alias = [
 			"bucket",
-			"chicken",
+			"fashion",
+			"cucket" #kraks favorite
 		],
-		recover_hunger = 280,
+		recover_hunger = 320,
 		price = 32,
 		inebriation = 0,
-		str_name = '8-piece fried chicken bucket',
+		str_name = '8-piece bucket of fried chicken',
 		vendors = [vendor_kfc],
-		str_eat = "You feast on hot, crispy, dripping white meat. Your fingers and tongue are scalded and you don't give a shit.",
-		str_desc = "Children are starving in Africa and you order a bucket of fried chicken just for yourself."
-			" Well, to be honest I don't even think the starving African children would touch KFC."
+		str_eat = "You stuff your face on the eight pieces of juicy limbs and hot, crispy skin carved from a winged beast. It’s calorie-rich flesh arouses your base instincts as a human, "
+				  "triggering growls and snarls to all approach you while you feed. Your fingers and tongue are scalded and you don't give a shit.",
+		str_desc = "An obscure amount of calories in a simple bucket, a convenient trough for you to consume your dystopian meal. While children are starving in third world countries, "
+				   "you crush these family meals often and without remorse. Well, to be fair I don’t think even the starving African children would touch KFC. That shit is nasty. You have a problem."
 	),
 	EwFood(
 		id_food = "famousbowl",
 		alias = [
-			"gordita",
+			"bowl",
 		],
-		recover_hunger = 80,
-		price = 16,
+		recover_hunger = 40,
+		price = 4,
 		inebriation = 0,
 		str_name = 'Famous Mashed Potato Bowl',
 		vendors = [vendor_kfc],
@@ -1463,17 +1505,17 @@ food_list = [
 	EwFood(
 		id_food = "barbecuesauce",
 		alias = [
-			"bbqsauce",
+			"bbq",
 			"sauce",
 			"saucepacket",
 		],
-		recover_hunger = 0,
+		recover_hunger = 1,
 		price = 0,
 		inebriation = 0,
 		str_name = 'packet of BBQ Sauce',
 		vendors = [vendor_kfc],
-		str_eat = "You discard what's left of your dignity and purchace a packet of barbeque sauce to slurp down.",
-		str_desc = "You're not alone. Confidential help is available for free. Call the suicide hotline if you're having thoughts of eating this."
+		str_eat = "You discard what little is left of your dignity and steal a packet of barbeque sauce to slurp down. What is wrong with you?",
+		str_desc = "You're not alone. Confidential help is available for free."
 	),
 	EwFood(
 		id_food = "mtndew",
@@ -1483,7 +1525,7 @@ food_list = [
 			"greendew"
 		],
 		recover_hunger = 10,
-		price = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'Mtn Dew',
 		vendors = [vendor_mtndew, vendor_vendingmachine],
@@ -1496,7 +1538,7 @@ food_list = [
 			"bluedew",
 		],
 		recover_hunger = 10,
-		price = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'Mtn Dew Baja Blast',
 		vendors = [vendor_mtndew, vendor_vendingmachine],
@@ -1509,7 +1551,7 @@ food_list = [
 			"reddew",
 		],
 		recover_hunger = 10,
-		price = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'Mtn Dew Code Red',
 		vendors = [vendor_mtndew, vendor_vendingmachine],
@@ -1522,7 +1564,7 @@ food_list = [
 			"blackdew",
 		],
 		recover_hunger = 10,
-		price = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'Mtn Dew Pitch Black',
 		vendors = [vendor_mtndew, vendor_vendingmachine],
@@ -1535,7 +1577,7 @@ food_list = [
 			"whitedew",
 		],
 		recover_hunger = 10,
-		price = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'Mtn Dew White-Out',
 		vendors = [vendor_mtndew, vendor_vendingmachine],
@@ -1548,7 +1590,7 @@ food_list = [
 			"orangedew",
 		],
 		recover_hunger = 10,
-		price = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'Mtn Dew Livewire',
 		vendors = [vendor_mtndew, vendor_vendingmachine],
@@ -1561,12 +1603,13 @@ food_list = [
 			"shimp",
 			"cocktail",
 		],
-		recover_hunger = 200,
-		price = 34,
+		recover_hunger = 180,
+		price = 18,
 		inebriation = 0,
 		str_name = 'a shrimp cocktail',
 		vendors = [vendor_seafood],
-		str_eat = "You pull out the prawns and pop ‘em into your mouth one after without removing their shell. To wash down the shards of crustacean getting lodged in the roof of your mouth, you take vigorous swigs of the cocktail sauce straight out of the glass.",
+		str_eat = "You pull out the prawns and pop ‘em into your mouth one after without removing their shell. You take vigorous swigs of the cocktail sauce straight "
+				  "out of the glass to wash down the shards of crustacean getting lodged in the roof of your mouth.",
 		str_desc = "A wavy glass of some shelled shrimp dipped in a weird, bitter ketchup that assaults your snout and mouth with unfortunate strength. Nothing is sacred."
 	),
 	EwFood(
@@ -1574,8 +1617,8 @@ food_list = [
 		alias = [
 			"halibut",
 		],
-		recover_hunger = 280,
-		price = 42,
+		recover_hunger = 270,
+		price = 30,
 		inebriation = 0,
 		str_name = 'a grilled halibut',
 		vendors = [vendor_seafood],
@@ -1587,8 +1630,8 @@ food_list = [
 		alias = [
 			"salmon",
 		],
-		recover_hunger = 280,
-		price = 45,
+		recover_hunger = 450,
+		price = 52,
 		inebriation = 0,
 		str_name = 'a wood fired salmon',
 		vendors = [vendor_seafood],
@@ -1600,8 +1643,8 @@ food_list = [
 		alias = [
 			"mahimahi",
 		],
-		recover_hunger = 280,
-		price = 42,
+		recover_hunger = 360,
+		price = 40,
 		inebriation = 0,
 		str_name = 'a sauteed mahi mahi',
 		vendors = [vendor_seafood],
@@ -1612,9 +1655,12 @@ food_list = [
 		id_food = "scallops",
 		alias = [
 			"scallops",
+			"scl",
+			"fish nuggies"
+
 		],
-		recover_hunger = 240,
-		price = 39,
+		recover_hunger = 540,
+		price = 60,
 		inebriation = 0,
 		str_name = 'pan-seared scallops',
 		vendors = [vendor_seafood],
@@ -1627,8 +1673,8 @@ food_list = [
 			"clam",
 			"chowder",
 		],
-		recover_hunger = 175,
-		price = 30,
+		recover_hunger = 90,
+		price = 10,
 		inebriation = 0,
 		str_name = 'a cup of clam chowder',
 		vendors = [vendor_seafood],
@@ -1639,67 +1685,84 @@ food_list = [
 		id_food = "steaknlobster",
 		alias = [
 			"lobster",
+			"lob",
+			"lb"
 		],
-		recover_hunger = 500,
-		price = 66,
+		recover_hunger = 720,
+		price = 80,
 		inebriation = 0,
 		str_name = 'a rock lobster tail and a sirloin steak',
 		vendors = [vendor_seafood],
-		str_eat = "You discard the napkin immediately, along with the silverware trapped inside of it, opting to instead to eat the meal with your hands. You pry the lobster from its shell first, ramming it into your mouth and taking a shot of melted butter to soften it up while you chew. You continue onto the steak, carefully sliced against the grain, and smother it in half a bottle of A1 sauce and just start to suck on the two inch pieces as if they were a jawbreaker or some other hard candy. You suck on the dead animal until it moistens to the point of liquefying, a solid hour and a half each. You burp loudly. Man, what an unforgettable dinner!",
-		str_desc = "A grilled 12oz sirloin steak and similarly sized rock lobster tail, served with scalloped potatoes, broccoli, asparagus, shallot herb butter along side a portrait of the chef that was autographed and kissed with a vibrant red lipstick. From his loving wife, or something? You break the portrait with your fist and your hand starts to bleed."
+		str_eat = "You discard the napkin immediately, along with the silverware trapped inside of it, opting to instead to eat the meal with your hands. "
+				  "You pry the lobster from its shell first, ramming it into your mouth and taking a shot of melted butter to soften it up while you chew. "
+				  "You continue onto the steak, carefully sliced against the grain, and smother it in half a bottle of A1 sauce and just start to suck on the two inch pieces "
+				  "as if they were a jawbreaker or some other hard candy. You suck on the dead animal until it moistens to the point of liquefying, a solid hour and a half each. "
+				  "You burp loudly. Man, what an unforgettable dinner!",
+		str_desc = "A grilled 12oz sirloin steak and similarly sized rock lobster tail, served with scalloped potatoes, broccoli, asparagus, shallot herb butter "
+				   "along side a portrait of the chef that was autographed and kissed with a vibrant red lipstick. What, does he think he’s better than you? "
+				   "You break the portrait with your fist and your hand starts to bleed."
 	),
 	EwFood(
 		id_food = "kingpincrab",
 		alias = [
 			"crab",
 			"kingpin",
+			"kp",
+			"krb"
 		],
-		recover_hunger = 450,
-		price = 61,
+		recover_hunger = 630,
+		price = 70,
 		inebriation = 0,
 		str_name = 'an Arizonian Kingpin Crab',
 		vendors = [vendor_seafood],
-		str_eat = "You’re too weak to properly crack the mighty crabs’ carapaces, even with the proper crab carapace cracking crackers. After about 10 minutes of desperately trying to, you just whip out whatever weapon you currently have quiped and start to viciously strike the crustaceans in a vain attempt to release their inner, delectable meat. You just end up destroying the entire table you’re eating at.",
-		str_desc = "Two imposing 1½ lb Arizonian Kingpin Crabs, steamed and split, served with a small side of melted butter. Their unique pink and purple carapaces that distinguish them are purely cosmetic, but you’ll always think one color tastes better than the other. D’awww..."
+		str_eat = "You’re too weak to properly crack the mighty crabs’ carapaces, even with the proper crab carapace cracking crackers. After about 10 minutes of desperately trying to, "
+				  "you just whip out whatever weapon you currently have quiped and start to viciously strike the crustaceans in a vain attempt to release their inner, delectable meat. "
+				  "You just end up destroying the entire table you’re eating at.",
+		str_desc = "Two imposing 1½ lb Arizonian Kingpin Crabs, steamed and split, served with a small side of melted butter. Their unique pink and purple carapaces that distinguish them are purely cosmetic, "
+				   "but you’ll always think one color tastes better than the other. D’awww..."
 	),
 	EwFood(
 		id_food = "champagne",
 		alias = [
 			"champagne",
 		],
-		recover_hunger = 40,
+		recover_hunger = 99,
 		price = 99,
 		inebriation = 99,
 		str_name = 'a bottle of champagne',
 		vendors = [vendor_seafood],
 		str_eat = "You shake the bottle violently before popping off the cork and letting the geyser of pink alcohol blast your waiter in the face. Haha, what a fucking dumbass.",
-		str_desc = "The bubbly, carbonated bright pink liquid contained inside this bottle is very reminiscent of of the alcohol in Disney’s The Great Mouse Detective, otherwise known as most appealing liquid on Earth until you remember it’s not straight edge."
+		str_desc = "The bubbly, carbonated bright pink liquid contained inside this bottle is very reminiscent of of the alcohol in Disney’s The Great Mouse Detective, "
+				   "otherwise known as most appealing liquid on Earth until you remember it’s not straight edge."
 	),
 	EwFood(
 		id_food = "sparklingwater",
 		alias = [
 			"sparklingwater",
 		],
-		recover_hunger = 5,
-		price = 10,
+		recover_hunger = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'a glass of sparkling water',
 		vendors = [vendor_seafood],
-		str_eat = "You savor every bubble in the lightly carbonated bliss. ‘Ah, just like in Roma,’ you think to yourself, eyes watering",
-		str_desc = "You savor every bubble of this lightly carbonated bliss. Your eyes begin to tear up as you fondly regard your own ecstasy. ‘Ah, just like in Roma…’"
+		str_eat = "You savor every bubble of this lightly carbonated bliss. Your eyes begin to tear up as you fondly regard your own ecstasy. ‘Ah, just like in Roma…’",
+		str_desc = "It’s some water with bubbles in it. Snore!"
 	),
 	EwFood(
 		id_food = "juviesroe",
 		alias = [
 			"roe",
 		],
-		recover_hunger = 40,
-		price = 99,
+		recover_hunger = 99,
+		price = 999,
 		inebriation = 0,
 		str_name = 'a bowl of decadent Juvie’s Roe',
 		vendors = [vendor_seafood],
-		str_eat = "You don’t really know how to eat caviar, so you just scoop some of the disgusting slop out of the tin with your bare hands and get crushed eggs all over your mouth as you shovel it into your uncultured maw. It tastes, uh… high class? This was a waste of money.",
-		str_desc = "A small tin of wild, matured Juvie’s roe. A highly sought after delicacy by the upper crust of the critical improshived juveniles of the city. Considered by many to be the height of luxury, and utterly decadent show of unrivalled epicurean ecstasy. Sure, maybe the indescribable bursts of flavor that terrorize and confuse the uncultured masses COULD be described as non-existent, reducing the whole dish to a weird, goopy mess, BUT YOU KNOW BETTER!!!!"
+		str_eat = "You don’t really know how to eat caviar, so you just scoop some of the disgusting slop out of the tin with your bare hands and get crushed fish eggs all over your mouth "
+				  "as you shovel it into your uncultured maw. It tastes, uh… high class? This was a waste of money.",
+		str_desc = "A small tin of wild, matured Juvie’s roe. A highly sought after delicacy by the upper crust of the critical improshived juveniles of the city. "
+				   "Considered by many to be the height of luxury, an utterly decadent show of unrivalled epicurean ecstasy. "
+				   "Sure, some of the unwashed masses COULD describe the understated burst of flavor non-existent, reducing the whole dish to a weird, goopy mess, but you know better."
 
 	),
 	EwFood(
@@ -1707,26 +1770,34 @@ food_list = [
 		alias = [
 			"fries",
 		],
-		recover_hunger = 10,
-		price = 9,
+		recover_hunger = 15,
+		price = 1,
 		inebriation = 0,
 		str_name = 'home fries',
 		vendors = [vendor_diner],
-		str_eat = "You cram as many overcooked cubes of potato into your oversized maw as possible.You choke painfully on some of the tiny bits that that bypass your attempts at chewing and lodge themselves into your windpipe. You hunger for more.",
-		str_desc = "A greasy, over salted, crispy pile of miniature potato chunks, ranging from the average cubes to smaller irregularly shaped, condensed bits of pure fried potato skin. With a calorie count well above your recommended daily consumption in just a handful, you could subsist on these preservative riddled species of spud for well over a week and still gain weight. Too bad you can’t stop yourself from guzzling an entire plates worth in 5 minutes. Oops."
+		str_eat = "You cram as many overcooked cubes of potato into your oversized maw as possible.You choke painfully on some of the tiny bits that that bypass your poor attempts at chewing. You hunger for more.",
+		str_desc = "A greasy, over salted, crispy pile of miniature potato chunks, ranging from the average cubes to smaller irregularly shaped, condensed bits of pure fried potato skin. "
+				   "With a calorie count well above your recommended daily consumption in just a handful, you could subsist on these preservative riddled species of spud for well over a week and still gain weight. "
+				   "Too bad you can’t stop yourself from guzzling an entire plates worth in 5 minutes. Oops."
 	),
 	EwFood(
 		id_food = "pancakes",
 		alias = [
 			"flapjacks",
+			"pan",
+			"cakes",
+			"hot cakes",
+			"stacks"
 		],
-		recover_hunger = 40,
-		price = 9,
+		recover_hunger = 105,
+		price = 7,
 		inebriation = 0,
-		str_name = 'three pancakes',
+		str_name = 'stack of three pancakes',
 		vendors = [vendor_diner],
-		str_eat = "You drench your three flapjacks in a generous helping of maple syrup and slap a stick of butter on top for good measure. It’s a good thing you’ve drowned your pancakes in all this excess shit, or you might have actually tasted them! The soggy, limp fried dough is so much more appetizing when all it’s innate flavor is overrun by pure sugary excess.",
-		str_desc = "Pancakes are usually a pretty safe bet, no matter where you are. You can’t really mess up a pancake unless you’re specifically trying to burn it. Luckily, the dedicated chefs in the kitchen are doing just that! Thank God, you almost got a good meal in this city."
+		str_eat = "You drench your three flapjacks in a generous helping of maple syrup and slap a stick of butter on top for good measure. It’s a good thing you’ve drowned your pancakes in all this excess shit, "
+				  "or you might have actually tasted them! The soggy, limp fried dough is so much more appetizing when all it’s innate flavor is overrun by pure sugary excess.",
+		str_desc = "Pancakes are usually a pretty safe bet, no matter where you are. You can’t really mess up a pancake unless you’re specifically trying to burn it. Luckily, "
+				   "the dedicated chefs in the kitchen are doing just that! Thank God, you almost got a decent meal in this city."
 	),
 	EwFood(
 		id_food = "chickennwaffles",
@@ -1734,38 +1805,54 @@ food_list = [
 			"belgium",
 			"cnw",
 		],
-		recover_hunger = 65,
-		price = 11,
+		recover_hunger = 135,
+		price = 9,
 		inebriation = 0,
 		str_name = 'two chicken strips and a waffle',
 		vendors = [vendor_diner],
-		str_eat = "You promptly seperate the two chicken strips and waffle on to separate plates, quarantining them off completely from one another. You dip the chicken strips into some ketchup and drizzle some syrup onto the waffles, making sure to NEVER combine the two bitter rivals and to cleanse your palette before switching between them. Ah, the life of a picky eater, it’s hard and no one understands.",
-		str_desc = "Waffles are the perfect test subject. Whether it’s a good waffle or a bad waffle, they’re all going to hover around the same average quality. So, whenever you’re in a new town and you wanna judge the quality of any given breakfast diner, order the waffle and rest easy knowing that even the worst waffle isn’t really that bad. Oh, this waffle? It’s terrible. At least you have two chicken strips that were clearly frozen and only heated up a couple of minutes before you received them. For all of the loss in quality and flavor, you can fuck up microwaving something."
+		str_eat = "You promptly seperate the two chicken strips and waffle on to separate plates, quarantining them off completely from one another. "
+				  "You dip the chicken strips into some ketchup and drizzle some syrup onto the waffles, making sure to NEVER combine the two bitter rivals and to cleanse your palette before switching between them. "
+				  "Ah, the life of a picky eater, it’s hard and no one understands.",
+		str_desc = "Waffles are the perfect test subject. Whether it’s a good waffle or a bad waffle, they’re all going to hover around the same average quality. So, "
+				   "whenever you’re in a new town and you wanna judge the quality of any given breakfast diner, order the waffle and rest easy knowing that even the worst waffle isn’t really that bad. "
+				   "Oh, this waffle? It’s terrible. At least you have two chicken strips that were clearly frozen and only heated up a couple of minutes before you received them. "
+				   "For all of the loss in quality and flavor, you can't fuck up microwaving something."
 	),
 	EwFood(
 		id_food = "frenchtoast",
 		alias = [
 			"toast",
+			"ft"
 		],
-		recover_hunger = 40,
-		price = 9,
+		recover_hunger = 90,
+		price = 6,
 		inebriation = 0,
 		str_name = 'four slices of french toast',
 		vendors = [vendor_diner],
-		str_eat = "You brace untold misery, for your hopes and dreams to be smashed utterly and irreparably, and most importantly to have wasted 12 SlimeCoin on the worst meal of your life. Every hair on your body stands upright, as if preparing for a betrayal fueled stroke. You bite into the toast, and as soon as the sweet pastry touches your tongue you feel as though you finally resonate with the ending of critically acclaimed children’s movie Ratatouille. The bread is fluffy, light, and pleasantly moist, the perfect distribution of cinnamon and nutmeg, mixed with light sprinkles of sugar and vanilla, create a french toast that is sweet but not sickeningly so. You can’t believe you’re saying this, but… it’s perfect! Your compliments to the chef, you guess.",
-		str_desc = "French toast is the hardest to perfect out of the legendary fried dough trio. Requiring even cursory amounts of knowledge or expertise in the kitchen proves to be too much for the chefs of diners nationwide. And unlike both the pancake and the waffle, there is a huge difference between a good french toast and a bad french toast. There is nothing more euphoric than biting into a fluffy, moist, and sweet piece of good french toast, while conversely there is nothing that invokes the image of pigs greedily eating trash in their trough than the feeling of a sticky glob of undercooked dough slide down your throat from a bad french toast. You really have to be sure that the restaurant you’re ordering french toast knows what they’re doing, or else your night is ruined. Now, take a wild guess if the chefs at the Smoker’s Cough know what they’re doing."
+		str_eat = "You brace untold misery, for your hopes and dreams to be smashed utterly and irreparably, and most importantly to have wasted 12 SlimeCoin on the worst meal of your life. "
+				  "Every hair on your body stands upright, as if preparing for a betrayal fueled stroke. You bite into the toast, and "
+				  "as soon as the sweet pastry touches your tongue you feel as though you finally resonate with the ending of critically acclaimed children’s movie Ratatouille. "
+				  "The bread is fluffy, light, and pleasantly moist, the perfect distribution of cinnamon and nutmeg, mixed with light sprinkles of sugar and vanilla, "
+				  "create a french toast that is sweet but not sickeningly so. You can’t believe you’re saying this, but… it’s perfect! Your compliments to the chef, you guess.",
+		str_desc = "French toast is the hardest to perfect out of the legendary fried dough trio. Requiring even cursory amounts of knowledge or expertise in the kitchen proves "
+				   "to be too much for the chefs of diners nationwide. And unlike both the pancake and the waffle, there is a huge difference between a good french toast and a bad french toast. "
+				   "There is nothing more euphoric than biting into a fluffy, moist, and sweet piece of good french toast, while conversely there is nothing that invokes the image of pigs greedily "
+				   "eating trash in their trough than the feeling of a sticky glob of undercooked dough slide down your throat from a bad french toast. You really have to be sure that the restaurant "
+				   "you’re ordering french toast knows what they’re doing, or else your night is ruined. Now, take a wild guess if the chefs at the Smoker’s Cough know what they’re doing."
 	),
 	EwFood(
 		id_food = "friedeggs",
 		alias = [
 			"eggs",
 		],
-		recover_hunger = 30,
-		price = 8,
+		recover_hunger = 45,
+		price = 3,
 		inebriation = 0,
 		str_name = 'two sunny side up eggs',
 		vendors = [vendor_diner],
-		str_eat = "You isolate the yolks from your two fried eggs with surgical precision, leaving a clump of egg whites scraps and two perfectly contained yellow bubbles waiting to burst. You salt and pepper them both thoroughly before eating one after another, first chewing on the slightly discolored egg whites and then bursting each egg yolk whole in your mouth and letting the runny, golden goo to coat your insides.",
+		str_eat = "You isolate the yolks from your two fried eggs with surgical precision, leaving a clump of egg whites scraps and two perfectly contained yellow bubbles waiting to burst. "
+				  "You salt and pepper them both thoroughly before eating one after another, first chewing on the slightly discolored egg whites and then bursting each egg yolk whole in your "
+				  "mouth and letting the runny, golden goo to coat your insides.",
 		str_desc = "Sure, you like your egg yolks runny, but given by their snotty, green discoloration, it’s pretty likely these eggs were severely undercooked. Oh well, salmonella here we come!"
 	),
 	EwFood(
@@ -1773,40 +1860,51 @@ food_list = [
 		alias = [
 			"benedict",
 			"benny",
+			"bny"
 		],
-		recover_hunger = 30,
-		price = 9,
+		recover_hunger = 75,
+		price = 5,
 		inebriation = 0,
 		str_name = 'an eggs benedict',
 		vendors = [vendor_diner],
-		str_eat = "Even though you’re pretty sure you know what an eggs benedict is, you aren’t sure you know how to eat it. You pick up the muffin and just take a bite out of it directly, hollandaise sauce and egg yolk coat your nostrils and generally splatters all over your face. Who would eat something like this????",
-		str_desc = "An English muffin topped off with some ham, a poached egg, and hollandaise sauce. It seems like the sort of food that’d you would enjoy, it’s customizable and leans itself to quirky variants, it’s pretty easy to make, it has an egg on it… still, the food comes across as menacing. It’s thick sauce masks it’s ingredients, what secrets could it be hiding? You guess there’s only one way to find out. Gulp!"
+		str_eat = "Even though you’re pretty sure you know what an eggs benedict is, you aren’t sure you know how to eat it. You pick up the muffin and just take a bite out of it directly, "
+				  "hollandaise sauce and egg yolk coat your nostrils and generally splatters all over your face. Who would eat something like this????",
+		str_desc = "An English muffin topped off with some ham, a poached egg, and hollandaise sauce. It seems like the sort of food that’d you would enjoy, it’s customizable and leans itself "
+				   "to quirky variants, it’s pretty easy to make, it has an egg on it… still, the food comes across as menacing. It’s thick sauce masks it’s ingredients, what secrets could it be "
+				   "hiding? You guess there’s only one way to find out. Gulp!"
 	),
 	EwFood(
 		id_food = "scrambledeggs",
 		alias = [
 			"scrambled",
 		],
-		recover_hunger = 30,
-		price = 8,
+		recover_hunger = 60,
+		price = 4,
 		inebriation = 0,
 		str_name = 'two scrambled eggs',
 		vendors = [vendor_diner],
-		str_eat = "You attempt to strangle your ketchup bottle for the state mandated dollop of ketchup to be adequately mixed into your scrambled egg when tragedy strikes! The bottle is empty! It blasts out specs of ketchup and a funny noise a few times before you throw it against the wall in ballistic anger. You are forced to eat the eggs… plain. DEAR GOD!!!!",
-		str_desc = "Some scrambled eggs. Come on, you know what scrambled eggs are, right? Do I have to spell out everything for you? Do you want me to stay awake all night and come up with immature jokes and puns for every one of these fucking things? Come on kid, get real."
+		str_eat = "You attempt to strangle your ketchup bottle for the state mandated dollop of ketchup to be adequately mixed into your scrambled egg when tragedy strikes! The bottle is empty! "
+				  "It blasts out specs of ketchup and a funny noise a few times before you throw it against the wall in ballistic anger. You are forced to eat the eggs… plain. DEAR GOD!!!!",
+		str_desc = "Some scrambled eggs. Come on, you know what scrambled eggs are, right? Do I have to spell out everything for you? Do you want me to stay awake all night and come up with immature "
+				   "jokes and puns for every one of these fucking things? Come on kid, get real."
 	),
 	EwFood(
 		id_food = "omelette",
 		alias = [
-			"omelette",
+			"om",
 		],
-		recover_hunger = 50,
-		price = 9,
+		recover_hunger = 120,
+		price = 8,
 		inebriation = 0,
 		str_name = 'a western omelette',
 		vendors = [vendor_diner],
-		str_eat = "You pour plenty of hot sauce all over your omelette and shove bite after bite into your slobbering mouth. The heat from the sauce and the bell peppers builds to a breaking point, causing you to blackout. You wake up an indeterminate amount of time later, covered in dried tears and sweat and your abdomen feeling as though you’re pregnant with Satan. You love pain.",
-		str_desc = "A delicious Denver omelette, stuffed with diced ham, onions, and green peppers. Looks great! Hm? Excuse me? What the fuck is a ‘western omelette’? Do people on the east coast seriously call Denver omelettes that? Are you joking me? You ask anyone on the sensible half of the country what the name of the best omelette is and they’ll bark back the long and storied history of John D. Omelette and his rough-and-tumble youth growing up in the mean streets of the great state of Colorado’s capital. Do they not know what Denver is? Do they think everything past the Appalachians are uncharted wilderness? Man, fuck you guys. We know were New York is, we know where Boston is, we know where Cincinnati is, we know our geography of the east coast like the back of our hand and it’s about time you start memorizing ours. Eat shit."
+		str_eat = "You pour plenty of hot sauce all over your omelette and shove bite after bite into your slobbering mouth. The heat from the sauce and the bell peppers builds to a breaking point, "
+				  "causing you to blackout. You wake up an indeterminate amount of time later, covered in dried tears and sweat and your abdomen feeling as though you’re pregnant with Satan. You love pain.",
+		str_desc = "A delicious Denver omelette, stuffed with diced ham, onions, and green peppers. Looks great! Hm? Excuse me? What the fuck is a ‘western omelette’? Do people on the east coast "
+				   "seriously call Denver omelettes that? Are you joking me? You ask anyone on the sensible half of the country what the name of the best omelette is and they’ll bark back the long "
+				   "and storied history of John D. Omelette and his rough-and-tumble youth growing up in the mean streets of the great state of Colorado’s capital. Do they not know what Denver is? "
+				   "Do they think everything past the Appalachians are uncharted wilderness? Man, fuck you guys. We know were New York is, we know where Boston is, we know where Cincinnati is, we know "
+				   "our geography of the east coast like the back of our hand and it’s about time you start memorizing ours. Eat shit."
 	),
 	EwFood(
 		id_food = "orangejuice",
@@ -1814,21 +1912,23 @@ food_list = [
 			"oj",
 			"juice",
 		],
-		recover_hunger = 10,
-		price = 6,
+		recover_hunger = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'a glass of orange juice',
 		vendors = [vendor_diner],
-		str_eat = "You swish around the decadent, pulpy orange juice in your mouth. This exacerbates your already poor dental hygiene, sending shockwaves of pain through your mouth as the sugary liquid washes up against dozens of cavities all throughout your mouth. But, you don’t care. You’re in heaven.",
-		str_desc = "A cavity creating, dental decaying, and enamel eroding glass of delicious orange juice. This vibrant citrus drink hits the spot any day of the week, any minute of the day, and every second of your short, pathetic life. Coffee is a myth, water is a joke, soda is piss. #juiceprideworldwide"
+		str_eat = "You swish around the decadent, pulpy orange juice in your mouth. This exacerbates your already poor dental hygiene, sending shockwaves of pain through your mouth as the "
+				  "sugary liquid washes up against dozens of cavities all throughout your mouth. But, you don’t care. You’re in heaven.",
+		str_desc = "A cavity creating, dental decaying, and enamel eroding glass of delicious orange juice. This vibrant citrus drink hits the spot any day of the week, any minute of the day, "
+				   "and every second of your short, pathetic life. Coffee is a myth, water is a joke, soda is piss. #juiceprideworldwide"
 	),
 	EwFood(
 		id_food = "milk",
 		alias = [
 			"cowjuice"
 		],
-		recover_hunger = 10,
-		price = 6,
+		recover_hunger = 9,
+		price = 1,
 		inebriation = 0,
 		str_name = 'a glass of milk',
 		vendors = [vendor_diner],
@@ -1839,24 +1939,26 @@ food_list = [
 		id_food = "steakneggs",
 		alias = [
 			"steak",
+			"sne",
 		],
-		recover_hunger = 80,
-		price = 12,
+		recover_hunger = 150,
+		price = 15,
 		inebriation = 0,
 		str_name = "two steak tips and two sunny side up eggs",
 		vendors = [vendor_diner],
-		str_eat = "You break the yolk of your two fried eggs immediately, letting the yolk run and pool around the steak tips, acting as a dipping sauce. With each mouthwatering bite of juicy, medium rare steak coated in delicious, runny yolk, you reach a higher level of christ consciousness. How does no one else but you do this?",
-		str_desc = "The only actually filling meal they serve at the diner. Between the two medium rare steak tips and the perfectly cooked sunny side up eggs, you’ve got enough protein in this one meal to grow an extra muscle."
+		str_eat = "You break the yolk of your two fried eggs immediately, letting the yolk run and pool around the steak tips, acting as a dipping sauce. With each mouthwatering bite of juicy, "
+				  "medium rare steak coated in delicious, runny yolk, you reach a higher level of christ consciousness. How does no one else but you do this?",
+		str_desc = "The only actually filling meal they serve at the diner. Between the two medium rare steak tips and the perfectly cooked sunny side up eggs, you’ve got enough protein in this one "
+				   "meal to grow an extra muscle."
 	),
 	EwFood(
 		id_food = "doubledown",
 		alias = [
 			"double",
 			"down",
-			"dd",
 		],
-		recover_hunger = 150,
-		price = 21,
+		recover_hunger = 80,
+		price = 8,
 		inebriation = 0,
 		str_name = 'Double Down',
 		vendors = [vendor_kfc],
@@ -1870,29 +1972,32 @@ food_list = [
 			"meal",
 			"fm",
 		],
-		recover_hunger = 360,
-		price = 39,
+		recover_hunger = 480,
+		price = 48,
 		inebriation = 0,
 		str_name = 'KFC Family Meal',
 		vendors = [vendor_kfc],
-		str_eat = "You stuff your face full of all manner of southern-style delicacies! You chew and chew until your jaw aches and tears stream down your cheeks.",
-		str_desc = "A veritable menagerie of homestyle goodness. Chicken, mashed potatoes, mac n' cheese, biscuits and gravy, the list goes on and on."
+		str_eat = "You feast on all manner of Southern homestyle delicacies out of this greasy fast food banquet! Your hands turn to blurs as you shovel handfuls of juicy fried calorie nuggets "
+				  "into your biological furnace as possible, only slowly down to chug the mushy sides down the very same abyss. You reduce the dinner intend for 5+ in a manner of minutes, causing "
+				  "frightened onlookers to scream and faint. You chew and chew until your jaw aches and tears stream down your cheeks.",
+		str_desc = "A veritable menagerie of cheap crap and homestyle goodness. Various fried, dismembered limbs of a chicken, instant mashed potatoes and gravy, oily mac n' cheese, stale biscuits, "
+				   "the list goes on and on. It’s enough to feed an army, or one you."
 	),
 	EwFood(
 		id_food = "plutoniumchicken",
 		alias = [
-			"pc",
 			"pluto",
 			"plutonium",
-			"pchicken",
 		],
-		recover_hunger = 450,
-		price = 46,
+		recover_hunger = 160,
+		price = 16,
 		inebriation = 0,
-		str_name = 'whole plutonium-battered fried chicken',
+		str_name = 'whole plutonium-battered fried baby chicken',
 		vendors = [vendor_kfc],
-		str_eat = "You crunch into the remains of this once-majestic animal. The odd metallic taste makes your tongue tingle in a most unsettling way.",
-		str_desc = "It resembles a cooked chicken, save for an extra wing or two, encrusted with an odd greenish-brown coating. May adversely affect sperm count."
+		str_eat = "You crunch into the remains of this once-adorable animal. It’s odd metallic taste makes your tongue tingle in a most unsettling way. You try and blow a bubble with it but "
+				  "you just end up spitting baby chicken bones five feet in front of you.",
+		str_desc = "It resembles a miniature cooked chicken, save for an extra wing or too, or an hyperrealistic green peep. It is encrusted with an odd greenish-brown coating, which tickles "
+				   "your skin upon touch. You could pop a few of these tiny things into your mouth at a time and feel their soul exit their body as you grind them into crispy dust. May adversely affect sperm count."
 	),
 	EwFood(
 		id_food = "giantdeepdish",
@@ -1900,13 +2005,14 @@ food_list = [
 			"gdd",
 			"deepdish",
 		],
-		recover_hunger = 320,
-		price = 35,
+		recover_hunger = 300,
+		price = 30,
 		inebriation = 0,
 		str_name = 'giant deep-dish pizza',
 		vendors = [vendor_pizzahut],
-		str_eat = "You slurp down slice after slice of sopping sauce-soaked pizza in a gruesome red runny spectacle.",
-		str_desc = "The sauce and cheese of this delicacy is like quicksand, anything falling in will sink to the bottom, never to be seen again."
+		str_eat = "You slurp down soupy slice after soupy slice of the sopping sauce-soaked pizza in a gruesome spectacle. Gnarly!!",
+		str_desc = "This goopy, near liquid mass of cheap marinara and pre-grated mozzarella resembles a hearty soup more so than a pizza. It’s sauce and cheese acts as quicksand, "
+				   "with anything placed on its surface sinking to the bottom, never to be seen again."
 	),
 	EwFood(
 		id_food = "whackcalzone",
@@ -1915,13 +2021,13 @@ food_list = [
 			"whack",
 			"calzone",
 		],
-		recover_hunger = 500,
-		price = 50,
+		recover_hunger = 210,
+		price = 21,
 		inebriation = 0,
 		str_name = 'Whack Calzone',
 		vendors = [vendor_pizzahut],
-		str_eat = "Chomping into this collossal italian confection, searing hot cheese explodes out from the edges in every direction. De-LISH!!!",
-		str_desc = "It's literally just an upside-down pizza on top of another pizza."
+		str_eat = "You chomp into the colossal Italian confection in a mad craze, searing hot grease pours out from the edges and melted cheese explodes in every direction. De-LISH!!",
+		str_desc = "It is literally just an upside-down pizza on top of another pizza. Your base, carnal desires will be the end of you one of these days."
 	),
 	EwFood(
 		id_food = "nachosupreme",
@@ -1931,8 +2037,8 @@ food_list = [
 			"nachos",
 			"supreme",
 		],
-		recover_hunger = 175,
-		price = 23,
+		recover_hunger = 110,
+		price = 11,
 		inebriation = 0,
 		str_name = 'Nacho Supreme',
 		vendors = [vendor_tacobell],
@@ -1946,8 +2052,8 @@ food_list = [
 			"energy",
 			"etaco",
 		],
-		recover_hunger = 400,
-		price = 42,
+		recover_hunger = 90,
+		price = 9,
 		inebriation = 0,
 		str_name = 'Energy Taco',
 		vendors = [vendor_tacobell],
@@ -1962,8 +2068,8 @@ food_list = [
 			"mds",
 			"greensyrup",
 		],
-		recover_hunger = 200,
-		price = 26,
+		recover_hunger = 100,
+		price = 10,
 		inebriation = 0,
 		str_name = 'cup of pure undiluted MTN DEW syrup',
 		vendors = [vendor_mtndew],
@@ -1977,8 +2083,8 @@ food_list = [
 			"bbs",
 			"bluesyrup",
 		],
-		recover_hunger = 200,
-		price = 26,
+		recover_hunger = 100,
+		price = 10,
 		inebriation = 0,
 		str_name = 'cup of pure undiluted MTN DEW Baja Blast syrup',
 		vendors = [vendor_mtndew],
@@ -1992,8 +2098,8 @@ food_list = [
 			"crs",
 			"redsyrup",
 		],
-		recover_hunger = 200,
-		price = 26,
+		recover_hunger = 100,
+		price = 10,
 		inebriation = 0,
 		str_name = 'cup of pure undiluted MTN DEW Code Red syrup',
 		vendors = [vendor_mtndew],
@@ -2008,8 +2114,8 @@ food_list = [
 			"blacksyrup",
 			"purplesyrup"
 		],
-		recover_hunger = 200,
-		price = 26,
+		recover_hunger = 100,
+		price = 10,
 		inebriation = 0,
 		str_name = 'cup of pure undiluted MTN DEW Pitch Black syrup',
 		vendors = [vendor_mtndew],
@@ -2023,8 +2129,8 @@ food_list = [
 			"wos",
 			"whitesyrup",
 		],
-		recover_hunger = 200,
-		price = 26,
+		recover_hunger = 100,
+		price = 10,
 		inebriation = 0,
 		str_name = 'cup of pure undiluted MTN DEW White Out syrup',
 		vendors = [vendor_mtndew],
@@ -2038,8 +2144,8 @@ food_list = [
 			"lws",
 			"orangesyrup",
 		],
-		recover_hunger = 200,
-		price = 26,
+		recover_hunger = 100,
+		price = 10,
 		inebriation = 0,
 		str_name = 'cup of pure undiluted MTN DEW Livewire syrup',
 		vendors = [vendor_mtndew],
@@ -2053,15 +2159,72 @@ food_list = [
 			"razor",
 			"nuts",
 		],
-		recover_hunger = 25,
-		price = 5,
+		recover_hunger = 20,
+		price = 2,
 		inebriation = 0,
 		str_name = 'packet of salted razornuts',
 		vendors = [vendor_bar],
 		str_eat = "You tear into the packet and eat the small, pointy nuts one at a time, carefully avoiding any accidental lacerations.",
 		str_desc = "It's a packet of locally-grown razornuts, roasted and salted to perfection. Perfect for snacking!"
 	),
+	EwFood(
+		id_food = "mexicanpizza",
+		alias = [
+			"mp",
+			"mexican",
+		],
+		recover_hunger = 70,
+		price = 7,
+		inebriation = 0,
+		str_name = 'Mexican pizza',
+		vendors = [vendor_tacobell],
+		str_eat = "You chomp right into the damp, haphazard mess of ethnic flavors and poor ingredients. The four sauces inexplicably just dumped on top drizzle down your chin and ruin your shirt. "
+				  "You feel like a complete dumbass, because you are.",
+		str_desc = "What the hell. A nauseating layer of refried beans and mushy, paste-like ground beef on top of and topped with a soggy, limp corn tortilla, finished with pre-grated, "
+				   "processed cheese maxed out on preservatives, weeks-old diced tomatoes, and a mysterious dark red, viscous liquid referred to only as “Mexican Pizza Sauce.” Oh joy!"
+	),
+	EwFood(
+		id_food = "doublestuffedcrust",
+		alias = [
+			"dsc",
+			"stuffed",
+			"stuffedcrust",
+			"double",
+		],
+		recover_hunger = 500,
+		price = 50,
+		inebriation = 0,
+		str_name = 'double Original Stuffed Crust® pizza',
+		vendors = [vendor_pizzahut],
+		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you imprudently ordered. Tepidly, you bring the first crud slice to your tongue, "
+				  "letting the melted cheese drizzle unto your awaiting tongue. And, just as a beast would be reduced to a state of pure carnal hunger and lust after acquiring it’s first taste of flesh and blood, "
+				  "you enter a state of sheer wilderness, stuffing each stuffed crust into your teeth and gums and tongue and throat. You scream at the top of your lungs. Sicknasty, dude!!",
+		str_desc = "Nothing can articulate the sheer awesomeness of this pizza. Always thought to be theoretically possible and discussed in hushed tones in obscure circles on the fringe of acceptable dialogue, "
+				   "but never achieved in practice, this heap of diary and dough can only truly be comprehended through several layers of abstraction. It is too big, too thick, too heavy and too deep. "
+				   "To put it simply, however, it is a pizza. Specifically, an Original Stuffed Crust® pizza. But, everything is doubled. Every ingredient is doubled. The toppings are doubled, "
+				   "the cheese is doubled, the pepperoni is doubled, the grease is doubled, the yeast is doubled and you fucking bet you could fit your whole forearm into the caverns they dare call a crust, "
+				   "if it weren’t overflowing with double the molten, stretchy string cheese. And it doesn’t stop there, double the size, double the weight, "
+				   "double the budget required to ward off lawsuits for double the colohestral, double the heart attacks. People die because of this pizza, "
+				   "someone you know has or will die because of this item in your inventory right now. It’s made to order, piping hot and ready to be devoured by "
+				   "whatever foolish egomaniac with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the life of the ones you love. "
+				   "Chant it’s name, praise the harbinger of death you just acquired from Pizza Hut. Doubled Stuffed Crust. Doubled Stuffed Crust. DOUBLE STUFFED CRUST!! AAAAAAAAAH!!"
+	),
+	EwFood(
+		id_food = "boxofchocolates",
+		alias = [
+			"box",
+			"chocolates",
+		],
+		recover_hunger = 125,
+		price = 10,
+		inebriation = 0,
+		str_name = 'box of chocolates',
+		vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
+		str_eat = "You pop open the lid of the heart-shaped box and shower yourself in warm sugary delicates! Your face and shirt is grazed numerous times by the melted confections, smearing brown all over you. Baby made a mess.",
+		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
+	),
 ]
+#chocolates were reduced due to being, hands down, the best food item in both FC and SMC, removing all reasons to go to food court
 
 # A map of id_food to EwFood objects.
 food_map = {}
@@ -2216,6 +2379,7 @@ poi_list = [
 		alias = [
 			"slimecorp",
 			"hq",
+			"donate"
 		],
 		str_name = "SlimeCorp HQ",
 		str_desc = "Within the gleaming metal hull of the towering SlimeCorp HQ, brightly lit sterile white hallways wind like a maze, past countless receptionists' desks, waiting rooms, and high-tech stainless steel vault doors.",
@@ -2270,7 +2434,9 @@ poi_list = [
 			"killer",
 			"killtown",
 			"copkt",
-			"ck"
+			"ck",
+			"cct",
+			"ckt",
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Deep indigo edifices of metal and brick rise above the pavement. Apartment windows glint in the blue and purple light of neon signs, and a menacing cathedral looms darkly on the horizon.\n\nTo the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the West is Vandal Park. To the Northwest is Gatlingsdale.",
@@ -2319,7 +2485,8 @@ poi_list = [
 			"rowdies",
 			"roughhouse",
 			"rowdyrh",
-			"rr"
+			"rr",
+			"rrh"
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Rusted pink metal shanties are hastily constructed as far as the eye can see, sometimes stacked on top of one another, forming high towers and densely populated mazes.\n\nTo the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
@@ -2596,7 +2763,8 @@ poi_list = [
 			"af",
 			"br",
 			"assflats",
-			"afbr"
+			"afbr",
+			"long"
 		],
 		str_name = "Assault Flats Beach Resort",
 		str_desc = "The white imported sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Gleaming hotels jut out of the rock formations just off the beachfront.\n\nTo the South is Vagrant's Corner. To the West is New New Yonkers.",
@@ -2796,7 +2964,12 @@ poi_list = [
 			"fc"
 		],
 		str_name = "The NLACakaNM Food Court",
-		str_desc = "A large, brightly-lit area with tiled walls and floors, lined on all sides with Yum! Brand food vendors, surrounding the city's prized MTN DEW Fountain. The place is completely dead.\n\nExits into Krak Bay.",
+		str_desc = "Inside a large shopping mall lies the city’s prized food court. This large, brightly-lit area with tiled walls and floors and numerous clashing, "
+				   "gaudy color schemes has probably not been renovated since the ‘90s, which is just the way you like it. You are surrounded on all sides by Yum! Brands "
+				   "restaurants, specifically the area is one big combination Pizza Hut/Taco Bell/Kentucky Fried Chicken. In the court’s center lies the esteemed "
+				   "Mountain Dew fountain, dispensing that glorious piss yellow elixir for all who patron it. Bustling with life, this is the happeningest place in New Los Angeles City "
+				   "aka Neo Milwaukee for a hip juvenile such as yourself. So hang out with your fellow gangsters, soak in the outdated mall music and savor the moment. When you’re old "
+				   "and brittle, you’ll wish you spent your time doing this more.\n\nExits into Krak Bay.",
 		channel = channel_foodcourt,
 		role = "Food Court",
 		coord = (16, 17),
@@ -2818,14 +2991,16 @@ poi_list = [
 			"nlacuniversity",
 			"college",
 			"uni",
-			"nu"
+			"nu",
+			"school",
+			"nlac"
 		],
 		str_name = "New Los Angeles City University",
-		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here.\n\nExits into Gatlingsdale.",
+		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here.Bullets line the halls. \n\nExits into Gatlingsdale.",
 		channel = channel_nlacu,
 		role = "NLAC U",
 		coord = (15, 9),
-		pvp = False,
+		pvp = True,
 		is_subzone = True,
 		mother_district = poi_id_gatlingsdale
 	),
@@ -2858,7 +3033,7 @@ poi_list = [
 			"d"
 		],
 		str_name = "The Dojo",
-		str_desc = "A modest, easily overlooked building, but containing all the facilities necessary for becoming a killing machine. Bamboo and parchment walls separate the dojo floor into large tatami-matted sections.\n\nExits into South Sleezeborough.",
+		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
 		channel = channel_dojo,
 		role = "Dojo",
 		coord = (11, 23),
@@ -2879,7 +3054,7 @@ poi_list = [
 			"kws"
 		],
 		str_name = "The King's Wife's Son Speakeasy",
-		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. There's nobody here.\n\nExits into Vagrant's Corner.",
+		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
 		coord = (39, 11),
@@ -3021,9 +3196,11 @@ poi_list = [
 			"diner",
 			"smokers",
 			"cough",
-			"smc", 
+			"smc",
 			"wf", #wreckington food
-			"rf" #rowdy food
+			"rf", #rowdy food
+			"sm",
+			"koff"
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.",
@@ -3212,12 +3389,12 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "sunglasses",
+		name = "pair of sunglasses",
 		description = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "glasses",
+		name = "pair of glasses",
 		description = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian
 	),
@@ -3257,7 +3434,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "3D glasses",
+		name = "pair of 3D glasses",
 		description = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian
 	),
@@ -3272,7 +3449,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "flip flops",
+		name = "pair of flip flops",
 		description = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian
 	),
@@ -3297,7 +3474,7 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "tam o' shanter'",
+		name = "tam o' shanter",
 		description = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian
 	),
@@ -3360,6 +3537,16 @@ cosmetic_items_list = [
 		name = "earbuds",
 		description = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician
+	),
+	EwCosmeticItem(
+		name = "nurse's outfit",
+		description = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
+		rarity = rarity_plebeian
+	),
+	EwCosmeticItem(
+		name = "heart boxers",
+		description = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
+		rarity = rarity_plebeian
 	)
 ]
 
@@ -4252,7 +4439,8 @@ thrownobjects_list = [
 	"large rock",
 	"small motor vehicle",
 	"chunk of broken concrete",
-	"piece of rusted scrap metal"
+	"piece of rusted scrap metal",
+	"a box of bbq sauce"
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id
