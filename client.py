@@ -61,6 +61,7 @@ cmd_map = {
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
+	ewcfg.cmd_bonk: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Choose your weapon
@@ -76,6 +77,9 @@ cmd_map = {
 	ewcfg.cmd_annoint: ewwep.annoint,
 	ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
+	#Marry and divorce your current wepaon.
+	ewcfg.cmd_marry: ewwep.marry,
+	ewcfg.cmd_divorce: ewwep.divorce,
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
@@ -146,6 +150,8 @@ cmd_map = {
 	# Show the player's slime credit.
 	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
 	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
@@ -218,6 +224,8 @@ cmd_map = {
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
 	ewcfg.cmd_booru: ewcmd.booru,
+	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
+	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
 
 	# Slimeoids
