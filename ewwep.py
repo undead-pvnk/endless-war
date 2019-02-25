@@ -410,8 +410,7 @@ async def attack(cmd):
 				if slimes_damage >= shootee_data.slimes:
 					was_killed = True
 
-				
-				district_data = EwDistrict(district = cmd.message.channel, id_server = cmd.message.server.id)
+				district_data = EwDistrict(district = ewcfg.id_to_poi.get(user_data.poi).channel, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				if was_juvenile or user_data.faction == shootee_data.faction:
 					district_data.change_slimes(n = slimes_damage, source = ewcfg.source_killing)
@@ -598,10 +597,15 @@ async def suicide(cmd):
 				ewitem.item_loot(member = cmd.message.author, id_user_target = user_data.rr_challenger)
 				challenger.persist()
 				
+			district_data = EwDistrict(district = ewcfg.id_to_poi.get(user_data.poi).channel, id_server = cmd.message.server.id)
+			district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
+			district_data.persist()
+
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
 			user_data.die(cause = ewcfg.cause_suicide)
 			user_data.persist()
+
 
 			# Assign the corpse role to the player. He dead.
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
