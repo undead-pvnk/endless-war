@@ -14,6 +14,7 @@ import discord
 
 import ewcfg
 from ew import EwUser
+from ewdistrict import EwDistrict
 
 db_pool = {}
 db_pool_id = 0
@@ -232,6 +233,29 @@ def decaySlimes(id_server = None):
 				if slimes_to_decay >= 1:
 					user_data.change_slimes(n = -slimes_to_decay, source = ewcfg.source_decay)
 					user_data.persist()
+					total_decayed += slimes_to_decay
+
+			cursor.execute("SELECT district FROM districts WHERE id_server = %s AND {slimes} > 1".format(
+				slimes = ewcfg.col_district_slimes
+			), (
+				id_server,
+			))
+
+			districts = cursor.fetchall()
+
+			for district in districts:
+				district_data = EwDistrict(district = district[0], id_server = id_server)
+				slimes_to_decay = district_data.slimes - (district_data.slimes * (.5 ** (ewcfg.update_market / ewcfg.slime_half_life)))
+
+				#round up or down, randomly weighted
+				remainder = slimes_to_decay - int(slimes_to_decay)
+				if random.random() < remainder: 
+					slimes_to_decay += 1 
+				slimes_to_decay = int(slimes_to_decay)
+
+				if slimes_to_decay >= 1:
+					district_data.change_slimes(n = -slimes_to_decay, source = ewcfg.source_decay)
+					district_data.persist()
 					total_decayed += slimes_to_decay
 
 			cursor.execute("UPDATE markets SET {decayed} = ({decayed} + %s) WHERE {server} = %s".format(

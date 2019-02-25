@@ -10,6 +10,7 @@ import ewrolemgr
 import ewstats
 from ew import EwUser, EwMarket
 from ewslimeoid import EwSlimeoid
+from ewdistrict import EwDistrict
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -409,6 +410,15 @@ async def attack(cmd):
 				if slimes_damage >= shootee_data.slimes:
 					was_killed = True
 
+				
+				district_data = EwDistrict(district = cmd.message.channel, id_server = cmd.message.server.id)
+				# move around slime as a result of the shot
+				if was_juvenile or user_data.faction == shootee_data.faction:
+					district_data.change_slimes(n = slimes_damage, source = ewcfg.source_killing)
+				else:
+					district_data.change_slimes(n = slimes_damage / 2, source = ewcfg.source_killing)
+					boss_slimes += int(slimes_damage / 2)
+
 				if was_killed:
 					#adjust statistics
 					ewstats.increment_stat(user = user_data, metric = ewcfg.stat_kills)
@@ -420,16 +430,10 @@ async def attack(cmd):
 
 					# Collect bounty
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-
-					# Move around slime as a result of the shot.
+					
 					if shootee_data.slimes >= 0:
 						user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
-						if was_juvenile:
-							user_data.change_slimes(n = slimes_dropped, source = ewcfg.source_killing)
-						else:
-							user_data.change_slimes(n = slimes_dropped / 2, source = ewcfg.source_killing)
-							boss_slimes += int(slimes_dropped / 2)
 
 					# Steal items
 					ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
@@ -548,6 +552,8 @@ async def attack(cmd):
 			# Persist every users' data.
 			user_data.persist()
 			shootee_data.persist()
+
+			district_data.persist()
 
 			# Assign the corpse role to the newly dead player.
 			if was_killed:

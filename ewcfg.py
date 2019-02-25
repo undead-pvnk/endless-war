@@ -251,6 +251,7 @@ cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
+cmd_scavenge = cmd_prefix + 'scavenge'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -383,6 +384,7 @@ cd_boombust = 22
 cd_rr = 600
 #slimeoid downtime after a defeat
 cd_slimeoiddefeated = 900
+cd_scavenge = 60
 
 # PvP timer pushouts
 time_pvp_kill = 600
@@ -504,6 +506,7 @@ col_time_lastsow = 'time_lastsow'
 col_farm = 'farm'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
+col_time_lastscavenge = 'time_lastscavenge'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -552,6 +555,7 @@ col_district = 'district'
 col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
+col_district_slimes = 'slimes'
 
 # Item type names
 it_medal = "medal"

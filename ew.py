@@ -145,6 +145,7 @@ class EwUser:
 	time_lastspar = 0
 	time_lasthaunt = 0
 	time_lastinvest = 0
+	time_lastscavenge = 0
 
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
@@ -324,7 +325,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -348,7 +349,8 @@ class EwUser:
 					ewcfg.col_busted,
 					ewcfg.col_rrchallenger,
 					ewcfg.col_time_last_action,
-					ewcfg.col_weaponmarried
+					ewcfg.col_weaponmarried,
+					ewcfg.col_time_lastscavenge
 				), (
 					id_user,
 					id_server
@@ -381,6 +383,7 @@ class EwUser:
 					self.rr_challenger = result[21]
 					self.time_last_action = result[22]
 					self.weaponmarried = (result[23] == 1)
+					self.time_lastscavenge = result[24]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -432,7 +435,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -459,7 +462,8 @@ class EwUser:
 				ewcfg.col_busted,
 				ewcfg.col_rrchallenger,
 				ewcfg.col_time_last_action,
-				ewcfg.col_weaponmarried
+				ewcfg.col_weaponmarried,
+				ewcfg.col_time_lastscavenge
 			), (
 				self.id_user,
 				self.id_server,
@@ -487,7 +491,8 @@ class EwUser:
 				(1 if self.busted else 0),
 				self.rr_challenger,
 				self.time_last_action,
-				(1 if self.weaponmarried else 0)
+				(1 if self.weaponmarried else 0),
+				self.time_lastscavenge
 			))
 
 			conn.commit()
