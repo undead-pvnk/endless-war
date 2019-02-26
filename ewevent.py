@@ -48,7 +48,9 @@ def init_stat_function_map():
 		ewcfg.stat_max_kills: process_max_kills,
 		ewcfg.stat_ghostbusts: process_ghostbusts,
 		ewcfg.stat_max_ghostbusts: process_max_ghostbusts,
-		ewcfg.stat_poudrins_looted: process_poudrins_looted
+		ewcfg.stat_poudrins_looted: process_poudrins_looted,
+                ewcfg.stat_slimesfarmed: process_slimesfarmed,
+                ewcfg.stat_slimesscavenged: process_slimesscavenged
 	}
 	global fns_initialized
 	fns_initialized = True
@@ -75,6 +77,12 @@ def process_slimesfromkills(id_server = None, id_user = None, value = None):
 def process_max_slimesfromkills(id_server = None, id_user = None, value = None):
 	# TODO give apropriate medal
 	pass
+
+def process_slimesfarmed(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_slimesfarmed, value = value)
+
+def process_slimesscavenged(id_server = None, id_user = None, value = None):
+	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_slimesscavenged, value = value)
 
 def process_kills(id_server = None, id_user = None, value = None):
 	ewstats.track_maximum(id_server = id_server, id_user = id_user, metric = ewcfg.stat_max_kills, value = value)

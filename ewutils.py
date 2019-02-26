@@ -6,6 +6,7 @@ import datetime
 import time
 import re
 import random
+import asyncio
 
 import ewstats
 import ewitem
@@ -265,6 +266,62 @@ def decaySlimes(id_server = None):
 				total_decayed,
 				id_server
 			))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)	
+"""
+	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
+"""
+async def bleed_tick_loop(id_server):
+	interval = ewcfg.bleed_tick_length
+	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
+	while True:
+		await bleedSlimes(id_server = id_server)
+		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
+
+		await asyncio.sleep(interval)
+
+""" Bleed slime for all users """
+async def bleedSlimes(id_server = None):
+	if id_server != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {bleed_storage} > 1".format(
+				bleed_storage = ewcfg.col_bleed_storage
+			), (
+				id_server,
+			))
+
+			users = cursor.fetchall()
+			total_bled = 0
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				slimes_to_bleed = user_data.bleed_storage - (user_data.bleed_storage * (.5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life)))
+
+				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
+
+				#round up or down, randomly weighted
+				remainder = slimes_to_bleed - int(slimes_to_bleed)
+				if random.random() < remainder: 
+					slimes_to_bleed += 1 
+				slimes_to_bleed = int(slimes_to_bleed)
+
+				if slimes_to_bleed >= 1:
+					user_data.bleed_storage -= slimes_to_bleed
+					user_data.persist()
+
+					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
+					district_data.persist()
+					total_bled += slimes_to_bleed
+
+
 
 			conn.commit()
 		finally:

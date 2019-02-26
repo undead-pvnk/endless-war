@@ -125,6 +125,7 @@ class EwUser:
 	slimelevel = 1
 	hunger = 0
 	totaldamage = 0
+	bleed_storage = 0
 	bounty = 0
 	weapon = ""
 	weaponskill = 0
@@ -178,7 +179,14 @@ class EwUser:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_slimesfromkills, n = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimesfromkills, n = change)
 
-			# todo add source from farming
+			if source == ewcfg.source_farming:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_slimesfarmed, n = change)
+				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimesfarmed, n = change)
+
+			if source == ewcfg.source_scavenging:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_slimesscavenged, n = change)
+				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimesscavenged, n = change)
+
 		else:
 			change *= -1 # convert to positive number
 			if source != ewcfg.source_spending and source != ewcfg.source_ghostification:
@@ -222,6 +230,7 @@ class EwUser:
 		self.poi = ewcfg.poi_id_thesewers
 		self.bounty = 0
 		self.totaldamage = 0
+		self.bleed_storage = 0
 		self.slimelevel = 1
 		self.hunger = 0
 		self.inebriation = 0
@@ -325,7 +334,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -350,7 +359,8 @@ class EwUser:
 					ewcfg.col_rrchallenger,
 					ewcfg.col_time_last_action,
 					ewcfg.col_weaponmarried,
-					ewcfg.col_time_lastscavenge
+					ewcfg.col_time_lastscavenge,
+					ewcfg.col_bleed_storage
 				), (
 					id_user,
 					id_server
@@ -384,6 +394,7 @@ class EwUser:
 					self.time_last_action = result[22]
 					self.weaponmarried = (result[23] == 1)
 					self.time_lastscavenge = result[24]
+					self.bleed_storage = result[25]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -435,7 +446,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -463,7 +474,8 @@ class EwUser:
 				ewcfg.col_rrchallenger,
 				ewcfg.col_time_last_action,
 				ewcfg.col_weaponmarried,
-				ewcfg.col_time_lastscavenge
+				ewcfg.col_time_lastscavenge,
+				ewcfg.col_bleed_storage
 			), (
 				self.id_user,
 				self.id_server,
@@ -492,7 +504,8 @@ class EwUser:
 				self.rr_challenger,
 				self.time_last_action,
 				(1 if self.weaponmarried else 0),
-				self.time_lastscavenge
+				self.time_lastscavenge,
+				self.bleed_storage
 			))
 
 			conn.commit()

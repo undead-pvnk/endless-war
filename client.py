@@ -368,6 +368,7 @@ async def on_ready():
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')

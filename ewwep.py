@@ -414,9 +414,11 @@ async def attack(cmd):
 				# move around slime as a result of the shot
 				slime_splatter = min(slimes_damage, shootee_data.slimes)
 				if was_juvenile or user_data.faction == shootee_data.faction:
-					district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
-				else:
 					district_data.change_slimes(n = slime_splatter / 2, source = ewcfg.source_killing)
+					shootee_data.bleed_storage += int(slime_splatter / 2)
+				else:
+					district_data.change_slimes(n = slime_splatter / 4, source = ewcfg.source_killing)
+					shootee_data.bleed_storage += int(slime_splatter / 4)
 					boss_slimes += int(slime_splatter / 2)
 
 				if was_killed:
@@ -447,6 +449,10 @@ async def attack(cmd):
 					
 					#explode_damage = slimes_dropped / 10 + shootee_data.slimes / 2
 					# explode, damaging everyone in the district
+
+                                        # release bleed storage
+					district_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
+					user_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user

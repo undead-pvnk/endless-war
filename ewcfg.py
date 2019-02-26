@@ -296,6 +296,7 @@ min_stamina = 100
 hunger_pershot = 10
 hunger_perspar = 30
 hunger_permine = 1
+hunger_perscavenge = 1
 hunger_pertick = 3
 
 #inebriation
@@ -364,6 +365,12 @@ district_control_slime_yields = {
 # Slime decay rate
 slime_half_life = 60 * 60 * 24 * 14 #two weeks
 
+# Rate of bleeding stored damage into the environment
+bleed_half_life = 60 * 5 #five minutes
+
+# how often to bleed
+bleed_tick_length = 10
+
 # Poudrin rarity (for enlisted players)
 poudrin_rarity = 2400
 
@@ -384,7 +391,7 @@ cd_boombust = 22
 cd_rr = 600
 #slimeoid downtime after a defeat
 cd_slimeoiddefeated = 900
-cd_scavenge = 60
+cd_scavenge = 20
 
 # PvP timer pushouts
 time_pvp_kill = 600
@@ -507,6 +514,7 @@ col_farm = 'farm'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
+col_bleed_storage = 'bleed_storage'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -636,6 +644,12 @@ stat_lifetime_slimesmined = 'lifetime_slimes_mined'
 stat_slimesfromkills = 'slimes_from_kills'
 stat_max_slimesfromkills = 'max_slimes_from_kills'
 stat_lifetime_slimesfromkills = 'lifetime_slimes_from_kills'
+stat_slimesfarmed = 'slimes_farmed'
+stat_max_slimesfarmed = 'max_slimes_farmed'
+stat_lifetime_slimesfarmed = 'lifetime_slimes_farmed'
+stat_slimesscavenged = 'slimes_scavenged'
+stat_max_slimesscavenged = 'max_slimes_scavenged'
+stat_lifetime_slimesscavenged = 'lifetime_slimes_scavenged'
 stat_lifetime_slimeshaunted = 'lifetime_slimes_haunted'
 stat_max_level = 'max_level'
 stat_max_ghost_level = 'max_ghost_level'
@@ -685,6 +699,9 @@ source_haunted = 6
 source_spending = 7
 source_decay = 8
 source_ghostification = 9
+source_bleeding = 10
+source_scavenging = 11
+source_farming = 12
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -708,7 +725,9 @@ stats_clear_on_death = [
 	stat_slimesmined,
 	stat_slimesfromkills,
 	stat_kills,
-	stat_ghostbusts
+	stat_ghostbusts,
+        stat_slimesfarmed,
+        stat_slimesscavenged
 ]
 
 # Seeds you might !Sow

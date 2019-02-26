@@ -235,10 +235,10 @@ async def scavenge(cmd):
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
-			scavenge_yield = math.floor(0.1 * district_data.slimes)
+			scavenge_yield = math.floor(0.05 * district_data.slimes)
 
-			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_mining)
-			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_mining)
+			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
+			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
 
 			response += "You scrape together {} slime from the streets.".format(scavenge_yield)
 
@@ -246,15 +246,15 @@ async def scavenge(cmd):
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
-			# Fatigue the miner.
+			# Fatigue the scavenger.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
-			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
+			user_data.hunger += ewcfg.hunger_perscavenge * int(hunger_cost_mod)
 			if extra > 0:  # if hunger_cost_mod is not an integer
 				# there's an x% chance that an extra stamina is deducted, where x is the fractional part of hunger_cost_mod in percent (times 100)
 				if random.randint(1, 100) <= extra * 100:
-					user_data.hunger += ewcfg.hunger_permine
+					user_data.hunger += ewcfg.hunger_perscavenge
 
 			user_data.time_lastscavenge = time_now
 
