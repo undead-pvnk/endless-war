@@ -1860,7 +1860,7 @@ async def skat(cmd):
 					while not legalplay:
 						while not legalplay:
 							play = random.randrange(len(hands[idx]))
-							legalplay = checkiflegal(hands[idx],play,trick[0],trumps)
+							legalplay = checkiflegal(hands[idx],play,trick[0],trumps) if len(trick) > 0 else True
 
 						try:
 							msg = await cmd.client.wait_for_message(timeout = play_timeout, author = members[idx], check = check_skat_play)
