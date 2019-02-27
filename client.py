@@ -61,7 +61,7 @@ cmd_map = {
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
-	ewcfg.cmd_bonk: ewwep.attack,
+	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Choose your weapon
