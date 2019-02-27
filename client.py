@@ -61,6 +61,7 @@ cmd_map = {
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
+	ewcfg.cmd_bonk: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Choose your weapon
@@ -168,6 +169,8 @@ cmd_map = {
 	# Show the player's slime credit.
 	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
 	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
