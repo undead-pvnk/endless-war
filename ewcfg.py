@@ -1340,7 +1340,9 @@ food_list = [
 		str_name = 'slice of pepperoni pizza',
 		vendors = [vendor_pizzahut],
 		str_eat = "You chomp right into the salty, spicy sausage slice, bro! Cowabunga, my dude!!",
+
 		str_desc = "An apparently appetizing slice of pepperoni pizza. It’s crust is limp and soggy from the excess grease it's slathered in, which is about the only thing you can taste on it. Pure Bliss."
+
 	),
 	EwFood(
 		id_food = "meatlovers",
@@ -1451,6 +1453,7 @@ food_list = [
 			"slaw",
 			"op",
 			"ghst"
+
 		],
 		recover_hunger = 10,
 		price = 1,
@@ -2217,6 +2220,7 @@ food_list = [
 		],
 		recover_hunger = 125,
 		price = 10,
+
 		inebriation = 0,
 		str_name = 'box of chocolates',
 		vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
@@ -2225,6 +2229,7 @@ food_list = [
 	),
 ]
 #chocolates were reduced due to being, hands down, the best food item in both FC and SMC, removing all reasons to go to food court
+
 
 # A map of id_food to EwFood objects.
 food_map = {}

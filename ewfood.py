@@ -208,7 +208,7 @@ async def order(cmd):
 						item_props = item_props
 					)
 
-				response = "You slam {cost:,} SlimeCoin down at the {vendor} for a {food}{togo}{sharetext}{flavor}".format(
+				response = "You slam an encrypted thumbdrive into the cash register down at {vendor} and transfer {cost:,} SlimeCoin for a {food}{togo}{sharetext}{flavor}".format(
 					cost = value,
 					vendor = current_vendor,
 					food = food.str_name,

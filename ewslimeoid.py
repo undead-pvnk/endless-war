@@ -35,15 +35,20 @@ class EwSlimeoid:
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
 
 	""" Load the slimeoid data for this user from the database. """
-	def __init__(self, member = None, id_slimeoid = None, life_state = None):
+	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None):
 		query_suffix = ""
 
 		if id_slimeoid != None:
 			query_suffix = " WHERE id_slimeoid = '{}'".format(id_slimeoid)
-		elif member != None:
-			query_suffix = " WHERE id_user = '{}' AND id_server = '{}'".format(member.id, member.server.id)
-			if life_state != None:
-				query_suffix += " AND life_state = '{}'".format(life_state)
+		else:
+			if member != None:
+				id_user = member.id
+				id_server = member.server.id
+
+			if id_user != None and id_server != None:
+				query_suffix = " WHERE id_user = '{}' AND id_server = '{}'".format(id_user, id_server)
+				if life_state != None:
+					query_suffix += " AND life_state = '{}'".format(life_state)
 
 		if query_suffix != "":
 			try:
