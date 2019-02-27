@@ -1858,7 +1858,10 @@ async def skat(cmd):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[idx],response))
 					legalplay = False
 					while not legalplay:
-						play = random.randrange(len(hands[idx]))
+						while not legalplay:
+							play = random.randrange(len(hands[idx]))
+							legalplay = checkiflegal(hands[idx],play,trick[0],trumps)
+
 						try:
 							msg = await cmd.client.wait_for_message(timeout = play_timeout, author = members[idx], check = check_skat_play)
 
