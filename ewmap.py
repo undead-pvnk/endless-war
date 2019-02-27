@@ -701,14 +701,16 @@ async def halt(cmd):
 """
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**\n\n{}{}".format(
+			"**{}**\n\n{}{}{}".format(
 				poi.str_name,
 				poi.str_desc,
+				"\n\nThere is {} slime in this district.".format(district_data.slimes),
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")

@@ -391,7 +391,7 @@ cd_boombust = 22
 cd_rr = 600
 #slimeoid downtime after a defeat
 cd_slimeoiddefeated = 900
-cd_scavenge = 20
+cd_scavenge = 0
 
 # PvP timer pushouts
 time_pvp_kill = 600

@@ -235,12 +235,12 @@ async def scavenge(cmd):
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
-			scavenge_yield = math.floor(0.05 * district_data.slimes)
+			scavenge_yield = math.floor(0.002 * district_data.slimes)
 
 			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
 
-			response += "You scrape together {} slime from the streets.".format(scavenge_yield)
+			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 
 			district_data.persist()
 
@@ -262,8 +262,8 @@ async def scavenge(cmd):
 
 			# Tell the player their slime level increased and/or a poudrin was found.
 			if was_levelup:
-				response += "\n\nYou have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
-
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				response += "You have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
+			if not response == "":
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slime is banned in the detention center. Go into the city to scavenge."))
