@@ -311,7 +311,7 @@ async def capture_tick(id_server):
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		cursor.execute("SELECT {district}, {controlling_faction}, {capturing_faction}, {capture_points} FROM districts WHERE id_server = %s".format(
+		cursor.execute("SELECT {district}, {controlling_faction}, {capturing_faction}, {capture_points} FROM districts WHERE id_server = %s AND {controlling_faction} = \'\'".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
