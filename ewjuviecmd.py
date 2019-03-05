@@ -221,15 +221,15 @@ async def scavenge(cmd):
 
 	# ghosts cant scavenge 
 	if user_data.life_state == ewcfg.life_state_corpse:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't scavenge while you're dead. Try {}.".format(ewcfg.cmd_revive)))
-	
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What would you want to do that for? You're a ghost, you have no need for such lowly materialistic possessions like slime. You only engage in intellectual pursuits now. {} if you want to give into your base human desire to see numbers go up.".format(ewcfg.cmd_revive)))
+	# currently not active - no cooldown
 	if time_now - user_data.time_lastscavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
 	# Mine only in the mines
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted for dumpster diving. Go get some grub!"))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
 			district_data = EwDistrict(district = cmd.message.channel.name, id_server = cmd.message.author.server.id)
 
@@ -266,4 +266,4 @@ async def scavenge(cmd):
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slime is banned in the detention center. Go into the city to scavenge."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))

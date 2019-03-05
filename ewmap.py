@@ -704,13 +704,25 @@ async def look(cmd):
 	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
+	slimes = district_data.slimes
+	slimes_resp = "\n\n"
+	if slimes < 10000:
+		slimes_resp += "There are a few specks of slime splattered across the city streets."
+	elif slimes < 100000:
+		slimes_resp += "There are sparse puddles of slime filling potholes in the cracked city streets."
+	elif slimes < 1000000:
+		slimes_resp += "There are good amounts of slime pooling around storm drains and craters in the rundown city streets."
+	else:
+		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
+
+
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
 			"**{}**\n\n{}{}{}".format(
 				poi.str_name,
 				poi.str_desc,
-				"\n\nThere is {} slime in this district.".format(district_data.slimes),
+				slimes_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
