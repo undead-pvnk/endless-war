@@ -526,24 +526,14 @@ async def attack(cmd):
 			if user_inital_level < user_data.slimelevel: 
 				response += "\n\n{} has been empowered by slime and is now a level {} slimeboi!".format(cmd.message.author.display_name, user_data.slimelevel)
 
-			# # Give slimes to the boss if possible.
-			# boss_member = None
-			# if boss_slimes > 0:
-			# 	for member_search in cmd.message.server.members:
-			# 		if role_boss in ewutils.getRoleMap(member_search.roles):
-			# 			boss_member = member_search
-			# 			break
+			# Team kills don't award slime to the kingpin.
+			if user_data.faction != shootee_data.faction:
+				# Give slimes to the boss if possible.
+				kingpin = ewutils.find_kingpin(id_server = cmd.message.server.id, kingpin_role = role_boss)
 
-			# if boss_member != None:
-			# 	boss_data = EwUser(member = boss_member)
-			# 	boss_data.change_slimes(n = boss_slimes)
-			# 	boss_data.persist()
-
-			kingpin = ewutils.find_kingpin(id_server = cmd.message.server.id, kingpin_role = role_boss)
-
-			if kingpin:
-				kingpin.change_slimes(n = boss_slimes)
-				kingpin.persist()
+				if kingpin:
+					kingpin.change_slimes(n = boss_slimes)
+					kingpin.persist()
 
 			# Persist every users' data.
 			user_data.persist()
