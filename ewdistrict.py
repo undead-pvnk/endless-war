@@ -88,26 +88,19 @@ class EwDistrict:
 
 	async def decay_capture_points(self):
 		if self.capture_points > 0:
-			players_in_district = ewutils.execute_sql_query("SELECT {faction}, {life_state}, id_user FROM users WHERE id_server = %s AND {poi} = %s".format(
-				faction = ewcfg.col_faction,
-				life_state = ewcfg.col_life_state,
-				poi = ewcfg.col_poi
-			), (
-				self.id_server,
-				self.name
-			))
 
-			cap_faction_member_present = False
+			neighbors = ewcfg.poi_neighbors[self.name]
+			all_neighbors_friendly = True
 
-			# if at least one of those players if from the capturing/controlling faction, don't decay
-			for player_in_district in players_in_district:
-				if player_in_district[0] == self.capturing_faction:  # [0] is their faction
-					cap_faction_member_present = True
+			for neighbor_id in neighbors:
+				neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
+				if not neighbor_data.controlling_faction == self.controlling_faction:
+					all_neighbors_friendly = False
 
-			if not cap_faction_member_present:  # only decay if no members of the currently capturing (or controlling) faction are present
+			if not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				await self.change_capture_points(-math.ceil(self.max_capture_points / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				await self.change_capture_points(-math.ceil(ewcfg.max_capture_points_s / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
 
 		if self.capture_points < 0:
 			self.capture_points = 0
