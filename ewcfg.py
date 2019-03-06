@@ -9,7 +9,7 @@ from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 
 # Global configuration options.
-version = "v2.20val"
+version = "v2.20valk2p"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -153,6 +153,7 @@ cmd_enlist = cmd_prefix + 'enlist'
 cmd_revive = cmd_prefix + 'revive'
 cmd_kill = cmd_prefix + 'kill'
 cmd_shoot = cmd_prefix + 'shoot'
+cmd_shoot_alt1 = cmd_prefix + 'bonk'
 cmd_attack = cmd_prefix + 'attack'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
@@ -195,6 +196,8 @@ cmd_deadmega = cmd_prefix + 'deadmega'
 cmd_donate = cmd_prefix + 'donate'
 cmd_slimecredit = cmd_prefix + 'slimecoin'
 cmd_slimecredit_alt1 = cmd_prefix + 'slimecredit'
+cmd_slimecredit_alt2 = cmd_prefix + 'coin'
+cmd_slimecredit_alt3 = cmd_prefix + 'sc'
 cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
 cmd_exchangerate_alt1 = cmd_prefix + 'exchange'
@@ -903,7 +906,8 @@ weapon_list = [
 		id_weapon = "rifle",
 		alias = [
 			"assaultrifle",
-			"machinegun"
+			"machinegun",
+			"mg"
 		],
 		str_crit = "**Critical hit!!** You unload an entire magazine into the target!!",
 		str_miss = "**You missed!** Not one of your bullets connected!!",
@@ -1367,6 +1371,7 @@ food_list = [
 		id_food = "pepperoni",
 		alias = [
 			"peperoni",
+			"pep"
 		],
 		recover_hunger = 60,
 		price = 6,
@@ -1374,7 +1379,9 @@ food_list = [
 		str_name = 'slice of pepperoni pizza',
 		vendors = [vendor_pizzahut],
 		str_eat = "You chomp right into the salty, spicy sausage slice, bro! Cowabunga, my dude!!",
-		str_desc = "An apparently appetizing slice of pepperoni pizza. It’s crust is limp and soggy from the excess grease it's slathered in, which is about the only thing you can taste on it."
+
+		str_desc = "An apparently appetizing slice of pepperoni pizza. It’s crust is limp and soggy from the excess grease it's slathered in, which is about the only thing you can taste on it. Pure Bliss."
+
 	),
 	EwFood(
 		id_food = "meatlovers",
@@ -1439,6 +1446,7 @@ food_list = [
 		alias = [
 			"coolranch",
 			"ranchtaco",
+			"cr"
 		],
 		recover_hunger = 30,
 		price = 3,
@@ -1451,7 +1459,7 @@ food_list = [
 	EwFood(
 		id_food = "quesarito",
 		alias = [
-			"gordita",
+			"qsr",
 		],
 		recover_hunger = 50,
 		price = 5,
@@ -1466,7 +1474,8 @@ food_list = [
 		alias = [
 			"machorito",
 			"quesomachorito"
-			"svqmr"
+			"svqmr",
+			"volc"
 		],
 		recover_hunger = 130,
 		price = 13,
@@ -1481,7 +1490,9 @@ food_list = [
 		id_food = "coleslaw",
 		alias = [
 			"slaw",
-			"op"
+			"op",
+			"ghst"
+
 		],
 		recover_hunger = 10,
 		price = 1,
@@ -1509,7 +1520,8 @@ food_list = [
 		id_food = "chickenbucket",
 		alias = [
 			"bucket",
-			"fashion",
+			"cucket", #kraks favorite
+			"chicken"
 		],
 		recover_hunger = 320,
 		price = 32,
@@ -1524,7 +1536,7 @@ food_list = [
 	EwFood(
 		id_food = "famousbowl",
 		alias = [
-			"gordita",
+			"bowl",
 		],
 		recover_hunger = 40,
 		price = 4,
@@ -1687,6 +1699,8 @@ food_list = [
 		id_food = "scallops",
 		alias = [
 			"scallops",
+			"scl",
+			"fish nuggies"
 		],
 		recover_hunger = 540,
 		price = 60,
@@ -1714,6 +1728,9 @@ food_list = [
 		id_food = "steaknlobster",
 		alias = [
 			"lobster",
+			"lob",
+			"snl",
+			"lb"
 		],
 		recover_hunger = 720,
 		price = 80,
@@ -1734,6 +1751,10 @@ food_list = [
 		alias = [
 			"crab",
 			"kingpin",
+			"kp",
+			"crb",
+			"krb",
+			"pin"
 		],
 		recover_hunger = 630,
 		price = 70,
@@ -1843,6 +1864,8 @@ food_list = [
 		id_food = "frenchtoast",
 		alias = [
 			"toast",
+			"ft",
+			"egg bread"
 		],
 		recover_hunger = 90,
 		price = 6,
@@ -2234,8 +2257,9 @@ food_list = [
 			"box",
 			"chocolates",
 		],
-		recover_hunger = 500,
-		price = 25,
+		recover_hunger = 125,
+		price = 10,
+
 		inebriation = 0,
 		str_name = 'box of chocolates',
 		vendors = [vendor_tacobell, vendor_pizzahut, vendor_kfc, vendor_bar, vendor_diner, vendor_seafood],
@@ -2243,6 +2267,7 @@ food_list = [
 		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
 	),
 ]
+#chocolates were reduced due to being, hands down, the best food item in both FC and SMC, removing all reasons to go to food court
 
 
 # A map of id_food to EwFood objects.
@@ -2388,7 +2413,7 @@ poi_list = [
 		str_in = "at the base of",
 		str_enter = "arrive at",
 		str_name = "ENDLESS WAR",
-		str_desc = "ENDLESS WAR towers above you, its gray color almost making it seem to disappear against the gray of the sky. Its eye is closed, motionless.",
+		str_desc = "ENDLESS WAR towers above you, its gray color almost making it seem to disappear against the gray of the sky. Its eye stares longingly into the cityscape.",
 		coord = (27, 16),
 		channel = channel_endlesswar,
 		role = "Endless War"
@@ -2398,6 +2423,7 @@ poi_list = [
 		alias = [
 			"slimecorp",
 			"hq",
+			"corp"
 		],
 		str_name = "SlimeCorp HQ",
 		str_desc = "Within the gleaming metal hull of the towering SlimeCorp HQ, brightly lit sterile white hallways wind like a maze, past countless receptionists' desks, waiting rooms, and high-tech stainless steel vault doors.",
@@ -2452,7 +2478,10 @@ poi_list = [
 			"killer",
 			"killtown",
 			"copkt",
-			"ck"
+			"ck",
+			"cct",
+			"ckt",
+			"cathedral"
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Deep indigo edifices of metal and brick rise above the pavement. Apartment windows glint in the blue and purple light of neon signs, and a menacing cathedral looms darkly on the horizon.\n\nTo the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the West is Vandal Park. To the Northwest is Gatlingsdale.",
@@ -2501,7 +2530,8 @@ poi_list = [
 			"rowdies",
 			"roughhouse",
 			"rowdyrh",
-			"rr"
+			"rr",
+			"rrh"
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Rusted pink metal shanties are hastily constructed as far as the eye can see, sometimes stacked on top of one another, forming high towers and densely populated mazes.\n\nTo the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
@@ -2761,6 +2791,10 @@ poi_list = [
 		str_name = "Vagrant's Corner",
 		str_desc = "The glow of the Slime Sea illumunates the undersides of the docks and the heavy industrial machinery designed to pump slime into the cargo holds of outbound barges.\n\nThis area contains The King's Wife's Son Speakeasy. To the North is New New Yonkers. To the Northeast is Assault Flats Beach Resort. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
 		coord = (37, 11),
+		coord_alias = [
+			(38, 11),
+			(39, 11)
+		],
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_a,
@@ -3005,14 +3039,16 @@ poi_list = [
 			"nlacuniversity",
 			"college",
 			"uni",
-			"nu"
+			"nu",
+			"school",
+			"nlac"
 		],
 		str_name = "New Los Angeles City University",
 		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here.\n\nExits into Gatlingsdale.",
 		channel = channel_nlacu,
 		role = "NLAC U",
 		coord = (15, 9),
-		pvp = False,
+		pvp = True,
 		is_subzone = True,
 		mother_district = poi_id_gatlingsdale
 	),
@@ -3063,13 +3099,15 @@ poi_list = [
 			"sons",
 			"sez",  # se is already slime's end
 			"ez",
-			"kws"
+			"kws",
+			"king",
+			"kings"
 		],
 		str_name = "The King's Wife's Son Speakeasy",
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
-		coord = (39, 11),
+		coord = (39, 13),
 		pvp = False,
 		vendors = [
 			vendor_bar
@@ -3114,7 +3152,8 @@ poi_list = [
 			"slimeoidlab",
 			"slimeoidlabs",
 			"slab",
-			"sl"
+			"sl",
+			"slimeoid"
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
 		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\n\nExits into Brawlden.",
@@ -3208,9 +3247,10 @@ poi_list = [
 			"diner",
 			"smokers",
 			"cough",
-			"smc", 
+			"smc",
 			"wf", #wreckington food
-			"rf" #rowdy food
+			"rf", #rowdy food
+			"sm"
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.",
@@ -4449,7 +4489,8 @@ thrownobjects_list = [
 	"large rock",
 	"small motor vehicle",
 	"chunk of broken concrete",
-	"piece of rusted scrap metal"
+	"piece of rusted scrap metal",
+	"box overflowing with KFC branded bbq sauce"
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id
