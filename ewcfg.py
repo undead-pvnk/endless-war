@@ -2768,6 +2768,10 @@ poi_list = [
 		str_name = "Vagrant's Corner",
 		str_desc = "The glow of the Slime Sea illumunates the undersides of the docks and the heavy industrial machinery designed to pump slime into the cargo holds of outbound barges.\n\nThis area contains The King's Wife's Son Speakeasy. To the North is New New Yonkers. To the Northeast is Assault Flats Beach Resort. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
 		coord = (37, 11),
+		coord_alias = [
+			(38, 11),
+			(39, 11)
+		],
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_a,
@@ -3080,7 +3084,7 @@ poi_list = [
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
-		coord = (39, 11),
+		coord = (39, 13),
 		pvp = False,
 		vendors = [
 			vendor_bar
