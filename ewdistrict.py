@@ -94,11 +94,10 @@ class EwDistrict:
 
 			for neighbor_id in neighbors:
 				neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
-				if not neighbor_data.controlling_faction == self.controlling_faction:
+				if neighbor_data.controlling_faction != self.controlling_faction:
 					all_neighbors_friendly = False
 
 			if not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
-
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
 				await self.change_capture_points(-math.ceil(ewcfg.max_capture_points_s / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
 
