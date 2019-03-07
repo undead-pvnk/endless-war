@@ -322,10 +322,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick so that 1 second = 1 capture point
-max_capture_points_s = 720  # 12 min
-max_capture_points_a = 360  # 6 min
-max_capture_points_b = 240  # 4 min
-max_capture_points_c = 120   # 2 min
+max_capture_points_s = 4915  # 12 min
+max_capture_points_a = 3686  # 6 min
+max_capture_points_b = 2458  # 4 min
+max_capture_points_c = 1229   # 2 min
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -338,9 +338,14 @@ max_capture_points = {
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
 
+# capture speed at 0% progress
+baseline_capture_speed = 2
+
+# accelerates capture speed depending on current progress
+capture_gradient = 1
 
 # district de-capturing
-decapture_speed_multiplier = 2  # how much faster de-capturing is than capturing
+decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
 decay_modifier = 1  # more means slower

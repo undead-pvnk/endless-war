@@ -87,6 +87,8 @@ class EwDistrict:
 		))
 	
 	def get_number_of_friendly_neighbors(self):
+		if self.controlling_faction == "":
+			return 0
 		neighbors = ewcfg.poi_neighbors[self.name]
 		friendly_neighbors = 0
 
@@ -106,7 +108,7 @@ class EwDistrict:
 
 			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				await self.change_capture_points(-math.ceil(ewcfg.max_capture_points_s / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				await self.change_capture_points(-math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
 
 		if self.capture_points < 0:
 			self.capture_points = 0
@@ -310,7 +312,7 @@ async def capture_tick(id_server):
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		cursor.execute("SELECT {district}, {controlling_faction}, {capturing_faction}, {capture_points} FROM districts WHERE id_server = %s AND {controlling_faction} = \'\'".format(
+		cursor.execute("SELECT {district}, {controlling_faction}, {capturing_faction}, {capture_points} FROM districts WHERE id_server = %s".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
@@ -387,6 +389,21 @@ async def capture_tick(id_server):
 			if faction_capture not in ['both', None]:  # if only members of one faction is present
 				if district_name in ewcfg.capturable_districts:
 					dist = EwDistrict(id_server = id_server, district = district_name)
+					
+					friendly_neighbors = dist.get_number_of_friendly_neighbors()
+					if friendly_neighbors < len(ewcfg.poi_neighbors[dist.name]):
+						capture_speed /= 1 + 0.1 * friendly_neighbors
+					else:
+						capture_speed = 0
+
+					capture_progress = dist.capture_points
+
+					if faction_capture != dist.capturing_faction:
+						capture_progress *= -1
+
+					capture_speed *= ewcfg.capture_gradient * capture_progress / dist.max_capture_points + ewcfg.baseline_capture_speed
+					capture_speed = math.ceil(capture_speed)
+
 
 					if dist.capture_points < dist.max_capture_points:
 						for stat_recipient in dc_stat_increase_list:
