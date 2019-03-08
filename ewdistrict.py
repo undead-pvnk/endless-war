@@ -402,7 +402,6 @@ async def capture_tick(id_server):
 						capture_progress *= -1
 
 					capture_speed *= ewcfg.capture_gradient * capture_progress / dist.max_capture_points + ewcfg.baseline_capture_speed
-					capture_speed = math.ceil(capture_speed)
 
 
 					if dist.capture_points < dist.max_capture_points:

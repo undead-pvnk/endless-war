@@ -321,11 +321,11 @@ property_class_b = "b"
 property_class_c = "c"
 
 # district capturing
-capture_tick_length = 10  # in seconds; also affects how much progress is made per tick so that 1 second = 1 capture point
-max_capture_points_s = 4915  # 12 min
-max_capture_points_a = 3686  # 6 min
-max_capture_points_b = 2458  # 4 min
-max_capture_points_c = 1229   # 2 min
+capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
+max_capture_points_s = 4915  # 90 min
+max_capture_points_a = 3277  # 60 min
+max_capture_points_b = 2458  # 45 min
+max_capture_points_c = 1638   # 30 min
 
 # district capture rates assigned to property classes
 max_capture_points = {
