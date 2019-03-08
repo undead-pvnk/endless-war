@@ -323,11 +323,11 @@ property_class_b = "b"
 property_class_c = "c"
 
 # district capturing
-capture_tick_length = 10  # in seconds; also affects how much progress is made per tick so that 1 second = 1 capture point
-max_capture_points_s = 7200  # 120 min
-max_capture_points_a = 3600  # 60 min
-max_capture_points_b = 1800  # 30 min
-max_capture_points_c = 900   # 15 min
+capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
+max_capture_points_s = 4915  # 90 min
+max_capture_points_a = 3277  # 60 min
+max_capture_points_b = 2458  # 45 min
+max_capture_points_c = 1638   # 30 min
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -340,12 +340,17 @@ max_capture_points = {
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
 
+# capture speed at 0% progress
+baseline_capture_speed = 2
+
+# accelerates capture speed depending on current progress
+capture_gradient = 1
 
 # district de-capturing
-decapture_speed_multiplier = 2  # how much faster de-capturing is than capturing
+decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = 2  # more means slower
+decay_modifier = 1  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -3376,6 +3381,38 @@ for poi in poi_list:
 	# if it's a district and not RR, CK, or JR, add it to a list of capturable districts
 	if poi.is_capturable:
 		capturable_districts.append(poi.id_poi)
+
+poi_neighbors = {
+	poi_id_downtown : [poi_id_smogsburg, poi_id_greenlightdistrict, poi_id_rowdyroughhouse, poi_id_poudrinalley, poi_id_krakbay, poi_id_copkilltown],
+	poi_id_smogsburg : [poi_id_downtown, poi_id_copkilltown, poi_id_astatineheights, poi_id_arsonbrook, poi_id_oldnewyonkers],
+	poi_id_copkilltown : [poi_id_gatlingsdale, poi_id_astatineheights, poi_id_smogsburg, poi_id_downtown],
+	poi_id_krakbay : [poi_id_downtown, poi_id_poudrinalley, poi_id_oozegardens, poi_id_southsleezeborough, poi_id_northsleezeborough, poi_id_glocksbury],
+	poi_id_poudrinalley : [poi_id_downtown, poi_id_rowdyroughhouse, poi_id_cratersville, poi_id_oozegardens, poi_id_krakbay],
+	poi_id_rowdyroughhouse : [poi_id_wreckington, poi_id_poudrinalley, poi_id_downtown],
+	poi_id_greenlightdistrict : [poi_id_vagrantscorner, poi_id_juviesrow, poi_id_downtown],
+	poi_id_oldnewyonkers : [poi_id_vagrantscorner, poi_id_smogsburg, poi_id_littlechernobyl, poi_id_brawlden, poi_id_newnewyonkers],
+	poi_id_littlechernobyl : [poi_id_brawlden, poi_id_oldnewyonkers, poi_id_arsonbrook],
+	poi_id_arsonbrook : [poi_id_brawlden, poi_id_littlechernobyl, poi_id_smogsburg, poi_id_astatineheights],
+	poi_id_astatineheights : [poi_id_arsonbrook, poi_id_smogsburg, poi_id_copkilltown, poi_id_gatlingsdale, poi_id_toxington],
+	poi_id_gatlingsdale : [poi_id_toxington, poi_id_astatineheights, poi_id_copkilltown, poi_id_vandalpark, poi_id_poloniumhill],
+	poi_id_vandalpark : [poi_id_poloniumhill, poi_id_gatlingsdale, poi_id_glocksbury, poi_id_westglocksbury],
+	poi_id_glocksbury : [poi_id_vandalpark, poi_id_krakbay, poi_id_northsleezeborough, poi_id_westglocksbury],
+	poi_id_northsleezeborough : [poi_id_glocksbury, poi_id_krakbay, poi_id_southsleezeborough],
+	poi_id_southsleezeborough : [poi_id_northsleezeborough, poi_id_krakbay, poi_id_oozegardens],
+	poi_id_oozegardens : [poi_id_southsleezeborough, poi_id_krakbay, poi_id_poudrinalley, poi_id_cratersville],
+	poi_id_cratersville : [poi_id_oozegardens, poi_id_poudrinalley, poi_id_wreckington],
+	poi_id_wreckington : [poi_id_rowdyroughhouse, poi_id_vagrantscorner, poi_id_cratersville],
+	poi_id_juviesrow : [poi_id_greenlightdistrict, poi_id_vagrantscorner],
+	poi_id_slimesend : [poi_id_vagrantscorner],
+	poi_id_vagrantscorner : [poi_id_oldnewyonkers, poi_id_newnewyonkers, poi_id_assaultflatsbeachresort, poi_id_wreckington, poi_id_slimesend, poi_id_juviesrow, poi_id_greenlightdistrict],
+	poi_id_assaultflatsbeachresort : [poi_id_vagrantscorner, poi_id_newnewyonkers],
+	poi_id_newnewyonkers : [poi_id_assaultflatsbeachresort, poi_id_vagrantscorner, poi_id_oldnewyonkers, poi_id_brawlden],
+	poi_id_brawlden : [poi_id_newnewyonkers, poi_id_oldnewyonkers, poi_id_littlechernobyl, poi_id_arsonbrook],
+	poi_id_toxington : [poi_id_astatineheights, poi_id_gatlingsdale, poi_id_poloniumhill, poi_id_charcoalpark],
+	poi_id_charcoalpark : [poi_id_toxington, poi_id_poloniumhill],
+	poi_id_poloniumhill : [poi_id_charcoalpark, poi_id_toxington, poi_id_gatlingsdale, poi_id_vandalpark, poi_id_westglocksbury],
+	poi_id_westglocksbury : [poi_id_poloniumhill, poi_id_vandalpark, poi_id_glocksbury]
+}
 
 cosmetic_items_list = [
 	EwCosmeticItem(

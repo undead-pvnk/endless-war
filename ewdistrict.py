@@ -94,29 +94,30 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes
 		))
+	
+	def get_number_of_friendly_neighbors(self):
+		if self.controlling_faction == "":
+			return 0
+		neighbors = ewcfg.poi_neighbors[self.name]
+		friendly_neighbors = 0
+
+		for neighbor_id in neighbors:
+			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
+			if neighbor_data.controlling_faction == self.controlling_faction:
+				friendly_neighbors += 1
+		return friendly_neighbors
+
 
 	async def decay_capture_points(self):
 		if self.capture_points > 0:
-			players_in_district = ewutils.execute_sql_query("SELECT {faction}, {life_state}, id_user FROM users WHERE id_server = %s AND {poi} = %s".format(
-				faction = ewcfg.col_faction,
-				life_state = ewcfg.col_life_state,
-				poi = ewcfg.col_poi
-			), (
-				self.id_server,
-				self.name
-			))
 
-			cap_faction_member_present = False
+			neighbors = ewcfg.poi_neighbors[self.name]
+			all_neighbors_friendly = len(neighbors) == self.get_number_of_friendly_neighbors()
 
-			# if at least one of those players if from the capturing/controlling faction, don't decay
-			for player_in_district in players_in_district:
-				if player_in_district[0] == self.capturing_faction:  # [0] is their faction
-					cap_faction_member_present = True
 
-			if not cap_faction_member_present:  # only decay if no members of the currently capturing (or controlling) faction are present
-
+			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				await self.change_capture_points(-math.ceil(self.max_capture_points / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				await self.change_capture_points(-math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
 
 		if self.capture_points < 0:
 			self.capture_points = 0
@@ -398,9 +399,24 @@ async def capture_tick(id_server):
 							capture_speed += 1
 							dc_stat_increase_list.append(player_id)
 
+
 			if faction_capture not in ['both', None]:  # if only members of one faction is present
 				if district_name in ewcfg.capturable_districts:
 					dist = EwDistrict(id_server = id_server, district = district_name)
+					
+					friendly_neighbors = dist.get_number_of_friendly_neighbors()
+					if friendly_neighbors < len(ewcfg.poi_neighbors[dist.name]):
+						capture_speed /= 1 + 0.1 * friendly_neighbors
+					else:
+						capture_speed = 0
+
+					capture_progress = dist.capture_points
+
+					if faction_capture != dist.capturing_faction:
+						capture_progress *= -1
+
+					capture_speed *= ewcfg.capture_gradient * capture_progress / dist.max_capture_points + ewcfg.baseline_capture_speed
+
 
 					if dist.capture_points < dist.max_capture_points:
 						for stat_recipient in dc_stat_increase_list:
@@ -445,6 +461,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 
 		if kingpin is not None:
 			slimegain = 0
+			friendly_mod = 1
 
 			for id_district in ewcfg.capturable_districts:
 				district = EwDistrict(id_server = id_server, district = id_district)
@@ -452,8 +469,9 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
 					slimegain += ewcfg.district_control_slime_yields[district.property_class]
-
-			kingpin.change_slimes(n = slimegain)
+					# increase slimeyields by 10 percent per friendly neighbor
+					friendly_mod += 0.1 * district.get_number_of_friendly_neighbors()
+			kingpin.change_slimes(n = slimegain * friendly_mod)
 			kingpin.persist()
 
 			ewutils.logMsg(kingpin_role + " just received %d" % slimegain + " slime for their captured districts.")
