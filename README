@@ -35,6 +35,8 @@ CREATE TABLE users (
 	rr_challenger_id varchar(128) NOT NULL DEFAULT '',
 	time_last_action bigint NOT NULL DEFAULT '0',
 	weaponmarried int NOT NULL DEFAULT '0',
+	time_lastscavenge int NOT NULL DEFAULT '0',
+	bleed_storage bigint NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -158,6 +160,7 @@ CREATE TABLE districts (
 	controlling_faction varchar(32) NOT NULL DEFAULT '',
 	capturing_faction varchar(32) NOT NULL DEFAULT '',
 	capture_points bigint NOT NULL DEFAULT '0',
+	slimes bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
 );

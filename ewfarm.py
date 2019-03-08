@@ -101,7 +101,7 @@ async def reap(cmd):
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
 					slime_gain = ewcfg.reap_gain
-					user_data.change_slimes(slime_gain)
+					user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
 					user_data.persist()
 
 					#S(t) = 35000000 +  (t - 1440) * 992 + Log2(t/1440) * 11782046 caped at 100000000
