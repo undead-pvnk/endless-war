@@ -706,6 +706,7 @@ async def look(cmd):
 	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
+	# get information about slime levels in the district
 	slimes = district_data.slimes
 	slimes_resp = "\n\n"
 	if slimes < 10000:
@@ -717,6 +718,7 @@ async def look(cmd):
 	else:
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
+	# get information about players in the district
 	players_in_district = district_data.get_number_of_players()
 	players_resp = "\n\n"
 	if players_in_district == 1:
@@ -725,6 +727,7 @@ async def look(cmd):
 		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
 
+	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
@@ -739,10 +742,15 @@ async def look(cmd):
 			)
 		))
 
+
+"""
+	Get information about an adjacent zone.
+"""
 async def scout(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 
+	# if no arguments, treat as a !look alias
 	if not len(cmd.tokens) > 1:
 		return await look(cmd)
 
@@ -750,6 +758,13 @@ async def scout(cmd):
 	poi = ewcfg.id_to_poi.get(target_name)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 
+
+	# if scouting own location, treat as a !look alias
+	if poi.id_poi == user_poi.id_poi:
+		return await look(cmd)
+
+
+	# check if district is in scouting range
 	is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
 	is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
 	is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
@@ -761,6 +776,7 @@ async def scout(cmd):
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
+	# get information about other gangsters in the district
 	players_in_district = district_data.get_number_of_players()
 	players_resp = "\n\n"
 	if players_in_district == 1:
@@ -769,6 +785,7 @@ async def scout(cmd):
 		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
 
+	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,

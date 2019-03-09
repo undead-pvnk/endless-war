@@ -280,6 +280,7 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
 
+	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
@@ -364,7 +365,10 @@ async def on_ready():
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
 
+		# find roles and add them to the database
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
+
+		# hides the names of poi roles
 		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
 
 		# Grep around for channels
