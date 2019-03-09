@@ -669,7 +669,7 @@ async def on_message(message):
 
 		# assign the appropriate roles to a user with less than @everyone, faction, location
 		if len(message.author.roles) < 3:
-			return await ewrolemgr.updateRoles(client = client, member = message.author)
+			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:

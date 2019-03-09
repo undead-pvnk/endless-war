@@ -717,7 +717,12 @@ async def look(cmd):
 	else:
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
-	players_resp = "\n\nThere are currently {} gangsters in this district.".format(district_data.get_number_of_players())
+	players_in_district = district_data.get_number_of_players()
+	players_resp = "\n\n"
+	if players_in_district == 1:
+		players_resp += "There is currently 1 gangster in this district"
+	else:
+		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
 
 	if poi != None:
@@ -756,7 +761,12 @@ async def scout(cmd):
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
-	players_resp = "\n\nThere are currently {} gangsters in this district.".format(district_data.get_number_of_players())
+	players_in_district = district_data.get_number_of_players()
+	players_resp = "\n\n"
+	if players_in_district == 1:
+		players_resp += "There is currently 1 gangster in this district"
+	else:
+		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
 
 	if poi != None:
