@@ -275,7 +275,9 @@ cmd_map = {
 	ewcfg.cmd_petslimeoid: ewcmd.petslimeoid,
 	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle
+	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
 debug = False
@@ -300,6 +302,18 @@ async def on_member_remove(member):
 		ewutils.logMsg('Player killed for leaving the server.')
 	except:
 		ewutils.logMsg('Failed to kill member who left the server.')
+
+@client.event
+async def on_member_update(before, after):
+	# update last offline time if they went from offline to online
+	try:
+		if before.status == discord.Status.offline and after.status != discord.Status.offline:
+
+			user_data = EwUser(member = after)
+			user_data.time_lastoffline = int(time.time())
+			user_data.persist()
+	except:
+		ewutils.logMsg('Failed to update member\'s last offline time.')
 
 @client.event
 async def on_ready():
@@ -346,6 +360,9 @@ async def on_ready():
 
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
+
+		ewrolemgr.setupRoles(client = client, id_server = server.id)
+		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
@@ -655,6 +672,15 @@ async def on_message(message):
 		if message.author.status == discord.Status.offline:
 
 			response = "You cannot participate in the ENDLESS WAR while offline."
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+			return
+
+		user_data = EwUser(member = message.author)
+		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
+			
+			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 

@@ -106,6 +106,94 @@ role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 
+faction_roles = [
+	role_juvenile, 
+	role_juvenile_pvp, 
+	role_rowdyfucker, 
+	role_rowdyfuckers, 
+	role_rowdyfuckers_pvp, 
+	role_copkiller, 
+	role_copkillers, 
+	role_copkillers_pvp, 
+	role_corpse, 
+	role_corpse_pvp, 
+	role_kingpin,
+	role_grandfoe 
+	]
+
+id_server_turtlepile = "112333370322649088"
+
+roles_map = {
+	# ID tags for points of interest that are needed in code.
+	poi_id_thesewers : {id_server_turtlepile : "546431764281950228"},
+	poi_id_slimeoidlab : {},
+	poi_id_mine : {},
+	poi_id_thecasino : {},
+	poi_id_711 : {},
+	poi_id_speakeasy : {},
+	poi_id_dojo : {},
+	poi_id_arena : {},
+	poi_id_nlacu : {},
+	poi_id_foodcourt : {},
+	poi_id_cinema : {},
+	poi_id_bazaar : {},
+	poi_id_stockexchange : {},
+	poi_id_endlesswar : {},
+	poi_id_slimecorphq : {},
+	poi_id_cv_mines : {},
+	poi_id_tt_mines : {},
+	poi_id_diner : {},
+	poi_id_seafood : {},
+	poi_id_jr_farms : {},
+	poi_id_og_farms : {},
+	poi_id_ab_farms : {},
+
+	# district pois
+	poi_id_downtown : {id_server_turtlepile : "543988509141237760"},
+	poi_id_smogsburg : {},
+	poi_id_copkilltown : {},
+	poi_id_krakbay : {},
+	poi_id_poudrinalley : {},
+	poi_id_rowdyroughhouse : {},
+	poi_id_greenlightdistrict : {},
+	poi_id_oldnewyonkers : {},
+	poi_id_littlechernobyl : {},
+	poi_id_arsonbrook : {},
+	poi_id_astatineheights : {},
+	poi_id_gatlingsdale : {},
+	poi_id_vandalpark : {},
+	poi_id_glocksbury : {},
+	poi_id_northsleezeborough : {},
+	poi_id_southsleezeborough : {},
+	poi_id_oozegardens : {},
+	poi_id_cratersville : {},
+	poi_id_wreckington : {},
+	poi_id_juviesrow : {},
+	poi_id_slimesend : {},
+	poi_id_vagrantscorner : {},
+	poi_id_assaultflatsbeachresort : {},
+	poi_id_newnewyonkers : {},
+	poi_id_brawlden : {},
+	poi_id_toxington : {},
+	poi_id_charcoalpark : {},
+	poi_id_poloniumhill : {},
+	poi_id_westglocksbury : {},
+
+	# Role names. All lower case with no spaces.
+	role_juvenile : {id_server_turtlepile : "543988458520182786"},
+	role_juvenile_pvp : {},
+	role_rowdyfucker : {},
+	role_rowdyfuckers : {id_server_turtlepile : "544997749163294728"},
+	role_rowdyfuckers_pvp : {},
+	role_copkiller : {},
+	role_copkillers : {id_server_turtlepile : "544997669597216778" },
+	role_copkillers_pvp : {},
+	role_corpse : {id_server_turtlepile : "543988566917906472"},
+	role_corpse_pvp : {},
+	role_kingpin : {},
+	role_grandfoe : {}
+	
+	}
 # Faction names
 faction_killers = "killers"
 faction_rowdys = "rowdys"
@@ -255,6 +343,8 @@ cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+
+cmd_restoreroles = cmd_prefix + 'restoreroles'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -411,6 +501,9 @@ time_pvp = 1800
 # time to get kicked out of subzone
 time_kickout = 3 * 60 * 60  # 3 hours
 
+# time after coming online before you can act
+time_offline = 10
+
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
 emote_pizzahut = "<:pizzahut:431273890355085323>"
@@ -472,8 +565,14 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 
+generic_role_name = 'Citizen'
+
 # Common database columns
 col_id_server = 'id_server'
+
+#Database columns for roles
+col_id_role = 'id_role'
+col_role_name = 'name'
 
 # Database columns for items
 col_id_item = "id_item"
@@ -523,6 +622,8 @@ col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
+col_time_lastenter = 'time_lastenter'
+col_time_lastoffline = 'time_lastoffline'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
