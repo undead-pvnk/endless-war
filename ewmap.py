@@ -717,6 +717,47 @@ async def look(cmd):
 	else:
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
+	players_resp = "\n\nThere are currently {} gangsters in this district.".format(district_data.get_number_of_players())
+
+
+	if poi != None:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"**{}**\n\n{}{}{}{}".format(
+				poi.str_name,
+				poi.str_desc,
+				slimes_resp,
+				players_resp,
+				("\n\n{}".format(
+					ewcmd.weather_txt(cmd.message.server.id)
+				) if cmd.message.server != None else "")
+			)
+		))
+
+async def scout(cmd):
+
+	user_data = EwUser(member = cmd.message.author)
+
+	if not len(cmd.tokens) > 1:
+		return await look(cmd)
+
+	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	poi = ewcfg.id_to_poi.get(target_name)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
+	is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
+	is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
+
+	if not is_neighbor and not is_subzone and not is_mother_district:
+		response = "You can't scout that far."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+	players_resp = "\n\nThere are currently {} gangsters in this district.".format(district_data.get_number_of_players())
+
 
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -724,7 +765,7 @@ async def look(cmd):
 			"**{}**\n\n{}{}{}".format(
 				poi.str_name,
 				poi.str_desc,
-				slimes_resp,
+				players_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")

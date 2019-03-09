@@ -209,6 +209,9 @@ cmd_map = {
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 
+	# Look around an adjacent POI
+	ewcfg.cmd_scout: ewmap.scout,
+
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
 
