@@ -612,7 +612,7 @@ async def on_message(message):
 			tokens = message.content.split(' ')  # if splitting via shlex doesnt work (odd number of quotes), use the old splitting method so it doesnt give an exception
 
 		tokens_count = len(tokens)
-		cmd = tokens[0].lower()
+		cmd = tokens[0].lower() if tokens_count >= 1 else ""
 
 		# remove mentions to us
 		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))
