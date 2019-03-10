@@ -183,22 +183,23 @@ async def updateRoles(
 			roleName = role_data.name
 			if roleName != None and roleName not in faction_roles_remove and roleName not in poi_roles_remove:
 				role_ids.append(role_data.id_role)
-				ewutils.logMsg('found role {} with id {}'.format(roleName, role_data.id_role))
 		except:
-			ewutils.logMsg('error: couldn\'t find role {}'.format(faction_role))
+			ewutils.logMsg('error: couldn\'t find role with id {}'.format(role_id))
 
 	
 	try:
 		role_data = EwRole(id_server = id_server, name = faction_role)
-		role_ids.append(role_data.id_role)
-		ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(faction_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = poi_role)
-		role_ids.append(role_data.id_role)
-		ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(faction_role))
 
