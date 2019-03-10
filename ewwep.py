@@ -602,7 +602,7 @@ async def suicide(cmd):
 				challenger.persist()
 				
 			district_data = EwDistrict(district = ewcfg.id_to_poi.get(user_data.poi).channel, id_server = cmd.message.server.id)
-			district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
+			district_data.change_slimes(n = user_data.slimes + user_data.bleed_storage, source = ewcfg.source_killing)
 			district_data.persist()
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
