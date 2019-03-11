@@ -55,6 +55,8 @@ class EwResponseContainer:
 	def __init__(self, client, id_server):
 		self.client = client
 		self.id_server = id_server
+		self.channel_responses = {}
+		self.channel_topics = {}
 
 	def add_channel_response(self, channel, response):
 		if channel in self.channel_topics:
