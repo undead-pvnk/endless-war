@@ -231,7 +231,7 @@ async def scavenge(cmd):
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
-			district_data = EwDistrict(district = cmd.message.channel.name, id_server = cmd.message.author.server.id)
+			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user

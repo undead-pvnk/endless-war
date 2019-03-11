@@ -410,7 +410,7 @@ async def attack(cmd):
 				if slimes_damage >= shootee_data.slimes:
 					was_killed = True
 
-				district_data = EwDistrict(district = ewcfg.id_to_poi.get(user_data.poi).channel, id_server = cmd.message.server.id)
+				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				slime_splatter = min(slimes_damage, shootee_data.slimes)
 				if was_juvenile or user_data.faction == shootee_data.faction:
@@ -601,8 +601,8 @@ async def suicide(cmd):
 				ewitem.item_loot(member = cmd.message.author, id_user_target = user_data.rr_challenger)
 				challenger.persist()
 				
-			district_data = EwDistrict(district = ewcfg.id_to_poi.get(user_data.poi).channel, id_server = cmd.message.server.id)
-			district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
+			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+			district_data.change_slimes(n = user_data.slimes + user_data.bleed_storage, source = ewcfg.source_killing)
 			district_data.persist()
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
