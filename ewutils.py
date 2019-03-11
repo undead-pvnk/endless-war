@@ -43,6 +43,63 @@ class Message:
 		self.message = message
 		self.id_poi = id_poi
 
+"""
+	Class for storing, passing, editing and posting channel responses and topics
+"""
+class EwResponseContainer:
+	client = None
+	id_server = ""
+	channel_responses = {}
+	channel_topics = {}
+
+	def __init__(self, client, id_server):
+		self.client = client
+		self.id_server = id_server
+
+	def add_channel_response(self, channel, response):
+		if channel in self.channel_topics:
+			self.channel_responses[channel] += "\n" + response
+		else:
+			self.channel_responses[channel] = response
+
+	def add_channel_topic(self, channel, topic):
+		if channel in self.channel_topics:
+			self.channel_topics[channel] += " " + topic
+		else:
+			self.channel_topics[channel] = topic
+
+	def add_response_container(self, resp_cont):
+		for ch in resp_cont.channel_responses:
+			self.add_channel_response(ch, resp_cont.channel_responses[ch])
+
+		for ch in resp_cont.channel_topics:
+			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+	async def post(self):
+		if self.client == None:
+			self.client = get_client()
+
+		if self.client == None:
+			logMsg("Couldn't find client")
+			return
+			
+		server = self.client.get_server(self.id_server)
+		if server == None:
+		    logMsg("Couldn't find server with id {}".format(self.id_server))
+		    return
+
+		for ch in self.channel_responses:
+			channel = get_channel(server = server, channel_name = ch)
+			await send_message(self.client, channel, self.channel_responses[ch])
+
+		for ch in self.channel_topics:
+			channel = get_channel(server = server, channel_name = ch)
+			try:
+				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+			except:
+				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+
+
 def readMessage(fname):
 	msg = Message()
 
@@ -711,3 +768,4 @@ async def edit_message(client, message, text):
 		return await client.edit_message(message, text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
+
