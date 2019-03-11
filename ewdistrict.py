@@ -7,6 +7,7 @@ import discord
 import ewcfg
 import ewstats
 import ewutils
+from ew import EwUser, EwMarket
 
 """
 	district data model for database persistence
@@ -32,6 +33,10 @@ class EwDistrict:
 	# The amount of CP it takes for the district to be captured
 	max_capture_points = 0
 
+	# The amount of slime in the district
+	slimes = 0
+
+
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
 			self.id_server = id_server
@@ -47,11 +52,12 @@ class EwDistrict:
 			else:
 				self.max_capture_points = 0
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes} FROM districts WHERE id_server = %s AND {district} = %s".format(
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
 				capture_points = ewcfg.col_capture_points,
 				district = ewcfg.col_district,
+				slimes = ewcfg.col_district_slimes
 			), (
 				id_server,
 				district
@@ -62,6 +68,7 @@ class EwDistrict:
 				self.controlling_faction = data[0][0]
 				self.capturing_faction = data[0][1]
 				self.capture_points = data[0][2]
+				self.slimes = data[0][3]
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
 				ewutils.execute_sql_query("REPLACE INTO districts ({id_server}, {district}) VALUES (%s, %s)".format(
@@ -73,17 +80,19 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}) VALUES(%s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}) VALUES(%s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
-			capture_points = ewcfg.col_capture_points
+			capture_points = ewcfg.col_capture_points,
+			slimes = ewcfg.col_district_slimes
 		), (
 			self.id_server,
 			self.name,
 			self.controlling_faction,
 			self.capturing_faction,
-			self.capture_points
+			self.capture_points,
+			self.slimes
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -298,6 +307,11 @@ class EwDistrict:
 
 				self.controlling_faction = new_owner
 
+	""" add or remove slime """
+	def change_slimes(self, n = 0, source = None):
+		change = int(n)
+		self.slimes += change
+
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -467,3 +481,4 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		district = EwDistrict(id_server = id_server, district = id_district)
 
 		await district.decay_capture_points()
+

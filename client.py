@@ -216,6 +216,9 @@ cmd_map = {
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
 
+        #scavenging
+        ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+
 	#cosmetics
 	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
@@ -368,6 +371,7 @@ async def on_ready():
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -608,7 +612,7 @@ async def on_message(message):
 			tokens = message.content.split(' ')  # if splitting via shlex doesnt work (odd number of quotes), use the old splitting method so it doesnt give an exception
 
 		tokens_count = len(tokens)
-		cmd = tokens[0].lower()
+		cmd = tokens[0].lower() if tokens_count >= 1 else ""
 
 		# remove mentions to us
 		mentions = list(filter(lambda user : user.id != client.user.id, message.mentions))

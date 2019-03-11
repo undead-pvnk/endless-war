@@ -13,6 +13,7 @@ import ewmap
 import ewrolemgr
 import ewstats
 from ew import EwUser, EwMarket
+from ewdistrict import EwDistrict
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
 # exceeds 3 in 5 seconds, you die.
@@ -204,3 +205,65 @@ async def mismine(cmd, user_data, cause):
 			response = "You can't mine in this channel. Go elsewhere."
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+""" scavenge for slime """
+async def scavenge(cmd):
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	user_data = EwUser(member = cmd.message.author)
+
+	time_now = int(time.time())
+	response = ""
+
+	# Kingpins can't scavenge.
+	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
+		return
+
+	# ghosts cant scavenge 
+	if user_data.life_state == ewcfg.life_state_corpse:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What would you want to do that for? You're a ghost, you have no need for such lowly materialistic possessions like slime. You only engage in intellectual pursuits now. {} if you want to give into your base human desire to see numbers go up.".format(ewcfg.cmd_revive)))
+	# currently not active - no cooldown
+	if time_now - user_data.time_lastscavenge < ewcfg.cd_scavenge:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
+
+	# Mine only in the mines
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
+		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
+		else:
+			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)
+
+			user_initial_level = user_data.slimelevel
+			# add scavenged slime to user
+			scavenge_yield = math.floor(0.002 * district_data.slimes)
+
+			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
+			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
+
+			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
+
+			district_data.persist()
+
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+			# Fatigue the scavenger.
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
+
+			user_data.hunger += ewcfg.hunger_perscavenge * int(hunger_cost_mod)
+			if extra > 0:  # if hunger_cost_mod is not an integer
+				# there's an x% chance that an extra stamina is deducted, where x is the fractional part of hunger_cost_mod in percent (times 100)
+				if random.randint(1, 100) <= extra * 100:
+					user_data.hunger += ewcfg.hunger_perscavenge
+
+			user_data.time_lastscavenge = time_now
+
+			user_data.persist()
+
+			# Tell the player their slime level increased and/or a poudrin was found.
+			if was_levelup:
+				response += "You have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
+			if not response == "":
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
