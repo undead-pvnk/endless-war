@@ -37,6 +37,8 @@ CREATE TABLE users (
 	weaponmarried int NOT NULL DEFAULT '0',
 	time_lastscavenge int NOT NULL DEFAULT '0',
 	bleed_storage bigint NOT NULL DEFAULT '0',
+	time_lastenter int NOT NULL DEFAULT '0',
+	time_lastoffline int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -163,4 +165,13 @@ CREATE TABLE districts (
 	slimes bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
+);
+
+CREATE TABLE roles (
+	id_server varchar(128) NOT NULL,
+	name varchar(128) NOT NULL,
+
+	id_role varchar(128) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, name)
 );

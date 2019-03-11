@@ -554,6 +554,7 @@ async def move(cmd):
 			return
 
 		user_data.poi = poi.id_poi
+		user_data.time_lastenter = int(time.time())
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -645,6 +646,7 @@ async def move(cmd):
 
 				if user_data.poi != poi_current.id_poi:
 					user_data.poi = poi_current.id_poi
+					user_data.time_lastenter = int(time.time())
 					user_data.persist()
 
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -704,6 +706,7 @@ async def look(cmd):
 	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
+	# get information about slime levels in the district
 	slimes = district_data.slimes
 	slimes_resp = "\n\n"
 	if slimes < 10000:
@@ -715,14 +718,81 @@ async def look(cmd):
 	else:
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
+	# get information about players in the district
+	players_in_district = district_data.get_number_of_players()
+	players_resp = "\n\n"
+	if players_in_district == 1:
+		players_resp += "There is currently 1 gangster in this district"
+	else:
+		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
+
+	# post result to channel
+	if poi != None:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"**{}**\n\n{}{}{}{}".format(
+				poi.str_name,
+				poi.str_desc,
+				slimes_resp,
+				players_resp,
+				("\n\n{}".format(
+					ewcmd.weather_txt(cmd.message.server.id)
+				) if cmd.message.server != None else "")
+			)
+		))
+
+
+"""
+	Get information about an adjacent zone.
+"""
+async def scout(cmd):
+
+	user_data = EwUser(member = cmd.message.author)
+
+	# if no arguments, treat as a !look alias
+	if not len(cmd.tokens) > 1:
+		return await look(cmd)
+
+	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	poi = ewcfg.id_to_poi.get(target_name)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+
+	# if scouting own location, treat as a !look alias
+	if poi.id_poi == user_poi.id_poi:
+		return await look(cmd)
+
+
+	# check if district is in scouting range
+	is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
+	is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
+	is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
+
+	if not is_neighbor and not is_subzone and not is_mother_district:
+		response = "You can't scout that far."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+	# get information about other gangsters in the district
+	players_in_district = district_data.get_number_of_players()
+	players_resp = "\n\n"
+	if players_in_district == 1:
+		players_resp += "There is currently 1 gangster in this district"
+	else:
+		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
+
+
+	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
 			"**{}**\n\n{}{}{}".format(
 				poi.str_name,
 				poi.str_desc,
-				slimes_resp,
+				players_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
@@ -734,10 +804,10 @@ async def look(cmd):
 """
 async def kick(id_server):
 	# Gets data for all living players from the database
-	all_living_players = ewutils.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_last_action} < %s".format(
+	all_living_players = ewutils.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_lastenter} < %s".format(
 		poi = ewcfg.col_poi,
 		id_user = ewcfg.col_id_user,
-		time_last_action = ewcfg.col_time_last_action,
+		time_lastenter = ewcfg.col_time_lastenter,
 		life_state = ewcfg.col_life_state
 	), (
 		id_server,
@@ -758,6 +828,7 @@ async def kick(id_server):
 				member_object = server.get_member(id_user)
 
 				user_data.poi = poi.mother_district
+				user_data.time_lastenter = int(time.time())
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = member_object)
 

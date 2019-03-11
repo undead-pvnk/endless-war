@@ -107,6 +107,17 @@ class EwDistrict:
 				friendly_neighbors += 1
 		return friendly_neighbors
 
+	def get_number_of_players(self):
+		players = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE id_server = %s AND {poi} = %s".format(
+			id_user = ewcfg.col_id_user,
+			poi = ewcfg.col_poi
+		),(
+			self.id_server,
+			self.name
+		))
+
+		return len(players)
+
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)

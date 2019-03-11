@@ -205,6 +205,15 @@ def getRoleMap(roles):
 
 	return roles_map
 
+""" turn a list of Roles into a map of id = >Role """
+def getRoleIdMap(roles):
+	roles_map = {}
+
+	for role in roles:
+		roles_map[mapRoleName(role.id)] = role
+
+	return roles_map
+
 """ canonical lowercase no space name for a role """
 def mapRoleName(roleName):
 	return roleName.replace(" ", "").lower()
