@@ -146,7 +146,7 @@ class EwDistrict:
 
 		self.capture_points += progress
 
-		resp_cont = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
+		resp_cont_change_cp = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 
 		# ensures that the value doesn't exceed the bounds
 		if self.capture_points < 0:
@@ -168,7 +168,7 @@ class EwDistrict:
 					channels = [ewcfg.id_to_poi[self.name].channel]
 
 					for ch in channels:
-						resp_cont.add_channel_response(channel = ch, response = message)
+						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 				else:
 					# alert both factions of significant capture progress
 					if progress_percent_after >= 30 > progress_percent_before:  # if the milestone of 30% was just reached
@@ -179,7 +179,7 @@ class EwDistrict:
 						)
 						channels = ewcfg.hideout_channels
 						for ch in channels:
-							resp_cont.add_channel_response(channel = ch, response = message)
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					if self.controlling_faction != actor:  # if it's not already owned by that faction
 						message = "{faction} continue to capture {district}. Current progress: {progress}%".format(
@@ -190,7 +190,7 @@ class EwDistrict:
 						channels = [ewcfg.id_to_poi[self.name].channel]
 						
 						for ch in channels:
-							resp_cont.add_channel_response(channel = ch, response = message)
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 					else:
 						message = "{faction} are renewing their grasp on {district}. Current control level: {progress}%".format(
 							faction = self.capturing_faction.capitalize(),
@@ -200,7 +200,7 @@ class EwDistrict:
 						channels = [ewcfg.id_to_poi[self.name].channel]
 						
 						for ch in channels:
-							resp_cont.add_channel_response(channel = ch, response = message)
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 			else:  # if it was a negative change
 				if self.controlling_faction != "":  # if the district is owned by a faction
 					if progress_percent_after < 20 <= progress_percent_before:
@@ -211,7 +211,7 @@ class EwDistrict:
 						)
 						channels = ewcfg.hideout_channels
 						for ch in channels:
-							resp_cont.add_channel_response(channel = ch, response = message)
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					elif progress_percent_after < 50 <= progress_percent_before and actor != ewcfg.actor_decay:
 						message = "{faction} are de-capturing {district}.".format(
@@ -222,7 +222,7 @@ class EwDistrict:
 						channels = ewcfg.hideout_channels
 						
 						for ch in channels:
-							resp_cont.add_channel_response(channel = ch, response = message)
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					message = "{faction}' control of {district} has decreased. Remaining control level: {progress}%".format(
 						faction = self.capturing_faction.capitalize(),
@@ -232,7 +232,7 @@ class EwDistrict:
 					channels = [ewcfg.id_to_poi[self.name].channel]
 					
 					for ch in channels:
-						resp_cont.add_channel_response(channel = ch, response = message)
+						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 				else:  # if it's an uncontrolled district
 					message = "{faction}' capture progress of {district} has decreased. Remaining progress: {progress}%".format(
 						faction = self.capturing_faction.capitalize(),
@@ -242,19 +242,19 @@ class EwDistrict:
 					channels = [ewcfg.id_to_poi[self.name].channel]
 					
 					for ch in channels:
-						resp_cont.add_channel_response(channel = ch, response = message)
+						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 		# if capture_points is at its maximum value (or above), assign the district to the capturing faction
 		if self.capture_points == self.max_capture_points and self.controlling_faction != actor:
 			responses = self.change_ownership(self.capturing_faction, actor)
-			resp_cont.add_response_container(responses)
+			resp_cont_change_cp.add_response_container(responses)
 
 		# if the district has decayed or been de-captured and it wasn't neutral anyway, make it neutral
 		elif self.capture_points == 0 and self.controlling_faction != "":
 			responses = self.change_ownership("", actor)
-			resp_cont.add_response_container(responses)
+			resp_cont_change_cp.add_response_container(responses)
 
-		return resp_cont
+		return resp_cont_change_cp
 
 	"""
 		Change who controls the district. Can be used to update the channel topic by passing the already controlling faction as an arg.
