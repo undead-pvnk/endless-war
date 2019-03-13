@@ -217,15 +217,15 @@ async def updateRoles(
 	#	else:
 	#		ewutils.logMsg("error: role missing \"{}\"".format(name))
 
-	ewutils.logMsg('looking for {} roles to replace'.format(len(role_ids)))
+	#ewutils.logMsg('looking for {} roles to replace'.format(len(role_ids)))
 	replacement_roles = []
 
 	for role in member.server.roles:
 		if role.id in role_ids:
-			ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
+			#ewutils.logMsg('found role {} with id {}'.format(role.name, role.id))
 			replacement_roles.append(role)
 
-	ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
+	#ewutils.logMsg('found {} roles to replace'.format(len(replacement_roles)))
 
 
 	try:

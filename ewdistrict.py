@@ -107,16 +107,24 @@ class EwDistrict:
 				friendly_neighbors += 1
 		return friendly_neighbors
 
-	def get_number_of_players(self):
-		players = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE id_server = %s AND {poi} = %s".format(
+	def get_number_of_players(self, min_level = 0):
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
 			id_user = ewcfg.col_id_user,
-			poi = ewcfg.col_poi
+			slimelevel = ewcfg.col_slimelevel,
+			poi = ewcfg.col_poi,
+			life_state = ewcfg.col_life_state
 		),(
 			self.id_server,
-			self.name
+			self.name,
+			ewcfg.life_state_kingpin
 		))
 
-		return len(players)
+		num_players = 0
+		for player in players:
+			if player[1] >= min_level:
+				num_players += 1
+
+		return num_players
 
 
 	def decay_capture_points(self):
@@ -298,7 +306,6 @@ class EwDistrict:
 				if client is None:
 					client = ewutils.get_client()
 
-				ewutils.logMsg(new_topic)
 
 				if client is not None:
 					resp_cont_owner.add_channel_topic(channel = channel_str, topic = new_topic)

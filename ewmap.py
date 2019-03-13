@@ -1,5 +1,6 @@
 import asyncio
 import time
+import math
 
 from copy import deepcopy
 
@@ -718,11 +719,14 @@ async def look(cmd):
 	else:
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
+	# don't show low level players
+	min_level = math.ceil((1/10) ** 0.2 * user_data.slimelevel)
+
 	# get information about players in the district
-	players_in_district = district_data.get_number_of_players()
+	players_in_district = district_data.get_number_of_players(min_level = min_level)
 	players_resp = "\n\n"
 	if players_in_district == 1:
-		players_resp += "There is currently 1 gangster in this district"
+		players_resp += "There is currently 1 gangster in this district."
 	else:
 		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
@@ -776,11 +780,14 @@ async def scout(cmd):
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
+	# don't show low level players
+	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
+
 	# get information about other gangsters in the district
-	players_in_district = district_data.get_number_of_players()
+	players_in_district = district_data.get_number_of_players(min_level = min_level)
 	players_resp = "\n\n"
 	if players_in_district == 1:
-		players_resp += "There is currently 1 gangster in this district"
+		players_resp += "There is currently 1 gangster in this district."
 	else:
 		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
 
