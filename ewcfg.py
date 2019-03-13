@@ -299,7 +299,7 @@ min_stamina = 100
 hunger_pershot = 10
 hunger_perspar = 30
 hunger_permine = 1
-hunger_perscavenge = 1
+hunger_perscavenge = 2
 hunger_pertick = 3
 
 #inebriation

@@ -212,8 +212,11 @@ async def scavenge(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
 
+
 	time_now = int(time.time())
 	response = ""
+
+	time_since_last_scavenge = time_now - user_data.time_lastscavenge
 
 	# Kingpins can't scavenge.
 	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
@@ -223,7 +226,7 @@ async def scavenge(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What would you want to do that for? You're a ghost, you have no need for such lowly materialistic possessions like slime. You only engage in intellectual pursuits now. {} if you want to give into your base human desire to see numbers go up.".format(ewcfg.cmd_revive)))
 	# currently not active - no cooldown
-	if time_now - user_data.time_lastscavenge < ewcfg.cd_scavenge:
+	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
 	# Mine only in the mines
@@ -235,7 +238,11 @@ async def scavenge(cmd):
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
-			scavenge_yield = math.floor(0.002 * district_data.slimes)
+			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
+
+			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
+
+			scavenge_yield = math.floor(scavenge_mod * district_data.slimes)
 
 			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
