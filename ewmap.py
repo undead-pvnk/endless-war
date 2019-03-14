@@ -720,7 +720,7 @@ async def look(cmd):
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
 	# don't show low level players
-	min_level = math.ceil((1/10) ** 0.2 * user_data.slimelevel)
+	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
 	# get information about players in the district
 	players_in_district = district_data.get_number_of_players(min_level = min_level)
