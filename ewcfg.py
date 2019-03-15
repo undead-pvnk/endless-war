@@ -3412,37 +3412,7 @@ for poi in poi_list:
 		capturable_districts.append(poi.id_poi)
 
 # maps districts to their immediate neighbors
-poi_neighbors = {
-	poi_id_downtown : [poi_id_smogsburg, poi_id_greenlightdistrict, poi_id_rowdyroughhouse, poi_id_poudrinalley, poi_id_krakbay, poi_id_copkilltown],
-	poi_id_smogsburg : [poi_id_downtown, poi_id_copkilltown, poi_id_astatineheights, poi_id_arsonbrook, poi_id_oldnewyonkers],
-	poi_id_copkilltown : [poi_id_gatlingsdale, poi_id_astatineheights, poi_id_smogsburg, poi_id_downtown],
-	poi_id_krakbay : [poi_id_downtown, poi_id_poudrinalley, poi_id_oozegardens, poi_id_southsleezeborough, poi_id_northsleezeborough, poi_id_glocksbury],
-	poi_id_poudrinalley : [poi_id_downtown, poi_id_rowdyroughhouse, poi_id_cratersville, poi_id_oozegardens, poi_id_krakbay],
-	poi_id_rowdyroughhouse : [poi_id_wreckington, poi_id_poudrinalley, poi_id_downtown],
-	poi_id_greenlightdistrict : [poi_id_vagrantscorner, poi_id_juviesrow, poi_id_downtown],
-	poi_id_oldnewyonkers : [poi_id_vagrantscorner, poi_id_smogsburg, poi_id_littlechernobyl, poi_id_brawlden, poi_id_newnewyonkers],
-	poi_id_littlechernobyl : [poi_id_brawlden, poi_id_oldnewyonkers, poi_id_arsonbrook],
-	poi_id_arsonbrook : [poi_id_brawlden, poi_id_littlechernobyl, poi_id_smogsburg, poi_id_astatineheights],
-	poi_id_astatineheights : [poi_id_arsonbrook, poi_id_smogsburg, poi_id_copkilltown, poi_id_gatlingsdale, poi_id_toxington],
-	poi_id_gatlingsdale : [poi_id_toxington, poi_id_astatineheights, poi_id_copkilltown, poi_id_vandalpark, poi_id_poloniumhill],
-	poi_id_vandalpark : [poi_id_poloniumhill, poi_id_gatlingsdale, poi_id_glocksbury, poi_id_westglocksbury],
-	poi_id_glocksbury : [poi_id_vandalpark, poi_id_krakbay, poi_id_northsleezeborough, poi_id_westglocksbury],
-	poi_id_northsleezeborough : [poi_id_glocksbury, poi_id_krakbay, poi_id_southsleezeborough],
-	poi_id_southsleezeborough : [poi_id_northsleezeborough, poi_id_krakbay, poi_id_oozegardens],
-	poi_id_oozegardens : [poi_id_southsleezeborough, poi_id_krakbay, poi_id_poudrinalley, poi_id_cratersville],
-	poi_id_cratersville : [poi_id_oozegardens, poi_id_poudrinalley, poi_id_wreckington],
-	poi_id_wreckington : [poi_id_rowdyroughhouse, poi_id_vagrantscorner, poi_id_cratersville],
-	poi_id_juviesrow : [poi_id_greenlightdistrict, poi_id_vagrantscorner],
-	poi_id_slimesend : [poi_id_vagrantscorner],
-	poi_id_vagrantscorner : [poi_id_oldnewyonkers, poi_id_newnewyonkers, poi_id_assaultflatsbeachresort, poi_id_wreckington, poi_id_slimesend, poi_id_juviesrow, poi_id_greenlightdistrict],
-	poi_id_assaultflatsbeachresort : [poi_id_vagrantscorner, poi_id_newnewyonkers],
-	poi_id_newnewyonkers : [poi_id_assaultflatsbeachresort, poi_id_vagrantscorner, poi_id_oldnewyonkers, poi_id_brawlden],
-	poi_id_brawlden : [poi_id_newnewyonkers, poi_id_oldnewyonkers, poi_id_littlechernobyl, poi_id_arsonbrook],
-	poi_id_toxington : [poi_id_astatineheights, poi_id_gatlingsdale, poi_id_poloniumhill, poi_id_charcoalpark],
-	poi_id_charcoalpark : [poi_id_toxington, poi_id_poloniumhill],
-	poi_id_poloniumhill : [poi_id_charcoalpark, poi_id_toxington, poi_id_gatlingsdale, poi_id_vandalpark, poi_id_westglocksbury],
-	poi_id_westglocksbury : [poi_id_poloniumhill, poi_id_vandalpark, poi_id_glocksbury]
-}
+poi_neighbors = {}
 
 cosmetic_items_list = [
 	EwCosmeticItem(
