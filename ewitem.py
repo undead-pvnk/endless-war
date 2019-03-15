@@ -713,8 +713,8 @@ async def give(cmd):
 				response = "You can't give away your partner"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			
-			#can only carry one weapon per 25 levels up to three
-			elif len(weapons_held) >= 3 or len(weapons_held) > math.floor(recipient_data.slimelevel / 25) if recipient_data.slimelevel >= 25 else len(weapons_held) >= 1:
+			#can only carry one weapon per 25 levels
+			elif len(weapons_held) > math.floor(recipient_data.slimelevel / 25) if recipient_data.slimelevel >= 25 else len(weapons_held) >= 1:
 				response = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			

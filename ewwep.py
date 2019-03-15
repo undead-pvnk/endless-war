@@ -886,11 +886,9 @@ async def arm(cmd):
 		response = "Ghosts can't hold weapons."
 	elif user_data.life_state == ewcfg.life_state_juvenile:
 		response = "Juvies don't know how to hold weapons."
-	#can only carry one weapon per 25 levels up to three
-	elif len(weapons_held) >= 3 or len(weapons_held) > math.floor(user_data.slimelevel / 25) if user_data.slimelevel >= 25 else len(weapons_held) >= 1:
+	#can only carry one weapon per 25 levels
+	elif len(weapons_held) > math.floor(user_data.slimelevel / 25) if user_data.slimelevel >= 25 else len(weapons_held) >= 1:
 		response = "You can't carry any more weapons."
-	elif ewcfg.weapon_fee > user_data.slimecredit:
-		response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecredit)
 	else:
 		value = None
 		if cmd.tokens_count > 1:
@@ -899,25 +897,31 @@ async def arm(cmd):
 
 		weapon = ewcfg.weapon_map.get(value)
 		if weapon != None:
-			
-			item_props = {
-				"weapon_type": weapon.id_weapon,
-				"weapon_name": "",
-				"weapon_desc": weapon.str_description,
-				"married": ""
-			}
+			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecredit:
+				response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecredit)
+				
+			else:
+				response = "You "
+				item_props = {
+					"weapon_type": weapon.id_weapon,
+					"weapon_name": "",
+					"weapon_desc": weapon.str_description,
+					"married": ""
+				}
 
-			ewitem.item_create(
-				item_type = ewcfg.it_weapon,
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_props = item_props
-			)
-			
-			user_data.change_slimecredit(n = -ewcfg.weapon_fee, coinsource=ewcfg.source_spending)
-			user_data.persist()
+				ewitem.item_create(
+					item_type = ewcfg.it_weapon,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = item_props
+				)
 
-			response = "You pay {} slimecoin and take the {}".format(ewcfg.weapon_fee, weapon.str_weapon)
+				if weapon.id_weapon != 'gun':
+					user_data.change_slimecredit(n = -ewcfg.weapon_fee, coinsource=ewcfg.source_spending)
+					user_data.persist()
+					response += "pay {} slimecoin and ".format(ewcfg.weapon_fee)
+
+				response += "take the {}".format(weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
 
