@@ -111,6 +111,7 @@ class EwDistrict:
 		if self.controlling_faction == "":
 			return False
 		
+		neighbors = ewcfg.poi_neighbors[self.name]
 		for neighbor_id in neighbors:
 			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
 			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
