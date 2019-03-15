@@ -250,11 +250,14 @@ cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
+cmd_discard = cmd_prefix + 'discard'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+cmd_arm = cmd_prefix + 'arm'
+cmd_arsenalize = cmd_prefix + 'arsenalize'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -379,6 +382,9 @@ poudrin_rarity = 2400
 
 # Lifetimes
 invuln_onrevive = 0
+
+# Weapon fee
+weapon_fee = 500
 
 # farming
 crops_time_to_grow = 720  # in minutes; 720 minutes are 12 hours
@@ -2378,8 +2384,10 @@ item_def_list = [
 		str_desc = "{weapon_desc}",
 		soulbound = False,
 		item_props = {
-			'weapon_name': 'Weapon',
-			'weapon_desc': 'It\'s a weapon of some sort.'
+			'weapon_type': 'Type of weapon',
+			'weapon_desc': 'It\'s a weapon of some sort.',
+			'weapon_name': 'Weapon\'s name',
+			'married': 'User Id'
 		}
 	),
 	EwItemDef(

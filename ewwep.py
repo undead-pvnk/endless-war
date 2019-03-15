@@ -914,7 +914,10 @@ async def arm(cmd):
 				item_props = item_props
 			)
 			
-			response = "You got " + weapon.str_weapon
+			user_data.change_slimecredit(n = -ewcfg.weapon_fee, coinsource=ewcfg.source_spending)
+			user_data.persist()
+
+			response = "You pay {} slimecoin and take the {}".format(ewcfg.weapon_fee, weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
 
