@@ -331,7 +331,9 @@ async def on_ready():
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
-		ewcfg.poi_neighbors[poi.id_poi] = ewmap.path_to(coord_start = poi.coord)
+
+		fake_ghost = EwUser()
+		ewcfg.poi_neighbors[poi.id_poi] = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
