@@ -107,6 +107,17 @@ class EwDistrict:
 				friendly_neighbors += 1
 		return friendly_neighbors
 
+	def all_neighbors_friendly(self):
+		if self.controlling_faction == "":
+			return False
+		
+		for neighbor_id in neighbors:
+			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
+			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
+			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone:
+				return False
+		return True
+
 	def get_number_of_players(self, min_level = 0):
 		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
 			id_user = ewcfg.col_id_user,
@@ -132,7 +143,7 @@ class EwDistrict:
 		if self.capture_points > 0:
 
 			neighbors = ewcfg.poi_neighbors[self.name]
-			all_neighbors_friendly = len(neighbors) == self.get_number_of_friendly_neighbors()
+			all_neighbors_friendly = self.all_neighbors_friendly()
 
 
 			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
@@ -436,10 +447,10 @@ async def capture_tick(id_server):
 					dist = EwDistrict(id_server = id_server, district = district_name)
 					
 					friendly_neighbors = dist.get_number_of_friendly_neighbors()
-					if friendly_neighbors < len(ewcfg.poi_neighbors[dist.name]):
-						capture_speed /= 1 + 0.1 * friendly_neighbors
-					else:
+					if dist.all_neighbors_friendly():
 						capture_speed = 0
+					else:
+						capture_speed /= 1 + 0.1 * friendly_neighbors
 
 					capture_progress = dist.capture_points
 
