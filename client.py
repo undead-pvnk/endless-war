@@ -332,9 +332,10 @@ async def on_ready():
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
 
-		fake_ghost = EwUser()
-		ewcfg.poi_neighbors[poi.id_poi] = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
-		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
+		if poi.coord != None:
+			fake_ghost = EwUser()
+			ewcfg.poi_neighbors[poi.id_poi] = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
+			ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
 		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
