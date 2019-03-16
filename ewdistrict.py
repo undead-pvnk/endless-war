@@ -162,7 +162,7 @@ class EwDistrict:
 					faction = self.controlling_faction,
 					district = ewcfg.id_to_poi[self.name].str_name
 				)
-				channels = ewcfg.id_to_poi[self.name].channel + ewcfg.hideout_channels
+				channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
 				for ch in channels:
 					resp_cont_decay.add_channel_reponse(channel = ch, response = message)
 			responses = self.change_ownership("", ewcfg.actor_decay)
