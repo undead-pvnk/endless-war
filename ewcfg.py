@@ -106,6 +106,21 @@ role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 
+faction_roles = [
+	role_juvenile, 
+	role_juvenile_pvp, 
+	role_rowdyfucker, 
+	role_rowdyfuckers, 
+	role_rowdyfuckers_pvp, 
+	role_copkiller, 
+	role_copkillers, 
+	role_copkillers_pvp, 
+	role_corpse, 
+	role_corpse_pvp, 
+	role_kingpin,
+	role_grandfoe 
+	]
+
 # Faction names
 faction_killers = "killers"
 faction_rowdys = "rowdys"
@@ -231,6 +246,7 @@ cmd_halt_alt1 = cmd_prefix + 'stop'
 cmd_inspect = cmd_prefix + 'inspect'
 cmd_inspect_alt1 = cmd_prefix + 'examine'
 cmd_look = cmd_prefix + 'look'
+cmd_scout = cmd_prefix + 'scout'
 cmd_map = cmd_prefix + 'map'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
@@ -255,6 +271,8 @@ cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+
+cmd_restoreroles = cmd_prefix + 'restoreroles'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -323,11 +341,11 @@ property_class_b = "b"
 property_class_c = "c"
 
 # district capturing
-capture_tick_length = 10  # in seconds; also affects how much progress is made per tick so that 1 second = 1 capture point
-max_capture_points_s = 7200  # 120 min
-max_capture_points_a = 3600  # 60 min
-max_capture_points_b = 1800  # 30 min
-max_capture_points_c = 900   # 15 min
+capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
+max_capture_points_s = 4915  # 90 min
+max_capture_points_a = 3277  # 60 min
+max_capture_points_b = 2458  # 45 min
+max_capture_points_c = 1638   # 30 min
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -340,12 +358,17 @@ max_capture_points = {
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
 
+# capture speed at 0% progress
+baseline_capture_speed = 2
+
+# accelerates capture speed depending on current progress
+capture_gradient = 1
 
 # district de-capturing
-decapture_speed_multiplier = 2  # how much faster de-capturing is than capturing
+decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = 2  # more means slower
+decay_modifier = 1  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -405,6 +428,9 @@ time_pvp = 1800
 
 # time to get kicked out of subzone
 time_kickout = 3 * 60 * 60  # 3 hours
+
+# time after coming online before you can act
+time_offline = 10
 
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
@@ -467,8 +493,14 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 
+generic_role_name = 'Citizen'
+
 # Common database columns
 col_id_server = 'id_server'
+
+#Database columns for roles
+col_id_role = 'id_role'
+col_role_name = 'name'
 
 # Database columns for items
 col_id_item = "id_item"
@@ -518,6 +550,8 @@ col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
+col_time_lastenter = 'time_lastenter'
+col_time_lastoffline = 'time_lastoffline'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -3376,6 +3410,9 @@ for poi in poi_list:
 	# if it's a district and not RR, CK, or JR, add it to a list of capturable districts
 	if poi.is_capturable:
 		capturable_districts.append(poi.id_poi)
+
+# maps districts to their immediate neighbors
+poi_neighbors = {}
 
 cosmetic_items_list = [
 	EwCosmeticItem(

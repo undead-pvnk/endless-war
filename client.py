@@ -209,6 +209,9 @@ cmd_map = {
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 
+	# Look around an adjacent POI
+	#ewcfg.cmd_scout: ewmap.scout,
+
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
 
@@ -275,7 +278,10 @@ cmd_map = {
 	ewcfg.cmd_petslimeoid: ewcmd.petslimeoid,
 	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle
+	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+
+	# restores poi roles to their proper names, only usable by admins
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
 debug = False
@@ -302,6 +308,18 @@ async def on_member_remove(member):
 		ewutils.logMsg('Failed to kill member who left the server.')
 
 @client.event
+async def on_member_update(before, after):
+	# update last offline time if they went from offline to online
+	try:
+		if before.status == discord.Status.offline and after.status != discord.Status.offline:
+
+			user_data = EwUser(member = after)
+			user_data.time_lastoffline = int(time.time())
+			user_data.persist()
+	except:
+		ewutils.logMsg('Failed to update member\'s last offline time.')
+
+@client.event
 async def on_ready():
 	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
@@ -313,6 +331,20 @@ async def on_ready():
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
+
+		neighbors = []
+		neighbor_ids = []
+		if poi.coord != None:
+			fake_ghost = EwUser()
+			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
+		elif poi.id_poi == ewcfg.poi_id_thesewers:
+			neighbors = ewcfg.poi_list
+			
+		for neighbor in neighbors:
+			neighbor_ids.append(neighbor.id_poi)
+
+		ewcfg.poi_neighbors[poi.id_poi] = neighbor_ids
+		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
 		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
@@ -347,6 +379,12 @@ async def on_ready():
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
 
+		# find roles and add them to the database
+		ewrolemgr.setupRoles(client = client, id_server = server.id)
+
+		# hides the names of poi roles
+		#await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
+
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
 		for channel in server.channels:
@@ -365,8 +403,9 @@ async def on_ready():
 			dist = EwDistrict(id_server = server.id, district = poi)
 			# change the ownership to the faction that's already in control to initialize topic names
 			try:
-				await dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
+				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
+				await resp_cont.post()
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
@@ -649,12 +688,21 @@ async def on_message(message):
 
 		# assign the appropriate roles to a user with less than @everyone, faction, location
 		if len(message.author.roles) < 3:
-			return await ewrolemgr.updateRoles(client = client, member = message.author)
+			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
 
 			response = "You cannot participate in the ENDLESS WAR while offline."
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+			return
+
+		user_data = EwUser(member = message.author)
+		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
+			
+			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 

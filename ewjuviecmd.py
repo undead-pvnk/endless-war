@@ -229,7 +229,7 @@ async def scavenge(cmd):
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
-	# Mine only in the mines
+	# Mine only in your location channel
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
