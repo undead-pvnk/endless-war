@@ -384,7 +384,7 @@ poudrin_rarity = 2400
 invuln_onrevive = 0
 
 # Weapon fee
-weapon_fee = 500
+weapon_fee = 100
 
 # farming
 crops_time_to_grow = 720  # in minutes; 720 minutes are 12 hours
