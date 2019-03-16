@@ -337,7 +337,7 @@ async def on_ready():
 		if poi.coord != None:
 			fake_ghost = EwUser()
 			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
-		elif poi.id_poi = ewcfg.poi_id_thesewers:
+		elif poi.id_poi == ewcfg.poi_id_thesewers:
 			neighbors = ewcfg.poi_list
 			
 		for neighbor in neighbors:
