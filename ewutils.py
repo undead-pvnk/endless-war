@@ -411,10 +411,9 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT {weapon}, {weaponskill}, {weaponname} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
+			cursor.execute("SELECT {weapon}, {weaponskill} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
 				weapon = ewcfg.col_weapon,
 				weaponskill = ewcfg.col_weaponskill,
-				weaponname = ewcfg.col_name,
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
 			), (
@@ -426,8 +425,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 			if data != None:
 				for row in data:
 					weaponskills[row[0]] = {
-						'skill': row[1],
-						'name': row[2]
+						'skill': row[1]
 					}
 		finally:
 			# Clean up the database handles.
@@ -437,7 +435,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	return weaponskills
 
 """ Set an individual weapon skill value for a player. """
-def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0, weaponname = ""):
+def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
 		id_server = member.server.id
 		id_user = member.id
@@ -448,18 +446,16 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}, {weaponname}) VALUES(%s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}) VALUES(%s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user,
 				weapon = ewcfg.col_weapon,
-				weaponskill = ewcfg.col_weaponskill,
-				weaponname = ewcfg.col_name
+				weaponskill = ewcfg.col_weaponskill
 			), (
 				id_server,
 				id_user,
 				weapon,
-				weaponskill,
-				weaponname
+				weaponskill
 			))
 
 			conn.commit()
