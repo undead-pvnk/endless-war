@@ -120,6 +120,12 @@ class EwDistrict:
 		return True
 
 	def get_number_of_players(self, min_level = 0):
+		client = ewutils.get_client()
+		server = client.get_server(self.id_server)
+		if server == None:
+			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
+			return 0
+
 		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
 			id_user = ewcfg.col_id_user,
 			slimelevel = ewcfg.col_slimelevel,
@@ -133,7 +139,7 @@ class EwDistrict:
 
 		num_players = 0
 		for player in players:
-			if player[1] >= min_level:
+			if player[1] >= min_level and server.get_member(player[0]) != None:
 				num_players += 1
 
 		return num_players
