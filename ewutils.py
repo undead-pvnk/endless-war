@@ -87,8 +87,8 @@ class EwResponseContainer:
 			
 		server = self.client.get_server(self.id_server)
 		if server == None:
-		    	logMsg("Couldn't find server with id {}".format(self.id_server))
-		    	return
+			logMsg("Couldn't find server with id {}".format(self.id_server))
+			return
 
 		for ch in self.channel_responses:
 			channel = get_channel(server = server, channel_name = ch)
