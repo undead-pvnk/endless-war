@@ -2387,6 +2387,7 @@ item_def_list = [
 			'weapon_type': 'Type of weapon',
 			'weapon_desc': 'It\'s a weapon of some sort.',
 			'weapon_name': 'Weapon\'s name',
+			'ammo': 0,
 			'married': 'User Id'
 		}
 	),
