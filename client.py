@@ -398,7 +398,8 @@ async def on_ready():
 					ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
 
 		# create all the districts in the database
-		for poi in ewcfg.capturable_districts:
+		for poi_object in ewcfg.poi_list:
+			poi = poi_object.id_poi
 			# call the constructor to create an entry if it doesnt exist yet
 			dist = EwDistrict(id_server = server.id, district = poi)
 			# change the ownership to the faction that's already in control to initialize topic names
