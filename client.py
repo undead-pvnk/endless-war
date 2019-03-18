@@ -403,6 +403,12 @@ async def on_ready():
 			dist = EwDistrict(id_server = server.id, district = poi)
 			# change the ownership to the faction that's already in control to initialize topic names
 			try:
+				# initialize gang bases
+				if poi == ewcfg.poi_id_rowdyroughhouse:
+					dist.controlling_faction = ewcfg.faction_rowdys
+				elif poi == ewcfg.poi_id_copkilltown:
+					dist.controlling_faction = ewcfg.faction_killers
+
 				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
 				await resp_cont.post()
