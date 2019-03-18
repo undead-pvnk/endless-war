@@ -511,19 +511,19 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		kingpin = ewutils.find_kingpin(id_server = id_server, kingpin_role = kingpin_role)
 
 		if kingpin is not None:
-
+			total_slimegain = 0
 			for id_district in ewcfg.capturable_districts:
-				slimegain = 0
-				friendly_mod = 1
 
 				district = EwDistrict(id_server = id_server, district = id_district)
 
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
-					slimegain += ewcfg.district_control_slime_yields[district.property_class]
+					slimegain = ewcfg.district_control_slime_yields[district.property_class]
 					# increase slimeyields by 10 percent per friendly neighbor
-					friendly_mod += 0.1 * district.get_number_of_friendly_neighbors()
-			kingpin.change_slimes(n = slimegain * friendly_mod)
+					friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
+					total_slimegain += slimegain * friendly_mod
+
+			kingpin.change_slimes(n = total_slimegain)
 			kingpin.persist()
 
 			ewutils.logMsg(kingpin_role + " just received %d" % slimegain + " slime for their captured districts.")
