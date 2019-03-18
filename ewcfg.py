@@ -493,7 +493,7 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 
-generic_role_name = 'Citizen'
+generic_role_name = 'NLACakaNM'
 
 # Common database columns
 col_id_server = 'id_server'

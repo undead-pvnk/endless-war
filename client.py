@@ -210,7 +210,7 @@ cmd_map = {
 	ewcfg.cmd_look: ewmap.look,
 
 	# Look around an adjacent POI
-	#ewcfg.cmd_scout: ewmap.scout,
+	ewcfg.cmd_scout: ewmap.scout,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -383,7 +383,7 @@ async def on_ready():
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
 
 		# hides the names of poi roles
-		#await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
+		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
