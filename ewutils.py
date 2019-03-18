@@ -65,10 +65,7 @@ class EwResponseContainer:
 			self.channel_responses[channel] = response
 
 	def add_channel_topic(self, channel, topic):
-		if channel in self.channel_topics:
-			self.channel_topics[channel] += " " + topic
-		else:
-			self.channel_topics[channel] = topic
+		self.channel_topics[channel] = topic
 
 	def add_response_container(self, resp_cont):
 		for ch in resp_cont.channel_responses:
