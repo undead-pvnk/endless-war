@@ -762,38 +762,36 @@ async def scout(cmd):
 	poi = ewcfg.id_to_poi.get(target_name)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 
-
-	# if scouting own location, treat as a !look alias
-	if poi.id_poi == user_poi.id_poi:
-		return await look(cmd)
-
-
-	# check if district is in scouting range
-	is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
-	is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
-	is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
-
-	if not is_neighbor and not is_subzone and not is_mother_district:
-		response = "You can't scout that far."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
-
-	# don't show low level players
-	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
-
-	# get information about other gangsters in the district
-	players_in_district = district_data.get_number_of_players(min_level = min_level)
-	players_resp = "\n\n"
-	if players_in_district == 1:
-		players_resp += "There is currently 1 gangster in this district."
-	else:
-		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
-
-
-	# post result to channel
 	if poi != None:
+		# if scouting own location, treat as a !look alias
+		if poi.id_poi == user_poi.id_poi:
+			return await look(cmd)
+
+
+		# check if district is in scouting range
+		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
+		is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
+		is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
+
+		if not is_neighbor and not is_subzone and not is_mother_district:
+			response = "You can't scout that far."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+		# don't show low level players
+		min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
+
+		# get information about other gangsters in the district
+		players_in_district = district_data.get_number_of_players(min_level = min_level)
+		players_resp = "\n\n"
+		if players_in_district == 1:
+			players_resp += "There is currently 1 gangster in this district."
+		else:
+			players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
+
+		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
 			"**{}**\n\n{}{}{}".format(
