@@ -511,10 +511,11 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		kingpin = ewutils.find_kingpin(id_server = id_server, kingpin_role = kingpin_role)
 
 		if kingpin is not None:
-			slimegain = 0
-			friendly_mod = 1
 
 			for id_district in ewcfg.capturable_districts:
+				slimegain = 0
+				friendly_mod = 1
+
 				district = EwDistrict(id_server = id_server, district = id_district)
 
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
