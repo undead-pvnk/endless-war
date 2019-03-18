@@ -247,6 +247,10 @@ async def scavenge(cmd):
 			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
 
+			loot_chance = 1
+			if random.random() < loot_chance:
+				ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
+
 			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 
 			district_data.persist()

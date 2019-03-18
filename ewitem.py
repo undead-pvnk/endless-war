@@ -1,5 +1,6 @@
 import math
 import time
+import random
 
 import ewutils
 import ewcfg
@@ -275,7 +276,56 @@ def item_create(
 
 	return item_id
 
+"""
+	Drop all of a player's non-soulbound items into their district
+"""
+def item_dropall(
+	id_server = None,
+	id_user = None
+):
+	
+	try:
+		user_data = EwUser(id_server = id_server, id_user = id_user)
+		
+		ewutils.execute_sql_query(
+			"UPDATE items SET id_user = %s WHERE id_user = %s AND id_server = %s AND soulbound = 0",(
+				user_data.poi,
+				id_user,
+				id_server
+			))
 
+	except:
+		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
+
+"""
+	Transfer a random item from district inventory to player inventory
+"""
+def item_lootrandom(id_server = None, id_user = None):
+
+	try:
+
+		user_data = EwUser(id_server = id_server, id_user = id_user)
+
+		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s".format(
+				id_item = ewcfg.col_id_item,
+				id_user = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			),(
+				user_data.poi,
+				id_server
+			))
+
+		if len(items_in_poi) > 0:
+			id_item = random.choice(items_in_poi)[0]
+
+			item_data = EwItem(id_item = id_item)
+
+			item_data.id_user = id_user
+
+			item_data.persist()
+
+	except:
+		ewutils.logMsg("Failed to loot random item")
 """
 	Destroy all of a player's non-soulbound items.
 """

@@ -226,6 +226,7 @@ class EwUser:
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
+		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
 		self.bounty = 0
@@ -241,7 +242,7 @@ class EwUser:
 		self.weaponmarried = False
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
-		ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
+		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 
