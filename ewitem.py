@@ -60,7 +60,7 @@ class EwItemDef:
 class EwItem:
 	id_item = -1
 	id_server = ""
-	id_user = ""
+	id_owner = ""
 	item_type = ""
 	time_expir = -1
 
@@ -102,7 +102,7 @@ class EwItem:
 				if result != None:
 					# Record found: apply the data to this object.
 					self.id_server = result[0]
-					self.id_user = result[1]
+					self.id_owner = result[1]
 					self.item_type = result[2]
 					self.time_expir = result[3]
 					self.stack_max = result[4]
@@ -153,7 +153,7 @@ class EwItem:
 			), (
 				self.id_item,
 				self.id_server,
-				self.id_user,
+				self.id_owner,
 				self.item_type,
 				self.time_expir if self.time_expir is not None else self.item_props['time_expir'] if 'time_expir' in self.item_props.keys() else 0,
 				self.stack_max,
@@ -210,6 +210,35 @@ def item_delete(
 		# Clean up the database handles.
 		cursor.close()
 		ewutils.databaseClose(conn_info)
+
+"""
+	Transfer item to new owner.
+"""
+def item_changeowner(
+	new_owner = None,
+	id_item = None
+):
+	try:
+		item_data = EwItem(id_item = id_item)
+		if item_data.soulbound:
+			return ewutils.logMsg("Failed to transfer item {}, because it's soulbound.".format(id_item))
+		item_data.id_owner = new_owner
+		item_data.persist()
+	except:
+		ewutils.logMsg("Failed to transfer item {} to new owner {}.".format(id_item, new_owner))
+
+"""
+	Drop item into current district.
+"""
+def item_drop(
+	id_item = None
+):
+	try:
+		item_data = EwItem(id_item = id_item)
+		user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
+		item_changeowner(new_owner = user_data.poi, id_item = id_item)
+	except:
+		ewutils.logMsg("Failed to drop item {}.".format(id_item))
 
 """
 	Create a new item and give it to a player.
@@ -301,14 +330,15 @@ def item_dropall(
 	Transfer a random item from district inventory to player inventory
 """
 def item_lootrandom(id_server = None, id_user = None):
+	response = ""
 
 	try:
 
 		user_data = EwUser(id_server = id_server, id_user = id_user)
 
-		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s".format(
+		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
 				id_item = ewcfg.col_id_item,
-				id_user = ewcfg.col_id_user,
+				id_owner = ewcfg.col_id_user,
 				id_server = ewcfg.col_id_server
 			),(
 				user_data.poi,
@@ -320,12 +350,22 @@ def item_lootrandom(id_server = None, id_user = None):
 
 			item_data = EwItem(id_item = id_item)
 
-			item_data.id_user = id_user
+			item_data.id_owner = id_user
 
 			item_data.persist()
+			item_sought = find_item(item_search = id_item, id_user = user_data.id_user, id_server = user_data.id_server)
+
+
+			response += "You found a {}!".format(item_sought.get('name'))
+
+		else:
+			response += "You found a... oh, nevermind, it's just a piece of trash."
 
 	except:
 		ewutils.logMsg("Failed to loot random item")
+
+	finally:
+		return response
 """
 	Destroy all of a player's non-soulbound items.
 """
@@ -417,6 +457,30 @@ def item_loot(
 		cursor.close()
 		ewutils.databaseClose(conn_info)
 
+
+
+"""
+	Check how many items are in a given district or player's inventory
+"""
+def get_inventory_size(owner = None, id_server = None):
+	if owner != None and id_server != None:
+		try:
+			items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+					id_item = ewcfg.col_id_item,
+					id_owner = ewcfg.col_id_user,
+					id_server = ewcfg.col_id_server
+				),(
+					owner,
+					id_server
+				))
+
+			return len(items_in_poi)
+
+		except:
+			return 0
+	else:
+		return 0
+	
 
 """
 	Returns true if the command string is !inv or equivalent.
@@ -652,6 +716,8 @@ def give_item(
 		id_server = member.server.id
 		id_user = member.id
 
+	item_changeowner(id_item = id_item, new_owner = id_user)
+
 	if id_server is not None and id_user is not None and id_item is not None:
 		ewutils.execute_sql_query(
 			"UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
@@ -752,5 +818,36 @@ async def give(cmd):
 			response = "You don't have one."
 		else:
 			response = "Give which item? (check **!inventory**)"
+
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""
+	Command that lets players !drop items
+"""
+async def drop(cmd):
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	author = cmd.message.author
+	server = cmd.message.server
+	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
+
+	if item_sought:  # if an item was found
+
+		if item_sought.get('soulbound'):
+			response = "You can't just drop soulbound items."
+		else:
+			item_drop(
+				id_item = item_sought.get('id_item')
+			)
+
+			response = "You dropped your {item}".format(
+				item = item_sought.get('name')
+			)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		if item_search:  # if they didnt forget to specify an item and it just wasn't found
+			response = "You don't have one."
+		else:
+			response = "Drop which item? (check **!inventory**)"
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

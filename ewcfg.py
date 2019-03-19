@@ -250,6 +250,7 @@ cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
+cmd_drop = cmd_prefix + 'drop'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
@@ -376,6 +377,9 @@ bleed_tick_length = 10
 
 # Poudrin rarity (for enlisted players)
 poudrin_rarity = 2400
+
+# Chance to loot an item while scavenging
+scavenge_item_rarity = 1200
 
 # Lifetimes
 invuln_onrevive = 0

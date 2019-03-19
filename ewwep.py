@@ -438,7 +438,7 @@ async def attack(cmd):
 
 
 					# Steal items
-					ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
+					#ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))

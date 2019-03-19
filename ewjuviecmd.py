@@ -229,7 +229,7 @@ async def scavenge(cmd):
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
-	# Mine only in the mines
+	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
@@ -246,14 +246,15 @@ async def scavenge(cmd):
 
 			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
+			district_data.persist()
 
-			loot_chance = 1
+			loot_multiplier = 1.0 + ewutils.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
+			loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
 			if random.random() < loot_chance:
-				ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
-
+				loot_resp = ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
+				response += loot_resp
 			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 
-			district_data.persist()
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
