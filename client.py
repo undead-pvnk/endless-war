@@ -340,8 +340,9 @@ async def on_ready():
 		elif poi.id_poi == ewcfg.poi_id_thesewers:
 			neighbors = ewcfg.poi_list
 			
-		for neighbor in neighbors:
-			neighbor_ids.append(neighbor.id_poi)
+		if neighbors != None:
+			for neighbor in neighbors:
+				neighbor_ids.append(neighbor.id_poi)
 
 		ewcfg.poi_neighbors[poi.id_poi] = neighbor_ids
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
