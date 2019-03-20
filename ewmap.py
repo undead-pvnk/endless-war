@@ -452,6 +452,9 @@ def map_draw(path = None, coord = None):
 		y += 1
 
 def inaccessible(user_data = None, poi = None):
+	if poi == None or user_data == None:
+		return True;
+
 	if(
 		len(poi.factions) > 0 and
 		len(user_data.faction) > 0 and
