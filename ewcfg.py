@@ -379,7 +379,7 @@ bleed_tick_length = 10
 poudrin_rarity = 2400
 
 # Chance to loot an item while scavenging
-scavenge_item_rarity = 1200
+scavenge_item_rarity = 1000
 
 # Lifetimes
 invuln_onrevive = 0
