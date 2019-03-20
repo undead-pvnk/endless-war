@@ -755,6 +755,8 @@ async def look(cmd):
 	Get information about an adjacent zone.
 """
 async def scout(cmd):
+	if channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	user_data = EwUser(member = cmd.message.author)
 
@@ -766,10 +768,15 @@ async def scout(cmd):
 	poi = ewcfg.id_to_poi.get(target_name)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if poi != None:
+
+	if poi == None:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+	else:
 		# if scouting own location, treat as a !look alias
 		if poi.id_poi == user_poi.id_poi:
 			return await look(cmd)
+
 
 
 		# check if district is in scouting range
