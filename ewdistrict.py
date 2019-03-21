@@ -532,7 +532,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 			kingpin.change_slimes(n = total_slimegain)
 			kingpin.persist()
 
-			ewutils.logMsg(kingpin_role + " just received %d" % slimegain + " slime for their captured districts.")
+			ewutils.logMsg(kingpin_role + " just received %d" % total_slimegain + " slime for their captured districts.")
 
 	# Decay capture points.
 	for id_district in ewcfg.capturable_districts:
