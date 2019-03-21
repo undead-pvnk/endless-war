@@ -726,12 +726,12 @@ async def look(cmd):
 	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
 	# get information about players in the district
-	players_in_district = district_data.get_number_of_players(min_level = min_level)
+	players_in_district = district_data.get_number_of_players(min_level = min_level) - 1
 	players_resp = "\n\n"
 	if players_in_district == 1:
-		players_resp += "There is currently 1 gangster in this district."
+		players_resp += "You notice 1 suspicious figure in this district."
 	else:
-		players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
+		players_resp += "You notice {} suspicious figures in this district.".format(players_in_district)
 
 
 	# post result to channel
@@ -759,14 +759,14 @@ async def scout(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	user_data = EwUser(member = cmd.message.author)
-
-	# if no arguments, treat as a !look alias
-	if not len(cmd.tokens) > 1:
-		return await look(cmd)
-
-	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	poi = ewcfg.id_to_poi.get(target_name)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	# if no arguments given, scout own location
+	if not len(cmd.tokens) > 1:
+		poi = user_poi
+	else:
+		target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		poi = ewcfg.id_to_poi.get(target_name)
 
 
 	if poi == None:
@@ -774,17 +774,17 @@ async def scout(cmd):
 
 	else:
 		# if scouting own location, treat as a !look alias
-		if poi.id_poi == user_poi.id_poi:
-			return await look(cmd)
+		#if poi.id_poi == user_poi.id_poi:
+		#	return await look(cmd)
 
 
 
 		# check if district is in scouting range
 		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
-		is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
-		is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
+		#is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
+		#is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
 
-		if not is_neighbor and not is_subzone and not is_mother_district:
+		if not is_neighbor and not poi.id_poi == user_poi.id_poi:
 			response = "You can't scout that far."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -796,22 +796,20 @@ async def scout(cmd):
 
 		# get information about other gangsters in the district
 		players_in_district = district_data.get_number_of_players(min_level = min_level)
-		players_resp = "\n\n"
+		if poi.id_poi == user_poi.id_poi:
+			players_in_district -= 1
+		players_resp = ""
 		if players_in_district == 1:
-			players_resp += "There is currently 1 gangster in this district."
+			players_resp += "You notice 1 suspicious figure in this district."
 		else:
-			players_resp += "There are currently {} gangsters in this district.".format(players_in_district)
+			players_resp += "You notice {} suspicious figures in this district.".format(players_in_district)
 
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**\n\n{}{}{}".format(
+			"**{}**: {}".format(
 				poi.str_name,
-				poi.str_desc,
-				players_resp,
-				("\n\n{}".format(
-					ewcmd.weather_txt(cmd.message.server.id)
-				) if cmd.message.server != None else "")
+				players_resp
 			)
 		))
 
