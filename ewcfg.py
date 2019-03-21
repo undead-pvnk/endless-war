@@ -171,6 +171,8 @@ channel_ferry = "ferry"
 channel_rowdyroughhouse = "rowdy-roughhouse"
 channel_copkilltown = "cop-killtown"
 
+channel_killfeed = "kill-feed"
+
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
