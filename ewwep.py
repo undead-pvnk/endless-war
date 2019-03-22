@@ -886,8 +886,7 @@ async def arm(cmd):
 		response = "Ghosts can't hold weapons."
 	elif user_data.life_state == ewcfg.life_state_juvenile:
 		response = "Juvies don't know how to hold weapons."
-	#can only carry one weapon per 25 levels
-	elif len(weapons_held) > math.floor(user_data.slimelevel / 25) if user_data.slimelevel >= 25 else len(weapons_held) >= 1:
+	elif len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
 		response = "You can't carry any more weapons."
 	else:
 		value = None
