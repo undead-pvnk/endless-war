@@ -569,6 +569,10 @@ async def attack(cmd):
 			# Assign the corpse role to the newly dead player.
 			if was_killed:
 				await ewrolemgr.updateRoles(client = cmd.client, member = member)
+				# announce death in kill feed channel
+				killfeed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_killfeed)
+				killfeed_resp = response + "\n`-------------------------`"
+				await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

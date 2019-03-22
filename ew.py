@@ -146,6 +146,8 @@ class EwUser:
 	time_lasthaunt = 0
 	time_lastinvest = 0
 	time_lastscavenge = 0
+	time_lastenter = 0
+	time_lastoffline = 0
 
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
@@ -347,7 +349,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -372,7 +374,9 @@ class EwUser:
 					ewcfg.col_time_last_action,
 					ewcfg.col_weaponmarried,
 					ewcfg.col_time_lastscavenge,
-					ewcfg.col_bleed_storage
+					ewcfg.col_bleed_storage,
+					ewcfg.col_time_lastenter,
+					ewcfg.col_time_lastoffline
 				), (
 					id_user,
 					id_server
@@ -406,6 +410,8 @@ class EwUser:
 					self.weaponmarried = (result[22] == 1)
 					self.time_lastscavenge = result[23]
 					self.bleed_storage = result[24]
+					self.time_lastenter = result[25]
+					self.time_lastoffline = result[26]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -456,7 +462,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -484,7 +490,9 @@ class EwUser:
 				ewcfg.col_time_last_action,
 				ewcfg.col_weaponmarried,
 				ewcfg.col_time_lastscavenge,
-				ewcfg.col_bleed_storage
+				ewcfg.col_bleed_storage,
+				ewcfg.col_time_lastenter,
+				ewcfg.col_time_lastoffline
 			), (
 				self.id_user,
 				self.id_server,
@@ -513,7 +521,9 @@ class EwUser:
 				self.time_last_action,
 				(1 if self.weaponmarried else 0),
 				self.time_lastscavenge,
-				self.bleed_storage
+				self.bleed_storage,
+				self.time_lastenter,
+				self.time_lastoffline
 			))
 
 			conn.commit()
