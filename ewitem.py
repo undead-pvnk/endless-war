@@ -693,33 +693,8 @@ async def give(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if item_sought.get('item_type') == ewcfg.it_weapon:
-			if recipient_data.life_state == ewcfg.life_state_corpse:
-				response = "Ghosts can't hold weapons."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			
-			if recipient_data.life_state == ewcfg.life_state_juvenile:
-				response = "Juvies don't know how to hold weapons."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-			weapons_held = inventory(
-				id_user = recipient.id,
-				id_server = server.id,
-				item_type_filter = ewcfg.it_weapon
-			)
-
-			weapon_item = EwItem(id_item = item_sought.get('id_item'))
-			#cucks btfo
-			if weapon_item.item_props.get('married') == user_data.id_user:		
-				response = "You can't give away your partner"
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			
-			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
-				response = "They can't carry any more weapons."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			
-			elif weapon_item.id_item == int(user_data.weapon):
-				user_data.weapon = ""
-				user_data.persist()
+			response = "You can't give that away"
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
