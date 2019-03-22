@@ -170,7 +170,7 @@ class EwDistrict:
 				)
 				channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
 				for ch in channels:
-					resp_cont_decay.add_channel_reponse(channel = ch, response = message)
+					resp_cont_decay.add_channel_response(channel = ch, response = message)
 			responses = self.change_ownership("", ewcfg.actor_decay)
 			resp_cont_decay.add_response_container(responses)
 			self.capturing_faction = ""
