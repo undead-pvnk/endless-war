@@ -1,9 +1,12 @@
 import time
+import random
 
 import ewutils
 import ewcfg
 import ewstats
 import ewitem
+
+from ewmutation import EwMutation
 
 """ Market data model for database persistence """
 class EwMarket:
@@ -168,6 +171,7 @@ class EwUser:
 	def change_slimes(self, n = 0, source = None):
 		change = int(n)
 		self.slimes += change
+		response = ""
 
 		if n >= 0:
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimes, n = change)
@@ -212,11 +216,25 @@ class EwUser:
 		# potentially level up
 		new_level = ewutils.level_byslime(self.slimes)
 		if new_level > self.slimelevel:
+			if self.life_state != ewcfg.life_state_corpse:
+				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
+			current_mutations = self.get_mutations()
+			for level in range(self.slimelevel+1, new_level+1):
+				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
+					new_mutation = random.choice(ewcfg.mutation_ids)
+					while new_mutation in current_mutations:
+						new_mutation = random.choice(ewcfg.mutation_ids)
+					EwMutation(id_server = self.id_server, id_user = self.id_user, id_mutation = new_mutation)
+					response += "\n\n{}".format(ewcfg.mutations_map[new_mutation].str_acquire)
+						
 			self.slimelevel = new_level
 			if self.life_state == ewcfg.life_state_corpse:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_ghost_level, value = self.slimelevel)
 			else:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_level, value = self.slimelevel)
+
+		return response
+
 		
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
@@ -244,6 +262,8 @@ class EwUser:
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
+		
+		self.clear_mutations()
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 
@@ -317,6 +337,38 @@ class EwUser:
 		ewitem.item_delete(food_item.id_item)
 
 		return response
+
+	def get_mutations(self):
+		result = []
+		try:
+			mutations = ewutils.execute_sql_query("SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+					id_mutation = ewcfg.col_id_mutation,
+					id_server = ewcfg.col_id_server,
+					id_user = ewcfg.col_id_user
+				),(
+					self.id_server,
+					self.id_user
+				))
+    
+			for mutation_data in mutations:
+				result.append(mutation_data[0])
+		except:
+			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+
+		finally:
+			return result
+
+	def clear_mutations(self):
+		try:
+			ewutils.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s".format(
+					id_server = ewcfg.col_id_server,
+					id_user = ewcfg.col_id_user
+				),(
+					self.id_server,
+					self.id_user
+				))
+		except:
+			ewutils.logMsg("Failed to clear mutations for user {}.".format(self.id_user))
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):

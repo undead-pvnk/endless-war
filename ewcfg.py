@@ -7,6 +7,7 @@ from ewfood import EwFood
 from ewitem import EwItemDef
 from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
+from ewmutation import EwMutationFlavor
 
 # Global configuration options.
 version = "v2.22c"
@@ -514,6 +515,7 @@ generic_role_name = 'NLACakaNM'
 
 # Common database columns
 col_id_server = 'id_server'
+col_id_user = 'id_user'
 
 #Database columns for roles
 col_id_role = 'id_role'
@@ -536,7 +538,6 @@ col_avatar = "avatar"
 col_display_name = "display_name"
 
 # Database columns for users
-col_id_user = 'id_user'
 col_slimes = 'slimes'
 col_slimelevel = 'slimelevel'
 col_hunger = 'hunger'
@@ -618,6 +619,10 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
+
+# Database columns for mutations
+col_id_mutation = 'mutation'
+col_time_lastuse = 'time_lastuse'
 
 # Item type names
 it_medal = "medal"
@@ -4699,6 +4704,27 @@ thrownobjects_list = [
 	"piece of rusted scrap metal",
 	"box overflowing with KFC branded bbq sauce"
 ]
+
+mutation_id_example = "example"
+
+mutation_milestones = [10, 20, 30, 40, 50]
+
+mutations = [
+	EwMutationFlavor(
+		id_mutation = mutation_id_example,
+		str_describe_self = "You have a perfectly generic mutation.",
+		str_describe_other = "",
+		str_acquire = ""
+		)
+	]
+
+mutations_map = {}
+
+mutation_ids = []
+
+for mutation in mutations:
+	mutations_map[mutation.id_mutation] = mutation
+	mutation_ids.append(mutation.id_mutation)
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

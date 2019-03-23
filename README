@@ -175,3 +175,12 @@ CREATE TABLE roles (
 
 	PRIMARY KEY (id_server, name)
 );
+
+CREATE TABLE mutations (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	mutation varchar(32) NOT NULL,
+	time_lastuse int NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_server, id_user, mutation)
+);

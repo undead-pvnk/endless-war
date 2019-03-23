@@ -7,7 +7,32 @@ import discord
 import ewcfg
 import ewstats
 import ewutils
-from ew import EwUser, EwMarket
+
+class EwMutationFlavor:
+
+	# The mutation's name
+	id_mutation = ""
+
+	# String used to describe the mutation when you !data yourself
+	str_describe_self = ""
+
+	# String used to describe the mutation when you !data another player
+	str_describe_other = ""
+
+	# String used when you acquire the mutation
+	str_acquire = ""
+
+	def __init__(self,
+		id_mutation = "",
+		str_describe_self = "",
+		str_describe_other = "",
+		str_acquire = ""):
+
+		self.id_mutation = id_mutation
+		self.str_describe_self = str_describe_self
+		self.str_describe_other = str_describe_other
+		self.str_acquire = str_acquire
+
 
 class EwMutation:
 	id_server = ""
@@ -30,7 +55,7 @@ class EwMutation:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lastuse} FROM mutations WHERE id_user = %s AND id_server = %s AND {id_mutation}".format(
+				cursor.execute("SELECT {time_lastuse} FROM mutations WHERE id_user = %s AND id_server = %s AND {id_mutation} = %s".format(
 					time_lastuse = ewcfg.col_time_lastuse,
 					id_mutation = ewcfg.col_id_mutation
 				), (
