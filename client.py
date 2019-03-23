@@ -39,6 +39,7 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewmutation
 
 from ewitem import EwItem
 from ew import EwUser, EwMarket
