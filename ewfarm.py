@@ -68,6 +68,8 @@ class EwFarm:
 """
 async def reap(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	levelup_response = ""
 
 	# Checking availability of reap action
 	if user_data.life_state != ewcfg.life_state_juvenile:
@@ -101,7 +103,7 @@ async def reap(cmd):
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
 					slime_gain = ewcfg.reap_gain
-					user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
+					levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
 					user_data.persist()
 
 					#S(t) = 35000000 +  (t - 1440) * 992 + Log2(t/1440) * 11782046 caped at 100000000
@@ -117,6 +119,7 @@ async def reap(cmd):
 
 					plant_type = ewcfg.seed_list[randint(0, len(ewcfg.seed_list) - 1)]
 					response = "You reap what you’ve sown. Your investment has yielded " + str(slime_gain) + " slime."  # + " slime and a bushel of " + plant_type
+					response += " {}".format(levelup_response)
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()

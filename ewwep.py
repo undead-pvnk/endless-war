@@ -141,6 +141,7 @@ async def attack(cmd):
 	time_now = int(time.time())
 	response = ""
 	deathreport = ""
+	levelup_response = ""
 	coinbounty = 0
 
 	user_data = EwUser(member = cmd.message.author)
@@ -270,7 +271,7 @@ async def attack(cmd):
 
 			if was_busted:
 				# Move around slime as a result of the shot.
-				user_data.change_slimes(n = ewutils.slime_bylevel(shootee_data.slimelevel), source = ewcfg.source_busting)
+				levelup_response = user_data.change_slimes(n = ewutils.slime_bylevel(shootee_data.slimelevel), source = ewcfg.source_busting)
 				coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)
 				user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
@@ -452,7 +453,7 @@ async def attack(cmd):
 
                                         # release bleed storage
 					district_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
-					user_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
+					levelup_response = user_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
@@ -541,8 +542,7 @@ async def attack(cmd):
 
 			# Add level up text to response if appropriate
 			if user_inital_level < user_data.slimelevel: 
-				response += "\n\n{} has been empowered by slime and is now a level {} slimeboi!".format(cmd.message.author.display_name, user_data.slimelevel)
-
+				response += "\n\n" + levelup_response
 			# Team kills don't award slime to the kingpin.
 			if user_data.faction != shootee_data.faction:
 				# Give slimes to the boss if possible.

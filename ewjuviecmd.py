@@ -113,7 +113,7 @@ async def mine(cmd):
 
 			mining_yield = min(mining_yield, alternate_yield)
 
-			user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
+			levelup_response = user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
@@ -156,8 +156,7 @@ async def mine(cmd):
 					ewutils.logMsg('{} has found {} poudrin(s)!'.format(cmd.message.author.display_name, poudrinamount))
 
 				if was_levelup:
-					response += "You have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
-
+					response += levelup_response
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't mine here. Go to the mines."))
@@ -244,14 +243,13 @@ async def scavenge(cmd):
 
 			scavenge_yield = math.floor(scavenge_mod * district_data.slimes)
 
-			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
+			levelup_response = user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
 
+			response += levelup_response
 			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 
 			district_data.persist()
-
-			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
 			# Fatigue the scavenger.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
@@ -267,9 +265,6 @@ async def scavenge(cmd):
 
 			user_data.persist()
 
-			# Tell the player their slime level increased and/or a poudrin was found.
-			if was_levelup:
-				response += "You have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:

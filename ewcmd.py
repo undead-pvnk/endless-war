@@ -137,6 +137,8 @@ def gen_data_text(
 		id_server = id_server
 	)
 	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
+	
+	mutations = user_data.get_mutations()
 
 	cosmetics = ewitem.inventory(
 		id_user = user_data.id_user,
@@ -174,6 +176,10 @@ def gen_data_text(
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
+
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += " {}".format(mutation_flavor.str_describe_other)
 
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:

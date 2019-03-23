@@ -4713,8 +4713,8 @@ mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_example,
 		str_describe_self = "You have a perfectly generic mutation.",
-		str_describe_other = "",
-		str_acquire = ""
+		str_describe_other = "They have a perfectly generic mutation.",
+		str_acquire = "You have acquired a perfectly generic mutation."
 		)
 	]
 
