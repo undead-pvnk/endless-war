@@ -4707,7 +4707,7 @@ thrownobjects_list = [
 
 mutation_id_example = "example"
 
-mutation_milestones = [10, 20, 30, 40, 50]
+mutation_milestones = [10]
 
 mutations = [
 	EwMutationFlavor(
