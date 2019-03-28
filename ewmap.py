@@ -726,7 +726,10 @@ async def look(cmd):
 	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
 	# get information about players in the district
-	players_in_district = district_data.get_number_of_players(min_level = min_level) - 1
+	players_in_district = district_data.get_number_of_players(min_level = min_level)
+	if user_data.life_state != ewcfg.life_state_kingpin:
+		players_in_district -= 1
+
 	players_resp = "\n\n"
 	if players_in_district == 1:
 		players_resp += "You notice 1 suspicious figure in this district."
@@ -796,8 +799,9 @@ async def scout(cmd):
 
 		# get information about other gangsters in the district
 		players_in_district = district_data.get_number_of_players(min_level = min_level)
-		if poi.id_poi == user_poi.id_poi:
+		if poi.id_poi == user_poi.id_poi and user_data.life_state != ewcfg.life_state_kingpin:
 			players_in_district -= 1
+
 		players_resp = ""
 		if players_in_district == 1:
 			players_resp += "You notice 1 suspicious figure in this district."
