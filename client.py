@@ -609,6 +609,7 @@ async def on_message_delete(message):
 @client.event
 async def on_message(message):
 	time_now = int(time.time())
+	ewcfg.set_client(client)
 
 	""" do not interact with our own messages """
 	if message.author.id == client.user.id or message.author.bot == True:

@@ -4710,10 +4710,17 @@ def update_server_list(server):
 	server_list[server.id] = server
 
 
-clients = []
+client_ref = None
+
+def get_client():
+	global client_ref
+	return client_ref;
 
 """
 	save the discord client of this bot
 """
 def set_client(cl):
-	clients.append(cl)
+	global client_ref
+	client_ref = cl
+
+	return client_ref
