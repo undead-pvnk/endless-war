@@ -8,6 +8,121 @@ import ewcfg
 import ewstats
 from ew import EwUser, EwMarket
 
+
+""" player invests slime in the market """
+async def invest(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	time_now = int(time.time())
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = ewcfg.str_exchange_channelreq.format(currency = "slime", action = "invest")
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return
+
+	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
+	if ewcfg.role_rowdyfucker in roles_map_user or ewcfg.role_copkiller in roles_map_user:
+		# Disallow investments by RF and CK kingpins.
+		response = "You're too powerful to be playing the market."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		value = None
+		if cmd.tokens_count > 1:
+			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+
+		if value != None:
+			if value < 0:
+				value = user_data.slimecredit
+			if value <= 0:
+				value = None
+
+		if value != None:
+			# Apply a brokerage fee of ~5% (rate * 1.05)
+			rate_exchange = (market_data.rate_exchange / 1000000.0)
+			feerate = 1.05
+
+			# The user can only buy a whole number of credits, so adjust their cost based on the actual number of credits purchased.
+			gross_credits = int(value / rate_exchange)
+
+			fee = int((gross_credits * feerate) - gross_credits)
+
+			net_credits = gross_credits - fee
+
+			if value > user_data.slimes:
+				response = "You don't have that much slime to invest."
+			elif user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+				# Limit frequency of investments.
+				response = ewcfg.str_exchange_busy.format(action = "invest")
+			else:
+				user_data.slimes -= value
+				user_data.slimecredit += net_credits
+				user_data.time_lastinvest = time_now
+
+				response = "You invest {slime:,} slime and receive {credit:,} SlimeCoin. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(
+					slime = value, credit = net_credits, fee = fee)
+
+				user_data.persist()
+				market_data.persist()
+
+		else:
+			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "invest")
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+""" player withdraws slime from the market """
+async def withdraw(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	time_now = int(time.time())
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		value = None
+		if cmd.tokens_count > 1:
+			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+
+		if value != None:
+			if value < 0:
+				value = user_data.slimecredit
+			if value <= 0:
+				value = None
+
+		if value != None:
+
+			rate_exchange = (market_data.rate_exchange / 1000000.0)
+
+			credits = value
+			slimes = int(value * rate_exchange)
+
+			if value > user_data.slimecredit:
+				response = "You don't have that many SlimeCoin to exchange."
+			elif user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+				# Limit frequency of withdrawals
+				response = ewcfg.str_exchange_busy.format(action = "withdraw")
+			else:
+				user_data.slimes += slimes
+				user_data.slimecredit -= credits
+				user_data.time_lastinvest = time_now
+
+				response = "You exchange {credits:,} SlimeCoin for {slimes:,} slime.".format(credits = credits,
+																							 slimes = slimes)
+				user_data.persist()
+				market_data.persist()
+
+		else:
+			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
 	time_now = int(time.time())
