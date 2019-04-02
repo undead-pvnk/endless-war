@@ -39,6 +39,7 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewquadrants
 
 from ewitem import EwItem
 from ew import EwUser, EwMarket
@@ -279,6 +280,18 @@ cmd_map = {
 	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+
+	# troll romance
+	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
+	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
+	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
+	ewcfg.cmd_get_pale: ewquadrants.get_pale,
+	ewcfg.cmd_get_pale_alt1: ewquadrants.get_pale,
+	ewcfg.cmd_get_caliginous: ewquadrants.get_caliginous,
+	ewcfg.cmd_get_caliginous_alt1: ewquadrants.get_caliginous,
+	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
+	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
