@@ -10,7 +10,7 @@ from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpeci
 from ewquadrants import EwQuadrantFlavor
 
 # Global configuration options.
-version = "v2.22e"
+version = "v2.23"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
