@@ -76,7 +76,15 @@ async def menu(cmd):
 		response = "{} Menu:\n\n".format(poi.str_name)
 
 		for vendor in poi.vendors:
-			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = ewcfg.food_vendor_inv[vendor]))
+			food_items = []
+			for food_item_name in ewcfg.food_vendor_inv[vendor]:
+				food_item = ewcfg.food_map.get(food_item_name)
+				if food_item != None:
+					food_items.append('{name} ({price})'.format(name=food_item_name, price=food_item.price))
+				else:
+					food_items.append(food_item_name)
+
+			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = food_items))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
