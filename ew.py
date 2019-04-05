@@ -121,7 +121,7 @@ class EwUser:
 	id_killer = ""
 
 	slimes = 0
-	slimecredit = 0
+	slimecoin = 0
 	slimelevel = 1
 	hunger = 0
 	totaldamage = 0
@@ -251,13 +251,13 @@ class EwUser:
 		self.bounty += int(n)
 		ewstats.track_maximum(user = self, metric = ewcfg.stat_max_bounty, value = self.bounty)
 
-	def change_slimecredit(self, n = 0, coinsource = None):
+	def change_slimecoin(self, n = 0, coinsource = None):
 		change = int(n)
-		self.slimecredit += change
+		self.slimecoin += change
 
 		if change >= 0:
-			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_slimecredit, value = self.slimecredit)
-			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimecredit, n = change)
+			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_slimecoin, value = self.slimecoin)
+			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimecoin, n = change)
 			if coinsource == ewcfg.coinsource_bounty:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_bounty_collected, n = change)
 			if coinsource == ewcfg.coinsource_casino:
@@ -266,7 +266,7 @@ class EwUser:
 		else:
 			change *= -1
 			if coinsource == ewcfg.coinsource_revival:
-				ewstats.change_stat(user = self, metric = ewcfg.stat_slimecredit_spent_on_revives, n = change)
+				ewstats.change_stat(user = self, metric = ewcfg.stat_slimecoin_spent_on_revives, n = change)
 			if coinsource == ewcfg.coinsource_casino:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_biggest_casino_loss, value = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_losses, n = change)
@@ -344,7 +344,7 @@ class EwUser:
 					ewcfg.col_bounty,
 					ewcfg.col_weapon,
 					ewcfg.col_trauma,
-					ewcfg.col_slimecredit,
+					ewcfg.col_slimecoin,
 					ewcfg.col_time_lastkill,
 					ewcfg.col_time_lastrevive,
 					ewcfg.col_id_killer,
@@ -380,7 +380,7 @@ class EwUser:
 					self.bounty = result[4]
 					self.weapon = result[5]
 					self.trauma = result[6]
-					self.slimecredit = result[7]
+					self.slimecoin = result[7]
 					self.time_lastkill = result[8]
 					self.time_lastrevive = result[9]
 					self.id_killer = result[10]
@@ -463,7 +463,7 @@ class EwUser:
 				ewcfg.col_weapon,
 				ewcfg.col_weaponskill,
 				ewcfg.col_trauma,
-				ewcfg.col_slimecredit,
+				ewcfg.col_slimecoin,
 				ewcfg.col_time_lastkill,
 				ewcfg.col_time_lastrevive,
 				ewcfg.col_id_killer,
@@ -495,7 +495,7 @@ class EwUser:
 				self.weapon,
 				self.weaponskill,
 				self.trauma,
-				self.slimecredit,
+				self.slimecoin,
 				self.time_lastkill,
 				self.time_lastrevive,
 				self.id_killer,

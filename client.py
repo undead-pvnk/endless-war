@@ -166,11 +166,11 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
-	# Show the player's slime credit.
-	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
+	# Show the player's slimecoin.
+	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
@@ -866,21 +866,21 @@ def market_tick(market_data, id_server):
 	rate_market += (active_bonus / 4)
 
 	# Invest/Withdraw effects
-	credit_rate = 0
-	if credit_totals[0] != credit_totals[1]:
+	coin_rate = 0
+	if coin_totals[0] != coin_totals[1]:
 		# Positive if net investment, negative if net withdrawal.
-		credit_change = (credit_totals[0] - credit_totals[1])
-		credit_rate = ((credit_change * 1.0) / credit_totals[1])
+		coin_change = (coin_totals[0] - coin_totals[1])
+		coin_rate = ((coin_change * 1.0) / coin_totals[1])
 
-		if credit_rate > 1.0:
-			credit_rate = 1.0
-		elif credit_rate < -0.5:
-			credit_rate = -0.5
+		if coin_rate > 1.0:
+			coin_rate = 1.0
+		elif coin_rate < -0.5:
+			coin_rate = -0.5
 
-		credit_rate = int((credit_rate * ewcfg.max_iw_swing) if credit_rate > 0 else (
-					credit_rate * 2 * ewcfg.max_iw_swing))
+		coin_rate = int((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
+					coin_rate * 2 * ewcfg.max_iw_swing))
 
-	rate_market += credit_rate
+	rate_market += coin_rate
 
 	# Tick down the boombust cooldown.
 	if market_data.boombust < 0:

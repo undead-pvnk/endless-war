@@ -34,7 +34,7 @@ async def invest(cmd):
 
 		if value != None:
 			if value < 0:
-				value = user_data.slimecredit
+				value = user_data.slimecoin
 			if value <= 0:
 				value = None
 
@@ -43,12 +43,12 @@ async def invest(cmd):
 			rate_exchange = (market_data.rate_exchange / 1000000.0)
 			feerate = 1.05
 
-			# The user can only buy a whole number of credits, so adjust their cost based on the actual number of credits purchased.
-			gross_credits = int(value / rate_exchange)
+			# The user can only buy a whole number of coins, so adjust their cost based on the actual number of coin purchased.
+			gross_coins = int(value / rate_exchange)
 
-			fee = int((gross_credits * feerate) - gross_credits)
+			fee = int((gross_coins * feerate) - gross_coins)
 
-			net_credits = gross_credits - fee
+			net_coins = gross_coins - fee
 
 			if value > user_data.slimes:
 				response = "You don't have that much slime to invest."
@@ -57,11 +57,11 @@ async def invest(cmd):
 				response = ewcfg.str_exchange_busy.format(action = "invest")
 			else:
 				user_data.slimes -= value
-				user_data.slimecredit += net_credits
+				user_data.slimecoin += net_coins
 				user_data.time_lastinvest = time_now
 
-				response = "You invest {slime:,} slime and receive {credit:,} SlimeCoin. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(
-					slime = value, credit = net_credits, fee = fee)
+				response = "You invest {slime:,} slime and receive {coins:,} SlimeCoin. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(
+					slime = value, coins = net_coins, fee = fee)
 
 				user_data.persist()
 				market_data.persist()
@@ -91,7 +91,7 @@ async def withdraw(cmd):
 
 		if value != None:
 			if value < 0:
-				value = user_data.slimecredit
+				value = user_data.slimecoin
 			if value <= 0:
 				value = None
 
@@ -99,20 +99,20 @@ async def withdraw(cmd):
 
 			rate_exchange = (market_data.rate_exchange / 1000000.0)
 
-			credits = value
+			coins = value
 			slimes = int(value * rate_exchange)
 
-			if value > user_data.slimecredit:
+			if value > user_data.slimecoin:
 				response = "You don't have that many SlimeCoin to exchange."
 			elif user_data.time_lastinvest + ewcfg.cd_invest > time_now:
 				# Limit frequency of withdrawals
 				response = ewcfg.str_exchange_busy.format(action = "withdraw")
 			else:
 				user_data.slimes += slimes
-				user_data.slimecredit -= credits
+				user_data.slimecoin -= coins
 				user_data.time_lastinvest = time_now
 
-				response = "You exchange {credits:,} SlimeCoin for {slimes:,} slime.".format(credits = credits,
+				response = "You exchange {coins:,} SlimeCoin for {slimes:,} slime.".format(coins = coins,
 																							 slimes = slimes)
 				user_data.persist()
 				market_data.persist()
@@ -164,7 +164,7 @@ async def donate(cmd):
 		else:
 			# Do the transfer if the player can afford it.
 			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
-			user_data.change_slimecredit(n = coin_total, coinsource = ewcfg.coinsource_donation)
+			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
 			user_data.time_lastinvest = time_now
 
 			# Persist changes
@@ -230,12 +230,12 @@ async def xfer(cmd):
 		# Cost including the 5% transfer fee.
 		cost_total = int(value * 1.05)
 
-		if user_data.slimecredit < cost_total:
-			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecredit, cost_total)
+		if user_data.slimecoin < cost_total:
+			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
 		else:
 			# Do the transfer if the player can afford it.
-			target_data.change_slimecredit(n = value, coinsource = ewcfg.coinsource_transfer)
-			user_data.change_slimecredit(n = -cost_total, coinsource = ewcfg.coinsource_transfer)
+			target_data.change_slimecoin(n = value, coinsource = ewcfg.coinsource_transfer)
+			user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_transfer)
 			user_data.time_lastinvest = time_now
 
 			# Persist changes
@@ -255,11 +255,11 @@ async def slimecoin(cmd):
 	user_data = None
 
 	if cmd.mentions_count == 0:
-		coins = EwUser(member = cmd.message.author).slimecredit
+		coins = EwUser(member = cmd.message.author).slimecoin
 		response = "You have {:,} SlimeCoin.".format(coins)
 	else:
 		member = cmd.mentions[0]
-		coins = EwUser(member = member).slimecredit
+		coins = EwUser(member = member).slimecoin
 		response = "{} has {:,} SlimeCoin.".format(member.display_name, coins)
 
 	# Send the response to the player.

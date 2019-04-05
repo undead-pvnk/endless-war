@@ -140,15 +140,15 @@ async def order(cmd):
 			if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
 				value = 0
 
-			if value > user_data.slimecredit:
+			if value > user_data.slimecoin:
 				# Not enough money.
-				response = "A {food} is {cost:,} SlimeCoin (and you only have {credits:,}).".format(
+				response = "A {food} is {cost:,} SlimeCoin (and you only have {coins:,}).".format(
 					food = food.str_name,
 					cost = value,
-					credits = user_data.slimecredit
+					coins = user_data.slimecoin
 				)
 			else:
-				user_data.change_slimecredit(n = -value, coinsource = ewcfg.coinsource_spending)
+				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_spending)
 
 				if not togo:
 

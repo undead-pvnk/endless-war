@@ -51,7 +51,7 @@ print("<tr><td>Faction</td><td>{icon}{faction}</td></tr>".format(
 
 ))
 print("<tr><td>Slime</td><td>{slime:,}</td></tr>".format(slime = user_data.slimes))
-print("<tr><td>SlimeCoin</td><td>{slimecredit:,}</td></tr>".format(slimecredit = user_data.slimecredit))
+print("<tr><td>SlimeCoin</td><td>{slimecredit:,}</td></tr>".format(slimecredit = user_data.slimecoin))
 print("<tr><td>Bounty</td><td>{bounty:,}</td></tr>".format(bounty = int((user_data.bounty + 1) / ewcfg.slimecoin_exchangerate)))
 print("</table>")
 

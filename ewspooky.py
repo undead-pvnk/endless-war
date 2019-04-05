@@ -26,8 +26,8 @@ async def revive(cmd):
 			market_data = EwMarket(id_server = cmd.message.server.id)
 
 			# Endless War collects his fee.
-			fee = (player_data.slimecredit / 10)
-			player_data.change_slimecredit(n = -fee, coinsource = ewcfg.coinsource_revival)
+			fee = (player_data.slimecoin / 10)
+			player_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
 			market_data.slimes_revivefee += fee
 			player_data.busted = False
 			
