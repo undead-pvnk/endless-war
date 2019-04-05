@@ -506,6 +506,8 @@ async def on_ready():
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
 					market_data.time_lasttick = time_now
 
+					market_tick(market_data, server.id)
+
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
 
@@ -843,6 +845,80 @@ async def on_message(message):
 			client = client
 		))
 
+def market_tick(market_data, id_server):
+	# Nudge the value back to stability.
+	rate_market = market_data.rate_market
+	if rate_market >= 1030:
+		rate_market -= 10
+	elif rate_market <= 970:
+		rate_market += 10
+
+	# Add participation bonus.
+	active_bonus = 0
+	active_map = active_users_map.get(id_server)
+	if active_map != None:
+		active_bonus = len(active_map)
+
+		if active_bonus > 20:
+			active_bonus = 20
+
+	active_users_map[server.id] = {}
+	rate_market += (active_bonus / 4)
+
+	# Invest/Withdraw effects
+	credit_rate = 0
+	if credit_totals[0] != credit_totals[1]:
+		# Positive if net investment, negative if net withdrawal.
+		credit_change = (credit_totals[0] - credit_totals[1])
+		credit_rate = ((credit_change * 1.0) / credit_totals[1])
+
+		if credit_rate > 1.0:
+			credit_rate = 1.0
+		elif credit_rate < -0.5:
+			credit_rate = -0.5
+
+		credit_rate = int((credit_rate * ewcfg.max_iw_swing) if credit_rate > 0 else (
+					credit_rate * 2 * ewcfg.max_iw_swing))
+
+	rate_market += credit_rate
+
+	# Tick down the boombust cooldown.
+	if market_data.boombust < 0:
+		market_data.boombust += 1
+	elif market_data.boombust > 0:
+		market_data.boombust -= 1
+
+	# Adjust the market rate.
+	fluctuation = 0  # (random.randrange(5) - 2) * 100
+	noise = (random.randrange(19) - 9) * 2
+	subnoise = (random.randrange(13) - 6)
+
+	# Some extra excitement!
+	if noise == 0 and subnoise == 0:
+		boombust = (random.randrange(3) - 1) * 200
+
+		# If a boombust occurs shortly after a previous boombust, make sure it's the opposite effect. (Boom follows bust, bust follows boom.)
+		if (market_data.boombust > 0 and boombust > 0) or (market_data.boombust < 0 and boombust < 0):
+			boombust *= -1
+
+		if boombust != 0:
+			market_data.boombust = ewcfg.cd_boombust
+
+			if boombust < 0:
+				market_data.boombust *= -1
+	else:
+		boombust = 0
+
+	rate_market += fluctuation + noise + subnoise + boombust
+	if rate_market < 300:
+		rate_market = (300 + noise + subnoise)
+
+	percentage = ((rate_market / 10) - 100)
+	percentage_abs = percentage * -1
+
+	# If the value hits 0, we're stuck there forever.
+	if market_data.rate_exchange <= 100:
+		market_data.rate_exchange = 100
 
 # find our REST API token
 token = ewutils.getToken()
