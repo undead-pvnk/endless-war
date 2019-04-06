@@ -866,7 +866,7 @@ def wef_nunchucks(ctn = None):
 		ctn.crit = True
 	elif ctn.strikes == 0:
 		ctn.miss = True
-		ctn.user_data.change_slimes(n = (-ctn.slimes_damage / 2), source = source_self_damage)
+		ctn.user_data.change_slimes(n = (-dmg / 2), source = source_self_damage)
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
