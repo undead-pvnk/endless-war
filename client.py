@@ -393,10 +393,13 @@ async def on_message(message):
 		active_map[message.author.id] = True
 
 		# Update player information.
-		ewplayer.player_update(
-			member = message.author,
-			server = message.server
-		)
+		try:
+			ewplayer.player_update(
+				member = message.author,
+				server = message.server
+			)
+		except:
+			ewutils.logMsg('failed to update player: {}'.format(message.author.display_name))
 
 	content_tolower = message.content.lower()
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
