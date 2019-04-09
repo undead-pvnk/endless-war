@@ -203,6 +203,26 @@ async def xfer(cmd):
 		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
 		return
 
+	if member.id == cmd.message.author.id:
+		response = "Insider trading is illegal and shameful. You have lost all of your slime and SlimeCoin."
+
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			user_data = EwUser(member=cmd.message.author, conn=conn, cursor=cursor)
+			user_data.slimes = 0
+			user_data.slimecredit = 0
+			user_data.persist(conn=conn, cursor=cursor)
+
+			conn.commit()
+		finally:
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+
+		await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+		return
 
 	try:
 		conn_info = ewutils.databaseConnect()
