@@ -425,6 +425,8 @@ async def attack(cmd):
 					was_killed = True
 
 				if was_killed:
+					coinbounty = 0
+
 					# Move around slime as a result of the shot.
 					if shootee_data.slimes > 0:
 						if was_juvenile:
