@@ -5,6 +5,11 @@ Run client.py (with python 3.5+).
 
 ------------------------------------------------------------------------
 
+Configure the database:
+
+	> create database oldrfck;
+	> grant all privileges on oldrfck.* to 'rfck-bot'@'localhost' identified by 'rfck';
+
 Creating the database tables:
  
 CREATE TABLE users (
