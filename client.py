@@ -226,6 +226,8 @@ async def on_ready():
 					if credit_totals[0] != credit_totals[1]:
 						# Positive if net investment, negative if net withdrawal.
 						credit_change = (credit_totals[0] - credit_totals[1])
+						if credit_totals[1] == 0:
+							credit_totals[1] = 1
 						credit_rate = ((credit_change * 1.0) / credit_totals[1])
 
 						if credit_rate > 1.0:
