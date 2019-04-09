@@ -472,7 +472,7 @@ async def attack(cmd):
 						shootee_data.trauma = ""
 					
 					if coinbounty > 0:
-						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), message.author.display_name)
+						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
 
 					#adjust kills bounty
 					user_data.kills += 1
