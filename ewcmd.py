@@ -172,7 +172,7 @@ async def data(cmd):
 			market_data = EwMarket(id_server = cmd.message.server.id, conn = conn, cursor = cursor)
 
 			new_level = 0
-			if ewcfg.role_corpse not in roles_map_target:
+			if ewcfg.role_corpse not in roles_map_user:
 				new_level = len(str(int(user_data.slimes)))
 
 			if new_level > user_data.slimelevel:
@@ -184,7 +184,7 @@ async def data(cmd):
 			ewutils.databaseClose(conn_info)
 
 		# return somebody's score
-		if ewcfg.role_corpse in roles_map_target:
+		if ewcfg.role_corpse in roles_map_user:
 			response = "{} is a level {} deadboi.".format(member.display_name, user_data.slimelevel)
 		else:
 			response = "{} is a level {} slimeboi.".format(member.display_name, user_data.slimelevel)
