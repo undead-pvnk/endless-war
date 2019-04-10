@@ -2885,7 +2885,7 @@ poi_list = [
 			"assaultflats",
 			"assault",
 			"flats",
-			"beach"
+			"beach",
 			"assflats",
 			"afb"
 		],
