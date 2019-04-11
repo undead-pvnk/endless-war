@@ -151,6 +151,7 @@ class EwUser:
 	time_expirpvp = 0
 	time_lasthaunt = 0
 	time_lastinvest = 0
+	time_joined = 0
 
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
@@ -188,7 +189,7 @@ class EwUser:
 					our_cursor = True
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_stamina,
@@ -209,7 +210,8 @@ class EwUser:
 					ewcfg.col_weaponname,
 					ewcfg.col_ghostbust,
 					ewcfg.col_inebriation,
-					ewcfg.col_faction
+					ewcfg.col_faction,
+					ewcfg.col_time_joined
 				), (
 					id_user,
 					id_server
@@ -239,11 +241,16 @@ class EwUser:
 					self.ghostbust = (result[18] == 1)
 					self.inebriation = result[19]
 					self.faction = result[20]
+					self.time_joined = result[21]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server) VALUES(%s, %s)", (id_user, id_server))
 					
 					conn.commit()
+
+				# Get the latest joined_at value from Discord if it's available and we don't have one.
+				if (self.time_joined == 0) and (member != None) and (member.joined_at != None):
+					self.time_joined = int(member.joined_at.timestamp())
 
 				# Get the skill for the user's current weapon.
 				if self.weapon != None and self.weapon != "":
@@ -295,7 +302,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -319,7 +326,8 @@ class EwUser:
 				ewcfg.col_weaponname,
 				ewcfg.col_ghostbust,
 				ewcfg.col_inebriation,
-				ewcfg.col_faction
+				ewcfg.col_faction,
+				ewcfg.col_time_joined
 			), (
 				self.id_user,
 				self.id_server,
@@ -344,7 +352,8 @@ class EwUser:
 				self.weaponname,
 				(1 if self.ghostbust == True else 0),
 				self.inebriation,
-				self.faction
+				self.faction,
+				self.time_joined
 			))
 
 			# Save the current weapon's skill

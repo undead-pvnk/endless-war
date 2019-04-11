@@ -211,6 +211,7 @@ col_name = 'name'
 col_inebriation = 'inebriation'
 col_ghostbust = 'ghostbust'
 col_faction = 'faction'
+col_time_joined = 'time_joined'
 
 # Database columns for markets
 col_rate_market = 'rate_market'
