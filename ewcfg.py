@@ -589,6 +589,7 @@ col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
+col_time_joined = 'time_joined'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
