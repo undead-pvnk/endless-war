@@ -412,6 +412,7 @@ async def xfer(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
 	response = ""
