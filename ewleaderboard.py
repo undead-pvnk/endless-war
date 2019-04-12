@@ -19,7 +19,7 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
 	await ewutils.send_message(client, leaderboard_channel, topslimes)
-	topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecredit, title = ewcfg.leaderboard_slimecredit)
+	topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
@@ -180,7 +180,7 @@ def board_header(title):
 		emote = ewcfg.emote_slime2
 		bar += "▓▓▓ "
 
-	elif title == ewcfg.leaderboard_slimecredit:
+	elif title == ewcfg.leaderboard_slimecoin:
 		emote = ewcfg.emote_slimecoin
 		bar += " "
 
