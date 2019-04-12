@@ -97,26 +97,46 @@ async def reap(cmd):
 			if time_grown < ewcfg.crops_time_to_grow:
 				response = "Patience is a virtue and you are morally bankrupt. Just wait, asshole."
 			else: # Reaping
-				if time_grown > ewcfg.crops_time_to_grow * 2:
+				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
+					# Determine if a poudrin is found.
+					poudrin = False
+					poudrinamount = 0
+
+					poudrin_rarity = ewcfg.poudrin_rarity / 500  # 1 in 3 chance
+					poudrin_mined = random.randint(1, poudrin_rarity)
+
+					if poudrin_mined == 1:
+						poudrin = True
+						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+
+					# Create and give slime poudrins
+					for pdx in range(poudrinamount):
+						item_id = ewitem.item_create(
+							item_type = ewcfg.it_slimepoudrin,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+						)
+						ewutils.logMsg('Created poudrin (item {}) for user (id {})'.format(
+							item_id,
+							cmd.message.author.id
+						))
+
 					slime_gain = ewcfg.reap_gain
 					user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
+					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
 
-					#S(t) = 35000000 +  (t - 1440) * 992 + Log2(t/1440) * 11782046 caped at 100000000
-#				if (time_grown < 20160):
-#					slimeGain = 33571520 + time_grown * 992 + math.log(time_grown, 2.0)
-#					else:
-#					slimeGain = 100000000
-				#S(t) = 35000000 +  (t - 1440) * 992 + Log2(t/1440) * 11782046 that transitions into flat growth
-#				if (time_grown < 20160):
-#					slimeGain = (33571520 + time_grown * 992 + math.log(time_grown, 2.0))/300#Divided by 300 to account for later balance changes
-#				else:
-#					slimeGain = time_grown * 992 + 80001280
-
 					plant_type = ewcfg.seed_list[randint(0, len(ewcfg.seed_list) - 1)]
-					response = "You reap what you’ve sown. Your investment has yielded " + str(slime_gain) + " slime."  # + " slime and a bushel of " + plant_type
+					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(ewcfg.reap_gain)
+					if poudrin = True:
+						if poudrinamount == 1:
+							response += "a slime poudrin, "
+						elif poudrinamount == 2:
+							response += "two slime poudrins, "
+					response = "and a bushel of {}!".format(plantfqvfasgabgwg)
+
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()

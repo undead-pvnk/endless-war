@@ -7,10 +7,9 @@ from ewfood import EwFood
 from ewitem import EwItemDef
 from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
-from ewquadrants import EwQuadrantFlavor
 
 # Global configuration options.
-version = "v2.23"
+version = "v2.22e"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -117,18 +116,18 @@ role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 
 faction_roles = [
-	role_juvenile, 
-	role_juvenile_pvp, 
-	role_rowdyfucker, 
-	role_rowdyfuckers, 
-	role_rowdyfuckers_pvp, 
-	role_copkiller, 
-	role_copkillers, 
-	role_copkillers_pvp, 
-	role_corpse, 
-	role_corpse_pvp, 
+	role_juvenile,
+	role_juvenile_pvp,
+	role_rowdyfucker,
+	role_rowdyfuckers,
+	role_rowdyfuckers_pvp,
+	role_copkiller,
+	role_copkillers,
+	role_copkillers_pvp,
+	role_corpse,
+	role_corpse_pvp,
 	role_kingpin,
-	role_grandfoe 
+	role_grandfoe
 	]
 
 # Faction names
@@ -319,18 +318,6 @@ cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 
-#Troll romance commands
-cmd_add_quadrant = cmd_prefix + "addquadrant"
-cmd_get_quadrants = cmd_prefix + "quadrants"
-cmd_get_flushed = cmd_prefix + "flushed"
-cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
-cmd_get_pale = cmd_prefix + "pale"
-cmd_get_pale_alt1 = cmd_prefix + "moirail"
-cmd_get_caliginous = cmd_prefix + "caliginous"
-cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
-cmd_get_ashen = cmd_prefix + "ashen"
-cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
-
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -346,6 +333,7 @@ slimecoin_exchangerate = 100
 min_stamina = 100
 hunger_pershot = 10
 hunger_perspar = 30
+hunger_perfarm = 50
 hunger_permine = 1
 hunger_perscavenge = 2
 hunger_pertick = 3
@@ -428,14 +416,14 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # Poudrin rarity (for enlisted players)
-poudrin_rarity = 2400
+poudrin_rarity = 1500
 
 # Lifetimes
 invuln_onrevive = 0
 
 # farming
-crops_time_to_grow = 720  # in minutes; 720 minutes are 12 hours
-reap_gain = 120000
+crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
+reap_gain = 160000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
 cd_kill = 5
@@ -511,13 +499,6 @@ emote_he = "<:he:492067814933266443>"
 emote_h_ = "<:h_:492067806465228811>"
 emote_blank = "<:blank:492087853702971403>"
 
-# Emotes for troll romance
-emote_hearts = ":hearts:"
-emote_diamonds = ":diamonds:"
-emote_spades = ":spades:"
-emote_clubs = ":clubs:"
-emote_broken_heart = ":broken_heart:"
-
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
@@ -589,7 +570,6 @@ col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
-col_time_joined = 'time_joined'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -639,12 +619,6 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
-
-# Database columns for troll romance
-col_quadrant = 'quadrant'
-col_quadrants_target = 'id_target'
-col_quadrants_target2 = 'id_target2'
-
 
 # Item type names
 it_medal = "medal"
@@ -811,25 +785,6 @@ stats_clear_on_death = [
         stat_slimesscavenged
 ]
 
-# Seeds you might !Sow
-seed_list = [
-		"Pink Rowddish",
-		"Sludgeberry",
-		"Pulp Gourd",
-		"Joybean",
-		"Brightshade",
-		"Dire Apple",
-		"Purple Killiflower",
-		"Razornut",
-		"Poke-tubers",
-		"Suganma Nuts",
-		"Dankwheat",
-		"Black Limes",
-		"Phosphorpoppy",
-		"Sour Potato",
-		"Blood Cabbage"
-]
-
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
 	aim = (random.randrange(10) + 1)
@@ -867,7 +822,7 @@ def wef_nunchucks(ctn = None):
 		ctn.crit = True
 	elif ctn.strikes == 0:
 		ctn.miss = True
-		ctn.user_data.change_slimes(n = (-dmg / 2), source = source_self_damage)
+		ctn.user_data.change_slimes(n = (-ctn.slimes_damage / 2), source = source_self_damage)
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
@@ -1416,6 +1371,22 @@ food_list = [
 		vendors = [vendor_bar],
 		str_eat = "The bartender sighs as he hands you a glass of water. You drink it. You're not sure why you bothered, though.",
 		str_desc = "It’s a room temperature glass of tap water. Abstaining from drinking calories has never tasted this adequate!"
+	),
+	EwFood(
+		id_food = "razornutspacket",
+		alias = [
+			"rn",
+			"razor",
+			"nuts",
+			"packet"
+		],
+		recover_hunger = 20,
+		price = 2,
+		inebriation = 0,
+		str_name = 'packet of salted razornuts',
+		vendors = [vendor_bar],
+		str_eat = "You tear into the packet and eat the small, pointy nuts one at a time, carefully avoiding any accidental lacerations.",
+		str_desc = "It's a packet of locally-grown razornuts, roasted and salted to perfection. Perfect for snacking!"
 	),
 	EwFood(
 		id_food = "breadsticks",
@@ -2275,21 +2246,6 @@ food_list = [
 		str_desc = "This thick, viscous orange fluid reeks with a sickly-sweet orangey odor."
 	),
 	EwFood(
-		id_food = "razornuts",
-		alias = [
-			"rn",
-			"razor",
-			"nuts",
-		],
-		recover_hunger = 20,
-		price = 2,
-		inebriation = 0,
-		str_name = 'packet of salted razornuts',
-		vendors = [vendor_bar],
-		str_eat = "You tear into the packet and eat the small, pointy nuts one at a time, carefully avoiding any accidental lacerations.",
-		str_desc = "It's a packet of locally-grown razornuts, roasted and salted to perfection. Perfect for snacking!"
-	),
-	EwFood(
 		id_food = "mexicanpizza",
 		alias = [
 			"mp",
@@ -2886,7 +2842,7 @@ poi_list = [
 			"assaultflats",
 			"assault",
 			"flats",
-			"beach",
+			"beach"
 			"assflats",
 			"afb"
 		],
@@ -4727,6 +4683,8 @@ thrownobjects_list = [
 	"box overflowing with KFC branded bbq sauce"
 ]
 
+<<<<<<< Updated upstream
+=======
 quadrant_flushed = "flushed"
 quadrant_pale = "pale"
 quadrant_caliginous = "caliginous"
@@ -4744,7 +4702,7 @@ quadrants_map = {}
 quadrants = [
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_flushed,
-		
+
 		aliases = ["heart", "hearts", "matesprit", "matespritship"],
 
 		resp_add_onesided = "You have developed flushed feelings for {}.",
@@ -4762,7 +4720,7 @@ quadrants = [
 
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_pale,
-		
+
 		aliases = ["diamond", "diamonds", "moirail", "moiraillegiance"],
 
 		resp_add_onesided = "You have developed pale feelings for {}.",
@@ -4780,7 +4738,7 @@ quadrants = [
 
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_caliginous,
-		
+
 		aliases = ["spade", "spades", "kismesis", "kismesissitude"],
 
 		resp_add_onesided = "You have developed caliginous feelings for {}.",
@@ -4798,7 +4756,7 @@ quadrants = [
 
 	EwQuadrantFlavor(
 		id_quadrant = quadrant_ashen,
-		
+
 		aliases = ["club", "clubs", "auspistice", "auspisticism"],
 
 		resp_add_onesided = "You have developed ashen feelings for {}.",
@@ -4813,7 +4771,7 @@ quadrants = [
 
 		resp_view_relationship_self = "You are in an auspisticism with {}. " + emote_clubs
 		)
-	
+
 	]
 
 for quadrant in quadrants:
@@ -4840,6 +4798,122 @@ quadrants_comments_relationship = [
 		"Have you no shame...?",
 		"Lke that's gonna last."
 	]
+
+# all the vegetables you can !reap from farming
+vegetable_list = [
+	EwFood(
+		id_food = "pinkrowddishes",
+		recover_hunger = 10,
+		str_name = 'Pink Rowddishes',
+		str_eat = "",
+		str_desc = "The sweet-smelling tubers stain your hands pink."
+	),
+	EwFood(
+		id_food = "sludgeberries",
+		recover_hunger = 10,
+		str_name = 'Sludgeberries',
+		str_eat = "",
+		str_desc = "The thick syrup covering the green and teal berries makes your hands sticky."
+	),
+	EwFood(
+		id_food = "pulpgourds",
+		recover_hunger = 10,
+		str_name = 'Pulp Gourds',
+		str_eat = "",
+		str_desc = "The easily malleable gourds form indents from even your lightest touch."
+	),
+	EwFood(
+		id_food = "joybeans",
+		recover_hunger = 10,
+		str_name = 'Joybeans',
+		str_eat = "",
+		str_desc = "The sugary candy-like beans have a thick gel interior that rots your teeth."
+	),
+	EwFood(
+		id_food = "brightshade",
+		recover_hunger = 10,
+		str_name = 'Brightshade',
+		str_eat = "",
+		str_desc = "The dangerously toxic chemicals that cover the flower bud burn your eyes and nose."
+	),
+	EwFood(
+		id_food = "direapples",
+		recover_hunger = 10,
+		str_name = 'Dire Apples',
+		str_eat = "",
+		str_desc = "The vicious acidity from from the cyan and orange apples makes your mouth contort in pain with every bite."
+	),
+	EwFood(
+		id_food = "purplekilliflower",
+		recover_hunger = 10,
+		str_name = 'Purple Killiflower',
+		str_eat = "",
+		str_desc = "The deep purple head has an extremely bitter aftertaste."
+	),
+	EwFood(
+		id_food = "razornuts",
+		recover_hunger = 10,
+		str_name = 'Razornuts',
+		str_eat = "",
+		str_desc = "The sharp edges of the hard nut slice open your mouth so that you taste slight hints of copper from your blood every bite."
+	),
+	EwFood(
+		id_food = "poketubers",
+		recover_hunger = 10,
+		str_name = 'Poke-tubers',
+		str_eat = "",
+		str_desc = "The lame, sad, lumpy roots barely support a bulbous crop that’s indiscernible taste is not complemented by it’s awkward texture."
+	),
+	EwFood(
+		id_food = "suganmanuts",
+		recover_hunger = 10,
+		str_name = 'Suganma Nuts',
+		str_eat = "",
+		str_desc = "The difficult nuts infuriate you for reasons you don’t really underst-- HEY WAIT A SECOND!!"
+	),
+	EwFood(
+		id_food = "dankwheat",
+		recover_hunger = 10,
+		str_name = 'Dankwheat',
+		str_eat = "",
+		str_desc = "The damp barley milled from this moist wheat causes hallucinations and intoxication once digested fully."
+	),
+	EwFood(
+		id_food = "blacklimes",
+		recover_hunger = 10,
+		str_name = 'Black Limes',
+		str_eat = "",
+		str_desc = "The sour juice squeezed from just one of these small dark grey limes can flavor an entire production of Warheads hard candy."
+	),
+	EwFood(
+		id_food = "phosphorpoppies",
+		recover_hunger = 10,
+		str_name = 'Phosphorpoppies',
+		str_eat = "",
+		str_desc = "The vivid and unnatural colors of this plant reveal it’s man made origin. Some say SlimeCorp designed the plant’s addictive and anxiety/paranoia inducing nature to keep juveniles weak and disenfranchised."
+	),
+	EwFood(
+		id_food = "sourpotatoes",
+		recover_hunger = 10,
+		str_name = 'Sour Potatoes',
+		str_eat = "",
+		str_desc = "The staple of many unhealthy juveniles’ diet. It’s revolting taste leaves much to be desired."
+	),
+	EwFood(
+		id_food = "bloodcabbages",
+		recover_hunger = 10,
+		str_name = 'Blood Cabbages',
+		str_eat = "",
+		str_desc = "The dripping mass of dark crimson leaves have become the staple special effects tool for aspiration amatuer filmmakers in the city for it’s uncanny resemblance to human blood."
+	),
+	EwFood(
+		id_food = "pawpaw",
+		recover_hunger = 10,
+		str_name = 'Pawpaw',
+		str_eat = "",
+		str_desc = "An American classic."
+	),
+]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
