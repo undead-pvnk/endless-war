@@ -6,8 +6,171 @@ import ewrolemgr
 import ewutils
 import ewcfg
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
 
+class EwMarket:
+	id_server = ""
+
+	clock = 0
+	weather = 'sunny'
+	day = 0
+
+	slimes_casino = 0
+	slimes_revivefee = 0
+
+	market_rate = 1000
+	exchange_rate = 1000000
+	boombust = 0
+	time_lasttick = 0
+	negaslime = 0
+	decayed_slimes = 0
+
+	""" Load the market data for this server from the database. """
+	def __init__(self, id_server = None):
+		if(id_server != None):
+			self.id_server = id_server
+
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor();
+
+				# Retrieve object
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes} FROM markets WHERE id_server = %s".format(
+					time_lasttick = ewcfg.col_time_lasttick,
+					slimes_revivefee = ewcfg.col_slimes_revivefee,
+					negaslime = ewcfg.col_negaslime,
+					clock = ewcfg.col_clock,
+					weather = ewcfg.col_weather,
+					day = ewcfg.col_day,
+					decayed_slimes = ewcfg.col_decayed_slimes
+				), (self.id_server, ))
+				result = cursor.fetchone();
+
+				if result != None:
+					# Record found: apply the data to this object.
+					self.time_lasttick = result[0]
+					self.slimes_revivefee = result[1]
+					self.negaslime = result[2]
+					self.clock = result[3]
+					self.weather = result[4]
+					self.day = result[5]
+					self.decayed_slimes = result[6]
+				else:
+					# Create a new database entry if the object is missing.
+					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
+
+					conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
+	""" Save market data object to the database. """
+	def persist(self):
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			# Save the object.
+			cursor.execute("REPLACE INTO markets({time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes},) VALUES(%s, %s, %s, %s, %s, %s)".format(
+				id_server = ewcfg.col_id_server,
+				time_lasttick = ewcfg.col_time_lasttick,
+				slimes_revivefee = ewcfg.col_slimes_revivefee,
+				negaslime = ewcfg.col_negaslime,
+				clock = ewcfg.col_clock,
+				weather = ewcfg.col_weather,
+				day = ewcfg.col_day,
+				decayed_slimes = ewcfg.col_decayed_slimes
+			), (
+				self.time_lasttick,
+				self.slimes_revivefee,
+				self.negaslime,
+				self.clock,
+				self.weather,
+				self.day,
+				self.decayed_slimes
+			))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+
+class EwStock:
+	id_server = ""
+
+	# The stock's identifying string
+	name = ""
+
+	market_rate = 0
+
+	exchange_rate = 0
+
+	boombust = 0
+
+	total_shares = 0
+
+	timestamp = 0
+
+	previous_entry = 0
+
+	def __init__(self, id_server = None, stock = None):
+		if id_server is not None and stock is not None:
+			self.id_server = id_server
+			self.name = stock
+
+			data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stock WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
+				stock = ewcfg.col_stock,
+				market_rate = ewcfg.col_market_rate,
+				exchange_rate = ewcfg.col_exchange_rate,
+				boombust = ewcfg.col_boombust,
+				total_shares = ewcfg.col_total_shares,
+				timestamp = ewcfg.col_timestamp
+			), (
+				id_server,
+				stock
+			))
+
+			slimecoin_total = ewutils.execute_sql_query()
+
+			if len(data) > 0:  # if data is not empty, i.e. it found an entry
+				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
+				self.name = data[0][0]
+				self.market_rate = data[0][1]
+				self.exchange_rate = data[0][2]
+				self.boombust = data[0][3]
+				self.total_shares = data[0][4]
+				self.timestamp = data[0][5]
+				self.previous_entry = data[1] if len(data) > 1 #gets the previous stock
+				# ewutils.logMsg("EwStock object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
+			else:  # create new entry
+				ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}) VALUES (%s, %s)".format(
+					id_server = ewcfg.col_id_server,
+					stock = ewcfg.col_stock
+				), (
+					id_server,
+					stock
+				))
+
+	def persist(self):
+		ewutils.execute_sql_query("INSERT INTO stocks(id_server, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+			stock = ewcfg.col_stock,
+			market_rate = ewcfg.col_market_rate,
+			exchange_rate = ewcfg.col_exchange_rate,
+			boombust = ewcfg.col_boombust,
+			total_shares = ewcfg.col_total_shares,
+			timestamp = ewcfg.col_timestamp
+		), (
+			self.stock,
+			self.market_rate,
+			self.exchange_rate,
+			self.boombust,
+			self.total_shares,
+			time.time(),
+		))
 
 """ player invests slime in the market """
 async def invest(cmd):
@@ -40,11 +203,11 @@ async def invest(cmd):
 
 		if value != None:
 			# Apply a brokerage fee of ~5% (rate * 1.05)
-			rate_exchange = (market_data.rate_exchange / 1000000.0)
+			exchange_rate = (market_data.exchange_rate / 1000000.0)
 			feerate = 1.05
 
 			# The user can only buy a whole number of credits, so adjust their cost based on the actual number of credits purchased.
-			gross_credits = int(value / rate_exchange)
+			gross_credits = int(value / exchange_rate)
 
 			fee = int((gross_credits * feerate) - gross_credits)
 
@@ -97,10 +260,10 @@ async def withdraw(cmd):
 
 		if value != None:
 
-			rate_exchange = (market_data.rate_exchange / 1000000.0)
+			exchange_rate = (market_data.exchange_rate / 1000000.0)
 
 			credits = value
-			slimes = int(value * rate_exchange)
+			slimes = int(value * exchange_rate)
 
 			if value > user_data.slimecredit:
 				response = "You don't have that many SlimeCoin to exchange."
@@ -121,7 +284,6 @@ async def withdraw(cmd):
 			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 
 
 """ donate slime to slimecorp in exchange for slimecoin """
@@ -265,3 +427,5 @@ async def slimecoin(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+

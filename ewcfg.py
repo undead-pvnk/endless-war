@@ -593,10 +593,6 @@ col_stat_metric = 'stat_metric'
 col_stat_value = 'stat_value'
 
 # Database columns for markets
-col_rate_market = 'rate_market'
-col_rate_exchange = 'rate_exchange'
-col_slimes_casino = 'slimes_casino'
-col_boombust = 'boombust'
 col_time_lasttick = 'time_lasttick'
 col_slimes_revivefee = 'slimes_revivefee'
 col_negaslime = 'negaslime'
@@ -604,6 +600,13 @@ col_clock = 'clock'
 col_weather = 'weather'
 col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
+
+# Database columns for stocks
+col_stock = 'stock'
+col_market_rate = 'market_rate'
+col_exchange_rate = 'exchange_rate'
+col_boombust = 'boombust'
+col_total_shares = 'total_shares'
 
 # Database columns for stats
 col_total_slime = 'total_slime'
@@ -4698,6 +4701,13 @@ thrownobjects_list = [
 	"chunk of broken concrete",
 	"piece of rusted scrap metal",
 	"box overflowing with KFC branded bbq sauce"
+]
+
+# Stock names
+stock_names = [
+	"KFC",
+	"Pizza Hut",
+	"Taco Bell"
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id

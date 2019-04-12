@@ -6,7 +6,8 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 
 """ Slimeoid data model for database persistence """
 class EwSlimeoid:

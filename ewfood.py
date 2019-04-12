@@ -5,7 +5,8 @@ import ewcfg
 import ewitem
 import ewutils
 import ewrolemgr
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 
 """ Food model object """
 class EwFood:

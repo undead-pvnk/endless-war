@@ -8,7 +8,8 @@ import ewcfg
 import ewutils
 import ewmap
 import ewrolemgr
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 
 """ revive yourself from the dead. """

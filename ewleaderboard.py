@@ -2,7 +2,8 @@ import datetime
 
 import ewcfg
 import ewutils
-from ew import EwMarket
+from ewmarket import EwMarket
+
 
 async def post_leaderboards(client = None, server = None):
 	leaderboard_channel = ewutils.get_channel(server = server, channel_name = ewcfg.channel_leaderboard)

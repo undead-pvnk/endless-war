@@ -8,7 +8,8 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 
