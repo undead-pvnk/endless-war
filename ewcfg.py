@@ -8,9 +8,10 @@ from ewitem import EwItemDef
 from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewmutation import EwMutationFlavor
+from ewquadrants import EwQuadrantFlavor
 
 # Global configuration options.
-version = "v2.22c"
+version = "v2.23"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -319,6 +320,18 @@ cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 
+#Troll romance commands
+cmd_add_quadrant = cmd_prefix + "addquadrant"
+cmd_get_quadrants = cmd_prefix + "quadrants"
+cmd_get_flushed = cmd_prefix + "flushed"
+cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
+cmd_get_pale = cmd_prefix + "pale"
+cmd_get_pale_alt1 = cmd_prefix + "moirail"
+cmd_get_caliginous = cmd_prefix + "caliginous"
+cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
+cmd_get_ashen = cmd_prefix + "ashen"
+cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -499,6 +512,13 @@ emote_he = "<:he:492067814933266443>"
 emote_h_ = "<:h_:492067806465228811>"
 emote_blank = "<:blank:492087853702971403>"
 
+# Emotes for troll romance
+emote_hearts = ":hearts:"
+emote_diamonds = ":diamonds:"
+emote_spades = ":spades:"
+emote_clubs = ":clubs:"
+emote_broken_heart = ":broken_heart:"
+
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
@@ -570,6 +590,7 @@ col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
+col_time_joined = 'time_joined'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -623,6 +644,12 @@ col_district_slimes = 'slimes'
 # Database columns for mutations
 col_id_mutation = 'mutation'
 col_time_lastuse = 'time_lastuse'
+
+# Database columns for troll romance
+col_quadrant = 'quadrant'
+col_quadrants_target = 'id_target'
+col_quadrants_target2 = 'id_target2'
+
 
 # Item type names
 it_medal = "medal"
@@ -845,7 +872,7 @@ def wef_nunchucks(ctn = None):
 		ctn.crit = True
 	elif ctn.strikes == 0:
 		ctn.miss = True
-		ctn.user_data.change_slimes(n = (-ctn.slimes_damage / 2), source = source_self_damage)
+		ctn.user_data.change_slimes(n = (-dmg / 2), source = source_self_damage)
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
@@ -2864,7 +2891,7 @@ poi_list = [
 			"assaultflats",
 			"assault",
 			"flats",
-			"beach"
+			"beach",
 			"assflats",
 			"afb"
 		],
@@ -4726,6 +4753,120 @@ for mutation in mutations:
 	mutations_map[mutation.id_mutation] = mutation
 	mutation_ids.append(mutation.id_mutation)
 
+quadrant_flushed = "flushed"
+quadrant_pale = "pale"
+quadrant_caliginous = "caliginous"
+quadrant_ashen = "ashen"
+
+quadrant_ids = [
+	quadrant_flushed,
+	quadrant_pale,
+	quadrant_caliginous,
+	quadrant_ashen
+	]
+
+quadrants_map = {}
+
+quadrants = [
+	EwQuadrantFlavor(
+		id_quadrant = quadrant_flushed,
+		
+		aliases = ["heart", "hearts", "matesprit", "matespritship"],
+
+		resp_add_onesided = "You have developed flushed feelings for {}.",
+
+		resp_add_relationship = "You have entered into a matespritship with {}.",
+
+		resp_view_onesided = "{} has a one-sided red crush on {}.",
+
+		resp_view_onesided_self = "You have a one-sided red crush on {}.",
+
+		resp_view_relationship = "{} is in a matespritship with {}. " + emote_hearts,
+
+		resp_view_relationship_self = "You are in a matespritship with {}. " + emote_hearts
+		),
+
+	EwQuadrantFlavor(
+		id_quadrant = quadrant_pale,
+		
+		aliases = ["diamond", "diamonds", "moirail", "moiraillegiance"],
+
+		resp_add_onesided = "You have developed pale feelings for {}.",
+
+		resp_add_relationship = "You have entered into a moiraillegiance with {}.",
+
+		resp_view_onesided = "{} has a one-sided pale crush on {}.",
+
+		resp_view_onesided_self = "You have a one-sided pale crush on {}.",
+
+		resp_view_relationship = "{} is in a moiraillegiance with {}. " + emote_diamonds,
+
+		resp_view_relationship_self = "You are in a moiraillegiance with {}. " + emote_diamonds
+		),
+
+	EwQuadrantFlavor(
+		id_quadrant = quadrant_caliginous,
+		
+		aliases = ["spade", "spades", "kismesis", "kismesissitude"],
+
+		resp_add_onesided = "You have developed caliginous feelings for {}.",
+
+		resp_add_relationship = "You have entered into a kismesissitude with {}.",
+
+		resp_view_onesided = "{} has a one-sided black crush on {}.",
+
+		resp_view_onesided_self = "You have a one-sided black crush on {}.",
+
+		resp_view_relationship = "{} is in a kismesissitude with {}. " + emote_spades,
+
+		resp_view_relationship_self = "You are in a kismesissitude with {}. " + emote_spades
+		),
+
+	EwQuadrantFlavor(
+		id_quadrant = quadrant_ashen,
+		
+		aliases = ["club", "clubs", "auspistice", "auspisticism"],
+
+		resp_add_onesided = "You have developed ashen feelings for {}.",
+
+		resp_add_relationship = "You have entered into an auspisticism with {}.",
+
+		resp_view_onesided = "{} has a one-sided ashen crush on {}.",
+
+		resp_view_onesided_self = "You have a one-sided ashen crush on {}.",
+
+		resp_view_relationship = "{} is in an auspisticism with {}. " + emote_clubs,
+
+		resp_view_relationship_self = "You are in an auspisticism with {}. " + emote_clubs
+		)
+	
+	]
+
+for quadrant in quadrants:
+	quadrants_map[quadrant.id_quadrant] = quadrant
+	for alias in quadrant.aliases:
+		quadrants_map[alias] = quadrant
+
+quadrants_comments_onesided = [
+		"Adorable~",
+		"GAY!",
+		"Disgusting.",
+		"How embarrassing!",
+		"Epic.",
+		"Have you no shame...?",
+		"As if you'd ever have a shot with them."
+	]
+
+quadrants_comments_relationship = [
+		"Adorable~",
+		"GAY!",
+		"Disgusting.",
+		"How embarrassing!",
+		"Epic.",
+		"Have you no shame...?",
+		"Lke that's gonna last."
+	]
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 
@@ -4736,10 +4877,17 @@ def update_server_list(server):
 	server_list[server.id] = server
 
 
-clients = []
+client_ref = None
+
+def get_client():
+	global client_ref
+	return client_ref;
 
 """
 	save the discord client of this bot
 """
 def set_client(cl):
-	clients.append(cl)
+	global client_ref
+	client_ref = cl
+
+	return client_ref

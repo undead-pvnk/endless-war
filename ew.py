@@ -152,6 +152,7 @@ class EwUser:
 	time_lastscavenge = 0
 	time_lastenter = 0
 	time_lastoffline = 0
+	time_joined = 0
 
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
@@ -388,7 +389,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -416,7 +417,8 @@ class EwUser:
 					ewcfg.col_time_lastscavenge,
 					ewcfg.col_bleed_storage,
 					ewcfg.col_time_lastenter,
-					ewcfg.col_time_lastoffline
+					ewcfg.col_time_lastoffline,
+					ewcfg.col_time_joined
 				), (
 					id_user,
 					id_server
@@ -453,6 +455,7 @@ class EwUser:
 					self.bleed_storage = result[25]
 					self.time_lastenter = result[26]
 					self.time_lastoffline = result[27]
+					self.time_joined = result[28]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -463,6 +466,9 @@ class EwUser:
 					))
 					
 					conn.commit()
+
+				if (self.time_joined == 0) and (member != None) and (member.joined_at != None):
+					self.time_joined = int(member.joined_at.timestamp())
 
 				# Get the skill for the user's current weapon.
 				if self.weapon != None and self.weapon != "":
@@ -504,7 +510,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -535,7 +541,8 @@ class EwUser:
 				ewcfg.col_time_lastscavenge,
 				ewcfg.col_bleed_storage,
 				ewcfg.col_time_lastenter,
-				ewcfg.col_time_lastoffline
+				ewcfg.col_time_lastoffline,
+				ewcfg.col_time_joined
 			), (
 				self.id_user,
 				self.id_server,
@@ -567,7 +574,8 @@ class EwUser:
 				self.time_lastscavenge,
 				self.bleed_storage,
 				self.time_lastenter,
-				self.time_lastoffline
+				self.time_lastoffline,
+				self.time_joined
 			))
 
 			conn.commit()

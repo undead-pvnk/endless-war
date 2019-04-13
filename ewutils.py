@@ -75,8 +75,7 @@ class EwResponseContainer:
 			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
 
 	async def post(self):
-		if self.client == None:
-			self.client = get_client()
+		self.client = get_client()
 
 		if self.client == None:
 			logMsg("Couldn't find client")
@@ -756,7 +755,7 @@ async def post_in_hideouts(id_server, message):
 	gets the discord client the bot is running on
 """
 def get_client():
-	return ewcfg.clients[0]
+	return ewcfg.get_client()
 
 
 """
