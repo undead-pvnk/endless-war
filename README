@@ -178,12 +178,13 @@ CREATE TABLE roles (
 );
 
 CREATE TABLE mutations (
+	mutation_counter int NOT NULL AUTO_INCREMENT,
 	id_server varchar(128) NOT NULL,
 	id_user varchar(128) NOT NULL,
 	mutation varchar(32) NOT NULL,
 	time_lastuse int NOT NULL DEFAULT '0',
 
-	PRIMARY KEY (id_server, id_user, mutation)
+	PRIMARY KEY (mutation_counter)
 );
 
 CREATE TABLE quadrants (

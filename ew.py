@@ -6,7 +6,6 @@ import ewcfg
 import ewstats
 import ewitem
 
-from ewmutation import EwMutation
 
 """ Market data model for database persistence """
 class EwMarket:
@@ -225,8 +224,10 @@ class EwUser:
 					new_mutation = random.choice(ewcfg.mutation_ids)
 					while new_mutation in current_mutations:
 						new_mutation = random.choice(ewcfg.mutation_ids)
-					EwMutation(id_server = self.id_server, id_user = self.id_user, id_mutation = new_mutation)
-					response += "\n\n{}".format(ewcfg.mutations_map[new_mutation].str_acquire)
+
+					add_success = self.add_mutation(new_mutation)
+					if add_success:
+						response += "\n\n{}".format(ewcfg.mutations_map[new_mutation].str_acquire)
 						
 			self.slimelevel = new_level
 			if self.life_state == ewcfg.life_state_corpse:
@@ -338,6 +339,29 @@ class EwUser:
 		ewitem.item_delete(food_item.id_item)
 
 		return response
+
+	def add_mutation(self, id_mutation):
+		mutations = self.get_mutations()
+		if id_mutation in mutations:
+			return False
+		try:
+			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}, {time_lastuse}) VALUES (%s, %s, %s, %s)".format(
+					id_server = ewcfg.col_id_server,
+					id_user = ewcfg.col_id_user,
+					id_mutation = ewcfg.col_id_mutation,
+					time_lastuse = ewcfg.col_time_lastuse
+				),(
+					self.id_server,
+					self.id_user,
+					id_mutation,
+					0
+				))
+
+			return True
+		except:
+			ewutils.logMsg("Failed to add mutation for user {}.".format(self.id_user))
+			return False
+
 
 	def get_mutations(self):
 		result = []

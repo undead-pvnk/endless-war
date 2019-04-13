@@ -293,6 +293,9 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 
+cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
+cmd_clear_mutations = cmd_prefix + 'clearmutations'
+
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
 cmd_growbody = cmd_prefix + 'growbody'
@@ -644,6 +647,7 @@ col_district_slimes = 'slimes'
 # Database columns for mutations
 col_id_mutation = 'mutation'
 col_time_lastuse = 'time_lastuse'
+col_mutation_counter = 'mutation_counter'
 
 # Database columns for troll romance
 col_quadrant = 'quadrant'
@@ -4733,6 +4737,7 @@ thrownobjects_list = [
 ]
 
 mutation_id_example = "example"
+mutation_id_example2 = "example2"
 
 mutation_milestones = [10]
 
@@ -4742,6 +4747,12 @@ mutations = [
 		str_describe_self = "You have a perfectly generic mutation.",
 		str_describe_other = "They have a perfectly generic mutation.",
 		str_acquire = "You have acquired a perfectly generic mutation."
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_example2,
+		str_describe_self = "You have a perfectly generic, yet legally distinct, mutation.",
+		str_describe_other = "They have a perfectly generic, yet legally distinct, mutation.",
+		str_acquire = "You have acquired a perfectly generic, yet legally distinct, mutation."
 		)
 	]
 

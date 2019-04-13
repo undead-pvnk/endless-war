@@ -294,6 +294,10 @@ cmd_map = {
 	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
+        # mutations
+        ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+        ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
