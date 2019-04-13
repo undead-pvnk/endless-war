@@ -144,7 +144,7 @@ class EwStock:
 				self.boombust = data[0][3]
 				self.total_shares = data[0][4]
 				self.timestamp = data[0][5]
-				self.previous_entry = data[1] if len(data) > 1 #gets the previous stock
+				self.previous_entry = data[1] if len(data) > 1  #gets the previous stock
 				# ewutils.logMsg("EwStock object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
 				ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}) VALUES (%s, %s)".format(
@@ -411,6 +411,16 @@ async def xfer(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+""" show the current market exchange rate """ #todo allow you to check the rate of multiple stocks
+async def rate(cmd):
+	market_data = EwMarket(id_server=cmd.message.server.id)
+
+	response = "The current market value of SlimeCoin is {cred:,.3f} slime per 1,000 coin.".format(cred=(market_data.exchange_rate / 1000.0))
+
+	# Send the response to the player.
+	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ show player's slimecoin balance """

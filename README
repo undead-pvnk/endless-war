@@ -54,10 +54,6 @@ CREATE TABLE stats (
 
 CREATE TABLE markets (
 	id_server varchar(128) NOT NULL,
-	slimes_casino bigint NOT NULL DEFAULT '0',
-	rate_market bigint NOT NULL DEFAULT '1000',
-	rate_exchange bigint NOT NULL DEFAULT '1000000',
-	boombust int NOT NULL DEFAULT '0',
 	time_lasttick int NOT NULL DEFAULT '0',
 	slimes_revivefee bigint NOT NULL DEFAULT '0',
 	negaslime bigint NOT NULL DEFAULT '0',
@@ -66,6 +62,18 @@ CREATE TABLE markets (
 	day int NOT NULL DEFAULT '726',
 	decayed_slimes bigint NOT NULL DEFAULT '0',
 
+
+	PRIMARY KEY (id_server)
+);
+
+CREATE TABLE stocks (
+	id_server varchar(128) NOT NULL,
+    stock varchar(64) NOT NULL,
+	market_rate bigint NOT NULL DEFAULT '1000',
+	exchange_rate bigint NOT NULL DEFAULT '1000000',
+	boombust int NOT NULL DEFAULT '0',
+	total_shares bigint NOT NULL DEFAULT '0',
+	timestamp bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server)
 );
