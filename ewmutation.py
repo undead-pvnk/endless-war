@@ -1,6 +1,7 @@
 import asyncio
 import math
 import time
+import random
 
 import discord
 
@@ -95,7 +96,7 @@ class EwMutation:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {time_lastuse}, {mutation_counter)) VALUES(%s, %s, %s, %s, %S)".format(
+			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {time_lastuse}, {mutation_counter}) VALUES(%s, %s, %s, %s, %s)".format(
 					id_mutation = ewcfg.col_id_mutation,
 					time_lastuse = ewcfg.col_time_lastuse,
 					mutation_counter = ewcfg.col_mutation_counter
