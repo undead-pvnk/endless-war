@@ -4683,8 +4683,6 @@ thrownobjects_list = [
 	"box overflowing with KFC branded bbq sauce"
 ]
 
-<<<<<<< Updated upstream
-=======
 quadrant_flushed = "flushed"
 quadrant_pale = "pale"
 quadrant_caliginous = "caliginous"
@@ -4799,7 +4797,7 @@ quadrants_comments_relationship = [
 		"Lke that's gonna last."
 	]
 
-# all the vegetables you can !reap from farming
+# all the vegetables you can !reap from farming #todo add str_eat flavor text
 vegetable_list = [
 	EwFood(
 		id_food = "pinkrowddishes",

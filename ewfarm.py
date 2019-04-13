@@ -1,6 +1,5 @@
 import time
-from random import randint
-
+import random
 import ewcfg
 
 import ewitem
@@ -100,7 +99,7 @@ async def reap(cmd):
 				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
-					# Determine if a poudrin is found.
+					# Determine if a slime poudrin is found.
 					poudrin = False
 					poudrinamount = 0
 
@@ -112,31 +111,45 @@ async def reap(cmd):
 						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
 					# Create and give slime poudrins
-					for pdx in range(poudrinamount):
-						item_id = ewitem.item_create(
-							item_type = ewcfg.it_slimepoudrin,
+					for pcreate in range(poudrinamount):
+						ewitem.item_create(
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
+							item_type = ewcfg.it_slimepoudrin,
 						)
-						ewutils.logMsg('Created poudrin (item {}) for user (id {})'.format(
-							item_id,
-							cmd.message.author.id
-						))
+
+					#  Determine what crop is grown.
+					vegetable = random.choice(ewcfg.vegetable_list)
+
+					#  Create and give a bushel of whatever crop was grown.
+					for vcreate in range(4):
+						ewitem.item_create(
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_type = ewcfg.it_food,
+							item_props = {
+								'id_food': vegetable.id_food,
+								'food_name': vegetable.str_name,
+								'food_desc': vegetable.str_desc,
+								'recover_hunger': vegetable.recover_hunger,
+								'str_eat': vegetable.str_eat,
+							}
+						)
 
 					slime_gain = ewcfg.reap_gain
 					user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
 					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
 
-					plant_type = ewcfg.seed_list[randint(0, len(ewcfg.seed_list) - 1)]
 					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(ewcfg.reap_gain)
-					if poudrin = True:
+
+					if poudrin == True:
 						if poudrinamount == 1:
 							response += "a slime poudrin, "
 						elif poudrinamount == 2:
 							response += "two slime poudrins, "
-					response = "and a bushel of {}!".format(plantfqvfasgabgwg)
 
+					response += "and a bushel of {}!".format(vegetable.str_name)
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()
