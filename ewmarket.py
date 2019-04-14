@@ -123,8 +123,8 @@ class EwStock:
 			self.id_server = id_server
 			self.name = stock
 
-			data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stock WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
-				stock = ewcfg.col_stock,
+			data = ewutils.execute_sql_query("SELECT {stocks}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stock WHERE id_server = %s AND {stocks} = %s ORDER BY {timestamp} DESC".format(
+				stocks = ewcfg.col_stock,
 				market_rate = ewcfg.col_market_rate,
 				exchange_rate = ewcfg.col_exchange_rate,
 				boombust = ewcfg.col_boombust,
