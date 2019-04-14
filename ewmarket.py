@@ -135,7 +135,7 @@ class EwStock:
 				stock
 			))
 
-			slimecoin_total = ewutils.execute_sql_query()
+			# slimecoin_total = ewutils.execute_sql_query()
 
 			if len(data) > 0:  # if data is not empty, i.e. it found an entry
 				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
