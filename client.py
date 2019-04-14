@@ -508,9 +508,12 @@ async def on_ready():
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
 					market_data.time_lasttick = time_now
 
+					market_response = ""
+
 					for stock in ewcfg.stock_names:
 						s = EwStock(server.id, stock)
-						market_tick(s, server.id)
+						market_response = market_tick(s, server.id)
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
@@ -518,6 +521,11 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+
+					if market_data.clock == 6:
+						response += ' The Slime Stock Exchange is now open for business.'
+					elif market_data.clock == 18:
+						response += ' The Slime Stock Exchange has closed for the night.'
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
@@ -930,6 +938,30 @@ def market_tick(stock_data, id_server):
 	stock_data.market_rate = market_rate
 
 	stock_data.persist()
+
+	# Give some indication of how the market is doing to the users.
+	response = stock_data.name + " "
+
+	# Market is up ...
+	if market_rate > 1200:
+		response += 'is skyrocketing!!! Slime stock is up {p:.3g}%!!!'.format(p = percentage)
+	elif market_rate > 1100:
+		response += 'is booming! Slime stock is up {p:.3g}%!'.format(p = percentage)
+	elif market_rate > 1000:
+		response += 'is doing well. Slime stock is up {p:.3g}%.'.format(p = percentage)
+	# Market is down ...
+	elif market_rate < 800:
+		response += 'is plummetting!!! Slime stock is down {p:.3g}%!!!'.format(p = percentage_abs)
+	elif market_rate < 900:
+		response += 'is stagnating! Slime stock is down {p:.3g}%!'.format(p = percentage_abs)
+	elif market_rate < 1000:
+		response += 'is a bit sluggish. Slime stock is down {p:.3g}%.'.format(p = percentage_abs)
+	# Perfectly balanced
+	else:
+		response += 'is holding steady. No change in slime stock value.'
+
+	# Send the announcement.
+	return response
 
 # find our REST API token
 token = ewutils.getToken()
