@@ -509,8 +509,8 @@ async def on_ready():
 					market_data.time_lasttick = time_now
 
 					for stock in ewcfg.stock_names:
-					s = EwStock(server.id, stock)
-					market_tick(server.id, stock)
+						s = EwStock(server.id, stock)
+						market_tick(server.id, stock)
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
