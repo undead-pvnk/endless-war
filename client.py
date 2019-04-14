@@ -510,7 +510,7 @@ async def on_ready():
 
 					for stock in ewcfg.stock_names:
 						s = EwStock(server.id, stock)
-						market_tick(server.id, stock)
+						market_tick(s, server.id)
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
@@ -866,7 +866,7 @@ def market_tick(stock_data, id_server):
 		if active_bonus > 20:
 			active_bonus = 20
 
-	active_users_map[server.id] = {}
+	active_users_map[id_server] = {}
 	market_rate += (active_bonus / 4)
 
 	# Invest/Withdraw effects
