@@ -1,6 +1,6 @@
 import time
 
-import ewcmd
+# import ewcmd
 import ewitem
 import ewrolemgr
 import ewutils
