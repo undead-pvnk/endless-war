@@ -523,9 +523,10 @@ async def on_ready():
 						market_data.day += 1
 
 					if market_data.clock == 6:
-						response += ' The Slime Stock Exchange is now open for business.'
+						response = ' The Slime Stock Exchange is now open for business.'
 					elif market_data.clock == 18:
-						response += ' The Slime Stock Exchange has closed for the night.'
+						response = ' The Slime Stock Exchange has closed for the night.'
+					await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
