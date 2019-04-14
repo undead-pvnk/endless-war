@@ -16,7 +16,7 @@ CREATE TABLE users (
 	id_killer varchar(128) NOT NULL DEFAULT '',
 	time_lastspar int NOT NULL DEFAULT '0',
 	time_lasthaunt int NOT NULL DEFAULT '0',
-	slimecredit bigint NOT NULL DEFAULT '0',
+	slimecoin bigint NOT NULL DEFAULT '0',
 	time_lastinvest int NOT NULL DEFAULT '0',
 	slimelevel int NOT NULL DEFAULT '1',
 	hunger int NOT NULL DEFAULT '0',

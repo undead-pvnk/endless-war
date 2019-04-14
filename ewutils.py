@@ -777,8 +777,8 @@ async def edit_message(client, message, text):
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
 """ Returns an array of the most recent counts of all invested slime coin, from newest at 0 to oldest. """
-def getRecentTotalShares(id_server=None, count=2):
-	if id_server != None:
+def getRecentTotalShares(id_server=None, stock=None, count=2):
+	if id_server != None and stock != None:
 
 		values = []
 
@@ -789,12 +789,14 @@ def getRecentTotalShares(id_server=None, count=2):
 			cursor = conn.cursor()
 
 			count = int(count)
-			cursor.execute("SELECT {} FROM stocks WHERE {} = %s ORDER BY {} DESC LIMIT %s".format(
-				ewcfg.col_total_slimecredit,
-				ewcfg.col_id_server,
-				ewcfg.col_timestamp,
+			cursor.execute("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
+				stock = ewcfg.col_stock,
+				total_shares = ewcfg.col_total_shares,
+				id_server = ewcfg.col_id_server,
+				timestamp = ewcfg.col_timestamp,
 			), (
 				id_server,
+				stock,
 				(count if (count > 0) else 2)
 			))
 

@@ -168,11 +168,11 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
-	# Show the player's slime credit.
-	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
+	# Show the player's slime coin.
+	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
@@ -505,14 +505,12 @@ async def on_ready():
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
 
-				for stock in ewcfg.stock_names:
-					s = EwStock(server.id, stock)
-					market_tick()
-
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
 					market_data.time_lasttick = time_now
 
-					market_tick(market_data, server.id)
+					for stock in ewcfg.stock_names:
+					s = EwStock(server.id, stock)
+					market_tick(server.id, stock)
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
@@ -872,21 +870,23 @@ def market_tick(stock_data, id_server):
 	market_rate += (active_bonus / 4)
 
 	# Invest/Withdraw effects
-	credit_rate = 0
-	if stock_data[0] != credit_totals[1]:
+	coin_rate = 0
+	total_shares = ewutils.getRecentTotalShares(id.server, stock_data.name)
+
+	if total_shares[0] != total_shares[1]:
 		# Positive if net investment, negative if net withdrawal.
-		credit_change = (credit_totals[0] - credit_totals[1])
-		credit_rate = ((credit_change * 1.0) / credit_totals[1])
+		coin_change = (total_shares[0] - total_shares[1])
+		coin_rate = ((coin_change * 1.0) / total_shares[1])
 
-		if credit_rate > 1.0:
-			credit_rate = 1.0
-		elif credit_rate < -0.5:
-			credit_rate = -0.5
+		if coin_rate > 1.0:
+			coin_rate = 1.0
+		elif coin_rate < -0.5:
+			coin_rate = -0.5
 
-		credit_rate = int((credit_rate * ewcfg.max_iw_swing) if credit_rate > 0 else (
-					credit_rate * 2 * ewcfg.max_iw_swing))
+		coin_rate = int((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
+					coin_rate * 2 * ewcfg.max_iw_swing))
 
-	market_rate += credit_rate
+	market_rate += coin_rate
 
 	# Tick down the boombust cooldown.
 	if stock_data.boombust < 0:
@@ -925,6 +925,11 @@ def market_tick(stock_data, id_server):
 	# If the value hits 0, we're stuck there forever.
 	if stock_data.exchange_rate <= 100:
 		stock_data.exchange_rate = 100
+
+	stock_data.exchange_rate = int(stock_data.exchange_rate * (market_rate / 1000))
+	stock_data.market_rate = market_rate
+
+	stock_data.persist()
 
 # find our REST API token
 token = ewutils.getToken()
