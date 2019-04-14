@@ -8,6 +8,7 @@ from ewitem import EwItemDef
 from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewquadrants import EwQuadrantFlavor
+from ewtransport import EwTransportLine
 
 # Global configuration options.
 version = "v2.23"
@@ -67,6 +68,7 @@ poi_id_countryclub = "thecountryclub"
 poi_id_wt_port = "wreckingtonport"
 poi_id_vc_port = "vagrantscornerport"
 poi_id_ferry = "ferry"
+poi_id_slimesea = "slimesea"
 
 # district pois
 poi_id_downtown = "downtown"
@@ -101,6 +103,14 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+
+# Transport types
+transport_type_ferry = "ferry"
+transport_type_subway = "subway"
+
+# Transport lines
+transport_line_ferry_wreckington_to_vagrantscorner = "ferrywttovc"
+transport_line_ferry_vagrantscorner_to_wreckington = "ferryvctowt"
 
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
@@ -3546,7 +3556,12 @@ poi_list = [
 		role = "Wreckington Port",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_wreckington
+		mother_district = poi_id_wreckington,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_ferry_wreckington_to_vagrantscorner,
+			    transport_line_ferry_vagrantscorner_to_wreckington
+			    ]
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
 		id_poi = poi_id_vc_port,
@@ -3566,7 +3581,12 @@ poi_list = [
 		role = "Vagrant's Corner Port",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
+		mother_district = poi_id_vagrantscorner,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_ferry_wreckington_to_vagrantscorner,
+			    transport_line_ferry_vagrantscorner_to_wreckington
+			    ]
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -3576,19 +3596,21 @@ poi_list = [
 		],
 		str_name = "The Ferry",
 		str_desc = "A modest two-story passenger ferry, built probably 80 years ago. Its faded paint is starting to crack and its creaky wood benches aren’t exactly comfortable. Though it’s not much to look at, you still love riding it. Out here, all you have to think about is the cool wind in your hair, the bright green glow of the Slime Sea searing your eyes, and the New Los Angeles City aka Neo Milwaukee skyline in the distance. You plug in earbuds to drown out the sea captain’s embarrassing Jungle Cruise-tier commentary over the microphone. Good times.",
-		coord = (42, 24),
 		channel = channel_ferry,
 		role = "Ferry",
-		pvp = False,
-		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
-	),
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_ferry,
+		default_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		default_stop = poi_id_wt_port
+	)
 ]
 
 id_to_poi = {}
 coord_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
+transports = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -3608,8 +3630,41 @@ for poi in poi_list:
 	if poi.is_capturable:
 		capturable_districts.append(poi.id_poi)
 
+	if poi.is_transport:
+		transports.append(poi.id_poi)
+
 # maps districts to their immediate neighbors
 poi_neighbors = {}
+
+transport_lines = [
+	EwTransportLine( # ferry line from wreckington to vagrant's corner
+		id_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		first_stop = poi_id_wt_port,
+		last_stop = poi_id_vc_port,
+		next_line = transport_line_ferry_vagrantscorner_to_wreckington,
+		schedule = {
+			poi_id_wt_port : [60, poi_id_slimesea],
+			poi_id_slimesea : [120, poi_id_vc_port]
+		    }
+
+		),
+	EwTransportLine( # ferry line from vagrant's corner to wreckington
+		id_line = transport_line_ferry_vagrantscorner_to_wreckington,
+		first_stop = poi_id_vc_port,
+		last_stop = poi_id_wt_port,
+		next_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		schedule = {
+			poi_id_vc_port : [60, poi_id_slimesea],
+			poi_id_slimesea : [120, poi_id_wt_port]
+		    }
+
+		)
+]
+
+id_to_transport_line = {}
+
+for line in transport_lines:
+	id_to_transport_line[line.id_line] = line
 
 cosmetic_items_list = [
 	EwCosmeticItem(

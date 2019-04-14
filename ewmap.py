@@ -100,6 +100,25 @@ class EwPoi:
 	# What District each subzone is in
 	mother_district = ""
 
+	# If it's a mobile zone
+	is_transport = False
+
+	# which type of transport
+	transport_type = ""
+	
+	# default line to follow, if it's a transport
+	default_line = ""
+
+	# default station to start at, if it's a transport
+	default_stop = ""
+	
+	# If a transport line stops here
+	is_transport_stop = True
+
+	# which transport lines stop here
+	transport_lines = []
+
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -121,7 +140,13 @@ class EwPoi:
 		property_class = "",
 		is_capturable = False,
 		is_subzone = False,
-		mother_district = ""
+		mother_district = "",
+		is_transport = False,
+		transport_type = "",
+		default_line = "",
+		default_stop = "",
+		is_transport_stop = False,
+		transport_lines = []
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -143,6 +168,12 @@ class EwPoi:
 		self.is_capturable = is_capturable
 		self.is_subzone = is_subzone
 		self.mother_district = mother_district
+		self.is_transport = is_transport
+		self.transport_type = transport_type
+		self.default_line = default_line
+		self.default_stop = default_stop
+		self.is_transport_stop = is_transport_stop
+		self.transport_lines = transport_lines
 
 map_world = [
 	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],

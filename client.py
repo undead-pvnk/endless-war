@@ -40,6 +40,7 @@ import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
 import ewquadrants
+import ewtransport
 
 from ewitem import EwItem
 from ew import EwUser, EwMarket
