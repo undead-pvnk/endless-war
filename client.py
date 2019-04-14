@@ -871,7 +871,7 @@ def market_tick(stock_data, id_server):
 
 	# Invest/Withdraw effects
 	coin_rate = 0
-	total_shares = ewutils.getRecentTotalShares(id.server, stock_data.name)
+	total_shares = ewutils.getRecentTotalShares(id_server, stock_data.name)
 
 	if total_shares[0] != total_shares[1]:
 		# Positive if net investment, negative if net withdrawal.

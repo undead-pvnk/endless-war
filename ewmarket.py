@@ -74,7 +74,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets({time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes},) VALUES(%s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes},) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -147,7 +147,7 @@ class EwStock:
 				self.timestamp = data[0][5]
 				self.previous_entry = data[1] if len(data) > 1 else 0 #gets the previous stock
 			else:  # create new entry
-				ewutils.execute_sql_query("INSERT INTO stock ({id_server}, {stock}, {timestamp) VALUES (%s, %s, %s)".format(
+				ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {timestamp}) VALUES (%s, %s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					stock = ewcfg.col_stock,
 					timestamp = ewcfg.col_timestamp
@@ -158,7 +158,7 @@ class EwStock:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("INSERT INTO stocks {id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 			id_server = ewcfg.col_id_server,
 			stock = ewcfg.col_stock,
 			market_rate = ewcfg.col_market_rate,
