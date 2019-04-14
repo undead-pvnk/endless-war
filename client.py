@@ -524,9 +524,10 @@ async def on_ready():
 
 					if market_data.clock == 6:
 						response = ' The Slime Stock Exchange is now open for business.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 					elif market_data.clock == 18:
 						response = ' The Slime Stock Exchange has closed for the night.'
-					await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
@@ -941,7 +942,7 @@ def market_tick(stock_data, id_server):
 	stock_data.persist()
 
 	# Give some indication of how the market is doing to the users.
-	response = stock_data.name + " "
+	response = stock_data.name + ewcfg.stock_emotes.get(stock_data.name) + " "
 
 	# Market is up ...
 	if market_rate > 1200:

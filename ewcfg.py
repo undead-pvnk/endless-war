@@ -4706,9 +4706,16 @@ thrownobjects_list = [
 # Stock names
 stock_names = [
 	"KFC",
-	"Pizza Hut",
-	"Taco Bell"
+	"PizzaHut",
+	"TacoBell"
 ]
+
+#  Stock emotes
+stock_emotes = {
+    "KFC" : emote_kfc,
+    "PizzaHut" : emote_pizzahut,
+    "TacoBell" : emote_tacobell
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
