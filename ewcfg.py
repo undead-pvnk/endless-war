@@ -65,10 +65,46 @@ poi_id_ab_farms = "arsonbrookfarms"
 poi_id_neomilwaukeestate = "neomilwaukeestate"
 poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
+poi_id_slimesea = "slimesea"
+
+# transports
+poi_id_ferry = "ferry"
+poi_id_subway_red01 = "subwayred01"
+poi_id_subway_red02 = "subwayred02"
+poi_id_subway_orange01 = "subwayorange01"
+poi_id_subway_orange02 = "subwayorange02"
+poi_id_subway_green01 = "subwaygreen01"
+poi_id_subway_green02 = "subwaygreen02"
+poi_id_subway_white01 = "subwaywhite01"
+poi_id_subway_blue01 = "subwayblue01"
+poi_id_subway_blue02 = "subwayblue02"
+
+
+# ferry ports
 poi_id_wt_port = "wreckingtonport"
 poi_id_vc_port = "vagrantscornerport"
-poi_id_ferry = "ferry"
-poi_id_slimesea = "slimesea"
+
+# subway stations
+poi_id_tt_subway_station = "toxingtonsubwaystation"
+poi_id_ah_subway_station = "astatineheightssubwaystation"
+poi_id_gd_subway_station = "gatlingsdalesubwaystation"
+poi_id_ck_subway_station = "copkilltownsubwaystation"
+poi_id_ab_subway_station = "arsonbrooksubwaystation"
+poi_id_sb_subway_station = "smogsburgsubwaystation"
+poi_id_dt_subway_station = "downtownsubwaystation"
+poi_id_kb_subway_station = "krakbaysubwaystation"
+poi_id_gb_subway_station = "glocksburysubwaystation"
+poi_id_wgb_subway_station = "westglocksburysubwaystation"
+poi_id_jp_subway_station = "jaywalkerplainsubwaystation"
+poi_id_nsb_subway_station = "northsleezesubwaystation"
+poi_id_ssb_subway_station = "southsleezesubwaystation"
+poi_id_cv_subway_station = "cratersvillesubwaystation"
+poi_id_wt_subway_station = "wreckingtonsubwaystation"
+poi_id_rr_subway_station = "rowdyroughhousesubwaystation"
+poi_id_gld_subway_station = "greenlightsubwaystation"
+poi_id_jr_subway_station = "juviesrowsubwaystation"
+poi_id_vc_subway_station = "vagrantscornersubwaystation"
+poi_id_afb_subway_station = "assaultflatssubwaystation"
 
 # district pois
 poi_id_downtown = "downtown"
@@ -108,9 +144,22 @@ poi_id_dreadford = "dreadford"
 transport_type_ferry = "ferry"
 transport_type_subway = "subway"
 
-# Transport lines
-transport_line_ferry_wreckington_to_vagrantscorner = "ferrywttovc"
-transport_line_ferry_vagrantscorner_to_wreckington = "ferryvctowt"
+# Ferry lines
+transport_line_ferry_wt_to_vc = "ferrywttovc"
+transport_line_ferry_vc_to_wt = "ferryvctowt"
+
+# Subway lines
+transport_line_subway_orange_northbound = "subwayorangenorth"
+transport_line_subway_orange_southbound = "subwayorangesouth"
+transport_line_subway_red_northbound = "subwayrednorth"
+transport_line_subway_red_southbound = "subwayredsouth"
+transport_line_subway_blue_eastbound = "subwayblueeast"
+transport_line_subway_blue_westbound = "subwaybluewest"
+transport_line_subway_white_eastbound = "subwaywhiteeast"
+transport_line_subway_white_westbound = "subwaywhitewest"
+transport_line_subway_green_eastbound = "subwaygreeneast"
+transport_line_subway_green_westbound = "subwaygreenwest"
+
 
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
@@ -176,12 +225,43 @@ channel_ab_farms = "arsonbrook-farms"
 channel_neomilwaukeestate = "neomilwaukeestate"
 channel_beachresort = "the-resort"
 channel_countryclub = "the-country-club"
-channel_wt_port = "wreckington-port"
-channel_vc_port = "vagrants-corner-port"
-channel_ferry = "ferry"
 channel_rowdyroughhouse = "rowdy-roughhouse"
 channel_copkilltown = "cop-killtown"
 channel_slimesea = "slime-sea"
+
+channel_wt_port = "wreckington-port"
+channel_vc_port = "vagrants-corner-port"
+channel_tt_subway_station = "toxington-subway-station"
+channel_ah_subway_station = "astatine-heights-subway-station"
+channel_gd_subway_station = "gatlingsdale-subway-station"
+channel_ck_subway_station = "cop-killtown-subway-station"
+channel_ab_subway_station = "arsonbrook-subway-station"
+channel_sb_subway_station = "smogsburg-subway-station"
+channel_dt_subway_station = "downtown-subway-station"
+channel_kb_subway_station = "krak-bay-subway-station"
+channel_gb_subway_station = "glocksbury-subway-station"
+channel_wgb_subway_station = "west-glocksbury-subway-station"
+channel_jp_subway_station = "jaywalker-plain-subway-station"
+channel_nsb_subway_station = "north-sleeze-subway-station"
+channel_ssb_subway_station = "south-sleeze-subway-station"
+channel_cv_subway_station = "cratersville-subway-station"
+channel_wt_subway_station = "wreckington-subway-station"
+channel_rr_subway_station = "rowdy-roughhouse-subway-station"
+channel_gld_subway_station = "green-light-subway-station"
+channel_jr_subway_station = "juvies-row-subway-station"
+channel_vc_subway_station = "vagrants-corner-subway-station"
+channel_afb_subway_station = "assault-flats-subway-station"
+
+channel_ferry = "ferry"
+channel_subway_red01 = "subway-train-r-01"
+channel_subway_red02 = "subway-train-r-02"
+channel_subway_orange01 = "subway-train-o-01"
+channel_subway_orange02 = "subway-train-o-02"
+channel_subway_green01 = "subway-train-g-01"
+channel_subway_green02 = "subway-train-g-02"
+channel_subway_white01 = "subway-train-w-01"
+channel_subway_blue01 = "subway-train-b-01"
+channel_subway_blue02 = "subway-train-b-02"
 
 channel_killfeed = "kill-feed"
 
@@ -3548,6 +3628,18 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_dreadford
 	),
+	EwPoi( # Slime Sea
+		id_poi = poi_id_slimesea,
+		str_name = "The Slime Sea",
+		channel = channel_slimesea,
+		role = "Slime Sea",
+		pvp = True,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_ferry_wreckington_to_vagrantscorner,
+			    transport_line_ferry_vagrantscorner_to_wreckington
+			    ]
+	),
 	EwPoi(  # Wreckington Ferry Port
 		id_poi = poi_id_wt_port,
 		alias = [
@@ -3563,7 +3655,7 @@ poi_list = [
 		coord = (29, 24),
 		channel = channel_wt_port,
 		role = "Wreckington Port",
-		pvp = False,
+		pvp = True,
 		is_subzone = True,
 		mother_district = poi_id_wreckington,
 		is_transport_stop = True,
@@ -3588,7 +3680,7 @@ poi_list = [
 		coord = (41, 11),
 		channel = channel_vc_port,
 		role = "Vagrant's Corner Port",
-		pvp = False,
+		pvp = True,
 		is_subzone = True,
 		mother_district = poi_id_vagrantscorner,
 		is_transport_stop = True,
@@ -3597,12 +3689,639 @@ poi_list = [
 			    transport_line_ferry_vagrantscorner_to_wreckington
 			    ]
 	),
+	EwPoi(  # Toxington Subway Station
+		id_poi = poi_id_tt_subway_station,
+		alias = [
+			"toxingtonsubway",
+			"toxingtonsub",
+			"toxingtonstation",
+			"toxsubwaystation",
+			"toxsubway",
+			"toxsub",
+			"toxstation",
+			"ttsubwaystation",
+			"ttsubway",
+			"ttsub",
+			"ttstation",
+			"toxs",
+			"tts"
+		],
+		str_name = "The Toxington Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_tt_subway_station,
+		role = "Toxington Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_toxington,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound
+			    ]
+	),
+	EwPoi(  # Astatine Heights Subway Station
+		id_poi = poi_id_ah_subway_station,
+		alias = [
+			"astatineheightssubway",
+			"astatineheightssub",
+			"astatineheightsstation",
+			"astatinesubwaystation",
+			"astatinesubway",
+			"astatinesub",
+			"astatinestation",
+			"ahsubwaystation",
+			"ahsubway",
+			"ahsub",
+			"ahstation",
+			"astatines",
+			"ahs"
+		],
+		str_name = "The Astatine Heights Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_ah_subway_station,
+		role = "Astatine Heights Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_astatineheights,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound
+			    ]
+	),
+	EwPoi(  # Gatlingsdale Subway Station
+		id_poi = poi_id_gd_subway_station,
+		alias = [
+			"gatlingsdalesubway",
+			"gatlingsdalesub",
+			"gatlingsdalestation",
+			"gatlingssubwaystation",
+			"gatlingssubway",
+			"gatlingssub",
+			"gatlingsstation",
+			"gdsubwaystation",
+			"gdsubway",
+			"gdsub",
+			"gdstation",
+			"gatlingss",
+			"gds"
+		],
+		str_name = "The Gatlingsdale Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_gd_subway_station,
+		role = "Gatlingsdale Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_gatlingsdale,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound
+			    ]
+	),
+	EwPoi(  # Arsonbrook Subway Station
+		id_poi = poi_id_ab_subway_station,
+		alias = [
+			"arsonbrooksubway",
+			"arsonbrooksub",
+			"arsonbrookstation",
+			"arsonsubwaystation",
+			"arsonsubway",
+			"arsonsub",
+			"arsonstation",
+			"absubwaystation",
+			"absubway",
+			"absub",
+			"abstation",
+			"arsons",
+			"abs"
+		],
+		str_name = "The Arsonbrook Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_ab_subway_station,
+		role = "Arsonbrook Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_arsonbrook,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_orange_northbound,
+			    transport_line_subway_orange_southbound
+			    ]
+	),
+	EwPoi(  # Cop Killtown Subway Station
+		id_poi = poi_id_ck_subway_station,
+		alias = [
+			"copkilltownsubway",
+			"copkilltownsub",
+			"copkilltownstation",
+			"copkillsubwaystation",
+			"copkillsubway",
+			"copkillsub",
+			"copkillstation",
+			"cksubwaystation",
+			"cksubway",
+			"cksub",
+			"ckstation",
+			"copkills",
+			"cks"
+		],
+		str_name = "The Cop Killtown Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_ck_subway_station,
+		role = "Cop Killtown Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_copkilltown,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound
+			    ]
+	),
+	EwPoi(  # Smogsburg Subway Station
+		id_poi = poi_id_sb_subway_station,
+		alias = [
+			"smogsburgsubway",
+			"smogsburgsub",
+			"smogsburgstation",
+			"smogssubwaystation",
+			"smogssubway",
+			"smogssub",
+			"smogsstation",
+			"sbsubwaystation",
+			"sbsubway",
+			"sbsub",
+			"sbstation",
+			"smogss",
+			"sbs"
+		],
+		str_name = "The Smogsburg Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_sb_subway_station,
+		role = "Smogsburg Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_smogsburg,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_orange_northbound,
+			    transport_line_subway_orange_southbound,
+			    transport_line_subway_green_eastbound,
+			    transport_line_subway_green_westbound
+			    ]
+	),
+	EwPoi(  # Downtown Subway Station
+		id_poi = poi_id_dt_subway_station,
+		alias = [
+			"downtownsubway",
+			"downtownsub",
+			"downtownstation",
+			"dtsubwaystation",
+			"dtsubway",
+			"dtsub",
+			"dtstation",
+			"dts"
+		],
+		str_name = "The Downtown NLACakaNM Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_dt_subway_station,
+		role = "Downtown Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_downtown,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_orange_northbound,
+			    transport_line_subway_orange_southbound,
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound,
+			    transport_line_subway_blue_eastbound,
+			    transport_line_subway_blue_westbound,
+			    transport_line_subway_white_eastbound,
+			    transport_line_subway_white_westbound,
+			    transport_line_subway_green_eastbound,
+			    transport_line_subway_green_westbound
+			    ]
+	),
+	EwPoi(  # Krak Bay Subway Station
+		id_poi = poi_id_kb_subway_station,
+		alias = [
+			"krakbaysubway",
+			"krakbaysub",
+			"krakbaystation",
+			"kraksubwaystation",
+			"kraksubway",
+			"kraksub",
+			"krakstation",
+			"kbsubwaystation",
+			"kbsubway",
+			"kbsub",
+			"kbstation",
+			"kraks",
+			"kbs"
+		],
+		str_name = "The Krak Bay Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_kb_subway_station,
+		role = "Krak Bay Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_krakbay,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_orange_northbound,
+			    transport_line_subway_orange_southbound,
+			    transport_line_subway_green_eastbound,
+			    transport_line_subway_green_westbound
+			    ]
+	),
+	EwPoi(  # Glocksbury Subway Station
+		id_poi = poi_id_gb_subway_station,
+		alias = [
+			"glocksburysubway",
+			"glocksburysub",
+			"glocksburystation",
+			"glockssubwaystaion",
+			"glockssubway",
+			"glockssub",
+			"glocksstation",
+			"gbsubwaystation",
+			"gbsubway",
+			"gbsub",
+			"gbstation",
+			"glockss",
+			"gbs"
+		],
+		str_name = "The Glocksbury Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_gb_subway_station,
+		role = "Glocksbury Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_glocksbury,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_green_westbound
+			    ]
+	),
+	EwPoi(  # West Glocksbury Subway Station
+		id_poi = poi_id_wgb_subway_station,
+		alias = [
+			"westglocksburysubway",
+			"westglocksburysub",
+			"westglocksburystation",
+			"westglockssubwaystaion",
+			"westglockssubway",
+			"westglockssub",
+			"westglocksstation",
+			"wgbsubwaystation",
+			"wgbsubway",
+			"wgbsub",
+			"wgbstation",
+			"westglockss",
+			"wgbs"
+		],
+		str_name = "The West Glocksbury Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_wgb_subway_station,
+		role = "West Glocksbury Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_westglocksbury,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_green_eastbound,
+			    transport_line_subway_green_westbound
+			    ]
+	),
+	EwPoi(  # Jaywalker Plain Subway Station
+		id_poi = poi_id_wgb_subway_station,
+		alias = [
+			"jaywalkerplainsubway",
+			"jaywalkerplainsub",
+			"jaywalkerplainstation",
+			"jaywalkersubwaystaion",
+			"jaywalkersubway",
+			"jaywalkersub",
+			"jaywalkerstation",
+			"jpsubwaystation",
+			"jpsubway",
+			"jpsub",
+			"jpstation",
+			"jaywalkers",
+			"jps"
+		],
+		str_name = "The Jaywalker Plain Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_jp_subway_station,
+		role = "Jaywalker Plain Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_jaywalkerplain,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_green_eastbound
+			    ]
+	),
+	EwPoi(  # North Sleezeborough Subway Station
+		id_poi = poi_id_nsb_subway_station,
+		alias = [
+			"northsleezeboroughsubway",
+			"northsleezeboroughsub",
+			"northsleezeboroughstation",
+			"northsleezesubwaystaion",
+			"northsleezesubway",
+			"northsleezesub",
+			"northsleezestation",
+			"nsbsubwaystation",
+			"nsbsubway",
+			"nsbsub",
+			"nsbstation",
+			"northsleezes",
+			"nsbs"
+		],
+		str_name = "The North Sleezeborough Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_nsb_subway_station,
+		role = "North Sleezeborough Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_northsleezeborough,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_green_eastbound
+			    ]
+	),
+	EwPoi(  # South Sleezeborough Subway Station
+		id_poi = poi_id_ssb_subway_station,
+		alias = [
+			"southsleezeboroughsubway",
+			"southsleezeboroughsub",
+			"southsleezeboroughstation",
+			"southsleezesubwaystaion",
+			"southsleezesubway",
+			"southsleezesub",
+			"southsleezestation",
+			"ssbsubwaystation",
+			"ssbsubway",
+			"ssbsub",
+			"ssbstation",
+			"southsleezes",
+			"ssbs"
+		],
+		str_name = "The South Sleezeborough Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_ssb_subway_station,
+		role = "South Sleezeborough Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_southsleezeborough,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_orange_northbound,
+			    transport_line_subway_orange_southbound
+			    ]
+	),
+	EwPoi(  # Cratersville Subway Station
+		id_poi = poi_id_cv_subway_station,
+		alias = [
+			"cratersvillesubway",
+			"cratersvillesub",
+			"cratersvillestation",
+			"craterssubwaystaion",
+			"craterssubway",
+			"craterssub",
+			"cratersstation",
+			"cvsubwaystation",
+			"cvsubway",
+			"cvsub",
+			"cvstation",
+			"craterss",
+			"cvs"
+		],
+		str_name = "The Cratersville Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_cv_subway_station,
+		role = "Cratersville Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_cratersville,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound
+			    ]
+	),
+	EwPoi(  # Wreckington Subway Station
+		id_poi = poi_id_wt_subway_station,
+		alias = [
+			"wreckingtonsubway",
+			"wreckingtonsub",
+			"wreckingtonstation",
+			"wrecksubwaystaion",
+			"wrecksubway",
+			"wrecksub",
+			"wreckstation",
+			"wtsubwaystation",
+			"wtsubway",
+			"wtsub",
+			"wtstation",
+			"wrecks",
+			"wts"
+		],
+		str_name = "The Wreckington Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_wt_subway_station,
+		role = "Wreckington Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_wreckington,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound
+			    ]
+	),
+	EwPoi(  # Rowdy Roughhouse Subway Station
+		id_poi = poi_id_rr_subway_station,
+		alias = [
+			"rowdyroughhousesubway",
+			"rowdyroughhousesub",
+			"rowdyroughhousestation",
+			"rowdysubwaystaion",
+			"rowdysubway",
+			"rowdysub",
+			"rowdystation",
+			"rrsubwaystation",
+			"rrsubway",
+			"rrsub",
+			"rrstation",
+			"rrs"
+		],
+		str_name = "The Rowdy Roughhouse Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_rr_subway_station,
+		role = "Rowdy Roughhouse Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_rowdyroughhouse,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_red_northbound,
+			    transport_line_subway_red_southbound,
+			    transport_line_subway_white_eastbound,
+			    transport_line_subway_white_westbound
+			    ]
+	),
+	EwPoi(  # Green Light District Subway Station
+		id_poi = poi_id_gld_subway_station,
+		alias = [
+			"greenlightdistrictsubway",
+			"greenlightdistrictsub",
+			"greenlightdistrictstation",
+			"greenlightsubwaystaion",
+			"greenlightsubway",
+			"greenlightsub",
+			"greenlightstation",
+			"gldsubwaystation",
+			"gldsubway",
+			"gldsub",
+			"gldstation",
+			"greenlights",
+			"glds"
+		],
+		str_name = "The Green Light District Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_gld_subway_station,
+		role = "Green Light District Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_greenlightdistrict,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_blue_eastbound,
+			    transport_line_subway_blue_westbound
+			    ]
+	),
+	EwPoi(  # Juvie's Row Subway Station
+		id_poi = poi_id_jr_subway_station,
+		alias = [
+			"juviesrowsubway",
+			"juviesrowsub",
+			"juviesrowstation",
+			"juviessubwaystaion",
+			"juviessubway",
+			"juviessub",
+			"juviesstation",
+			"jrsubwaystation",
+			"jrsubway",
+			"jrsub",
+			"jrstation",
+			"juviess",
+			"jrs"
+		],
+		str_name = "The Juvie's Row Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_jr_subway_station,
+		role = "Juvie's Row Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_juviesrow,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_white_eastbound,
+			    transport_line_subway_white_westbound,
+			    transport_line_subway_blue_eastbound,
+			    transport_line_subway_blue_westbound
+			    ]
+	),
+	EwPoi(  # Vagrant's Corner Subway Station
+		id_poi = poi_id_vc_subway_station,
+		alias = [
+			"vagrantscornersubway",
+			"vagrantscornersub",
+			"vagrantscornerstation",
+			"vagrantssubwaystaion",
+			"vagrantssubway",
+			"vagrantssub",
+			"vagrantsstation",
+			"vcsubwaystation",
+			"vcsubway",
+			"vcsub",
+			"vcstation",
+			"vagrantss",
+			"vcs"
+		],
+		str_name = "The Vagrant's Corner Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_vc_subway_station,
+		role = "Vagrant's Corner Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_vagrantscorner,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_blue_eastbound,
+			    transport_line_subway_blue_westbound
+			    ]
+	),
+	EwPoi(  # Assault Flats Beach Subway Station
+		id_poi = poi_id_afb_subway_station,
+		alias = [
+			"assaultflatsbeachsubway",
+			"assaultflatsbeachsub",
+			"assaultflatsbeachstation",
+			"assaultflatssubwaystaion",
+			"assaultflatssubway",
+			"assaultflatssub",
+			"assaultflatsstation",
+			"beachsubwaystaion",
+			"beachsubway",
+			"beachsub",
+			"beachstation",
+			"afbsubwaystation",
+			"afbsubway",
+			"afbsub",
+			"afbstation",
+			"assaultflatss",
+			"afbs"
+		],
+		str_name = "The Assault Flats Beach Subway Station",
+		str_desc = "",
+		coord = None,
+		channel = channel_afb_subway_station,
+		role = "Assault Flats Beach Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_assaultflatsbeach,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_subway_blue_eastbound,
+			    transport_line_subway_blue_westbound
+			    ]
+	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
-		alias = [
-			"boat",
-			"f",
-		],
 		str_name = "The Ferry",
 		str_desc = "A modest two-story passenger ferry, built probably 80 years ago. Its faded paint is starting to crack and its creaky wood benches aren’t exactly comfortable. Though it’s not much to look at, you still love riding it. Out here, all you have to think about is the cool wind in your hair, the bright green glow of the Slime Sea searing your eyes, and the New Los Angeles City aka Neo Milwaukee skyline in the distance. You plug in earbuds to drown out the sea captain’s embarrassing Jungle Cruise-tier commentary over the microphone. Good times.",
 		channel = channel_ferry,
@@ -3613,17 +4332,113 @@ poi_list = [
 		default_line = transport_line_ferry_wreckington_to_vagrantscorner,
 		default_stop = poi_id_wt_port
 	),
-	EwPoi( # Slime Sea
-		id_poi = poi_id_slimesea,
-		str_name = "The Slime Sea",
-		channel = channel_slimesea,
-		role = "Slime Sea",
+	EwPoi(  # Subway train on the red line
+		id_poi = poi_id_subway_red01,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_red01,
+		role = "Subway Train R-01",
 		pvp = True,
-		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_ferry_wreckington_to_vagrantscorner,
-			    transport_line_ferry_vagrantscorner_to_wreckington
-			    ]
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_red_northbound,
+		default_stop = poi_id_cv_subway_station
+	),
+	EwPoi(  # Subway train on the red line
+		id_poi = poi_id_subway_red02,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_red02,
+		role = "Subway Train R-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_red_southbound,
+		default_stop = poi_id_tt_subway_station
+	),
+	EwPoi(  # Subway train on the orange line
+		id_poi = poi_id_subway_orange01,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_orange01,
+		role = "Subway Train O-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_orange_northbound,
+		default_stop = poi_id_ssb_subway_station
+	),
+	EwPoi(  # Subway train on the orange line
+		id_poi = poi_id_subway_orange02,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_orange02,
+		role = "Subway Train O-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_orange_southbound,
+		default_stop = poi_id_ab_subway_station
+	),
+	EwPoi(  # Subway train on the green line
+		id_poi = poi_id_subway_green01,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_green01,
+		role = "Subway Train G-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_green_eastbound,
+		default_stop = poi_id_wgb_subway_station
+	),
+	EwPoi(  # Subway train on the green line
+		id_poi = poi_id_subway_green02,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_green02,
+		role = "Subway Train G-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_green_westbound,
+		default_stop = poi_id_sb_subway_station
+	),
+	EwPoi(  # Subway train on the blue line
+		id_poi = poi_id_subway_blue01,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_blue01,
+		role = "Subway Train B-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_blue_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Subway train on the blue line
+		id_poi = poi_id_subway_blue02,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_blue02,
+		role = "Subway Train B-02",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_blue_westbound,
+		default_stop = poi_id_afb_subway_station
+	),
+	EwPoi(  # Subway train on the white line
+		id_poi = poi_id_subway_white01,
+		str_name = "A Subway Train",
+		str_desc = "", # TODO: add description
+		channel = channel_subway_white01,
+		role = "Subway Train W-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_white_eastbound,
+		default_stop = poi_id_dt_subway_station
 	)
 ]
 
@@ -3667,11 +4482,15 @@ transport_lines = [
 		alias = [
 			"vagrantscornerferry",
 			"vagrantsferry",
-			"vcferry"
+			"vcferry",
+			"ferrytovagrantscorner",
+			"ferrytovagrants",
+			"ferrytovc"
 		    ],
 		first_stop = poi_id_wt_port,
 		last_stop = poi_id_vc_port,
 		next_line = transport_line_ferry_vagrantscorner_to_wreckington,
+		str_name = "The ferry towards Vagrant's Corner",
 		schedule = {
 			poi_id_wt_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_vc_port]
@@ -3683,14 +4502,240 @@ transport_lines = [
 		alias = [
 			"wreckingtonferry",
 			"wreckferry",
-			"wtferry"
+			"wtferry",
+			"ferrytowreckington",
+			"ferrytowreck",
+			"ferrytowt"
 		    ],
 		first_stop = poi_id_vc_port,
 		last_stop = poi_id_wt_port,
 		next_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		str_name = "The ferry towards Wreckington",
 		schedule = {
 			poi_id_vc_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_wt_port]
+		    }
+
+		),
+	EwTransportLine( # orange subway line from south sleezeborough to arsonbrook
+		id_line = transport_line_subway_orange_northbound,
+		alias = [
+			"northorangeline",
+			"northorange",
+			"orangenorth",
+			"orangetoarsonbrook",
+			"orangetoarson",
+			"orangetoab"
+		    ],
+		first_stop = poi_id_ssb_subway_station,
+		last_stop = poi_id_ab_subway_station,
+		next_line = transport_line_subway_orange_southbound,
+		str_name = "The orange subway line towards Arsonbrook"
+		schedule = {
+			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
+			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
+		    }
+
+		),
+	EwTransportLine( # orange subway line from arsonbrook to south sleezeborough
+		id_line = transport_line_subway_orange_southbound,
+		alias = [
+			"southorangeline",
+			"southorange",
+			"orangesouth",
+			"orangetosouthsleezeborough",
+			"orangetosouthsleeze",
+			"orangetossb"
+		    ],
+		first_stop = poi_id_ab_subway_station,
+		last_stop = poi_id_ssb_subway_station,
+		next_line = transport_line_subway_orange_northbound,
+		str_name = "The orange subway line towards South Sleezeborough"
+		schedule = {
+			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
+			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
+		    }
+
+		),
+	EwTransportLine( # red subway line from cratersville to toxington
+		id_line = transport_line_subway_red_northbound,
+		alias = [
+			"northredline",
+			"northred",
+			"rednorth",
+			"redtotoxington",
+			"redtotox",
+			"redtott"
+		    ],
+		first_stop = poi_id_cv_subway_station,
+		last_stop = poi_id_tt_subway_station,
+		next_line = transport_line_subway_red_southbound,
+		str_name = "The red subway line towards Toxington"
+		schedule = {
+			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
+			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_ck_subway_station],
+			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
+			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
+			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
+		    }
+
+		),
+	EwTransportLine( # red subway line from toxington to cratersville
+		id_line = transport_line_subway_red_southbound,
+		alias = [
+			"southredline",
+			"southred",
+			"redsouth",
+			"redtocratersville",
+			"redtocraters",
+			"redtocv"
+		    ],
+		first_stop = poi_id_tt_subway_station,
+		last_stop = poi_id_cv_subway_station,
+		next_line = transport_line_subway_red_northbound,
+		str_name = "The red subway line towards Cratersville"
+		schedule = {
+			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
+			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
+			poi_id_gd_subway_station : [20, poi_id_ck_subway_station],
+			poi_id_ck_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_wt_subway_station],
+			poi_id_wt_subway_station : [20, poi_id_cv_subway_station]
+		    }
+
+		),
+	EwTransportLine( # green subway line from smogsburg to west glocksbury
+		id_line = transport_line_subway_green_eastbound,
+		alias = [
+			"greeneastline",
+			"greeneast",
+			"eastgreen",
+			"greentosmogsburg",
+			"greentosmogs",
+			"greentosb"
+		    ],
+		first_stop = poi_id_wgb_subway_station,
+		last_stop = poi_id_sb_subway_station,
+		next_line = transport_line_subway_green_westbound,
+		str_name = "The green subway line towards Smogsburg"
+		schedule = {
+			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
+			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
+			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
+		    }
+
+		),
+	EwTransportLine( # green subway line from west glocksbury to smogsburg
+		id_line = transport_line_subway_green_westbound,
+		alias = [
+			"greenwestline",
+			"greenwest",
+			"westgreen",
+			"greentowestglocksbury",
+			"greentowestglocks",
+			"greentowgb"
+		    ],
+		first_stop = poi_id_sb_subway_station,
+		last_stop = poi_id_wgb_subway_station,
+		next_line = transport_line_subway_green_eastbound,
+		str_name = "The green subway line towards West Glocksbury"
+		schedule = {
+			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
+			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
+			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
+		    }
+
+		),
+	EwTransportLine( # blue subway line from downtown to assault flats beach
+		id_line = transport_line_subway_blue_eastbound,
+		alias = [
+			"blueeastline",
+			"blueeast",
+			"eastblue",
+			"bluetoassaultflatsbeach",
+			"bluetoassaultflats",
+			"bluetobeach",
+			"bluetoafb"
+		    ],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_afb_subway_station,
+		next_line = transport_line_subway_blue_westbound,
+		str_name = "The blue subway line towards Assault Flats Beach"
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
+		    }
+
+		),
+	EwTransportLine( # blue subway line from assault flats beach to downtown
+		id_line = transport_line_subway_blue_westbound,
+		alias = [
+			"bluewestline",
+			"bluewest",
+			"westblue",
+			"bluetodowntown",
+			"bluetodt"
+		    ],
+		first_stop = poi_id_afb_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_blue_eastbound,
+		str_name = "The blue subway line towards Downtown NLACakaNM"
+		schedule = {
+			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
+			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
+			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
+			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
+		    }
+
+		),
+	EwTransportLine( # white subway line from downtown to juvies row
+		id_line = transport_line_subway_white_eastbound,
+		alias = [
+			"whiteeastline",
+			"whiteeast",
+			"eastwhite",
+			"whitetojuviesrow",
+			"whitetojuvies",
+			"whitetojr"
+		    ],
+		first_stop = poi_id_dt_subway_station,
+		last_stop = poi_id_jr_subway_station,
+		next_line = transport_line_subway_white_westbound,
+		str_name = "The white subway line towards Juvie's Row"
+		schedule = {
+			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+		    }
+
+		),
+	EwTransportLine( # white subway line from juvies row to downtown
+		id_line = transport_line_subway_white_westbound,
+		alias = [
+			"whitewestline",
+			"whitewest",
+			"westwhite",
+			"whitetodowntown",
+			"whitetodt"
+		    ],
+		first_stop = poi_id_jr_subway_station,
+		last_stop = poi_id_dt_subway_station,
+		next_line = transport_line_subway_white_eastbound,
+		str_name = "The white subway line towards Downtown NLACakaNM"
+		schedule = {
+			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
 		    }
 
 		)
