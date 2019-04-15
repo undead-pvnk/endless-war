@@ -4703,18 +4703,24 @@ thrownobjects_list = [
 	"box overflowing with KFC branded bbq sauce"
 ]
 
+stocks = {
+	"kfc",
+	"pizzahut",
+	"tacobell",
+}
+
 # Stock names
-stock_names = [
-	"KFC",
-	"PizzaHut",
-	"TacoBell"
-]
+stock_names = {
+	"kfc" : "Kentucky Fried Chicken",
+	"pizzahut" : "Pizza Hut",
+	"tacobell" : "Taco Bell",
+}
 
 #  Stock emotes
 stock_emotes = {
-    "KFC" : emote_kfc,
-    "PizzaHut" : emote_pizzahut,
-    "TacoBell" : emote_tacobell
+    "kfc" : emote_kfc,
+    "pizzahut" : emote_pizzahut,
+    "tacobell" : emote_tacobell
 }
 
 # lists of all the discord server objects served by bot, identified by the server id

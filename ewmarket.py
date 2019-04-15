@@ -104,7 +104,7 @@ class EwStock:
 	id_server = ""
 
 	# The stock's identifying string
-	name = ""
+	id_stock = ""
 
 	market_rate = 1000
 
@@ -121,7 +121,7 @@ class EwStock:
 	def __init__(self, id_server = None, stock = None):
 		if id_server is not None and stock is not None:
 			self.id_server = id_server
-			self.name = stock
+			self.id_stock = stock
 
 			data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
 				stock = ewcfg.col_stock,
@@ -139,7 +139,7 @@ class EwStock:
 
 			if len(data) > 0:  # if data is not empty, i.e. it found an entry
 				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
-				self.name = data[0][0]
+				self.id_stock = data[0][0]
 				self.market_rate = data[0][1]
 				self.exchange_rate = data[0][2]
 				self.boombust = data[0][3]
@@ -168,7 +168,7 @@ class EwStock:
 			timestamp = ewcfg.col_timestamp
 		), (
 			self.id_server,
-			self.name,
+			self.id_stock,
 			self.market_rate,
 			self.exchange_rate,
 			self.boombust,
@@ -419,12 +419,19 @@ async def xfer(cmd):
 
 """ show the current market exchange rate """ #todo allow you to check the rate of multiple stocks
 async def rate(cmd):
-	market_data = EwMarket(id_server=cmd.message.server.id)
+	stock = None
+	if cmd.tokens_count > 0:
+		stock = ewutils.formatNiceList(cmd.tokens[1:])
 
-	response = "The current market value of SlimeCoin is {cred:,.3f} slime per 1,000 coin.".format(cred=(market_data.exchange_rate / 1000.0))
+	if stock in ewcfg.stocks:
+		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+		response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred=int(stock.exchange_rate / 1000.0))
+	else:
+		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
+
 
 	# Send the response to the player.
-	await cmd.client.edit_message(resp, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ show player's slimecoin balance """

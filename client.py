@@ -510,10 +510,11 @@ async def on_ready():
 
 					market_response = ""
 
-					for stock in ewcfg.stock_names:
+					for stock in ewcfg.stocks:
 						s = EwStock(server.id, stock)
-						market_response = market_tick(s, server.id)
-						await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
+						if s.timestamp != 0:
+							market_response = market_tick(s, server.id)
+							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
@@ -881,7 +882,7 @@ def market_tick(stock_data, id_server):
 
 	# Invest/Withdraw effects
 	coin_rate = 0
-	total_shares = ewutils.getRecentTotalShares(id_server, stock_data.name)
+	total_shares = ewutils.getRecentTotalShares(id_server, stock_data.id_stock)
 
 	if total_shares[0] != total_shares[1]:
 		# Positive if net investment, negative if net withdrawal.
@@ -942,7 +943,7 @@ def market_tick(stock_data, id_server):
 	stock_data.persist()
 
 	# Give some indication of how the market is doing to the users.
-	response = stock_data.name + ewcfg.stock_emotes.get(stock_data.name) + " "
+	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ewcfg.stock_names.get(stock_data.id_stock) + ' '
 
 	# Market is up ...
 	if market_rate > 1200:
@@ -961,6 +962,8 @@ def market_tick(stock_data, id_server):
 	# Perfectly balanced
 	else:
 		response += 'is holding steady. No change in slime stock value.'
+
+	response += ' ' + ewcfg.stock_emotes.get(stock_data.id_stock)
 
 	# Send the announcement.
 	return response
