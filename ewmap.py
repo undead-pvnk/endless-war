@@ -116,7 +116,7 @@ class EwPoi:
 	is_transport_stop = True
 
 	# which transport lines stop here
-	transport_lines = []
+	transport_lines = set()
 
 
 	def __init__(
@@ -146,7 +146,7 @@ class EwPoi:
 		default_line = "",
 		default_stop = "",
 		is_transport_stop = False,
-		transport_lines = []
+		transport_lines = None
 	):
 		self.id_poi = id_poi
 		self.alias = alias

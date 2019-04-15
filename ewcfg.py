@@ -3637,10 +3637,7 @@ poi_list = [
 		role = "Slime Sea",
 		pvp = True,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_ferry_wt_to_vc,
-			    transport_line_ferry_vc_to_wt
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Wreckington Ferry Port
 		id_poi = poi_id_wt_port,
@@ -3661,10 +3658,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_wreckington,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_ferry_wt_to_vc,
-			    transport_line_ferry_vc_to_wt
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
 		id_poi = poi_id_vc_port,
@@ -3686,10 +3680,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_vagrantscorner,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_ferry_wt_to_vc,
-			    transport_line_ferry_vc_to_wt
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Toxington Subway Station
 		id_poi = poi_id_tt_subway_station,
@@ -3717,10 +3708,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_toxington,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Astatine Heights Subway Station
 		id_poi = poi_id_ah_subway_station,
@@ -3748,10 +3736,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_astatineheights,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Gatlingsdale Subway Station
 		id_poi = poi_id_gd_subway_station,
@@ -3779,10 +3764,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_gatlingsdale,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Arsonbrook Subway Station
 		id_poi = poi_id_ab_subway_station,
@@ -3810,10 +3792,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_arsonbrook,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_orange_northbound,
-			    transport_line_subway_orange_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Cop Killtown Subway Station
 		id_poi = poi_id_ck_subway_station,
@@ -3841,10 +3820,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_copkilltown,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Smogsburg Subway Station
 		id_poi = poi_id_sb_subway_station,
@@ -3872,12 +3848,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_smogsburg,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_orange_northbound,
-			    transport_line_subway_orange_southbound,
-			    transport_line_subway_green_eastbound,
-			    transport_line_subway_green_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Downtown Subway Station
 		id_poi = poi_id_dt_subway_station,
@@ -3900,18 +3871,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_downtown,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_orange_northbound,
-			    transport_line_subway_orange_southbound,
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound,
-			    transport_line_subway_blue_eastbound,
-			    transport_line_subway_blue_westbound,
-			    transport_line_subway_white_eastbound,
-			    transport_line_subway_white_westbound,
-			    transport_line_subway_green_eastbound,
-			    transport_line_subway_green_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Krak Bay Subway Station
 		id_poi = poi_id_kb_subway_station,
@@ -3939,12 +3899,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_krakbay,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_orange_northbound,
-			    transport_line_subway_orange_southbound,
-			    transport_line_subway_green_eastbound,
-			    transport_line_subway_green_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Glocksbury Subway Station
 		id_poi = poi_id_gb_subway_station,
@@ -3972,9 +3927,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_glocksbury,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_green_westbound
-			    ]
+		transport_lines = set()	
 	),
 	EwPoi(  # West Glocksbury Subway Station
 		id_poi = poi_id_wgb_subway_station,
@@ -4002,10 +3955,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_westglocksbury,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_green_eastbound,
-			    transport_line_subway_green_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
 		id_poi = poi_id_jp_subway_station,
@@ -4033,9 +3983,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_jaywalkerplain,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_green_eastbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
@@ -4063,9 +4011,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_northsleezeborough,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_green_eastbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
@@ -4093,10 +4039,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_southsleezeborough,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_orange_northbound,
-			    transport_line_subway_orange_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Cratersville Subway Station
 		id_poi = poi_id_cv_subway_station,
@@ -4124,10 +4067,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_cratersville,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Wreckington Subway Station
 		id_poi = poi_id_wt_subway_station,
@@ -4155,10 +4095,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_wreckington,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Rowdy Roughhouse Subway Station
 		id_poi = poi_id_rr_subway_station,
@@ -4185,12 +4122,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_rowdyroughhouse,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_red_northbound,
-			    transport_line_subway_red_southbound,
-			    transport_line_subway_white_eastbound,
-			    transport_line_subway_white_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
@@ -4218,10 +4150,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_greenlightdistrict,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_blue_eastbound,
-			    transport_line_subway_blue_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Juvie's Row Subway Station
 		id_poi = poi_id_jr_subway_station,
@@ -4249,12 +4178,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_juviesrow,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_white_eastbound,
-			    transport_line_subway_white_westbound,
-			    transport_line_subway_blue_eastbound,
-			    transport_line_subway_blue_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Vagrant's Corner Subway Station
 		id_poi = poi_id_vc_subway_station,
@@ -4282,10 +4206,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_vagrantscorner,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_blue_eastbound,
-			    transport_line_subway_blue_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Assault Flats Beach Subway Station
 		id_poi = poi_id_afb_subway_station,
@@ -4317,10 +4238,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_assaultflatsbeach,
 		is_transport_stop = True,
-		transport_lines = [
-			    transport_line_subway_blue_eastbound,
-			    transport_line_subway_blue_westbound
-			    ]
+		transport_lines = set()
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -4749,6 +4667,12 @@ for line in transport_lines:
 	id_to_transport_line[line.id_line] = line
 	for alias in line.alias:
 		id_to_transport_line[alias] = line
+
+	for poi in transport_stops:
+		poi_data = id_to_poi.get(poi)
+		if (poi in line.schedule.keys()) or (poi == line.last_stop):
+			poi_data.transport_lines.add(line.id_line)
+        
 
 cosmetic_items_list = [
 	EwCosmeticItem(
