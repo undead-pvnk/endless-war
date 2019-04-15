@@ -624,6 +624,8 @@ str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 
 generic_role_name = 'NLACakaNM'
+generic_subway_description = "A grimy subway train."
+generic_subway_station_description = "A grimy subway station."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -3707,7 +3709,7 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-                str_desc = "", #TODO: add description
+                str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
@@ -3738,7 +3740,7 @@ poi_list = [
 			"ahs"
 		],
 		str_name = "The Astatine Heights Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
@@ -3769,7 +3771,7 @@ poi_list = [
 			"gds"
 		],
 		str_name = "The Gatlingsdale Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
@@ -3800,7 +3802,7 @@ poi_list = [
 			"abs"
 		],
 		str_name = "The Arsonbrook Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
@@ -3831,7 +3833,7 @@ poi_list = [
 			"cks"
 		],
 		str_name = "The Cop Killtown Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
@@ -3862,7 +3864,7 @@ poi_list = [
 			"sbs"
 		],
 		str_name = "The Smogsburg Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
@@ -3890,7 +3892,7 @@ poi_list = [
 			"dts"
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
@@ -3929,7 +3931,7 @@ poi_list = [
 			"kbs"
 		],
 		str_name = "The Krak Bay Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
@@ -3962,7 +3964,7 @@ poi_list = [
 			"gbs"
 		],
 		str_name = "The Glocksbury Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
@@ -3992,7 +3994,7 @@ poi_list = [
 			"wgbs"
 		],
 		str_name = "The West Glocksbury Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
@@ -4023,7 +4025,7 @@ poi_list = [
 			"jps"
 		],
 		str_name = "The Jaywalker Plain Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
@@ -4053,7 +4055,7 @@ poi_list = [
 			"nsbs"
 		],
 		str_name = "The North Sleezeborough Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
@@ -4083,7 +4085,7 @@ poi_list = [
 			"ssbs"
 		],
 		str_name = "The South Sleezeborough Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
@@ -4114,7 +4116,7 @@ poi_list = [
 			"cvs"
 		],
 		str_name = "The Cratersville Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
@@ -4145,7 +4147,7 @@ poi_list = [
 			"wts"
 		],
 		str_name = "The Wreckington Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
@@ -4175,7 +4177,7 @@ poi_list = [
 			"rrs"
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
@@ -4208,7 +4210,7 @@ poi_list = [
 			"glds"
 		],
 		str_name = "The Green Light District Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
@@ -4239,7 +4241,7 @@ poi_list = [
 			"jrs"
 		],
 		str_name = "The Juvie's Row Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
@@ -4272,7 +4274,7 @@ poi_list = [
 			"vcs"
 		],
 		str_name = "The Vagrant's Corner Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
@@ -4307,7 +4309,7 @@ poi_list = [
 			"afbs"
 		],
 		str_name = "The Assault Flats Beach Subway Station",
-		str_desc = "", #TODO: add description
+		str_desc = generic_subway_station_description, #TODO: add description
 		coord = None,
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
@@ -4335,7 +4337,7 @@ poi_list = [
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red01,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_red01,
 		role = "Subway Train R-01",
 		pvp = True,
@@ -4347,7 +4349,7 @@ poi_list = [
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red02,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_red02,
 		role = "Subway Train R-02",
 		pvp = True,
@@ -4359,7 +4361,7 @@ poi_list = [
 	EwPoi(  # Subway train on the orange line
 		id_poi = poi_id_subway_orange01,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_orange01,
 		role = "Subway Train O-01",
 		pvp = True,
@@ -4371,7 +4373,7 @@ poi_list = [
 	EwPoi(  # Subway train on the orange line
 		id_poi = poi_id_subway_orange02,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_orange02,
 		role = "Subway Train O-02",
 		pvp = True,
@@ -4383,7 +4385,7 @@ poi_list = [
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green01,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_green01,
 		role = "Subway Train G-01",
 		pvp = True,
@@ -4395,7 +4397,7 @@ poi_list = [
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green02,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_green02,
 		role = "Subway Train G-02",
 		pvp = True,
@@ -4407,7 +4409,7 @@ poi_list = [
 	EwPoi(  # Subway train on the blue line
 		id_poi = poi_id_subway_blue01,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_blue01,
 		role = "Subway Train B-01",
 		pvp = True,
@@ -4419,7 +4421,7 @@ poi_list = [
 	EwPoi(  # Subway train on the blue line
 		id_poi = poi_id_subway_blue02,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_blue02,
 		role = "Subway Train B-02",
 		pvp = True,
@@ -4431,7 +4433,7 @@ poi_list = [
 	EwPoi(  # Subway train on the white line
 		id_poi = poi_id_subway_white01,
 		str_name = "A Subway Train",
-		str_desc = "", # TODO: add description
+		str_desc = generic_subway_description, # TODO: add description
 		channel = channel_subway_white01,
 		role = "Subway Train W-01",
 		pvp = True,
@@ -4490,7 +4492,7 @@ transport_lines = [
 		first_stop = poi_id_wt_port,
 		last_stop = poi_id_vc_port,
 		next_line = transport_line_ferry_vc_to_wt,
-		str_name = "The ferry towards Vagrant's Corner",
+		str_name = "The ferry line towards Vagrant's Corner",
 		schedule = {
 			poi_id_wt_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_vc_port]
@@ -4510,7 +4512,7 @@ transport_lines = [
 		first_stop = poi_id_vc_port,
 		last_stop = poi_id_wt_port,
 		next_line = transport_line_ferry_wt_to_vc,
-		str_name = "The ferry towards Wreckington",
+		str_name = "The ferry line towards Wreckington",
 		schedule = {
 			poi_id_vc_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_wt_port]

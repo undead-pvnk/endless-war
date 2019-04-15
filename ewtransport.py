@@ -104,15 +104,24 @@ class EwTransport:
 					stop_data = ewcfg.id_to_poi.get(self.current_stop)
 
 					# announce new stop inside the transport
-					response = "We have reached {}.".format(stop_data.str_name)
+					if stop_data.is_subzone:
+						stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
+						response = "We have reached {}.".format(stop_mother.str_name)
+					else:
+						response = "We have reached {}.".format(stop_data.str_name)
+
 					if stop_data.id_poi != ewcfg.poi_id_slimesea:
 						response += " You may exit now."
 						if stop_data.id_poi == transport_line.last_stop:
 							next_line = ewcfg.id_to_transport_line[transport_line.next_line]
-							response += " This {} will proceed on {}.".format(self.transport_type, next_line.str_name)
+							response += " This {} will proceed on {}.".format(self.transport_type, next_line.str_name.replace("The", "the"))
 						else:
 							next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
-							response += " The next stop is {}.".format(next_stop.str_name)
+							if next_stop.is_subzone:
+								stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
+								response += " The next stop is {}.".format(stop_mother.str_name)
+							else:
+								response += " The next stop is {}.".format(next_stop.str_name)
 					resp_cont.add_channel_response(poi_data.channel, response)
 
 					# announce transport has arrived at the stop
