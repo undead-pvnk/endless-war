@@ -831,13 +831,13 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 
 			cursor.execute("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
 				stock = ewcfg.col_stock,
-				shares = ewcfg.col_total_shares,
+				shares = ewcfg.col_shares,
 				id_server = ewcfg.col_id_server,
-				timestamp = ewcfg.col_timestamp,
+				id_user = ewcfg.cold_id_user
 			), (
 				id_server,
+				id_user,
 				stock,
-				(count if (count > 0) else 2)
 			))
 
 			for row in cursor.fetchall():
@@ -847,10 +847,6 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 			if len(values) == 0:
 				values.append(0)
 
-			# If we don't have enough data, pad out to count with the last value in the array.
-			value_last = values[-1]
-			while len(values) < count:
-				values.append(value_last)
 		finally:
 			# Clean up the database handles.
 			cursor.close()

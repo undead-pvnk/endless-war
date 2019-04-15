@@ -179,7 +179,6 @@ class EwStock:
 """ player invests slime in the market """
 async def invest(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	time_now = int(time.time())
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
@@ -196,8 +195,18 @@ async def invest(cmd):
 
 	else:
 		value = None
+		stock = None
+
 		if cmd.tokens_count > 1:
-			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+			for token in cmd.tokens[1:]:
+				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
+					value = ewutils.getIntToken(cmd.tokens[1:], allow_all = True)
+					break
+			for token in cmd.tokens[1:]:
+				if token.lower() in ewcfg.stocks:
+					stock = token
+					break
+
 
 		if value != None:
 			if value < 0:
@@ -206,8 +215,10 @@ async def invest(cmd):
 				value = None
 
 		if value != None:
+			stock = EwStock(id_server = cmd.message.server.id, stock)
+
 			# Apply a brokerage fee of ~5% (rate * 1.05)
-			exchange_rate = (market_data.exchange_rate / 1000000.0)
+			exchange_rate = (stock.exchange_rate / 1000000.0)
 			feerate = 1.05
 
 			# The user can only buy a whole number of coins, so adjust their cost based on the actual number of coins purchased.
@@ -227,11 +238,10 @@ async def invest(cmd):
 				user_data.slimecoin += net_coins
 				user_data.time_lastinvest = time_now
 
-				response = "You invest {slime:,} slime and receive {coin:,} SlimeCoin. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(
-					slime = value, coin = net_coins, fee = fee)
+				response = "You invest {coin} SlimeCoin and receive {shares} shares. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(slime = value, coin = net_coins, fee = fee)
 
 				user_data.persist()
-				market_data.persist()
+				stock.persist()
 
 		else:
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "invest")
