@@ -86,6 +86,7 @@ class EwTransport:
 	async def move_loop(self):
 		response = ""
 		poi_data = ewcfg.id_to_poi.get(self.poi)
+		last_messages = []
 		while True:
 			try:
 				transport_line = ewcfg.id_to_transport_line[self.current_line]
@@ -98,6 +99,9 @@ class EwTransport:
 				else:
 					schedule = transport_line.schedule[self.current_stop]
 					await asyncio.sleep(schedule[0])
+					for message in last_messages:
+						if message is not None:
+							await client.delete_message(message)
 					self.current_stop = schedule[1]
 					self.persist()
 
@@ -129,7 +133,7 @@ class EwTransport:
 					response = "{} has arrived. You may board now.".format(transport_line.str_name)
 					resp_cont.add_channel_response(stop_data.channel, response)
 
-				await resp_cont.post()
+					last_messages = await resp_cont.post()
 
 
 			except:
