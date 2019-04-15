@@ -187,6 +187,11 @@ async def invest(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		return
 
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		# Limit frequency of investments.
+		response = ewcfg.str_exchange_busy.format(action = "invest")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
 	if ewcfg.role_rowdyfucker in roles_map_user or ewcfg.role_copkiller in roles_map_user:
 		# Disallow investments by RF and CK kingpins.
@@ -221,24 +226,21 @@ async def invest(cmd):
 			exchange_rate = (stock.exchange_rate / 1000000.0)
 			feerate = 1.05
 
-			# The user can only buy a whole number of coins, so adjust their cost based on the actual number of coins purchased.
-			gross_coins = int(value / exchange_rate)
+			# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
+			gross_shares = int(value / exchange_rate)
 
-			fee = int((gross_coins * feerate) - gross_coins)
+			fee = int((gross_shares * feerate) - gross_shares)
 
-			net_coins = gross_coins - fee
+			net_shares = gross_shares - fee
 
-			if value > user_data.slimes:
-				response = "You don't have that much slime to invest."
-			elif user_data.time_lastinvest + ewcfg.cd_invest > time_now:
-				# Limit frequency of investments.
-				response = ewcfg.str_exchange_busy.format(action = "invest")
+			if value > user_data.slimecoin:
+				response = "You don't have that much SlimeCoin to invest."
 			else:
 				user_data.slimes -= value
 				user_data.slimecoin += net_coins
 				user_data.time_lastinvest = time_now
 
-				response = "You invest {coin} SlimeCoin and receive {shares} shares. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(slime = value, coin = net_coins, fee = fee)
+				response = "You invest {coin} SlimeCoin and receive {shares} shares. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, coin = net_coins, fee = fee)
 
 				user_data.persist()
 				stock.persist()
