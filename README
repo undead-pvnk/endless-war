@@ -73,9 +73,17 @@ CREATE TABLE stocks (
 	exchange_rate bigint NOT NULL DEFAULT '1000000',
 	boombust int NOT NULL DEFAULT '0',
 	total_shares bigint NOT NULL DEFAULT '0',
-	timestamp bigint NOT NULL DEFAULT '0',
+	timestamp bigint NOT NULL DEFAULT '0'
+);
 
-	PRIMARY KEY (id_server)
+CREATE TABLE shares (
+    id_server varchar(128) NOT NULL,
+   	id_user varchar(128) NOT NULL,
+    stock varchar(64) NOT NULL,
+    shares bigint NOT NULL DEFAULT '0',
+
+
+    PRIMARY KEY (id_server)
 );
 
 CREATE TABLE weaponskills (

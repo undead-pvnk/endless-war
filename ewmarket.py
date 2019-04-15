@@ -417,7 +417,7 @@ async def xfer(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-""" show the current market exchange rate """ #todo allow you to check the rate of multiple stocks
+""" show the current market exchange rate """
 async def rate(cmd):
 	stock = None
 	if cmd.tokens_count > 0:
@@ -428,7 +428,6 @@ async def rate(cmd):
 		response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred=int(stock.exchange_rate / 1000.0))
 	else:
 		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
-
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

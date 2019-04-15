@@ -817,3 +817,41 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 			databaseClose(conn_info)
 
 		return values
+
+def getUserTotalShares(id_server=None, stock=None, id_user=None):
+	if id_server != None and stock != None and id_user != None:
+
+		values = 0
+
+		try:
+			# Get database handles if they weren't passed.
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+				stock = ewcfg.col_stock,
+				shares = ewcfg.col_total_shares,
+				id_server = ewcfg.col_id_server,
+				timestamp = ewcfg.col_timestamp,
+			), (
+				id_server,
+				stock,
+				(count if (count > 0) else 2)
+			))
+
+			for row in cursor.fetchall():
+				values.append(row[0])
+
+			# Make sure we return at least one value.
+			if len(values) == 0:
+				values.append(0)
+
+			# If we don't have enough data, pad out to count with the last value in the array.
+			value_last = values[-1]
+			while len(values) < count:
+				values.append(value_last)
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)

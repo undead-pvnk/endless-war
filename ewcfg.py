@@ -230,6 +230,7 @@ cmd_slimecoin = cmd_prefix + 'slimecoin'
 cmd_slimecoin_alt1 = cmd_prefix + 'slimecredit'
 cmd_slimecoin_alt2 = cmd_prefix + 'coin'
 cmd_slimecoin_alt3 = cmd_prefix + 'sc'
+cmd_invest = cmd_prefix + 'invest'
 cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
 cmd_exchangerate_alt1 = cmd_prefix + 'exchange'
@@ -607,6 +608,9 @@ col_market_rate = 'market_rate'
 col_exchange_rate = 'exchange_rate'
 col_boombust = 'boombust'
 col_total_shares = 'total_shares'
+
+# Database columns for shares
+col_shares = 'shares'
 
 # Database columns for stats
 col_total_slime = 'total_slime'
@@ -4703,11 +4707,11 @@ thrownobjects_list = [
 	"box overflowing with KFC branded bbq sauce"
 ]
 
-stocks = {
+stocks = [
 	"kfc",
 	"pizzahut",
 	"tacobell",
-}
+]
 
 # Stock names
 stock_names = {

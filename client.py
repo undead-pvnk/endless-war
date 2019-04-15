@@ -177,6 +177,15 @@ cmd_map = {
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
 
+	# Invest
+	ewcfg.cmd_invest: ewmarket.invest,
+
+	# Withdraw
+	ewcfg.cmd_withdraw: ewmarket.withdraw,
+
+	# rate
+	ewcfg.cmd_exchangerate: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
 
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
