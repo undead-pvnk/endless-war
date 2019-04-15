@@ -181,6 +181,7 @@ channel_vc_port = "vagrants-corner-port"
 channel_ferry = "ferry"
 channel_rowdyroughhouse = "rowdy-roughhouse"
 channel_copkilltown = "cop-killtown"
+channel_slimesea = "slime-sea"
 
 channel_killfeed = "kill-feed"
 
@@ -271,6 +272,8 @@ cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
+cmd_embark = cmd_prefix + 'embark'
+cmd_disembark = cmd_prefix + 'disembark'
 cmd_inspect = cmd_prefix + 'inspect'
 cmd_inspect_alt1 = cmd_prefix + 'examine'
 cmd_look = cmd_prefix + 'look'
@@ -649,6 +652,11 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
+
+# Database columns for transports
+col_transport_type = 'transport_type'
+col_current_line = 'current_line'
+col_current_stop = 'current_stop'
 
 # Database columns for troll romance
 col_quadrant = 'quadrant'
@@ -3603,6 +3611,18 @@ poi_list = [
 		transport_type = transport_type_ferry,
 		default_line = transport_line_ferry_wreckington_to_vagrantscorner,
 		default_stop = poi_id_wt_port
+	),
+	EwPoi( # Slime Sea
+		id_poi = poi_id_slimesea,
+		str_name = "The Slime Sea",
+		channel = channel_slimesea,
+		role = "Slime Sea",
+		pvp = True,
+		is_transport_stop = True,
+		transport_lines = [
+			    transport_line_ferry_wreckington_to_vagrantscorner,
+			    transport_line_ferry_vagrantscorner_to_wreckington
+			    ]
 	)
 ]
 
@@ -3611,6 +3631,7 @@ coord_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
 transports = []
+transport_stops = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -3633,12 +3654,20 @@ for poi in poi_list:
 	if poi.is_transport:
 		transports.append(poi.id_poi)
 
+	if poi.is_transport_stop:
+		transport_stops.append(poi.id_poi)
+
 # maps districts to their immediate neighbors
 poi_neighbors = {}
 
 transport_lines = [
 	EwTransportLine( # ferry line from wreckington to vagrant's corner
 		id_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		alias = [
+			"vagrantscornerferry",
+			"vagrantsferry",
+			"vcferry"
+		    ],
 		first_stop = poi_id_wt_port,
 		last_stop = poi_id_vc_port,
 		next_line = transport_line_ferry_vagrantscorner_to_wreckington,
@@ -3650,6 +3679,11 @@ transport_lines = [
 		),
 	EwTransportLine( # ferry line from vagrant's corner to wreckington
 		id_line = transport_line_ferry_vagrantscorner_to_wreckington,
+		alias = [
+			"wreckingtonferry",
+			"wreckferry",
+			"wtferry"
+		    ],
 		first_stop = poi_id_vc_port,
 		last_stop = poi_id_wt_port,
 		next_line = transport_line_ferry_wreckington_to_vagrantscorner,
@@ -3665,6 +3699,8 @@ id_to_transport_line = {}
 
 for line in transport_lines:
 	id_to_transport_line[line.id_line] = line
+	for alias in line.alias:
+		id_to_transport_line[alias] = line
 
 cosmetic_items_list = [
 	EwCosmeticItem(

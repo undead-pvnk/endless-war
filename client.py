@@ -208,6 +208,10 @@ cmd_map = {
 	ewcfg.cmd_halt: ewmap.halt,
 	ewcfg.cmd_halt_alt1: ewmap.halt,
 
+	# Enter and exit public transportation
+	ewcfg.cmd_embark: ewtransport.embark,
+	ewcfg.cmd_disembark: ewtransport.disembark,
+
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 
@@ -433,6 +437,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+		await ewtransport.init_transports(id_server = server.id)
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
