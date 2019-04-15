@@ -114,6 +114,8 @@ class EwTransport:
 					else:
 						response = "We have reached {}.".format(stop_data.str_name)
 
+					next_line = transport_line
+
 					if stop_data.id_poi != ewcfg.poi_id_slimesea:
 						response += " You may exit now."
 						if stop_data.id_poi == transport_line.last_stop:
@@ -129,8 +131,7 @@ class EwTransport:
 					resp_cont.add_channel_response(poi_data.channel, response)
 
 					# announce transport has arrived at the stop
-					last_stop_data = ewcfg.id_to_poi.get(transport_line.last_stop)
-					response = "{} has arrived. You may board now.".format(transport_line.str_name)
+					response = "{} has arrived. You may board now.".format(next_line.str_name)
 					resp_cont.add_channel_response(stop_data.channel, response)
 
 					last_messages = await resp_cont.post()

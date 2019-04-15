@@ -879,10 +879,10 @@ async def kick(id_server):
 		try:
 			poi = ewcfg.id_to_poi[player[0]]
 			id_user = player[1]
+			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone:
-				user_data = EwUser(id_user = id_user, id_server = id_server)
+			if poi.is_subzone and not inaccessible(user_data = user_data, poi = poi.mother_district):
 				server = ewcfg.server_list[id_server]
 				member_object = server.get_member(id_user)
 
