@@ -851,3 +851,32 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
+
+def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
+	if id_server != None and stock != None and id_user != None:
+
+		values = 0
+
+		try:
+			# Get database handles if they weren't passed.
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("UPDATE shares SET {shares} = %s WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+				stock = ewcfg.col_stock,
+				shares = ewcfg.col_shares,
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.cold_id_user
+			), (
+				shares,
+				id_server,
+				id_user,
+				stock,
+			))
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+

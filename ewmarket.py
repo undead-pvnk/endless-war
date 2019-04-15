@@ -220,33 +220,41 @@ async def invest(cmd):
 				value = None
 
 		if value != None:
-			stock = EwStock(id_server = cmd.message.server.id, stock)
+			if stock != None:
 
-			# Apply a brokerage fee of ~5% (rate * 1.05)
-			exchange_rate = (stock.exchange_rate / 1000000.0)
-			feerate = 1.05
+				stock = EwStock(id_server = cmd.message.server.id, stock)
 
-			# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
-			gross_shares = int(value / exchange_rate)
+				# Apply a brokerage fee of ~5% (rate * 1.05)
+				exchange_rate = (stock.exchange_rate / 1000000.0)
+				feerate = 1.05
 
-			fee = int((gross_shares * feerate) - gross_shares)
+				# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
+				gross_shares = int(value / exchange_rate)
 
-			net_shares = gross_shares - fee
+				fee = int((gross_shares * feerate) - gross_shares)
 
-			if value > user_data.slimecoin:
-				response = "You don't have that much SlimeCoin to invest."
+				net_shares = gross_shares - fee
+
+				if value > user_data.slimecoin:
+					response = "You don't have that much SlimeCoin to invest."
+				else:
+					user_data.slimecoin -= value
+					shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
+					shares += net_shares
+					ewutils.updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = shares)
+					user_data.time_lastinvest = time_now
+
+					stock.total_shares += net_shares
+					response = "You invest {coin} SlimeCoin and receive {shares} shares. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, fee = fee)
+
+					user_data.persist()
+					stock.persist()
+
 			else:
-				user_data.slimes -= value
-				user_data.slimecoin += net_coins
-				user_data.time_lastinvest = time_now
-
-				response = "You invest {coin} SlimeCoin and receive {shares} shares. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, coin = net_coins, fee = fee)
-
-				user_data.persist()
-				stock.persist()
+				response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
 
 		else:
-			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "invest")
+			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "invest")
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
