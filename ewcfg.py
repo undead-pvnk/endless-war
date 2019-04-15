@@ -3701,7 +3701,7 @@ poi_list = [
 		],
 		str_name = "The Toxington Subway Station",
                 str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
@@ -3729,7 +3729,7 @@ poi_list = [
 		],
 		str_name = "The Astatine Heights Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
@@ -3757,7 +3757,7 @@ poi_list = [
 		],
 		str_name = "The Gatlingsdale Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
@@ -3785,7 +3785,7 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
@@ -3813,7 +3813,7 @@ poi_list = [
 		],
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
@@ -3841,7 +3841,7 @@ poi_list = [
 		],
 		str_name = "The Smogsburg Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
@@ -3864,7 +3864,7 @@ poi_list = [
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
 		pvp = True,
@@ -3892,7 +3892,7 @@ poi_list = [
 		],
 		str_name = "The Krak Bay Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
@@ -3920,7 +3920,7 @@ poi_list = [
 		],
 		str_name = "The Glocksbury Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
@@ -3948,7 +3948,7 @@ poi_list = [
 		],
 		str_name = "The West Glocksbury Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
@@ -3976,7 +3976,7 @@ poi_list = [
 		],
 		str_name = "The Jaywalker Plain Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
@@ -4004,7 +4004,7 @@ poi_list = [
 		],
 		str_name = "The North Sleezeborough Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
@@ -4032,7 +4032,7 @@ poi_list = [
 		],
 		str_name = "The South Sleezeborough Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
@@ -4060,7 +4060,7 @@ poi_list = [
 		],
 		str_name = "The Cratersville Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
@@ -4088,7 +4088,7 @@ poi_list = [
 		],
 		str_name = "The Wreckington Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
@@ -4115,7 +4115,7 @@ poi_list = [
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
@@ -4143,7 +4143,7 @@ poi_list = [
 		],
 		str_name = "The Green Light District Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
@@ -4171,7 +4171,7 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
@@ -4199,7 +4199,7 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
@@ -4231,7 +4231,7 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Subway Station",
 		str_desc = generic_subway_station_description, #TODO: add description
-		coord = None,
+		coord = None, #TODO: add coords
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
 		pvp = True,
