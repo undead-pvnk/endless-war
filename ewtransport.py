@@ -104,12 +104,20 @@ class EwTransport:
 					stop_data = ewcfg.id_to_poi.get(self.current_stop)
 
 					# announce new stop inside the transport
-					response = "We have reached {}. You may exit now.".format(stop_data.str_name)
+					response = "We have reached {}.".format(stop_data.str_name)
+					if stop_data.id_poi != ewcfg.poi_id_slimesea:
+						response += " You may exit now."
+						if stop_data.id_poi == transport_line.last_stop:
+							next_line = ewcfg.id_to_transport_line[transport_line.next_line]
+							response += " This {} will proceed on {}.".format(self.transport_type, next_line.str_name)
+						else:
+							next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
+							response += " The next stop is {}.".format(next_stop.str_name)
 					resp_cont.add_channel_response(poi_data.channel, response)
 
 					# announce transport has arrived at the stop
 					last_stop_data = ewcfg.id_to_poi.get(transport_line.last_stop)
-					response = "The {} to {} has arrived. You may board now.".format(self.transport_type, last_stop_data.str_name)
+					response = "{} has arrived. You may board now.".format(transport_line.str_name)
 					resp_cont.add_channel_response(stop_data.channel, response)
 
 				await resp_cont.post()
@@ -128,6 +136,9 @@ class EwTransportLine:
 	# alternative names
 	alias = []
 
+	# Nice name for output
+	str_name = ""
+
 	# which stop the line starts at
 	first_stop = ""
 
@@ -143,6 +154,7 @@ class EwTransportLine:
 	def __init__(self,
 		id_line = "",
 		alias = [],
+		str_name = "",
 		first_stop = "",
 		last_stop = "",
 		next_line = "",
@@ -150,6 +162,7 @@ class EwTransportLine:
 		):
 		self.id_line = id_line
 		self.alias = alias
+		self.str_name = str_name
 		self.first_stop = first_stop
 		self.last_stop = last_stop
 		self.next_line = next_line
@@ -240,7 +253,7 @@ async def embark(cmd):
 				if move_current == ewmap.moves_active[cmd.message.author.id]:
 					user_data = EwUser(member = cmd.message.author)
 	
-				transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
+					transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
 
 					# check if the transport is still at the same stop
 					if transport_data.current_stop == user_data.poi:

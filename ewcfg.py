@@ -3636,8 +3636,8 @@ poi_list = [
 		pvp = True,
 		is_transport_stop = True,
 		transport_lines = [
-			    transport_line_ferry_wreckington_to_vagrantscorner,
-			    transport_line_ferry_vagrantscorner_to_wreckington
+			    transport_line_ferry_wt_to_vc,
+			    transport_line_ferry_vc_to_wt
 			    ]
 	),
 	EwPoi(  # Wreckington Ferry Port
@@ -3660,8 +3660,8 @@ poi_list = [
 		mother_district = poi_id_wreckington,
 		is_transport_stop = True,
 		transport_lines = [
-			    transport_line_ferry_wreckington_to_vagrantscorner,
-			    transport_line_ferry_vagrantscorner_to_wreckington
+			    transport_line_ferry_wt_to_vc,
+			    transport_line_ferry_vc_to_wt
 			    ]
 	),
 	EwPoi(  # Vagrant's Corner Ferry Port
@@ -3685,8 +3685,8 @@ poi_list = [
 		mother_district = poi_id_vagrantscorner,
 		is_transport_stop = True,
 		transport_lines = [
-			    transport_line_ferry_wreckington_to_vagrantscorner,
-			    transport_line_ferry_vagrantscorner_to_wreckington
+			    transport_line_ferry_wt_to_vc,
+			    transport_line_ferry_vc_to_wt
 			    ]
 	),
 	EwPoi(  # Toxington Subway Station
@@ -3707,7 +3707,7 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-		str_desc = "",
+                str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
@@ -3738,7 +3738,7 @@ poi_list = [
 			"ahs"
 		],
 		str_name = "The Astatine Heights Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
@@ -3769,7 +3769,7 @@ poi_list = [
 			"gds"
 		],
 		str_name = "The Gatlingsdale Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
@@ -3800,7 +3800,7 @@ poi_list = [
 			"abs"
 		],
 		str_name = "The Arsonbrook Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
@@ -3831,7 +3831,7 @@ poi_list = [
 			"cks"
 		],
 		str_name = "The Cop Killtown Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
@@ -3862,7 +3862,7 @@ poi_list = [
 			"sbs"
 		],
 		str_name = "The Smogsburg Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
@@ -3890,7 +3890,7 @@ poi_list = [
 			"dts"
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
@@ -3929,7 +3929,7 @@ poi_list = [
 			"kbs"
 		],
 		str_name = "The Krak Bay Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
@@ -3962,7 +3962,7 @@ poi_list = [
 			"gbs"
 		],
 		str_name = "The Glocksbury Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
@@ -3992,7 +3992,7 @@ poi_list = [
 			"wgbs"
 		],
 		str_name = "The West Glocksbury Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
@@ -4006,7 +4006,7 @@ poi_list = [
 			    ]
 	),
 	EwPoi(  # Jaywalker Plain Subway Station
-		id_poi = poi_id_wgb_subway_station,
+		id_poi = poi_id_jp_subway_station,
 		alias = [
 			"jaywalkerplainsubway",
 			"jaywalkerplainsub",
@@ -4023,7 +4023,7 @@ poi_list = [
 			"jps"
 		],
 		str_name = "The Jaywalker Plain Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
@@ -4053,7 +4053,7 @@ poi_list = [
 			"nsbs"
 		],
 		str_name = "The North Sleezeborough Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
@@ -4083,7 +4083,7 @@ poi_list = [
 			"ssbs"
 		],
 		str_name = "The South Sleezeborough Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
@@ -4114,7 +4114,7 @@ poi_list = [
 			"cvs"
 		],
 		str_name = "The Cratersville Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
@@ -4145,7 +4145,7 @@ poi_list = [
 			"wts"
 		],
 		str_name = "The Wreckington Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
@@ -4175,7 +4175,7 @@ poi_list = [
 			"rrs"
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
@@ -4208,7 +4208,7 @@ poi_list = [
 			"glds"
 		],
 		str_name = "The Green Light District Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
@@ -4239,7 +4239,7 @@ poi_list = [
 			"jrs"
 		],
 		str_name = "The Juvie's Row Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
@@ -4272,7 +4272,7 @@ poi_list = [
 			"vcs"
 		],
 		str_name = "The Vagrant's Corner Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
@@ -4307,7 +4307,7 @@ poi_list = [
 			"afbs"
 		],
 		str_name = "The Assault Flats Beach Subway Station",
-		str_desc = "",
+		str_desc = "", #TODO: add description
 		coord = None,
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
@@ -4329,7 +4329,7 @@ poi_list = [
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_ferry,
-		default_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		default_line = transport_line_ferry_wt_to_vc,
 		default_stop = poi_id_wt_port
 	),
 	EwPoi(  # Subway train on the red line
@@ -4478,7 +4478,7 @@ poi_neighbors = {}
 
 transport_lines = [
 	EwTransportLine( # ferry line from wreckington to vagrant's corner
-		id_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		id_line = transport_line_ferry_wt_to_vc,
 		alias = [
 			"vagrantscornerferry",
 			"vagrantsferry",
@@ -4489,7 +4489,7 @@ transport_lines = [
 		    ],
 		first_stop = poi_id_wt_port,
 		last_stop = poi_id_vc_port,
-		next_line = transport_line_ferry_vagrantscorner_to_wreckington,
+		next_line = transport_line_ferry_vc_to_wt,
 		str_name = "The ferry towards Vagrant's Corner",
 		schedule = {
 			poi_id_wt_port : [60, poi_id_slimesea],
@@ -4498,7 +4498,7 @@ transport_lines = [
 
 		),
 	EwTransportLine( # ferry line from vagrant's corner to wreckington
-		id_line = transport_line_ferry_vagrantscorner_to_wreckington,
+		id_line = transport_line_ferry_vc_to_wt,
 		alias = [
 			"wreckingtonferry",
 			"wreckferry",
@@ -4509,7 +4509,7 @@ transport_lines = [
 		    ],
 		first_stop = poi_id_vc_port,
 		last_stop = poi_id_wt_port,
-		next_line = transport_line_ferry_wreckington_to_vagrantscorner,
+		next_line = transport_line_ferry_wt_to_vc,
 		str_name = "The ferry towards Wreckington",
 		schedule = {
 			poi_id_vc_port : [60, poi_id_slimesea],
@@ -4530,7 +4530,7 @@ transport_lines = [
 		first_stop = poi_id_ssb_subway_station,
 		last_stop = poi_id_ab_subway_station,
 		next_line = transport_line_subway_orange_southbound,
-		str_name = "The orange subway line towards Arsonbrook"
+		str_name = "The orange subway line towards Arsonbrook",
 		schedule = {
 			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
 			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
@@ -4552,7 +4552,7 @@ transport_lines = [
 		first_stop = poi_id_ab_subway_station,
 		last_stop = poi_id_ssb_subway_station,
 		next_line = transport_line_subway_orange_northbound,
-		str_name = "The orange subway line towards South Sleezeborough"
+		str_name = "The orange subway line towards South Sleezeborough",
 		schedule = {
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
@@ -4574,7 +4574,7 @@ transport_lines = [
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
 		next_line = transport_line_subway_red_southbound,
-		str_name = "The red subway line towards Toxington"
+		str_name = "The red subway line towards Toxington",
 		schedule = {
 			poi_id_cv_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_rr_subway_station],
@@ -4599,7 +4599,7 @@ transport_lines = [
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
 		next_line = transport_line_subway_red_northbound,
-		str_name = "The red subway line towards Cratersville"
+		str_name = "The red subway line towards Cratersville",
 		schedule = {
 			poi_id_tt_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_gd_subway_station],
@@ -4624,7 +4624,7 @@ transport_lines = [
 		first_stop = poi_id_wgb_subway_station,
 		last_stop = poi_id_sb_subway_station,
 		next_line = transport_line_subway_green_westbound,
-		str_name = "The green subway line towards Smogsburg"
+		str_name = "The green subway line towards Smogsburg",
 		schedule = {
 			poi_id_wgb_subway_station : [20, poi_id_jp_subway_station],
 			poi_id_jp_subway_station : [20, poi_id_nsb_subway_station],
@@ -4647,7 +4647,7 @@ transport_lines = [
 		first_stop = poi_id_sb_subway_station,
 		last_stop = poi_id_wgb_subway_station,
 		next_line = transport_line_subway_green_eastbound,
-		str_name = "The green subway line towards West Glocksbury"
+		str_name = "The green subway line towards West Glocksbury",
 		schedule = {
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
@@ -4670,7 +4670,7 @@ transport_lines = [
 		first_stop = poi_id_dt_subway_station,
 		last_stop = poi_id_afb_subway_station,
 		next_line = transport_line_subway_blue_westbound,
-		str_name = "The blue subway line towards Assault Flats Beach"
+		str_name = "The blue subway line towards Assault Flats Beach",
 		schedule = {
 			poi_id_dt_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
@@ -4691,7 +4691,7 @@ transport_lines = [
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
 		next_line = transport_line_subway_blue_eastbound,
-		str_name = "The blue subway line towards Downtown NLACakaNM"
+		str_name = "The blue subway line towards Downtown NLACakaNM",
 		schedule = {
 			poi_id_afb_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
@@ -4713,7 +4713,7 @@ transport_lines = [
 		first_stop = poi_id_dt_subway_station,
 		last_stop = poi_id_jr_subway_station,
 		next_line = transport_line_subway_white_westbound,
-		str_name = "The white subway line towards Juvie's Row"
+		str_name = "The white subway line towards Juvie's Row",
 		schedule = {
 			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
@@ -4732,7 +4732,7 @@ transport_lines = [
 		first_stop = poi_id_jr_subway_station,
 		last_stop = poi_id_dt_subway_station,
 		next_line = transport_line_subway_white_eastbound,
-		str_name = "The white subway line towards Downtown NLACakaNM"
+		str_name = "The white subway line towards Downtown NLACakaNM",
 		schedule = {
 			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
