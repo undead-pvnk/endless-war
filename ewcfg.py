@@ -731,6 +731,8 @@ stat_biggest_casino_win = 'biggest_casino_win'
 stat_biggest_casino_loss = 'biggest_casino_loss'
 stat_lifetime_casino_winnings = 'lifetime_casino_winnings'
 stat_lifetime_casino_losses = 'lifetime_casino_losses'
+stat_total_slimecoin_invested = 'total_slimecoin_invested'
+stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -771,6 +773,8 @@ coinsource_bounty = 2
 coinsource_revival = 3
 coinsource_casino = 4
 coinsource_transfer = 5
+coinsource_invest = 6
+coinsource_withdraw = 7
 
 # Causes of death, for statistics tracking
 cause_killing = 0
