@@ -226,13 +226,15 @@ async def invest(cmd):
 				# basic exchange rate / 1000 = 1 share
 				exchange_rate = (stock.exchange_rate / 1000.0)
 
-				# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
-				net_shares = int(value / exchange_rate)
-
 				cost_total = int(value * 1.05)
 
 				if value == user_data.slimecoin:
-					value -= cost_total - value
+					while cost_total > user_data.slimecoin:
+						value -= cost_total - value
+						cost_total = int(value * 1.05)
+
+				# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
+				net_shares = int(value / exchange_rate)
 
 				if user_data.slimecoin < cost_total:
 					response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
