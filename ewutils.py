@@ -841,16 +841,13 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 			))
 
 			for row in cursor.fetchall():
-				values.append(row[0])
-
-			# Make sure we return at least one value.
-			if len(values) == 0:
-				values.append(0)
+				values = row[0]
 
 		finally:
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
+			return values
 
 def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 	if id_server != None and stock != None and id_user != None:
