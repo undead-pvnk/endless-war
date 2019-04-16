@@ -296,20 +296,20 @@ async def withdraw(cmd):
 
 			exchange_rate = (stock.exchange_rate / 1000000.0)
 
-			coins = value
-			slimes = int(value * exchange_rate)
+			shares = value
+			slimecoin = int(value * exchange_rate)
 
 			if value > user_data.slimecoin:
-				response = "You don't have that many SlimeCoin to exchange."
+				response = "You don't have that many shares in {stock} to exchange.".format(stock = stock)
 			elif user_data.time_lastinvest + ewcfg.cd_invest > time_now:
 				# Limit frequency of withdrawals
 				response = ewcfg.str_exchange_busy.format(action = "withdraw")
 			else:
-				user_data.slimes += slimes
-				user_data.slimecoin -= coins
+				user_data.slimecoin += slimecoin
+				user_data.slimecoin -= shares
 				user_data.time_lastinvest = time_now
 
-				response = "You exchange {shares} shares in {stock} for {coins:,} SlimeCoin.".format(coins = value, shares = net_shares, stock = stock, fee = fee)
+				response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = value, shares = shares, stock = stock)
 				user_data.persist()
 				stock.persist()
 

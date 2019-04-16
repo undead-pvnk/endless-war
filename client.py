@@ -963,7 +963,7 @@ def market_tick(stock_data, id_server):
 		response += 'is doing well. Slime stock is up {p:.3g}%.'.format(p = percentage)
 	# Market is down ...
 	elif market_rate < 800:
-		response += 'is plummetting!!! Slime stock is down {p:.3g}%!!!'.format(p = percentage_abs)
+		response += 'is plummeting!!! Slime stock is down {p:.3g}%!!!'.format(p = percentage_abs)
 	elif market_rate < 900:
 		response += 'is stagnating! Slime stock is down {p:.3g}%!'.format(p = percentage_abs)
 	elif market_rate < 1000:
