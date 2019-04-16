@@ -454,19 +454,35 @@ async def rate(cmd):
 
 	if stock in ewcfg.stocks:
 		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-		response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred=int(stock.exchange_rate / 1000.0))
+		response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(stock.exchange_rate / 1000.0))
 	else:
-		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
+		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+""" show player's shares in a stock """
+async def shares(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	stock = None
+
+	if cmd.tokens_count > 0:
+		stock = ewutils.formatNiceList(cmd.tokens[1:])
+
+	if stock in ewcfg.stocks:
+		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+		shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
+		shares_value = int(shares * (stock.exchange_rate / 1000000.0))
+
+		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = stock, coin = shares_value)
+	else:
+		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
-	response = ""
-	user_data = None
-
 	if cmd.mentions_count == 0:
 		coins = EwUser(member = cmd.message.author).slimecoin
 		response = "You have {:,} SlimeCoin.".format(coins)
