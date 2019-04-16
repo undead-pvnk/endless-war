@@ -866,10 +866,10 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
 			), (
-				shares,
 				id_server,
 				id_user,
 				stock,
+				shares,
 			))
 
 		finally:

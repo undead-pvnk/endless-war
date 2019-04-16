@@ -187,6 +187,9 @@ cmd_map = {
 	ewcfg.cmd_exchangerate: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
 
+	# shares
+	ewcfg.cmd_shares: ewmarket.shares,
+
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
