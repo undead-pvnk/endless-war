@@ -186,6 +186,7 @@ cmd_map = {
 	# rate
 	ewcfg.cmd_exchangerate: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
 
 	# shares
 	ewcfg.cmd_shares: ewmarket.shares,

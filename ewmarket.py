@@ -245,7 +245,7 @@ async def invest(cmd):
 					user_data.time_lastinvest = time_now
 
 					stock.total_shares += net_shares
-					response = "You invest {coin} SlimeCoin and receive {shares} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = stock.id_stock, fee = (cost_total - value))
+					response = "You invest {coin} SlimeCoin and receive {shares} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
 
 					user_data.persist()
 					stock.persist()
@@ -293,10 +293,9 @@ async def withdraw(cmd):
 				value = None
 
 		if value != None:
+			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 
 			if value <= total_shares:
-				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-
 				exchange_rate = (stock.exchange_rate / 1000.0)
 
 				shares = value
@@ -311,12 +310,12 @@ async def withdraw(cmd):
 					user_data.time_lastinvest = time_now
 					stock.total_shares -= shares
 
-					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = value, shares = shares, stock = stock.id_stock)
+					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = value, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 					user_data.persist()
 					stock.persist()
 					ewutils.updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
 			else:
-				response = "You don't have that many shares in {stock} to exchange.".format(stock = stock.id_stock)
+				response = "You don't have that many shares in {stock} to exchange.".format(stock = ewcfg.stock_names.get(stock.id_stock))
 		else:
 			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
 
@@ -478,7 +477,7 @@ async def shares(cmd):
 		shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 		shares_value = int(shares * (stock.exchange_rate / 1000.0))
 
-		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = stock.id_stock, coin = shares_value)
+		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
 	else:
 		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
