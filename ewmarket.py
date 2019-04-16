@@ -237,6 +237,9 @@ async def invest(cmd):
 				elif value > user_data.slimecoin:
 					response = "You don't have that much SlimeCoin to invest."
 
+				elif net_shares == 0:
+					response = "You don't have enough SlimeCoin to buy a share in {stock}".format(stock = ewcfg.stock_names.get(stock.id_stock))
+
 				else:
 					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.stat_total_slimecoin_invested)
 					shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
@@ -451,18 +454,27 @@ async def xfer(cmd):
 
 """ show the current market exchange rate """
 async def rate(cmd):
-	stock = None
-	if cmd.tokens_count > 0:
-		stock = ewutils.formatNiceList(cmd.tokens[1:])
+	user_data = EwUser(member = cmd.message.author)
 
-	if stock in ewcfg.stocks:
-		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-		response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(stock.exchange_rate / 1000.0))
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = "You must go to the Slime Stock Exchange to check the current stock exchange rates ."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	else:
-		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+		stock = None
 
-	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if cmd.tokens_count > 0:
+			stock = ewutils.formatNiceList(cmd.tokens[1:])
+
+		if stock in ewcfg.stocks:
+			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+			response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(stock.exchange_rate / 1000.0))
+		else:
+			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+		# Send the response to the player.
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ show player's shares in a stock """
 async def shares(cmd):
@@ -483,6 +495,21 @@ async def shares(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" show all interactable stocks in the market """
+async def stocks(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = "You must go to the Slime Stock Exchange to check the currently available stocks."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+			response = "Here are the currently available stocks: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+		# Send the response to the player.
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
