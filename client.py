@@ -903,7 +903,7 @@ def market_tick(stock_data, id_server):
 	if total_shares[0] != total_shares[1]:
 		# Positive if net investment, negative if net withdrawal.
 		coin_change = (total_shares[0] - total_shares[1])
-		coin_rate = ((coin_change * 1.0) / total_shares[1])
+		coin_rate = ((coin_change * 1.0) / total_shares[1] if total_shares[1] != 0 else 1)
 
 		if coin_rate > 1.0:
 			coin_rate = 1.0

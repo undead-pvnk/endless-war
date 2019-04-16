@@ -183,7 +183,7 @@ async def invest(cmd):
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
-		response = ewcfg.str_exchange_channelreq.format(currency = "slime", action = "invest")
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		return
 
@@ -230,6 +230,9 @@ async def invest(cmd):
 				net_shares = int(value / exchange_rate)
 
 				cost_total = int(value * 1.05)
+
+				if value == user_data.slimecoin:
+					value -= cost_total - value
 
 				if user_data.slimecoin < cost_total:
 					response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
@@ -420,7 +423,7 @@ async def xfer(cmd):
 	# Parse the slime value to send.
 	value = None
 	if cmd.tokens_count > 1:
-		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+		value = ewutils.getIntToken(tokens = cmd.tokens)
 
 	if value != None:
 		if value < 0:
@@ -508,8 +511,8 @@ async def stocks(cmd):
 	else:
 			response = "Here are the currently available stocks: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
-		# Send the response to the player.
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
