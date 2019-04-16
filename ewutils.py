@@ -829,11 +829,11 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
-			cursor.execute("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+			cursor.execute("SELECT {shares} FROM {shares} WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
 				stock = ewcfg.col_stock,
 				shares = ewcfg.col_shares,
 				id_server = ewcfg.col_id_server,
-				id_user = ewcfg.cold_id_user
+				id_user = ewcfg.col_id_user
 			), (
 				id_server,
 				id_user,
@@ -863,11 +863,11 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor()
 
-			cursor.execute("UPDATE shares SET {shares} = %s WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+			cursor.execute("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
 				stock = ewcfg.col_stock,
 				shares = ewcfg.col_shares,
 				id_server = ewcfg.col_id_server,
-				id_user = ewcfg.cold_id_user
+				id_user = ewcfg.col_id_user
 			), (
 				shares,
 				id_server,
