@@ -310,7 +310,7 @@ async def withdraw(cmd):
 					user_data.time_lastinvest = time_now
 					stock.total_shares -= shares
 
-					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = value, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 					user_data.persist()
 					stock.persist()
 					ewutils.updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
