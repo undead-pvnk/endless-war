@@ -528,6 +528,7 @@ async def on_ready():
 
 					for stock in ewcfg.stocks:
 						s = EwStock(server.id, stock)
+						# we don't update stocks when they were just added
 						if s.timestamp != 0:
 							market_response = market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)

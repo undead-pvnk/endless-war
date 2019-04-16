@@ -818,6 +818,7 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 
 		return values
 
+"""" returns the total number of shares a player has in a certain stock """
 def getUserTotalShares(id_server=None, stock=None, id_user=None):
 	if id_server != None and stock != None and id_user != None:
 
@@ -849,6 +850,7 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 			databaseClose(conn_info)
 			return values
 
+"""" updates the total number of shares a player has in a certain stock """
 def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 	if id_server != None and stock != None and id_user != None:
 

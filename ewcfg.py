@@ -4714,6 +4714,7 @@ thrownobjects_list = [
 	"box overflowing with KFC branded bbq sauce"
 ]
 
+# list of stock ids
 stocks = [
 	"kfc",
 	"pizzahut",

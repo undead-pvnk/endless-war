@@ -228,6 +228,7 @@ async def invest(cmd):
 
 				cost_total = int(value * 1.05)
 
+				# gets the highest value possible where the player can still pay the fee
 				if value == user_data.slimecoin:
 					while cost_total > user_data.slimecoin:
 						value -= cost_total - value

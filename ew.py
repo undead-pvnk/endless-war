@@ -156,6 +156,8 @@ class EwUser:
 			if coinsource == ewcfg.coinsource_casino:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_biggest_casino_win, value = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_winnings, n = change)
+			if coinsource == ewcfg.coinsource_withdraw:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_withdrawn, n = change)
 		else:
 			change *= -1
 			if coinsource == ewcfg.coinsource_revival:
@@ -163,6 +165,8 @@ class EwUser:
 			if coinsource == ewcfg.coinsource_casino:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_biggest_casino_loss, value = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_losses, n = change)
+			if coinsource == ewcfg.coinsource_invest:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_invested, n = change)
 
 	def add_weaponskill(self, n = 0):
 		# Save the current weapon's skill
