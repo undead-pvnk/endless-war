@@ -78,6 +78,7 @@ poi_id_subway_green02 = "subwaygreen02"
 poi_id_subway_white01 = "subwaywhite01"
 poi_id_subway_blue01 = "subwayblue01"
 poi_id_subway_blue02 = "subwayblue02"
+poi_id_blimp = "blimp"
 
 
 # ferry ports
@@ -105,6 +106,10 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+
+# ferry ports
+poi_id_df_blimp_tower = "dreadfordblimptower"
+poi_id_afb_blimp_tower = "assaultflatsblimptower"
 
 # district pois
 poi_id_downtown = "downtown"
@@ -143,6 +148,7 @@ poi_id_dreadford = "dreadford"
 # Transport types
 transport_type_ferry = "ferry"
 transport_type_subway = "subway"
+transport_type_blimp = "blimp"
 
 # Ferry lines
 transport_line_ferry_wt_to_vc = "ferrywttovc"
@@ -159,6 +165,10 @@ transport_line_subway_white_eastbound = "subwaywhiteeast"
 transport_line_subway_white_westbound = "subwaywhitewest"
 transport_line_subway_green_eastbound = "subwaygreeneast"
 transport_line_subway_green_westbound = "subwaygreenwest"
+
+# Blimp lines
+transport_line_blimp_df_to_afb = "blimpdftoafb"
+transport_line_blimp_afb_to_df = "blimpafbtodf"
 
 
 # Role names. All lower case with no spaces.
@@ -251,6 +261,8 @@ channel_gld_subway_station = "green-light-subway-station"
 channel_jr_subway_station = "juvies-row-subway-station"
 channel_vc_subway_station = "vagrants-corner-subway-station"
 channel_afb_subway_station = "assault-flats-subway-station"
+channel_df_blimp_tower = "dreadford-blimp-tower"
+channel_afb_blimp_tower = "assault-flats-blimp-tower"
 
 channel_ferry = "ferry"
 channel_subway_red01 = "subway-train-r-01"
@@ -262,6 +274,7 @@ channel_subway_green02 = "subway-train-g-02"
 channel_subway_white01 = "subway-train-w-01"
 channel_subway_blue01 = "subway-train-b-01"
 channel_subway_blue02 = "subway-train-b-02"
+channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
 
@@ -626,6 +639,8 @@ str_weapon_married = "They are married to"
 generic_role_name = 'NLACakaNM'
 generic_subway_description = "A grimy subway train."
 generic_subway_station_description = "A grimy subway station."
+generic_blimp_description = "It's a blimp."
+generic_blimp_tower_description = "So fancy you want to puke."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -901,6 +916,7 @@ cause_busted = 4
 cause_suicide = 5
 cause_leftserver = 6
 cause_drowning = 7
+cause_falling = 8
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -3694,9 +3710,7 @@ poi_list = [
 		str_name = "The Slime Sea",
 		channel = channel_slimesea,
 		role = "Slime Sea",
-		pvp = True,
-		is_transport_stop = True,
-		transport_lines = set()
+		pvp = True
 	),
 	EwPoi(  # Wreckington Ferry Port
 		id_poi = poi_id_wt_port,
@@ -4273,7 +4287,7 @@ poi_list = [
 			"assaultflatsbeachsubway",
 			"assaultflatsbeachsub",
 			"assaultflatsbeachstation",
-			"assaultflatssubwaystaion",
+			"assaultflatssubwaystation",
 			"assaultflatssubway",
 			"assaultflatssub",
 			"assaultflatsstation",
@@ -4293,6 +4307,57 @@ poi_list = [
 		coord = (42, 4),
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_assaultflatsbeach,
+		is_transport_stop = True,
+		transport_lines = set()
+	),
+	EwPoi(  # Assault Flats Beach Subway Station
+		id_poi = poi_id_df_blimp_tower,
+		alias = [
+			"dreadfordblimptower",
+			"dreadfordhblimp",
+			"dreadfordtower",
+			"dreadblimptower",
+			"dreadblimp",
+			"dreadtower",
+			"dfblimptower",
+			"dfblimp",
+			"dftower"
+		],
+		str_name = "The Dreadford Blimp Tower",
+		str_desc = generic_blimp_tower_description, #TODO: add description
+		coord = (1, 23),
+		channel = channel_df_blimp_tower,
+		role = "Dreadford Blimp Tower",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_dreadford,
+		is_transport_stop = True,
+		transport_lines = set()
+	),
+	EwPoi(  # Assault Flats Beach Subway Station
+		id_poi = poi_id_afb_blimp_tower,
+		alias = [
+			"assaultflatsbeachblimptower",
+			"assaultflatsbeachblimp",
+			"assaultflatsbeachtower",
+			"assaultflatsblimptower",
+			"assaultflatsblimp",
+			"assaultflatstower",
+			"beachblimptower",
+			"beachblimp",
+			"beachtower",
+			"afbblimptower",
+			"afbblimp",
+			"afbtower"
+		],
+		str_name = "The Assault Flats Beach Blimp Tower",
+		str_desc = generic_blimp_tower_description, #TODO: add description
+		coord = (40, 2),
+		channel = channel_afb_blimp_tower,
+		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
 		is_subzone = True,
 		mother_district = poi_id_assaultflatsbeach,
@@ -4418,6 +4483,18 @@ poi_list = [
 		transport_type = transport_type_subway,
 		default_line = transport_line_subway_white_eastbound,
 		default_stop = poi_id_dt_subway_station
+	),
+	EwPoi(  # Blimp
+		id_poi = poi_id_blimp,
+		str_name = "The Blimp",
+		str_desc = generic_blimp_description, # TODO: add description
+		channel = channel_blimp,
+		role = "Blimp",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_blimp,
+		default_line = transport_line_blimp_df_to_afb,
+		default_stop = poi_id_df_blimp_tower
 	)
 ]
 
@@ -4715,6 +4792,58 @@ transport_lines = [
 		schedule = {
 			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
+		    }
+
+		),
+	EwTransportLine( # blimp line from dreadford to assault flats beach
+		id_line = transport_line_blimp_df_to_afb,
+		alias = [
+			"assaultflatsbeachblimp",
+			"assaultflatsblimp",
+			"beachblimp",
+			"afbblimp",
+			"blimptoassaultflatsbeach",
+			"blimptoassaultflats",
+			"blimptobeach",
+			"blimptoafb"
+		    ],
+		first_stop = poi_id_df_blimp_tower,
+		last_stop = poi_id_afb_blimp_tower,
+		next_line = transport_line_blimp_afb_to_df,
+		str_name = "The blimp line towards Assault Flats Beach",
+		schedule = {
+			poi_id_df_blimp_tower : [60, poi_id_jaywalkerplain],
+			poi_id_jaywalkerplain : [40, poi_id_northsleezeborough],
+			poi_id_northsleezeborough : [40, poi_id_krakbay],
+			poi_id_krakbay : [40, poi_id_downtown],
+			poi_id_downtown : [40, poi_id_greenlightdistrict],
+			poi_id_greenlightdistrict : [40, poi_id_vagrantscorner],
+			poi_id_vagrantscorner : [40, poi_id_afb_blimp_tower]
+		    }
+
+		),
+	EwTransportLine( # blimp line from assault flats beach to dreadford
+		id_line = transport_line_blimp_afb_to_df,
+		alias = [
+			"dreadfordblimp",
+			"dreadblimp",
+			"dfblimp",
+			"blimptodreadford",
+			"blimptodread",
+			"blimptodf"
+		    ],
+		first_stop = poi_id_afb_blimp_tower,
+		last_stop = poi_id_df_blimp_tower,
+		next_line = transport_line_blimp_df_to_afb,
+		str_name = "The blimp line towards Dreadford",
+		schedule = {
+			poi_id_afb_blimp_tower : [60, poi_id_vagrantscorner],
+			poi_id_vagrantscorner : [40, poi_id_greenlightdistrict],
+			poi_id_greenlightdistrict : [40, poi_id_downtown],
+			poi_id_downtown : [40, poi_id_krakbay],
+			poi_id_krakbay : [40, poi_id_northsleezeborough],
+			poi_id_northsleezeborough : [40, poi_id_jaywalkerplain],
+			poi_id_jaywalkerplain : [40, poi_id_df_blimp_tower]
 		    }
 
 		)

@@ -8,6 +8,7 @@ import ewrolemgr
 
 from ew import EwUser
 from ewutils import EwResponseContainer
+from ewdistrict import EwDistrict
 
 
 """
@@ -116,7 +117,7 @@ class EwTransport:
 
 					next_line = transport_line
 
-					if stop_data.id_poi != ewcfg.poi_id_slimesea:
+					if stop_data.is_transport_stop:
 						response += " You may exit now."
 
 					if stop_data.id_poi == transport_line.last_stop:
@@ -124,16 +125,25 @@ class EwTransport:
 						response += " This {} will proceed on {}.".format(self.transport_type, next_line.str_name.replace("The", "the"))
 					else:
 						next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
-						if next_stop.is_subzone:
-							stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
-							response += " The next stop is {}.".format(stop_mother.str_name)
-						else:
-							response += " The next stop is {}.".format(next_stop.str_name)
+						if next_stop.is_transport_stop:
+							if next_stop.is_subzone:
+								stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
+								response += " The next stop is {}.".format(stop_mother.str_name)
+							else:
+								response += " The next stop is {}.".format(next_stop.str_name)
 					resp_cont.add_channel_response(poi_data.channel, response)
 
 					# announce transport has arrived at the stop
-					response = "{} has arrived. You may board now.".format(next_line.str_name)
-					resp_cont.add_channel_response(stop_data.channel, response)
+					if stop_data.is_transport_stop:
+						response = "{} has arrived. You may board now.".format(next_line.str_name)
+						resp_cont.add_channel_response(stop_data.channel, response)
+					elif self.transport_type == ewcfg.transport_type_ferry:
+						response = "{} sails by.".format(next_line.str_name)
+						resp_cont.add_channel_response(stop_data.channel, response)
+					elif self.transport_type == ewcfg.transport_type_blimp:
+						response = "{} flies overhead.".format(next_line.str_name)
+						resp_cont.add_channel_response(stop_data.channel, response)
+
 
 					last_messages = await resp_cont.post()
 
@@ -297,6 +307,7 @@ async def disembark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
+	resp_cont = EwResponseContainer(client = cmd.client, id_server = user_data.id_server)
 
 	# can only disembark when you're on a transport vehicle
 	if user_data.poi in ewcfg.transports:
@@ -325,22 +336,52 @@ async def disembark(cmd):
 		if user_data.poi != transport_data.poi:
 			return
 
+		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
+
 		# juvies can't swim
 		if transport_data.current_stop == ewcfg.poi_id_slimesea and user_data.life_state != ewcfg.life_state_corpse:
+			if user_data.life_state == ewcfg.life_state_kingpin:
+				response = "You try to heave yourself over the railing as you're hit by a sudden case of sea sickness. You puke into the sea and sink back on deck."
+				response = ewutils.formatMessage(cmd.message.author, response)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
 			deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
 			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
+
+			response = "{} jumps over the railing of the ferry and promptly drowns in the slime sea.".format(cmd.message.author.display_name)
+			resp_cont.add_channel_response(channel = ewcfg.channel_slimesea, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			return await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+		# they also can't fly
+		elif transport_data.transport_type == ewcfg.transport_type_blimp and not stop_poi.is_transport_stop and user_data.life_state != ewcfg.life_state_corpse:
+			if user_data.life_state == ewcfg.life_state_kingpin:
+				response = "Your life flashes before your eyes, as you plummet towards your certain death. A lifetime spent being a piece of shit and playing videogames all day. You close your eyes and... BOING! You open your eyes gain to see a crew of workers transporting the trampoline that broke your fall. You get up and dust yourself off, sighing heavily."
+				response = ewutils.formatMessage(cmd.message.author, response)
+				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
+				user_data.poi = stop_poi.id_poi
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				return await resp_cont.post()
+
+			district_data = EwDistrict(id_server = user_data.id_server, district = stop_poi.id_poi)
+			district_data.change_slimes(n = user_data.slimes)
+			district_data.persist()
+			user_data.die(cause = ewcfg.cause_falling)
+			user_data.persist()
+			deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
+			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
+			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
+			response = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
+			resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			
 		# update user location, if move successful
 		else:
 			user_data.poi = transport_data.current_stop
 			user_data.persist()
-			stop_poi = ewcfg.id_to_poi.get(user_data.poi)
 			response = "You enter {}".format(stop_poi.str_name)
 			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+		return await resp_cont.post()
 	else:
 		response = "You are not currently riding any transport."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
