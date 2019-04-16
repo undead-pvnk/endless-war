@@ -362,7 +362,7 @@ async def on_ready():
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
-		ewcfg.poi_neighbors[poi.id_poi] = neighbor_ids
+		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
