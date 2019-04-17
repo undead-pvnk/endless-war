@@ -176,7 +176,7 @@ class EwStock:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}, {total_profits}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 			id_server = ewcfg.col_id_server,
 			stock = ewcfg.col_stock,
 			market_rate = ewcfg.col_market_rate,
@@ -220,24 +220,26 @@ class EwCompany:
 
 				if result != None:
 					# Record found: apply the data to this object.
-					self.recent_profits = result[0]
-					self.total_profits = result[1]
+					self.recent_profits = result[0][0]
+					self.total_profits = result[0][1]
 				else:
 					# Create a new database entry if the object is missing.
 					self.persist()
 			except:
-				ewutils.logMsg("Failed to retrieve company {} from database.".format(stock))
+				ewutils.logMsg("Failed to retrieve company {} from database.".format(self.id_stock))
 
 
 	""" Save company data object to the database. """
 	def persist(self):
 		try:
-			ewutils.execute_sql_query("REPLACE INTO companies({id_server}, {stock}) VALUES(%s,%s)".format(
+			ewutils.execute_sql_query("REPLACE INTO companies({recent_profits}, {total_profits}, {id_server}, {stock}) VALUES(%s,%s,%s,%s)".format(
+				recent_profits = ewcfg.col_recent_profits,
+				total_profits = ewcfg.col_total_profits,
 				id_server = ewcfg.col_id_server,
 				stock = ewcfg.col_stock
-			    ), (id_server, stock ))
+			    ), (self.recent_profits, self.total_profits, self.id_server, self.id_stock ))
 		except:
-			ewutils.logMsg("Failed to retrieve company {} from database.".format(stock))
+			ewutils.logMsg("Failed to save company {} to the database.".format(self.id_stock))
 
 """ player invests slimecoin in the market """
 async def invest(cmd):
@@ -715,13 +717,9 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 		values = []
 
 		try:
-			# Get database handles if they weren't passed.
-			conn_info = databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
 
 			count = int(count)
-			cursor.execute("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
+			data = ewutils.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
 				stock = ewcfg.col_stock,
 				total_shares = ewcfg.col_total_shares,
 				id_server = ewcfg.col_id_server,
@@ -732,7 +730,7 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 				(count if (count > 0) else 2)
 			))
 
-			for row in cursor.fetchall():
+			for row in data:
 				values.append(row[0])
 
 			# Make sure we return at least one value.
@@ -743,12 +741,10 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 			value_last = values[-1]
 			while len(values) < count:
 				values.append(value_last)
+		except:
+			pass
 		finally:
-			# Clean up the database handles.
-			cursor.close()
-			databaseClose(conn_info)
-
-		return values
+			return values
 
 """" returns the total number of shares a player has in a certain stock """
 def getUserTotalShares(id_server=None, stock=None, id_user=None):
@@ -757,12 +753,8 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 		values = 0
 
 		try:
-			# Get database handles if they weren't passed.
-			conn_info = databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
 
-			cursor.execute("SELECT {shares} FROM {shares} WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {shares} FROM {shares} WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
 				stock = ewcfg.col_stock,
 				shares = ewcfg.col_shares,
 				id_server = ewcfg.col_id_server,
@@ -773,13 +765,11 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 				stock,
 			))
 
-			for row in cursor.fetchall():
+			for row in data:
 				values = row[0]
-
+		except:
+			pass
 		finally:
-			# Clean up the database handles.
-			cursor.close()
-			databaseClose(conn_info)
 			return values
 
 """" updates the total number of shares a player has in a certain stock """
@@ -789,12 +779,8 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 		values = 0
 
 		try:
-			# Get database handles if they weren't passed.
-			conn_info = databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor()
 
-			cursor.execute("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
+			ewutils.execute_sql_query("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
 				stock = ewcfg.col_stock,
 				shares = ewcfg.col_shares,
 				id_server = ewcfg.col_id_server,
@@ -805,9 +791,7 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 				stock,
 				shares,
 			))
+		except:
+			pass
 
-		finally:
-			# Clean up the database handles.
-			cursor.close()
-			databaseClose(conn_info)
 
