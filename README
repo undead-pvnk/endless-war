@@ -16,7 +16,7 @@ CREATE TABLE users (
 	id_killer varchar(128) NOT NULL DEFAULT '',
 	time_lastspar int NOT NULL DEFAULT '0',
 	time_lasthaunt int NOT NULL DEFAULT '0',
-	slimecredit bigint NOT NULL DEFAULT '0',
+	slimecoin bigint NOT NULL DEFAULT '0',
 	time_lastinvest int NOT NULL DEFAULT '0',
 	slimelevel int NOT NULL DEFAULT '1',
 	hunger int NOT NULL DEFAULT '0',
@@ -55,10 +55,6 @@ CREATE TABLE stats (
 
 CREATE TABLE markets (
 	id_server varchar(128) NOT NULL,
-	slimes_casino bigint NOT NULL DEFAULT '0',
-	rate_market bigint NOT NULL DEFAULT '1000',
-	rate_exchange bigint NOT NULL DEFAULT '1000000',
-	boombust int NOT NULL DEFAULT '0',
 	time_lasttick int NOT NULL DEFAULT '0',
 	slimes_revivefee bigint NOT NULL DEFAULT '0',
 	negaslime bigint NOT NULL DEFAULT '0',
@@ -69,6 +65,26 @@ CREATE TABLE markets (
 
 
 	PRIMARY KEY (id_server)
+);
+
+CREATE TABLE stocks (
+	id_server varchar(128) NOT NULL,
+    stock varchar(64) NOT NULL,
+	market_rate bigint NOT NULL DEFAULT '1000',
+	exchange_rate bigint NOT NULL DEFAULT '1000000',
+	boombust int NOT NULL DEFAULT '0',
+	total_shares bigint NOT NULL DEFAULT '0',
+	timestamp bigint NOT NULL DEFAULT '0'
+);
+
+CREATE TABLE shares (
+    id_server varchar(128) NOT NULL,
+   	id_user varchar(128) NOT NULL,
+    stock varchar(64) NOT NULL,
+    shares bigint NOT NULL DEFAULT '0',
+
+
+    PRIMARY KEY (id_server, id_user, stock)
 );
 
 CREATE TABLE weaponskills (

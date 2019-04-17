@@ -42,7 +42,9 @@ import ewdistrict
 import ewquadrants
 
 from ewitem import EwItem
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
+from ewmarket import EwStock
 from ewdistrict import EwDistrict
 
 ewutils.logMsg('Starting up...')
@@ -167,15 +169,31 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
-	# Show the player's slime credit.
-	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
+	# Show the player's slime coin.
+	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
 
+	# Invest slimecoin into a stock
+	ewcfg.cmd_invest: ewmarket.invest,
+
+	# Withdraw slimecoin from your shares
+	ewcfg.cmd_withdraw: ewmarket.withdraw,
+
+	# show the exchange rate of a given stock
+	ewcfg.cmd_exchangerate: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+
+	# show player's current shares in a compant
+	ewcfg.cmd_shares: ewmarket.shares,
+
+	# check available stocks
+	ewcfg.cmd_stocks: ewmarket.stocks,
 
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
@@ -519,12 +537,28 @@ async def on_ready():
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
 					market_data.time_lasttick = time_now
 
+					market_response = ""
+
+					for stock in ewcfg.stocks:
+						s = EwStock(server.id, stock)
+						# we don't update stocks when they were just added
+						if s.timestamp != 0:
+							market_response = market_tick(s, server.id)
+							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
+
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
 
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+
+					if market_data.clock == 6:
+						response = ' The Slime Stock Exchange is now open for business.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+					elif market_data.clock == 18:
+						response = ' The Slime Stock Exchange has closed for the night.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
@@ -856,6 +890,113 @@ async def on_message(message):
 			client = client
 		))
 
+def market_tick(stock_data, id_server):
+	# Nudge the value back to stability.
+	market_rate = stock_data.market_rate
+	if market_rate >= 1030:
+		market_rate -= 10
+	elif market_rate <= 970:
+		market_rate += 10
+
+	# Add participation bonus.
+	active_bonus = 0
+	active_map = active_users_map.get(id_server)
+	if active_map != None:
+		active_bonus = len(active_map)
+
+		if active_bonus > 20:
+			active_bonus = 20
+
+	active_users_map[id_server] = {}
+	market_rate += (active_bonus / 4)
+
+	# Invest/Withdraw effects
+	coin_rate = 0
+	total_shares = ewutils.getRecentTotalShares(id_server, stock_data.id_stock)
+
+	if total_shares[0] != total_shares[1]:
+		# Positive if net investment, negative if net withdrawal.
+		coin_change = (total_shares[0] - total_shares[1])
+		coin_rate = ((coin_change * 1.0) / total_shares[1] if total_shares[1] != 0 else 1)
+
+		if coin_rate > 1.0:
+			coin_rate = 1.0
+		elif coin_rate < -0.5:
+			coin_rate = -0.5
+
+		coin_rate = int((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
+					coin_rate * 2 * ewcfg.max_iw_swing))
+
+	market_rate += coin_rate
+
+	# Tick down the boombust cooldown.
+	if stock_data.boombust < 0:
+		stock_data.boombust += 1
+	elif stock_data.boombust > 0:
+		stock_data.boombust -= 1
+
+	# Adjust the market rate.
+	fluctuation = 0  # (random.randrange(5) - 2) * 100
+	noise = (random.randrange(19) - 9) * 2
+	subnoise = (random.randrange(13) - 6)
+
+	# Some extra excitement!
+	if noise == 0 and subnoise == 0:
+		boombust = (random.randrange(3) - 1) * 200
+
+		# If a boombust occurs shortly after a previous boombust, make sure it's the opposite effect. (Boom follows bust, bust follows boom.)
+		if (stock_data.boombust > 0 and boombust > 0) or (stock_data.boombust < 0 and boombust < 0):
+			boombust *= -1
+
+		if boombust != 0:
+			stock_data.boombust = ewcfg.cd_boombust
+
+			if boombust < 0:
+				stock_data.boombust *= -1
+	else:
+		boombust = 0
+
+	market_rate += fluctuation + noise + subnoise + boombust
+	if market_rate < 300:
+		market_rate = (300 + noise + subnoise)
+
+	percentage = ((market_rate / 10) - 100)
+	percentage_abs = percentage * -1
+
+	# If the value hits 0, we're stuck there forever.
+	if stock_data.exchange_rate <= 100:
+		stock_data.exchange_rate = 100
+
+	stock_data.exchange_rate = int(stock_data.exchange_rate * (market_rate / 1000))
+	stock_data.market_rate = market_rate
+
+	stock_data.persist()
+
+	# Give some indication of how the market is doing to the users.
+	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ewcfg.stock_names.get(stock_data.id_stock) + ' '
+
+	# Market is up ...
+	if market_rate > 1200:
+		response += 'is skyrocketing!!! Slime stock is up {p:.3g}%!!!'.format(p = percentage)
+	elif market_rate > 1100:
+		response += 'is booming! Slime stock is up {p:.3g}%!'.format(p = percentage)
+	elif market_rate > 1000:
+		response += 'is doing well. Slime stock is up {p:.3g}%.'.format(p = percentage)
+	# Market is down ...
+	elif market_rate < 800:
+		response += 'is plummeting!!! Slime stock is down {p:.3g}%!!!'.format(p = percentage_abs)
+	elif market_rate < 900:
+		response += 'is stagnating! Slime stock is down {p:.3g}%!'.format(p = percentage_abs)
+	elif market_rate < 1000:
+		response += 'is a bit sluggish. Slime stock is down {p:.3g}%.'.format(p = percentage_abs)
+	# Perfectly balanced
+	else:
+		response += 'is holding steady. No change in slime stock value.'
+
+	response += ' ' + ewcfg.stock_emotes.get(stock_data.id_stock)
+
+	# Send the announcement.
+	return response
 
 # find our REST API token
 token = ewutils.getToken()

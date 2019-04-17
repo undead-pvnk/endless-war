@@ -1,12 +1,335 @@
 import time
 
-import ewcmd
+# import ewcmd
 import ewitem
 import ewrolemgr
 import ewutils
 import ewcfg
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
+
+class EwMarket:
+	id_server = ""
+
+	clock = 0
+	weather = 'sunny'
+	day = 0
+
+	slimes_casino = 0
+	slimes_revivefee = 0
+
+	market_rate = 1000
+	exchange_rate = 1000000
+	boombust = 0
+	time_lasttick = 0
+	negaslime = 0
+	decayed_slimes = 0
+
+	""" Load the market data for this server from the database. """
+	def __init__(self, id_server = None):
+		if(id_server != None):
+			self.id_server = id_server
+
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor();
+
+				# Retrieve object
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes} FROM markets WHERE id_server = %s".format(
+					time_lasttick = ewcfg.col_time_lasttick,
+					slimes_revivefee = ewcfg.col_slimes_revivefee,
+					negaslime = ewcfg.col_negaslime,
+					clock = ewcfg.col_clock,
+					weather = ewcfg.col_weather,
+					day = ewcfg.col_day,
+					decayed_slimes = ewcfg.col_decayed_slimes
+				), (self.id_server, ))
+				result = cursor.fetchone();
+
+				if result != None:
+					# Record found: apply the data to this object.
+					self.time_lasttick = result[0]
+					self.slimes_revivefee = result[1]
+					self.negaslime = result[2]
+					self.clock = result[3]
+					self.weather = result[4]
+					self.day = result[5]
+					self.decayed_slimes = result[6]
+				else:
+					# Create a new database entry if the object is missing.
+					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
+
+					conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
+	""" Save market data object to the database. """
+	def persist(self):
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			# Save the object.
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+				id_server = ewcfg.col_id_server,
+				time_lasttick = ewcfg.col_time_lasttick,
+				slimes_revivefee = ewcfg.col_slimes_revivefee,
+				negaslime = ewcfg.col_negaslime,
+				clock = ewcfg.col_clock,
+				weather = ewcfg.col_weather,
+				day = ewcfg.col_day,
+				decayed_slimes = ewcfg.col_decayed_slimes
+			), (
+				self.id_server,
+				self.time_lasttick,
+				self.slimes_revivefee,
+				self.negaslime,
+				self.clock,
+				self.weather,
+				self.day,
+				self.decayed_slimes
+			))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+
+class EwStock:
+	id_server = ""
+
+	# The stock's identifying string
+	id_stock = ""
+
+	market_rate = 1000
+
+	exchange_rate = 1000000
+
+	boombust = 0
+
+	total_shares = 0
+
+	timestamp = 0
+
+	previous_entry = 0
+
+	def __init__(self, id_server = None, stock = None):
+		if id_server is not None and stock is not None:
+			self.id_server = id_server
+			self.id_stock = stock
+
+			data = ewutils.execute_sql_query("SELECT {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp} FROM stocks WHERE id_server = %s AND {stock} = %s ORDER BY {timestamp} DESC".format(
+				stock = ewcfg.col_stock,
+				market_rate = ewcfg.col_market_rate,
+				exchange_rate = ewcfg.col_exchange_rate,
+				boombust = ewcfg.col_boombust,
+				total_shares = ewcfg.col_total_shares,
+				timestamp = ewcfg.col_timestamp
+			), (
+				id_server,
+				stock
+			))
+
+			# slimecoin_total = ewutils.execute_sql_query()
+
+			if len(data) > 0:  # if data is not empty, i.e. it found an entry
+				# data is always a two-dimensional array and if we only fetch one row, we have to type data[0][x]
+				self.id_stock = data[0][0]
+				self.market_rate = data[0][1]
+				self.exchange_rate = data[0][2]
+				self.boombust = data[0][3]
+				self.total_shares = data[0][4]
+				self.timestamp = data[0][5]
+				self.previous_entry = data[1] if len(data) > 1 else 0 #gets the previous stock
+			else:  # create new entry
+				ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {timestamp}) VALUES (%s, %s, %s)".format(
+					id_server = ewcfg.col_id_server,
+					stock = ewcfg.col_stock,
+					timestamp = ewcfg.col_timestamp
+				), (
+					id_server,
+					stock,
+					time.time(),
+				))
+
+	def persist(self):
+		ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+			id_server = ewcfg.col_id_server,
+			stock = ewcfg.col_stock,
+			market_rate = ewcfg.col_market_rate,
+			exchange_rate = ewcfg.col_exchange_rate,
+			boombust = ewcfg.col_boombust,
+			total_shares = ewcfg.col_total_shares,
+			timestamp = ewcfg.col_timestamp
+		), (
+			self.id_server,
+			self.id_stock,
+			self.market_rate,
+			self.exchange_rate,
+			self.boombust,
+			self.total_shares,
+			time.time(),
+		))
+
+""" player invests slime in the market """
+async def invest(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	time_now = int(time.time())
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return
+
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		# Limit frequency of investments.
+		response = ewcfg.str_exchange_busy.format(action = "invest")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
+	if ewcfg.role_rowdyfucker in roles_map_user or ewcfg.role_copkiller in roles_map_user:
+		# Disallow investments by RF and CK kingpins.
+		response = "You're too powerful to be playing the market."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		value = None
+		stock = None
+
+		if cmd.tokens_count > 1:
+			for token in cmd.tokens[1:]:
+				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
+					value = ewutils.getIntToken(cmd.tokens, allow_all = True)
+					break
+			for token in cmd.tokens[1:]:
+				if token.lower() in ewcfg.stocks:
+					stock = token
+					break
+
+
+		if value != None:
+			if value < 0:
+				value = user_data.slimecoin
+			if value <= 0:
+				value = None
+
+		if value != None:
+			if stock != None:
+
+				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+				# basic exchange rate / 1000 = 1 share
+				exchange_rate = (stock.exchange_rate / 1000.0)
+
+				cost_total = int(value * 1.05)
+
+				# gets the highest value possible where the player can still pay the fee
+				if value == user_data.slimecoin:
+					while cost_total > user_data.slimecoin:
+						value -= cost_total - value
+						cost_total = int(value * 1.05)
+
+				# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
+				net_shares = int(value / exchange_rate)
+
+				if user_data.slimecoin < cost_total:
+					response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
+
+				elif value > user_data.slimecoin:
+					response = "You don't have that much SlimeCoin to invest."
+
+				elif net_shares == 0:
+					response = "You don't have enough SlimeCoin to buy a share in {stock}".format(stock = ewcfg.stock_names.get(stock.id_stock))
+
+				else:
+					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.stat_total_slimecoin_invested)
+					shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
+					shares += net_shares
+					ewutils.updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = shares)
+					user_data.time_lastinvest = time_now
+
+					stock.total_shares += net_shares
+					response = "You invest {coin} SlimeCoin and receive {shares} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
+
+					user_data.persist()
+					stock.persist()
+
+			else:
+				response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
+
+		else:
+			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "invest")
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+""" player withdraws slime from the market """
+async def withdraw(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	time_now = int(time.time())
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		value = None
+		stock = None
+
+		if cmd.tokens_count > 1:
+			for token in cmd.tokens[1:]:
+				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
+					value = ewutils.getIntToken(cmd.tokens, allow_all = True)
+					break
+			for token in cmd.tokens[1:]:
+				if token.lower() in ewcfg.stocks:
+					stock = token
+					break
+
+		total_shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock, id_user = user_data.id_user)
+
+		if value != None:
+			if value < 0:
+				value = total_shares
+			if value <= 0:
+				value = None
+
+		if value != None:
+			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+
+			if value <= total_shares:
+				exchange_rate = (stock.exchange_rate / 1000.0)
+
+				shares = value
+				slimecoin = int(value * exchange_rate)
+
+				if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+					# Limit frequency of withdrawals
+					response = ewcfg.str_exchange_busy.format(action = "withdraw")
+				else:
+					user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.stat_total_slimecoin_withdrawn)
+					total_shares -= shares
+					user_data.time_lastinvest = time_now
+					stock.total_shares -= shares
+
+					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+					user_data.persist()
+					stock.persist()
+					ewutils.updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
+			else:
+				response = "You don't have that many shares in {stock} to exchange.".format(stock = ewcfg.stock_names.get(stock.id_stock))
+		else:
+			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
@@ -49,7 +372,7 @@ async def donate(cmd):
 		else:
 			# Do the transfer if the player can afford it.
 			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
-			user_data.change_slimecredit(n = coin_total, coinsource = ewcfg.coinsource_donation)
+			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
 			user_data.time_lastinvest = time_now
 
 			# Persist changes
@@ -103,7 +426,7 @@ async def xfer(cmd):
 	# Parse the slime value to send.
 	value = None
 	if cmd.tokens_count > 1:
-		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+		value = ewutils.getIntToken(tokens = cmd.tokens)
 
 	if value != None:
 		if value < 0:
@@ -115,12 +438,12 @@ async def xfer(cmd):
 		# Cost including the 5% transfer fee.
 		cost_total = int(value * 1.05)
 
-		if user_data.slimecredit < cost_total:
-			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecredit, cost_total)
+		if user_data.slimecoin < cost_total:
+			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
 		else:
 			# Do the transfer if the player can afford it.
-			target_data.change_slimecredit(n = value, coinsource = ewcfg.coinsource_transfer)
-			user_data.change_slimecredit(n = -cost_total, coinsource = ewcfg.coinsource_transfer)
+			target_data.change_slimecoin(n = value, coinsource = ewcfg.coinsource_transfer)
+			user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_transfer)
 			user_data.time_lastinvest = time_now
 
 			# Persist changes
@@ -134,18 +457,77 @@ async def xfer(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
+""" show the current market exchange rate """
+async def rate(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = "You must go to the Slime Stock Exchange to check the current stock exchange rates ."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		stock = None
+
+		if cmd.tokens_count > 0:
+			stock = ewutils.formatNiceList(cmd.tokens[1:])
+
+		if stock in ewcfg.stocks:
+			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+			response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(stock.exchange_rate / 1000.0))
+		else:
+			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+		# Send the response to the player.
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" show player's shares in a stock """
+async def shares(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	stock = None
+
+	if cmd.tokens_count > 0:
+		stock = ewutils.formatNiceList(cmd.tokens[1:])
+
+	if stock in ewcfg.stocks:
+		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+		shares = ewutils.getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
+		shares_value = int(shares * (stock.exchange_rate / 1000.0))
+
+		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
+	else:
+		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" show all interactable stocks in the market """
+async def stocks(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_stockexchange:
+		# Only allowed in the stock exchange.
+		response = "You must go to the Slime Stock Exchange to check the currently available stocks."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+			response = "Here are the currently available stocks: {}".format(ewutils.formatNiceList(ewcfg.stocks))
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 """ show player's slimecoin balance """
 async def slimecoin(cmd):
-	response = ""
-	user_data = None
-
 	if cmd.mentions_count == 0:
-		coins = EwUser(member = cmd.message.author).slimecredit
+		coins = EwUser(member = cmd.message.author).slimecoin
 		response = "You have {:,} SlimeCoin.".format(coins)
 	else:
 		member = cmd.mentions[0]
-		coins = EwUser(member = member).slimecredit
+		coins = EwUser(member = member).slimecoin
 		response = "{} has {:,} SlimeCoin.".format(member.display_name, coins)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+

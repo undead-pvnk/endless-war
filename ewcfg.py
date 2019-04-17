@@ -227,13 +227,17 @@ cmd_slimeskat_hand = cmd_prefix + 'skathand'
 cmd_slimeskat_choose = cmd_prefix + 'skatchoose'
 cmd_deadmega = cmd_prefix + 'deadmega'
 cmd_donate = cmd_prefix + 'donate'
-cmd_slimecredit = cmd_prefix + 'slimecoin'
-cmd_slimecredit_alt1 = cmd_prefix + 'slimecredit'
-cmd_slimecredit_alt2 = cmd_prefix + 'coin'
-cmd_slimecredit_alt3 = cmd_prefix + 'sc'
+cmd_slimecoin = cmd_prefix + 'slimecoin'
+cmd_slimecoin_alt1 = cmd_prefix + 'slimecredit'
+cmd_slimecoin_alt2 = cmd_prefix + 'coin'
+cmd_slimecoin_alt3 = cmd_prefix + 'sc'
+cmd_invest = cmd_prefix + 'invest'
 cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
 cmd_exchangerate_alt1 = cmd_prefix + 'exchange'
+cmd_exchangerate_alt2 = cmd_prefix + 'rate'
+cmd_shares = cmd_prefix + 'shares'
+cmd_stocks = cmd_prefix + 'stocks'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
@@ -564,7 +568,7 @@ col_totaldamage = 'totaldamage'
 col_weapon = 'weapon'
 col_weaponskill = 'weaponskill'
 col_trauma = 'trauma'
-col_slimecredit = 'slimecredit'
+col_slimecoin = 'slimecoin'
 col_time_lastkill = 'time_lastkill'
 col_time_lastrevive = 'time_lastrevive'
 col_id_killer = 'id_killer'
@@ -614,10 +618,6 @@ col_stat_metric = 'stat_metric'
 col_stat_value = 'stat_value'
 
 # Database columns for markets
-col_rate_market = 'rate_market'
-col_rate_exchange = 'rate_exchange'
-col_slimes_casino = 'slimes_casino'
-col_boombust = 'boombust'
 col_time_lasttick = 'time_lasttick'
 col_slimes_revivefee = 'slimes_revivefee'
 col_negaslime = 'negaslime'
@@ -626,9 +626,19 @@ col_weather = 'weather'
 col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
 
+# Database columns for stocks
+col_stock = 'stock'
+col_market_rate = 'market_rate'
+col_exchange_rate = 'exchange_rate'
+col_boombust = 'boombust'
+col_total_shares = 'total_shares'
+
+# Database columns for shares
+col_shares = 'shares'
+
 # Database columns for stats
 col_total_slime = 'total_slime'
-col_total_slimecredit = 'total_slimecredit'
+col_total_slimecoin = 'total_slimecoin'
 col_total_players = 'total_players'
 col_total_players_pvp = 'total_players_pvp'
 col_timestamp = 'timestamp'
@@ -662,7 +672,7 @@ rarity_princeps = "Princeps"
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"
-leaderboard_slimecredit = "SLIMECOIN BARONS"
+leaderboard_slimecoin = "SLIMECOIN BARONS"
 leaderboard_ghosts = "ANTI-SLIMIEST"
 leaderboard_podrins = "PODRIN LORDS"
 leaderboard_bounty = "MOST WANTED"
@@ -744,13 +754,15 @@ stat_lifetime_kills = 'lifetime_kills'
 stat_lifetime_ganks = 'lifetime_ganks'
 stat_lifetime_takedowns = 'lifetime_takedowns'
 stat_max_wepskill = 'max_wep_skill'
-stat_max_slimecredit = 'max_slime_coins'
-stat_lifetime_slimecredit = 'lifetime_slime_coins'
-stat_slimecredit_spent_on_revives = 'slimecoins_spent_on_revives'
+stat_max_slimecoin = 'max_slime_coins'
+stat_lifetime_slimecoin = 'lifetime_slime_coins'
+stat_slimecoin_spent_on_revives = 'slimecoins_spent_on_revives'
 stat_biggest_casino_win = 'biggest_casino_win'
 stat_biggest_casino_loss = 'biggest_casino_loss'
 stat_lifetime_casino_winnings = 'lifetime_casino_winnings'
 stat_lifetime_casino_losses = 'lifetime_casino_losses'
+stat_total_slimecoin_invested = 'total_slimecoin_invested'
+stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -791,6 +803,8 @@ coinsource_bounty = 2
 coinsource_revival = 3
 coinsource_casino = 4
 coinsource_transfer = 5
+coinsource_invest = 6
+coinsource_withdraw = 7
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -4840,6 +4854,27 @@ quadrants_comments_relationship = [
 		"Have you no shame...?",
 		"Lke that's gonna last."
 	]
+
+# list of stock ids
+stocks = [
+	"kfc",
+	"pizzahut",
+	"tacobell",
+]
+
+# Stock names
+stock_names = {
+	"kfc" : "Kentucky Fried Chicken",
+	"pizzahut" : "Pizza Hut",
+	"tacobell" : "Taco Bell",
+}
+
+#  Stock emotes
+stock_emotes = {
+    "kfc" : emote_kfc,
+    "pizzahut" : emote_pizzahut,
+    "tacobell" : emote_tacobell
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

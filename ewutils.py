@@ -776,3 +776,106 @@ async def edit_message(client, message, text):
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
 
+""" Returns an array of the most recent counts of all invested slime coin, from newest at 0 to oldest. """
+def getRecentTotalShares(id_server=None, stock=None, count=2):
+	if id_server != None and stock != None:
+
+		values = []
+
+		try:
+			# Get database handles if they weren't passed.
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			count = int(count)
+			cursor.execute("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
+				stock = ewcfg.col_stock,
+				total_shares = ewcfg.col_total_shares,
+				id_server = ewcfg.col_id_server,
+				timestamp = ewcfg.col_timestamp,
+			), (
+				id_server,
+				stock,
+				(count if (count > 0) else 2)
+			))
+
+			for row in cursor.fetchall():
+				values.append(row[0])
+
+			# Make sure we return at least one value.
+			if len(values) == 0:
+				values.append(0)
+
+			# If we don't have enough data, pad out to count with the last value in the array.
+			value_last = values[-1]
+			while len(values) < count:
+				values.append(value_last)
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
+		return values
+
+"""" returns the total number of shares a player has in a certain stock """
+def getUserTotalShares(id_server=None, stock=None, id_user=None):
+	if id_server != None and stock != None and id_user != None:
+
+		values = 0
+
+		try:
+			# Get database handles if they weren't passed.
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("SELECT {shares} FROM {shares} WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+				stock = ewcfg.col_stock,
+				shares = ewcfg.col_shares,
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user
+			), (
+				id_server,
+				id_user,
+				stock,
+			))
+
+			for row in cursor.fetchall():
+				values = row[0]
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+			return values
+
+"""" updates the total number of shares a player has in a certain stock """
+def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
+	if id_server != None and stock != None and id_user != None:
+
+		values = 0
+
+		try:
+			# Get database handles if they weren't passed.
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			cursor.execute("REPLACE INTO shares({id_server}, {id_user}, {stock}, {shares}) VALUES(%s, %s, %s, %s)".format(
+				stock = ewcfg.col_stock,
+				shares = ewcfg.col_shares,
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user
+			), (
+				id_server,
+				id_user,
+				stock,
+				shares,
+			))
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
