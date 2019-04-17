@@ -535,7 +535,6 @@ async def on_ready():
 				market_data = EwMarket(id_server = server.id)
 
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
-					market_data.time_lasttick = time_now
 
 					market_response = ""
 
@@ -543,8 +542,11 @@ async def on_ready():
 						s = EwStock(server.id, stock)
 						# we don't update stocks when they were just added
 						if s.timestamp != 0:
-							market_response = market_tick(s, server.id)
+							s.timestamp = time_now
+							market_response = ewmarket.market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
+
+					market_data.time_lasttick = time_now
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
@@ -890,113 +892,6 @@ async def on_message(message):
 			client = client
 		))
 
-def market_tick(stock_data, id_server):
-	# Nudge the value back to stability.
-	market_rate = stock_data.market_rate
-	if market_rate >= 1030:
-		market_rate -= 10
-	elif market_rate <= 970:
-		market_rate += 10
-
-	# Add participation bonus.
-	active_bonus = 0
-	active_map = active_users_map.get(id_server)
-	if active_map != None:
-		active_bonus = len(active_map)
-
-		if active_bonus > 20:
-			active_bonus = 20
-
-	active_users_map[id_server] = {}
-	market_rate += (active_bonus / 4)
-
-	# Invest/Withdraw effects
-	coin_rate = 0
-	total_shares = ewutils.getRecentTotalShares(id_server, stock_data.id_stock)
-
-	if total_shares[0] != total_shares[1]:
-		# Positive if net investment, negative if net withdrawal.
-		coin_change = (total_shares[0] - total_shares[1])
-		coin_rate = ((coin_change * 1.0) / total_shares[1] if total_shares[1] != 0 else 1)
-
-		if coin_rate > 1.0:
-			coin_rate = 1.0
-		elif coin_rate < -0.5:
-			coin_rate = -0.5
-
-		coin_rate = int((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
-					coin_rate * 2 * ewcfg.max_iw_swing))
-
-	market_rate += coin_rate
-
-	# Tick down the boombust cooldown.
-	if stock_data.boombust < 0:
-		stock_data.boombust += 1
-	elif stock_data.boombust > 0:
-		stock_data.boombust -= 1
-
-	# Adjust the market rate.
-	fluctuation = 0  # (random.randrange(5) - 2) * 100
-	noise = (random.randrange(19) - 9) * 2
-	subnoise = (random.randrange(13) - 6)
-
-	# Some extra excitement!
-	if noise == 0 and subnoise == 0:
-		boombust = (random.randrange(3) - 1) * 200
-
-		# If a boombust occurs shortly after a previous boombust, make sure it's the opposite effect. (Boom follows bust, bust follows boom.)
-		if (stock_data.boombust > 0 and boombust > 0) or (stock_data.boombust < 0 and boombust < 0):
-			boombust *= -1
-
-		if boombust != 0:
-			stock_data.boombust = ewcfg.cd_boombust
-
-			if boombust < 0:
-				stock_data.boombust *= -1
-	else:
-		boombust = 0
-
-	market_rate += fluctuation + noise + subnoise + boombust
-	if market_rate < 300:
-		market_rate = (300 + noise + subnoise)
-
-	percentage = ((market_rate / 10) - 100)
-	percentage_abs = percentage * -1
-
-	# If the value hits 0, we're stuck there forever.
-	if stock_data.exchange_rate <= 100:
-		stock_data.exchange_rate = 100
-
-	stock_data.exchange_rate = int(stock_data.exchange_rate * (market_rate / 1000))
-	stock_data.market_rate = market_rate
-
-	stock_data.persist()
-
-	# Give some indication of how the market is doing to the users.
-	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ewcfg.stock_names.get(stock_data.id_stock) + ' '
-
-	# Market is up ...
-	if market_rate > 1200:
-		response += 'is skyrocketing!!! Slime stock is up {p:.3g}%!!!'.format(p = percentage)
-	elif market_rate > 1100:
-		response += 'is booming! Slime stock is up {p:.3g}%!'.format(p = percentage)
-	elif market_rate > 1000:
-		response += 'is doing well. Slime stock is up {p:.3g}%.'.format(p = percentage)
-	# Market is down ...
-	elif market_rate < 800:
-		response += 'is plummeting!!! Slime stock is down {p:.3g}%!!!'.format(p = percentage_abs)
-	elif market_rate < 900:
-		response += 'is stagnating! Slime stock is down {p:.3g}%!'.format(p = percentage_abs)
-	elif market_rate < 1000:
-		response += 'is a bit sluggish. Slime stock is down {p:.3g}%.'.format(p = percentage_abs)
-	# Perfectly balanced
-	else:
-		response += 'is holding steady. No change in slime stock value.'
-
-	response += ' ' + ewcfg.stock_emotes.get(stock_data.id_stock)
-
-	# Send the announcement.
-	return response
 
 # find our REST API token
 token = ewutils.getToken()

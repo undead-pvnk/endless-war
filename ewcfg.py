@@ -633,6 +633,10 @@ col_exchange_rate = 'exchange_rate'
 col_boombust = 'boombust'
 col_total_shares = 'total_shares'
 
+# Database columns for companies
+col_total_profits = 'total_profits'
+col_recent_profits = 'recent_profits'
+
 # Database columns for shares
 col_shares = 'shares'
 
@@ -1267,6 +1271,12 @@ vendor_seafood = 'Red Mobster Seafood'	#rate of seafood is 1 slimecoin to 9 hung
 vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
 vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and Red Mobster
 vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
+
+# stock ids
+stock_kfc = "kfc"
+stock_pizzahut = "pizzahut"
+stock_tacobell = "tacobell"
+
 
 # A map of name to EwWeather objects.
 weather_map = {}
@@ -2389,6 +2399,12 @@ for food in food_list:
 
 	for alias in food.alias:
 		food_map[alias] = food
+
+vendor_stock_map = {
+	vendor_kfc : stock_kfc,
+	vendor_pizzahut : stock_pizzahut,
+	vendor_tacobell : stock_tacobell
+	}
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -4857,23 +4873,23 @@ quadrants_comments_relationship = [
 
 # list of stock ids
 stocks = [
-	"kfc",
-	"pizzahut",
-	"tacobell",
+	stock_kfc,
+	stock_pizzahut,
+	stock_tacobell,
 ]
 
 # Stock names
 stock_names = {
-	"kfc" : "Kentucky Fried Chicken",
-	"pizzahut" : "Pizza Hut",
-	"tacobell" : "Taco Bell",
+	stock_kfc : "Kentucky Fried Chicken",
+	stock_pizzahut : "Pizza Hut",
+	stock_tacobell : "Taco Bell",
 }
 
 #  Stock emotes
 stock_emotes = {
-    "kfc" : emote_kfc,
-    "pizzahut" : emote_pizzahut,
-    "tacobell" : emote_tacobell
+    stock_kfc : emote_kfc,
+    stock_pizzahut : emote_pizzahut,
+    stock_tacobell : emote_tacobell
 }
 
 # lists of all the discord server objects served by bot, identified by the server id

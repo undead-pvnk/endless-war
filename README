@@ -67,9 +67,18 @@ CREATE TABLE markets (
 	PRIMARY KEY (id_server)
 );
 
+CREATE TABLE companies (
+	id_server varchar(128) NOT NULL,
+	stock varchar(64) NOT NULL,
+	recent_profits bigint NOT NULL DEFAULT '0',
+	total_profits bigint NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_server, stock)
+);
+
 CREATE TABLE stocks (
 	id_server varchar(128) NOT NULL,
-    stock varchar(64) NOT NULL,
+	stock varchar(64) NOT NULL,
 	market_rate bigint NOT NULL DEFAULT '1000',
 	exchange_rate bigint NOT NULL DEFAULT '1000000',
 	boombust int NOT NULL DEFAULT '0',
@@ -78,13 +87,13 @@ CREATE TABLE stocks (
 );
 
 CREATE TABLE shares (
-    id_server varchar(128) NOT NULL,
-   	id_user varchar(128) NOT NULL,
-    stock varchar(64) NOT NULL,
-    shares bigint NOT NULL DEFAULT '0',
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	stock varchar(64) NOT NULL,
+	shares bigint NOT NULL DEFAULT '0',
 
 
-    PRIMARY KEY (id_server, id_user, stock)
+	PRIMARY KEY (id_server, id_user, stock)
 );
 
 CREATE TABLE weaponskills (

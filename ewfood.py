@@ -6,7 +6,7 @@ import ewitem
 import ewutils
 import ewrolemgr
 from ew import EwUser
-from ewmarket import EwMarket
+from ewmarket import EwMarket, EwCompany, EwStock
 
 """ Food model object """
 class EwFood:
@@ -80,8 +80,20 @@ async def menu(cmd):
 			food_items = []
 			for food_item_name in ewcfg.food_vendor_inv[vendor]:
 				food_item = ewcfg.food_map.get(food_item_name)
+			# increase profits for the stock market
+				if vendor in ewcfg.vendor_stock_map:
+					stock = ewcfg.vendor_stock_map.get(vendor)
+					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
+
+				value = food_item.price
+
+				if stock_data != None:
+					value *= (stock_data.exchange_rate / 1000000) ** 0.2
+
+				value = int(value)
+
 				if food_item != None:
-					food_items.append('{name} ({price})'.format(name=food_item_name, price=food_item.price))
+					food_items.append('{name} ({price})'.format(name=food_item_name, price=value))
 				else:
 					food_items.append(food_item_name)
 
@@ -94,6 +106,7 @@ async def menu(cmd):
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	time_now = int(time.time())
 
 	if (poi == None) or (len(poi.vendors) == 0):
 		# Only allowed in the food court.
@@ -145,6 +158,19 @@ async def order(cmd):
 
 			value = food.price if not togo else food.price * ewcfg.togo_price_increase
 
+			# factor in the current stocks
+			for vendor in food.vendors:
+				if vendor in ewcfg.vendor_stock_map:
+					stock = ewcfg.vendor_stock_map.get(vendor)
+					company_data = EwCompany(id_server = user_data.id_server, stock = stock)
+					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
+					
+
+			if stock_data != None:
+				value *= (stock_data.exchange_rate / 1000000) ** 0.2
+
+			value = int(value)
+
 			# Kingpins eat free.
 			if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
 				value = 0
@@ -158,6 +184,10 @@ async def order(cmd):
 				)
 			else:
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_spending)
+
+				company_data.recent_profits += value
+				company_data.persist()
+
 
 				if not togo:
 
