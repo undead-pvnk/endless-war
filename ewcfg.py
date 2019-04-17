@@ -4366,6 +4366,10 @@ poi_list = [
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
+		alias = [
+			"boat",
+			"f"
+		],
 		str_name = "The Ferry",
 		str_desc = "A modest two-story passenger ferry, built probably 80 years ago. Its faded paint is starting to crack and its creaky wood benches aren’t exactly comfortable. Though it’s not much to look at, you still love riding it. Out here, all you have to think about is the cool wind in your hair, the bright green glow of the Slime Sea searing your eyes, and the New Los Angeles City aka Neo Milwaukee skyline in the distance. You plug in earbuds to drown out the sea captain’s embarrassing Jungle Cruise-tier commentary over the microphone. Good times.",
 		channel = channel_ferry,
@@ -4486,6 +4490,10 @@ poi_list = [
 	),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
+		alias = [
+			"zeppelin",
+			"airship"
+		],
 		str_name = "The Blimp",
 		str_desc = generic_blimp_description, # TODO: add description
 		channel = channel_blimp,
