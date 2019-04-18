@@ -165,7 +165,7 @@ class EwStock:
 				self.timestamp = data[0][5]
 				self.previous_entry = data[1] if len(data) > 1 else 0 #gets the previous stock
 			else:  # create new entry
-				self.timestamp = int(time.time())
+				self.timestamp = time.time()
 				self.market_rate = ewcfg.default_stock_market_rate
 				self.exchange_rate = ewcfg.default_stock_exchange_rate
 				self.persist()
@@ -213,7 +213,7 @@ class EwCompany:
 					stock = ewcfg.col_stock
 				), (self.id_server, self.id_stock))
 
-				if result != None:
+				if len(result) > 0:
 					# Record found: apply the data to this object.
 					self.recent_profits = result[0][0]
 					self.total_profits = result[0][1]
@@ -670,9 +670,10 @@ def market_tick(stock_data, id_server):
 	if stock_data.exchange_rate <= 100:
 		stock_data.exchange_rate = 100
 
-	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * ewcfg.default_stock_exchange_rate)
+	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * ewcfg.default_stock_exchange_rate / ewcfg.default_stock_market_rate)
 
 	percentage = exchange_rate_increase / stock_data.exchange_rate
+	percentage_abs = percentage * -1
 	stock_data.exchange_rate += exchange_rate_increase
 	stock_data.market_rate = market_rate
 

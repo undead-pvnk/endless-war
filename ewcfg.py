@@ -17,7 +17,8 @@ dir_msgqueue = 'msgqueue'
 update_hookstillactive = 60 * 60 * 3
 update_twitch = 60
 update_pvp = 60
-update_market = 900 #15 min
+#update_market = 900 #15 min
+update_market = 60 #15 min
 
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 5
