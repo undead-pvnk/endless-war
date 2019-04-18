@@ -663,8 +663,8 @@ def market_tick(stock_data, id_server):
 	if market_rate < 300:
 		market_rate = (300 + noise + subnoise)
 
-	percentage = ((market_rate / 10) - 100)
-	percentage_abs = percentage * -1
+	#percentage = ((market_rate / 10) - 100)
+	#percentage_abs = percentage * -1
 
 	# If the value hits 0, we're stuck there forever.
 	if stock_data.exchange_rate <= 100:
@@ -674,6 +674,10 @@ def market_tick(stock_data, id_server):
 
 	percentage = exchange_rate_increase / stock_data.exchange_rate
 	percentage_abs = percentage * -1
+
+	points = abs(exchange_rate_increase / 1000)
+
+
 	stock_data.exchange_rate += exchange_rate_increase
 	stock_data.market_rate = market_rate
 
@@ -688,18 +692,18 @@ def market_tick(stock_data, id_server):
 
 	# Market is up ...
 	if market_rate > 1200:
-		response += 'is skyrocketing!!! Slime stock is up {p:.3g}%!!!'.format(p = percentage)
+		response += 'is skyrocketing!!! Slime stock is up {p:.3g} points!!!'.format(p = points)
 	elif market_rate > 1100:
-		response += 'is booming! Slime stock is up {p:.3g}%!'.format(p = percentage)
+		response += 'is booming! Slime stock is up {p:.3g} points!'.format(p = points)
 	elif market_rate > 1000:
-		response += 'is doing well. Slime stock is up {p:.3g}%.'.format(p = percentage)
+		response += 'is doing well. Slime stock is up {p:.3g} points.'.format(p = points)
 	# Market is down ...
 	elif market_rate < 800:
-		response += 'is plummeting!!! Slime stock is down {p:.3g}%!!!'.format(p = percentage_abs)
+		response += 'is plummeting!!! Slime stock is down {p:.3g} points!!!'.format(p = points)
 	elif market_rate < 900:
-		response += 'is stagnating! Slime stock is down {p:.3g}%!'.format(p = percentage_abs)
+		response += 'is stagnating! Slime stock is down {p:.3g} points!'.format(p = points)
 	elif market_rate < 1000:
-		response += 'is a bit sluggish. Slime stock is down {p:.3g}%.'.format(p = percentage_abs)
+		response += 'is a bit sluggish. Slime stock is down {p:.3g} points.'.format(p = points)
 	# Perfectly balanced
 	else:
 		response += 'is holding steady. No change in slime stock value.'
