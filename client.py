@@ -208,9 +208,12 @@ cmd_map = {
 	ewcfg.cmd_halt: ewmap.halt,
 	ewcfg.cmd_halt_alt1: ewmap.halt,
 
-	# Enter and exit public transportation
+	# public transportation
 	ewcfg.cmd_embark: ewtransport.embark,
+	ewcfg.cmd_embark_alt1: ewtransport.embark,
 	ewcfg.cmd_disembark: ewtransport.disembark,
+	ewcfg.cmd_disembark_alt1: ewtransport.disembark,
+	ewcfg.cmd_checkschedule: ewtransport.check_schedule,
 
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,

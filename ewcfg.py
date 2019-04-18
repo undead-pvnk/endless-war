@@ -71,8 +71,8 @@ poi_id_slimesea = "slimesea"
 poi_id_ferry = "ferry"
 poi_id_subway_red01 = "subwayred01"
 poi_id_subway_red02 = "subwayred02"
-poi_id_subway_orange01 = "subwayorange01"
-poi_id_subway_orange02 = "subwayorange02"
+poi_id_subway_yellow01 = "subwayyellow01"
+poi_id_subway_yellow02 = "subwayyellow02"
 poi_id_subway_green01 = "subwaygreen01"
 poi_id_subway_green02 = "subwaygreen02"
 poi_id_subway_white01 = "subwaywhite01"
@@ -155,8 +155,8 @@ transport_line_ferry_wt_to_vc = "ferrywttovc"
 transport_line_ferry_vc_to_wt = "ferryvctowt"
 
 # Subway lines
-transport_line_subway_orange_northbound = "subwayorangenorth"
-transport_line_subway_orange_southbound = "subwayorangesouth"
+transport_line_subway_yellow_northbound = "subwayyellownorth"
+transport_line_subway_yellow_southbound = "subwayyellowsouth"
 transport_line_subway_red_northbound = "subwayrednorth"
 transport_line_subway_red_southbound = "subwayredsouth"
 transport_line_subway_blue_eastbound = "subwayblueeast"
@@ -267,8 +267,8 @@ channel_afb_blimp_tower = "assault-flats-blimp-tower"
 channel_ferry = "ferry"
 channel_subway_red01 = "subway-train-r-01"
 channel_subway_red02 = "subway-train-r-02"
-channel_subway_orange01 = "subway-train-o-01"
-channel_subway_orange02 = "subway-train-o-02"
+channel_subway_yellow01 = "subway-train-y-01"
+channel_subway_yellow02 = "subway-train-y-02"
 channel_subway_green01 = "subway-train-g-01"
 channel_subway_green02 = "subway-train-g-02"
 channel_subway_white01 = "subway-train-w-01"
@@ -366,7 +366,10 @@ cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
 cmd_embark = cmd_prefix + 'embark'
+cmd_embark_alt1 = cmd_prefix + 'board'
 cmd_disembark = cmd_prefix + 'disembark'
+cmd_disembark_alt1 = cmd_prefix + 'alight'
+cmd_checkschedule = cmd_prefix + 'checkschedule'
 cmd_inspect = cmd_prefix + 'inspect'
 cmd_inspect_alt1 = cmd_prefix + 'examine'
 cmd_look = cmd_prefix + 'look'
@@ -637,10 +640,21 @@ str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 
 generic_role_name = 'NLACakaNM'
-generic_subway_description = "A grimy subway train."
-generic_subway_station_description = "A grimy subway station."
-generic_blimp_description = "It's a blimp."
-generic_blimp_tower_description = "So fancy you want to puke."
+
+str_generic_subway_description = "A grimy subway train."
+str_generic_subway_station_description = "A grimy subway station."
+str_blimp_description = "This luxury zeppelin contains all the most exquisite amenities a robber baron in transit could ask for. A dining room, a lounge, a pool table, you know, rich people stuff. Being a huge, highly flammable balloon filled with hydrogen, it is the safest way to travel in the city only because it's out of the price range of most juveniles' budget. It's used by the rich elite to travel from their summer homes in Assault Flats Beach to their winter homes in Dreadford, and vice versa, without having to step foot in the more unsavory parts of the city. It does it's job well and only occasionally bursts into flames."
+str_blimp_tower_description = "So fancy you want to puke."
+str_downtown_station_description = "This large, imposing structure is the central hub for the entire city's rapid transit system. A public transportation powerhouse, it contains connections to every subway line in the city, and for dirt cheap. Inside of it's main terminal, a humongous split-flap display is constantly updating with the times of subway arrivals and departures. Hordes of commuters from all across the city sprint to their connecting trains, or simply spill out into the Downtown streets, ready to have their guts do the same."
+str_red_subway_description = "Red Line trains are strictly uniform, with dull, minimalistic furnishings producing a borderline depressing experience. Almost completely grey aside from it's style guide mandated red accents, everything is purely practical. It provides just enough for its commuting salarymen to get to work in the morning and home at night."
+str_red_subway_station_description = "This sparsely decorated terminal replicates the feeling of riding on a Red Line train, otherwise known as inducing suicidal thoughts. Dim lighting barely illuminates the moldy, stained terminal walls. Inbound and outbound trains arrive and departure one after another with unreal temporal precision. You're not sure if you've ever seen a Red Line train be late. Still doesn't make you like being on one though."
+str_green_subway_description = "Easily the oldest subway line in the city, with the interior design and general cleanliness to prove it. Once cutting edge, it's art deco stylings have begun to deteriorate due to overuse and underfunding. That goes double for the actual trains themselves, with a merely bumpy ride on the Green Line being the height of luxury compared to the far worse potential risks."
+str_green_subway_station_description = "Much like its trains, Green Line terminals have fallen into disrepair. It's vintage aesthetic only exasperating it's crumbling infrastructure, making the whole line seem like a old, dilapidated mess. But, you'll give it one thing, it's pretty cool looking from the perspective of urban exploration. You've dreamed of exploring it's vast, abandoned subway networks ever since you first rode on it. They could lead to anywhere. So close, and yet so mysterious."
+str_blue_subway_description = "Probably the nicest subway line in the city, the Blue Line isn't defined by its poor hygiene or mechanical condition. Instead, it's defined by its relative normality. More-or-less clean floors, brightly lit interiors, upholstery on the seats. These stunning, almost sci-fi levels of perfection are a sight to behold. Wow!"
+str_blue_subway_station_description = "It is clean and well-kempt, just like the Blue Line trains. This relatively pristine subway terminal hosts all manner of unusualities. With limited amounts of graffiti sprayed unto the otherwise sort-of white walls, there's actually some semblance of visual simplicity. For once in this city, your eyes aren't being completely assaulted with information or blinding lights. Boring, this place sucks. Board whatever train you're getting on and get back to killing people as soon as possible."
+str_yellow_subway_description = "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
+str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
+str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -3773,7 +3787,7 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-                str_desc = generic_subway_station_description, #TODO: add description
+                str_desc = str_red_subway_station_description,
 		coord = (9, 6),
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
@@ -3801,7 +3815,7 @@ poi_list = [
 			"ahs"
 		],
 		str_name = "The Astatine Heights Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_red_subway_station_description,
 		coord = (15, 3),
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
@@ -3829,7 +3843,7 @@ poi_list = [
 			"gds"
 		],
 		str_name = "The Gatlingsdale Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_red_subway_station_description,
 		coord = (15, 11),
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
@@ -3857,7 +3871,7 @@ poi_list = [
 			"abs"
 		],
 		str_name = "The Arsonbrook Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_yellow_subway_station_description,
 		coord = (23, 1),
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
@@ -3885,7 +3899,7 @@ poi_list = [
 			"cks"
 		],
 		str_name = "The Cop Killtown Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_red_subway_station_description,
 		coord = (17, 15),
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
@@ -3913,7 +3927,9 @@ poi_list = [
 			"sbs"
 		],
 		str_name = "The Smogsburg Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_green_subway_station_description + \
+                        "\n\n" + str_subway_connecting_sentence.format("yellow") + \
+                        "\n\n" + str_yellow_subway_station_description,
 		coord = (25, 9),
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
@@ -3936,7 +3952,7 @@ poi_list = [
 			"dts"
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_downtown_station_description,
 		coord = (23, 20),
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
@@ -3964,7 +3980,9 @@ poi_list = [
 			"kbs"
 		],
 		str_name = "The Krak Bay Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_green_subway_station_description + \
+                        "\n\n" + str_subway_connecting_sentence.format("yellow") + \
+                        "\n\n" + str_yellow_subway_station_description,
 		coord = (18, 17),
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
@@ -3992,7 +4010,7 @@ poi_list = [
 			"gbs"
 		],
 		str_name = "The Glocksbury Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_green_subway_station_description,
 		coord = (6, 18),
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
@@ -4020,7 +4038,7 @@ poi_list = [
 			"wgbs"
 		],
 		str_name = "The West Glocksbury Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_green_subway_station_description,
 		coord = (2, 14),
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
@@ -4048,7 +4066,7 @@ poi_list = [
 			"jps"
 		],
 		str_name = "The Jaywalker Plain Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_green_subway_station_description,
 		coord = (2, 19),
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
@@ -4076,7 +4094,7 @@ poi_list = [
 			"nsbs"
 		],
 		str_name = "The North Sleezeborough Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_green_subway_station_description,
 		coord = (10, 23),
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
@@ -4104,7 +4122,7 @@ poi_list = [
 			"ssbs"
 		],
 		str_name = "The South Sleezeborough Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_yellow_subway_station_description,
 		coord = (10, 27),
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
@@ -4132,7 +4150,7 @@ poi_list = [
 			"cvs"
 		],
 		str_name = "The Cratersville Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_red_subway_station_description,
 		coord = (21, 30),
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
@@ -4160,7 +4178,7 @@ poi_list = [
 			"wts"
 		],
 		str_name = "The Wreckington Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_red_subway_station_description,
 		coord = (25, 26),
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
@@ -4187,7 +4205,7 @@ poi_list = [
 			"rrs"
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_red_subway_station_description,
 		coord = (29, 21),
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
@@ -4215,7 +4233,7 @@ poi_list = [
 			"glds"
 		],
 		str_name = "The Green Light District Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_blue_subway_station_description,
 		coord = (30, 15),
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
@@ -4243,7 +4261,7 @@ poi_list = [
 			"jrs"
 		],
 		str_name = "The Juvie's Row Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_blue_subway_station_description,
 		coord = (30, 18),
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
@@ -4271,7 +4289,7 @@ poi_list = [
 			"vcs"
 		],
 		str_name = "The Vagrant's Corner Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_blue_subway_station_description,
 		coord = (41, 9),
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
@@ -4303,7 +4321,7 @@ poi_list = [
 			"afbs"
 		],
 		str_name = "The Assault Flats Beach Subway Station",
-		str_desc = generic_subway_station_description, #TODO: add description
+		str_desc = str_blue_subway_station_description,
 		coord = (42, 4),
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
@@ -4327,7 +4345,7 @@ poi_list = [
 			"dftower"
 		],
 		str_name = "The Dreadford Blimp Tower",
-		str_desc = generic_blimp_tower_description, #TODO: add description
+		str_desc = str_blimp_tower_description,
 		coord = (1, 23),
 		channel = channel_df_blimp_tower,
 		role = "Dreadford Blimp Tower",
@@ -4354,7 +4372,7 @@ poi_list = [
 			"afbtower"
 		],
 		str_name = "The Assault Flats Beach Blimp Tower",
-		str_desc = generic_blimp_tower_description, #TODO: add description
+		str_desc = str_blimp_tower_description,
 		coord = (40, 2),
 		channel = channel_afb_blimp_tower,
 		role = "Assault Flats Beach Blimp Tower",
@@ -4382,8 +4400,8 @@ poi_list = [
 	),
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red01,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
+		str_name = "A Red Line Subway Train",
+		str_desc = str_red_subway_description,
 		channel = channel_subway_red01,
 		role = "Subway Train R-01",
 		pvp = True,
@@ -4394,8 +4412,8 @@ poi_list = [
 	),
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red02,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
+		str_name = "A Red Line Subway Train",
+		str_desc = str_red_subway_description,
 		channel = channel_subway_red02,
 		role = "Subway Train R-02",
 		pvp = True,
@@ -4404,34 +4422,34 @@ poi_list = [
 		default_line = transport_line_subway_red_southbound,
 		default_stop = poi_id_tt_subway_station
 	),
-	EwPoi(  # Subway train on the orange line
-		id_poi = poi_id_subway_orange01,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
-		channel = channel_subway_orange01,
-		role = "Subway Train O-01",
+	EwPoi(  # Subway train on the yellow line
+		id_poi = poi_id_subway_yellow01,
+		str_name = "A Yellow Line Subway Train",
+		str_desc = str_yellow_subway_description,
+		channel = channel_subway_yellow01,
+		role = "Subway Train Y-01",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_orange_northbound,
+		default_line = transport_line_subway_yellow_northbound,
 		default_stop = poi_id_ssb_subway_station
 	),
-	EwPoi(  # Subway train on the orange line
-		id_poi = poi_id_subway_orange02,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
-		channel = channel_subway_orange02,
-		role = "Subway Train O-02",
+	EwPoi(  # Subway train on the yellow line
+		id_poi = poi_id_subway_yellow02,
+		str_name = "A Yellow Line Subway Train",
+		str_desc = str_yellow_subway_description,
+		channel = channel_subway_yellow02,
+		role = "Subway Train Y-02",
 		pvp = True,
 		is_transport = True,
 		transport_type = transport_type_subway,
-		default_line = transport_line_subway_orange_southbound,
+		default_line = transport_line_subway_yellow_southbound,
 		default_stop = poi_id_ab_subway_station
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green01,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
+		str_name = "A Green Line Subway Train",
+		str_desc = str_green_subway_description,
 		channel = channel_subway_green01,
 		role = "Subway Train G-01",
 		pvp = True,
@@ -4442,8 +4460,8 @@ poi_list = [
 	),
 	EwPoi(  # Subway train on the green line
 		id_poi = poi_id_subway_green02,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
+		str_name = "A Green Line Subway Train",
+		str_desc = str_green_subway_description,
 		channel = channel_subway_green02,
 		role = "Subway Train G-02",
 		pvp = True,
@@ -4454,8 +4472,8 @@ poi_list = [
 	),
 	EwPoi(  # Subway train on the blue line
 		id_poi = poi_id_subway_blue01,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
+		str_name = "A Blue Line Subway Train",
+		str_desc = str_blue_subway_description,
 		channel = channel_subway_blue01,
 		role = "Subway Train B-01",
 		pvp = True,
@@ -4466,8 +4484,8 @@ poi_list = [
 	),
 	EwPoi(  # Subway train on the blue line
 		id_poi = poi_id_subway_blue02,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
+		str_name = "A Blue Line Subway Train",
+		str_desc = str_blue_subway_description,
 		channel = channel_subway_blue02,
 		role = "Subway Train B-02",
 		pvp = True,
@@ -4476,18 +4494,18 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	EwPoi(  # Subway train on the white line
-		id_poi = poi_id_subway_white01,
-		str_name = "A Subway Train",
-		str_desc = generic_subway_description, # TODO: add description
-		channel = channel_subway_white01,
-		role = "Subway Train W-01",
-		pvp = True,
-		is_transport = True,
-		transport_type = transport_type_subway,
-		default_line = transport_line_subway_white_eastbound,
-		default_stop = poi_id_dt_subway_station
-	),
+	#EwPoi(  # Subway train on the white line
+	#	id_poi = poi_id_subway_white01,
+	#	str_name = "A Subway Train",
+	#	str_desc = generic_subway_description, # TODO: add description
+	#	channel = channel_subway_white01,
+	#	role = "Subway Train W-01",
+	#	pvp = True,
+	#	is_transport = True,
+	#	transport_type = transport_type_subway,
+	#	default_line = transport_line_subway_white_eastbound,
+	#	default_stop = poi_id_dt_subway_station
+	#),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -4495,7 +4513,7 @@ poi_list = [
 			"airship"
 		],
 		str_name = "The Blimp",
-		str_desc = generic_blimp_description, # TODO: add description
+		str_desc = str_blimp_description,
 		channel = channel_blimp,
 		role = "Blimp",
 		pvp = True,
@@ -4581,20 +4599,20 @@ transport_lines = [
 		    }
 
 		),
-	EwTransportLine( # orange subway line from south sleezeborough to arsonbrook
-		id_line = transport_line_subway_orange_northbound,
+	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
+		id_line = transport_line_subway_yellow_northbound,
 		alias = [
-			"northorangeline",
-			"northorange",
-			"orangenorth",
-			"orangetoarsonbrook",
-			"orangetoarson",
-			"orangetoab"
+			"northyellowline",
+			"northyellow",
+			"yellownorth",
+			"yellowtoarsonbrook",
+			"yellowtoarson",
+			"yellowtoab"
 		    ],
 		first_stop = poi_id_ssb_subway_station,
 		last_stop = poi_id_ab_subway_station,
-		next_line = transport_line_subway_orange_southbound,
-		str_name = "The orange subway line towards Arsonbrook",
+		next_line = transport_line_subway_yellow_southbound,
+		str_name = "The yellow subway line towards Arsonbrook",
 		schedule = {
 			poi_id_ssb_subway_station : [20, poi_id_kb_subway_station],
 			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
@@ -4603,20 +4621,20 @@ transport_lines = [
 		    }
 
 		),
-	EwTransportLine( # orange subway line from arsonbrook to south sleezeborough
-		id_line = transport_line_subway_orange_southbound,
+	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
+		id_line = transport_line_subway_yellow_southbound,
 		alias = [
-			"southorangeline",
-			"southorange",
-			"orangesouth",
-			"orangetosouthsleezeborough",
-			"orangetosouthsleeze",
-			"orangetossb"
+			"southyellowline",
+			"southyellow",
+			"yellowsouth",
+			"yellowtosouthsleezeborough",
+			"yellowtosouthsleeze",
+			"yellowtossb"
 		    ],
 		first_stop = poi_id_ab_subway_station,
 		last_stop = poi_id_ssb_subway_station,
-		next_line = transport_line_subway_orange_northbound,
-		str_name = "The orange subway line towards South Sleezeborough",
+		next_line = transport_line_subway_yellow_northbound,
+		str_name = "The yellow subway line towards South Sleezeborough",
 		schedule = {
 			poi_id_ab_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
@@ -4764,45 +4782,43 @@ transport_lines = [
 		    }
 
 		),
-	EwTransportLine( # white subway line from downtown to juvies row
-		id_line = transport_line_subway_white_eastbound,
-		alias = [
-			"whiteeastline",
-			"whiteeast",
-			"eastwhite",
-			"whitetojuviesrow",
-			"whitetojuvies",
-			"whitetojr"
-		    ],
-		first_stop = poi_id_dt_subway_station,
-		last_stop = poi_id_jr_subway_station,
-		next_line = transport_line_subway_white_westbound,
-		str_name = "The white subway line towards Juvie's Row",
-		schedule = {
-			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-		    }
-
-		),
-	EwTransportLine( # white subway line from juvies row to downtown
-		id_line = transport_line_subway_white_westbound,
-		alias = [
-			"whitewestline",
-			"whitewest",
-			"westwhite",
-			"whitetodowntown",
-			"whitetodt"
-		    ],
-		first_stop = poi_id_jr_subway_station,
-		last_stop = poi_id_dt_subway_station,
-		next_line = transport_line_subway_white_eastbound,
-		str_name = "The white subway line towards Downtown NLACakaNM",
-		schedule = {
-			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
-		    }
-
-		),
+	#EwTransportLine( # white subway line from downtown to juvies row
+	#	id_line = transport_line_subway_white_eastbound,
+	#	alias = [
+	#		"whiteeastline",
+	#		"whiteeast",
+	#		"eastwhite",
+	#		"whitetojuviesrow",
+	#		"whitetojuvies",
+	#		"whitetojr"
+	#	    ],
+	#	first_stop = poi_id_dt_subway_station,
+	#	last_stop = poi_id_jr_subway_station,
+	#	next_line = transport_line_subway_white_westbound,
+	#	str_name = "The white subway line towards Juvie's Row",
+	#	schedule = {
+	#		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+	#		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+	#	    }
+	#	),
+	#EwTransportLine( # white subway line from juvies row to downtown
+	#	id_line = transport_line_subway_white_westbound,
+	#	alias = [
+	#		"whitewestline",
+	#		"whitewest",
+	#		"westwhite",
+	#		"whitetodowntown",
+	#		"whitetodt"
+	#	    ],
+	#	first_stop = poi_id_jr_subway_station,
+	#	last_stop = poi_id_dt_subway_station,
+	#	next_line = transport_line_subway_white_eastbound,
+	#	str_name = "The white subway line towards Downtown NLACakaNM",
+	#	schedule = {
+	#		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+	#		poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
+	#	    }
+	#	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [

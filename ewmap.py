@@ -772,22 +772,14 @@ async def look(cmd):
 	else:
 		players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
 
-	transport_resp = ""
-	if poi.is_transport_stop:
-		transport_resp += "\n\nThe following public transport lines stop here:"
-		for line in poi.transport_lines:
-			line_data = ewcfg.id_to_transport_line.get(line)
-			transport_resp += "\n-" + line_data.str_name
-
 	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}{}{}".format(
+			"You stand {} {}.\n\n{}{}{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
-				transport_resp,
 				slimes_resp,
 				players_resp,
 				("\n\n{}".format(

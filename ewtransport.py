@@ -263,7 +263,7 @@ async def embark(cmd):
 			# check if one of the vehicles at the stop matches up with the line, the user wants to board
 			if transport_data.current_line == transport_line.id_line:
 				last_stop_poi = ewcfg.id_to_poi.get(transport_line.last_stop)
-				response = "Embarking on {} toward {}.".format(transport_data.transport_type, last_stop_poi.str_name)
+				response = "Embarking on {}.".format(transport_line.str_name)
 				# schedule tasks for concurrent execution
 				message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
 				wait_task = asyncio.ensure_future(asyncio.sleep(5))
@@ -294,6 +294,9 @@ async def embark(cmd):
 						response = "The {} starts moving just as you try to get on.".format(transport_data.transport_type)
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+		response = "There is currently no vehicle following that line here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	else:
 		response = "No transport vehicles stop here. Try going to a subway station or a ferry port."
@@ -312,7 +315,7 @@ async def disembark(cmd):
 	# can only disembark when you're on a transport vehicle
 	if user_data.poi in ewcfg.transports:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
-		response = "Disembarking."
+		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
 		# schedule tasks for concurrent execution
 		message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
@@ -385,3 +388,23 @@ async def disembark(cmd):
 	else:
 		response = "You are not currently riding any transport."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def check_schedule(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	response = ""
+
+	if poi.is_transport_stop:
+		response = "The following public transit lines stop here:"
+		for line in poi.transport_lines:
+			line_data = ewcfg.id_to_transport_line.get(line)
+			response += "\n-" + line_data.str_name
+	elif poi.is_transport:
+		transport_data = EwTransport(id_server = user_data.id_server, poi = poi.id_poi)
+		transport_line = ewcfg.id_to_transport_line.get(transport_data.current_line)
+		response = "This {} is following {}.".format(transport_data.transport_type, transport_line.str_name)
+	else:
+		response = "There is no schedule to check here."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
