@@ -613,7 +613,7 @@ def market_tick(stock_data, id_server):
 
 	# Add profit bonus.
 	profits = company_data.recent_profits
-	profit_bonus = profits / 100 - 1 * (latest_stock.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
+	profit_bonus = profits / 100 - 1 * ((latest_stock.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2)
 	profit_bonus = min(50, max(profit_bonus, -50))
 	market_rate += (profit_bonus / 2)
 
@@ -666,20 +666,21 @@ def market_tick(stock_data, id_server):
 	#percentage = ((market_rate / 10) - 100)
 	#percentage_abs = percentage * -1
 
-	# If the value hits 0, we're stuck there forever.
-	if stock_data.exchange_rate <= 100:
-		stock_data.exchange_rate = 100
 
 	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * ewcfg.default_stock_exchange_rate / ewcfg.default_stock_market_rate)
 
 	percentage = exchange_rate_increase / stock_data.exchange_rate
 	percentage_abs = percentage * -1
 
-	points = abs(exchange_rate_increase / 1000)
 
+	# negative exchange rate causes problems, duh
+	exchange_rate_increase = max(exchange_rate_increase, -stock_data.exchange_rate)
+
+	points = abs(exchange_rate_increase / 1000)
 
 	stock_data.exchange_rate += exchange_rate_increase
 	stock_data.market_rate = market_rate
+
 
 	stock_data.persist()
 
