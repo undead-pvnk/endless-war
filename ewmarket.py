@@ -618,7 +618,7 @@ def market_tick(stock_data, id_server):
 
 	# Add profit bonus.
 	profits = company_data.recent_profits
-	profit_bonus = profits / 100 - 5 * latest_stock.exchange_rate / 1000000
+	profit_bonus = profits / 100 - 1 * (latest_stock.exchange_rate / 1000000) ** 0.2
 	profit_bonus = min(20, max(profit_bonus, -20))
 	market_rate += (profit_bonus / 2)
 
@@ -685,7 +685,7 @@ def market_tick(stock_data, id_server):
 	company_data.persist()
 
 	# Give some indication of how the market is doing to the users.
-	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ewcfg.stock_names.get(stock_data.id_stock) + ' '
+	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ' ' + ewcfg.stock_names.get(stock_data.id_stock) + ' '
 
 	# Market is up ...
 	if market_rate > 1200:
