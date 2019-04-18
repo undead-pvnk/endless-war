@@ -165,15 +165,10 @@ class EwStock:
 				self.timestamp = data[0][5]
 				self.previous_entry = data[1] if len(data) > 1 else 0 #gets the previous stock
 			else:  # create new entry
-				ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {timestamp}) VALUES (%s, %s, %s)".format(
-					id_server = ewcfg.col_id_server,
-					stock = ewcfg.col_stock,
-					timestamp = ewcfg.col_timestamp
-				), (
-					id_server,
-					stock,
-					time.time(),
-				))
+				self.timestamp = int(time.time())
+				self.market_rate = ewcfg.default_stock_market_rate
+				self.exchange_rate = ewcfg.default_stock_exchange_rate
+				self.persist()
 
 	def persist(self):
 		ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
@@ -618,8 +613,8 @@ def market_tick(stock_data, id_server):
 
 	# Add profit bonus.
 	profits = company_data.recent_profits
-	profit_bonus = profits / 100 - 1 * (latest_stock.exchange_rate / 1000000) ** 0.2
-	profit_bonus = min(20, max(profit_bonus, -20))
+	profit_bonus = profits / 100 - 1 * (latest_stock.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
+	profit_bonus = min(50, max(profit_bonus, -50))
 	market_rate += (profit_bonus / 2)
 
 	if total_shares[0] != total_shares[1]:
@@ -675,7 +670,10 @@ def market_tick(stock_data, id_server):
 	if stock_data.exchange_rate <= 100:
 		stock_data.exchange_rate = 100
 
-	stock_data.exchange_rate = int(stock_data.exchange_rate * (market_rate / 1000))
+	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * ewcfg.default_stock_exchange_rate)
+
+	percentage = exchange_rate_increase / stock_data.exchange_rate
+	stock_data.exchange_rate += exchange_rate_increase
 	stock_data.market_rate = market_rate
 
 	stock_data.persist()

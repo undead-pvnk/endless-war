@@ -88,7 +88,7 @@ async def menu(cmd):
 				value = food_item.price
 
 				if stock_data != None:
-					value *= (stock_data.exchange_rate / 1000000) ** 0.2
+					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
 				value = int(value)
 
@@ -167,7 +167,7 @@ async def order(cmd):
 					
 
 			if stock_data != None:
-				value *= (stock_data.exchange_rate / 1000000) ** 0.2
+				value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
 			value = int(value)
 
