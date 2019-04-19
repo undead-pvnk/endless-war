@@ -924,7 +924,7 @@ async def arm(cmd):
 					user_data.persist()
 					response += "pay {} slimecoin and ".format(ewcfg.weapon_fee)
 
-				response += "take the {}".format(weapon.str_weapon)
+				response += "take {}.".format(weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
 
