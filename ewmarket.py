@@ -1,5 +1,6 @@
 import time
 import random
+import math
 
 # import ewcmd
 import ewitem
@@ -537,7 +538,7 @@ async def rate(cmd):
 
 		if stock in ewcfg.stocks:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-			response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(stock.exchange_rate / 1000.0))
+			response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(math.ceil(stock.exchange_rate / 1000.0)))
 		else:
 			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
