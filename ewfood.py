@@ -80,14 +80,15 @@ async def menu(cmd):
 			food_items = []
 			for food_item_name in ewcfg.food_vendor_inv[vendor]:
 				food_item = ewcfg.food_map.get(food_item_name)
-			# increase profits for the stock market
+				# increase profits for the stock market
+				stock_data = None
 				if vendor in ewcfg.vendor_stock_map:
 					stock = ewcfg.vendor_stock_map.get(vendor)
 					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
 
 				value = food_item.price
 
-				if stock_data != None:
+				if stock_data is not None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
 				value = int(value)
@@ -157,7 +158,9 @@ async def order(cmd):
 				target_data = EwUser(member = member)
 
 			value = food.price if not togo else food.price * ewcfg.togo_price_increase
-
+			
+			stock_data = None
+			company_data = None
 			# factor in the current stocks
 			for vendor in food.vendors:
 				if vendor in ewcfg.vendor_stock_map:
@@ -166,7 +169,7 @@ async def order(cmd):
 					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
 					
 
-			if stock_data != None:
+			if stock_data is not None:
 				value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
 			value = int(value)
@@ -185,8 +188,9 @@ async def order(cmd):
 			else:
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_spending)
 
-				company_data.recent_profits += value
-				company_data.persist()
+				if company_data is not None:
+					company_data.recent_profits += value
+					company_data.persist()
 
 
 				if not togo:
