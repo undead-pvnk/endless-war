@@ -40,6 +40,7 @@ import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
 import ewquadrants
+import ewtransport
 
 from ewitem import EwItem
 from ew import EwUser, EwMarket
@@ -211,6 +212,13 @@ cmd_map = {
 	ewcfg.cmd_halt: ewmap.halt,
 	ewcfg.cmd_halt_alt1: ewmap.halt,
 
+	# public transportation
+	ewcfg.cmd_embark: ewtransport.embark,
+	ewcfg.cmd_embark_alt1: ewtransport.embark,
+	ewcfg.cmd_disembark: ewtransport.disembark,
+	ewcfg.cmd_disembark_alt1: ewtransport.disembark,
+	ewcfg.cmd_checkschedule: ewtransport.check_schedule,
+
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 
@@ -364,7 +372,7 @@ async def on_ready():
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
-		ewcfg.poi_neighbors[poi.id_poi] = neighbor_ids
+		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
@@ -439,6 +447,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+		await ewtransport.init_transports(id_server = server.id)
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')

@@ -76,19 +76,25 @@ class EwResponseContainer:
 
 	async def post(self):
 		self.client = get_client()
+		messages = []
 
 		if self.client == None:
 			logMsg("Couldn't find client")
-			return
+			return messages
 			
 		server = self.client.get_server(self.id_server)
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
-			return
+			return messages
 
 		for ch in self.channel_responses:
 			channel = get_channel(server = server, channel_name = ch)
-			await send_message(self.client, channel, self.channel_responses[ch])
+			try:
+				message = await send_message(self.client, channel, self.channel_responses[ch])
+				messages.append(message)
+			except:
+				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
+				
 
 		for ch in self.channel_topics:
 			channel = get_channel(server = server, channel_name = ch)
@@ -96,6 +102,8 @@ class EwResponseContainer:
 				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
 			except:
 				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+
+		return messages
 
 
 def readMessage(fname):
