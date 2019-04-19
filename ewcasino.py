@@ -1255,6 +1255,8 @@ def evaluatetrick(trick):
 
 
 def checkiflegal(hand,play,first,trump):
+	if play < 0 or play >= len(hand):
+		return False
 	hearts = ["1","7","8","9","10","11","12","13"]
 	slugs = ["14","20","21","22","23","24","25","26"]
 	hats = ["27","33","34","35","36","37","38","39"]

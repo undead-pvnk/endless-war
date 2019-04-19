@@ -46,8 +46,8 @@ async def revive(cmd):
 			# Set life state. This is what determines whether the player is actually alive.
 			player_data.life_state = ewcfg.life_state_juvenile
 
-			# Get the player out of the sewers. Will be endless-war eventually.
-			player_data.poi = ewcfg.poi_id_downtown
+			# Get the player out of the sewers.
+			player_data.poi = ewcfg.poi_id_endlesswar
 
 			player_data.persist()
 			market_data.persist()
@@ -76,9 +76,10 @@ async def revive(cmd):
 			reunite += brain.str_revive.format(
 			slimeoid_name = slimeoid.name
 			)
-			downtownchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_downtown)
+			new_poi = ewcfg.id_to_poi.get(player_data.poi)
+			revivechannel = ewutils.get_channel(cmd.message.server, new_poi.channel)
 			reunite = ewutils.formatMessage(cmd.message.author, reunite)
-			await ewutils.send_message(cmd.client, downtownchannel, reunite)
+			await ewutils.send_message(cmd.client, revivechannel, reunite)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
