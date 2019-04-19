@@ -410,7 +410,7 @@ async def attack(cmd):
 				if slimes_damage >= shootee_data.slimes:
 					was_killed = True
 
-				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id) #todo make juvies drop half slime, make kingpin slime 100% of damage dealt to enemies https://github.com/krakissi/endless-war/commit/4317410fafe44cdb73ecc6bc339cec58ccb6ec34
+				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				slime_splatter = min(slimes_damage, shootee_data.slimes)
 				if was_juvenile or user_data.faction == shootee_data.faction:
