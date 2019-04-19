@@ -7,7 +7,6 @@ import ewmap
 import ewrolemgr
 
 from ew import EwUser
-from ewutils import EwResponseContainer
 from ewdistrict import EwDistrict
 
 
@@ -92,7 +91,7 @@ class EwTransport:
 			try:
 				transport_line = ewcfg.id_to_transport_line[self.current_line]
 				client = ewutils.get_client()
-				resp_cont = EwResponseContainer(client = client, id_server = self.id_server)
+				resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)
 
 				if self.current_stop == transport_line.last_stop:
 					self.current_line = transport_line.next_line
@@ -310,7 +309,7 @@ async def disembark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
-	resp_cont = EwResponseContainer(client = cmd.client, id_server = user_data.id_server)
+	resp_cont = ewutils.EwResponseContainer(client = cmd.client, id_server = user_data.id_server)
 
 	# can only disembark when you're on a transport vehicle
 	if user_data.poi in ewcfg.transports:
@@ -383,6 +382,7 @@ async def disembark(cmd):
 			user_data.poi = transport_data.current_stop
 			user_data.persist()
 			response = "You enter {}".format(stop_poi.str_name)
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 		return await resp_cont.post()
 	else:
