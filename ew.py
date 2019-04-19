@@ -6,113 +6,6 @@ import ewstats
 import ewitem
 
 """ Market data model for database persistence """
-class EwMarket:
-	id_server = ""
-
-	clock = 0
-	weather = 'sunny'
-	day = 0
-
-	slimes_casino = 0
-	slimes_revivefee = 0
-
-	rate_market = 1000
-	rate_exchange = 1000000
-	boombust = 0
-	time_lasttick = 0
-	negaslime = 0
-	decayed_slimes = 0
-
-	""" Load the market data for this server from the database. """
-	def __init__(self, id_server = None):
-		if(id_server != None):
-			self.id_server = id_server
-
-			try:
-				conn_info = ewutils.databaseConnect()
-				conn = conn_info.get('conn')
-				cursor = conn.cursor();
-
-				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM markets WHERE id_server = %s".format(
-					ewcfg.col_slimes_casino,
-					ewcfg.col_rate_market,
-					ewcfg.col_rate_exchange,
-					ewcfg.col_boombust,
-					ewcfg.col_time_lasttick,
-					ewcfg.col_slimes_revivefee,
-					ewcfg.col_negaslime,
-					ewcfg.col_clock,
-					ewcfg.col_weather,
-					ewcfg.col_day,
-					ewcfg.col_decayed_slimes
-				), (self.id_server, ))
-				result = cursor.fetchone();
-
-				if result != None:
-					# Record found: apply the data to this object.
-					self.slimes_casino = result[0]
-					self.rate_market = result[1]
-					self.rate_exchange = result[2]
-					self.boombust = result[3]
-					self.time_lasttick = result[4]
-					self.slimes_revivefee = result[5]
-					self.negaslime = result[6]
-					self.clock = result[7]
-					self.weather = result[8]
-					self.day = result[9]
-					self.decayed_slimes = result[10]
-				else:
-					# Create a new database entry if the object is missing.
-					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
-
-					conn.commit()
-			finally:
-				# Clean up the database handles.
-				cursor.close()
-				ewutils.databaseClose(conn_info)
-
-	""" Save market data object to the database. """
-	def persist(self):
-		try:
-			conn_info = ewutils.databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor();
-
-			# Save the object.
-			cursor.execute("REPLACE INTO markets({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
-				ewcfg.col_id_server,
-				ewcfg.col_slimes_casino,
-				ewcfg.col_rate_market,
-				ewcfg.col_rate_exchange,
-				ewcfg.col_boombust,
-				ewcfg.col_time_lasttick,
-				ewcfg.col_slimes_revivefee,
-				ewcfg.col_negaslime,
-				ewcfg.col_clock,
-				ewcfg.col_weather,
-				ewcfg.col_day,
-				ewcfg.col_decayed_slimes
-			), (
-				self.id_server,
-				self.slimes_casino,
-				self.rate_market,
-				self.rate_exchange,
-				self.boombust,
-				self.time_lasttick,
-				self.slimes_revivefee,
-				self.negaslime,
-				self.clock,
-				self.weather,
-				self.day,
-				self.decayed_slimes
-			))
-
-			conn.commit()
-		finally:
-			# Clean up the database handles.
-			cursor.close()
-			ewutils.databaseClose(conn_info)
 
 """ User model for database persistence """
 class EwUser:
@@ -121,7 +14,7 @@ class EwUser:
 	id_killer = ""
 
 	slimes = 0
-	slimecredit = 0
+	slimecoin = 0
 	slimelevel = 1
 	hunger = 0
 	totaldamage = 0
@@ -251,25 +144,29 @@ class EwUser:
 		self.bounty += int(n)
 		ewstats.track_maximum(user = self, metric = ewcfg.stat_max_bounty, value = self.bounty)
 
-	def change_slimecredit(self, n = 0, coinsource = None):
+	def change_slimecoin(self, n = 0, coinsource = None):
 		change = int(n)
-		self.slimecredit += change
+		self.slimecoin += change
 
 		if change >= 0:
-			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_slimecredit, value = self.slimecredit)
-			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimecredit, n = change)
+			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_slimecoin, value = self.slimecoin)
+			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimecoin, n = change)
 			if coinsource == ewcfg.coinsource_bounty:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_bounty_collected, n = change)
 			if coinsource == ewcfg.coinsource_casino:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_biggest_casino_win, value = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_winnings, n = change)
+			if coinsource == ewcfg.coinsource_withdraw:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_withdrawn, n = change)
 		else:
 			change *= -1
 			if coinsource == ewcfg.coinsource_revival:
-				ewstats.change_stat(user = self, metric = ewcfg.stat_slimecredit_spent_on_revives, n = change)
+				ewstats.change_stat(user = self, metric = ewcfg.stat_slimecoin_spent_on_revives, n = change)
 			if coinsource == ewcfg.coinsource_casino:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_biggest_casino_loss, value = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_losses, n = change)
+			if coinsource == ewcfg.coinsource_invest:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_invested, n = change)
 
 	def add_weaponskill(self, n = 0, weapon_type = None):
 		# Save the current weapon's skill
@@ -358,7 +255,7 @@ class EwUser:
 					ewcfg.col_bounty,
 					ewcfg.col_weapon,
 					ewcfg.col_trauma,
-					ewcfg.col_slimecredit,
+					ewcfg.col_slimecoin,
 					ewcfg.col_time_lastkill,
 					ewcfg.col_time_lastrevive,
 					ewcfg.col_id_killer,
@@ -394,7 +291,7 @@ class EwUser:
 					self.bounty = result[4]
 					self.weapon = result[5]
 					self.trauma = result[6]
-					self.slimecredit = result[7]
+					self.slimecoin = result[7]
 					self.time_lastkill = result[8]
 					self.time_lastrevive = result[9]
 					self.id_killer = result[10]
@@ -479,7 +376,7 @@ class EwUser:
 				ewcfg.col_weapon,
 				ewcfg.col_weaponskill,
 				ewcfg.col_trauma,
-				ewcfg.col_slimecredit,
+				ewcfg.col_slimecoin,
 				ewcfg.col_time_lastkill,
 				ewcfg.col_time_lastrevive,
 				ewcfg.col_id_killer,
@@ -511,7 +408,7 @@ class EwUser:
 				self.weapon,
 				self.weaponskill,
 				self.trauma,
-				self.slimecredit,
+				self.slimecoin,
 				self.time_lastkill,
 				self.time_lastrevive,
 				self.id_killer,

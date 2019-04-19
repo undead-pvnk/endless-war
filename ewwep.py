@@ -9,8 +9,10 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
+
+from ew import EwUser
 from ewitem import EwItem
-from ew import EwUser, EwMarket
+from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 
@@ -280,7 +282,7 @@ async def attack(cmd):
 				# Move around slime as a result of the shot.
 				user_data.change_slimes(n = ewutils.slime_bylevel(shootee_data.slimelevel), source = ewcfg.source_busting)
 				coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)
-				user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+				user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 				ewstats.track_maximum(user = user_data, metric = ewcfg.stat_biggest_bust_level, value = shootee_data.slimelevel)
 
@@ -442,7 +444,7 @@ async def attack(cmd):
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
 					
 					if shootee_data.slimes >= 0:
-						user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+						user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 
 					# Steal items
@@ -1098,9 +1100,11 @@ async def divorce(cmd):
 			#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
 			user_data.weaponmarried = False
 			user_data.weapon = ""
-			ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
-			fee = (user_data.slimecredit / 2)
-			user_data.change_slimecredit(n = -fee, coinsource = ewcfg.coinsource_revival)
+  		ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
+      
+			fee = (user_data.slimecoin / 2)
+			user_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
+      
 			user_data.persist()
 
 			#delete weapon item

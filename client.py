@@ -43,7 +43,9 @@ import ewquadrants
 import ewtransport
 
 from ewitem import EwItem
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
+from ewmarket import EwStock
 from ewdistrict import EwDistrict
 
 ewutils.logMsg('Starting up...')
@@ -172,15 +174,31 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
-	# Show the player's slime credit.
-	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
+	# Show the player's slime coin.
+	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
 
+	# Invest slimecoin into a stock
+	ewcfg.cmd_invest: ewmarket.invest,
+
+	# Withdraw slimecoin from your shares
+	ewcfg.cmd_withdraw: ewmarket.withdraw,
+
+	# show the exchange rate of a given stock
+	ewcfg.cmd_exchangerate: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+
+	# show player's current shares in a compant
+	ewcfg.cmd_shares: ewmarket.shares,
+
+	# check available stocks
+	ewcfg.cmd_stocks: ewmarket.stocks,
 
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
@@ -533,6 +551,17 @@ async def on_ready():
 				market_data = EwMarket(id_server = server.id)
 
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
+
+					market_response = ""
+
+					for stock in ewcfg.stocks:
+						s = EwStock(server.id, stock)
+						# we don't update stocks when they were just added
+						if s.timestamp != 0:
+							s.timestamp = time_now
+							market_response = ewmarket.market_tick(s, server.id)
+							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
+
 					market_data.time_lasttick = time_now
 
 					# Advance the time and potentially change weather.
@@ -541,6 +570,13 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+
+					if market_data.clock == 6:
+						response = ' The Slime Stock Exchange is now open for business.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+					elif market_data.clock == 18:
+						response = ' The Slime Stock Exchange has closed for the night.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)

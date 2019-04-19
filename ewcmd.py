@@ -7,7 +7,8 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
 

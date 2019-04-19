@@ -779,4 +779,3 @@ async def edit_message(client, message, text):
 		return await client.edit_message(message, text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
-

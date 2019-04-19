@@ -7,7 +7,8 @@ import discord
 import ewcfg
 import ewstats
 import ewutils
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 
 """
 	district data model for database persistence
