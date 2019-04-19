@@ -25,7 +25,6 @@ CREATE TABLE users (
 	totaldamage bigint NOT NULL DEFAULT '0',
 	weaponskill int NOT NULL DEFAULT '0',
 	bounty bigint NOT NULL DEFAULT '0',
-	weaponname varchar(32) NOT NULL DEFAULT '',
 	ghostbust int NOT NULL DEFAULT '0',
 	inebriation int NOT NULL DEFAULT '0',
 	faction varchar(32) NOT NULL default '',
@@ -76,7 +75,6 @@ CREATE TABLE weaponskills (
 	id_server varchar(128) NOT NULL,
 	weapon varchar(64) NOT NULL,
 	weaponskill int NOT NULL DEFAULT '0',
-	name varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_user, id_server, weapon)
 );
@@ -186,4 +184,15 @@ CREATE TABLE quadrants (
 	id_target2 varchar(128) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, quadrant)
+);
+
+CREATE TABLE transports (
+	id_server varchar(128) NOT NULL,
+	poi varchar(64) NOT NULL,
+
+	transport_type varchar(64) NOT NULL DEFAULT '',
+	current_line varchar(64) NOT NULL DEFAULT '',
+	current_stop varchar(64) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(id_server, poi)
 );
