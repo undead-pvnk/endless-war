@@ -460,7 +460,7 @@ async def attack(cmd):
 					#explode_damage = slimes_dropped / 10 + shootee_data.slimes / 2
 					# explode, damaging everyone in the district
 
-                                        # release bleed storage
+					# release bleed storage
 					district_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
 					user_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
 
@@ -1100,11 +1100,11 @@ async def divorce(cmd):
 			#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
 			user_data.weaponmarried = False
 			user_data.weapon = ""
-  		ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
-      
+			ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
+
 			fee = (user_data.slimecoin / 2)
 			user_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
-      
+
 			user_data.persist()
 
 			#delete weapon item

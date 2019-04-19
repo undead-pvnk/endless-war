@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v2.22e"
+version = "v2.24glhf"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -436,6 +436,17 @@ cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 
+cmd_add_quadrant = cmd_prefix + "addquadrant"
+cmd_get_quadrants = cmd_prefix + "quadrants"
+cmd_get_flushed = cmd_prefix + "flushed"
+cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
+cmd_get_pale = cmd_prefix + "pale"
+cmd_get_pale_alt1 = cmd_prefix + "moirail"
+cmd_get_caliginous = cmd_prefix + "caliginous"
+cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
+cmd_get_ashen = cmd_prefix + "ashen"
+cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -621,6 +632,13 @@ emote_he = "<:he:492067814933266443>"
 emote_h_ = "<:h_:492067806465228811>"
 emote_blank = "<:blank:492087853702971403>"
 
+# Emotes for troll romance
+emote_hearts = ":hearts:"
+emote_diamonds = ":diamonds:"
+emote_spades = ":spades:"
+emote_clubs = ":clubs:"
+emote_broken_heart = ":broken_heart:"
+
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
@@ -707,6 +725,7 @@ col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
+col_time_joined = 'time_joined'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
