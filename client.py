@@ -65,6 +65,10 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
+	# Get a weapon into your inventory
+	ewcfg.cmd_arm: ewwep.arm,
+	ewcfg.cmd_arsenalize: ewwep.arm,
+
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
 
@@ -230,6 +234,9 @@ cmd_map = {
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
+
+	#throw away an item
+	ewcfg.cmd_discard: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,

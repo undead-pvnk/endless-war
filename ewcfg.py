@@ -284,11 +284,14 @@ cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
+cmd_discard = cmd_prefix + 'discard'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+cmd_arm = cmd_prefix + 'arm'
+cmd_arsenalize = cmd_prefix + 'arsenalize'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 
@@ -357,6 +360,7 @@ inebriation_pertick = 2
 # max item amounts
 max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player's slime level is divided by this number to calculate the number of carriable food items
 max_adorn_mod = 4
+max_weapon_mod = 16
 
 # price multipliers
 togo_price_increase = 2
@@ -432,6 +436,9 @@ poudrin_rarity = 2400
 
 # Lifetimes
 invuln_onrevive = 0
+
+# Weapon fee
+weapon_fee = 100
 
 # farming
 crops_time_to_grow = 720  # in minutes; 720 minutes are 12 hours
@@ -978,7 +985,8 @@ weapon_list = [
 		str_killdescriptor = "gunned down",
 		str_damage = "{name_target} takes a bullet to the {hitzone}!!",
 		str_duel = "**BANG BANG.** {name_player} and {name_target} practice their quick-draw, bullets whizzing past one another's heads.",
-		fn_effect = wef_gun
+		fn_effect = wef_gun,
+		str_description = "They're dual pistols"
 	),
 	EwWeapon( # 2
 		id_weapon = "rifle",
@@ -999,7 +1007,8 @@ weapon_list = [
 		str_killdescriptor = "gunned down",
 		str_damage = "Bullets rake over {name_target}'s {hitzone}!!",
 		str_duel = "**RAT-TAT-TAT-TAT-TAT!!** {name_player} and {name_target} practice shooting at distant targets with quick, controlled bursts.",
-		fn_effect = wef_rifle
+		fn_effect = wef_rifle,
+		str_description = "It's a rifle"
 	),
 	EwWeapon( # 3
 		id_weapon = "nun-chucks",
@@ -1022,7 +1031,8 @@ weapon_list = [
 		str_killdescriptor = "fatally bludgeoned",
 		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
 		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
-		fn_effect = wef_nunchucks
+		fn_effect = wef_nunchucks,
+		str_description = "They're nunchucks"
 	),
 	EwWeapon( # 4
 		id_weapon = "katana",
@@ -1044,7 +1054,8 @@ weapon_list = [
 		str_killdescriptor = "bisected",
 		str_damage = "{name_target} is slashed across the {hitzone}!!",
 		str_duel = "**CRACK!! THWACK!! CRACK!!** {name_player} and {name_target} duel with bamboo swords, viciously striking at head, wrist and belly.",
-		fn_effect = wef_katana
+		fn_effect = wef_katana,
+		str_description = "It's a katana"
 	),
 	EwWeapon( # 5
 		id_weapon = "bat",
@@ -1065,7 +1076,8 @@ weapon_list = [
 		str_killdescriptor = "nail bat battered",
 		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
 		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
-		fn_effect = wef_bat
+		fn_effect = wef_bat,
+		str_description = "It's a nailbat"
 	),
 	EwWeapon( # 6
 		id_weapon = "garrote",
@@ -1086,7 +1098,8 @@ weapon_list = [
 		str_killdescriptor = "garrote wired",
 		str_damage = "{name_target} is ensnared by {name_player}'s wire!!",
 		str_duel = "{name_player} and {name_target} compare their dexterity by playing Cat's Cradle with deadly wire.",
-		fn_effect = wef_garrote
+		fn_effect = wef_garrote,
+		str_description = "It's a garrote"
 	),
 	EwWeapon( # 7
 		id_weapon = "brassknuckles",
@@ -1107,7 +1120,8 @@ weapon_list = [
 		str_killdescriptor = "pummeled to death",
 		str_damage = "{name_target} is socked in the {hitzone}!!",
 		str_duel = "**POW! BIFF!!** {name_player} and {name_target} take turns punching each other in the abs. It hurts so good.",
-		fn_effect = wef_brassknuckles
+		fn_effect = wef_brassknuckles,
+		str_description = "They're brass knuckles"
 	),
 	EwWeapon( # 8
 		id_weapon = "molotov",
@@ -1129,7 +1143,8 @@ weapon_list = [
 		str_killdescriptor = "exploded",
 		str_damage = "{name_target} dodges a bottle, but is singed on the {hitzone} by the blast!!",
 		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
-		fn_effect = wef_molotov
+		fn_effect = wef_molotov,
+		str_description = "They're molotov bottles"
 	),
 	EwWeapon( # 9
 		id_weapon = "knives",
@@ -1152,7 +1167,8 @@ weapon_list = [
 		str_killdescriptor = "knifed",
 		str_damage = "{name_target} is stuck by a knife in the {hitzone}!!",
 		str_duel = "**TING! TING!!** {name_player} and {name_target} take turns hitting one another's knives out of the air.",
-		fn_effect = wef_knives
+		fn_effect = wef_knives,
+		str_description = "They're throwing knives"
 	),
 	EwWeapon( # 10
 		id_weapon = "scythe",
@@ -1171,7 +1187,8 @@ weapon_list = [
 		str_killdescriptor = "sliced in twain",
 		str_damage = "{name_target} is cleaved through the {hitzone}!!",
 		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
-		fn_effect = wef_scythe
+		fn_effect = wef_scythe,
+		str_description = "It's a scythe"
 	)
 ]
 
@@ -2457,8 +2474,11 @@ item_def_list = [
 		str_desc = "{weapon_desc}",
 		soulbound = False,
 		item_props = {
-			'weapon_name': 'Weapon',
-			'weapon_desc': 'It\'s a weapon of some sort.'
+			'weapon_type': 'Type of weapon',
+			'weapon_desc': 'It\'s a weapon of some sort.',
+			'weapon_name': 'Weapon\'s name',
+			'ammo': 0,
+			'married': 'User Id'
 		}
 	),
 	EwItemDef(
