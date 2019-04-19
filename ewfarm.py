@@ -1,6 +1,5 @@
 import time
-from random import randint
-
+import random
 import ewcfg
 
 import ewitem
@@ -97,26 +96,60 @@ async def reap(cmd):
 			if time_grown < ewcfg.crops_time_to_grow:
 				response = "Patience is a virtue and you are morally bankrupt. Just wait, asshole."
 			else: # Reaping
-				if time_grown > ewcfg.crops_time_to_grow * 2:
+				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
+					# Determine if a slime poudrin is found.
+					poudrin = False
+					poudrinamount = 0
+
+					poudrin_rarity = ewcfg.poudrin_rarity / 500  # 1 in 3 chance
+					poudrin_mined = random.randint(1, poudrin_rarity)
+
+					if poudrin_mined == 1:
+						poudrin = True
+						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+
+					# Create and give slime poudrins
+					for pcreate in range(poudrinamount):
+						ewitem.item_create(
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_type = ewcfg.it_slimepoudrin,
+						)
+
+					#  Determine what crop is grown.
+					vegetable = random.choice(ewcfg.vegetable_list)
+
+					#  Create and give a bushel of whatever crop was grown.
+					for vcreate in range(4):
+						ewitem.item_create(
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_type = ewcfg.it_food,
+							item_props = {
+								'id_food': vegetable.id_food,
+								'food_name': vegetable.str_name,
+								'food_desc': vegetable.str_desc,
+								'recover_hunger': vegetable.recover_hunger,
+								'str_eat': vegetable.str_eat,
+							}
+						)
+
 					slime_gain = ewcfg.reap_gain
 					user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
+					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
 
-					#S(t) = 35000000 +  (t - 1440) * 992 + Log2(t/1440) * 11782046 caped at 100000000
-#				if (time_grown < 20160):
-#					slimeGain = 33571520 + time_grown * 992 + math.log(time_grown, 2.0)
-#					else:
-#					slimeGain = 100000000
-				#S(t) = 35000000 +  (t - 1440) * 992 + Log2(t/1440) * 11782046 that transitions into flat growth
-#				if (time_grown < 20160):
-#					slimeGain = (33571520 + time_grown * 992 + math.log(time_grown, 2.0))/300#Divided by 300 to account for later balance changes
-#				else:
-#					slimeGain = time_grown * 992 + 80001280
+					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(ewcfg.reap_gain)
 
-					plant_type = ewcfg.seed_list[randint(0, len(ewcfg.seed_list) - 1)]
-					response = "You reap what you’ve sown. Your investment has yielded " + str(slime_gain) + " slime."  # + " slime and a bushel of " + plant_type
+					if poudrin == True:
+						if poudrinamount == 1:
+							response += "a slime poudrin, "
+						elif poudrinamount == 2:
+							response += "two slime poudrins, "
+
+					response += "and a bushel of {}!".format(vegetable.str_name)
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()

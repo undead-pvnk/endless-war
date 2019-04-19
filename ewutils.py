@@ -76,19 +76,25 @@ class EwResponseContainer:
 
 	async def post(self):
 		self.client = get_client()
+		messages = []
 
 		if self.client == None:
 			logMsg("Couldn't find client")
-			return
+			return messages
 			
 		server = self.client.get_server(self.id_server)
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
-			return
+			return messages
 
 		for ch in self.channel_responses:
 			channel = get_channel(server = server, channel_name = ch)
-			await send_message(self.client, channel, self.channel_responses[ch])
+			try:
+				message = await send_message(self.client, channel, self.channel_responses[ch])
+				messages.append(message)
+			except:
+				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
+				
 
 		for ch in self.channel_topics:
 			channel = get_channel(server = server, channel_name = ch)
@@ -96,6 +102,8 @@ class EwResponseContainer:
 				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
 			except:
 				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+
+		return messages
 
 
 def readMessage(fname):
@@ -475,10 +483,9 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT {weapon}, {weaponskill}, {weaponname} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
+			cursor.execute("SELECT {weapon}, {weaponskill} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
 				weapon = ewcfg.col_weapon,
 				weaponskill = ewcfg.col_weaponskill,
-				weaponname = ewcfg.col_name,
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
 			), (
@@ -490,8 +497,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 			if data != None:
 				for row in data:
 					weaponskills[row[0]] = {
-						'skill': row[1],
-						'name': row[2]
+						'skill': row[1]
 					}
 		finally:
 			# Clean up the database handles.
@@ -501,7 +507,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	return weaponskills
 
 """ Set an individual weapon skill value for a player. """
-def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0, weaponname = ""):
+def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
 		id_server = member.server.id
 		id_user = member.id
@@ -512,18 +518,16 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}, {weaponname}) VALUES(%s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}) VALUES(%s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user,
 				weapon = ewcfg.col_weapon,
-				weaponskill = ewcfg.col_weaponskill,
-				weaponname = ewcfg.col_name
+				weaponskill = ewcfg.col_weaponskill
 			), (
 				id_server,
 				id_user,
 				weapon,
-				weaponskill,
-				weaponname
+				weaponskill
 			))
 
 			conn.commit()

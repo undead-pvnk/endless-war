@@ -166,9 +166,11 @@ def gen_data_text(
 		
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
-		weapon = ewcfg.weapon_map.get(user_data.weapon)
+		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 		if weapon != None:
-			response += " {} {}{}.".format(ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding, ("" if len(user_data.weaponname) == 0 else "{}, ".format(user_data.weaponname)), weapon.str_weapon)
+			response += " {} {}{}.".format(ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding, ("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
 			
@@ -224,9 +226,11 @@ async def data(cmd):
 		
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
-		weapon = ewcfg.weapon_map.get(user_data.weapon)
+		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 		if weapon != None:
-			response += " {} {}{}.".format(ewcfg.str_weapon_married_self if user_data.weaponmarried == True else ewcfg.str_weapon_wielding_self, ("" if len(user_data.weaponname) == 0 else "{}, ".format(user_data.weaponname)), weapon.str_weapon)
+			response += " {} {}{}.".format(ewcfg.str_weapon_married_self if user_data.weaponmarried == True else ewcfg.str_weapon_wielding_self, ("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank = (user_data.weaponskill - 4)))
 			
