@@ -4120,6 +4120,7 @@ poi_list = [
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
 		alias = [
+			"northsleezeboroughsubwaystation",
 			"northsleezeboroughsubway",
 			"northsleezeboroughsub",
 			"northsleezeboroughstation",
@@ -4148,6 +4149,7 @@ poi_list = [
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
 		alias = [
+			"southsleezeboroughsubwaystation",
 			"southsleezeboroughsubway",
 			"southsleezeboroughsub",
 			"southsleezeboroughstation",
@@ -4259,6 +4261,7 @@ poi_list = [
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
 		alias = [
+			"greenlightdistrictsubwaystation",
 			"greenlightdistrictsubway",
 			"greenlightdistrictsub",
 			"greenlightdistrictstation",
@@ -4343,6 +4346,7 @@ poi_list = [
 	EwPoi(  # Assault Flats Beach Subway Station
 		id_poi = poi_id_afb_subway_station,
 		alias = [
+			"assaultflatsbeachsubwaystation",
 			"assaultflatsbeachsubway",
 			"assaultflatsbeachsub",
 			"assaultflatsbeachstation",
@@ -4372,7 +4376,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
+	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
 		alias = [
 			"dreadfordblimptower",
@@ -4396,7 +4400,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
+	EwPoi(  # Assault Flats Beach Blimp Tower
 		id_poi = poi_id_afb_blimp_tower,
 		alias = [
 			"assaultflatsbeachblimptower",
