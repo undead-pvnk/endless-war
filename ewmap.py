@@ -431,6 +431,7 @@ def path_to(
 			try:
 				paths_walking.remove(path)
 			except:
+				ewutils.logMsg("Failed to remove dead path.")
 				return None
 
 		if len(paths_walking_new) > 0:
@@ -441,7 +442,8 @@ def path_to(
 		if len(paths_finished) > 0:
 			path_true = paths_finished[0]
 			path_true.iters = count_iter
-
+		if path_true is None:
+			ewutils.logMsg("Could not find a path.")
 		return path_true
 	else:
 		return pois_adjacent
