@@ -149,7 +149,6 @@ class EwTransport:
 
 			except:
 				ewutils.logMsg("An error occured while moving transport {}.".format(self.poi))
-				break
 
 """ Object that defines a public transportation line """
 class EwTransportLine:
