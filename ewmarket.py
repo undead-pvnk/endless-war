@@ -534,6 +534,7 @@ async def xfer(cmd):
 """ show the current market exchange rate """
 async def rate(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	response = ""
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
@@ -541,14 +542,18 @@ async def rate(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		stock = None
+		stock = ""
 
 		if cmd.tokens_count > 0:
-			stock = ewutils.formatNiceList(cmd.tokens[1:])
+			stock = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		if stock in ewcfg.stocks:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 			response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(math.ceil(stock.exchange_rate / 1000.0)))
+		elif stock == "":
+			for stock in ewcfg.stocks:
+				response += "The current value of {stock} stocks is {cred} SlimeCoin per Share.\n".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(math.ceil(stock.exchange_rate / 1000.0)))
+
 		else:
 			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
@@ -558,10 +563,11 @@ async def rate(cmd):
 """ show player's shares in a stock """
 async def shares(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	stock = None
+	stock = ""
+	response = ""
 
 	if cmd.tokens_count > 0:
-		stock = ewutils.formatNiceList(cmd.tokens[1:])
+		stock = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	if stock in ewcfg.stocks:
 		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
@@ -569,6 +575,13 @@ async def shares(cmd):
 		shares_value = int(shares * (stock.exchange_rate / 1000.0))
 
 		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
+	elif stock == "":
+		for stock in ewcfg.stocks
+			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+			shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
+			shares_value = int(shares * (stock.exchange_rate / 1000.0))
+
+			response += "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.\n".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
 	else:
 		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
