@@ -553,7 +553,7 @@ async def rate(cmd):
 		elif stock == "":
 			for stock in ewcfg.stocks:
 				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-				response += "The current value of {stock} stocks is {cred} SlimeCoin per Share.\n".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(math.ceil(stock.exchange_rate / 1000.0)))
+				response += "\nThe current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(math.ceil(stock.exchange_rate / 1000.0)))
 
 		else:
 			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
@@ -582,7 +582,7 @@ async def shares(cmd):
 			shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 			shares_value = int(shares * (stock.exchange_rate / 1000.0))
 
-			response += "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.\n".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
+			response += "\nYou have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
 	else:
 		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
@@ -692,14 +692,14 @@ def market_tick(stock_data, id_server):
 	#percentage_abs = percentage * -1
 
 
-	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * ewcfg.default_stock_exchange_rate / ewcfg.default_stock_market_rate)
+	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * min(stock_data.exchange_rate, ewcfg.default_stock_exchange_rate) / ewcfg.default_stock_market_rate)
 
 	percentage = exchange_rate_increase / stock_data.exchange_rate
 	percentage_abs = percentage * -1
 
 
 	# negative exchange rate causes problems, duh
-	exchange_rate_increase = max(exchange_rate_increase, -stock_data.exchange_rate + 1)
+	exchange_rate_increase = max(exchange_rate_increase, -stock_data.exchange_rate + 1000)
 
 	points = abs(exchange_rate_increase / 1000)
 
