@@ -317,7 +317,7 @@ async def invest(cmd):
 					response = "You don't have enough SlimeCoin to buy a share in {stock}".format(stock = ewcfg.stock_names.get(stock.id_stock))
 
 				else:
-					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.stat_total_slimecoin_invested)
+					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_invest)
 					shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 					shares += net_shares
 					updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = shares)
@@ -393,7 +393,7 @@ async def withdraw(cmd):
 						# Limit frequency of withdrawals
 						response = ewcfg.str_exchange_busy.format(action = "withdraw")
 					else:
-						user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.stat_total_slimecoin_withdrawn)
+						user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.coinsource_withdraw)
 						total_shares -= shares
 						user_data.time_lastinvest = time_now
 						stock.total_shares -= shares
