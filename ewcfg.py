@@ -757,6 +757,7 @@ col_clock = 'clock'
 col_weather = 'weather'
 col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
+col_donated_slimes = 'donated_slimes'
 
 # Database columns for stocks
 col_stock = 'stock'
