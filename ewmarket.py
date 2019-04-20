@@ -273,13 +273,11 @@ async def invest(cmd):
 		stock = None
 
 		if cmd.tokens_count > 1:
-			for token in cmd.tokens[1:]:
-				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
-					value = ewutils.getIntToken(cmd.tokens, allow_all = True)
-					break
+			value = ewutils.getIntToken(cmd.tokens, allow_all = True)
+			
 			for token in cmd.tokens[1:]:
 				if token.lower() in ewcfg.stocks:
-					stock = token
+					stock = token.lower()
 					break
 
 
@@ -360,13 +358,11 @@ async def withdraw(cmd):
 		stock = None
 
 		if cmd.tokens_count > 1:
-			for token in cmd.tokens[1:]:
-				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
-					value = ewutils.getIntToken(cmd.tokens, allow_all = True)
-					break
+			value = ewutils.getIntToken(cmd.tokens[1:], allow_all = True)
+
 			for token in cmd.tokens[1:]:
 				if token.lower() in ewcfg.stocks:
-					stock = token
+					stock = token.lower()
 					break
 
 
