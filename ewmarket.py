@@ -26,6 +26,7 @@ class EwMarket:
 	time_lasttick = 0
 	negaslime = 0
 	decayed_slimes = 0
+	donated_slimes = 0
 
 	""" Load the market data for this server from the database. """
 	def __init__(self, id_server = None):
@@ -38,14 +39,15 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
 					clock = ewcfg.col_clock,
 					weather = ewcfg.col_weather,
 					day = ewcfg.col_day,
-					decayed_slimes = ewcfg.col_decayed_slimes
+					decayed_slimes = ewcfg.col_decayed_slimes,
+					donated_slimes = ewcfg.col_donated_slimes
 				), (self.id_server, ))
 				result = cursor.fetchone();
 
@@ -58,6 +60,7 @@ class EwMarket:
 					self.weather = result[4]
 					self.day = result[5]
 					self.decayed_slimes = result[6]
+					self.donated_slimes = result[7]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
@@ -76,7 +79,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -84,7 +87,8 @@ class EwMarket:
 				clock = ewcfg.col_clock,
 				weather = ewcfg.col_weather,
 				day = ewcfg.col_day,
-				decayed_slimes = ewcfg.col_decayed_slimes
+				decayed_slimes = ewcfg.col_decayed_slimes,
+				donated_slimes = ewcfg.col_donated_slimes
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -93,7 +97,8 @@ class EwMarket:
 				self.clock,
 				self.weather,
 				self.day,
-				self.decayed_slimes
+				self.decayed_slimes,
+				self.donated_slimes
 			))
 
 			conn.commit()
@@ -405,6 +410,7 @@ async def donate(cmd):
 		return
 
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 
 	value = None
 	if cmd.tokens_count > 1:
@@ -426,6 +432,8 @@ async def donate(cmd):
 
 		if user_data.slimes < cost_total:
 			response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
+			market_data.donated_slimes += user_data.slimes
+			market_data.persist()
 			user_data.die(cause = ewcfg.cause_donation)
 			user_data.persist()
 			# Assign the corpse role to the player. He dead.
@@ -434,6 +442,8 @@ async def donate(cmd):
 			await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
 		else:
 			# Do the transfer if the player can afford it.
+			market_data.donated_slimes += cost_total
+			market_data.persist()
 			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
 			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
 			user_data.time_lastinvest = time_now

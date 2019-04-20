@@ -394,7 +394,7 @@ async def on_ready():
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
-		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
+		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -562,6 +562,7 @@ async def on_ready():
 							market_response = ewmarket.market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
 
+					market_data = EwMarket(id_server = server.id)
 					market_data.time_lasttick = time_now
 
 					# Advance the time and potentially change weather.
@@ -571,12 +572,16 @@ async def on_ready():
 						market_data.clock = 0
 						market_data.day += 1
 
+					market_data.persist()
+
 					if market_data.clock == 6:
-						response = ' The Slime Stock Exchange is now open for business.'
+						response = ' The SlimeCorp Stock Exchange is now open for business.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 					elif market_data.clock == 18:
-						response = ' The Slime Stock Exchange has closed for the night.'
+						response = ' The SlimeCorp Stock Exchange has closed for the night.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+	
+					market_data = EwMarket(id_server = server.id)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
