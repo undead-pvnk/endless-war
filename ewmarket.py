@@ -246,12 +246,16 @@ class EwCompany:
 async def invest(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	time_now = int(time.time())
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		return
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	if market_data.clock < 6 or market_data.clock >= 18:
+		response = ewcfg.str_exchange_closed
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
 		# Limit frequency of investments.
@@ -313,7 +317,7 @@ async def invest(cmd):
 					response = "You don't have enough SlimeCoin to buy a share in {stock}".format(stock = ewcfg.stock_names.get(stock.id_stock))
 
 				else:
-					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.stat_total_slimecoin_invested)
+					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_invest)
 					shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 					shares += net_shares
 					updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = shares)
@@ -340,6 +344,11 @@ async def invest(cmd):
 async def withdraw(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	time_now = int(time.time())
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
+
+	if market_data.clock < 6 or market_data.clock >= 18:
+		response = ewcfg.str_exchange_closed
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
@@ -360,41 +369,47 @@ async def withdraw(cmd):
 					stock = token
 					break
 
-		total_shares = getUserTotalShares(id_server = user_data.id_server, stock = stock, id_user = user_data.id_user)
 
-		if value != None:
-			if value < 0:
-				value = total_shares
-			if value <= 0:
-				value = None
-
-		if value != None:
+		if stock != None:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 
-			if value <= total_shares:
-				exchange_rate = (stock.exchange_rate / 1000.0)
+			total_shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 
-				shares = value
-				slimecoin = int(value * exchange_rate)
+			if value != None:
+				if value < 0:
+					value = total_shares 
+				if value <= 0:
+					value = None
 
-				if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
-					# Limit frequency of withdrawals
-					response = ewcfg.str_exchange_busy.format(action = "withdraw")
+			if value != None:
+
+				if value <= total_shares:
+					exchange_rate = (stock.exchange_rate / 1000.0)
+
+					shares = value
+					slimecoin = int(value * exchange_rate)
+
+					if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+						# Limit frequency of withdrawals
+						response = ewcfg.str_exchange_busy.format(action = "withdraw")
+					else:
+						user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.coinsource_withdraw)
+						total_shares -= shares
+						user_data.time_lastinvest = time_now
+						stock.total_shares -= shares
+
+						response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+						user_data.persist()
+						stock.timestamp = int(time.time())
+						stock.persist()
+						updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
 				else:
-					user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.stat_total_slimecoin_withdrawn)
-					total_shares -= shares
-					user_data.time_lastinvest = time_now
-					stock.total_shares -= shares
-
-					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
-					user_data.persist()
-					stock.timestamp = int(time.time())
-					stock.persist()
-					updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
+					response = "You don't have that many shares in {stock} to exchange.".format(stock = ewcfg.stock_names.get(stock.id_stock))
 			else:
-				response = "You don't have that many shares in {stock} to exchange.".format(stock = ewcfg.stock_names.get(stock.id_stock))
+				response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
 		else:
-			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
+			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
+
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -796,6 +811,7 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 
 			for row in data:
 				values = row[0]
+
 		except:
 			pass
 		finally:
