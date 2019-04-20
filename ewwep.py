@@ -902,8 +902,8 @@ async def arm(cmd):
 
 		weapon = ewcfg.weapon_map.get(value)
 		if weapon != None:
-			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecredit:
-				response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecredit)
+			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecoin:
+				response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecoin)
 				
 			else:
 				response = "You "
@@ -922,7 +922,7 @@ async def arm(cmd):
 				)
 
 				if weapon.id_weapon != 'gun':
-					user_data.change_slimecredit(n = -ewcfg.weapon_fee, coinsource=ewcfg.source_spending)
+					user_data.change_slimecoin(n = -ewcfg.weapon_fee, coinsource=ewcfg.source_spending)
 					user_data.persist()
 					response += "pay {} slimecoin and ".format(ewcfg.weapon_fee)
 

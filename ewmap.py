@@ -190,7 +190,7 @@ map_world = [
 	[ -1, -1, -1, -1,  0, -1, -1,  0, -1, -1, -2, -1, -1, -3, -1, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, 20, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
 	[ -1, -1, -1, -1,  0, -1, -1,  0, -1, -1, 20, -1, -1, -3, 20, -2, -1,  0, -1, -1, -1, -2, 20, -2, -3, -3, 30,  0,  0,  0,  0,  0,  0, -1,  0,  0, 30, -2, -3, -3, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1 ],
 	[ -1, -1, -1, -1,  0, -1, -1,  0,  0, 30, -2, -1, -1, 30, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, 30, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0, -1,  0,  0, 30, -3, -2, -3, 30,  0, -1,  0, -1, -1,  0, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0, -1,  0,  0, 30, -2, -3, -3, 30,  0, -1,  0, -1, -1,  0, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
 	[ -1, -1, -2, 20, -2, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, 20, -1, 20, -1,  0,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
 	[ -1, -1, -1, -1, 30, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, 30, -1, 30, -1, -1, -2, -1, -2, -1,  0, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
 	[ -1, -1, -1, -1,  0, 30, -3, -3, -2, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -2, 20, -2, -3, -3, 20, -2, -1, -1, -1, -1,  0, -1, -1, -1, -1,  0,  0, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
@@ -431,6 +431,7 @@ def path_to(
 			try:
 				paths_walking.remove(path)
 			except:
+				ewutils.logMsg("Failed to remove dead path.")
 				return None
 
 		if len(paths_walking_new) > 0:
@@ -441,7 +442,8 @@ def path_to(
 		if len(paths_finished) > 0:
 			path_true = paths_finished[0]
 			path_true.iters = count_iter
-
+		if path_true is None:
+			ewutils.logMsg("Could not find a path.")
 		return path_true
 	else:
 		return pois_adjacent
@@ -886,7 +888,7 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone and not inaccessible(user_data = user_data, poi = poi.mother_district):
+			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
 				server = ewcfg.server_list[id_server]
 				member_object = server.get_member(id_user)
 

@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v2.24glhf"
+version = "v3.0"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -757,6 +757,7 @@ col_clock = 'clock'
 col_weather = 'weather'
 col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
+col_donated_slimes = 'donated_slimes'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -2813,9 +2814,9 @@ poi_list = [
 		],
 		str_name = "Green Light District",
 		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
-		coord = (29, 13),
+		coord = (28, 13),
 		coord_alias = [
-			(28, 13),
+			(29, 13),
 			(30, 13)
 		],
 		channel = "green-light-district",
@@ -4120,6 +4121,7 @@ poi_list = [
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
 		alias = [
+			"northsleezeboroughsubwaystation",
 			"northsleezeboroughsubway",
 			"northsleezeboroughsub",
 			"northsleezeboroughstation",
@@ -4148,6 +4150,7 @@ poi_list = [
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
 		alias = [
+			"southsleezeboroughsubwaystation",
 			"southsleezeboroughsubway",
 			"southsleezeboroughsub",
 			"southsleezeboroughstation",
@@ -4259,6 +4262,7 @@ poi_list = [
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
 		alias = [
+			"greenlightdistrictsubwaystation",
 			"greenlightdistrictsubway",
 			"greenlightdistrictsub",
 			"greenlightdistrictstation",
@@ -4343,6 +4347,7 @@ poi_list = [
 	EwPoi(  # Assault Flats Beach Subway Station
 		id_poi = poi_id_afb_subway_station,
 		alias = [
+			"assaultflatsbeachsubwaystation",
 			"assaultflatsbeachsubway",
 			"assaultflatsbeachsub",
 			"assaultflatsbeachstation",
@@ -4372,7 +4377,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
+	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
 		alias = [
 			"dreadfordblimptower",
@@ -4396,7 +4401,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
+	EwPoi(  # Assault Flats Beach Blimp Tower
 		id_poi = poi_id_afb_blimp_tower,
 		alias = [
 			"assaultflatsbeachblimptower",
