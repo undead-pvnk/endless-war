@@ -576,7 +576,7 @@ async def shares(cmd):
 
 		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
 	elif stock == "":
-		for stock in ewcfg.stocks
+		for stock in ewcfg.stocks:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 			shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 			shares_value = int(shares * (stock.exchange_rate / 1000.0))
