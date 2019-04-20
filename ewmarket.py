@@ -253,7 +253,7 @@ async def invest(cmd):
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-	if market_data.clock < 6 and market_data.clock >= 18:
+	if market_data.clock < 6 or market_data.clock >= 18:
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -346,7 +346,7 @@ async def withdraw(cmd):
 	time_now = int(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
-	if market_data.clock < 6 and market_data.clock >= 18:
+	if market_data.clock < 6 or market_data.clock >= 18:
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
