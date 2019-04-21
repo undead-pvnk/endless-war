@@ -245,7 +245,7 @@ class EwCompany:
 """ player invests slimecoin in the market """
 async def invest(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	time_now = int(time.time())
+	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
@@ -294,16 +294,16 @@ async def invest(cmd):
 				# basic exchange rate / 1000 = 1 share
 				exchange_rate = (stock.exchange_rate / 1000.0)
 
-				cost_total = int(value * 1.05)
+				cost_total = round(value * 1.05)
 
 				# gets the highest value possible where the player can still pay the fee
 				if value == user_data.slimecoin:
 					while cost_total > user_data.slimecoin:
 						value -= cost_total - value
-						cost_total = int(value * 1.05)
+						cost_total = round(value * 1.05)
 
 				# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
-				net_shares = int(value / exchange_rate)
+				net_shares = round(value / exchange_rate)
 
 				if user_data.slimecoin < cost_total:
 					response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
@@ -325,7 +325,7 @@ async def invest(cmd):
 					response = "You invest {coin} SlimeCoin and receive {shares} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
 
 					user_data.persist()
-					stock.timestamp = int(time.time())
+					stock.timestamp = round(time.time())
 					stock.persist()
 
 			else:
@@ -341,7 +341,7 @@ async def invest(cmd):
 """ player withdraws slimecoin from the market """
 async def withdraw(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	time_now = int(time.time())
+	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
 	if market_data.clock < 6 or market_data.clock >= 18:
@@ -383,7 +383,7 @@ async def withdraw(cmd):
 					exchange_rate = (stock.exchange_rate / 1000.0)
 
 					shares = value
-					slimecoin = int(value * exchange_rate)
+					slimecoin = round(value * exchange_rate)
 
 					if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
 						# Limit frequency of withdrawals
@@ -396,7 +396,7 @@ async def withdraw(cmd):
 
 						response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 						user_data.persist()
-						stock.timestamp = int(time.time())
+						stock.timestamp = round(time.time())
 						stock.persist()
 						updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
 				else:
@@ -412,7 +412,7 @@ async def withdraw(cmd):
 
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
-	time_now = int(time.time())
+	time_now = round(time.time())
 
 	if cmd.message.channel.name != ewcfg.channel_slimecorphq:
 		# Only allowed in SlimeCorp HQ.
@@ -438,8 +438,8 @@ async def donate(cmd):
 
 	elif value != None:
 		# Amount of slime invested.
-		cost_total = int(value)
-		coin_total = int(value / ewcfg.slimecoin_exchangerate)
+		cost_total = round(value)
+		coin_total = round(value / ewcfg.slimecoin_exchangerate)
 
 		if user_data.slimes < cost_total:
 			response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
@@ -472,7 +472,7 @@ async def donate(cmd):
 
 """ transfer slimecoin between players """
 async def xfer(cmd):
-	time_now = int(time.time())
+	time_now = round(time.time())
 
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
@@ -520,7 +520,7 @@ async def xfer(cmd):
 
 	if value != None:
 		# Cost including the 5% transfer fee.
-		cost_total = int(value * 1.05)
+		cost_total = round(value * 1.05)
 
 		if user_data.slimecoin < cost_total:
 			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
@@ -584,14 +584,14 @@ async def shares(cmd):
 	if stock in ewcfg.stocks:
 		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 		shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
-		shares_value = int(shares * (stock.exchange_rate / 1000.0))
+		shares_value = round(shares * (stock.exchange_rate / 1000.0))
 
 		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
 	elif stock == "":
 		for stock in ewcfg.stocks:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 			shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
-			shares_value = int(shares * (stock.exchange_rate / 1000.0))
+			shares_value = round(shares * (stock.exchange_rate / 1000.0))
 
 			response += "\nYou have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
 	else:
@@ -663,7 +663,7 @@ def market_tick(stock_data, id_server):
 		elif coin_rate < -0.5:
 			coin_rate = -0.5
 
-		coin_rate = int((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
+		coin_rate = round((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
 					coin_rate * 2 * ewcfg.max_iw_swing))
 
 	market_rate += coin_rate
@@ -703,7 +703,7 @@ def market_tick(stock_data, id_server):
 	#percentage_abs = percentage * -1
 
 
-	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * min(stock_data.exchange_rate, ewcfg.default_stock_exchange_rate) / ewcfg.default_stock_market_rate)
+	exchange_rate_increase = round((market_rate - ewcfg.default_stock_market_rate) * min(stock_data.exchange_rate, ewcfg.default_stock_exchange_rate) / ewcfg.default_stock_market_rate)
 
 	percentage = exchange_rate_increase / stock_data.exchange_rate
 	percentage_abs = percentage * -1
@@ -758,7 +758,7 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 
 		try:
 
-			count = int(count)
+			count = round(count)
 			data = ewutils.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
 				stock = ewcfg.col_stock,
 				total_shares = ewcfg.col_total_shares,
