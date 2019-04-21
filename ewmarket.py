@@ -564,7 +564,7 @@ async def rate(cmd):
 		elif stock == "":
 			for stock in ewcfg.stocks:
 				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-				response += "\nThe current value of {stock:,} stocks is {cred:,} SlimeCoin per 1000 Shares.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = stock.exchange_rate)
+				response += "\nThe current value of {stock} stocks is {cred:,} SlimeCoin per 1000 Shares.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = stock.exchange_rate)
 
 		else:
 			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
