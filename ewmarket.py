@@ -676,7 +676,7 @@ def market_tick(stock_data, id_server):
 	# negative exchange rate causes problems, duh
 	exchange_rate_increase = max(exchange_rate_increase, -stock_data.exchange_rate)
 
-	points = abs(exchange_rate_increase / 1000)
+	points = abs(exchange_rate_increase / 1000.0)
 
 	stock_data.exchange_rate += exchange_rate_increase
 	stock_data.market_rate = market_rate
