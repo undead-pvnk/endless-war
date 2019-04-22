@@ -253,7 +253,7 @@ async def invest(cmd):
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-	if market_data.clock < 6 or market_data.clock >= 18:
+	if market_data.clock < 6 or market_data.clock >= 20:
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -346,7 +346,7 @@ async def withdraw(cmd):
 	time_now = int(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
-	if market_data.clock < 6 or market_data.clock >= 18:
+	if market_data.clock < 6 or market_data.clock >= 20:
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -461,7 +461,6 @@ async def donate(cmd):
 			market_data.persist()
 			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
 			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
-			user_data.time_lastinvest = time_now
 
 			# Persist changes
 			user_data.persist()
@@ -532,7 +531,6 @@ async def xfer(cmd):
 			# Do the transfer if the player can afford it.
 			target_data.change_slimecoin(n = value, coinsource = ewcfg.coinsource_transfer)
 			user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_transfer)
-			user_data.time_lastinvest = time_now
 
 			# Persist changes
 			response = "You transfer {slime:,} SlimeCoin to {target_name}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(slime = value, target_name = member.display_name, fee = (cost_total - value))
