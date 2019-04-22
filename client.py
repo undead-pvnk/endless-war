@@ -577,7 +577,7 @@ async def on_ready():
 					if market_data.clock == 6:
 						response = ' The SlimeCorp Stock Exchange is now open for business.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
-					elif market_data.clock == 18:
+					elif market_data.clock == 20:
 						response = ' The SlimeCorp Stock Exchange has closed for the night.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
 	

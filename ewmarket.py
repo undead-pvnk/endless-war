@@ -253,7 +253,7 @@ async def invest(cmd):
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-	if market_data.clock < 6 or market_data.clock >= 18:
+	if market_data.clock < 6 or market_data.clock >= 20:
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -344,7 +344,7 @@ async def withdraw(cmd):
 	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
-	if market_data.clock < 6 or market_data.clock >= 18:
+	if market_data.clock < 6 or market_data.clock >= 20:
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -457,7 +457,6 @@ async def donate(cmd):
 			market_data.persist()
 			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
 			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
-			user_data.time_lastinvest = time_now
 
 			# Persist changes
 			user_data.persist()
@@ -483,6 +482,12 @@ async def xfer(cmd):
 	if cmd.mentions_count != 1:
 		# Must have exactly one target to send to.
 		response = "Mention the player you want to send SlimeCoin to."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return
+
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		# Limit frequency of transfers
+		response = ewcfg.str_exchange_busy.format(action = "transfer slimecoin")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		return
 
