@@ -489,6 +489,12 @@ async def xfer(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		return
 
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		# Limit frequency of transfers
+		response = ewcfg.str_exchange_busy.format(action = "transfer slimecoin")
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return
+
 	member = cmd.mentions[0]
 	target_data = EwUser(member = member)
 
@@ -531,6 +537,7 @@ async def xfer(cmd):
 			# Do the transfer if the player can afford it.
 			target_data.change_slimecoin(n = value, coinsource = ewcfg.coinsource_transfer)
 			user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_transfer)
+			user_data.time_lastinvest = time_now
 
 			# Persist changes
 			response = "You transfer {slime:,} SlimeCoin to {target_name}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(slime = value, target_name = member.display_name, fee = (cost_total - value))
