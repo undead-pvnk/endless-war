@@ -630,7 +630,7 @@ emote_ht = "<:ht:492067823150039063>"
 emote_hs = "<:hs:492067783396294658>"
 emote_he = "<:he:492067814933266443>"
 emote_h_ = "<:h_:492067806465228811>"
-emote_blank = "<:blank:570060647900119070>"
+emote_blank = "<:blank:570060211327336472>"
 
 # Emotes for troll romance
 emote_hearts = ":hearts:"
