@@ -327,7 +327,7 @@ async def invest(cmd):
 					user_data.time_lastinvest = time_now
 
 					stock.total_shares += net_shares
-					response = "You invest {coin} SlimeCoin and receive {shares} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
+					response = "You invest {coin:,} SlimeCoin and receive {shares:,} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
 
 					user_data.persist()
 					stock.timestamp = round(time.time())
@@ -404,7 +404,7 @@ async def withdraw(cmd):
 						user_data.time_lastinvest = time_now
 						stock.total_shares -= shares
 
-						response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+						response = "You exchange {shares:,} shares in {stock} for {coins:,} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 						user_data.persist()
 						stock.timestamp = round(time.time())
 						stock.persist()
@@ -854,9 +854,9 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 		shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 		shares_value = round(shares * (stock.exchange_rate / 1000.0))
 
-		response = "You have {shares} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+		response = "You have {shares:,} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 		if user_data.poi == ewcfg.poi_id_stockexchange:
-			response += ", currently valued at {coin} SlimeCoin.".format(coin = shares_value)
+			response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
 		else:
 			response += "."
 		
