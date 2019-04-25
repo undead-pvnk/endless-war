@@ -193,6 +193,8 @@ cmd_map = {
 	ewcfg.cmd_exchangerate: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt3: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt4: ewmarket.rate,
 
 	# show player's current shares in a compant
 	ewcfg.cmd_shares: ewmarket.shares,
