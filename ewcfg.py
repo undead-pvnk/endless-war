@@ -4587,6 +4587,7 @@ for poi in poi_list:
 		# Populate the map of coordinate aliases to the main coordinate.
 		for coord_alias in poi.coord_alias:
 			alias_to_coord[coord_alias] = poi.coord
+			coord_to_poi[coord_alias] = poi
 
 	# Populate the map of point of interest names/aliases to the POI.
 	id_to_poi[poi.id_poi] = poi
