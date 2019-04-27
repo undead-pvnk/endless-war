@@ -215,7 +215,13 @@ class EwDistrict:
 							district = ewcfg.id_to_poi[self.name].str_name,
 							progress = progress_percent_after
 						)
-						channels = ewcfg.hideout_channels
+						if self.controlling_faction == ewcfg.faction_rowdys:
+							channels = [ewcfg.channel_rowdyroughhouse]
+						elif self.controlling_faction == ewcfg.faction_killers:
+							channels = [ewcfg.channel_copkilltown]
+						else:
+							channels = ewcfg.hideout_channels
+
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
@@ -457,6 +463,8 @@ async def capture_tick(id_server):
 					friendly_neighbors = dist.get_number_of_friendly_neighbors()
 					if dist.all_neighbors_friendly():
 						capture_speed = 0
+					elif dist.controlling_faction == faction_capture:
+						capture_speed *= 1 + 0.1 * friendly_neighbors
 					else:
 						capture_speed /= 1 + 0.1 * friendly_neighbors
 
