@@ -247,22 +247,26 @@ class EwPath:
 	steps = None
 	cost = 0
 	iters = 0
+	pois_visited = None
 
 	def __init__(
 		self,
 		path_from = None,
 		steps = [],
 		cost = 0,
-		visited = {}
+		visited = {},
+		pois_visited = set()
 	):
 		if path_from != None:
 			self.steps = deepcopy(path_from.steps)
 			self.cost = path_from.cost
 			self.visited = deepcopy(path_from.visited)
+			self.pois_visited = deepcopy(path_from.pois_visited)
 		else:
 			self.steps = steps
 			self.cost = cost
 			self.visited = visited
+			self.pois_visited = pois_visited
 			
 
 """
@@ -283,13 +287,15 @@ def path_step(path, coord_next, user_data, coord_end):
 	if cost_next == sem_city or cost_next == sem_city_alias:
 		next_poi = ewcfg.coord_to_poi.get(coord_next)
 
-		if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
-			cost_next = 5000
+		if inaccessible(user_data = user_data, poi = next_poi):
+			return False
 		else:
 			cost_next = 0
-
-			if next_poi != None:
-				if len(user_data.faction) > 0 and coord_next != coord_end and next_poi.id_poi in ewcfg.capturable_districts:
+			
+			# check if we already got the movement bonus/malus for this district
+			if not next_poi.id_poi in path.pois_visited:
+				path.pois_visited.add(next_poi.id_poi)
+				if len(user_data.faction) > 0 and next_poi.coord != coord_end and next_poi.coord != path.steps[0]:
 					district = EwDistrict(
 						id_server = user_data.id_server,
 						district = next_poi.id_poi
@@ -352,90 +358,61 @@ def path_to(
 		visited = { coord_start[0]: { coord_start[1]: True } }
 	)
 
-	for neigh in neighbors(coord_start):
-		path_next = path_branch(path_base, neigh, user_data, coord_end)
-		if path_next != None:
-			paths_walking.append(path_next)
+	paths_walking.append(path_base)
 
 	count_iter = 0
 	while len(paths_walking) > 0:
 		count_iter += 1
 
 		paths_walking_new = []
-		paths_dead = []
 
 		for path in paths_walking:
 			if path.cost >= score_golf:
-				paths_dead.append(path)
 				continue
 
 			step_last = path.steps[-1]
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
-			path_branches = 0
+
+			if coord_end != None:
+				# Arrived at the actual destination?
+				if step_last == coord_end:
+					path_final = path
+					if path_final.cost < score_golf:
+						score_golf = path_final.cost
+						paths_finished = []
+					if path_final.cost <= score_golf:
+						paths_finished.append(path_final)
+					continue
+
+			else:
+				# Looking for adjacent points of interest.
+				sem_current = map_world[step_last[1]][step_last[0]]
+				poi_adjacent_coord = step_last
+				if sem_current == sem_city_alias:
+					poi_adjacent_coord = ewcfg.alias_to_coord.get(step_last)
+
+					if poi_adjacent_coord != None:
+						sem_current = sem_city
+
+				if sem_current == sem_city and poi_adjacent_coord != coord_start:
+					poi_adjacent = ewcfg.coord_to_poi.get(poi_adjacent_coord)
+
+					if poi_adjacent != None:
+						pois_adjacent.append(poi_adjacent)
+						continue
+
 			path_base = EwPath(path_from = path)
 			for neigh in neighbors(step_last):
 				if neigh == step_penult:
 					continue
 
-				could_move = False
+				branch = path_branch(path_base, neigh, user_data, coord_end)
+				if branch != None:
+					paths_walking_new.append(branch)
 
-				branch = None
-				if path_branches == 0:
-					could_move = path_step(path, neigh, user_data, coord_end)
-				else:
-					branch = path_branch(path_base, neigh, user_data, coord_end)
-					if branch != None:
-						could_move = True
-						paths_walking_new.append(branch)
 
-				if could_move:
-					path_branches += 1
-
-					if coord_end != None:
-						# Arrived at the actual destination?
-						if neigh == coord_end:
-							path_final = branch if branch != None else path
-							if path_final.cost < score_golf:
-								score_golf = path_final.cost
-								paths_finished = []
-
-							if path.cost <= score_golf:
-								paths_finished.append(path_final)
-
-							paths_dead.append(path_final)
-					else:
-						# Looking for adjacent points of interest.
-						sem_current = map_world[neigh[1]][neigh[0]]
-						poi_adjacent_coord = neigh
-
-						if sem_current == sem_city_alias:
-							poi_adjacent_coord = ewcfg.alias_to_coord.get(neigh)
-
-							if poi_adjacent_coord != None:
-								sem_current = sem_city
-
-						if sem_current == sem_city and poi_adjacent_coord != coord_start:
-							poi_adjacent = ewcfg.coord_to_poi.get(poi_adjacent_coord)
-
-							if poi_adjacent != None:
-								pois_adjacent.append(poi_adjacent)
-
-							path_final = branch if branch != None else path
-							paths_dead.append(path_final)
-
-			if path_branches == 0:
-				paths_dead.append(path)
-
-		for path in paths_dead:
-			try:
-				paths_walking.remove(path)
-			except:
-				ewutils.logMsg("Failed to remove dead path.")
-				return None
-
-		if len(paths_walking_new) > 0:
-			paths_walking += paths_walking_new
+		paths_walking = paths_walking_new
 
 	if coord_end != None:
 		path_true = None
