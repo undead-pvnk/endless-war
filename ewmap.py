@@ -247,26 +247,22 @@ class EwPath:
 	steps = None
 	cost = 0
 	iters = 0
-	pois_visited = None
 
 	def __init__(
 		self,
 		path_from = None,
 		steps = [],
 		cost = 0,
-		visited = {},
-		pois_visited = set()
+		visited = {}
 	):
 		if path_from != None:
 			self.steps = deepcopy(path_from.steps)
 			self.cost = path_from.cost
 			self.visited = deepcopy(path_from.visited)
-			self.pois_visited = deepcopy(path_from.pois_visited)
 		else:
 			self.steps = steps
 			self.cost = cost
 			self.visited = visited
-			self.pois_visited = pois_visited
 			
 
 """
@@ -285,21 +281,15 @@ def path_step(path, coord_next, user_data, coord_end):
 	cost_next = map_world[coord_next[1]][coord_next[0]]
 
 	if cost_next == sem_city or cost_next == sem_city_alias:
-		if coord_next in ewcfg.alias_to_coord:
-			coord_poi = ewcfg.alias_to_coord.get(coord_next)
-		else:
-			coord_poi = coord_next
+		next_poi = ewcfg.coord_to_poi.get(coord_next)
 
-		next_poi = ewcfg.coord_to_poi.get(coord_poi)
-
-		if inaccessible(user_data = user_data, poi = next_poi):
-			return False
+		if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
+			cost_next = 5000
 		else:
 			cost_next = 0
 
-			if not next_poi.id_poi in path.pois_visited:
-				path.pois_visited.add(next_poi.id_poi)
-				if len(user_data.faction) > 0 and coord_poi != coord_end and coord_poi != path.steps[0]:
+			if next_poi != None:
+				if len(user_data.faction) > 0 and coord_next != coord_end and next_poi.id_poi in ewcfg.capturable_districts:
 					district = EwDistrict(
 						id_server = user_data.id_server,
 						district = next_poi.id_poi
@@ -338,7 +328,7 @@ def path_to(
 	poi_end = None,
 	user_data = None
 ):
-	score_golf = 500
+	score_golf = 65535
 	paths_finished = []
 	paths_walking = []
 
@@ -359,8 +349,7 @@ def path_to(
 	path_base = EwPath(
 		steps = [ coord_start ],
 		cost = 0,
-		visited = { coord_start[0]: { coord_start[1]: True } },
-		pois_visited = set()
+		visited = { coord_start[0]: { coord_start[1]: True } }
 	)
 
 	for neigh in neighbors(coord_start):
@@ -411,7 +400,7 @@ def path_to(
 								score_golf = path_final.cost
 								paths_finished = []
 
-							if path_final.cost <= score_golf:
+							if path.cost <= score_golf:
 								paths_finished.append(path_final)
 
 							paths_dead.append(path_final)
@@ -438,14 +427,15 @@ def path_to(
 			if path_branches == 0:
 				paths_dead.append(path)
 
-		if len(paths_walking_new) > 0:
-			paths_walking += paths_walking_new
-
 		for path in paths_dead:
 			try:
 				paths_walking.remove(path)
 			except:
 				ewutils.logMsg("Failed to remove dead path.")
+				return None
+
+		if len(paths_walking_new) > 0:
+			paths_walking += paths_walking_new
 
 	if coord_end != None:
 		path_true = None
