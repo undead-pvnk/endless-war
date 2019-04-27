@@ -388,7 +388,7 @@ async def capture_progress(cmd):
 	elif district_data.capturing_faction != "":
 		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
 	else:
-		response += "Nobody has staked a claim on this district yet. ".format(district_data.controlling_faction.capitalize())
+		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
 	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
