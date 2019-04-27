@@ -334,7 +334,11 @@ def path_to(
 	poi_end = None,
 	user_data = None
 ):
-	score_golf = 65535
+	score_golf = math.inf
+	score_map = []
+	for row in map_world:
+		score_map.append(list(map(replace_with_inf, row)))
+
 	paths_finished = []
 	paths_walking = []
 
@@ -358,6 +362,7 @@ def path_to(
 		visited = { coord_start[0]: { coord_start[1]: True } }
 	)
 
+
 	paths_walking.append(path_base)
 
 	count_iter = 0
@@ -367,10 +372,13 @@ def path_to(
 		paths_walking_new = []
 
 		for path in paths_walking:
-			if path.cost >= score_golf:
+			step_last = path.steps[-1]
+			score_current = score_map[step_last[1]][step_last[0]]
+			if path.cost >= score_golf or path.cost >= score_current:
 				continue
 
-			step_last = path.steps[-1]
+			score_map[step_last[1]][step_last[0]] = path.cost
+
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
 
@@ -425,6 +433,8 @@ def path_to(
 	else:
 		return pois_adjacent
 
+def replace_with_inf(n):
+	return math.inf
 
 """
 	Debug method to draw the map, optionally with a path/route on it.
