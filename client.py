@@ -245,6 +245,9 @@ cmd_map = {
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
 
+	# Check your current POI capture progress
+	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
+
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
 

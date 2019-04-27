@@ -408,6 +408,7 @@ cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
+cmd_capture_progress = cmd_prefix + 'progress'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 
