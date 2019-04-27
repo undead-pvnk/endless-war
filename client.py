@@ -281,6 +281,7 @@ cmd_map = {
 	ewcfg.cmd_harvest: ewcmd.harvest,
 	ewcfg.cmd_salute: ewcmd.salute,
 	ewcfg.cmd_unsalute: ewcmd.unsalute,
+	ewcfg.cmd_hurl: ewcmd.hurl,
 	ewcfg.cmd_news: ewcmd.patchnotes,
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
@@ -387,7 +388,7 @@ async def on_ready():
 			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
 		elif poi.id_poi == ewcfg.poi_id_thesewers:
 			neighbors = ewcfg.poi_list
-			
+
 		if neighbors != None:
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
@@ -582,7 +583,7 @@ async def on_ready():
 					elif market_data.clock == 20:
 						response = ' The SlimeCorp Stock Exchange has closed for the night.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
-	
+
 					market_data = EwMarket(id_server = server.id)
 
 					if random.randrange(30) == 0:
@@ -782,7 +783,7 @@ async def on_message(message):
 
 		user_data = EwUser(member = message.author)
 		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
-			
+
 			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))

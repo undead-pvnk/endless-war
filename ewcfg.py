@@ -306,6 +306,7 @@ cmd_help_alt3 = cmd_prefix + 'guide'
 cmd_harvest = cmd_prefix + 'harvest'
 cmd_salute = cmd_prefix + 'salute'
 cmd_unsalute = cmd_prefix + 'unsalute'
+cmd_hurl = cmd_prefix + 'hurl'
 cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
 cmd_haunt = cmd_prefix + 'haunt'
@@ -1001,7 +1002,7 @@ def wef_nunchucks(ctn = None):
 	for count in range(5):
 		if random.randint(1, 3) == 1:
 			ctn.strikes += 1
-			ctn.slimes_damage += int(dmg / 2)
+			ctn.slimes_damage += int((dmg * 3) / 5)
 
 	if ctn.strikes == 5:
 		ctn.crit = True
@@ -1012,10 +1013,10 @@ def wef_nunchucks(ctn = None):
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
 	ctn.miss = False
-	ctn.slimes_damage = int(0.8 * ctn.slimes_damage)
+	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
 	if(random.randrange(10) + 1) == 10:
 		ctn.crit = True
-		ctn.slimes_damage *= 2
+		ctn.slimes_damage *= 2.1
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None):
@@ -1585,8 +1586,8 @@ food_list = [
 			"nuts",
 			"packet"
 		],
-		recover_hunger = 20,
-		price = 2,
+		recover_hunger = 50,
+		price = 8,
 		inebriation = 0,
 		str_name = 'packet of salted razornuts',
 		vendors = [vendor_bar],
@@ -2473,6 +2474,8 @@ food_list = [
 			"stuffed",
 			"stuffedcrust",
 			"double",
+			"doub",
+			"dou"
 		],
 		recover_hunger = 500,
 		price = 50,
@@ -3281,7 +3284,8 @@ poi_list = [
 			"ghost",
 			"ghosts",
 			"ts",
-			"s"
+			"s",
+			"loser"
 		],
 		str_name = "The Sewers",
 		str_desc = "A vast subterranean maze of concrete tunnels, eternally echoing with the dripping of water and decayed slime runoff. All the waste of NLACakaNM eventually winds up here, citizens included.",
@@ -3304,10 +3308,11 @@ poi_list = [
 			"sec",
 			"sx",
 			"scex",
-			"scx"
+			"scx",
+			"findom"
 		],
 		str_name = "The SlimeCorp Stock Exchange",
-		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular.\n\nExits into Downtown NLACakaNM.",
+		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
 		channel = channel_stockexchange,
 		role = "Stock Exchange",
 		coord = (21, 16),
@@ -3363,7 +3368,8 @@ poi_list = [
 			"tacobell",
 			"kfc",
 			"fcourt",
-			"fc"
+			"fc",
+			"marketmanipulation"
 		],
 		str_name = "The NLACakaNM Food Court",
 		str_desc = "Inside a large shopping mall lies the city’s prized food court. This large, brightly-lit area with tiled walls and floors and numerous clashing, "
@@ -3542,7 +3548,6 @@ poi_list = [
 			"slimecasino",
 			"theslimecasino",
 			"tc",  # the casino
-			"sc",  # slime casino
 			"cas",
 			"c"
 		],
@@ -3601,9 +3606,10 @@ poi_list = [
 			"smokers",
 			"cough",
 			"smc",
-			"wf", #wreckington food
+			"sc",
 			"rf", #rowdy food
-			"sm"
+			"sm",
+			#"k0ff"
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
@@ -3777,6 +3783,7 @@ poi_list = [
 			"wtferry",
 			"wtp",
 			"wtfp",
+			"wf"
 		],
 		str_name = "The Wreckington Ferry Port",
 		str_desc = "Caddy corner to Wreckington’s iconic junkyard lies its less famous shipyard, filled mostly with dozens upon dozens of different garbage barges dumping off metric tons of trash every day but also hosting this very terminal! The ferry takes you from here to Vagrant’s Corner, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Wreckington.",
@@ -3799,6 +3806,7 @@ poi_list = [
 			"vcferry",
 			"vcp",
 			"vcfp",
+			"vf"
 		],
 		str_name = "The Vagrant's Corner Ferry Port",
 		str_desc = "Down one of hundreds of piers on the crowded Vagrant’s Corner wharf sits this dingy dinghy terminal. The ferry takes you from here to Wreckington, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Vagrant's Corner.",
@@ -3938,7 +3946,8 @@ poi_list = [
 			"cksub",
 			"ckstation",
 			"copkills",
-			"cks"
+			"cks",
+			"cs"
 		],
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
@@ -4062,7 +4071,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_glocksbury,
 		is_transport_stop = True,
-		transport_lines = set()	
+		transport_lines = set()
 	),
 	EwPoi(  # West Glocksbury Subway Station
 		id_poi = poi_id_wgb_subway_station,
@@ -4420,7 +4429,7 @@ poi_list = [
 			"afbtower"
 		],
 		str_name = "The Assault Flats Beach Blimp Tower",
-		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.", 
+		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.",
 		coord = (40, 2),
 		channel = channel_afb_blimp_tower,
 		role = "Assault Flats Beach Blimp Tower",
@@ -4932,7 +4941,7 @@ for line in transport_lines:
 		poi_data = id_to_poi.get(poi)
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
-        
+
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -6047,7 +6056,8 @@ thrownobjects_list = [
 	"small motor vehicle",
 	"chunk of broken concrete",
 	"piece of rusted scrap metal",
-	"box overflowing with KFC branded bbq sauce"
+	"box overflowing with KFC branded bbq sauce",
+	"Nokia 3310"
 ]
 
 quadrant_flushed = "flushed"
