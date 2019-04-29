@@ -455,7 +455,7 @@ async def attack(cmd):
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
 					if shootee_data.slimelevel >= user_data.slimelevel:
-						user_data.add_weaponskill(n = 1)
+						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
 					#explode_damage = slimes_dropped / 10 + shootee_data.slimes / 2
 					# explode, damaging everyone in the district
@@ -802,15 +802,11 @@ async def spar(cmd):
 						weaker_player.change_slimes(n = slimegain / 2)
 						stronger_player.change_slimes(n = slimegain / 2)
 
-						if weaker_player.weaponskill < 5:
-							weaker_player.add_weaponskill(n = 1)
-						elif (weaker_player.weaponskill + 1) < stronger_player.weaponskill:
-							weaker_player.add_weaponskill(n = 1)
+						if weaker_player.weaponskill < 5 or (weaker_player.weaponskill + 1) < stronger_player.weaponskill:
+							weaker_player.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 
-						if stronger_player.weaponskill < 5:
-							stronger_player.add_weaponskill(n = 1)
-						elif (stronger_player.weaponskill + 1) < weaker_player.weaponskill:
-							stronger_player.add_weaponskill(n = 1)
+						if stronger_player.weaponskill < 5 or (stronger_player.weaponskill + 1) < weaker_player.weaponskill:
+							stronger_player.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 
 					weaker_player.time_lastspar = time_now
 
@@ -1071,7 +1067,7 @@ async def marry(cmd):
 		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, you get an extra two mastery levels, and you can't change your weapon.
 		user_data = EwUser(member = cmd.message.author)
 		user_data.weaponmarried = True
-		user_data.add_weaponskill(n = 2)
+		user_data.add_weaponskill(n = 2, weapon_type = weapon.id_weapon)
 		user_data.persist()
 		weapon_item.item_props["married"] = user_data.id_user
 		weapon_item.persist()
