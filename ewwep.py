@@ -948,6 +948,16 @@ async def annoint(cmd):
 				id_server = cmd.message.server.id,
 				item_type_filter = ewcfg.it_slimepoudrin
 			)
+
+			all_weapons = ewitem.inventory(
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_weapon
+			)
+			for weapon in all_weapons:
+				if weapon.get("name") == annoint_name and int(weapon.get("id_item")) != int(user_data.weapon):
+					response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			poudrins_count = len(poudrins)
 
 			if poudrins_count < 1:

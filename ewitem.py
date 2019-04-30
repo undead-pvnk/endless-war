@@ -504,27 +504,25 @@ def cmd_is_inventory(cmd):
 	inserted into SQL without validation/sanitation.
 """
 def inventory(
-	id_user = "",
+	id_user = None,
 	id_server = None,
 	item_type_filter = None
 ):
 	items = []
 
 	try:
-		player = EwPlayer(
-			id_user = id_user,
-			id_server = id_server
-		)
 
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		sql = "SELECT {}, {}, {}, {}, {} FROM items WHERE {} = %s AND {} = %s"
+		sql = "SELECT {}, {}, {}, {}, {} FROM items WHERE {} = %s"
+		if id_user != None:
+			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
 		if item_type_filter != None:
 			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
 
-		if player.id_server != None:
+		if id_server != None:
 			cursor.execute(sql.format(
 				ewcfg.col_id_item,
 				ewcfg.col_item_type,
@@ -532,12 +530,10 @@ def inventory(
 				ewcfg.col_stack_max,
 				ewcfg.col_stack_size,
 
-				ewcfg.col_id_user,
 				ewcfg.col_id_server
-			), (
-				player.id_user,
-				player.id_server
-			))
+			), [
+				id_server
+			])
 
 			for row in cursor:
 				id_item = row[0]
@@ -599,9 +595,11 @@ def inventory(
 async def inventory_print(cmd):
 	can_message_user = True
 
+	player = EwPlayer(id_user = cmd.message.author.id)
+
 	items = inventory(
 		id_user = cmd.message.author.id,
-		id_server = (cmd.message.server.id if (cmd.message.server != None) else None)
+		id_server = player.id_server
 	)
 
 	if len(items) == 0:
@@ -756,7 +754,7 @@ def soulbind(id_item):
 """
 	Find a single item in the player's inventory (returns either a (non-EwItem) item or None)
 """
-def find_item(item_search, id_user, id_server):
+def find_item(item_search = None, id_user = None, id_server = None):
 	item_sought = None
 
 	# search for an ID instead of a name
