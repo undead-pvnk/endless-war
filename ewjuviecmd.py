@@ -12,7 +12,8 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 from ewdistrict import EwDistrict
 
 # Map of user ID to a map of recent miss-mining time to count. If the count

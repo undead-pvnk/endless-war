@@ -1,5 +1,6 @@
 import asyncio
 import time
+import math
 
 from copy import deepcopy
 
@@ -10,9 +11,8 @@ import ewcfg
 
 from ew import EwUser
 from ewdistrict import EwDistrict
+from ewtransport import EwTransport
 
-# Map of user IDs to their course ID.
-moves_active = {}
 move_counter = 0
 
 """
@@ -99,6 +99,25 @@ class EwPoi:
 	# What District each subzone is in
 	mother_district = ""
 
+	# If it's a mobile zone
+	is_transport = False
+
+	# which type of transport
+	transport_type = ""
+	
+	# default line to follow, if it's a transport
+	default_line = ""
+
+	# default station to start at, if it's a transport
+	default_stop = ""
+	
+	# If a transport line stops here
+	is_transport_stop = True
+
+	# which transport lines stop here
+	transport_lines = set()
+
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -120,7 +139,13 @@ class EwPoi:
 		property_class = "",
 		is_capturable = False,
 		is_subzone = False,
-		mother_district = ""
+		mother_district = "",
+		is_transport = False,
+		transport_type = "",
+		default_line = "",
+		default_stop = "",
+		is_transport_stop = False,
+		transport_lines = None
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -142,39 +167,46 @@ class EwPoi:
 		self.is_capturable = is_capturable
 		self.is_subzone = is_subzone
 		self.mother_district = mother_district
+		self.is_transport = is_transport
+		self.transport_type = transport_type
+		self.default_line = default_line
+		self.default_stop = default_stop
+		self.is_transport_stop = is_transport_stop
+		self.transport_lines = transport_lines
 
 map_world = [
 	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -2, 30,  0, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -3, 20, -2, -1, -2, 30,  0,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0, -1, -3, -1, -1, -1, 30, -1, -1, -1,  0, -1, -1, 30, -1, -1, -1, -1,  0,  0, 30, -2, 30,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -3, -1,  0,  0,  0,  0, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 30, -2, 30,  0, -1, -1,  0, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0,  0,  0, -1, 30, -1, -1, -1, -1,  0, -1, -1, -2, 30,  0,  0,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, 30, -1,  0,  0,  0,  0,  0, -1, 30, -1, -1, -1,  0, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -2, 30,  0, -1, -1, -1,  0, 30, -2, 20, -2, -1,  0, -1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -2, -1, -1, 30, -1, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, 20, -1, -1,  0, -1, -1, -1,  0, -1, -1, -1, -2, 20, -2, 30,  0,  0,  0,  0,  0,  0,  0,  0, -1,  0,  0, 30, -2, -3, -3, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1,  0,  0,  0,  0,  0, 30, -2, 30,  0,  0, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, 30, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -2, -1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, 30, -1, -1, -1, 20, -1,  0, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1,  0,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -2, 20, -2, -3, -3, 20, -2, -1, -2, -1,  0, -1, -1, -1, -1, -1,  0,  0, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, -2, -1, -1, -1, -1, -1, -1, 30, -1, -3, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1,  0, -1, 20, -1, -1,  0,  0,  0,  0,  0, -1, -3, 20, -2, -1, -1, -1, 30, -2, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1,  0, 30, -2, 30,  0,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 30, -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -2, 30,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 30,  0,  0,  0, -1, -1, 30, -1,  0,  0,  0,  0, 30, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 20, -1,  0, -1, -1,  0, 30, -2, 30,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1,  0, -1, 20, -1, -1, -1, -1, -1, -1, -1, -2, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 30,  0,  0, -1, -2, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 30, -2, 30,  0,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ]
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -2, -1, -2, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, 20, -1, 20, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -2, 30,  0, -1, -1, -1, 20, -1, -1, -1, -1, -1, -2, 20, -3, 20, -2, -1, -2, -3, -3, 30,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0, -1, -1, -1, -3, -1, -1, -1, 30, -1, -1, -1,  0, -1, -1, 30, -1, -1, -1, -1,  0,  0, 30, -2, 30,  0, 30, -3, 20, -2, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, 20, -1, -1, -1,  0,  0,  0, -1, -3, -1,  0,  0,  0,  0, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, -1, -1, -1, -1, -1,  0, 30, -2, 30,  0, -1, -1,  0, -1, -1, 30, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, 30, -2, 20, -2, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0,  0,  0, -1, 30, -1, -1, -1, -1,  0, -1, -1, -2, 30,  0,  0,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, 30, -1,  0,  0,  0,  0,  0, -1, 30, -1, -1, -1,  0, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, 30, -2, 30,  0, -1, -1, -1,  0, 30, -2, 20, -2, -1,  0, -1, -1, -1, -1,  0,  0, -1, -2, -1, -1, -1,  0,  0, 30, -2, 30,  0,  0,  0,  0, -1, -3, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1,  0, -1, -1,  0, -1, -1, -2, -1, -1, -3, -1, -1, -1,  0, -1, -1, -1, -1, -1, 30, -1, 20, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, 30, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1,  0, -1, -1,  0, -1, -1, 20, -1, -1, -3, 20, -2, -1,  0, -1, -1, -1, -2, 20, -2, -3, -3, 30,  0,  0,  0,  0,  0,  0, -1,  0,  0, 30, -2, -3, -3, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1,  0, -1, -1,  0,  0, 30, -2, -1, -1, 30, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, 30, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, 30, -1, -1,  0,  0,  0, 30, -2, 30,  0,  0,  0,  0,  0, -1,  0,  0, 30, -2, -3, -3, 30,  0, -1,  0, -1, -1,  0, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -2, 20, -2, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1,  0, -1,  0, -1, -1, 20, -1, 20, -1,  0,  0,  0, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, 30, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, 30, -1, 30, -1, -1, -2, -1, -2, -1,  0, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1,  0, 30, -3, -3, -2, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -2, 20, -2, -3, -3, 20, -2, -1, -1, -1, -1,  0, -1, -1, -1, -1,  0,  0, 30, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1,  0, -1, 20, -1, 30, -1,  0, -1, -1, -1,  0, -1, -2, -1, -2, -1, -1, -1, -1, -3, -1, -3, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, 30, -1, -2, -1,  0, -1, 30, -1, -1, -1,  0, -1, 20, -1, 20, -1,  0,  0, 30, -3, -1, -3, 20, -2, -1, -1, -2, 20, -2, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -2, 20, -2, -3, -1,  0,  0, 30, -2, 20, -2, -1,  0, 30, -2, -3, -3, 30,  0, -1, -1, 20, -1, 30, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -3, 30,  0, -1, -1, -3, -1, -1, -1, -1, -1, 30, -1, -1, -1,  0, -1, -1, -2, -1, 30, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, 30, -1, -1,  0, 30, -3, 30, 30, -1, -1, -1,  0, -1, -1,  0,  0, -1, -1, -1, -1, -2, -3, -3, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1,  0, -1, -1, 30, -1, 20, -1, -2, 30,  0,  0,  0, -1, -1, 30, -1,  0,  0,  0,  0, 30, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -2, 20, -2, 30,  0,  0, 30, -2, -1, -2, -1, -3, -1,  0, -1, -1,  0, 30, -2, 30,  0, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, 20, -1, -1, -1, -1, 30, -1, -1, -1, -3, -1, 30, -1, -1,  0, -1, 20, -1, -1, -1, -1, -1, -2, 20, -2, 20, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -2, -1, -1, -1, -1,  0,  0,  0, 30, -3, -1, -2, 30,  0,  0, -1, -2, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, 20, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -2, 20, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, 20, -3, -1, -2, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1,  0, 30, -2, -3, -3, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, 20, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ]
 ]
 map_width = len(map_world[0])
 map_height = len(map_world)
@@ -213,22 +245,26 @@ class EwPath:
 	steps = None
 	cost = 0
 	iters = 0
+	pois_visited = None
 
 	def __init__(
 		self,
 		path_from = None,
 		steps = [],
 		cost = 0,
-		visited = {}
+		visited = {},
+		pois_visited = set()
 	):
 		if path_from != None:
 			self.steps = deepcopy(path_from.steps)
 			self.cost = path_from.cost
 			self.visited = deepcopy(path_from.visited)
+			self.pois_visited = deepcopy(path_from.pois_visited)
 		else:
 			self.steps = steps
 			self.cost = cost
 			self.visited = visited
+			self.pois_visited = pois_visited
 			
 
 """
@@ -249,13 +285,15 @@ def path_step(path, coord_next, user_data, coord_end):
 	if cost_next == sem_city or cost_next == sem_city_alias:
 		next_poi = ewcfg.coord_to_poi.get(coord_next)
 
-		if cost_next == sem_city and inaccessible(user_data = user_data, poi = next_poi):
-			cost_next = 5000
+		if inaccessible(user_data = user_data, poi = next_poi):
+			return False
 		else:
 			cost_next = 0
-
-			if next_poi != None:
-				if len(user_data.faction) > 0 and coord_next != coord_end and next_poi.id_poi in ewcfg.capturable_districts:
+			
+			# check if we already got the movement bonus/malus for this district
+			if not next_poi.id_poi in path.pois_visited:
+				path.pois_visited.add(next_poi.id_poi)
+				if len(user_data.faction) > 0 and next_poi.coord != coord_end and next_poi.coord != path.steps[0]:
 					district = EwDistrict(
 						id_server = user_data.id_server,
 						district = next_poi.id_poi
@@ -294,7 +332,11 @@ def path_to(
 	poi_end = None,
 	user_data = None
 ):
-	score_golf = 65535
+	score_golf = math.inf
+	score_map = []
+	for row in map_world:
+		score_map.append(list(map(replace_with_inf, row)))
+
 	paths_finished = []
 	paths_walking = []
 
@@ -318,100 +360,79 @@ def path_to(
 		visited = { coord_start[0]: { coord_start[1]: True } }
 	)
 
-	for neigh in neighbors(coord_start):
-		path_next = path_branch(path_base, neigh, user_data, coord_end)
-		if path_next != None:
-			paths_walking.append(path_next)
+
+	paths_walking.append(path_base)
 
 	count_iter = 0
 	while len(paths_walking) > 0:
 		count_iter += 1
 
 		paths_walking_new = []
-		paths_dead = []
 
 		for path in paths_walking:
-			if path.cost >= score_golf:
-				paths_dead.append(path)
+			step_last = path.steps[-1]
+			score_current = score_map[step_last[1]][step_last[0]]
+			if path.cost >= score_golf or path.cost >= score_current:
 				continue
 
-			step_last = path.steps[-1]
+			score_map[step_last[1]][step_last[0]] = path.cost
+
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
-			path_branches = 0
+
+			if coord_end != None:
+				# Arrived at the actual destination?
+				if step_last == coord_end:
+					path_final = path
+					if path_final.cost < score_golf:
+						score_golf = path_final.cost
+						paths_finished = []
+					if path_final.cost <= score_golf:
+						paths_finished.append(path_final)
+					continue
+
+			else:
+				# Looking for adjacent points of interest.
+				sem_current = map_world[step_last[1]][step_last[0]]
+				poi_adjacent_coord = step_last
+				if sem_current == sem_city_alias:
+					poi_adjacent_coord = ewcfg.alias_to_coord.get(step_last)
+
+					if poi_adjacent_coord != None:
+						sem_current = sem_city
+
+				if sem_current == sem_city and poi_adjacent_coord != coord_start:
+					poi_adjacent = ewcfg.coord_to_poi.get(poi_adjacent_coord)
+
+					if poi_adjacent != None:
+						pois_adjacent.append(poi_adjacent)
+						continue
+
 			path_base = EwPath(path_from = path)
 			for neigh in neighbors(step_last):
 				if neigh == step_penult:
 					continue
 
-				could_move = False
+				branch = path_branch(path_base, neigh, user_data, coord_end)
+				if branch != None:
+					paths_walking_new.append(branch)
 
-				branch = None
-				if path_branches == 0:
-					could_move = path_step(path, neigh, user_data, coord_end)
-				else:
-					branch = path_branch(path_base, neigh, user_data, coord_end)
-					if branch != None:
-						could_move = True
-						paths_walking_new.append(branch)
 
-				if could_move:
-					path_branches += 1
-
-					if coord_end != None:
-						# Arrived at the actual destination?
-						if neigh == coord_end:
-							path_final = branch if branch != None else path
-							if path_final.cost < score_golf:
-								score_golf = path_final.cost
-								paths_finished = []
-
-							if path.cost <= score_golf:
-								paths_finished.append(path_final)
-
-							paths_dead.append(path_final)
-					else:
-						# Looking for adjacent points of interest.
-						sem_current = map_world[neigh[1]][neigh[0]]
-						poi_adjacent_coord = neigh
-
-						if sem_current == sem_city_alias:
-							poi_adjacent_coord = ewcfg.alias_to_coord.get(neigh)
-
-							if poi_adjacent_coord != None:
-								sem_current = sem_city
-
-						if sem_current == sem_city and poi_adjacent_coord != coord_start:
-							poi_adjacent = ewcfg.coord_to_poi.get(poi_adjacent_coord)
-
-							if poi_adjacent != None:
-								pois_adjacent.append(poi_adjacent)
-
-							path_final = branch if branch != None else path
-							paths_dead.append(path_final)
-
-			if path_branches == 0:
-				paths_dead.append(path)
-
-		for path in paths_dead:
-			try:
-				paths_walking.remove(path)
-			except:
-				return None
-
-		if len(paths_walking_new) > 0:
-			paths_walking += paths_walking_new
+		paths_walking = paths_walking_new
 
 	if coord_end != None:
 		path_true = None
 		if len(paths_finished) > 0:
 			path_true = paths_finished[0]
 			path_true.iters = count_iter
-
+		if path_true is None:
+			ewutils.logMsg("Could not find a path.")
 		return path_true
 	else:
 		return pois_adjacent
 
+def replace_with_inf(n):
+	return math.inf
 
 """
 	Debug method to draw the map, optionally with a path/route on it.
@@ -451,6 +472,9 @@ def map_draw(path = None, coord = None):
 		y += 1
 
 def inaccessible(user_data = None, poi = None):
+	if poi == None or user_data == None:
+		return True;
+
 	if(
 		len(poi.factions) > 0 and
 		len(user_data.faction) > 0 and
@@ -498,7 +522,10 @@ async def move(cmd):
 			return
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
-		path = EwPath(cost = 60)
+		if user_data.life_state == ewcfg.life_state_corpse:
+			path = EwPath(cost = 60)
+		else:
+			path = None
 	else:
 		path = path_to(
 			poi_start = user_data.poi,
@@ -506,18 +533,17 @@ async def move(cmd):
 			user_data = user_data
 		)
 
-		if path == None:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
+	if path == None:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
 
-	global moves_active
 	global move_counter
 
 	# Check if we're already moving. If so, cancel move and change course. If not, register this course.
-	move_current = moves_active.get(cmd.message.author.id)
+	move_current = ewutils.moves_active.get(cmd.message.author.id)
 	move_counter += 1
 
 	# Take control of the move for this player.
-	move_current = moves_active[cmd.message.author.id] = move_counter
+	move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
 
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
@@ -539,7 +565,7 @@ async def move(cmd):
 		if path.cost > 0:
 			await asyncio.sleep(path.cost)
 
-		if moves_active[cmd.message.author.id] != move_current:
+		if ewutils.moves_active[cmd.message.author.id] != move_current:
 			return
 
 		user_data = EwUser(member = cmd.message.author)
@@ -554,6 +580,7 @@ async def move(cmd):
 			return
 
 		user_data.poi = poi.id_poi
+		user_data.time_lastenter = int(time.time())
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -586,7 +613,7 @@ async def move(cmd):
 		# Perform move.
 		for step in path.steps[1:]:
 			# Check to see if we have been interrupted and need to not move any farther.
-			if moves_active[cmd.message.author.id] != move_current:
+			if ewutils.moves_active[cmd.message.author.id] != move_current:
 				break
 
 			val = map_world[step[1]][step[0]]
@@ -645,6 +672,7 @@ async def move(cmd):
 
 				if user_data.poi != poi_current.id_poi:
 					user_data.poi = poi_current.id_poi
+					user_data.time_lastenter = int(time.time())
 					user_data.persist()
 
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -692,7 +720,7 @@ async def move(cmd):
 	Cancel any in progress move.
 """
 async def halt(cmd):
-	moves_active[cmd.message.author.id] = 0
+	ewutils.moves_active[cmd.message.author.id] = 0
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You {} dead in your tracks.".format(cmd.cmd[1:])))
 
 
@@ -704,6 +732,7 @@ async def look(cmd):
 	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
+	# get information about slime levels in the district
 	slimes = district_data.slimes
 	slimes_resp = "\n\n"
 	if slimes < 10000:
@@ -715,17 +744,107 @@ async def look(cmd):
 	else:
 		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
 
+	# don't show low level players
+	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
+	# get information about players in the district
+	players_in_district = district_data.get_number_of_players(min_level = min_level)
+	if user_data.life_state != ewcfg.life_state_kingpin:
+		players_in_district -= 1
+
+	players_resp = "\n\n"
+	if players_in_district == 1:
+		players_resp += "You notice 1 suspicious figure in this location."
+	else:
+		players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
+
+	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**\n\n{}{}{}".format(
+			"You stand {} {}.\n\n{}{}{}".format(
+				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
 				slimes_resp,
+				players_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
+			)
+		))
+
+
+"""
+	Get information about an adjacent zone.
+"""
+async def scout(cmd):
+	if channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+	user_data = EwUser(member = cmd.message.author)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	# if no arguments given, scout own location
+	if not len(cmd.tokens) > 1:
+		poi = user_poi
+	else:
+		target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		poi = ewcfg.id_to_poi.get(target_name)
+
+
+	if poi == None:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+	else:
+		# if scouting own location, treat as a !look alias
+		#if poi.id_poi == user_poi.id_poi:
+		#	return await look(cmd)
+
+
+
+		# check if district is in scouting range
+		is_neighbor = user_poi.id_poi in ewcfg.poi_neighbors and poi.id_poi in ewcfg.poi_neighbors[user_poi.id_poi]
+		is_current_transport_station = False
+		if user_poi.is_transport:
+			transport_data = EwTransport(id_server = user_data.id_server, poi = user_poi.id_poi)
+			is_current_transport_station = transport_data.current_stop == poi.id_poi
+		is_transport_at_station = False
+		if poi.is_transport:
+			transport_data = EwTransport(id_server = user_data.id_server, poi = poi.id_poi)
+			is_transport_at_station = transport_data.current_stop == user_poi.id_poi
+			
+			
+		#is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
+		#is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
+
+		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi):
+			response = "You can't scout that far."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+		# don't show low level players
+		min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
+
+		# get information about other gangsters in the district
+		players_in_district = district_data.get_number_of_players(min_level = min_level)
+		if poi.id_poi == user_poi.id_poi and user_data.life_state != ewcfg.life_state_kingpin:
+			players_in_district -= 1
+
+		players_resp = ""
+		if players_in_district == 1:
+			players_resp += "You notice 1 suspicious figure in this location."
+		else:
+			players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
+
+		# post result to channel
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"**{}**: {}".format(
+				poi.str_name,
+				players_resp
 			)
 		))
 
@@ -750,14 +869,15 @@ async def kick(id_server):
 		try:
 			poi = ewcfg.id_to_poi[player[0]]
 			id_user = player[1]
+			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone:
-				user_data = EwUser(id_user = id_user, id_server = id_server)
+			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
 				server = ewcfg.server_list[id_server]
 				member_object = server.get_member(id_user)
 
 				user_data.poi = poi.mother_district
+				user_data.time_lastenter = int(time.time())
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = member_object)
 

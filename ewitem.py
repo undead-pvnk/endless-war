@@ -571,6 +571,10 @@ def inventory(
 						if name.find('{') >= 0:
 							name = name.format_map(item_inst.item_props)
 
+				#if a weapon has no name show its type instead
+				if name == "" and item_inst.item_type == ewcfg.it_weapon:
+					name = item_inst.item_props.get("weapon_type")
+
 				item['name'] = name
 	finally:
 		# Clean up the database handles.
@@ -680,15 +684,20 @@ async def item_use(cmd):
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
-	if item_sought:
+	if item_sought:		
+		# Load the user before the item so that the right item props are used
+		user_data = EwUser(member = author)
+
 		item = EwItem(id_item = item_sought.get('id_item'))
 
 		response = "The item doesn't have !use functionality"  # if it's not overwritten
 
-		user_data = EwUser(member = author)
-
 		if item.item_type == ewcfg.it_food:
 			response = user_data.eat(item)
+			user_data.persist()
+
+		if item.item_type == ewcfg.it_weapon:
+			response = user_data.equip(item)
 			user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -799,6 +808,27 @@ async def give(cmd):
 				response = "They can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+		if item_sought.get('item_type') == ewcfg.it_weapon:
+			weapons_held = inventory(
+				id_user = recipient.id,
+				id_server = server.id,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			if user_data.weaponmarried:
+				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('weapon_name'))
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif recipient_data.life_state == ewcfg.life_state_corpse:
+				response = "Ghosts can't hold weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif recipient_data.life_state == ewcfg.life_state_juvenile:
+				response = "Juvies don't know how to hold weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				response  = "They can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
 		else:
@@ -811,6 +841,10 @@ async def give(cmd):
 				recipient = recipient.display_name,
 				item = item_sought.get('name')
 			)
+
+			if item_sought.get('id_item') == user_data.weapon:
+				user_data.weapon = ""
+				user_data.persist()
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
@@ -821,33 +855,37 @@ async def give(cmd):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-"""
-	Command that lets players !drop items
-"""
-async def drop(cmd):
+#Throw away an item
+async def discard(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	author = cmd.message.author
-	server = cmd.message.server
-	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
-	if item_sought:  # if an item was found
+	item_sought = find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-		if item_sought.get('soulbound'):
-			response = "You can't just drop soulbound items."
+	if item_sought:
+		item = EwItem(id_item = item_sought.get("id_item"))
+
+		if not item.soulbound:
+			if item.item_type == ewcfg.it_weapon and user_data.weapon != "" and item.id_item == int(user_data.weapon):
+				if user_data.weaponmarried:
+					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					user_data.weapon = ""
+					user_data.persist()
+				
+			response = "You throw away your " + item_sought.get("name")
+			item_drop(id_item = item.id_item)
+
 		else:
-			item_drop(
-				id_item = item_sought.get('id_item')
-			)
-
-			response = "You dropped your {item}".format(
-				item = item_sought.get('name')
-			)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+			response = "You can't throw away soulbound items."
 	else:
-		if item_search:  # if they didnt forget to specify an item and it just wasn't found
-			response = "You don't have one."
+		if item_search:
+			response = "You don't have one"
 		else:
-			response = "Drop which item? (check **!inventory**)"
+			response = "Discard which item? (check **!inventory**)"
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

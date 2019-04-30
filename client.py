@@ -39,9 +39,13 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewquadrants
+import ewtransport
 
 from ewitem import EwItem
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
+from ewmarket import EwStock
 from ewdistrict import EwDistrict
 
 ewutils.logMsg('Starting up...')
@@ -63,6 +67,10 @@ cmd_map = {
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
+
+	# Get a weapon into your inventory
+	ewcfg.cmd_arm: ewwep.arm,
+	ewcfg.cmd_arsenalize: ewwep.arm,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
@@ -166,15 +174,33 @@ cmd_map = {
 	ewcfg.cmd_transfer: ewmarket.xfer,
 	ewcfg.cmd_transfer_alt1: ewmarket.xfer,
 
-	# Show the player's slime credit.
-	ewcfg.cmd_slimecredit: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt1: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecredit_alt3: ewmarket.slimecoin,
+	# Show the player's slime coin.
+	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
+	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,
 
+	# Invest slimecoin into a stock
+	ewcfg.cmd_invest: ewmarket.invest,
+
+	# Withdraw slimecoin from your shares
+	ewcfg.cmd_withdraw: ewmarket.withdraw,
+
+	# show the exchange rate of a given stock
+	ewcfg.cmd_exchangerate: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt3: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt4: ewmarket.rate,
+
+	# show player's current shares in a compant
+	ewcfg.cmd_shares: ewmarket.shares,
+
+	# check available stocks
+	ewcfg.cmd_stocks: ewmarket.stocks,
 
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
@@ -201,13 +227,27 @@ cmd_map = {
 	ewcfg.cmd_move: ewmap.move,
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
+	ewcfg.cmd_move_alt3: ewmap.move,
 
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
 	ewcfg.cmd_halt_alt1: ewmap.halt,
 
+	# public transportation
+	ewcfg.cmd_embark: ewtransport.embark,
+	ewcfg.cmd_embark_alt1: ewtransport.embark,
+	ewcfg.cmd_disembark: ewtransport.disembark,
+	ewcfg.cmd_disembark_alt1: ewtransport.disembark,
+	ewcfg.cmd_checkschedule: ewtransport.check_schedule,
+
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
+
+	# Look around an adjacent POI
+	ewcfg.cmd_scout: ewmap.scout,
+
+	# Check your current POI capture progress
+	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -228,7 +268,8 @@ cmd_map = {
 	ewcfg.cmd_give: ewitem.give,
 
 	# drop item into your current district
-	ewcfg.cmd_drop: ewitem.drop,
+	ewcfg.cmd_discard: ewitem.discard,
+	ewcfg.cmd_discard_alt1: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -245,6 +286,7 @@ cmd_map = {
 	ewcfg.cmd_harvest: ewcmd.harvest,
 	ewcfg.cmd_salute: ewcmd.salute,
 	ewcfg.cmd_unsalute: ewcmd.unsalute,
+	ewcfg.cmd_hurl: ewcmd.hurl,
 	ewcfg.cmd_news: ewcmd.patchnotes,
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
@@ -278,7 +320,22 @@ cmd_map = {
 	ewcfg.cmd_petslimeoid: ewcmd.petslimeoid,
 	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle
+	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+
+	# troll romance
+	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
+	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
+	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
+	ewcfg.cmd_get_pale: ewquadrants.get_pale,
+	ewcfg.cmd_get_pale_alt1: ewquadrants.get_pale,
+	ewcfg.cmd_get_caliginous: ewquadrants.get_caliginous,
+	ewcfg.cmd_get_caliginous_alt1: ewquadrants.get_caliginous,
+	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
+	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
+
+	# restores poi roles to their proper names, only usable by admins
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
 debug = False
@@ -305,6 +362,18 @@ async def on_member_remove(member):
 		ewutils.logMsg('Failed to kill member who left the server.')
 
 @client.event
+async def on_member_update(before, after):
+	# update last offline time if they went from offline to online
+	try:
+		if before.status == discord.Status.offline and after.status != discord.Status.offline:
+
+			user_data = EwUser(member = after)
+			user_data.time_lastoffline = int(time.time())
+			user_data.persist()
+	except:
+		ewutils.logMsg('Failed to update member\'s last offline time.')
+
+@client.event
 async def on_ready():
 	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
@@ -317,8 +386,23 @@ async def on_ready():
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
 
+		neighbors = []
+		neighbor_ids = []
+		if poi.coord != None:
+			fake_ghost = EwUser()
+			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
+		elif poi.id_poi == ewcfg.poi_id_thesewers:
+			neighbors = ewcfg.poi_list
+
+		if neighbors != None:
+			for neighbor in neighbors:
+				neighbor_ids.append(neighbor.id_poi)
+
+		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
+		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
+
 	try:
-		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
+		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -350,6 +434,12 @@ async def on_ready():
 		# store the list of channels in an ewutils field
 		ewcfg.update_server_list(server = server)
 
+		# find roles and add them to the database
+		ewrolemgr.setupRoles(client = client, id_server = server.id)
+
+		# hides the names of poi roles
+		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
+
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
 		for channel in server.channels:
@@ -363,18 +453,27 @@ async def on_ready():
 					ewutils.logMsg("• found channel for stock exchange: {}".format(channel.name))
 
 		# create all the districts in the database
-		for poi in ewcfg.capturable_districts:
+		for poi_object in ewcfg.poi_list:
+			poi = poi_object.id_poi
 			# call the constructor to create an entry if it doesnt exist yet
 			dist = EwDistrict(id_server = server.id, district = poi)
 			# change the ownership to the faction that's already in control to initialize topic names
 			try:
-				await dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
+				# initialize gang bases
+				if poi == ewcfg.poi_id_rowdyroughhouse:
+					dist.controlling_faction = ewcfg.faction_rowdys
+				elif poi == ewcfg.poi_id_copkilltown:
+					dist.controlling_faction = ewcfg.faction_killers
+
+				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
+				await resp_cont.post()
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+		await ewtransport.init_transports(id_server = server.id)
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -460,6 +559,18 @@ async def on_ready():
 				market_data = EwMarket(id_server = server.id)
 
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
+
+					market_response = ""
+
+					for stock in ewcfg.stocks:
+						s = EwStock(server.id, stock)
+						# we don't update stocks when they were just added
+						if s.timestamp != 0:
+							s.timestamp = time_now
+							market_response = ewmarket.market_tick(s, server.id)
+							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
+
+					market_data = EwMarket(id_server = server.id)
 					market_data.time_lasttick = time_now
 
 					# Advance the time and potentially change weather.
@@ -468,6 +579,17 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+
+					market_data.persist()
+
+					if market_data.clock == 6:
+						response = ' The SlimeCorp Stock Exchange is now open for business.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+					elif market_data.clock == 20:
+						response = ' The SlimeCorp Stock Exchange has closed for the night.'
+						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+
+					market_data = EwMarket(id_server = server.id)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
@@ -565,6 +687,7 @@ async def on_message_delete(message):
 @client.event
 async def on_message(message):
 	time_now = int(time.time())
+	ewcfg.set_client(client)
 
 	""" do not interact with our own messages """
 	if message.author.id == client.user.id or message.author.bot == True:
@@ -652,12 +775,21 @@ async def on_message(message):
 
 		# assign the appropriate roles to a user with less than @everyone, faction, location
 		if len(message.author.roles) < 3:
-			return await ewrolemgr.updateRoles(client = client, member = message.author)
+			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
 
 			response = "You cannot participate in the ENDLESS WAR while offline."
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+			return
+
+		user_data = EwUser(member = message.author)
+		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
+
+			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 

@@ -16,9 +16,13 @@ import discord
 import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
+from ewplayer import EwPlayer
 
 db_pool = {}
 db_pool_id = 0
+
+# Map of user IDs to their course ID.
+moves_active = {}
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -42,6 +46,69 @@ class Message:
 		self.reverb = reverb
 		self.message = message
 		self.id_poi = id_poi
+
+"""
+	Class for storing, passing, editing and posting channel responses and topics
+"""
+class EwResponseContainer:
+	client = None
+	id_server = ""
+	channel_responses = {}
+	channel_topics = {}
+
+	def __init__(self, client = None, id_server = None):
+		self.client = client
+		self.id_server = id_server
+		self.channel_responses = {}
+		self.channel_topics = {}
+
+	def add_channel_response(self, channel, response):
+		if channel in self.channel_responses:
+			self.channel_responses[channel] += "\n" + response
+		else:
+			self.channel_responses[channel] = response
+
+	def add_channel_topic(self, channel, topic):
+		self.channel_topics[channel] = topic
+
+	def add_response_container(self, resp_cont):
+		for ch in resp_cont.channel_responses:
+			self.add_channel_response(ch, resp_cont.channel_responses[ch])
+
+		for ch in resp_cont.channel_topics:
+			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+	async def post(self):
+		self.client = get_client()
+		messages = []
+
+		if self.client == None:
+			logMsg("Couldn't find client")
+			return messages
+			
+		server = self.client.get_server(self.id_server)
+		if server == None:
+			logMsg("Couldn't find server with id {}".format(self.id_server))
+			return messages
+
+		for ch in self.channel_responses:
+			channel = get_channel(server = server, channel_name = ch)
+			try:
+				message = await send_message(self.client, channel, self.channel_responses[ch])
+				messages.append(message)
+			except:
+				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
+				
+
+		for ch in self.channel_topics:
+			channel = get_channel(server = server, channel_name = ch)
+			try:
+				await self.client.edit_channel(channel = channel, topic = self.channel_topics[ch])
+			except:
+				logMsg('Failed to set channel topic for {} to {}'.format(ch, self.channel_topics[ch]))
+
+		return messages
+
 
 def readMessage(fname):
 	msg = Message()
@@ -143,6 +210,15 @@ def getRoleMap(roles):
 
 	for role in roles:
 		roles_map[mapRoleName(role.name)] = role
+
+	return roles_map
+
+""" turn a list of Roles into a map of id = >Role """
+def getRoleIdMap(roles):
+	roles_map = {}
+
+	for role in roles:
+		roles_map[mapRoleName(role.id)] = role
 
 	return roles_map
 
@@ -300,10 +376,13 @@ async def bleedSlimes(id_server = None):
 
 			users = cursor.fetchall()
 			total_bled = 0
-
+			deathreport = ""
+			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
-				slimes_to_bleed = user_data.bleed_storage - (user_data.bleed_storage * (.5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life)))
+				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
+				slimes_to_bleed = min(slimes_to_bleed, user_data.slimes, user_data.bleed_storage)
 
 				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 
@@ -315,11 +394,19 @@ async def bleedSlimes(id_server = None):
 
 				if slimes_to_bleed >= 1:
 					user_data.bleed_storage -= slimes_to_bleed
+					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
+					if user_data.slimes <= 0:
+						user_data.die(cause = ewcfg.cause_bleeding)
+						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
+						deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
+						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 					user_data.persist()
 
 					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
 					district_data.persist()
 					total_bled += slimes_to_bleed
+
+			await resp_cont.post()
 
 
 
@@ -411,10 +498,9 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT {weapon}, {weaponskill}, {weaponname} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
+			cursor.execute("SELECT {weapon}, {weaponskill} FROM weaponskills WHERE {id_server} = %s AND {id_user} = %s".format(
 				weapon = ewcfg.col_weapon,
 				weaponskill = ewcfg.col_weaponskill,
-				weaponname = ewcfg.col_name,
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
 			), (
@@ -426,8 +512,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 			if data != None:
 				for row in data:
 					weaponskills[row[0]] = {
-						'skill': row[1],
-						'name': row[2]
+						'skill': row[1]
 					}
 		finally:
 			# Clean up the database handles.
@@ -437,7 +522,7 @@ def weaponskills_get(id_server = None, id_user = None, member = None):
 	return weaponskills
 
 """ Set an individual weapon skill value for a player. """
-def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0, weaponname = ""):
+def weaponskills_set(id_server = None, id_user = None, member = None, weapon = None, weaponskill = 0):
 	if member != None:
 		id_server = member.server.id
 		id_user = member.id
@@ -448,18 +533,16 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}, {weaponname}) VALUES(%s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO weaponskills({id_server}, {id_user}, {weapon}, {weaponskill}) VALUES(%s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user,
 				weapon = ewcfg.col_weapon,
-				weaponskill = ewcfg.col_weaponskill,
-				weaponname = ewcfg.col_name
+				weaponskill = ewcfg.col_weaponskill
 			), (
 				id_server,
 				id_user,
 				weapon,
-				weaponskill,
-				weaponname
+				weaponskill
 			))
 
 			conn.commit()
@@ -691,7 +774,7 @@ async def post_in_hideouts(id_server, message):
 	gets the discord client the bot is running on
 """
 def get_client():
-	return ewcfg.clients[0]
+	return ewcfg.get_client()
 
 
 """

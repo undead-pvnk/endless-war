@@ -113,8 +113,8 @@ async def adorn(cmd):
 				if i.item_props['adorned'] == 'true':
 					adorned_items += 1
 
-			item = EwItem(id_item = id_item)
 			user_data = EwUser(member = cmd.message.author)
+			item = EwItem(id_item = id_item)
 
 			if item.item_props['adorned'] == 'true':
 				item.item_props['adorned'] = 'false'

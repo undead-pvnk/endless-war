@@ -1,6 +1,7 @@
 import asyncio
 import time
 import random
+import math
 
 import ewcfg
 import ewutils
@@ -8,7 +9,10 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
-from ew import EwUser, EwMarket
+
+from ew import EwUser
+from ewitem import EwItem
+from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 
@@ -61,6 +65,9 @@ class EwWeapon:
 	# Displayed when a weapon effect causes a miss.
 	str_miss = ""
 
+	# Displayed when !inspect-ing
+	str_description = ""
+
 	def __init__(
 		self,
 		id_weapon = "",
@@ -78,7 +85,8 @@ class EwWeapon:
 		str_weaponmaster_self = "",
 		fn_effect = None,
 		str_crit = "",
-		str_miss = ""
+		str_miss = "",
+		str_description = ""
 	):
 		self.id_weapon = id_weapon
 		self.alias = alias
@@ -96,6 +104,7 @@ class EwWeapon:
 		self.fn_effect = fn_effect
 		self.str_crit = str_crit
 		self.str_miss = str_miss
+		self.str_description = str_description
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -145,7 +154,8 @@ async def attack(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
-	weapon = ewcfg.weapon_map.get(user_data.weapon)
+	weapon_item = EwItem(id_item = user_data.weapon)
+	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
@@ -272,7 +282,7 @@ async def attack(cmd):
 				# Move around slime as a result of the shot.
 				user_data.change_slimes(n = ewutils.slime_bylevel(shootee_data.slimelevel), source = ewcfg.source_busting)
 				coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)
-				user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+				user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 				ewstats.track_maximum(user = user_data, metric = ewcfg.stat_biggest_bust_level, value = shootee_data.slimelevel)
 
@@ -407,19 +417,23 @@ async def attack(cmd):
 				if user_data.id_killer == shootee_data.id_user:
 					user_data.id_killer = ""
 
-				if slimes_damage >= shootee_data.slimes:
+				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
 
 				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
-				slime_splatter = min(slimes_damage, shootee_data.slimes)
+				slime_splatter = min(slimes_damage, max(shootee_data.slimes - shootee_data.bleed_storage, 0))
 				if was_juvenile or user_data.faction == shootee_data.faction:
 					district_data.change_slimes(n = slime_splatter / 2, source = ewcfg.source_killing)
 					shootee_data.bleed_storage += int(slime_splatter / 2)
+					shootee_data.change_slimes(n = -int(slime_splatter / 2), source = ewcfg.source_damage)
+					damage = str(slimes_damage)
 				else:
+					boss_slimes += int(slime_splatter / 2)
 					district_data.change_slimes(n = slime_splatter / 4, source = ewcfg.source_killing)
 					shootee_data.bleed_storage += int(slime_splatter / 4)
-					boss_slimes += int(slime_splatter / 2)
+					shootee_data.change_slimes(n = -int(3 * slime_splatter / 4), source = ewcfg.source_damage)
+					damage = str(slimes_damage)
 
 				if was_killed:
 					#adjust statistics
@@ -434,7 +448,7 @@ async def attack(cmd):
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
 					
 					if shootee_data.slimes >= 0:
-						user_data.change_slimecredit(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
+						user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 
 					# Steal items
@@ -444,15 +458,15 @@ async def attack(cmd):
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
-					if shootee_data.slimelevel >= user_data.slimelevel:
-						user_data.add_weaponskill(n = 1)
+					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
+						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
 					#explode_damage = slimes_dropped / 10 + shootee_data.slimes / 2
 					# explode, damaging everyone in the district
 
-                                        # release bleed storage
-					district_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
-					user_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
+					# release bleed storage
+					district_data.change_slimes(n = shootee_data.slimes / 2, source = ewcfg.source_killing)
+					user_data.change_slimes(n = shootee_data.slimes / 2, source = ewcfg.source_killing)
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
@@ -505,8 +519,6 @@ async def attack(cmd):
 					#response += explode_resp
 				else:
 					# A non-lethal blow!
-					shootee_data.change_slimes(n = -slimes_damage, source = ewcfg.source_damage)
-					damage = str(slimes_damage)
 
 					if weapon != None:
 						if miss:
@@ -561,6 +573,10 @@ async def attack(cmd):
 			# Assign the corpse role to the newly dead player.
 			if was_killed:
 				await ewrolemgr.updateRoles(client = cmd.client, member = member)
+				# announce death in kill feed channel
+				killfeed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_killfeed)
+				killfeed_resp = response + "\n`-------------------------`"
+				await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -712,9 +728,11 @@ async def spar(cmd):
 		else:
 			# Get killing player's info.
 			user_data = EwUser(member = cmd.message.author)
+			weapon_item = EwItem(id_item = user_data.weapon)
 
 			# Get target's info.
 			sparred_data = EwUser(member = member)
+			sparred_weapon_item = EwItem(id_item = sparred_data.weapon)
 
 			user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 			user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
@@ -742,8 +760,8 @@ async def spar(cmd):
 
 				#Determine if the !spar is a duel:
 				weapon = None
-				if user_data.weapon != None and user_data.weapon != "" and user_data.weapon == sparred_data.weapon:
-					weapon = ewcfg.weapon_map.get(user_data.weapon)
+				if user_data.weapon != "" and sparred_data.weapon != "" and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
+					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 					duel = True
 
 				if sparred_data.life_state == ewcfg.life_state_corpse:
@@ -786,15 +804,11 @@ async def spar(cmd):
 						weaker_player.change_slimes(n = slimegain / 2)
 						stronger_player.change_slimes(n = slimegain / 2)
 
-						if weaker_player.weaponskill < 5:
-							weaker_player.add_weaponskill(n = 1)
-						elif (weaker_player.weaponskill + 1) < stronger_player.weaponskill:
-							weaker_player.add_weaponskill(n = 1)
+						if weaker_player.weaponskill < 5 or (weaker_player.weaponskill + 1) < stronger_player.weaponskill:
+							weaker_player.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 
-						if stronger_player.weaponskill < 5:
-							stronger_player.add_weaponskill(n = 1)
-						elif (stronger_player.weaponskill + 1) < weaker_player.weaponskill:
-							stronger_player.add_weaponskill(n = 1)
+						if stronger_player.weaponskill < 5 or (stronger_player.weaponskill + 1) < weaker_player.weaponskill:
+							stronger_player.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 
 					weaker_player.time_lastspar = time_now
 
@@ -838,17 +852,46 @@ async def spar(cmd):
 
 """ equip a weapon """
 async def equip(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+	if item_sought:
+		item = EwItem(id_item = item_sought.get("id_item"))
+
+		if item.item_type == ewcfg.it_weapon:
+			response = user_data.equip(item)
+			user_data.persist()
+		else:
+			response = "Not a weapon you ignorant juvenile"
+	else:
+		response = "You don't have one"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" get a weapon into your inventory"""
+async def arm(cmd):
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
+	weapon_item = EwItem(id_item = user_data.weapon)
+
+	weapons_held = ewitem.inventory(
+		id_user = user_data.id_user,
+		id_server = cmd.message.server.id,
+		item_type_filter = ewcfg.it_weapon
+	)
 
 	if cmd.message.channel.name != ewcfg.channel_dojo:
-		response = "You must go to the #{} to change your equipment.".format(ewcfg.channel_dojo)
+		response = "You must go to the #{} to get new equipment.".format(ewcfg.channel_dojo)
 	elif user_data.life_state == ewcfg.life_state_corpse:
-		response = "Ghosts can't equip weapons."
+		response = "Ghosts can't hold weapons."
 	elif user_data.life_state == ewcfg.life_state_juvenile:
-		response = "Juvies can't equip weapons."
-	elif user_data.weaponmarried == True:
-		response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(user_data.weaponname)
+		response = "Juvies don't know how to hold weapons."
+	elif len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+		response = "You can't carry any more weapons."
 	else:
 		value = None
 		if cmd.tokens_count > 1:
@@ -857,29 +900,31 @@ async def equip(cmd):
 
 		weapon = ewcfg.weapon_map.get(value)
 		if weapon != None:
-			response = weapon.str_equip
-			try:
-				conn_info = ewutils.databaseConnect()
-				conn = conn_info.get('conn')
-				cursor = conn.cursor()
+			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecoin:
+				response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecoin)
+				
+			else:
+				response = "You "
+				item_props = {
+					"weapon_type": weapon.id_weapon,
+					"weapon_name": "",
+					"weapon_desc": weapon.str_description,
+					"married": ""
+				}
 
-				user_skills = ewutils.weaponskills_get(member = cmd.message.author)
+				ewitem.item_create(
+					item_type = ewcfg.it_weapon,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = item_props
+				)
 
-				user_data.weapon = weapon.id_weapon
-				weaponskillinfo = user_skills.get(weapon.id_weapon)
-				if weaponskillinfo == None:
-					user_data.weaponskill = 0
-					user_data.weaponname = ""
-				else:
-					user_data.weaponskill = weaponskillinfo.get('skill')
-					user_data.weaponname = weaponskillinfo.get('name')
+				if weapon.id_weapon != 'gun':
+					user_data.change_slimecoin(n = -ewcfg.weapon_fee, coinsource=ewcfg.source_spending)
+					user_data.persist()
+					response += "pay {} slimecoin and ".format(ewcfg.weapon_fee)
 
-				user_data.persist()
-
-				conn.commit()
-			finally:
-				cursor.close()
-				ewutils.databaseClose(conn_info)
+				response += "take {}.".format(weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
 
@@ -916,13 +961,12 @@ async def annoint(cmd):
 			else:
 				# Perform the ceremony.
 				user_data.change_slimes(n = -100, source = ewcfg.source_spending)
-				user_data.weaponname = annoint_name
-				
-				skillup = 0
-				if user_data.weaponskill < 10:
-					skillup = 1
+				weapon_item = EwItem(id_item = user_data.weapon)
+				weapon_item.item_props["weapon_name"] = annoint_name
+				weapon_item.persist()
 
-				user_data.add_weaponskill(n = skillup)
+				if user_data.weaponskill < 10:
+					user_data.add_weaponskill(n = 1, weapon_type = weapon_item.item_props.get("weapon_type"))
 
 				# delete a slime poudrin from the player's inventory
 				ewitem.item_delete(id_item = poudrins[0].get('id_item'))
@@ -937,8 +981,10 @@ async def annoint(cmd):
 
 async def marry(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	weapon = ewcfg.weapon_map.get(user_data.weapon)
+	weapon_item = EwItem(id_item = user_data.weapon)
+	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	display_name = cmd.message.author.display_name
+	weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
 	#Checks to make sure you're in the dojo.
 	if user_data.poi != ewcfg.poi_id_dojo:
@@ -954,7 +1000,7 @@ async def marry(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you have a displayed rank 8 or higher weapon.
 	elif user_data.weaponskill < 12:
-		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(user_data.weaponname)
+		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
 	elif user_data.weaponmarried == True:
@@ -972,12 +1018,12 @@ async def marry(cmd):
 		))
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You express your desire to get things done as soon as possible so that you can stop reading this boring wall of text and return to your busy agenda of murder, and so he prepares to officiate immediately. You stand next to your darling {}, the only object of your affection in this godforsaken city. You shiver with anticipation for the most anticipated in-game event of your ENDLESS WAR career. A crowd of enemy and allied gangsters alike forms around you three as the Dojo Master begins the ceremony...".format(user_data.weaponname)
+			"You express your desire to get things done as soon as possible so that you can stop reading this boring wall of text and return to your busy agenda of murder, and so he prepares to officiate immediately. You stand next to your darling {}, the only object of your affection in this godforsaken city. You shiver with anticipation for the most anticipated in-game event of your ENDLESS WAR career. A crowd of enemy and allied gangsters alike forms around you three as the Dojo Master begins the ceremony...".format(weapon_name)
 		))
 		await asyncio.sleep(3)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"”We are gathered here today to witness the combined union of {} and {}.".format(display_name, user_data.weaponname)
+			"”We are gathered here today to witness the combined union of {} and {}.".format(display_name, weapon_name)
 		))
 		await asyncio.sleep(3)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -1017,20 +1063,24 @@ async def marry(cmd):
 		await asyncio.sleep(3)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You begin to tear up, fondly regarding your last kill with your {} that you love so much. You lean down and kiss your new spouse on the handle, anointing an extra two mastery ranks with pure love. It remains completely motionless, because it is an inanimate object. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!".format(user_data.weaponname)
+			"You begin to tear up, fondly regarding your last kill with your {} that you love so much. You lean down and kiss your new spouse on the handle, anointing an extra two mastery ranks with pure love. It remains completely motionless, because it is an inanimate object. The Dojo Master does a karate chop midair to bookend the entire experience. Sick, you’re married now!".format(weapon_name)
 		))
 
 		#Sets their weaponmarried table to true, so that "you are married to" appears instead of "you are wielding" intheir !data, you get an extra two mastery levels, and you can't change your weapon.
 		user_data = EwUser(member = cmd.message.author)
 		user_data.weaponmarried = True
-		user_data.add_weaponskill(n = 2)
+		user_data.add_weaponskill(n = 2, weapon_type = weapon.id_weapon)
 		user_data.persist()
+		weapon_item.item_props["married"] = user_data.id_user
+		weapon_item.persist()
 		return
 
 
 async def divorce(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	weapon = ewcfg.weapon_map.get(user_data.weapon)
+	weapon_item = EwItem(id_item = user_data.weapon)
+	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
 	# Checks to make sure you're in the dojo.
 	if weapon != None:
@@ -1042,15 +1092,21 @@ async def divorce(cmd):
 		else:
 			#Unpreform the ceremony
 			response = "You decide it’s finally time to end the frankly obviously retarded farce that is your marriage with your {}. Things were good at first, you both wanted the same things out of life. But, that was then and this is now. You reflect briefly on your myriad of woes; the constant bickering, the mundanity of your everyday routine, the total lack of communication. You’re a slave. But, a slave you will be no longer! You know what you must do." \
-					   "\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partneter to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
-					   "So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, user_data.weaponname)
+					   "\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partner to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
+					   "So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, weapon_name)
 
 			#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
 			user_data.weaponmarried = False
 			user_data.weapon = ""
-			user_data.weaponskill = 0
-			fee = (user_data.slimecredit / 2)
-			user_data.change_slimecredit(n = -fee, coinsource = ewcfg.coinsource_revival)
+			ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
+
+			fee = (user_data.slimecoin / 2)
+			user_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
+
 			user_data.persist()
 
+			#delete weapon item
+			ewitem.item_delete(id_item = weapon_item.id_item)
+
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+

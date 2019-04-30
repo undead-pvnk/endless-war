@@ -7,7 +7,8 @@ import discord
 import ewcfg
 import ewstats
 import ewutils
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 
 """
 	district data model for database persistence
@@ -94,52 +95,96 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes
 		))
+	
+	def get_number_of_friendly_neighbors(self):
+		if self.controlling_faction == "":
+			return 0
+		neighbors = ewcfg.poi_neighbors[self.name]
+		friendly_neighbors = 0
 
-	async def decay_capture_points(self):
+		for neighbor_id in neighbors:
+			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
+			if neighbor_data.controlling_faction == self.controlling_faction:
+				friendly_neighbors += 1
+		return friendly_neighbors
+
+	def all_neighbors_friendly(self):
+		if self.controlling_faction == "":
+			return False
+		
+		neighbors = ewcfg.poi_neighbors[self.name]
+		for neighbor_id in neighbors:
+			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
+			neighbor_data = EwDistrict(id_server = self.id_server, district = neighbor_id)
+			if neighbor_data.controlling_faction != self.controlling_faction and not neighbor_poi.is_subzone:
+				return False
+		return True
+
+	def get_number_of_players(self, min_level = 0):
+		client = ewutils.get_client()
+		server = client.get_server(self.id_server)
+		if server == None:
+			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
+			return 0
+
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
+			id_user = ewcfg.col_id_user,
+			slimelevel = ewcfg.col_slimelevel,
+			poi = ewcfg.col_poi,
+			life_state = ewcfg.col_life_state
+		),(
+			self.id_server,
+			self.name,
+			ewcfg.life_state_kingpin
+		))
+
+		num_players = 0
+		for player in players:
+			if player[1] >= min_level and server.get_member(player[0]) != None:
+				num_players += 1
+
+		return num_players
+
+
+	def decay_capture_points(self):
+		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 		if self.capture_points > 0:
-			players_in_district = ewutils.execute_sql_query("SELECT {faction}, {life_state}, id_user FROM users WHERE id_server = %s AND {poi} = %s".format(
-				faction = ewcfg.col_faction,
-				life_state = ewcfg.col_life_state,
-				poi = ewcfg.col_poi
-			), (
-				self.id_server,
-				self.name
-			))
 
-			cap_faction_member_present = False
+			neighbors = ewcfg.poi_neighbors[self.name]
+			all_neighbors_friendly = self.all_neighbors_friendly()
 
-			# if at least one of those players if from the capturing/controlling faction, don't decay
-			for player_in_district in players_in_district:
-				if player_in_district[0] == self.capturing_faction:  # [0] is their faction
-					cap_faction_member_present = True
 
-			if not cap_faction_member_present:  # only decay if no members of the currently capturing (or controlling) faction are present
-
+			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				await self.change_capture_points(-math.ceil(self.max_capture_points / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				responses = self.change_capture_points(-math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				resp_cont_decay.add_response_container(responses)
 
 		if self.capture_points < 0:
 			self.capture_points = 0
 
 		if self.capture_points == 0:
 			if self.controlling_faction != "":  # if it was owned by a faction
-				await ewutils.post_in_channels(
-					id_server = self.id_server,
-					message = "The {faction} have lost control over {district} because of sheer negligence.".format(
-						faction = self.controlling_faction,
-						district = ewcfg.id_to_poi[self.name].str_name
-					),
-					channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+
+				message = "The {faction} have lost control over {district} because of sheer negligence.".format(
+					faction = self.controlling_faction,
+					district = ewcfg.id_to_poi[self.name].str_name
 				)
-			await self.change_ownership("", ewcfg.actor_decay)
+				channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+				for ch in channels:
+					resp_cont_decay.add_channel_response(channel = ch, response = message)
+			responses = self.change_ownership("", ewcfg.actor_decay)
+			resp_cont_decay.add_response_container(responses)
 			self.capturing_faction = ""
 
-		self.persist()
+		return resp_cont_decay
 
-	async def change_capture_points(self, progress, actor):  # actor can either be a faction or "decay"
+
+	def change_capture_points(self, progress, actor):  # actor can either be a faction or "decay"
 		progress_percent_before = int(self.capture_points / self.max_capture_points * 100)
 
 		self.capture_points += progress
+
+		resp_cont_change_cp = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 
 		# ensures that the value doesn't exceed the bounds
 		if self.capture_points < 0:
@@ -153,104 +198,114 @@ class EwDistrict:
 		if (progress_percent_after // ewcfg.capture_milestone) != (progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
 			if progress > 0:  # if it was a positive change
 				if ewcfg.capture_milestone <= progress_percent_after < ewcfg.capture_milestone * 2:  # if its the first milestone
-					await ewutils.post_in_channels(
-						id_server = self.id_server,
-						message = "{faction} have started capturing {district}. Current progress: {progress}%".format(
-							faction = self.capturing_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
-							progress = progress_percent_after
-						),
-						channels = [ewcfg.id_to_poi[self.name].channel]
+					message = "{faction} have started capturing {district}. Current progress: {progress}%".format(
+						faction = self.capturing_faction.capitalize(),
+						district = ewcfg.id_to_poi[self.name].str_name,
+						progress = progress_percent_after
 					)
+					channels = [ewcfg.id_to_poi[self.name].channel]
+
+					for ch in channels:
+						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 				else:
 					# alert both factions of significant capture progress
 					if progress_percent_after >= 30 > progress_percent_before:  # if the milestone of 30% was just reached
-						await ewutils.post_in_channels(
-							id_server = self.id_server,
-							message = "{faction} are capturing {district}.".format(
-								faction = self.capturing_faction.capitalize(),
-								district = ewcfg.id_to_poi[self.name].str_name,
-								progress = progress_percent_after
-							),
-							channels = ewcfg.hideout_channels
+						message = "{faction} are capturing {district}.".format(
+							faction = self.capturing_faction.capitalize(),
+							district = ewcfg.id_to_poi[self.name].str_name,
+							progress = progress_percent_after
 						)
+						if self.controlling_faction == ewcfg.faction_rowdys:
+							channels = [ewcfg.channel_rowdyroughhouse]
+						elif self.controlling_faction == ewcfg.faction_killers:
+							channels = [ewcfg.channel_copkilltown]
+						else:
+							channels = ewcfg.hideout_channels
+
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					if self.controlling_faction != actor:  # if it's not already owned by that faction
-						await ewutils.post_in_channels(
-							id_server = self.id_server,
-							message = "{faction} continue to capture {district}. Current progress: {progress}%".format(
-								faction = self.capturing_faction.capitalize(),
-								district = ewcfg.id_to_poi[self.name].str_name,
-								progress = progress_percent_after
-							),
-							channels = [ewcfg.id_to_poi[self.name].channel]
+						message = "{faction} continue to capture {district}. Current progress: {progress}%".format(
+							faction = self.capturing_faction.capitalize(),
+							district = ewcfg.id_to_poi[self.name].str_name,
+							progress = progress_percent_after
 						)
+						channels = [ewcfg.id_to_poi[self.name].channel]
+						
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 					else:
-						await ewutils.post_in_channels(
-							id_server = self.id_server,
-							message = "{faction} are renewing their grasp on {district}. Current control level: {progress}%".format(
-								faction = self.capturing_faction.capitalize(),
-								district = ewcfg.id_to_poi[self.name].str_name,
-								progress = progress_percent_after
-							),
-							channels = [ewcfg.id_to_poi[self.name].channel]
+						message = "{faction} are renewing their grasp on {district}. Current control level: {progress}%".format(
+							faction = self.capturing_faction.capitalize(),
+							district = ewcfg.id_to_poi[self.name].str_name,
+							progress = progress_percent_after
 						)
+						channels = [ewcfg.id_to_poi[self.name].channel]
+						
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 			else:  # if it was a negative change
 				if self.controlling_faction != "":  # if the district is owned by a faction
 					if progress_percent_after < 20 <= progress_percent_before:
-						await ewutils.post_in_channels(
-							id_server = self.id_server,
-							message = "{faction}' control of {district} is slipping.".format(
-								faction = self.controlling_faction.capitalize(),
-								district = ewcfg.id_to_poi[self.name].str_name,
-								progress = progress_percent_after
-							),
-							channels = ewcfg.hideout_channels
+						message = "{faction}' control of {district} is slipping.".format(
+							faction = self.controlling_faction.capitalize(),
+							district = ewcfg.id_to_poi[self.name].str_name,
+							progress = progress_percent_after
 						)
+						channels = ewcfg.hideout_channels
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					elif progress_percent_after < 50 <= progress_percent_before and actor != ewcfg.actor_decay:
-						await ewutils.post_in_channels(
-							id_server = self.id_server,
-							message = "{faction} are de-capturing {district}.".format(
-								faction = actor.capitalize(),
-								district = ewcfg.id_to_poi[self.name].str_name,
-								progress = progress_percent_after
-							),
-							channels = ewcfg.hideout_channels
+						message = "{faction} are de-capturing {district}.".format(
+							faction = actor.capitalize(),
+							district = ewcfg.id_to_poi[self.name].str_name,
+							progress = progress_percent_after
 						)
+						channels = ewcfg.hideout_channels
+						
+						for ch in channels:
+							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
-					await ewutils.post_in_channels(
-						id_server = self.id_server,
-						message = "{faction}' control of {district} has decreased. Remaining control level: {progress}%".format(
-							faction = self.capturing_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
-							progress = progress_percent_after
-						),
-						channels = [ewcfg.id_to_poi[self.name].channel]
+					message = "{faction}' control of {district} has decreased. Remaining control level: {progress}%".format(
+						faction = self.capturing_faction.capitalize(),
+						district = ewcfg.id_to_poi[self.name].str_name,
+						progress = progress_percent_after
 					)
+					channels = [ewcfg.id_to_poi[self.name].channel]
+					
+					for ch in channels:
+						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 				else:  # if it's an uncontrolled district
-					await ewutils.post_in_channels(
-						id_server = self.id_server,
-						message = "{faction}' capture progress of {district} has decreased. Remaining progress: {progress}%".format(
-							faction = self.capturing_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name,
-							progress = progress_percent_after
-						),
-						channels = [ewcfg.id_to_poi[self.name].channel]
+					message = "{faction}' capture progress of {district} has decreased. Remaining progress: {progress}%".format(
+						faction = self.capturing_faction.capitalize(),
+						district = ewcfg.id_to_poi[self.name].str_name,
+						progress = progress_percent_after
 					)
+					channels = [ewcfg.id_to_poi[self.name].channel]
+					
+					for ch in channels:
+						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 		# if capture_points is at its maximum value (or above), assign the district to the capturing faction
 		if self.capture_points == self.max_capture_points and self.controlling_faction != actor:
-			await self.change_ownership(self.capturing_faction, actor)
+			responses = self.change_ownership(self.capturing_faction, actor)
+			resp_cont_change_cp.add_response_container(responses)
 
 		# if the district has decayed or been de-captured and it wasn't neutral anyway, make it neutral
 		elif self.capture_points == 0 and self.controlling_faction != "":
-			await self.change_ownership("", actor)
+			responses = self.change_ownership("", actor)
+			resp_cont_change_cp.add_response_container(responses)
+
+		return resp_cont_change_cp
 
 	"""
 		Change who controls the district. Can be used to update the channel topic by passing the already controlling faction as an arg.
 	"""
-	async def change_ownership(self, new_owner, actor, client = None):  # actor can either be a faction, "decay", or "init"
+	def change_ownership(self, new_owner, actor, client = None):  # actor can either be a faction, "decay", or "init"
+		resp_cont_owner = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
+
 		factions = ["", ewcfg.faction_killers, ewcfg.faction_rowdys]
 
 		if new_owner in factions:
@@ -276,41 +331,69 @@ class EwDistrict:
 				if client is None:
 					client = ewutils.get_client()
 
+
 				if client is not None:
-					try:
-						await client.edit_channel(channel = channel, topic = new_topic)
-					except:
-						ewutils.logMsg('Failed to set channel topic for {} to {}'.format(channel.name, new_topic))
+					resp_cont_owner.add_channel_topic(channel = channel_str, topic = new_topic)
 
 			if self.controlling_faction != new_owner:  # if the controlling faction actually changed
 				if new_owner != "":  # if it was captured by a faction instead of being de-captured or decayed
-					await ewutils.post_in_channels(
-						id_server = self.id_server,
-						message = "{faction} just captured {district}.".format(
-							faction = self.capturing_faction.capitalize(),
-							district = ewcfg.id_to_poi[self.name].str_name
-						),
-						channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+					message = "{faction} just captured {district}.".format(
+						faction = self.capturing_faction.capitalize(),
+						district = ewcfg.id_to_poi[self.name].str_name
 					)
+					channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+					
+					for ch in channels:
+						resp_cont_owner.add_channel_response(channel = ch, response = message)
 				else:  # successful de-capture or full decay
 					if actor != ewcfg.actor_decay:
-						await ewutils.post_in_channels(
-							id_server = self.id_server,
-							message = "{faction} just wrested control over {district} from the {other_faction}.".format(
-								faction = actor.capitalize(),
-								district = ewcfg.id_to_poi[self.name].str_name,
-								other_faction = self.controlling_faction  # the faction that just lost control
-							),
-							channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+						message = "{faction} just wrested control over {district} from the {other_faction}.".format(
+							faction = actor.capitalize(),
+							district = ewcfg.id_to_poi[self.name].str_name,
+							other_faction = self.controlling_faction  # the faction that just lost control
 						)
+						channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
+						
+						for ch in channels:
+							resp_cont_owner.add_channel_response(channel = ch, response = message)
 
 				self.controlling_faction = new_owner
+
+		return resp_cont_owner
 
 	""" add or remove slime """
 	def change_slimes(self, n = 0, source = None):
 		change = int(n)
 		self.slimes += change
 
+"""
+	Informs the player about their current zone's capture progress
+"""
+async def capture_progress(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	response += "**{}**: ".format(poi.str_name)
+
+	if not user_data.poi in ewcfg.capturable_districts:
+		response += "This zone cannot be captured."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
+
+
+	if district_data.controlling_faction != "":
+		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
+	elif district_data.capturing_faction != "":
+		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
+	else:
+		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
+
+	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+		
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -319,6 +402,8 @@ async def capture_tick(id_server):
 	# the variables might apparently be accessed before assignment if i didn't declare them here
 	cursor = None
 	conn_info = None
+
+	resp_cont_capture_tick = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
 
 	try:
 		conn_info = ewutils.databaseConnect()
@@ -398,9 +483,26 @@ async def capture_tick(id_server):
 							capture_speed += 1
 							dc_stat_increase_list.append(player_id)
 
+
 			if faction_capture not in ['both', None]:  # if only members of one faction is present
 				if district_name in ewcfg.capturable_districts:
 					dist = EwDistrict(id_server = id_server, district = district_name)
+					
+					friendly_neighbors = dist.get_number_of_friendly_neighbors()
+					if dist.all_neighbors_friendly():
+						capture_speed = 0
+					elif dist.controlling_faction == faction_capture:
+						capture_speed *= 1 + 0.1 * friendly_neighbors
+					else:
+						capture_speed /= 1 + 0.1 * friendly_neighbors
+
+					capture_progress = dist.capture_points
+
+					if faction_capture != dist.capturing_faction:
+						capture_progress *= -1
+
+					capture_speed *= ewcfg.capture_gradient * capture_progress / dist.max_capture_points + ewcfg.baseline_capture_speed
+
 
 					if dist.capture_points < dist.max_capture_points:
 						for stat_recipient in dc_stat_increase_list:
@@ -412,17 +514,23 @@ async def capture_tick(id_server):
 							)
 
 					if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
-						await dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						resp_cont_capture_tick.add_response_container(responses)
 
 					elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
-						await dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						responses =  dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						resp_cont_capture_tick.add_response_container(responses)
+
 						dist.capturing_faction = faction_capture
 
 					# lower the enemy faction's progress to revert it to neutral (or potentially get it onto your side without becoming neutral first)
 					else:  # if the (de-)capturing faction is not in control
-						await dist.change_capture_points(-(ewcfg.capture_tick_length * capture_speed * ewcfg.decapture_speed_multiplier), faction_capture)
+						responses =  dist.change_capture_points(-(ewcfg.capture_tick_length * capture_speed * ewcfg.decapture_speed_multiplier), faction_capture)
+						resp_cont_capture_tick.add_response_container(responses)
 
 					dist.persist()
+
+	await resp_cont_capture_tick.post()
 
 """
 	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
@@ -440,27 +548,35 @@ async def capture_tick_loop(id_server):
 	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
 async def give_kingpins_slime_and_decay_capture_points(id_server):
+	resp_cont_decay_loop = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = id_server)
+
 	for kingpin_role in [ewcfg.role_rowdyfucker, ewcfg.role_copkiller]:
 		kingpin = ewutils.find_kingpin(id_server = id_server, kingpin_role = kingpin_role)
 
 		if kingpin is not None:
-			slimegain = 0
-
+			total_slimegain = 0
 			for id_district in ewcfg.capturable_districts:
+
 				district = EwDistrict(id_server = id_server, district = id_district)
 
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
-					slimegain += ewcfg.district_control_slime_yields[district.property_class]
+					slimegain = ewcfg.district_control_slime_yields[district.property_class]
+					# increase slimeyields by 10 percent per friendly neighbor
+					friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
+					total_slimegain += slimegain * friendly_mod
 
-			kingpin.change_slimes(n = slimegain)
+			kingpin.change_slimes(n = total_slimegain)
 			kingpin.persist()
 
-			ewutils.logMsg(kingpin_role + " just received %d" % slimegain + " slime for their captured districts.")
+			ewutils.logMsg(kingpin_role + " just received %d" % total_slimegain + " slime for their captured districts.")
 
 	# Decay capture points.
 	for id_district in ewcfg.capturable_districts:
 		district = EwDistrict(id_server = id_server, district = id_district)
 
-		await district.decay_capture_points()
+		responses =  district.decay_capture_points()
+		resp_cont_decay_loop.add_response_container(responses)
+		district.persist()
+	await resp_cont_decay_loop.post()
 

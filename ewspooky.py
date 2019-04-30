@@ -8,7 +8,8 @@ import ewcfg
 import ewutils
 import ewmap
 import ewrolemgr
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 
 """ revive yourself from the dead. """
@@ -26,8 +27,8 @@ async def revive(cmd):
 			market_data = EwMarket(id_server = cmd.message.server.id)
 
 			# Endless War collects his fee.
-			fee = (player_data.slimecredit / 10)
-			player_data.change_slimecredit(n = -fee, coinsource = ewcfg.coinsource_revival)
+			fee = (player_data.slimecoin / 10)
+			player_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
 			market_data.slimes_revivefee += fee
 			player_data.busted = False
 			
@@ -46,8 +47,8 @@ async def revive(cmd):
 			# Set life state. This is what determines whether the player is actually alive.
 			player_data.life_state = ewcfg.life_state_juvenile
 
-			# Get the player out of the sewers. Will be endless-war eventually.
-			player_data.poi = ewcfg.poi_id_downtown
+			# Get the player out of the sewers.
+			player_data.poi = ewcfg.poi_id_endlesswar
 
 			player_data.persist()
 			market_data.persist()
@@ -76,9 +77,10 @@ async def revive(cmd):
 			reunite += brain.str_revive.format(
 			slimeoid_name = slimeoid.name
 			)
-			downtownchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_downtown)
+			new_poi = ewcfg.id_to_poi.get(player_data.poi)
+			revivechannel = ewutils.get_channel(cmd.message.server, new_poi.channel)
 			reunite = ewutils.formatMessage(cmd.message.author, reunite)
-			await ewutils.send_message(cmd.client, downtownchannel, reunite)
+			await ewutils.send_message(cmd.client, revivechannel, reunite)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
