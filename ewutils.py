@@ -21,6 +21,9 @@ from ewplayer import EwPlayer
 db_pool = {}
 db_pool_id = 0
 
+# Map of user IDs to their course ID.
+moves_active = {}
+
 class Message:
 	# Send the message to this exact channel by name.
 	channel = None

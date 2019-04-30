@@ -13,8 +13,6 @@ from ew import EwUser
 from ewdistrict import EwDistrict
 from ewtransport import EwTransport
 
-# Map of user IDs to their course ID.
-moves_active = {}
 move_counter = 0
 
 """
@@ -538,15 +536,14 @@ async def move(cmd):
 	if path == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't know how to get there."))
 
-	global moves_active
 	global move_counter
 
 	# Check if we're already moving. If so, cancel move and change course. If not, register this course.
-	move_current = moves_active.get(cmd.message.author.id)
+	move_current = ewutils.moves_active.get(cmd.message.author.id)
 	move_counter += 1
 
 	# Take control of the move for this player.
-	move_current = moves_active[cmd.message.author.id] = move_counter
+	move_current = ewutils.moves_active[cmd.message.author.id] = move_counter
 
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
@@ -568,7 +565,7 @@ async def move(cmd):
 		if path.cost > 0:
 			await asyncio.sleep(path.cost)
 
-		if moves_active[cmd.message.author.id] != move_current:
+		if ewutils.moves_active[cmd.message.author.id] != move_current:
 			return
 
 		user_data = EwUser(member = cmd.message.author)
@@ -616,7 +613,7 @@ async def move(cmd):
 		# Perform move.
 		for step in path.steps[1:]:
 			# Check to see if we have been interrupted and need to not move any farther.
-			if moves_active[cmd.message.author.id] != move_current:
+			if ewutils.moves_active[cmd.message.author.id] != move_current:
 				break
 
 			val = map_world[step[1]][step[0]]
@@ -723,7 +720,7 @@ async def move(cmd):
 	Cancel any in progress move.
 """
 async def halt(cmd):
-	moves_active[cmd.message.author.id] = 0
+	ewutils.moves_active[cmd.message.author.id] = 0
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You {} dead in your tracks.".format(cmd.cmd[1:])))
 
 

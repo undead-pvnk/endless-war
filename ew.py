@@ -134,6 +134,7 @@ class EwUser:
 		self.weapon = ""
 		self.weaponskill = 0
 		self.weaponmarried = False
+		ewutils.moves_active[self.id_user] = 0
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
