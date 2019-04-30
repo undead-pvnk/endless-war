@@ -211,21 +211,6 @@ def item_delete(
 		cursor.close()
 		ewutils.databaseClose(conn_info)
 
-"""
-	Transfer item to new owner.
-"""
-def item_changeowner(
-	new_owner = None,
-	id_item = None
-):
-	try:
-		item_data = EwItem(id_item = id_item)
-		if item_data.soulbound:
-			return ewutils.logMsg("Failed to transfer item {}, because it's soulbound.".format(id_item))
-		item_data.id_owner = new_owner
-		item_data.persist()
-	except:
-		ewutils.logMsg("Failed to transfer item {} to new owner {}.".format(id_item, new_owner))
 
 """
 	Drop item into current district.
@@ -236,7 +221,7 @@ def item_drop(
 	try:
 		item_data = EwItem(id_item = id_item)
 		user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
-		item_changeowner(new_owner = user_data.poi, id_item = id_item)
+		give_item(id_user = user_data.poi, id_server = item_data.id_server, id_item = item_data.id_item)
 	except:
 		ewutils.logMsg("Failed to drop item {}.".format(id_item))
 
@@ -349,14 +334,37 @@ def item_lootrandom(id_server = None, id_user = None):
 			id_item = random.choice(items_in_poi)[0]
 
 			item_data = EwItem(id_item = id_item)
+			response += "You found a {}!".format(item_data.item_props.get('name'))
 
-			item_data.id_owner = id_user
+			if item_data.item_type == ewcfg.it_food:
+				food_items = inventory(
+					id_user = id_user,
+					id_server = id_server,
+					item_type_filter = ewcfg.it_food
+				)
+
+				if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+					response += " But you couldn't carry any more food items, so you tossed it back."
+				else:
+					item_data.id_owner = id_user
+			elif item_data.item_type == ewcfg.it_weapon:
+				weapons_held = inventory(
+					id_user = id_user,
+					id_server = id_server,
+					item_type_filter = ewcfg.it_weapon
+				)
+
+				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+					response += " But you couldn't carry any more weapons, so you tossed it back."
+				else:
+					item_data.id_owner = id_user
+
+			else:
+				item_data.id_owner = id_user
+
 
 			item_data.persist()
-			item_sought = find_item(item_search = id_item, id_user = user_data.id_user, id_server = user_data.id_server)
 
-
-			response += "You found a {}!".format(item_sought.get('name'))
 
 		else:
 			response += "You found a... oh, nevermind, it's just a piece of trash."
@@ -725,8 +733,6 @@ def give_item(
 		id_server = member.server.id
 		id_user = member.id
 
-	item_changeowner(id_item = id_item, new_owner = id_user)
-
 	if id_server is not None and id_user is not None and id_item is not None:
 		ewutils.execute_sql_query(
 			"UPDATE items SET id_user = %s WHERE id_server = %s AND {id_item} = %s".format(
@@ -821,9 +827,6 @@ async def give(cmd):
 			elif recipient_data.life_state == ewcfg.life_state_corpse:
 				response = "Ghosts can't hold weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif recipient_data.life_state == ewcfg.life_state_juvenile:
-				response = "Juvies don't know how to hold weapons."
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
 				response  = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -855,7 +858,9 @@ async def give(cmd):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-#Throw away an item
+"""
+	Throw away an item
+"""
 async def discard(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""

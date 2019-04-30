@@ -888,8 +888,6 @@ async def arm(cmd):
 		response = "You must go to the #{} to get new equipment.".format(ewcfg.channel_dojo)
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "Ghosts can't hold weapons."
-	elif user_data.life_state == ewcfg.life_state_juvenile:
-		response = "Juvies don't know how to hold weapons."
 	elif len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
 		response = "You can't carry any more weapons."
 	else:
