@@ -119,8 +119,9 @@ class EwUser:
 			self.life_state = ewcfg.life_state_corpse
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
-			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide:
+			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
+		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
 		self.bounty = 0
@@ -134,9 +135,10 @@ class EwUser:
 		self.weapon = ""
 		self.weaponskill = 0
 		self.weaponmarried = False
+		ewutils.moves_active[self.id_user] = 0
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
-		ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
+		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 

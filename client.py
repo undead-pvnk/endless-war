@@ -267,8 +267,9 @@ cmd_map = {
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
 
-	#throw away an item
+	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
+	ewcfg.cmd_discard_alt1: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,

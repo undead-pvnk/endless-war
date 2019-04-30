@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.1K3P+"
+version = "v3.2"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -402,6 +402,7 @@ cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
+cmd_discard_alt1 = cmd_prefix + 'drop'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
@@ -552,6 +553,9 @@ bleed_tick_length = 10
 # Poudrin rarity (for enlisted players)
 poudrin_rarity = 1500
 
+# Chance to loot an item while scavenging
+scavenge_item_rarity = 1000
+
 # Lifetimes
 invuln_onrevive = 0
 
@@ -582,7 +586,7 @@ time_pvp_invest_withdraw = 180
 time_pvp = 1800
 
 # time to get kicked out of subzone
-time_kickout = 3 * 60 * 60  # 3 hours
+time_kickout = 60 * 60  # 1 hour
 
 # time after coming online before you can act
 time_offline = 10
@@ -961,6 +965,7 @@ cause_suicide = 5
 cause_leftserver = 6
 cause_drowning = 7
 cause_falling = 8
+cause_bleeding = 9
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
