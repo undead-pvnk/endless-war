@@ -624,7 +624,6 @@ async def suicide(cmd):
 			user_data.die(cause = ewcfg.cause_suicide)
 			user_data.persist()
 
-
 			# Assign the corpse role to the player. He dead.
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
