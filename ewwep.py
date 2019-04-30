@@ -417,19 +417,23 @@ async def attack(cmd):
 				if user_data.id_killer == shootee_data.id_user:
 					user_data.id_killer = ""
 
-				if slimes_damage >= shootee_data.slimes:
+				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
 
 				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
-				slime_splatter = min(slimes_damage, shootee_data.slimes)
+				slime_splatter = min(slimes_damage, max(shootee_data.slimes - shootee_data.bleed_storage, 0))
 				if was_juvenile or user_data.faction == shootee_data.faction:
 					district_data.change_slimes(n = slime_splatter / 2, source = ewcfg.source_killing)
 					shootee_data.bleed_storage += int(slime_splatter / 2)
+					shootee_data.change_slimes(n = -int(slime_splatter / 2), source = ewcfg.source_damage)
+					damage = str(slimes_damage)
 				else:
+					boss_slimes += int(slime_splatter / 2)
 					district_data.change_slimes(n = slime_splatter / 4, source = ewcfg.source_killing)
 					shootee_data.bleed_storage += int(slime_splatter / 4)
-					boss_slimes += int(slime_splatter / 2)
+					shootee_data.change_slimes(n = -int(3 * slime_splatter / 4), source = ewcfg.source_damage)
+					damage = str(slimes_damage)
 
 				if was_killed:
 					#adjust statistics
@@ -454,15 +458,15 @@ async def attack(cmd):
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
-					if shootee_data.slimelevel >= user_data.slimelevel:
+					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
 						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
 					#explode_damage = slimes_dropped / 10 + shootee_data.slimes / 2
 					# explode, damaging everyone in the district
 
 					# release bleed storage
-					district_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
-					user_data.change_slimes(n = shootee_data.bleed_storage / 2, source = ewcfg.source_killing)
+					district_data.change_slimes(n = shootee_data.slimes / 2, source = ewcfg.source_killing)
+					user_data.change_slimes(n = shootee_data.slimes / 2, source = ewcfg.source_killing)
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
@@ -515,8 +519,6 @@ async def attack(cmd):
 					#response += explode_resp
 				else:
 					# A non-lethal blow!
-					shootee_data.change_slimes(n = -slimes_damage, source = ewcfg.source_damage)
-					damage = str(slimes_damage)
 
 					if weapon != None:
 						if miss:

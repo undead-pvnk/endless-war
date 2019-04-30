@@ -961,6 +961,7 @@ cause_suicide = 5
 cause_leftserver = 6
 cause_drowning = 7
 cause_falling = 8
+cause_bleeding = 9
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [

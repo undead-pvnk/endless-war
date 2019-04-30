@@ -119,7 +119,7 @@ class EwUser:
 			self.life_state = ewcfg.life_state_corpse
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
-			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide:
+			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
