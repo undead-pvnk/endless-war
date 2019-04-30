@@ -333,10 +333,11 @@ def item_lootrandom(id_server = None, id_user = None):
 		if len(items_in_poi) > 0:
 			id_item = random.choice(items_in_poi)[0]
 
-			item_data = EwItem(id_item = id_item)
-			response += "You found a {}!".format(item_data.item_props.get('name'))
+			item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
 
-			if item_data.item_type == ewcfg.it_food:
+			response += "You found a {}!".format(item_sought.get('name'))
+
+			if item_sought.get('item_type') == ewcfg.it_food:
 				food_items = inventory(
 					id_user = id_user,
 					id_server = id_server,
@@ -346,31 +347,30 @@ def item_lootrandom(id_server = None, id_user = None):
 				if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
 					response += " But you couldn't carry any more food items, so you tossed it back."
 				else:
-					item_data.id_owner = id_user
-			elif item_data.item_type == ewcfg.it_weapon:
+					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+			elif item_sought.get('item_type') == ewcfg.it_weapon:
 				weapons_held = inventory(
 					id_user = id_user,
 					id_server = id_server,
 					item_type_filter = ewcfg.it_weapon
 				)
 
-				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
 					response += " But you couldn't carry any more weapons, so you tossed it back."
 				else:
-					item_data.id_owner = id_user
+					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 			else:
-				if item_data.item_type == ewcfg.it_slimepoudrin:
+				if item_sought.get('item_type') == ewcfg.it_slimepoudrin:
 					ewstats.change_stat(
 						id_server = user_data.id_server,
 						id_user = user_data.id_user,
 						metric = ewcfg.stat_poudrins_looted,
 						n = 1
 					)
-				item_data.id_owner = id_user
+				give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 
-			item_data.persist()
 
 
 		else:
