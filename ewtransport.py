@@ -266,12 +266,12 @@ async def embark(cmd):
 
 				# Take control of the move for this player.
 				ewmap.move_counter += 1
-				move_current = ewmap.moves_active[cmd.message.author.id] = ewmap.move_counter
+				move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
 				await message_task
 				await wait_task
 
 				# check if the user entered another movement command while waiting for the current one to be completed
-				if move_current == ewmap.moves_active[cmd.message.author.id]:
+				if move_current == ewutils.moves_active[cmd.message.author.id]:
 					user_data = EwUser(member = cmd.message.author)
 	
 					transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
@@ -319,13 +319,13 @@ async def disembark(cmd):
 
 		# Take control of the move for this player.
 		ewmap.move_counter += 1
-		move_current = ewmap.moves_active[cmd.message.author.id] = ewmap.move_counter
+		move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
 		await message_task
 		await wait_task
 
 		
 		# check if the user entered another movement command while waiting for the current one to be completed
-		if move_current != ewmap.moves_active[cmd.message.author.id]:
+		if move_current != ewutils.moves_active[cmd.message.author.id]:
 			return
 
 		user_data = EwUser(member = cmd.message.author)
