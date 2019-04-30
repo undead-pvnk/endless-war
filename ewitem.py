@@ -360,6 +360,13 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_data.id_owner = id_user
 
 			else:
+				if item_data.item_type == ewcfg.it_slimepoudrin:
+					ewstats.change_stat(
+						id_server = user_data.id_server,
+						id_user = user_data.id_user,
+						metric = ewcfg.stat_poudrins_looted,
+						n = 1
+					)
 				item_data.id_owner = id_user
 
 
@@ -416,6 +423,9 @@ def item_loot(
 		return
 
 	try:
+		target_data = EwUser(id_user = id_user_target, id_server = member.server.id)
+		source_data = EwUser(member = member)
+
 		# Get database handles if they weren't passed.
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
@@ -437,27 +447,18 @@ def item_loot(
 
 		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
 
-		# Transfer slimepoudrins
-		cursor.execute((
-			"UPDATE items SET id_user = %s " +
-			"WHERE id_user = %s AND id_server = %s AND item_type = %s "
-		), (
-			id_user_target,
-			member.id,
-			member.server.id,
-			ewcfg.it_slimepoudrin
-		))
+		if source_data.weapon != "":
+			weapons_held = inventory(
+				id_user = target_data.id_user,
+				id_server = target_data.id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
 
-		poudrins_looted = cursor.rowcount
+			if len(weapons_held) <= math.floor(target_data.slimelevel / ewcfg.max_weapon_mod) if target_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) < 1:
+				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
+			
 
-		ewstats.change_stat(
-			id_server = member.server.id,
-			id_user = id_user_target,
-			metric = ewcfg.stat_poudrins_looted,
-			n = poudrins_looted
-		)
 
-		ewutils.logMsg('Transferred {} slime poudrins.'.format(poudrins_looted))
 
 		conn.commit()
 	finally:
