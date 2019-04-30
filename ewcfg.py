@@ -582,7 +582,7 @@ time_pvp_invest_withdraw = 180
 time_pvp = 1800
 
 # time to get kicked out of subzone
-time_kickout = 3 * 60 * 60  # 3 hours
+time_kickout = 60 * 60  # 1 hour
 
 # time after coming online before you can act
 time_offline = 10

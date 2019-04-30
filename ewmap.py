@@ -853,10 +853,10 @@ async def scout(cmd):
 """
 async def kick(id_server):
 	# Gets data for all living players from the database
-	all_living_players = ewutils.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_lastenter} < %s".format(
+	all_living_players = ewutils.execute_sql_query("SELECT {poi}, {id_user} FROM users WHERE id_server = %s AND {life_state} > 0 AND {time_last_action} < %s".format(
 		poi = ewcfg.col_poi,
 		id_user = ewcfg.col_id_user,
-		time_lastenter = ewcfg.col_time_lastenter,
+		time_last_action = ewcfg.col_time_last_action,
 		life_state = ewcfg.col_life_state
 	), (
 		id_server,
