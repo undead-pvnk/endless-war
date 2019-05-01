@@ -87,7 +87,7 @@ class EwUser:
 			if source != ewcfg.source_spending and source != ewcfg.source_ghostification:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = change)
 
-			if source == ewcfg.source_damage:
+			if source == ewcfg.source_damage or source == ewcfg.source_bleeding:
 				self.totaldamage += change
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_hitsurvived, value = change)
 

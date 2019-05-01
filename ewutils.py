@@ -382,7 +382,8 @@ async def bleedSlimes(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-				slimes_to_bleed = min(slimes_to_bleed, user_data.slimes, user_data.bleed_storage)
+				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
+				slimes_dropped = user_data.total_damage + user_data.slimes
 
 				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 
@@ -395,8 +396,9 @@ async def bleedSlimes(id_server = None):
 				if slimes_to_bleed >= 1:
 					user_data.bleed_storage -= slimes_to_bleed
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
-					if user_data.slimes <= 0:
+					if user_data.slimes < 0:
 						user_data.die(cause = ewcfg.cause_bleeding)
+						user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
 						deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
 						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
