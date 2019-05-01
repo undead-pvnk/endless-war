@@ -282,3 +282,23 @@ async def scavenge(cmd):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
+
+"""
+Renounce your past sins.
+"""
+async def renounce(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "It’s a little bit too late to do that, buddy."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_juvenile:
+			response = "What exactly are you renouncing? Your lackisdical, idyllic life free of vice and violence? Either you’re looking for {} or you’re not very smart. I’m betting on the latter.".format(ewcfg.cmd_enlist)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi != ewcfg.poi_id_rowdyroughhouse or ewcfg.poi_id_copkilltown or ewcfg.poi_id_juviesrow:
+		# Only allowed to !renounce at a gang base.
+		response = "Which faction? If you want to join a gang, you have to {} at their homebase. Dumbass.\nTo join the hot blooded and reckless {}, {} in {}.\nTo join the hardboiled and calculating {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+#todo make renounced a thing that requires a pardon to renlist

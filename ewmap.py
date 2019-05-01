@@ -830,15 +830,20 @@ async def scout(cmd):
 
 		# get information about other gangsters in the district
 		players_in_district = district_data.get_number_of_players(min_level = min_level)
-		if poi.id_poi == user_poi.id_poi and user_data.life_state != ewcfg.life_state_kingpin:
+		if poi.id_poi == user_poi.id_poi and user_data.life_state != ewcfg.life_state_kingpin or ewcfg.life_state_juvenile:
 			players_in_district -= 1
 
 		players_resp = ""
-		if players_in_district == 1:
-			players_resp += "You notice 1 suspicious figure in this location."
+		if players_in_district == 0:
+			players_resp += "You don’t notice any activity from this district."
+		elif players_in_district == 1:
+			players_resp += "You can hear the occasional spray of a spray can from a gangster in this district."
+		elif players_in_district <= 5:
+			players_resp += "You can make out a distant conversation between a few gangsters in this district."
+		elif players_in_district <= 10:
+			players_resp += "You can hear shouting and frequent gunshots from a group of gangsters in this district."
 		else:
-			players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
-
+			players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
