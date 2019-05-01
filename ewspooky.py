@@ -1,3 +1,5 @@
+from ewdistrict import EwDistrict
+
 """
 	Commands and utilities related to dead players.
 """
@@ -53,18 +55,30 @@ async def revive(cmd):
 			player_data.persist()
 			market_data.persist()
 
-			# Give some slimes to every living player (currently online)
-			for member in cmd.message.server.members:
-				if member.id != cmd.message.author.id and member.id != cmd.client.user.id:
-					member_data = EwUser(member = member)
+			# Shower every district in the city with slime from the sewers.
+			# Get a list of all the districts
+			for poi_object in ewcfg.poi_list:
+				poi = poi_object.id_poi
+				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
+				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 
-					if member_data.life_state != ewcfg.life_state_corpse and member_data.life_state != ewcfg.life_state_grandfoe:
-						member_data.change_slimes(n = ewcfg.slimes_onrevive_everyone)
-						member_data.persist()
+				# the amount of slime showered is divided equally amongst the 32 districts
+				geyser_amount = int(district_data.slimes / 32)
+
+				# Doesn't spray into sub-zones
+				if poi_object.is_capturable == False:
+					pass
+				else:
+					district_data.change_slimes(n = geyser_amount)
+					sewer_data.change_slimes(n = -1 * geyser_amount)
+
+				district_data.persist()
+				sewer_data.persist()
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-			response = '{slime4} A geyser of fresh slime erupts, showering Rowdy, Killer, and Juvenile alike. {slime4} {name} has been reborn in slime. {slime4}'.format(slime4 = ewcfg.emote_slime4, name = cmd.message.author.display_name)
+			response = '{slime4} Geysers of fresh slime erupt from every manhole in the city, showering their surrounding districts. {slime4} {name} has been reborn in slime. {slime4}'.format(
+				slime4 = ewcfg.emote_slime4, name = cmd.message.author.display_name)
 		else:
 			response = 'You\'re not dead just yet.'
 

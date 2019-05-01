@@ -421,12 +421,15 @@ async def attack(cmd):
 					was_killed = True
 
 				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				slime_splatter = min(slimes_damage, max(shootee_data.slimes - shootee_data.bleed_storage, 0))
+				slime_drained = int(slime_splatter / 2) + int(slime_splatter / 8)
 				if was_juvenile or user_data.faction == shootee_data.faction:
-					district_data.change_slimes(n = slime_splatter / 2, source = ewcfg.source_killing)
-					shootee_data.bleed_storage += int(slime_splatter / 2)
-					shootee_data.change_slimes(n = -int(slime_splatter / 2), source = ewcfg.source_damage)
+					sewer_data.change_slimes(n = slime_drained)
+					district_data.change_slimes(n = slime_splatter / 8, source = ewcfg.source_killing)
+					shootee_data.bleed_storage += int(slime_splatter / 8)
+					shootee_data.change_slimes(n = -int(slime_splatter / 8), source = ewcfg.source_damage)
 					damage = str(slimes_damage)
 				else:
 					boss_slimes += int(slime_splatter / 2)
