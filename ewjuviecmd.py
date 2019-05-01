@@ -25,41 +25,44 @@ async def enlist(cmd):
 	time_now = int(time.time())
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
+	user_slimes = user_data.slimes
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
-		return
+		response = "Hehehehe, this response will never be seen. If you're reading this, you're a Github Goon."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're dead, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_enlisted:
+			if user_data.faction == ewcfg.faction_killers:
+				color = "purple"
+			else:
+				color = "pink"
+			response = "You are already enlisted in the {}! Look, your name is {}! Get a clue, idiot.".format(user_data.faction, color)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi != ewcfg.poi_id_rowdyroughhouse or ewcfg.poi_id_copkilltown:
+		# Only allowed to !enlist at a gang base.
+		response = "Which faction? If you want to join a gang, you have to {} at their homebase. Dumbass.\nTo join the hot blooded and reckless {}, {} in {}.\nTo join the hardboiled and calculating {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_slimes < ewcfg.slimes_toenlist:
+		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.life_state == ewcfg.life_state_juvenile:
-		faction = ""
-		if cmd.tokens_count > 1:
-			faction = cmd.tokens[1].lower()
-
-		user_slimes = user_data.slimes
-
-		if user_slimes < ewcfg.slimes_toenlist:
-			response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
+		if user_data.poi == ewcfg.poi_id_copkilltown:
+			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_killers
+			user_data.persist()
 		else:
-			if faction == "":
-				faction = user_data.faction
-
-			if faction == ewcfg.faction_rowdys or faction == ewcfg.faction_killers:
-				if len(user_data.faction) > 0 and user_data.faction != faction:
-					# Disallow joining a new faction. Player must be pardoned first.
-					response = "Disgusting traitor. You can only join the {}.".format(user_data.faction)
-				else:
-					response = "Enlisting in the {}.".format(faction)
-
-					user_data.life_state = ewcfg.life_state_enlisted
-					user_data.faction = faction
-					user_data.persist()
-
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			else:
-				response = "Which faction? Say '{} {}' or '{} {}'.".format(ewcfg.cmd_enlist, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.faction_rowdys)
-
-	elif user_data.life_state == ewcfg.life_state_corpse:
-		response = 'You are dead, bitch.'
-
+			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_rowdys
+			user_data.persist()
 	else:
 		response = "You can't do that right now, bitch."
 

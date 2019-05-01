@@ -200,9 +200,11 @@ faction_roles = [
 	role_grandfoe
 	]
 
-# Faction names
-faction_killers = "killers"
-faction_rowdys = "rowdys"
+# Faction names and bases
+faction_killers = "Killers"
+gangbase_killers = "Cop Killtown"
+faction_rowdys = "Rowdys"
+gangbase_rowdys = "Rowdy Roughhouse"
 factions = [faction_killers, faction_rowdys]
 
 # Channel names
@@ -455,7 +457,7 @@ cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
-slimes_toenlist = 0
+slimes_toenlist = 50000
 slimes_perspar_base = 0
 slimes_hauntratio = 40
 slimes_hauntmax = 20000
