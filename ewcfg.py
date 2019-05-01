@@ -1908,6 +1908,7 @@ food_list = [
 		id_food = "shrimpcocktail",
 		alias = [
 			"shimp",
+			"shrimp",
 			"cocktail",
 		],
 		recover_hunger = 180,
