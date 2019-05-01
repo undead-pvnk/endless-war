@@ -882,7 +882,7 @@ async def kick(id_server):
 				await ewrolemgr.updateRoles(client = client, member = member_object)
 
 				mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
-				response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 3 hours at a time."
+				response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
 				await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
 			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))
