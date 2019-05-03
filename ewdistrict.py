@@ -120,30 +120,39 @@ class EwDistrict:
 				return False
 		return True
 
-	def get_number_of_players(self, min_level = 0):
+	def get_players_in_district(self,
+			min_level = 0,
+			max_level = math.inf,
+			life_states = [],
+			factions = [],
+			min_slimes = -math.inf,
+			max_slimes = math.inf
+		):
 		client = ewutils.get_client()
 		server = client.get_server(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
-			return 0
+			return []
 
-		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE id_server = %s AND {poi} = %s".format(
 			id_user = ewcfg.col_id_user,
-			slimelevel = ewcfg.col_slimelevel,
-			poi = ewcfg.col_poi,
-			life_state = ewcfg.col_life_state
+			poi = ewcfg.col_poi
 		),(
 			self.id_server,
-			self.name,
-			ewcfg.life_state_kingpin
+			self.name
 		))
 
-		num_players = 0
+		filtered_players = []
 		for player in players:
-			if player[1] >= min_level and server.get_member(player[0]) != None:
-				num_players += 1
+			if server.get_member(player[0]) != None:
+				user_data = EwUser(id_user = player[0], id_server = self.id_server)
+				if max_level >= user_data.slimelevel >= min_level \
+				and max_slimes >= user_data.slimes >= min_slimes \
+				and (len(life_states) == 0 or user_data.life_state in life_states) \
+				and (len(factions) == 0 or user_data.faction in factions):
+					filtered_players.append(user_data.id_user)
 
-		return num_players
+		return filtered_players
 
 
 	def decay_capture_points(self):
@@ -417,17 +426,7 @@ async def capture_tick(id_server):
 			dist = EwDistrict(id_server = id_server, district = district_name)
 			controlling_faction = dist.controlling_faction
 
-			gangsters_in_district = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE id_server = %s AND {life_state} = %s AND {slimes} >= %s AND {poi} = %s".format(
-				poi = ewcfg.col_poi,
-				life_state = ewcfg.col_life_state,
-				id_user = ewcfg.col_id_user,
-				slimes = ewcfg.col_slimes
-			), (
-				id_server,
-				ewcfg.life_state_enlisted,
-				ewcfg.min_slime_to_cap,
-				district_name
-			))
+			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
 					
 
 			# the faction that's actively capturing the district this tick

@@ -764,16 +764,18 @@ async def look(cmd):
 	# don't show low level players
 	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
+	life_states = [ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
 	# get information about players in the district
-	players_in_district = district_data.get_number_of_players(min_level = min_level)
-	if user_data.life_state != ewcfg.life_state_kingpin:
-		players_in_district -= 1
+	players_in_district = district_data.get_players_in_district(min_level = min_level, life_states = life_states)
+	if user_data.id_user in players_in_district:
+		players_in_district.remove(user_data.id_user)
 
+	num_players = len(players_in_district)
 	players_resp = "\n\n"
-	if players_in_district == 1:
+	if num_players == 1:
 		players_resp += "You notice 1 suspicious figure in this location."
 	else:
-		players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
+		players_resp += "You notice {} suspicious figures in this location.".format(num_players)
 
 	# post result to channel
 	if poi != None:
@@ -801,6 +803,7 @@ async def scout(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	mutations = user_data.get_mutations()
 
 	# if no arguments given, scout own location
 	if not len(cmd.tokens) > 1:
@@ -845,16 +848,26 @@ async def scout(cmd):
 		# don't show low level players
 		min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
-		# get information about other gangsters in the district
-		players_in_district = district_data.get_number_of_players(min_level = min_level)
-		if poi.id_poi == user_poi.id_poi and user_data.life_state != ewcfg.life_state_kingpin:
-			players_in_district -= 1
-
-		players_resp = ""
-		if players_in_district == 1:
-			players_resp += "You notice 1 suspicious figure in this location."
+		life_states = [ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+		# get information about players in the district
+		players_in_district = district_data.get_players_in_district(min_level = min_level, life_states = life_states)
+		if user_data.id_user in players_in_district:
+			players_in_district.remove(user_data.id_user)
+	
+		num_players = len(players_in_district)
+		players_resp = "\n\n"
+		if num_players == 1:
+			players_resp += "You notice 1 suspicious figure in this location"
 		else:
-			players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
+			players_resp += "You notice {} suspicious figures in this location".format(num_players)
+
+		if ewcfg.mutation_id_keensmell in mutations:
+			players_resp += ":"
+			for player in players_in_district:
+				scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
+				players_resp += "\n" + scoutee_data.get_mention()
+		else:
+			players_resp += "."
 
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
