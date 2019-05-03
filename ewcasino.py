@@ -52,7 +52,7 @@ async def pachinko(cmd):
 
 		user_data = EwUser(member = cmd.message.author)
 
-		if value > user_data.slimecredit:
+		if value > user_data.slimecoin:
 			response = "You don't have enough SlimeCoin to play."
 		else:
 			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} SlimeCoin. Balls begin to drop!".format(ewcfg.slimes_perpachinko)))
@@ -90,7 +90,7 @@ async def pachinko(cmd):
 			user_data = EwUser(member = cmd.message.author)
 
 			# add winnings/subtract losses
-			user_data.change_slimecredit(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+			user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 			user_data.persist()
 
 			if winnings > 0:
@@ -131,9 +131,9 @@ async def craps(cmd):
 			user_data = EwUser(member = cmd.message.author)
 
 			if value == -1:
-				value = user_data.slimecredit
+				value = user_data.slimecoin
 
-			elif value > user_data.slimecredit:
+			elif value > user_data.slimecoin:
 				response = "You don't have that much SlimeCoin to bet with."
 			else:
 
@@ -158,7 +158,7 @@ async def craps(cmd):
 					response += "\n\nYou didn't roll 7. You lost your SlimeCoins."
 
 				# add winnings/subtract losses
-				user_data.change_slimecredit(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 				user_data.persist()
 		else:
 			response = "Specify how much SlimeCoin you will wager."
@@ -188,7 +188,7 @@ async def slots(cmd):
 
 		user_data = EwUser(member = cmd.message.author)
 
-		if value > user_data.slimecredit:
+		if value > user_data.slimecoin:
 			response = "You don't have enough SlimeCoin."
 		else:
 			# Add some suspense...
@@ -270,7 +270,7 @@ async def slots(cmd):
 			user_data = EwUser(member = cmd.message.author)
 
 			# add winnings/subtract losses
-			user_data.change_slimecredit(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+			user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 			user_data.persist()
 
 		last_slotsed_times[cmd.message.author.id] = 0
@@ -311,9 +311,9 @@ async def roulette(cmd):
 			user_data = EwUser(member = cmd.message.author)
 
 			if value == -1:
-				value = user_data.slimecredit
+				value = user_data.slimecoin
 
-			if value > user_data.slimecredit or value == 0:
+			if value > user_data.slimecoin or value == 0:
 				response = "You don't have enough SlimeCoin."
 			elif len(bet) == 0:
 				response = "You need to say what you're betting on. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names = all_bets), img_base)
@@ -388,7 +388,7 @@ async def roulette(cmd):
 				response += "\n\n{}{}.gif".format(img_base, roll)
 
 				# add winnings/subtract losses
-				user_data.change_slimecredit(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 				user_data.persist()
 		else:
 			response = "Specify how much SlimeCoin you will wager."
@@ -432,9 +432,9 @@ async def baccarat(cmd):
 			user_data = EwUser(member = cmd.message.author)
 
 			if value == -1:
-				value = user_data.slimecredit
+				value = user_data.slimecoin
 
-			if value > user_data.slimecredit or value == 0:
+			if value > user_data.slimecoin or value == 0:
 				response = "You don't have enough SlimeCoin."
 				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
@@ -950,7 +950,7 @@ async def baccarat(cmd):
 
 				# add winnings/subtract losses
 				user_data = EwUser(member = cmd.message.author)
-				user_data.change_slimecredit(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 				user_data.persist()
 				await ewutils.edit_message(cmd.client, resp_f, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1519,13 +1519,13 @@ async def skat(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Players must have sufficient slimecoin for the game
-	if challenger.slimecredit < maxgame:
+	if challenger.slimecoin < maxgame:
 		response = "You don't have enough slimecoin to cover your potential loss. Try lowering the multiplier."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-	if challengee.slimecredit < maxgame:
+	if challengee.slimecoin < maxgame:
 		response = "{} doesn't have enough slimecoin to cover their potential loss. Try lowering the multiplier.".format(member.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-	if challengee2.slimecredit < maxgame:
+	if challengee2.slimecoin < maxgame:
 		response = "{} doesn't have enough slimecoin to cover their potential loss. Try lowering the multiplier.".format(member2.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
@@ -1589,7 +1589,7 @@ async def skat(cmd):
 		for i in range(3):
 			player = EwUser(member = members[i])
 			
-			if player.slimecredit < maxgame:
+			if player.slimecoin < maxgame:
 				response = "You don't have enough slimecoin to cover your potential loss. Try lowering the multiplier."
 				for m in members:
 					ewuser = EwUser(member = m)
@@ -1951,9 +1951,9 @@ async def skat(cmd):
 			for i in range(3):
 				player = EwUser(member = members[i])
 				if i == active_idx:
-					player.change_slimecredit(n = sign * totalsc, coinsource = ewcfg.coinsource_casino)
+					player.change_slimecoin(n = sign * totalsc, coinsource = ewcfg.coinsource_casino)
 				else:
-					player.change_slimecredit(n = -1 * (sign * totalsc) / 2, coinsource = ewcfg.coinsource_casino)
+					player.change_slimecoin(n = -1 * (sign * totalsc) / 2, coinsource = ewcfg.coinsource_casino)
 				player.persist()
 
 		for handles in handles_table:

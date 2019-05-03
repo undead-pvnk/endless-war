@@ -12,7 +12,8 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket
 from ewdistrict import EwDistrict
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
@@ -228,7 +229,7 @@ async def scavenge(cmd):
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
-	# Mine only in your location channel
+	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
@@ -245,11 +246,17 @@ async def scavenge(cmd):
 
 			levelup_response = user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
-
-			response += levelup_response
-			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
-
 			district_data.persist()
+
+			if levelup_response != "":
+				response += levelup_response + "\n\n"
+			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
+			loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
+			loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
+			if random.random() < loot_chance:
+				loot_resp = ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
+				response += loot_resp
+
 
 			# Fatigue the scavenger.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)

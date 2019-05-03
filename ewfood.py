@@ -5,7 +5,8 @@ import ewcfg
 import ewitem
 import ewutils
 import ewrolemgr
-from ew import EwUser, EwMarket
+from ew import EwUser
+from ewmarket import EwMarket, EwCompany, EwStock
 
 """ Food model object """
 class EwFood:
@@ -79,8 +80,21 @@ async def menu(cmd):
 			food_items = []
 			for food_item_name in ewcfg.food_vendor_inv[vendor]:
 				food_item = ewcfg.food_map.get(food_item_name)
+				# increase profits for the stock market
+				stock_data = None
+				if vendor in ewcfg.vendor_stock_map:
+					stock = ewcfg.vendor_stock_map.get(vendor)
+					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
+
+				value = food_item.price
+
+				if stock_data is not None:
+					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
+
+				value = int(value)
+
 				if food_item != None:
-					food_items.append('{name} ({price})'.format(name=food_item_name, price=food_item.price))
+					food_items.append('{name} ({price})'.format(name=food_item_name, price=value))
 				else:
 					food_items.append(food_item_name)
 
@@ -93,6 +107,7 @@ async def menu(cmd):
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	time_now = int(time.time())
 
 	if (poi == None) or (len(poi.vendors) == 0):
 		# Only allowed in the food court.
@@ -143,20 +158,40 @@ async def order(cmd):
 				target_data = EwUser(member = member)
 
 			value = food.price if not togo else food.price * ewcfg.togo_price_increase
+			
+			stock_data = None
+			company_data = None
+			# factor in the current stocks
+			for vendor in food.vendors:
+				if vendor in ewcfg.vendor_stock_map:
+					stock = ewcfg.vendor_stock_map.get(vendor)
+					company_data = EwCompany(id_server = user_data.id_server, stock = stock)
+					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
+					
+
+			if stock_data is not None:
+				value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
+
+			value = int(value)
 
 			# Kingpins eat free.
 			if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
 				value = 0
 
-			if value > user_data.slimecredit:
+			if value > user_data.slimecoin:
 				# Not enough money.
-				response = "A {food} is {cost:,} SlimeCoin (and you only have {credits:,}).".format(
+				response = "A {food} is {cost:,} SlimeCoin (and you only have {coins:,}).".format(
 					food = food.str_name,
 					cost = value,
-					credits = user_data.slimecredit
+					coins = user_data.slimecoin
 				)
 			else:
-				user_data.change_slimecredit(n = -value, coinsource = ewcfg.coinsource_spending)
+				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_spending)
+
+				if company_data is not None:
+					company_data.recent_profits += value
+					company_data.persist()
+
 
 				if not togo:
 
