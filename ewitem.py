@@ -669,7 +669,7 @@ async def item_look(cmd):
 		if item.item_type == ewcfg.it_food:
 			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
 				response += " This food item is rotten so you decide to throw it away."
-				item_delete(id_item)
+				item_drop(id_item)
 
 		response = name + "\n\n" + response
 

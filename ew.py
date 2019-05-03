@@ -209,9 +209,11 @@ class EwUser:
 
 	def eat(self, food_item = None):
 		item_props = food_item.item_props
+		mutations = self.get_mutations()
 
-		if float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
+		if ewcfg.mutation_id_spoiledappetite not in mutations and float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
+			ewitem.item_drop(food_item.id_item)
 		else:
 			self.hunger -= int(item_props['recover_hunger'])
 			if self.hunger < 0:
@@ -232,7 +234,7 @@ class EwUser:
 
 			response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
 
-		ewitem.item_delete(food_item.id_item)
+			ewitem.item_delete(food_item.id_item)
 
 		return response
 
