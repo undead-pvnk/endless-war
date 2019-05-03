@@ -491,6 +491,9 @@ togo_price_increase = 2
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
 
+# minimum amount of slime needed to capture territory
+min_slime_to_cap = 50000
+
 # property classes
 property_class_s = "s"
 property_class_a = "a"
