@@ -15,6 +15,7 @@ from ewitem import EwItem
 from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
+from ewplayer import EwPlayer
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -178,6 +179,9 @@ async def attack(cmd):
 		member = cmd.mentions[0]
 		shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
+
+		user_mutations = user_data.get_mutations()
+		shootee_mutations = shootee_data.get_mutations()
 
 		miss = False
 		crit = False
@@ -462,7 +466,7 @@ async def attack(cmd):
 					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
 						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
-					#explode_damage = slimes_dropped / 10 + shootee_data.slimes / 2
+					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
 					# explode, damaging everyone in the district
 
 					# release bleed storage
@@ -473,7 +477,11 @@ async def attack(cmd):
 					shootee_data.id_killer = user_data.id_user
 					shootee_data.die(cause = ewcfg.cause_killing)
 					shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-					#explode_resp = explode(cmd = cmd, damage = explode_damage, district_data = district_data)
+
+					explode_resp = ""
+					if ewcfg.mutation_id_spontaneouscombustion in shootee_mutations:
+						explode_resp += "\n\n {} explodes in a shower of slime!\n".format(member.display_name)
+						explode_resp += explode(damage = explode_damage, district_data = district_data)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -516,8 +524,7 @@ async def attack(cmd):
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
 
-					#response += "\n\n {} explodes in a shower of slime!\n".format(member.display_name)
-					#response += explode_resp
+					response += explode_resp
 				else:
 					# A non-lethal blow!
 
@@ -643,39 +650,26 @@ async def suicide(cmd):
 		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 """ Damage all players in a district """
-def explode(cmd, damage = 0, district_data = None):
-	client = cmd.client
+def explode(damage = 0, district_data = None):
 	id_server = district_data.id_server
-	server = client.get_server(id_server)
 	poi = district_data.name
-
-	cursor = None
-	conn_info = None
-	users = None
 
 	response = ""
 
 	try:
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor();
-
-		cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} = %s".format(
+		users = ewutils.execute_sql_query("SELECT id_user FROM users WHERE id_server = %s AND {poi} = %s".format(
 			poi = ewcfg.col_poi
 		), (
 			id_server,
 			poi
 		))
-
-		users = cursor.fetchall()
 	except:
+		ewutils.logMsg("failed to explode in district {}".format(poi))
 		return response
-	finally:
-		cursor.close()
-		ewutils.databaseClose(conn_info)
 
 	for user in users:
 		user_data = EwUser(id_user = user[0], id_server = id_server)
+		mutations = user_data.get_mutations()
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
@@ -684,25 +678,32 @@ def explode(cmd, damage = 0, district_data = None):
 		user_isdead = user_data.life_state == ewcfg.life_state_corpse
 		
 		if user_iskillers or user_isrowdys or user_isjuvenile:
-			member = server.get_member(user_data.id_user)
-			response += "{} takes {} damage from the blast.\n".format(member.display_name, damage)
-			slime_splatter = min(damage, user_data.slimes)
-			district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
-			district_data.persist()
-			if user_data.slimes < damage:
+			player_data = EwPlayer(id_user = user_data.id_user)
+			response += "{} takes {} damage from the blast.\n".format(player_data.display_name, damage)
+			slimes_damage = damage
+			if user_data.slimes < slimes_damage + user_data.bleed_storage:
 				# die in the explosion
+				district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
+				district_data.persist()
 				slimes_dropped = user_data.totaldamage + user_data.slimes
+				explode_damage = ewutils.slime_bylevel(user_data.slimelevel)
 
 				user_data.die(cause = ewcfg.cause_killing)
 				user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 				user_data.persist()
 
-				response += "{} has died in the explosion.\n"
+				response += "{} has died in the explosion.\n".format(player_data.display_name)
 
-				response += explode(cmd, 0.1 * slimes_dropped + 0.5 * damage, district_data)
+				if ewcfg.mutation_id_spontaneouscombustion in mutations:
+					response += explode(explode_damage, district_data)
 			else:
 				# survive
-				user_data.change_slimes(n = -damage, source = ewcfg.source_killing)
+				slime_splatter = 0.5 * slimes_damage
+				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+				district_data.persist()
+				slimes_damage -= slime_splatter
+				user_data.bleed_storage += slimes_damage
+				user_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
 				user_data.persist()
 	return response
 	

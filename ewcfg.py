@@ -6077,23 +6077,51 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_example = "example"
-mutation_id_example2 = "example2"
+mutation_id_spontaneouscombustion = "combust"
+mutation_id_spoiledappetite = "spoiled"
+mutation_id_bigbones = "bones"
+mutation_id_fastmetabolism = "fastmetabolism"
+mutation_id_lonewolf = "lonewolf"
+mutation_id_keensmell = "keensmell"
 
-mutation_milestones = [10]
+mutation_milestones = [10,20,30,40,50]
 
 mutations = [
 	EwMutationFlavor(
-		id_mutation = mutation_id_example,
-		str_describe_self = "You have a perfectly generic mutation.",
-		str_describe_other = "They have a perfectly generic mutation.",
-		str_acquire = "You have acquired a perfectly generic mutation."
+		id_mutation = mutation_id_spontaneouscombustion,
+		str_describe_self = "You explode on death.",
+		str_describe_other = "They explode on death.",
+		str_acquire = "You have acquired the ability to explode on death."
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_example2,
-		str_describe_self = "You have a perfectly generic, yet legally distinct, mutation.",
-		str_describe_other = "They have a perfectly generic, yet legally distinct, mutation.",
-		str_acquire = "You have acquired a perfectly generic, yet legally distinct, mutation."
+		id_mutation = mutation_id_spoiledappetite,
+		str_describe_self = "You can only eat spoiled food.",
+		str_describe_other = "They can only eat spoiled food.",
+		str_acquire = "You have acquired the ability to eat spoiled food."
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bigbones,
+		str_describe_self = "You have big bones.",
+		str_describe_other = "They have big bones.",
+		str_acquire = "You have acquired big bones."
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fastmetabolism,
+		str_describe_self = "You have a fast metabolism.",
+		str_describe_other = "They have a fast metabolism.",
+		str_acquire = "You have acquired a fast metabolism."
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lonewolf,
+		str_describe_self = "You are a lone wolf.",
+		str_describe_other = "They are a lone wolf.",
+		str_acquire = "You have become a lone wolf."
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_keensmell,
+		str_describe_self = "You have a keen smell.",
+		str_describe_other = "They have a keen smell.",
+		str_acquire = "You have acquired a keen smell."
 		)
 	]
 
