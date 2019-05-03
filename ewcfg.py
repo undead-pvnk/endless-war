@@ -39,6 +39,22 @@ slimeoid_state_forming = 1
 slimeoid_state_active = 2
 slimeoid_state_stored = 3
 
+# turtle murder game states
+tm_game_state_inactive = 0
+tm_game_state_murder = 1
+tm_game_state_investigate = 2
+tm_game_state_vote = 3
+tm_game_state_boss = 10
+
+# turtle murder life states
+tm_life_state_dead = 0
+tm_life_state_active = 1
+
+# turtle murder win states
+tm_win_state_lost = -1
+tm_win_state_none = 0
+tm_win_state_won = 1
+
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
@@ -84,6 +100,7 @@ poi_id_blimp = "blimp"
 # ferry ports
 poi_id_wt_port = "wreckingtonport"
 poi_id_vc_port = "vagrantscornerport"
+poi_id_ki_port = "kameislandport"
 
 # subway stations
 poi_id_tt_subway_station = "toxingtonsubwaystation"
@@ -144,6 +161,21 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+poi_id_kameisland = "kameisland"
+
+# Turtle Murder locations
+poi_id_turtlelobby = "turtlelobby"
+poi_id_turtledisco = "turtledisco"
+poi_id_turtlecasino = "turtlecasino"
+poi_id_turtlearcade = "turtlearcade"
+poi_id_turtlegraveyard = "turtlegraveyard"
+poi_id_turtlearena = "turtlearena"
+poi_id_turtleweebcorner = "turtleweebcorner"
+poi_id_turtlelab = "turtlelaboratory"
+poi_id_turtlethroneroom = "turtlethroneroom"
+poi_id_turtletrialgrounds = "turtletrialgrounds"
+poi_id_turtlehell = "turtlehell"
+poi_id_turtlepokeball = "turtlepokeball"
 
 # Transport types
 transport_type_ferry = "ferry"
@@ -184,6 +216,7 @@ role_corpse = "corpse"
 role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
+role_turtle = "turtle"
 
 faction_roles = [
 	role_juvenile,
@@ -241,6 +274,7 @@ channel_slimesea = "slime-sea"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
+channel_ki_port = "kame-island-port"
 channel_tt_subway_station = "toxington-subway-station"
 channel_ah_subway_station = "astatine-heights-subway-station"
 channel_gd_subway_station = "gatlingsdale-subway-station"
@@ -277,6 +311,31 @@ channel_subway_blue02 = "subway-train-b-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
+
+channel_turtlelobby = "turtle-lobby"
+channel_turtledisco = "turtle-disco"
+channel_turtlecasino = "turtle-casino"
+channel_turtlearcade = "turtle-arcade"
+channel_turtlegraveyard = "turtle-graveyard"
+channel_turtlearena = "turtle-arena"
+channel_turtleweebcorner = "weeb-corner"
+channel_turtlelab = "turtle-laboratory"
+channel_turtlethroneroom = "throne-room"
+channel_turtletrialgrounds = "trial-grounds"
+channel_turtlehell = "turtle-hell"
+channel_turtlepokeball = "pokeball"
+
+turtle_mansion_channels = [
+	channel_turtlelobby,
+	channel_turtledisco,
+	channel_turtlecasino,
+	channel_turtlearcade,
+	channel_turtlegraveyard,
+	channel_turtlearena,
+	channel_turtleweebcorner,
+	channel_turtlelab,
+	channel_turtlethroneroom
+]
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -334,8 +393,7 @@ cmd_deadmega = cmd_prefix + 'deadmega'
 cmd_donate = cmd_prefix + 'donate'
 cmd_slimecoin = cmd_prefix + 'slimecoin'
 cmd_slimecoin_alt1 = cmd_prefix + 'slimecredit'
-cmd_slimecoin_alt2 = cmd_prefix + 'coin'
-cmd_slimecoin_alt3 = cmd_prefix + 'sc'
+cmd_slimecoin_alt2 = cmd_prefix + 'sc'
 cmd_invest = cmd_prefix + 'invest'
 cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
@@ -441,6 +499,7 @@ cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 
+# Quadrants commands
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
 cmd_get_flushed = cmd_prefix + "flushed"
@@ -451,6 +510,24 @@ cmd_get_caliginous = cmd_prefix + "caliginous"
 cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
 cmd_get_ashen = cmd_prefix + "ashen"
 cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
+
+cmd_tm_prefix = cmd_prefix + "tm"
+# Turtle Murder Command
+cmd_tm_defend = cmd_prefix + "defend"
+cmd_tm_vote = cmd_prefix + "vote"
+cmd_tm_pray = cmd_prefix + "pray"
+cmd_tm_oracle = cmd_prefix + "oracle"
+cmd_tm_dance = cmd_prefix + "dance"
+cmd_tm_distract = cmd_prefix + "distract"
+cmd_tm_play = cmd_prefix + "play"
+cmd_tm_prizes = cmd_prefix + "prizes"
+cmd_tm_sell = cmd_prefix + "sell"
+cmd_tm_target = cmd_prefix + "target"
+cmd_tm_coins = cmd_prefix + "turtlecoins"
+cmd_tm_enter = cmd_tm_prefix + "enter"
+cmd_tm_players = cmd_tm_prefix + "players"
+cmd_tm_start = cmd_tm_prefix + "start"
+cmd_tm_endgame = cmd_tm_prefix + "endgame"
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -804,6 +881,24 @@ col_current_stop = 'current_stop'
 col_quadrant = 'quadrant'
 col_quadrants_target = 'id_target'
 col_quadrants_target2 = 'id_target2'
+
+# Database columsn for Turtle Murder
+col_tm_game_state = "game_state"
+col_tm_casino_state = "casino_state"
+col_tm_magic_blue = "magic_blue"
+col_tm_magic_green = "magic_green"
+col_tm_magic_red = "magic_red"
+col_tm_magic_black = "magic_black"
+col_tm_magic_white = "magic_white"
+col_tm_boss_hp = "boss_hp"
+col_tm_boss_last_action = "boss_last_action"
+
+col_tm_id_target = "id_target"
+col_tm_life_state = "life_state"
+col_tm_win_state = "win_state"
+
+col_tm_id_victim = "id_victim"
+col_tm_weapon = "weapon"
 
 # Item type names
 it_medal = "medal"
@@ -3282,6 +3377,21 @@ poi_list = [
 		property_class = property_class_s,
 		is_capturable = True
 	),
+	EwPoi(  # Kame Island
+		id_poi = poi_id_kameisland,
+		alias = [
+			"kame",
+			"island",
+			"ki",
+		],
+		str_name = "Kame Island",
+		str_desc = "", # TODO: add description
+		coord = (), # TODO: add to map
+		channel = "kame-island",
+		role = "Kame Island",
+		pvp = False,
+		turtlemurder = True
+	),
 	EwPoi( # the-sewers
 		id_poi = poi_id_thesewers,
 		alias = [
@@ -3823,6 +3933,31 @@ poi_list = [
 		pvp = True,
 		is_subzone = True,
 		mother_district = poi_id_vagrantscorner,
+		is_transport_stop = True,
+		transport_lines = set()
+	),
+	EwPoi(  # Kame Island Ferry Port
+		id_poi = poi_id_ki_port,
+		alias = [
+			"kameislandport",
+			"kameport",
+			"turtleport",
+			"kiport",
+			"kameislandferry",
+			"turtleferry",
+			"kiferry",
+			"kip",
+			"kifp",
+			"kif"
+		],
+		str_name = "The Kame Island Ferry Port",
+		str_desc = "", # TODO: add description
+		coord = (), # TODO: add to map
+		channel = channel_ki_port,
+		role = "Kame Island Port",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_kameisland,
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -4585,6 +4720,134 @@ poi_list = [
 		transport_type = transport_type_blimp,
 		default_line = transport_line_blimp_df_to_afb,
 		default_stop = poi_id_df_blimp_tower
+	),
+	EwPoi(  # Turtle Lobby
+		id_poi = poi_id_turtlelobby,
+		str_name = "The Turtle Mansion Lobby",
+		alias = [
+			"turtle"
+		],
+		str_desc = "", # TODO: add description
+		channel = channel_turtlelobby,
+		role = "Turtle Lobby",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Disco
+		id_poi = poi_id_turtledisco,
+		str_name = "The Turtle Disco",
+		alias = [
+			"dance"
+		],
+		str_desc = "", # TODO: add description
+		channel = channel_turtledisco,
+		role = "Turtle Disco",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Casino
+		id_poi = poi_id_turtlecasino,
+		str_name = "The Turtle Casino",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlecasino,
+		role = "Turtle Casino",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Arcade
+		id_poi = poi_id_turtlearcade,
+		str_name = "The Turtle Arcade",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlearcade,
+		role = "Turtle Arcade",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Graveyard
+		id_poi = poi_id_turtlegraveyard,
+		alias = [
+			"graveyard",
+			"turtleskull",
+			"pray",
+			"skull"
+		],
+		str_name = "The Turtle Graveyard",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlegraveyard,
+		role = "Turtle Graveyard",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Arena
+		id_poi = poi_id_turtlearena,
+		str_name = "The Turtle Arena",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlearena,
+		role = "Turtle Arena",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Weeb Corner
+		id_poi = poi_id_turtleweebcorner,
+		alias = [
+			"weebcorner",
+			"weeb",
+			"otaku",
+			"anime"
+		],
+		str_name = "The Weeb Corner",
+		str_desc = "", # TODO: add description
+		channel = channel_turtleweebcorner,
+		role = "Weeb Corner",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Laboratory
+		id_poi = poi_id_turtlelab,
+		alias = [
+			"turtlelab",
+			"magicthegathering"
+		],
+		str_name = "The Turtle Laboratory",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlelab,
+		role = "Turtle Lab",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Throne Room
+		id_poi = poi_id_turtlethroneroom,
+		alias = [
+			"throneroom",
+			"andrewhussie",
+			"hussie",
+			"oracle"
+		],
+		str_name = "The Throne Room",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlethroneroom,
+		role = "Throne Room",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Trial Grounds
+		id_poi = poi_id_turtletrialgrounds,
+		alias = [
+			"trial",
+			"trialgrounds"
+		],
+		str_name = "The Trial Grounds",
+		str_desc = "", # TODO: add description
+		channel = channel_turtletrialgrounds,
+		role = "Trial Grounds",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Hell
+		id_poi = poi_id_turtlehell,
+		str_name = "Turtle Hell",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlehell,
+		role = "Turtle Hell",
+		turtlemurder = True
+	),
+	EwPoi(  # Turtle Pokeball
+		id_poi = poi_id_turtlepokeball,
+		str_name = "Inside the Pokeball",
+		str_desc = "", # TODO: add description
+		channel = channel_turtlepokeball,
+		role = "Pokeball",
+		turtlemurder = True
 	)
 ]
 
@@ -4594,6 +4857,7 @@ alias_to_coord = {}
 capturable_districts = []
 transports = []
 transport_stops = []
+turtlemurder_pois = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -4619,6 +4883,9 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+
+	if poi.turtlemurder:
+		turtlemurder_pois.append(poi.id_poi)
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -6318,6 +6585,214 @@ vegetable_list = [
 		str_desc = "An American classic."
 	),
 ]
+
+tm_items = [
+	EwTurtleItem(
+		id_item = "turtleknife",
+		price = 10,
+		weapon = True,
+		weapon_level = 1,
+		str_name = "Turtle Knife",
+		str_desc = "Knife with a turtle-shaped handle.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = "",
+	),
+	EwTurtleItem(
+		id_item = "scissorblade",
+		price = 20,
+		weapon = True,
+		weapon_level = 2,
+		str_name = "Scissor Blade.",
+		str_desc = "Don't lose your way!"
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = "",
+	),
+	EwTurtleItem(
+		id_item = "warhammerofzillyhoo",
+		price = 20,
+		weapon = True,
+		weapon_level = 2,
+		str_name = "Warhammer of Zillyhoo",
+		str_desc = "",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	EwTurtleItem(
+		id_item = "chainsword",
+		price = 20,
+		weapon = True,
+		weapon_level = 2,
+		str_name = "Chainsword",
+		str_desc = "A vicious weapon from a grimdark universe.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = "",
+	),
+	EwTurtleItem(
+		id_item = "moneymachete",
+		price = 20,
+		weapon = True,
+		weapon_level = 2,
+		str_name = "Money Machete",
+		str_desc = "A blade forged from hardened dollar bills.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	EwTurtleItem(
+		id_item = "tranquilizergun",
+		price = 30,
+		weapon = True,
+		weapon_level = 3,
+		str_name = "Tranquilizer Gun",
+		str_desc = "Air gun that fires a dart laced with a knockout drug, that lasts for two minutes.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = "",
+	),
+	EwTurtleItem(
+		id_item = "boltpistol",
+		price = 30,
+		weapon = True,
+		weapon_level = 3,
+		str_name = "Bolt Pistol",
+		str_desc = "Side-arm wielded by the Emperor's faithful servants. Makes a lot of noise, when fired.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	EwTurtleItem(
+		id_item = "cashcannon",
+		price = 30,
+		weapon = True,
+		weapon_level = 3,
+		str_name = "Cash Cannon",
+		str_desc = "Shoots coins rather than bullets. Makes a lot of noise, when fired.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	EwTurtleItem(
+		id_item = "deathnote",
+		price = 40,
+		weapon = True,
+		weapon_level = -1,
+		str_name = "Death Note",
+		str_desc = "Can kill any player from anywhere, as long as you know their true name. If only you had something to write with...",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	EwTurtleItem(
+		id_item = "fluoriteoctet",
+		price = 40,
+		weapon = True,
+		weapon_level = -1,
+		str_name = "Fluorite Octet",
+		str_desc = "A legendary set of 8 8-sided dice. Power level equal to the number of 8s you roll.",
+		use_pois = turtlemurder_pois,
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	EwTurtleItem(
+		id_item = "codexastartes",
+		price = 10,
+		weapon = False,
+		str_name = "Codex Astartes",
+		str_desc = "An invaluable strategic asset in any large-scale conflict.",
+		use_pois = [poi_id_turtledisco],
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = "",
+	),
+	EwTurtleItem(
+		id_item = "nendoroid",
+		price = 10,
+		weapon = False,
+		str_name = "Nendoroid",
+		str_desc = "A cute little figure of your favorite anime character.",
+		use_pois = [poi_id_turtleweebcorner],
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = "",
+	),
+	EwTurtleItem(
+		id_item = "sburbbeta",
+		price = 10,
+		weapon = False,
+		str_name = "SBURB Beta",
+		str_desc = "Beta version of the revolutionary, immersive upcoming video game SBURB.",
+		use_pois = [poi_id_turtlethroneroom],
+		# TODO: add strings
+		str_use_success = "",
+		str_use_failure = "",
+		
+
+		str_kill = "",
+		str_crime_scene = ""
+	),
+	]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

@@ -32,6 +32,7 @@ class EwUser:
 	rr_challenger = ""
 	time_last_action = 0
 	weaponmarried = False
+	turtlemurder = False
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -249,7 +250,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -277,7 +278,8 @@ class EwUser:
 					ewcfg.col_bleed_storage,
 					ewcfg.col_time_lastenter,
 					ewcfg.col_time_lastoffline,
-					ewcfg.col_time_joined
+					ewcfg.col_time_joined,
+					ewcfg.col_turtlemurder
 				), (
 					id_user,
 					id_server
@@ -314,6 +316,7 @@ class EwUser:
 					self.time_lastenter = result[25]
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
+					self.turtlemurder = (result[28] == 1)
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -367,7 +370,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -398,7 +401,8 @@ class EwUser:
 				ewcfg.col_bleed_storage,
 				ewcfg.col_time_lastenter,
 				ewcfg.col_time_lastoffline,
-				ewcfg.col_time_joined
+				ewcfg.col_time_joined,
+				ewcfg.col_turtlemurder
 			), (
 				self.id_user,
 				self.id_server,
@@ -430,7 +434,8 @@ class EwUser:
 				self.bleed_storage,
 				self.time_lastenter,
 				self.time_lastoffline,
-				self.time_joined
+				self.time_joined,
+				(1 if self.turtlemurder else 0),
 			))
 
 			conn.commit()

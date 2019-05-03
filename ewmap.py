@@ -117,6 +117,9 @@ class EwPoi:
 	# which transport lines stop here
 	transport_lines = set()
 
+        # if it's part of the turtle mansion
+        turtlemurder = False
+
 
 	def __init__(
 		self,
@@ -145,7 +148,8 @@ class EwPoi:
 		default_line = "",
 		default_stop = "",
 		is_transport_stop = False,
-		transport_lines = None
+		transport_lines = None,
+		turtlemurder = False
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -173,6 +177,7 @@ class EwPoi:
 		self.default_stop = default_stop
 		self.is_transport_stop = is_transport_stop
 		self.transport_lines = transport_lines
+		self.turtlemurder = turtlemurder
 
 map_world = [
 	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ],
