@@ -741,6 +741,18 @@ def hunger_cost_mod(slimelevel):
 
 
 """
+	Calculate how much food the player can carry
+"""
+def food_carry_capacity_bylevel(slimelevel):
+	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
+        
+"""
+	Calculate how much food the player can carry
+"""
+def weapon_carry_capacity_bylevel(slimelevel):
+	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
+
+"""
 	Returns an EwUser object of the selected kingpin
 """
 def find_kingpin(id_server, kingpin_role):

@@ -309,6 +309,16 @@ class EwUser:
 
 		return response
 
+	def get_weapon_capacity(self):
+		return ewutils.weapon_carry_capacity_bylevel(self.slimelevel)
+
+	def get_food_capacity(self):
+		mutations = self.get_mutations()
+		if ewcfg.mutation_id_bigbones in mutations:
+			return 2 * ewutils.food_carry_capacity_bylevel(self.slimelevel)
+		else:
+			return ewutils.food_carry_capacity_bylevel(self.slimelevel)
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 		if(id_user == None) and (id_server == None):

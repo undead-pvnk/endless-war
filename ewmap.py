@@ -271,6 +271,7 @@ class EwPath:
 	Add coord_next to the path.
 """
 def path_step(path, coord_next, user_data, coord_end):
+	mutations = user_data.get_mutations()
 	visited_set_y = path.visited.get(coord_next[0])
 	if visited_set_y == None:
 		path.visited[coord_next[0]] = { coord_next[1]: True }
@@ -310,6 +311,9 @@ def path_step(path, coord_next, user_data, coord_end):
 					cost_next = 0
 
 	path.steps.append(coord_next)
+	if ewcfg.mutation_id_bigbones in mutations:
+		cost_next *= 2
+
 	path.cost += cost_next
 
 	return True
@@ -627,8 +631,9 @@ async def move(cmd):
 			elif val == sem_city_alias:
 				poi_current = ewcfg.coord_to_poi.get(ewcfg.alias_to_coord.get(step))
 
+			user_data = EwUser(member = cmd.message.author)
+			mutations = user_data.get_mutations()
 			if poi_current != None:
-				user_data = EwUser(member = cmd.message.author)
 
 				# If the player dies or enlists or whatever while moving, cancel the move.
 				if user_data.life_state != life_state or faction != user_data.faction:
@@ -700,11 +705,16 @@ async def move(cmd):
 							if user_data.faction == district.controlling_faction:
 								boost = ewcfg.territory_time_gain
 							else:
-								await asyncio.sleep(ewcfg.territory_time_gain)
+								territory_slowdown = ewcfg.territory_time_gain
+								if ewcfg.mutation_id_bigbones in mutations:
+									territory_slowdown *= 2
+								await asyncio.sleep(territory_slowdown)
 			else:
 				if val > 0:
 					val_actual = val - boost
 					boost = 0
+					if ewcfg.mutation_id_bigbones in mutations:
+					    val_actual *= 2
 
 					if val_actual > 0:
 						await asyncio.sleep(val_actual)
