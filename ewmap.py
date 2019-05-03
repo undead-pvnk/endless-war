@@ -314,6 +314,9 @@ def path_step(path, coord_next, user_data, coord_end):
 	if ewcfg.mutation_id_bigbones in mutations:
 		cost_next *= 2
 
+	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() > 0.9:
+		cost_next = int(cost_next / 2)
+
 	path.cost += cost_next
 
 	return True
@@ -708,6 +711,8 @@ async def move(cmd):
 								territory_slowdown = ewcfg.territory_time_gain
 								if ewcfg.mutation_id_bigbones in mutations:
 									territory_slowdown *= 2
+								if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() > 0.9:
+									territory_slowdown = int(territory_slowdown / 2)
 								await asyncio.sleep(territory_slowdown)
 			else:
 				if val > 0:
@@ -715,6 +720,8 @@ async def move(cmd):
 					boost = 0
 					if ewcfg.mutation_id_bigbones in mutations:
 					    val_actual *= 2
+					if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() > 0.9:
+					    val_actual = int(val_actual / 2)
 
 					if val_actual > 0:
 						await asyncio.sleep(val_actual)

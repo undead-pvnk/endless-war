@@ -261,7 +261,7 @@ async def data(cmd):
 
 		if user_data.hunger > 0:
 			response += " You are {}% hungry.".format(
-				round(user_data.hunger * 100.0 / ewutils.hunger_max_bylevel(user_data.slimelevel), 1)
+				round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
 			)
 
 		if user_data.ghostbust:

@@ -89,7 +89,7 @@ async def mine(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
-		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 		else:
 			# Determine if a poudrin is found.
@@ -231,7 +231,7 @@ async def scavenge(cmd):
 
 	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
-		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)

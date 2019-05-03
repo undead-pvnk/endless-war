@@ -47,8 +47,8 @@ class EwUser:
 
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
-		if self.hunger > ewutils.hunger_max_bylevel(self.slimelevel):
-			self.hunger = ewutils.hunger_max_bylevel(self.slimelevel)
+		if self.hunger > self.get_hunger_max():
+			self.hunger = self.get_hunger_max()
 
 		if self.inebriation < 0:
 			self.inebriation = 0
@@ -318,6 +318,9 @@ class EwUser:
 			return 2 * ewutils.food_carry_capacity_bylevel(self.slimelevel)
 		else:
 			return ewutils.food_carry_capacity_bylevel(self.slimelevel)
+
+	def get_hunger_max(self):
+		return ewutils.hunger_max_bylevel(self.slimelevel)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
