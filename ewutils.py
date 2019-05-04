@@ -383,7 +383,7 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
-				slimes_dropped = user_data.total_damage + user_data.slimes
+				slimes_dropped = user_data.totaldamage + user_data.slimes
 
 				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 
