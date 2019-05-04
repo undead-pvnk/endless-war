@@ -6099,8 +6099,8 @@ mutations = [
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_spoiledappetite,
-		str_describe_self = "You can only eat spoiled food.",
-		str_describe_other = "They can only eat spoiled food.",
+		str_describe_self = "You can eat spoiled food.",
+		str_describe_other = "They can eat spoiled food.",
 		str_acquire = "You have acquired the ability to eat spoiled food."
 		),
 	EwMutationFlavor(

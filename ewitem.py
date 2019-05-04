@@ -649,6 +649,8 @@ async def item_look(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.message.server
+	user_data = EwUser(member = author)
+	mutations = user_data.get_mutations()
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id if server is not None else None)
 
@@ -668,8 +670,12 @@ async def item_look(cmd):
 
 		if item.item_type == ewcfg.it_food:
 			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
-				response += " This food item is rotten so you decide to throw it away."
-				item_drop(id_item)
+				response += " This food item is rotten"
+				if ewcfg.mutation_id_spoiledappetite in mutations:
+					response += ". Yummy!"
+				else:
+					response += ", so you decide to throw it away."
+					item_drop(id_item)
 
 		response = name + "\n\n" + response
 

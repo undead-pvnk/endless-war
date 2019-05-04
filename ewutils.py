@@ -7,6 +7,7 @@ import time
 import re
 import random
 import asyncio
+import math
 
 import ewstats
 import ewitem
@@ -77,6 +78,10 @@ class EwResponseContainer:
 
 		for ch in resp_cont.channel_topics:
 			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+	def format_channel_response(self, channel, member):
+		if channel in self.channel_responses:
+			self.channel_responses[channel] = formatMessage(member, self.channel_responses[channel])
 
 	async def post(self):
 		self.client = get_client()
@@ -278,7 +283,7 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+	return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
@@ -383,7 +388,7 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
-				slimes_dropped = user_data.total_damage + user_data.slimes
+				slimes_dropped = user_data.totaldamage + user_data.slimes
 
 				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 

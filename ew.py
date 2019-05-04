@@ -323,7 +323,7 @@ class EwUser:
 		return ewutils.hunger_max_bylevel(self.slimelevel)
 
 	def get_mention(self):
-		return "<@{}>".format(self.id_user)
+		return "<@{id_user}>".format(id_user = self.id_user)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):

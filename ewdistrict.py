@@ -441,7 +441,7 @@ async def capture_tick(id_server):
 
 			# checks if any players are in the district and if there are only players of the same faction, i.e. progress can happen
 			for player in gangsters_in_district:
-				player_id = player[0]
+				player_id = player
 				user_data = EwUser(id_user = player_id, id_server = id_server)
 				player_faction = user_data.faction
 
