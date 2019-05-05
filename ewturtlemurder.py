@@ -198,6 +198,7 @@ class EwMurder:
 	id_victim = ""
 	weapon = ""
 	poi = ""
+	resolved = False
 
 	def __init__(
 		self,
@@ -211,12 +212,13 @@ class EwMurder:
 			self.id_server = id_server
 			self.id_victim = id_victim
 
-			data = ewutils.execute_sql_query("SELECT {id_culprit}, {weapon}, {poi} FROM tm_murders WHERE {id_server} = %s AND {id_victim} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {id_culprit}, {weapon}, {poi}, {resolved} FROM tm_murders WHERE {id_server} = %s AND {id_victim} = %s".format(
 				id_server = ewcfg.col_id_server,
 				id_culprit = ewcfg.col_tm_id_culprit,
 				id_victim = ewcfg.col_tm_id_victim,
 				weapon = ewcfg.col_tm_weapon,
-				poi = ewcfg.col_poi
+				poi = ewcfg.col_poi,
+				resolved = ewcfg.col_tm_resolved
 			    
 			),(
 				id_server,
@@ -227,25 +229,29 @@ class EwMurder:
 				self.id_culprit = data[0][0]
 				self.weapon = data[0][1]
 				self.poi = data[0][2]
+				self.resolved = (1 == data[0][3])
 			elif id_culprit != None and weapon != None and poi != None:
 				self.id_culprit = id_culprit
 				self.weapon = weapon
 				self.poi = poi
+				self.resolved = False
 				self.persist()
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO tm_murders({id_server},{id_victim},{id_culprit},{weapon},{poi}) VALUES (%s,%s,%s,%s,%s)".format(
+		ewutils.execute_sql_query("REPLACE INTO tm_murders({id_server},{id_victim},{id_culprit},{weapon},{poi},{resolved}) VALUES (%s,%s,%s,%s,%s,%s)".format(
 				id_server = ewcfg.col_id_server,
 				id_victim = ewcfg.col_tm_id_victim,
 				id_culprit = ewcfg.col_tm_id_culprit,
 				weapon = ewcfg.col_tm_weapon,
-				poi = ewcfg.col_poi
+				poi = ewcfg.col_poi,
+				resolved = ewcfg.col_tm_resolved
 		),(
 				self.id_server,
 				self.id_victim,
 				self.id_culprit,
 				self.weapon,
-				self.poi
+				self.poi,
+				(1 if self.resolved else 0)
 
 		))
 	def get_boss_next_action(self):
@@ -369,6 +375,7 @@ async def tm_reset(id_server):
 	client = ewutils.get_client()
 	ewutils.execute_sql_query("DELETE FROM tm_turtles WHERE id_server = %s",(id_server,))
 	ewutils.execute_sql_query("DELETE FROM tm_murders WHERE id_server = %s", (id_server,))
+	ewutils.execute_sql_query("DELETE FROM tm_votes WHERE id_server = %s", (id_server,))
 	ewutils.execute_sql_query("DELETE FROM tm_games WHERE id_server = %s", (id_server,))
 	ewutils.execute_sql_query("DELETE FROM items WHERE id_server = %s AND {item_type} = %s".format(
 		item_type = ewcfg.col_item_type
@@ -391,12 +398,249 @@ def tm_get_players(id_server):
 	data = ewutils.execute_sql_query("SELECT {id_user} FROM tm_turtles WHERE id_server = %s".format(
 		id_user = ewcfg.col_id_user
 	),(
-		id_server
+		id_server,
 	))
 	for row in data:
 		players.append(row[0])
 
 	return players
+
+def tm_get_victims(id_server):
+	players = []
+	data = ewutils.execute_sql_query("SELECT {id_victim} FROM tm_murders WHERE id_server = %s".format(
+		id_victim = ewcfg.col_tm_id_victim
+	),(
+		id_server,
+	))
+	for row in data:
+		players.append(row[0])
+
+	return players
+
+def tm_get_votes(id_server, id_victim):
+	votes = {}
+	data = ewutils.execute_sql_query("SELECT {id_user}, {id_votee} FROM tm_votes WHERE id_server = %s AND {id_victim} = %s".format(
+		id_user = ewcfg.col_id_user
+		id_votee = ewcfg.col_tm_id_votee
+		id_victim = ewcfg.col_tm_id_victim
+	),(
+		id_server,
+		id_victim
+	))
+	for row in data:
+		votes[row[0]] = row[1]
+
+	return votes
+
+async def tm_trial_begin(id_server):
+	client = ewutils.get_client()
+	server = ewcfg.server_list.get(id_server)
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	game_data = EwTurtleMurder(id_server = id_server)
+	players = tm_get_players(id_server)
+	if game_data.game_state == ewcfg.tm_game_state_trial:
+		return
+	
+	for id_user in players:
+		user_data = EwUser(id_user = id_user, id_server = id_server)
+		turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+		if user_data.poi != ewcfg.poi_id_turtletrialgrounds and turtle_data.life_state == ewcfg.tm_life_state_active:
+			return
+
+	victims = tm_get_victims(id_server)
+	for id_victim in victims:
+		murder_data = EwMurder(id_server = id_server, id_victim = id_victim)
+		if murder_data.resolved:
+			victims.remove(id_victim)
+	
+	if len(victims) == 0:
+		response = "Nobody has been murdered yet. Get out and start killing!"
+		resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+		await resp_cont.post()
+		for id_user in players:
+			user_data = EwUser(id_user = id_user, id_server = id_server)
+			if user_data.poi == ewcfg.poi_id_turtletrialgrounds:
+				user_data.poi = ewcfg.poi_id_turtlelobby
+				user_data.persist()
+				await ewrolemgr.updateRoles(
+					client = client,
+					member = server.get_member(id_user)
+				)
+
+		return
+
+	game_data.game_state = ewcfg.tm_game_state_trial
+	game_data.current_victim = random.choice(victims)
+	game_data.persist()
+	victim_player = EwPlayer(id_user = game_data.current_victim)
+	response = "Everyone has arrived. The first case is the murder of {}. You may cast your votes now.".format(victim_player.display_name)
+	resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+
+	return await resp_cont.post()
+
+async def tm_trial_advance(id_server):
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	game_data = EwTurtleMurder(id_server = id_server)
+	if game_data.game_state != ewcfg.tm_game_state_trial:
+		return
+	murder_data = EwMurder(id_server = id_server, id_victim = game_data.current_victim)
+	votes = tm_get_votes(id_server, game_data.current_victim)
+	players = tm_get_players(id_server)
+	votes_map = {}
+	for id_user in players:
+		turtle_data = EwTurtle(id_server = id_server, id_user = id_user)
+		if turtle_data.life_state == ewcfg.tm_life_state_dead or id_user not in votes:
+			return
+		votee_id = votes[id_user]
+		if votee_id in votes_map:
+			votes_map[votee_id] += 1
+		else:
+			votes_map[votee_id] = 1
+
+	found_guilty_id = ""
+	max_votes = 0
+
+	for id_user, num_votes in votes_map:
+		if num_votes > max_votes:
+			found_guilty_id = id_user
+	tie = False
+	for id_user, num_votes in votes_map:
+		if id_user != found_guilty_id and num_votes == max_votes:
+			tie = True
+			break;
+
+	response = "The Results are in:\n"
+	for id_user, num_votes in votes_map:
+		player_data = EwPlayer(id_user = id_user)
+		response += "{}: {} votes\n".format(player_data.display_name, num_votes)
+
+	if tie:
+		response += "The vote was inconclusive.\n"
+	else:
+		victim_player = EwPlayer(id_user = murder_data.id_victim)
+		found_guilty_player = EwPlayer(id_user = found_guilty_id)
+		response += "{} was found guilty of killing {}.\n".format(found_guilty_player.display_name, victim_player.display_name)
+	
+	culprit_data = EwTurtle(id_server = id_server, id_user = murder_data.id_culprit)
+	if tie or found_guilty_id != murder_data.id_culprit:
+		response += "You voted incorrectly. The culprit will not be punished. Case closed.\n"
+		if game_data.current_victim == culprit_data.current_victim:
+			if culprit_data.win_state != ewcfg.tm_win_state_lost
+				culprit_data.win_state = ewcfg.tm_win_state_won
+	else:
+		response += "You voted correctly. The culprit will be punished. Case closed.\n"
+		culprit_data.win_state = ewcfg.tm_win_state_lost
+	culprit_data.persist()
+	murder_data.resolved = True
+	murder_data.persist()
+
+	resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+	await resp_cont.post()
+	return await tm_trial_next_case(id_server)
+
+async def tm_trial_next_case(id_server):
+	client = ewutils.get_client()
+	server = ewcfg.server_list.get(id_server)
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	victims = tm_get_victims(id_server)
+	game_data = EwTurtleMurder(id_server = id_server)
+	for id_victim in victims:
+		murder_data = EwMurder(id_server = id_server, id_victim = id_victim)
+		if murder_data.resolved:
+			victims.remove(id_victim)
+
+	if len(victims) == 0:
+		response = "All cases closed."
+		players = tm_get_players(id_server)
+		winners = []
+		losers = []
+		for id_user in players:
+			turtle_data = EwTurtle(id_server = id_server, id_user = id_user)
+			if turtle_data.win_state == ewcfg.tm_win_state_won:
+				winners.append(id_user)
+			elif turtle_data.win_state == ewcfg.tm_win_state_lost:
+				turtle_data.life_state = ewcfg.tm_life_state_dead
+				turtle_data.persist()
+				losers.append(id_user)
+
+		if len(winners) > 0:
+			response += "The following players have won:\n"
+			for id_user in winners:
+				player_data = EwPlayer(id_user = id_user)
+				response += player_data.display_name + "\n"
+			response += "The game is over. ({} to leave the mansion)".format(ewcfg.cmd_tm_endgame)
+			game_data.game_state = ewcfg.tm_game_state_postgame
+			game_data.persist()
+			resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+			await resp_cont.post()
+			for id_user in players:
+				if id_user not in winners:
+					turtle_data = EwTurtle(id_user = id_user)
+					turtle_data.life_state == ewcfg.tm_life_state_dead
+					turtle_data.poi = ewcfg.poi_id_turtlehell
+					turtle_data.persist()
+					await ewrolemgr.updateRoles(
+						client = client,
+						member = server.get_member(id_user)
+					)
+			return
+		elif len(losers) > 0:
+			response += "The following players will be punished:\n"
+			for id_user in losers:
+				player_data = EwPlayer(id_user = id_user)
+				response += player_data.display_name + "\n"
+			resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+			await resp_cont.post()
+
+			for id_user in losers:
+				turtle_data = EwTurtle(id_server = id_server, id_user = id_user)
+				user_data = EwUser(id_server = id_server, id_user = id_user)
+				turtle_data.life_state == ewcfg.tm_life_state_dead
+				user_data.poi = ewcfg.poi_id_turtlehell
+				turtle_data.persist()
+				user_data.persist()
+				await ewrolemgr.updateRoles(
+					client = client,
+					member = server.get_member(id_user)
+				)
+
+			left_alive = []
+			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+			for id_user in players:
+				turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+				if turtle_data.life_state == ewcfg.tm_life_state_active:
+					left_alive.append(id_user)
+			if len(left_alive) > 3:
+				response = "The game continues. Ejecting everyone from the trial grounds."
+			else:
+				response = "The game is over. ({} to leave the mansion)".format(ewcfg.cmd_tm_endgame)
+			resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+			await resp_cont.post()
+
+			for id_user in left_alive:
+				user_data = EwUser(id_user = id_user, id_server = id_server)
+				user_data.poi = ewcfg.poi_id_turtlelobby
+				await ewrolemgr.updateRoles(
+					client = client,
+					member = server.get_member(id_user)
+				)
+			return
+
+
+
+	game_data.current_victim = random.choice(victims)
+	game_data.persist()
+	victim_player = EwPlayer(id_user = game_data.current_victim)
+	response = "The next case is the murder of {}. You may cast your votes now.".format(victim_player.display_name)
+	resp_cont.add_channel_response(ewcfg.channel_turtletrialgrounds, response)
+
+	return await resp_cont.post()
+
+
+	
+	
 
 async def tm_boss_act(id_server):
 	client = ewutils.get_client()
@@ -653,207 +897,56 @@ async def tm_use(cmd, id_item):
 
 
 async def tm_vote(cmd):
-			case 'vote':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch ) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **I'M NOT BOUND BY YOUR SILLY RULES**",
-						typing: true
-					});
-					break;
-				}
-				
-				if(channelID == trialgrounds.ch) {
-					if (voting) {
-						obj = obj.replace(/[<>@!]/g, "");
-						var ccase = murders[murders.length - 1];
-						
-						if (checkIfPlayer(obj)) {
-							if (players.some(function(p) {return p.id == userID && !p.voted;})) {
-								players.forEach(function(p) {if (p.id == obj || p.name == obj) {p.votes++;}});
-								sendMessage({
-									to: channelID,
-									message: "**" + user + "**: successfully recorded your vote",
-									typing: true
-								});
-								players.forEach(function(p) {if (p.id == userID) {p.voted = true;}});
-								if ( players.every(function(p) {return !p.alive || p.voted;}) ) {
-									voting = false;
-									players.forEach(function(p) {p.voted = false;});
-									var result = "voting concluded. announcing the results:";
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	time_now = time.time()
+	if not user_data.turtlemurder:
+		response = "Vote with your slime."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
-									var mostVotes = 0;
-									var decision = "tie";
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**I'M NOT BOUND BY YOUR SILLY RULES.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-									players.forEach(function(p) {
-										var currentVotes = p.votes;
-										if (currentVotes > mostVotes) { 
-											mostVotes = currentVotes; 
-											decision = p.id;
-										} else if (currentVotes == mostVotes) {	
-											decision = "tie";
-										}
-										result = result + "\n<@" + p.id + ">: " + p.votes + " votes";
-										p.votes = 0;
+	if game_data.game_state != ewcfg.tm_game_state_trial:
+		response = "You have to wait for the trial to begin to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-									});
+	if turtle_data.life_state == ewcfg.tm_life_state_dead:
+		response = "You're too busy being dead to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-									if( decision == "tie" ) {
-										sendMessage({
-											to: channelID,
-											message: result + "\n\nno consensus reached",
-											typing: true
-										});
-									} else {
-										sendMessage({
-											to: channelID,
-											message: result + "\n\n<@" + decision + "> got the most votes",
-											typing: true
-										});
-									}
-									
+	if cmd.mentions_count > 1:
+		response = "You can only vote for one person per case."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if cmd.mentions_count <= 0:
+		response = "Please specify who you want to send to the gallows."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	member = cmd.mentions[0]
+	votee_data = EwUser(member = member)
+	if not votee_data.turtlemurder:
+		response = "Who?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-									if( ccase.culprit == decision ) {
-										losers.push(decision);
-									} else if (players.some(function(p) {return p.id == ccase.culprit && p.target == ccase.victim;})) {
-										winners.push(ccase.culprit);
-									}
+	vote_data = EwVote(id_server = user_data.id_server, id_user = user_data.id_user, id_victim = game_data.current_victim)
 
-									murders.pop();
-									var result = "";
-									if(murders.length == 0) {
-										result = "the trial has reached it's conclusion. ";
+	if vote_data.id_votee != "":
+		response = "You can only vote for one person per case."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	vote_data.id_votee = member.id
+	vote_data.persist()
+	response = "Successfully recorded your vote."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-										winners = winners.filter( function(w) {return !losers.includes(w);} );
-										losers = losers.filter( function(l) {return players.some( function(p) { return p.id == l && p.alive ; } ); });
+	return await tm_trial_advance(cmd.message.server.id)
 
-										if (winners.length > 0) {
-											result += "you have voted incorrectly. the following players have won:";
-
-											winners.forEach(function(w) {
-												result = result + "\n" + "<@" + w + ">";
-												let random = Math.floor(database.glimpses.length * Math.random());
-												let glimpse = database.glimpses[random];
-												sendMessage({
-													to: w,
-													message: "You catch a glimpse of the truth:\n" + glimpse + "\nThe vision ends."
-												});
-											});
-										} else {
-
-											if (losers.length > 0) {
-												result += "you have voted correctly.";
-												result += " the following players will be executed:";
-
-												losers.forEach(function(l) {
-													result = result + "\n<@" + l + ">";
-													players.forEach(function(p) { if (p.id == l) { p.alive = false; } });
-													changeRoom(trialgrounds.id, dead.id, channelID, l);
-
-
-												});
-											} else {
-												result += "you have voted incorrectly. the culprit(s) avoided punishment.";
-											}
-
-
-										}
-										
-										var leftAlive = 0;
-										players.forEach(function(p) { if (p.alive) {leftAlive++;} });
-
-										if (winners.length > 0) {
-											result = result + "\nthe game is over. use !endgame to return to the lobby.";
-											sendMessage({
-												to: channelID,
-												message: result,
-												typing: true
-											});
-										} else if (leftAlive < 4) {
-											result = result + "\nthe game is over. everyone left alive wins. use !endgame to return to the lobby.";
-											sendMessage({
-												to: channelID,
-												message: result,
-												typing: true
-											});
-										} else {
-											result = result + "\nthe game continues. evicting everyone from the trial-grounds in 10 seconds.";
-											sendMessage({
-												to: channelID,
-												message: result,
-												typing: true
-											});
-
-											players.forEach( function (p) {
-												if (p.alive && !checkIfAlive(p.target)) {
-													while (!checkIfAlive(p.target)) {
-														players.forEach( function (ctarg) {if (ctarg.id == p.target) {
-															p.target = ctarg.target;
-														}});
-
-													}
-													sendMessage({
-														to: p.id,
-														message: "**" + p.name + "**: your target has just died. assigning you a new target: <@" + p.target + ">"
-													});
-												}
-
-											});
-
-											setTimeout(function() {players.forEach(
-												function(p) { if (p.alive) {changeRoom(p.room, roomIDs[4], channelID, p.id);} }
-											);}, 10000);
-										}
-									} else {
-										sendMessage({
-											to: trialgrounds.ch,
-											message: "case closed. you may now discuss the murder of <@" + murders[murders.length - 1].victim + "> and then !vote for who you think the killer was.",
-											typing: true
-										});
-										voting = true;
-									}
-								}
-							} else {
-								sendMessage({
-									to: channelID,
-									message: "**" + user + "**: you've already voted",
-									typing: true
-								});
-							}
-						} else {
-							sendMessage({
-								to: channelID,
-								message: "**" + user + "**: I don't know that user",
-								typing: true	
-							});
-						}
-					} else {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: voting hasn't begun yet. please wait for everyone to arrive.",
-							typing: true
-						});
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: can only vote in the trial-grounds",
-						typing: true
-					});
-				}				
-
-				break;
 async def tm_pray(cmd):
 			case 'pray':
 				if (isPlayer) {
