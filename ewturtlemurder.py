@@ -5,6 +5,12 @@ import math
 
 import ewutils
 import ewcfg
+import ewmap
+import ewitem
+
+from ew import EwUser
+from ewplayer import EwPlayer
+from ewdistrict import EwDistrict
 
 class EwTurtleMurder:
 	id_server = ""
@@ -22,6 +28,7 @@ class EwTurtleMurder:
 	boss_hp = 8
 	boss_last_action = ""
 	time_boss_last_action = 0
+	current_victim = ""
 
 	def __init__(
 		self,
@@ -30,7 +37,7 @@ class EwTurtleMurder:
 		if id_server != None:
 			self.id_server = id_server
 
-			data = ewutils.execute_sql_query("SELECT {time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action} FROM tm_turtles WHERE {id_server} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action}, {current_victim} FROM tm_turtles WHERE {id_server} = %s".format(
 				id_server = ewcfg.col_id_server,
 				time_start = ewcfg.col_tm_time_start,
 				game_state = ewcfg.col_tm_game_state,
@@ -44,7 +51,8 @@ class EwTurtleMurder:
 
 				boss_hp = ewcfg.col_tm_boss_hp,
 				boss_last_action = ewcfg.col_tm_boss_last_action,
-				time_boss_last_action = ewcfg.col_tm_time_boss_last_action
+				time_boss_last_action = ewcfg.col_tm_time_boss_last_action,
+				current_victim = ewcfg.col_tm_current_victim
 			    
 			),(
 				id_server,
@@ -64,11 +72,12 @@ class EwTurtleMurder:
 				self.boss_hp = data[0][8]
 				self.boss_last_action = data[0][9]
 				self.time_boss_last_action = data[0][10]
+				self.current_victim = data[0][11]
 			else:
 				self.persist()
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
+		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action}, {current_victim}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
 				id_server = ewcfg.col_id_server,
 				time_start = ewcfg.col_tm_time_start,
 				game_state = ewcfg.col_tm_game_state,
@@ -82,7 +91,8 @@ class EwTurtleMurder:
 
 				boss_hp = ewcfg.col_tm_boss_hp,
 				boss_last_action = ewcfg.col_tm_boss_last_action,
-				time_boss_last_action = ewcfg.col_tm_time_boss_last_action
+				time_boss_last_action = ewcfg.col_tm_time_boss_last_action,
+				current_victim = ewcfg.col_tm_current_victim
 		),(
 				self.id_server,
 				self.time_start,
@@ -97,7 +107,8 @@ class EwTurtleMurder:
 
 				self.boss_hp,
 				self.boss_last_action,
-				self.time_boss_last_action
+				self.time_boss_last_action,
+				self.current_victim
 
 		))
 
@@ -200,7 +211,7 @@ class EwMurder:
 			self.id_server = id_server
 			self.id_victim = id_victim
 
-			data = ewutils.execute_sql_query("SELECT {id_culprit}, {weapon}, {poi} FROM tm_murders WHERE {id_server} = %s AND {id_culprit} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {id_culprit}, {weapon}, {poi} FROM tm_murders WHERE {id_server} = %s AND {id_victim} = %s".format(
 				id_server = ewcfg.col_id_server,
 				id_culprit = ewcfg.col_tm_id_culprit,
 				id_victim = ewcfg.col_tm_id_victim,
@@ -235,6 +246,63 @@ class EwMurder:
 				self.id_culprit,
 				self.weapon,
 				self.poi
+
+		))
+	def get_boss_next_action(self):
+		next_action = ""
+		if self.boss_last_action == ewcfg.tm_boss_action_charge:
+			next_action = ewcfg.tm_boss_action_aoe
+		elif random.random() > 0.33:
+			next_action = ewcfg.tm_boss_action_strike
+		else:
+			next_action = ewcfg.tm_boss_action_charge
+		return next_action
+
+class EwVote:
+	id_server = ""
+	id_user = ""
+	id_victim = ""
+	id_votee = ""
+
+	def __init__(
+		self,
+		id_server = None,
+		id_user = None,
+		id_victim = None
+	):
+		if id_server != None and id_user != None and id_victim != None:
+			self.id_server = id_server
+			self.id_user = id_user
+			self.id_victim = id_victim
+
+			data = ewutils.execute_sql_query("SELECT {id_votee} FROM tm_votes WHERE {id_server} = %s AND {id_user} = %s AND {id_victim} = %s".format(
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user,
+				id_victim = ewcfg.col_tm_id_victim,
+				id_votee = ewcfg.col_tm_id_votee
+			    
+			),(
+				id_server,
+				id_user,
+				id_victim
+			))
+
+			if len(data) > 0:
+				self.id_votee = data[0][0]
+			else:
+				self.persist()
+
+	def persist(self):
+		ewutils.execute_sql_query("REPLACE INTO tm_votes({id_server},{id_user},{id_victim},{id_votee}) VALUES (%s,%s,%s,%s)".format(
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user,
+				id_victim = ewcfg.col_tm_id_victim,
+				id_votee = ewcfg.col_tm_id_votee
+		),(
+				self.id_server,
+				self.id_user,
+				self.id_victim,
+				self.id_votee
 
 		))
 
@@ -330,6 +398,65 @@ def tm_get_players(id_server):
 
 	return players
 
+async def tm_boss_act(id_server):
+	client = ewutils.get_client()
+	server = ewcfg.server_list.get(id_server)
+	players = tm_get_players(id_server)
+	game_data = EwTurtleMurder(id_server = id_server)
+	for id_user in players:
+		turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+		if not (turtle_data.time_last_action > game_dta.time_boss_last_action or turtle_data.life_state != ewcfg.tm_life_state_active):
+			return
+
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	boss_action = game_data.get_boss_next_action()
+	if boss_action == ewcfg.tm_boss_action_charge:
+		response = "The Endless Turtle charges up its devastating shadow breath."
+	elif boss_action == ewcfg.tm_boss_action_aoe:
+		response = "The Endless Turtle unleashes its stored energy and bathes the whole room in shadow flames."
+		for id_user in players:
+			turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+			player_data = EwPlayer(id_user = id_user)
+			if turtle_data.life_state == ewcfg.tm_life_state_active:
+				if turtle_data.last_action == ewcfg.tm_action_defend:
+					response += "\n{} successfully defends.".format(player_data.display_name)
+				else:
+					response += "\n{} is incinerated. The Endless Turtle feeds on their soul and regenerates 2 HP.".format(player_data.display_name)
+					game_data.boss_hp = min(game_data.boss_hp + 2, 8)
+					turtle_data.life_state = ewcfg.tm_life_state_dead
+					turtle_data.persist()
+	elif boss_action == ewcfg.tm_boss_action_strike:
+		id_user = random.choice(players)
+		turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+		while turtle_data.life_state != ewcfg.tm_life_state_active:
+			id_user = random.choice(players)
+			turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+			
+		player_data = EwPlayer(id_user = id_user)
+		if turtle_data.last_action == ewcfg.tm_action_defend:
+			response = "The Endless Turtle strikes at {}, but they successfully defend.".format(player_data.display_name)
+		else:
+			response = "The Endless Turtle strikes at {} and kills them. It feeds on their soul and regenerates 2 HP.".format(player_data.display_name)
+			game_data.boss_hp = min(game_data.boss_hp + 2, 8)
+			turtle_data.life_state = ewcfg.tm_life_state_dead
+			turtle_data.persist()
+					
+
+
+	game_data.boss_last_action = boss_action
+	game_data.time_boss_last_action = time.time()
+	game_data.persist()
+	resp_cont.add_channel_response(ewcfg.channel_turtlegraveyard, response)
+	await resp_cont.post()
+	for id_user in players:
+		member = server.get_member(id_user)
+		await ewrolemgr.updateRoles(
+			client = client,
+			member = member
+		)
+
+		
+
 
 
 
@@ -356,17 +483,21 @@ async def tm_defend(cmd):
 
 	if game_data.game_state != ewcfg.tm_game_state_bossfight:
 		turtle_data.last_action = ""
+		turtle_data.persist()
 		response = "What are you afraid of?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif game_data.time_boss_last_action < turtle_data.time_last_action:
+	if game_data.time_boss_last_action < turtle_data.time_last_action:
 		response = "You've already acted this turn."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		turtle_data.last_action = ewcfg.tm_action_defend
 		turtle_data.time_last_action = time_now
+		turtle_data.persist()
 		response = "You brace against incoming attacks."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await tm_boss_act(cmd.message.server.id)
 
-	turtle_data.persist()
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 
 async def tm_use(cmd, id_item):
@@ -426,10 +557,11 @@ async def tm_use(cmd, id_item):
 			success = False
 			turtle_data.coins += 5
 	elif item_def.id_item == ewcfg.tm_item_id_pokeball:
-		players = tm_get_players(id_server)
+		pokeball_district = EwDistrict(id_server = id_server, district = ewcfg.poi_id_turtlepokeball)
+		players = pokeball_district.get_players_in_district()
 		for id_inball in players:
 			user_inball = EwUser(id_user = id_inball, id_server = id_server)
-			if user_inball.poi == ewcfg.poi_id_turtlepokeball:
+			if user_inball.turtlemurder:
 				success = True
 				user_inball.poi = user_data.poi
 				ewitem.item_delete(id_item = id_item)

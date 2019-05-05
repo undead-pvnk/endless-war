@@ -41,6 +41,7 @@ import ewslimeoid
 import ewdistrict
 import ewquadrants
 import ewtransport
+import ewturtlemurder
 
 from ewitem import EwItem
 from ew import EwUser

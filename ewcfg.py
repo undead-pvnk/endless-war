@@ -4742,6 +4742,7 @@ poi_list = [
 		],
 		str_desc = "The lobby is filled with all sorts of turtle-related merchandise. Statues of varying sizes, plushies, portraits, anything you can imagine.\nThis room connects to the disco, the laboratory, the arena and the graveyard.", 
 		channel = channel_turtlelobby,
+		pvp = True,
 		role = "Turtle Lobby",
 		turtlemurder = True
 	),
@@ -4753,6 +4754,7 @@ poi_list = [
 		],
 		str_desc = "Strobe lights illuminate the dance floor while dubstep blasts from the speakers. It's extremely loud. In the center of the dancefloor stands a hulking space marine, perfectly still, as though he were a statue.\nThis room connects to the lobby and the casino.",
 		channel = channel_turtledisco,
+		pvp = True,
 		role = "Turtle Disco",
 		turtlemurder = True
 	),
@@ -4761,6 +4763,7 @@ poi_list = [
 		str_name = "The Turtle Casino",
 		str_desc = "A classy casino for savvy players to win big and for suckers to lose everything. You can play a dice game and exchange coins for prizes here.\nThis room connects to the disco, the arcade and the graveyard.",
 		channel = channel_turtlecasino,
+		pvp = True,
 		role = "Turtle Casino",
 		turtlemurder = True
 	),
@@ -4769,6 +4772,7 @@ poi_list = [
 		str_name = "The Turtle Arcade",
 		str_desc = "This dark room, decorated with neon lights, is full of arcade machines boasting all the hottest new games from 30 years ago.\nThis room connects to the casino.",
 		channel = channel_turtlearcade,
+		pvp = True,
 		role = "Turtle Arcade",
 		turtlemurder = True
 	),
@@ -4783,6 +4787,7 @@ poi_list = [
 		str_name = "The Turtle Graveyard",
 		str_desc = "The thick fog covering the floor gives this room an ethereal atmosphere. There are turtle skeletons of various sizes littered throughout the room, all of which are dwarfed by a single giant turtle skull. In front of the skull there is a plaque, which reads: 'Pray for the dead.'\nThis room connects to the lobby, the arena and the casino.",
 		channel = channel_turtlegraveyard,
+		pvp = True,
 		role = "Turtle Graveyard",
 		turtlemurder = True
 	),
@@ -4791,6 +4796,7 @@ poi_list = [
 		str_name = "The Turtle Arena",
 		str_desc = "An empty collosseum-style room, that beckons you to test your mettle as a pokemon trainer against your fellow players.\nThis room connects to the lobby, weeb-corner and the graveyard.",
 		channel = channel_turtlearena,
+		pvp = True,
 		role = "Turtle Arena",
 		turtlemurder = True
 	),
@@ -4805,6 +4811,7 @@ poi_list = [
 		str_name = "The Weeb Corner",
 		str_desc = "A room full of anime merchandise in massive, utterly disorganized piles. If you were to dig through these, you might be able to find some pretty valuable stuff. In the corner sits a filthy otaku watching Eva for the 57th time. This room makes you sick.\nThis room connects to the laboratory and the arena.",
 		channel = channel_turtleweebcorner,
+		pvp = True,
 		role = "Weeb Corner",
 		turtlemurder = True
 	),
@@ -4817,6 +4824,7 @@ poi_list = [
 		str_name = "The Turtle Laboratory",
 		str_desc = "Lining the walls of the lab are cabinets full of science equipment. One of the cabinets in a corner is locked. On a table in the center there is a strange setup involving a pentagram with five sockets illuminated in the colours red, green, white, blue and black respectively.\nThis room connects to the lobby, the throne-room and the weeb-corner.",
 		channel = channel_turtlelab,
+		pvp = True,
 		role = "Turtle Lab",
 		turtlemurder = True
 	),
@@ -4831,6 +4839,7 @@ poi_list = [
 		str_name = "The Throne Room",
 		str_desc = "Colourful light enters through the stained-glass windows and illuminates this bleak, rundown room. An altar sits at the bottom of a set of stairs leading up to the throne that dominates the room. Atop the throne sits the withered husk of Andrew Hussie, artificially kept alive by consuming the souls of a thousand Homestuck fans every day. It is rumoured that he can serve as a powerful oracle, for the right price.\nThis room connects to the laboratory.",
 		channel = channel_turtlethroneroom,
+		pvp = True,
 		role = "Throne Room",
 		turtlemurder = True
 	),
@@ -4871,6 +4880,7 @@ capturable_districts = []
 transports = []
 transport_stops = []
 turtlemurder_pois = []
+turtlemansion_pois = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -4899,6 +4909,8 @@ for poi in poi_list:
 
 	if poi.turtlemurder:
 		turtlemurder_pois.append(poi.id_poi)
+		if poi.pvp
+			turtlemansion_pois.append(poi.id_poi)
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -6663,7 +6675,7 @@ tm_items = [
 		weapon_level = 1,
 		str_name = "Turtle Knife",
 		str_desc = "Knife with a turtle-shaped handle. Level 1 Weapon.",
-		use_pois = turtlemurder_pois,
+		use_pois = turtlemansion_pois,
 		str_use_success = "You prick yourself in the finger. Ouch! You bleed all over the floor.",
 		
 
@@ -6794,7 +6806,7 @@ tm_items = [
 		weapon_special = True,
 		str_name = "Pokeball",
 		str_desc = "Gotta catch 'em all!",
-		use_pois = turtlemurder_pois,
+		use_pois = turtlemansion_pois,
 		str_use_success = "Go, {pokemon}, I choose you!",
 		str_use_failure = "The pokeball is empty.",
 		
