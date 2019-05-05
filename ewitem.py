@@ -596,11 +596,19 @@ async def inventory_print(cmd):
 	can_message_user = True
 
 	player = EwPlayer(id_user = cmd.message.author.id)
+	user_data = EwUser(member = cmd.message.author)
 
-	items = inventory(
-		id_user = cmd.message.author.id,
-		id_server = player.id_server
-	)
+	if user_data.turtlemurder:
+		items = inventory(
+			id_user = cmd.message.author.id,
+			id_server = player.id_server,
+			item_type_filter = ewcfg.it_turtlemurder
+		)
+	else:
+		items = inventory(
+			id_user = cmd.message.author.id,
+			id_server = player.id_server
+		)
 
 	if len(items) == 0:
 		response = "You don't have anything."
@@ -656,6 +664,10 @@ async def item_look(cmd):
 		item = EwItem(id_item = item_sought.get('id_item'))
 
 		id_item = item.id_item
+		if user_data.turtlemurder and item.item_type != ewcfg.it_turtlemurder:
+			response = "You can't access that item."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		name = item_sought.get('name')
 		response = item_sought.get('item_def').str_desc
 
@@ -699,11 +711,13 @@ async def item_use(cmd):
 
 		response = "The item doesn't have !use functionality"  # if it's not overwritten
 
-		if item.item_type == ewcfg.it_food:
+		if user_data.turtlemurder:
+			response = ewturtlemurder.tm_use(item)
+		elif item.item_type == ewcfg.it_food:
 			response = user_data.eat(item)
 			user_data.persist()
 
-		if item.item_type == ewcfg.it_weapon:
+		elif item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)
 			user_data.persist()
 
@@ -800,6 +814,10 @@ async def give(cmd):
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 	if item_sought:  # if an item was found
+
+		if user_data.turtlemurder and item_sought.get('item_type') != ewcfg.it_turtlemurder:
+			response = "You can't access that item."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		# don't let people give others food when they shouldn't be able to carry more food items
 		if item_sought.get('item_type') == ewcfg.it_food:

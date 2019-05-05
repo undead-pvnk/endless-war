@@ -898,6 +898,7 @@ col_tm_life_state = "life_state"
 col_tm_win_state = "win_state"
 
 col_tm_id_victim = "id_victim"
+col_tm_id_culprit = "id_culprit"
 col_tm_weapon = "weapon"
 
 # Item type names
@@ -906,7 +907,7 @@ it_slimepoudrin = "slimepoudrin"
 it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
-
+it_turtlemurder = "turtlemurder"
 it_cosmetic = 'cosmetic'
 
 # Cosmetic item rarities
@@ -2746,7 +2747,19 @@ item_def_list = [
 			'cosmetic_desc': 'Cosmetic Item.',
 			'rarity': rarity_plebeian
 		}
+	),
+	EwItemDef(
+		item_type = it_turtlemurder,
+		str_name = "{tm_name}",
+		str_desc = "{tm_desc}",
+		soulbound = False,
+		item_props = {
+			"tm_item_id": "",
+			"tm_name": "Turtle Murder Item",
+			"tm_desc": "Used for the Turtle Murder game"
+		}
 	)
+
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -4727,7 +4740,7 @@ poi_list = [
 		alias = [
 			"turtle"
 		],
-		str_desc = "", # TODO: add description
+		str_desc = "The lobby is filled with all sorts of turtle-related merchandise. Statues of varying sizes, plushies, portraits, anything you can imagine.\nThis room connects to the disco, the laboratory, the arena and the graveyard.", 
 		channel = channel_turtlelobby,
 		role = "Turtle Lobby",
 		turtlemurder = True
@@ -4738,7 +4751,7 @@ poi_list = [
 		alias = [
 			"dance"
 		],
-		str_desc = "", # TODO: add description
+		str_desc = "Strobe lights illuminate the dance floor while dubstep blasts from the speakers. It's extremely loud. In the center of the dancefloor stands a hulking space marine, perfectly still, as though he were a statue.\nThis room connects to the lobby and the casino.",
 		channel = channel_turtledisco,
 		role = "Turtle Disco",
 		turtlemurder = True
@@ -4746,7 +4759,7 @@ poi_list = [
 	EwPoi(  # Turtle Casino
 		id_poi = poi_id_turtlecasino,
 		str_name = "The Turtle Casino",
-		str_desc = "", # TODO: add description
+		str_desc = "A classy casino for savvy players to win big and for suckers to lose everything. You can play a dice game and exchange coins for prizes here.\nThis room connects to the disco, the arcade and the graveyard.",
 		channel = channel_turtlecasino,
 		role = "Turtle Casino",
 		turtlemurder = True
@@ -4754,7 +4767,7 @@ poi_list = [
 	EwPoi(  # Turtle Arcade
 		id_poi = poi_id_turtlearcade,
 		str_name = "The Turtle Arcade",
-		str_desc = "", # TODO: add description
+		str_desc = "This dark room, decorated with neon lights, is full of arcade machines boasting all the hottest new games from 30 years ago.\nThis room connects to the casino.",
 		channel = channel_turtlearcade,
 		role = "Turtle Arcade",
 		turtlemurder = True
@@ -4768,7 +4781,7 @@ poi_list = [
 			"skull"
 		],
 		str_name = "The Turtle Graveyard",
-		str_desc = "", # TODO: add description
+		str_desc = "The thick fog covering the floor gives this room an ethereal atmosphere. There are turtle skeletons of various sizes littered throughout the room, all of which are dwarfed by a single giant turtle skull. In front of the skull there is a plaque, which reads: 'Pray for the dead.'\nThis room connects to the lobby, the arena and the casino.",
 		channel = channel_turtlegraveyard,
 		role = "Turtle Graveyard",
 		turtlemurder = True
@@ -4776,7 +4789,7 @@ poi_list = [
 	EwPoi(  # Turtle Arena
 		id_poi = poi_id_turtlearena,
 		str_name = "The Turtle Arena",
-		str_desc = "", # TODO: add description
+		str_desc = "An empty collosseum-style room, that beckons you to test your mettle as a pokemon trainer against your fellow players.\nThis room connects to the lobby, weeb-corner and the graveyard.",
 		channel = channel_turtlearena,
 		role = "Turtle Arena",
 		turtlemurder = True
@@ -4790,7 +4803,7 @@ poi_list = [
 			"anime"
 		],
 		str_name = "The Weeb Corner",
-		str_desc = "", # TODO: add description
+		str_desc = "A room full of anime merchandise in massive, utterly disorganized piles. If you were to dig through these, you might be able to find some pretty valuable stuff. In the corner sits a filthy otaku watching Eva for the 57th time. This room makes you sick.\nThis room connects to the laboratory and the arena.",
 		channel = channel_turtleweebcorner,
 		role = "Weeb Corner",
 		turtlemurder = True
@@ -4802,7 +4815,7 @@ poi_list = [
 			"magicthegathering"
 		],
 		str_name = "The Turtle Laboratory",
-		str_desc = "", # TODO: add description
+		str_desc = "Lining the walls of the lab are cabinets full of science equipment. One of the cabinets in a corner is locked. On a table in the center there is a strange setup involving a pentagram with five sockets illuminated in the colours red, green, white, blue and black respectively.\nThis room connects to the lobby, the throne-room and the weeb-corner.",
 		channel = channel_turtlelab,
 		role = "Turtle Lab",
 		turtlemurder = True
@@ -4816,7 +4829,7 @@ poi_list = [
 			"oracle"
 		],
 		str_name = "The Throne Room",
-		str_desc = "", # TODO: add description
+		str_desc = "Colourful light enters through the stained-glass windows and illuminates this bleak, rundown room. An altar sits at the bottom of a set of stairs leading up to the throne that dominates the room. Atop the throne sits the withered husk of Andrew Hussie, artificially kept alive by consuming the souls of a thousand Homestuck fans every day. It is rumoured that he can serve as a powerful oracle, for the right price.\nThis room connects to the laboratory.",
 		channel = channel_turtlethroneroom,
 		role = "Throne Room",
 		turtlemurder = True
@@ -4828,7 +4841,7 @@ poi_list = [
 			"trialgrounds"
 		],
 		str_name = "The Trial Grounds",
-		str_desc = "", # TODO: add description
+		str_desc = "A circular room, allowing you to cast blame in every direction.",
 		channel = channel_turtletrialgrounds,
 		role = "Trial Grounds",
 		turtlemurder = True
@@ -4836,7 +4849,7 @@ poi_list = [
 	EwPoi(  # Turtle Hell
 		id_poi = poi_id_turtlehell,
 		str_name = "Turtle Hell",
-		str_desc = "", # TODO: add description
+		str_desc = "The realm of the dead. There is nothing here.",
 		channel = channel_turtlehell,
 		role = "Turtle Hell",
 		turtlemurder = True
@@ -4844,7 +4857,7 @@ poi_list = [
 	EwPoi(  # Turtle Pokeball
 		id_poi = poi_id_turtlepokeball,
 		str_name = "Inside the Pokeball",
-		str_desc = "", # TODO: add description
+		str_desc = "There is nothing here.",
 		channel = channel_turtlepokeball,
 		role = "Pokeball",
 		turtlemurder = True
@@ -6586,213 +6599,393 @@ vegetable_list = [
 	),
 ]
 
+tm_item_id_turtleknife = "turtleknife"
+tm_item_id_scissorblade = "scissorblade"
+tm_item_id_warhammerofzillyhoo = "warhammerofzillyhoo"
+tm_item_id_moneymachete = "moneymachete"
+tm_item_id_chainsword = "chainsword"
+tm_item_id_cashcannon = "cashcannon"
+tm_item_id_boltpistol = "boltpistol"
+tm_item_id_tranquilizergun = "tranquilizergun"
+tm_item_id_deathnote = "deathnote"
+tm_item_id_pokeball = "pokeball"
+tm_item_id_fluoriteoctet = "fluoriteoctet"
+tm_item_id_codexastartes = "codexastartes"
+tm_item_id_nendoroid = "nendoroid"
+tm_item_id_sburbbeta = "sburbbeta"
+tm_item_id_key = "key"
+tm_item_id_dnddice = "dnddice"
+tm_item_id_cheatcode = "cheatcode"
+tm_item_id_badge = "badge"
+tm_item_id_dollarbill = "dollarbill"
+tm_item_id_pearl = "pearl"
+tm_item_id_miniature = "miniature"
+tm_item_id_crystal = "crystal"
+tm_item_id_animepin = "animepin"
+tm_item_id_animeposter = "animeposter"
+tm_item_id_animetshirt = "animetshirt"
+tm_item_id_animepillow = "animepillow"
+tm_item_id_animebluray = "animebluray"
+tm_item_id_animefigure = "animefigure"
+
+str_tm_arcadegames = [
+	"You play a virtual card game. The card backs are emblazoned with the colours red, green, white, blue and black in a pentagon.",
+	"You play an action game. Only with the power of hope can you triumph over true despair.",
+	"You play a mystery puzzle game. It seems like you have to compete against the other characters, but in truth you all have to work together to succeed.",
+	"You play a turn-based RPG. You collect badges as proof of your supremacy over the bosses you conquer.",
+	"You play a strategy game. You lead an army of angels in blue armour against the vile alien menace.",
+	"You play a 2D platformer. The final boss is a giant turtle. It's always a giant turtle. Talk about unoriginal...",
+	"You play a simulation game. You manage a city to collect as much as possible of a strange currency based on green paper."
+]
+
+str_tm_bossfight = {
+	"begin": "The pentagramm, now complete, glows blindingly bright. You are sucked into a vortex of swirling colours and your surroundings disappear. When you regain your senses, the colours have disappeared and you find yourself in the bleak darkness of the graveyard together with all of the other players.\nStill disoriented you all look around, when you start sensing a malevolent aura. The room temperature seems to drop and a shiver runs down your spine. Threads of purple energy emerge from the fog and start swirling around the skeletons that are scattered throughout the room. Slowly the bones start to rise from the ground and move along with the thickening energy threads. At first their movement seems random, but gradually they all gather around the central giant turtle skull. At the same time a purple fire starts shining through the skull's eyesockets, growing from a candle-size flame until it envelops the entire skull. Yet the unholy fire does not provide any warmth; rather the temperature in the room drops even further. Finally the skull, too, starts lifting off the ground, and the swirling bones settle into place, forming the body of a giant skeletal turtle.\n\nIt's the Endless Turtle. Fight! (you each have one action per round, then the Endless Turtle will attack. you can either {cmd_attack} or {cmd_defend} yourself)".format(cmd_attack = cmd_attack, cmd_defend = cmd_tm_defend),
+	"victory": "The Endless Turtle staggers backwards as its skeleton body starts to crumble. The purple energy dissipates until finally the abomination collapses under its own weight. The ground quakes as the giant turtle skull hits the ground, shattering the bones beneath it and splitting in two.\nYou have vanquished the Endless Turtle! You are finally free to leave this place. The souls of those who died, however, remain shackled by the Endless Turtle's curse... (use {cmd_endgame} to return to the lobby)".format(cmd_endgame = cmd_tm_endgame),
+	"defeat": "The last of the heroes falls. Having failed to defeat the ancient evil of this place, your souls remain shackled by the Endless Turtle's curse... (use {cmd_endgame} to return to the lobby)".format(cmd_endgame = cmd_tm_endgame)
+
+}
+
+str_tm_glimpses = [
+	"You find yourself in the graveyard. All ist silent, but something is different from usual. A heavy atmosphere fills the room. Something is there with you. Something ancient and malevolent, and it's drawing closer.",
+	"You find yourself in a cage. There is nothing outside the cage, only darkness stretching endlessly in every direction. You realize that the bars of your cage are actually the bones of a giant hand or claw perhaps. Just then, the bones abruptly close together, crushing you between them.",
+	"You find yourself in the graveyard. A faint purple glow is coming from the giant turtle skull. You try to look closer, when the glow suddenly erupts brightly from the skull's eyesockets, enveloping you. It's the souls of a thousand turtles howling in agony.",
+	"You find yourself in the lobby. You feel like you are being watched. The usually friendly-looking pieces of turtle merchandise all have their faces contorted into malicious grins. You hear a low-pitched cackle from all directions at once.",
+	"You find yourself looking at your own corpse on the floor. You try to remember how you died, but you can't. Instead you get the feeling that this isn't the first time. Just as the thought crystallizes, you feel your soul being sucked back into your body, and you wake up in the lobby with everyone else.",
+	"You find yourself in a maelstrom of five colours. Its blinding light pierces the veil of lies. You feel invigorated."
+]
+
+
 tm_items = [
 	EwTurtleItem(
-		id_item = "turtleknife",
+		id_item = tm_item_id_turtleknife,
 		price = 10,
 		weapon = True,
 		weapon_level = 1,
 		str_name = "Turtle Knife",
-		str_desc = "Knife with a turtle-shaped handle.",
+		str_desc = "Knife with a turtle-shaped handle. Level 1 Weapon.",
 		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_use_success = "You prick yourself in the finger. Ouch! You bleed all over the floor.",
 		
 
-		str_kill = "",
-		str_crime_scene = "",
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor with a knife in their chest.",
 	),
 	EwTurtleItem(
-		id_item = "scissorblade",
+		id_item = tm_item_id_scissorblade,
 		price = 20,
 		weapon = True,
 		weapon_level = 2,
 		str_name = "Scissor Blade.",
-		str_desc = "Don't lose your way!"
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "Don't lose your way! Level 2 Weapon."
 		
 
-		str_kill = "",
-		str_crime_scene = "",
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor, their head several feet away from their body. The Scissor Blade lies next to them.",
 	),
 	EwTurtleItem(
-		id_item = "warhammerofzillyhoo",
+		id_item = tm_item_id_warhammerofzillyhoo,
 		price = 20,
 		weapon = True,
 		weapon_level = 2,
 		str_name = "Warhammer of Zillyhoo",
-		str_desc = "",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "There she is. Forged in fire by the smiths of Pipplemop, commissioned by the sage Lord of the Wozzinjay Fiefdom in the Realm of the Snargly Fruzmigbubbins, The Warhammer Of Zillyhoo. Level 2 Weapon.",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
+		str_kill = "You attack {target} with your {weapon}."
+		str_crime_scene = "{victim} lies dead on the floor, their head bashed in from heavy blunt force trauma. The Warhammer of Zillyhoo.",
 	),
 	EwTurtleItem(
-		id_item = "chainsword",
+		id_item = tm_item_id_chainsword,
 		price = 20,
 		weapon = True,
 		weapon_level = 2,
 		str_name = "Chainsword",
-		str_desc = "A vicious weapon from a grimdark universe.",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "A vicious weapon from a grimdark universe. Level 2 Weapon.",
 		
 
-		str_kill = "",
-		str_crime_scene = "",
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor with their entire torso gruesomely split open. The chainsword lies next to them.",
 	),
 	EwTurtleItem(
-		id_item = "moneymachete",
+		id_item = tm_item_id_moneymachete,
 		price = 20,
 		weapon = True,
 		weapon_level = 2,
 		str_name = "Money Machete",
-		str_desc = "A blade forged from hardened dollar bills.",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "A blade forged from hardened dollar bills. Level 2 Weapon.",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor, a pile of blood-soaked dollar bills covering a deep chest wound."
 	),
 	EwTurtleItem(
-		id_item = "tranquilizergun",
+		id_item = tm_item_id_tranquilizergun,
 		price = 30,
 		weapon = True,
 		weapon_level = 3,
+		weapon_special = True,
 		str_name = "Tranquilizer Gun",
-		str_desc = "Air gun that fires a dart laced with a knockout drug, that lasts for two minutes.",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "Air gun that fires a dart laced with a knockout drug, that lasts for two minutes. Level 3 Weapon.",
 		
 
-		str_kill = "",
-		str_crime_scene = "",
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies unconscious on the floor.",
 	),
 	EwTurtleItem(
-		id_item = "boltpistol",
+		id_item = tm_item_id_boltpistol,
 		price = 30,
 		weapon = True,
 		weapon_level = 3,
+		weapon_loud = True,
 		str_name = "Bolt Pistol",
-		str_desc = "Side-arm wielded by the Emperor's faithful servants. Makes a lot of noise, when fired.",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "Side-arm wielded by the Emperor's faithful servants. Makes a lot of noise, when fired. Level 3 Weapon.",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor with half their face blown off. The bolt pistol lies next to them."
 	),
 	EwTurtleItem(
-		id_item = "cashcannon",
+		id_item = tm_item_id_cashcannon,
 		price = 30,
 		weapon = True,
 		weapon_level = 3,
+		weapon_loud = True,
 		str_name = "Cash Cannon",
-		str_desc = "Shoots coins rather than bullets. Makes a lot of noise, when fired.",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		str_desc = "Shoots coins rather than bullets. Makes a lot of noise, when fired. Level 3 Weapon.",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor, coins littered around them and sticking out of the wounds that cover their body. The Cash Cannon lies next to them."
 	),
 	EwTurtleItem(
-		id_item = "deathnote",
+		id_item = tm_item_id_deathnote,
 		price = 40,
 		weapon = True,
 		weapon_level = -1,
+		weapon_special = True,
 		str_name = "Death Note",
 		str_desc = "Can kill any player from anywhere, as long as you know their true name. If only you had something to write with...",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
+		str_kill = "You let out a maniacal cackle as you write the name in your own blood.",
+		str_crime_scene = "{victim} lies dead on the floor with no noticeable wounds at all."
 	),
 	EwTurtleItem(
-		id_item = "fluoriteoctet",
+		id_item = tm_item_id_fluoriteoctet,
 		price = 40,
 		weapon = True,
 		weapon_level = -1,
+		weapon_special = True,
 		str_name = "Fluorite Octet",
 		str_desc = "A legendary set of 8 8-sided dice. Power level equal to the number of 8s you roll.",
-		use_pois = turtlemurder_pois,
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		use_pois = [poi_id_turtlecasino],
+		str_use_success = "You hand over the dice to the casino staff. They tell you the casino can now open. As a token of their appreciation you get 10 coins to start playing with.",
+		str_use_failure = "You hand over the dice to the casino staff. They tell you they already got some dice to play with earlier, but they give you 5 coins as a token of appreciation anyway.",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
+		str_kill = "You attack {target} with your {weapon}.",
+		str_crime_scene = "{victim} lies dead on the floor with a series of wounds too bizarre to adequately describe in words. The Fluorite Octet lies next to them."
 	),
 	EwTurtleItem(
-		id_item = "codexastartes",
+		id_item = tm_item_id_pokeball,
+		price = 40,
+		weapon = True,
+		weapon_level = -1,
+		weapon_special = True,
+		str_name = "Pokeball",
+		str_desc = "Gotta catch 'em all!",
+		use_pois = turtlemurder_pois,
+		str_use_success = "Go, {pokemon}, I choose you!",
+		str_use_failure = "The pokeball is empty.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_codexastartes,
 		price = 10,
 		weapon = False,
 		str_name = "Codex Astartes",
 		str_desc = "An invaluable strategic asset in any large-scale conflict.",
 		use_pois = [poi_id_turtledisco],
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		use_rewards = [tm_item_id_chainsword, tm_item_id_boltpistol],
+		str_use_success = "You give the heavy book to the stoic yet thankful looking space marine.",
 		
 
-		str_kill = "",
-		str_crime_scene = "",
 	),
 	EwTurtleItem(
-		id_item = "nendoroid",
+		id_item = tm_item_id_nendoroid,
 		price = 10,
 		weapon = False,
 		str_name = "Nendoroid",
 		str_desc = "A cute little figure of your favorite anime character.",
 		use_pois = [poi_id_turtleweebcorner],
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		use_rewards = [tm_item_id_scissorblade, tm_item_id_deathnote, tm_item_cheatcode],
+		str_use_success = "The otaku goes crazy with joy over the little plastic figure.",
 		
 
-		str_kill = "",
-		str_crime_scene = "",
 	),
 	EwTurtleItem(
-		id_item = "sburbbeta",
+		id_item = tm_item_id_sburbbeta,
 		price = 10,
 		weapon = False,
 		str_name = "SBURB Beta",
 		str_desc = "Beta version of the revolutionary, immersive upcoming video game SBURB.",
 		use_pois = [poi_id_turtlethroneroom],
-		# TODO: add strings
-		str_use_success = "",
-		str_use_failure = "",
+		use_rewards = [tm_item_id_warhammerofzillyhoo, tm_item_id_fluoriteoctet],
+		str_use_success = "You place the beta on the stone altar. It vanishes in a flash of light.",
 		
 
-		str_kill = "",
-		str_crime_scene = ""
 	),
-	]
+	EwTurtleItem(
+		id_item = tm_item_id_key,
+		price = 10,
+		weapon = False,
+		str_name = "Key",
+		str_desc = "An ordinary key.",
+		use_pois = [poi_id_turtlelab],
+		use_rewards = [tm_item_id_tranquilizergun, tm_item_id_dnddice],
+		str_use_success = "You open the locked cabinet.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_dnddice,
+		price = 10,
+		weapon = False,
+		str_name = "DnD Dice",
+		str_desc = "Contains all the dice you need for a session of Dungeons & Dragons.",
+		use_pois = [poi_id_turtlecasino],
+		str_use_success = "You hand over the dice to the casino staff. They tell you the casino can now open. As a token of their appreciation you get 10 coins to start playing with.",
+		str_use_failure = "You hand over the dice to the casino staff. They tell you they already got some dice to play with earlier, but they give you 5 coins as a token of appreciation anyway.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_cheatcode,
+		price = 20,
+		weapon = False,
+		str_name = "Cheatcode",
+		str_desc = "Rumored to unlock exclusive new content.",
+		use_pois = [poi_id_turtlearcade],
+		str_use_success = "You enter the cheat code into one of the arcade machines. The machine starts rattling and moving to the side, revealing a secret path that takes you to the weeb-corner.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_badge,
+		price = 20,
+		weapon = False,
+		str_name = "Arena Badge",
+		str_desc = "Red fire badge, symbolizing the heat of the battle you had to brave to obtain it.",
+		use_pois = [poi_id_turtlelab],
+		str_use_success = "You place the badge in the red socket. It starts glowing brightly.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_dollarbill,
+		price = 100,
+		weapon = False,
+		str_name = "One Dollar Bill",
+		str_desc = "An esoteric currency that's printed on green paper, rather than the much more sensible alternative of using plastic casino coins.",
+		use_pois = [poi_id_turtlelab],
+		str_use_success = "You place the bill in the green socket. It starts glowing brightly.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_pearl,
+		price = 20,
+		weapon = False,
+		str_name = "White Pearl",
+		str_desc = "Its shiny white glow gives you hope.",
+		use_pois = [poi_id_turtlelab],
+		str_use_success = "You place the pearl in the white socket. It starts glowing brightly.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_miniature,
+		price = 20,
+		weapon = False,
+		str_name = "Miniature",
+		str_desc = "A little Ultramarine, painted in the chapter-typical blue.",
+		use_pois = [poi_id_turtlelab],
+		str_use_success = "You place the miniature in the blue socket. It starts glowing brightly.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_crystal,
+		price = 20,
+		weapon = False,
+		str_name = "Crystal",
+		str_desc = "Pure despair manifested into an obsidian black crystal. It makes you uneasy.",
+		use_pois = [poi_id_turtlelab],
+		str_use_success = "You place the crystal in the black socket. It starts glowing brightly.",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_animepin,
+		price = 2,
+		weapon = False,
+		str_name = "Anime Pin",
+		str_desc = "Anime Merchandise. Can be sold for 1 coin at the casino",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_animeposter,
+		price = 6,
+		weapon = False,
+		str_name = "Anime Poster",
+		str_desc = "Anime Merchandise. Can be sold for 3 coins at the casino",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_animetshirt,
+		price = 10,
+		weapon = False,
+		str_name = "Anime T-Shirt",
+		str_desc = "Anime Merchandise. Can be sold for 5 coins at the casino",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_animepillow,
+		price = 20,
+		weapon = False,
+		str_name = "Anime Pillow",
+		str_desc = "Anime Merchandise. Can be sold for 10 coins at the casino",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_animebluray,
+		price = 40,
+		weapon = False,
+		str_name = "Anime Blu-Ray",
+		str_desc = "Anime Merchandise. Can be sold for 20 coins at the casino",
+		
+
+	),
+	EwTurtleItem(
+		id_item = tm_item_id_animefigure,
+		price = 60,
+		weapon = False,
+		str_name = "Anime Figure",
+		str_desc = "Anime Merchandise. Can be sold for 30 coins at the casino",
+		
+
+	)
+]
+
+id_to_tmitem = {}
+
+for tm_item in tm_items:
+	id_to_tmitem[tm_item.id_item] = tm_item
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

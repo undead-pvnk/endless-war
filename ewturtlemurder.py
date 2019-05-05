@@ -19,10 +19,87 @@ class EwTurtleMurder:
 	magic_black = False
 	magic_white = False
 
-	murder_happened = False
-
 	boss_hp = 8
 	boss_last_action = ""
+	time_boss_last_action = 0
+
+	def __init__(
+		self,
+		id_server = None
+	):
+		if id_server != None:
+			self.id_server = id_server
+
+			data = ewutils.execute_sql_query("SELECT {time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action} FROM tm_turtles WHERE {id_server} = %s".format(
+				id_server = ewcfg.col_id_server,
+				time_start = ewcfg.col_tm_time_start,
+				game_state = ewcfg.col_tm_game_state,
+				casino_state = ewcfg.col_tm_casino_state,
+
+				magic_blue = ewcfg.col_tm_magic_blue,
+				magic_green = ewcfg.col_tm_magic_green,
+				magic_red = ewcfg.col_tm_magic_red,
+				magic_black = ewcfg.col_tm_magic_black,
+				magic_white = ewcfg.col_tm_magic_white,
+
+				boss_hp = ewcfg.col_tm_boss_hp,
+				boss_last_action = ewcfg.col_tm_boss_last_action,
+				time_boss_last_action = ewcfg.col_tm_time_boss_last_action
+			    
+			),(
+				id_server,
+			))
+
+			if len(data) > 0:
+				self.time_start = data[0][0]
+				self.game_state = data[0][1]
+				self.casino_state = data[0][2]
+
+				self.magic_blue = data[0][3]
+				self.magic_green = data[0][4]
+				self.magic_red = data[0][5]
+				self.magic_black = data[0][6]
+				self.magic_white = data[0][7]
+
+				self.boss_hp = data[0][8]
+				self.boss_last_action = data[0][9]
+				self.time_boss_last_action = data[0][10]
+			else:
+				self.persist()
+
+	def persist(self):
+		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
+				id_server = ewcfg.col_id_server,
+				time_start = ewcfg.col_tm_time_start,
+				game_state = ewcfg.col_tm_game_state,
+				casino_state = ewcfg.col_tm_casino_state,
+
+				magic_blue = ewcfg.col_tm_magic_blue,
+				magic_green = ewcfg.col_tm_magic_green,
+				magic_red = ewcfg.col_tm_magic_red,
+				magic_black = ewcfg.col_tm_magic_black,
+				magic_white = ewcfg.col_tm_magic_white,
+
+				boss_hp = ewcfg.col_tm_boss_hp,
+				boss_last_action = ewcfg.col_tm_boss_last_action,
+				time_boss_last_action = ewcfg.col_tm_time_boss_last_action
+		),(
+				self.id_server,
+				self.time_start,
+				self.game_state,
+				self.casino_state,
+
+				(1 if self.magic_blue else 0),
+				(1 if self.magic_green else 0),
+				(1 if self.magic_red else 0),
+				(1 if self.magic_black else 0),
+				(1 if self.magic_white else 0),
+
+				self.boss_hp,
+				self.boss_last_action,
+				self.time_boss_last_action
+
+		))
 
 
 class EwTurtle:
@@ -30,16 +107,136 @@ class EwTurtle:
 	id_server = ""
 
 	id_target = ""
+	weapon = ""
 	life_state = ewcfg.tm_life_state_active
 	win_state = ewcfg.tm_win_state_neutral
 	bleeding = False
+	last_action = ""
+	time_last_action = 0
+	coins = 0
+
+	def __init__(
+		self,
+		id_server = None,
+		id_user = None
+	):
+		if id_server != None and id_user != None:
+			self.id_server = id_server
+			self.id_user = id_user
+
+			data = ewutils.execute_sql_query("SELECT {id_target}, {weapon}, {life_state}, {win_state}, {bleeding}, {last_action}, {time_last_action}, {coins} FROM tm_turtles WHERE {id_server} = %s AND {id_user} = %s".format(
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user,
+				id_target = ewcfg.col_tm_id_target,
+				weapon = ewcfg.col_tm_weapon,
+				life_state = ewcfg.col_tm_life_state,
+				win_state = ewcfg.col_tm_win_state,
+				bleeding = ewcfg.col_tm_bleeding,
+				last_action = ewcfg.col_tm_last_action
+				time_last_action = ewcfg.col_tm_time_last_action,
+				coins = ewcfg.col_tm_coins
+			    
+			),(
+				id_server,
+				id_user
+			))
+
+			if len(data) > 0:
+				self.id_target = data[0][0]
+				self.weapon = data[0][1]
+				self.life_state = data[0][2]
+				self.win_state = data[0][3]
+				self.bleeding = (data[0][4] == 1)
+				self.last_action = data[0][5]
+				self.time_last_action = data[0][6]
+				self.coins = data[0][7]
+			else:
+				self.persist()
+
+	def persist(self):
+		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{id_user},{id_target},{weapon},{life_state},{win_state},{bleeding}, {last_action}, {time_last_action}, {coins}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user,
+				id_target = ewcfg.col_tm_id_target,
+				weapon = ewcfg.col_tm_weapon,
+				life_state = ewcfg.col_tm_life_state,
+				win_state = ewcfg.col_tm_win_state,
+				bleeding = ewcfg.col_tm_bleeding,
+				last_action = ewcfg.col_tm_last_action,
+				time_last_action = ewcfg.col_tm_time_last_action,
+				coins = ewcfg.col_tm_coins
+		),(
+				self.id_user,
+				self.id_server,
+
+				self.id_target,
+				self.weapon,
+				self.life_state,
+				self.win_state,
+				(1 if self.bleeding else 0),
+				self.last_action,
+				self.time_last_action,
+				self.coins
+
+		))
 
 class EwMurder:
 	id_server = ""
-	id_user = ""
+	id_culprit = ""
 
 	id_victim = ""
 	weapon = ""
+	poi = ""
+
+	def __init__(
+		self,
+		id_server = None,
+		id_culprit = None,
+		id_victim = None,
+		weapon = None,
+		poi = None
+	):
+		if id_server != None and id_victim != None:
+			self.id_server = id_server
+			self.id_victim = id_victim
+
+			data = ewutils.execute_sql_query("SELECT {id_culprit}, {weapon}, {poi} FROM tm_murders WHERE {id_server} = %s AND {id_culprit} = %s".format(
+				id_server = ewcfg.col_id_server,
+				id_culprit = ewcfg.col_tm_id_culprit,
+				id_victim = ewcfg.col_tm_id_victim,
+				weapon = ewcfg.col_tm_weapon,
+				poi = ewcfg.col_poi
+			    
+			),(
+				id_server,
+				id_culprit
+			))
+
+			if len(data) > 0:
+				self.id_culprit = data[0][0]
+				self.weapon = data[0][1]
+				self.poi = data[0][2]
+			elif id_culprit != None and weapon != None and poi != None:
+				self.id_culprit = id_culprit
+				self.weapon = weapon
+				self.poi = poi
+				self.persist()
+
+	def persist(self):
+		ewutils.execute_sql_query("REPLACE INTO tm_murders({id_server},{id_victim},{id_culprit},{weapon},{poi}) VALUES (%s,%s,%s,%s,%s)".format(
+				id_server = ewcfg.col_id_server,
+				id_victim = ewcfg.col_tm_id_victim,
+				id_culprit = ewcfg.col_tm_id_culprit,
+				weapon = ewcfg.col_tm_weapon,
+				poi = ewcfg.col_poi
+		),(
+				self.id_server,
+				self.id_victim,
+				self.id_culprit,
+				self.weapon,
+				self.poi
+
+		))
 
 class EwTurtleItem:
 	id_item = ""
@@ -47,653 +244,270 @@ class EwTurtleItem:
 	price = 0
 
 	weapon = False
-	weapon_level = 0
-
-	use_pois = []
+	weapon_level = -1
+	weapon_special = False
+	weapon_loud = False
 	
+	use_pois = []
+	use_rewards = []
+
 	str_name = ""
 	str_desc = ""
 
 	str_use_success = ""
 	str_use_failure = ""
-	str_inspect = ""
 
 	str_kill = ""
 	str_crime_scene = ""
 
+	def __init__(
+		self,
+		id_item = "",
+		price = 0,
+		weapon = False,
+		weapon_level = -1,
+		weapon_special = False,
+		weapon_loud = False,
+		use_pois = [],
+		use_rewards = [],
+		str_name = "",
+		str_desc = "",
+		str_use_success = "",
+		str_use_failure = "",
+		str_kill = "",
+		str_crime_scene = ""
+	):
+		self.id_item = id_item
+		self.price = price
+		self.weapon = weapon
+		self.weapon_level = weapon_level
+		self.weapon_special = weapon_special
+		self.weapon_loud = weapon_loud
 
+		self.use_pois = use_pois
+		self.use_rewards = use_rewards
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.str_use_success = str_use_success
+		self.str_use_failure = str_use_failure
 
-def tm_reset():
-
-function reset() {
-	removeFromTurtleMurder();
-	startingItems = ['codex-astartes', 'nendoroid', 'sburb-beta', 'key', 'pearl'];
-	casinoInventory = ['money-machete', 'cash-cannon', 'dollar-bill'];
-	animePile = [];
-	for (color in magic) {color = false;};
-
-	murders = [];
-	knockouts = [];
-	roomEvents = [];
-	welcomeEvents = [];
-	players = [];
-	casinoDice = [];
-	playing = false;
-	voting = false;
-	casinoOpen = false;
-	arenaRewardsGiven = false;
-	bossFight = false;
-	boss = new Boss();
-
-	winners = [];
-	losers = [];
-
-}
-
-
-async def tm_move(cmd):
-	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
-	response = ""
-	if game_data.game_state == ewcfg.tm_game_state_inactive:
-		response = ""
-	user_data = EwUser(member = cmd.message.author)
-				var now = new Date();
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == dead.ch || channelID == ko.ch || channelID == pokeball.ch ) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **YOU'VE GOT NOWHERE TO RUN TO**",
-						typing: true
-					});
-					break;
-				} else if (obj == "") {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: please specify where you want to go to",
-						typing: true
-					});
-					break;
+		self.str_kill = str_kill
+		self.str_crime_scene = str_crime_scene
 
 
 
-				} else if (now.getTime() - activePlayer.cds.move < 10000) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you can only use this command once every 10 seconds",
-						typing: true
-					});
-					break;
-					
-				} else if (channels.has(obj)) {
+async def tm_reset(id_server):
+	players = tm_get_players(id_server)
+	client = ewutils.get_client()
+	ewutils.execute_sql_query("DELETE FROM tm_turtles WHERE id_server = %s",(id_server,))
+	ewutils.execute_sql_query("DELETE FROM tm_murders WHERE id_server = %s", (id_server,))
+	ewutils.execute_sql_query("DELETE FROM tm_games WHERE id_server = %s", (id_server,))
+	ewutils.execute_sql_query("DELETE FROM items WHERE id_server = %s AND {item_type} = %s".format(
+		item_type = ewcfg.col_item_type
+	), (
+		id_server,
+		ewcfg.it_turtlemurder
+	))
 
-					mainRoom(user, userID, channelID, rooms.get(channels.get(obj)), obj);
-					activePlayer.cds.move = now.getTime();
+	for id_player in players:
+		user_data = EwUser(id_user = id_player, id_server = id_server)
+		user_data.poi = ewcfg.poi_id_kameisland
+		user_data.turtlemurder = False
+		user_data.persist()
+		server = ewcfg.server_list[id_server]
+		member_object = server.get_member(id_player)
+		await ewrolemgr.updateRoles(client = client, member = member_object)
+
+def tm_get_players(id_server):
+	players = []
+	data = ewutils.execute_sql_query("SELECT {id_user} FROM tm_turtles WHERE id_server = %s".format(
+		id_user = ewcfg.col_id_user
+	),(
+		id_server
+	))
+	for row in data:
+		players.append(row[0])
+
+	return players
 
 
-				} else if (obj == "trial" || obj == "trial-grounds") {
-					if(rooms.has(channelID)) {
-						var currentRoom = rooms.get(channelID);
-						var goal = trialgrounds.id;
-                                                channelIDs.forEach(function (ch) {
-							if (ch != channelIDs[2]) {
-								sendMessage({
-									to: ch,
-									message: "**" + user + ' is moving to the trial-grounds**'
-								});
-							}
-						});
 
-						if ( players.some(function (p) {return p.id == userID && p.hasItem("pokeball");}) ) {
-							players.forEach (function (p) {
-
-								if(p.room == pokeball.id) {
-									welcomeEvents.push(new RoomEvent(trialgrounds.ch, p.name + " is forcibly released from " + user + "'s pokeball", p.id));
-									changeRoom(p.room, trialgrounds.id, channelID, p.id);
-
-
-								}
-							});
-
-						}
-
-						if ( players.every(function (p) {return !p.alive || p.room == trialgrounds.id || p.id == userID;}) ) {
-							if (murders.length > 0) {
-								var i;
-								for (i = 0; i < 1000; i++) {
-									murders.sort(randomSort);
-								}
-								welcomeEvents.push(new RoomEvent(trialgrounds.ch, "everyone has arrived. you may now discuss the murder of <@" + murders[murders.length - 1].victim + "> and then !vote for who you think the killer was.", userID));
-
-								changeRoom(currentRoom, goal, channelID, userID);
-								voting = true;
-							} else {
-								welcomeEvents.push(new RoomEvent(trialgrounds.ch, "no murder has been committed! come back when you've done some killing. ejecting everyone from the trial-grounds in 10 seconds...", userID));
-								changeRoom(currentRoom, goal, channelID, userID);
-
-								setTimeout(function() {players.forEach(
-									function(p) { if (p.alive) {changeRoom(p.room, roomIDs[4], channelID, p.id);} }
-								);}, 10000);
-							}
-						} else {
-							changeRoom(currentRoom, goal, channelID, userID);
-
-						}
-					} else {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + '**: youre not in the right channel for this command',
-							typing: true
-						});
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: I don't recognize that room",
-						typing: true
-					});	
-				}
-				
-			break;
 
 async def tm_defend(cmd):
-			case 'defend':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!checkIfPlayer(userID) || (!playing || !checkIfAlive(userID)) || channelID == trialgrounds.ch || channelID == turtlemurder.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					if (players.some( function(p) {return (p.id == userID) && p.acted;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you've already performed an action this turn",
-							typing: true
-						});
-						break;
-					}
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	time_now = time.time()
+	if not user_data.turtlemurder:
+		response = "The best defense is a good offense."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
-					players.forEach( function (p) { 
-						if (p.id == userID) {
-							p.acted = true;	
-							p.lastAction = "defend";
-						}
-					});
+	if turtle_data.life_state != ewcfg.tm_life_state_active:
+		response = "You're too busy being dead to {}".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-					sendMessage({
-						to: channelID,
-						message: user + " braces to defend against incoming attacks.",
-						typing: true
-					});
-					if ( players.every(function (p) {return p.acted || !p.alive;}) ) {
-						setTimeout(function() {
-							boss.act();
-						}, 2000);
+	if game_data.game_state != ewcfg.tm_game_state_bossfight:
+		turtle_data.last_action = ""
+		response = "What are you afraid of?"
 
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: what are you afraid of? some giant skeleton turtle wiping your party?",
-						typing: true
-					});
-					break;
+	elif game_data.time_boss_last_action < turtle_data.time_last_action:
+		response = "You've already acted this turn."
+	else:
+		turtle_data.last_action = ewcfg.tm_action_defend
+		turtle_data.time_last_action = time_now
+		response = "You brace against incoming attacks."
 
-				}
-				break;
-async def tm_attack(cmd):
-			case 'attack':
-				var now = new Date();
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!checkIfPlayer(userID) || (!playing || !checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					if (players.some( function(p) {return (p.id == userID) && p.acted;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you've already performed an action this turn",
-							typing: true
-						});
-						break;
-					}
-
-
-					var weapon;
-					players.forEach(function(p) {
-						if (p.id == userID) {
-							weapon = p.weapon;
-						}
-					});
-
-					var result = user + " attacks with their " + weapon;
-					
-					if (weapon == "death-note" || weapon == "tranquilizer-gun" || weapon == "pokeball") {
-						result += ", but it has no effect on the Negaturtle.";
-					} else if (weapon == "fluorite-octet") {
-						var damage = 0;
-						var octet = rollxdy(8,8);
-						octet.forEach( function (o) {
-							if (o == 8) {damage++;}
-						});
-						result += " and deals " + damage + " points of damage to the Negaturtle.";
-						sendMessage({
-							to: channelID,
-							message: "Rolling the fluorite octet: " + octet.toString()
-						});
-						boss.hp -= damage;
-
-					} else {
-						result += " and deals " + powerLevels.get(weapon) + " points of damage to the Negaturtle.";
-						boss.hp -= powerLevels.get(weapon);
-					}
+	turtle_data.persist()
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 
-					players.forEach( function (p) { 
-						if (p.id == userID) {
-							p.acted = true;	
-							p.lastAction = "attack";
-						}
-					});
-					
-					sendMessage({
-						to: channelID,
-						message: result,
-						typing: true
-					});
+async def tm_use(cmd, id_item):
+	user_data = EwUser(member = cmd.message.author)
+	id_server = cmd.message.server.id
+	id_user = cmd.message.author.id
+	response = ""
+	time_now = time.time()
+    
+	game_data = EwTurtleMurder(id_server = id_server)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
+	item_data = EwItem(id_item = id_item)
+	item_def = ewcfg.id_to_tmitem.get(item_data.item_props['tm_item_id'])
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-					if (boss.hp < 1) {
-						setTimeout(function() {
-							sendMessage({
-								to: channelID,
-								message: database["boss-fight"].victory,
-								typing: true
-							});
-							bossFight = false;
+	if turtle_data.life_state != ewcfg.tm_life_state_active:
+		response = "You're too busy being dead to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-						}, 2000);
-						
-					} else if ( players.every(function (p) {return p.acted || !p.alive;}) ) {
-						setTimeout(function() {
-							boss.act();
-						}, 2000);
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**YOUR TOYS WON'T SAVE YOU NOW.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-					}
-					break;
-				} else if (now.getTime() - activePlayer.cds.attack < 10000) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you can only use this command once every 10 seconds",
-						typing: true
-					});
-					break;
-					
-				}
-				obj = obj.replace(/[<>@!]/g, "");
+	if game_data.game_state == ewcfg.tm_game_state_voting:
+		response = "You can't {} during the voting phase.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 
-				var weapon;
-				players.forEach(function(p) {
-					if (p.id == userID) {
-						weapon = p.weapon;
-					}
-				});
-				
-				if (weapon == "death-note") {
-					if (!players.some( function (p) { return p.id == userID && p.bleeding; }) ) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you have nothing to write with",
-							typing: true
-						});
-						break;
-					} else {
+	if len(item_def.use_pois) == 0:
+		response = "You can't use this item."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you let out a maniacal cackle as you write the name in your own blood.",
-							typing: true
-						});
+	if user_data.poi not in item_def.use_pois:
+		response = "There's nothing here to use {} on.".format(item_def.str_name)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-						var name = obj;
+	success = False
+	user_inball = None
+	format_map = {}
+	if item_def.id_item == ewcfg.tm_item_id_turtleknife:
+		turtle_data.bleeding = True
+		success = True
 
-						players.forEach( function (p) { 
-							if (p.id == userID) {
-								p.weapon = "fists";
-								p.removeItem("death-note");
-							}	
+	elif item_def.id_item in [ewcfg.tm_item_id_fluoriteoctet, ewcfg.tm_item_id_dnddice]:
+		ewitem.give_item(id_user = ewcfg.poi_id_turtlecasino, id_server = id_server, id_item = id_item)
+		if game_data.casino_state == ewcfg.tm_casino_state_closed:
+			success = True
+			turtle_data.coins += 10
+			game_data.casino_state = ewcfg.tm_casino_state_open
+		else:
+			success = False
+			turtle_data.coins += 5
+	elif item_def.id_item == ewcfg.tm_item_id_pokeball:
+		players = tm_get_players(id_server)
+		for id_inball in players:
+			user_inball = EwUser(id_user = id_inball, id_server = id_server)
+			if user_inball.poi == ewcfg.poi_id_turtlepokeball:
+				success = True
+				user_inball.poi = user_data.poi
+				ewitem.item_delete(id_item = id_item)
+				break
+	elif item_def.id_item in [ewcfg.tm_item_id_codexastartes, ewcfg.tm_item_id_nendoroid, ewcfg.tm_item_id_sburbbeta, ewcfg.tm_item_id_key]:
+		success = True
+		ewitem.item_delete(id_item = id_item)
+		reward = random.choice(item_def.use_rewards)
+		reward_item = ewcfg.id_to_tmitem.get(reward)
+		reward_props = {
+			"tm_item_id": reward_item.id_item,
+			"tm_name": reward_item.str_name,
+			"tm_desc": reward_item.str_desc
+		}
+		ewitem.item_create(
+			item_type = ewcfg.it_turtlemurder,
+			id_user = id_user,
+			id_server = id_server,
+			item_props = reward_props
+		)
+		format_map["reward1"] = reward_item.str_name
 
-						 });
-
-
-
-						setTimeout( function () {
-
-							players.forEach( function (p) { 
-								if(p.id == obj && p.room != dead.id && p.room != pokeball.id && p.room != trialgrounds.id) {
-									
-									if(p.room == ko.id) {
-										var dest;
-										knockouts.forEach( function (k) {
-											if(k.victim == p.id) {
-												time -= k.time;
-												dest = k.room;
-											}
-										});
-										knockouts = knockouts.filter( function (k) {return k.victim != p.id;} );
-										roomEvents = roomEvents.filter( function (e) {return e.id != p.id;} );
-										welcomeEvents.push(new RoomEvent(dest, p.name + "'s body jerks upright", p.id));
-										changeRoom(p.room, rooms.get(dest), dest, p.id);
-									}
-
-									ch = channelIDs[roomIDs.indexOf(p.room)];
-
-									var newMurder = new Murder(p.id, userID, "death-note", ch);
-
-									if (players.some(function (pl) { return (pl.id == userID) && (pl.target != p.id); })) {
-										players.forEach( function (pl) { if (pl.alive && pl.target == p.id) {
-											pl.target = p.target;
-											sendMessage({
-												to: pl.id,
-												message: "**" + pl.name + "**: your target has just died. assigning you a new target: <@" + pl.target + ">",
-												typing: true
-											});
-
-										}});
-									}
-
-
-									murders.push(newMurder);
-									roomEvents.push(new RoomEvent(ch, newMurder.description(), p.id)); 
-									
-									sendMessage({
-										to: ch,
-										message: "**" + p.name + "**: you grasp your chest, as your heart suddenly gives out and you die. the contents of your inventory are transferred to the casino.",
-										typing: true
-									});
-									p.alive = false;
-									casinoInventory = casinoInventory.concat(p.inventory);
-									welcomeEvents.push(new RoomEvent(dead.ch, "**" + p.name + "**: you have died from a heart attack.", p.id));
-									changeRoom(p.room, dead.id, dead.ch, p.id);
-									name = "<@" + p.id + ">";
-								}
-
-							});
-						}, 40000);
-						
-						
-						roomEvents.push(new RoomEvent(channelID, "the death note lies in the middle of the room with the name " + name + " scrawled in blood in it.", userID)); 
-						
-					}
-					activePlayer.cds.attack = now.getTime();
-				} else {
-					combat(userID, obj, channelID);
-				}
-				
-
-			break;
-async def tm_use(cmd):
-			case 'use':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if( channelID == trialgrounds.id || channelID == dead.id ) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you can't use items here",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **YOUR TOYS WON'T SAVE YOU NOW**",
-						typing: true
-					});
-					break;
-				} else if( !players.some( function(p) {return p.id == userID && p.inventory.includes(obj);}) ) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you don't have that item",
-						typing: true
-					});
-					break;
-				} else {
-					if (weapons.includes(obj)) {
-						switch (obj) {
-							 case 'knife':
-								sendMessage({
-									to: channelID,
-									message: "**" + user + "**: you prick yourself in the finger. Ouch! You bleed all over the floor.",
-									typing: true
-								});
-								players.forEach( function(p) { if (p.id == userID) {
-									p.bleeding = true;
-								} });
-								roomEvents.push(new RoomEvent(channelID, "there's a small bloodstain on the floor", userID)); 
-								break;
-							case 'fluorite-octet':
-								if (channelID == channelIDs[1]) {
-									var result = "**" + user + "**: You give the fluorite octet to the casino attendant.\n"
-									if (casinoOpen) {
-										result += "They tell you they already got some dice to play with earlier, but they give you 5 coins as a token of appreciation anyway.";
-										players.forEach( function(p) { if (p.id == userID) {
-											p.coins += 5;
-											p.removeItem("fluorite-octet");
-											if (p.weapon == "fluorite-octet") {p.weapon = "fists";}
-										} });
-									} else {
-										result += "They tell you the casino can now open. As a token of their appreciation you get 10 coins to start playing with.";
-										players.forEach( function(p) { if (p.id == userID) {
-											p.coins += 10;
-											p.removeItem("fluorite-octet");
-											if (p.weapon == "fluorite-octet") {p.weapon = "fists";}
-										} });
-										casinoOpen = true;
-										casinoDice.push(8);
-									}
-									sendMessage({
-										to: channelID,
-										message: result,
-										typing: true
-									});
-								} else {
-									sendMessage({
-										to: channelID,
-										message: "**" + user + "**: there's nothing here to use " + obj + " on",
-										typing: true
-									});
-								}
-								break;
-							case 'pokeball':
-								players.forEach( function(p) {
-									if (p.room == pokeball.id) {
-										changeRoom(p.room, rooms.get(channelID), channelID, p.id);
-										sendMessage({
-											to: channelID,
-											message: "Go, " + p.name + ", I choose you!",
-											typing: true
-										});
-									}
-								});
-
-								break;
-							default:
-								sendMessage({
-									to: channelID,
-									message: "**" + user + "**: there's nothing here to use " + obj + " on",
-									typing: true
-								});
+		if item_def.id_item == ewcfg.tm_item_id_codexastartes:
+			reward = ewcfg.tm_id_item_miniature
+			reward_item = ewcfg.id_to_tmitem.get(reward)
+			reward_props = {
+				"tm_item_id": reward_item.id_item,
+				"tm_name": reward_item.str_name,
+				"tm_desc": reward_item.str_desc
+			}
+			ewitem.item_create(
+				item_type = ewcfg.it_turtlemurder,
+				id_user = id_user,
+				id_server = id_server,
+				item_props = reward_props
+			)
+			format_map["reward2"] = reward_item.str_name
+	elif item_def.id_item == ewcfg.tm_item_id_badge:
+		ewitem.item_delete(id_item = id_item)
+		success = True
+		game_state.magic_red = True
+	elif item_def.id_item == ewcfg.tm_item_id_dollarbill:
+		ewitem.item_delete(id_item = id_item)
+		success = True
+		game_state.magic_green = True
+	elif item_def.id_item == ewcfg.tm_item_id_pearl:
+		ewitem.item_delete(id_item = id_item)
+		success = True
+		game_state.magic_white = True
+	elif item_def.id_item == ewcfg.tm_item_id_miniature:
+		ewitem.item_delete(id_item = id_item)
+		success = True
+		game_state.magic_blue = True
+	elif item_def.id_item == ewcfg.tm_item_id_crystal:
+		ewitem.item_delete(id_item = id_item)
+		success = True
+		game_state.magic_red = True
+	elif item_def.id_item == ewcfg.tm_item_id_cheatcode:
+		success = True
+		user_data.poi = ewcfg.poi_id_turtleweebcorner
+			
 
 
-						}
+			
+	turtle_data.last_action = ewcfg.tm_action_use
+	turtle_data.time_last_action = time_now
+	turtle_data.persist()
+	game_state.persist()
+	if user_inball is not None:
+		user_inball.persist()
+		server = cmd.message.server
+		member = server.get_member(user_inball.id_user)
+		await ewrolemgr.updateRoles(
+			client = cmd.client,
+			member = member
+		)
+	if success:
+		response = item_def.str_use_success
+	else:
+		response = item_def.str_use_failure
+	response = response.format_map(format_map)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	user_data.persist()
+	await ewrolemgr.updateRoles(
+		client = cmd.client,
+		member = cmd.message.author
+	)
 
-					} else if (database.roomforobject[obj] == bot.channels.get(channelID).name) {
-						var result = "**" + user + "**: " + database.use[obj] + "\n";
-						
-						switch(obj) {
-							case 'codex-astartes':
-								var rewards = ["chainsword", "bolt-pistol"];
-								var i;
-								for (i = 0; i < 1000; i++) {
-									rewards.sort(randomSort);
-								}
-								var reward = rewards.pop();
-								players.forEach( function(p) { if (p.id == userID) {
-										p.addItem(reward);
-										p.addItem("miniature");
-									} });
-								result += "You receive the " + reward + " and the miniature.";
-								break;
-							case 'nendoroid':
-								var rewards = ["scissor-blade", "death-note", "cheatcode"];
-								var i;
-								for (i = 0; i < 1000; i++) {
-									rewards.sort(randomSort);
-								}
-								var reward = rewards.pop();
-								players.forEach( function(p) { if (p.id == userID) {
-										p.addItem(reward);
-									} });
-								result += "You receive the " + reward + ".";
-								break;
-							case 'sburb-beta':
-								var rewards = ["warhammer-of-zillyhoo", "fluorite-octet"];
-								var i;
-								for (i = 0; i < 1000; i++) {
-									rewards.sort(randomSort);
-								}
-								var reward = rewards.pop();
-								players.forEach( function(p) { if (p.id == userID) {
-										p.addItem(reward);
-									} });
-								result += "You receive the " + reward + ".";
-								break;
-							case 'key':
-								var rewards = ["tranquilizer-gun", "dnd-dice"];
-								var i;
-								for (i = 0; i < 1000; i++) {
-									rewards.sort(randomSort);
-								}
-								var reward = rewards.pop();
-								players.forEach( function(p) { if (p.id == userID) {
-										p.addItem(reward);
-									} });
-								result += "You receive the " + reward + ".";
-								break;
-							case 'dnd-dice':
-								var newDice = [4, 6, 8, 10, 12, 20];
-								if (casinoOpen) {
-									result += "They tell you they already got some dice to play with earlier, but they give you 5 coins as a token of appreciation anyway.";
-									players.forEach( function(p) { if (p.id == userID) {
-										p.coins += 5;
-									} });
-									casinoDice = newDice;
-								} else {
-									result += "They tell you the casino can now open. As a token of their appreciation you get 10 coins to start playing with.";
-									players.forEach( function(p) { if (p.id == userID) {
-										p.coins += 10;
-									} });
-									casinoOpen = true;
-									newDice.forEach(function(d) {
-										if (!casinoDice.includes(d)) {
-											casinoDice.push(d);
-										}
-									});
-								}
-
-								break;
-
-							case 'badge':
-								magic.red = true;
-								roomEvents.push(new RoomEvent(channelID, "the red socket glows brightly", userID));
-								if (magic.ready()) {
-									beginBossFight();
-								}
-								break;
-							case 'dollar-bill':
-								magic.green = true;
-								roomEvents.push(new RoomEvent(channelID, "the green socket glows brightly", userID)); 
-								if (magic.ready()) {
-									beginBossFight();
-								}
-								break;
-							case 'pearl':
-								magic.white = true;
-								roomEvents.push(new RoomEvent(channelID, "the white socket glows brightly", userID)); 
-								if (magic.ready()) {
-									beginBossFight();
-								}
-								break;
-							case 'miniature':
-								magic.blue = true;
-								roomEvents.push(new RoomEvent(channelID, "the blue socket glows brightly", userID)); 
-								if (magic.ready()) {
-									beginBossFight();
-								}
-								break;
-							case 'crystal':
-								magic.black = true;
-								roomEvents.push(new RoomEvent(channelID, "the black socket glows brightly", userID)); 
-								if (magic.ready()) {
-									beginBossFight();
-								}
-								break;
-						}
-
-						sendMessage({
-							to: channelID,
-							message: result
-						});
-
-						if (obj == "cheatcode") {
-							welcomeEvents.push(new RoomEvent(channels.get("weeb-corner"), user + " suddenly emerges from a pile of body pillows!", userID));
-							changeRoom(roomIDs[0], roomIDs[8], channelID, userID);
-						} else {
-							players.forEach(function (p) { if (p.id == userID) {p.removeItem(obj);}});
-						}
-
-						break;
-					} else {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: there's nothing here to use " + obj + " on",
-							typing: true
-						});
-						break;
-					}
-				}
-				
-			break;
 
 
 async def tm_vote(cmd):

@@ -130,6 +130,8 @@ async def updateRoles(
 	client = None,
 	member = None
 ):
+	if member is None:
+		return
 	user_data = EwUser(member = member)
 	id_server = user_data.id_server
 
