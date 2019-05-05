@@ -6929,7 +6929,7 @@ tm_items = [
 	),
 	EwTurtleItem(
 		id_item = tm_item_id_crystal,
-		price = 20,
+		price = 0,
 		weapon = False,
 		str_name = "Crystal",
 		str_desc = "Pure despair manifested into an obsidian black crystal. It makes you uneasy.",

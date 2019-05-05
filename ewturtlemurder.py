@@ -191,6 +191,34 @@ class EwTurtle:
 
 		))
 
+	def die(self):
+		self.life_state = ewcfg.tm_life_state_dead
+		self.weapon = ""
+		self.coins = 0
+		turtle_items = ewitems.inventory(
+			id_server = self.id_server,
+			id_user = self.id_user,
+			item_type_filter = ewcfg.it_turtlemurder
+		)
+		for item in turtle_items:
+			ewitem.give_item(
+				id_item = item.get("id_item"),
+				id_user = ewcfg.poi_id_turtlecasino,
+				id_server = self.id_server
+			)
+
+	async def direct_message(self, message):
+		client = ewutils.get_client()
+		server = ewcfg.server_list[self.id_server]
+		member = server.get_member(self.id_user)
+		try:
+			await ewutils.send_message(client, member, message)
+		except:
+			user_data = EwUser(id_user = self.id_user, id_server = self.id_server)
+			poi = ewcfg.id_to_poi.get(user_data.poi)
+			channel = ewutils.get_channel(server, poi.channel)
+			await ewutils.send_message(client, channel, ewutils.formatMessage(member,message))
+
 class EwMurder:
 	id_server = ""
 	id_culprit = ""
@@ -639,6 +667,26 @@ async def tm_trial_next_case(id_server):
 	return await resp_cont.post()
 
 
+async def tm_fix_targets(id_server):
+	players = tm_get_players(id_server)
+	victims = tm_get_victims(id_server)
+	for id_user in players:
+		turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+		murder_data = EwMurder(id_server = id_server, id_victim = turtle_data.id_target)
+		if murder_data.id_culprit == turtle_data.id_user:
+			    break;
+		changed_target = False
+		while turtle_data.id_target in victims:
+			victim_data = EwTurtle(id_server = id_server, id_user = turtle_data.id_target)
+			turtle_data.id_target = victim_data.id_target
+			changed_target = True
+		turtle_data.persist()
+		if changed_target:
+			target_player = EwPlayer(id_user = turtle_data.id_target)
+			response = "Your target has just died. Assigning new target: {}".format(target_player.display_name)
+			await turtle_data.direct_message(response)
+	return
+
 	
 	
 
@@ -948,97 +996,84 @@ async def tm_vote(cmd):
 	return await tm_trial_advance(cmd.message.server.id)
 
 async def tm_pray(cmd):
-			case 'pray':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **HAHAHA! YES, BEG FOR YOUR PATHETIC LIVES!**",
-						typing: true
-					});
-					break;
-				}
-				if (channelID == channelIDs[5]) {
-					if ( players.some( function (p) {return !p.alive;}) ) {
-						if (magic.black || players.some( function (p) {return p.hasItem("crystal");} )) {
-							sendMessage({
-								to: channelID,
-								message: "**" + user + "**: the dead remain silent.",
-								typing: true
-							});
-							break;
-						}
-						players.forEach( function (p) {
-							if (p.id == userID) {
-								if (p.hasItem("pearl")) {
-									p.addItem("crystal");
-									sendMessage({
-										to: channelID,
-										message: "**" + user + "**: you open your mind to the spirits of the dead and they answer. dark energies rise all around you, trying to take hold of you."
-											+ " but the hope in your heart protects you. the swirling despair crystallizes in your inventory."
-									});
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	time_now = time.time()
+	if not user_data.turtlemurder:
+		response = "Your prayer goes unanswered."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
-								} else {
-									sendMessage({
-										to: channelID,
-										message: "**" + user + "**: you open your mind to the spirits of the dead and they answer. dark energies rise all around you, trying to take hold of you."
-											+ " you struggle, but soon you lose hope. your flesh blackens and cracks and you die in agony. the contents of your inventory are transferred to the casino."
-									});
-									p.alive = false;
-									casinoInventory = casinoInventory.concat(p.inventory);
-									changeRoom(p.room, dead.id, dead.ch, p.id);
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**HAHAHA! YES, BEG FOR YOUR PATHETIC LIVES!**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-									var newMurder = new Murder(p.id, p.id, "despair", channelID);
+	if user_data.poi != ewcfg.poi_id_turtlegraveyard:
+		response = "Your prayer goes unanswered."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-							
+	victims = tm_get_victims(id_server = user_data.id_server)
+	if len(victims) == 0:
+		response = "The dead remain silent."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-									if (p.target != p.id) {
-										players.forEach( function (pl) { if (pl.alive && pl.target == p.id) {
-											pl.target = p.target;
-											sendMessage({
-												to: pl.id,
-												message: "**" + pl.name + "**: your target has just died. assigning you a new target: <@" + pl.target + ">",
-												typing: true
-											});
+	item_sought = ewitem.find_item(
+		item_search = ewcfg.tm_item_id_pearl,
+		id_user = user_data.id_user,
+		id_server = user_data.id_server
+	)
+	response = "You open your mind to the spirits of the dead and they answer. Dark energies rise all around you, trying to take hold of you. "
+		
+	if item_sought == None:
+		murder_data = EwMurder(
+			id_server = user_data.id_server,
+			id_victim = user_data.id_user,
+			id_culprit = user_data.id_user,
+			poi = user_data.poi,
+			weapon = ewcfg.tm_weapon_prayer
+		)
+		user_data.poi = ewcfg.poi_id_turtlehell
+		game_data.game_state = ewcfg.tm_game_state_investigation
+		game_data.persist()
+		user_data.persist()
+		turtle_data.die()
+		turtle_data.persist()
 
-										}});
-									}
+		resp_cont = ewutils.EwResponseContainer(id_server = user_data.id_server)
+		response += "You struggle, but soon you lose hope. Your flesh blackens and cracks and you die in agony. The contents of your inventory are transferred to the casino."
+		resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
+		deathreport = "You have been overwhelmed by the malice of the dead."
+		resp_cont.add_channel_response(ewcfg.channel_turtlehell, ewutils.formatMessage(cmd.message.author, deathreport))
+		await resp_cont.post()
 
-									murders.push(newMurder);
-									roomEvents.push(new RoomEvent(channelID, newMurder.description(), p.id)); 
-									
+		await ewrolemgr.updateRoles(
+			client = cmd.client,
+			member = cmd.message.author
+		)
+		return await tm_fix_targets(user_data.id_server)
 
-								}
-							}
-						});
+	else:
+		response += "But the hope in your heart protects you. The swirling despair crystallizes in your inventory."
+		item_crystal = ewcfg.id_to_tmitem(ewcfg.tm_item_id_crystal)
+		item_props = {
+			"tm_item_id": item_crystal.id_item,
+			"tm_name": item_crystal.str_name,
+			"tm_desc": item_crystal.str_desc
+		}
+		ewitem.item_create(
+			item_type = ewcfg.it_turtlemurder,
+			id_user = user_data.id_user,
+			id_server = user_data.id_server,
+			item_props = item_props
+		)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-					} else {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: there is no one to answer your prayer",
-							typing: true
-						});
-					}
 
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: your god can't save you now",
-						typing: true
-					});
-				}		
-				
-			break;
+
 async def tm_oracle(cmd):
 			case 'oracle':
 				if (isPlayer) {
