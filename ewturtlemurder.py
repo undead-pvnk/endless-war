@@ -346,8 +346,12 @@ async def tm_defend(cmd):
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
-	if turtle_data.life_state != ewcfg.tm_life_state_active:
-		response = "You're too busy being dead to {}".format(cmd.tokens[0])
+	if turtle_data.life_state == ewcfg.tm_life_state_dead:
+		response = "You're too busy being dead to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if turtle_data.life_state == ewcfg.tm_life_state_pregame:
+		response = "You have to wait for the game to begin to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if game_data.game_state != ewcfg.tm_game_state_bossfight:
@@ -378,8 +382,12 @@ async def tm_use(cmd, id_item):
 	item_def = ewcfg.id_to_tmitem.get(item_data.item_props['tm_item_id'])
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if turtle_data.life_state != ewcfg.tm_life_state_active:
+	if turtle_data.life_state == ewcfg.tm_life_state_dead:
 		response = "You're too busy being dead to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if turtle_data.life_state == ewcfg.tm_life_state_pregame:
+		response = "You have to wait for the game to begin to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if game_data.game_state == ewcfg.tm_game_state_bossfight:
@@ -408,6 +416,8 @@ async def tm_use(cmd, id_item):
 
 	elif item_def.id_item in [ewcfg.tm_item_id_fluoriteoctet, ewcfg.tm_item_id_dnddice]:
 		ewitem.give_item(id_user = ewcfg.poi_id_turtlecasino, id_server = id_server, id_item = id_item)
+		if turtle_data.weapon == id_item:
+			turtle_data.weapon = ""
 		if game_data.casino_state == ewcfg.tm_casino_state_closed:
 			success = True
 			turtle_data.coins += 10
