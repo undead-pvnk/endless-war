@@ -249,11 +249,25 @@ async def scavenge(cmd):
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.persist()
 
-			loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
-			loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
-			if random.random() < loot_chance:
-				loot_resp = ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
+			if cmd.tokens_count > 1:
+				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				loot_resp = ewitem.item_lootspecific(
+					id_server = user_data.id_server,
+					id_user = user_data.id_user,
+					item_search = item_search
+				)
+
 				response += loot_resp
+
+			else:
+				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
+				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
+				if random.random() < loot_chance:
+					loot_resp = ewitem.item_lootrandom(
+						id_server = user_data.id_server,
+						id_user = user_data.id_user
+					)
+					response += loot_resp
 
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
