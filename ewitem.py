@@ -311,6 +311,31 @@ def item_dropall(
 	except:
 		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
+
+def item_lootspecific(id_server = None, id_user = None, item_search = None):
+	response = ""
+	if id_server is not None and id_user is not None:
+		user_data = EwUser(id_user = id_user, id_server = id_server)
+		item_sought = find_item(
+			item_search = item_search, 
+			id_server = user_data.id_server, 
+			id_user = user_data.poi
+		)
+		if item_sought is not None:
+			item_type = item_sought.get("item_type")
+			response += "You found a {}!".format(item_sought.get("name"))
+			can_loot = check_inv_capacity(id_server = id_server, id_user = id_user, item_type = item_type)
+			if can_loot:
+				give_item(
+					id_item = item_sought.get("id_item"),
+					id_user = user_data.id_user,
+					id_server = user_data.id_server
+				)
+			else:
+				response += " But you couldn't carry any more {} items, so you tossed it back.".format(item_type)
+	return response
+
+
 """
 	Transfer a random item from district inventory to player inventory
 """
@@ -467,6 +492,36 @@ def item_loot(
 		ewutils.databaseClose(conn_info)
 
 
+def check_inv_capacity(id_user = None, id_server = None, item_type = None):
+	if id_user is not None and id_server is not None and item_type is not None:
+		user_data = EwUser(id_user = id_user, id_server = id_server)
+		if item_type == ewcfg.it_food:
+			food_items = inventory(
+				id_user = id_user,
+				id_server = id_server,
+				item_type_filter = ewcfg.it_food
+			)
+
+			if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+				return False
+			else:
+				return True
+		elif item_type == ewcfg.it_weapon:
+			weapons_held = inventory(
+				id_user = id_user,
+				id_server = id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				return False
+			else:
+				return True
+		else:
+			return True
+		
+	else:
+		return False
 
 """
 	Check how many items are in a given district or player's inventory
