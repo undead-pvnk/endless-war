@@ -43,8 +43,13 @@ slimeoid_state_stored = 3
 tm_game_state_inactive = 0
 tm_game_state_murder = 1
 tm_game_state_investigate = 2
-tm_game_state_vote = 3
-tm_game_state_boss = 10
+tm_game_state_trial = 3
+tm_game_state_bossfight = 10
+
+# turtle murder casino states
+tm_casino_state_closed = 0
+tm_casino_state_octet = 8
+tm_casino_state_dnd = 20
 
 # turtle murder life states
 tm_life_state_dead = 0
@@ -519,7 +524,8 @@ cmd_tm_pray = cmd_prefix + "pray"
 cmd_tm_oracle = cmd_prefix + "oracle"
 cmd_tm_dance = cmd_prefix + "dance"
 cmd_tm_distract = cmd_prefix + "distract"
-cmd_tm_play = cmd_prefix + "play"
+cmd_tm_yahtzee = cmd_prefix + "turtleyahtzee"
+cmd_tm_gamering = cmd_prefix + "gamering"
 cmd_tm_prizes = cmd_prefix + "prizes"
 cmd_tm_sell = cmd_prefix + "sell"
 cmd_tm_target = cmd_prefix + "target"
@@ -528,6 +534,24 @@ cmd_tm_enter = cmd_tm_prefix + "enter"
 cmd_tm_players = cmd_tm_prefix + "players"
 cmd_tm_start = cmd_tm_prefix + "start"
 cmd_tm_endgame = cmd_tm_prefix + "endgame"
+
+turtle_only_commands = [
+	cmd_tm_defend, 
+	cmd_tm_vote,
+	cmd_tm_pray,
+	cmd_tm_oracle,
+	cmd_tm_dance,
+	cmd_tm_distract,
+	cmd_tm_yahtzee,
+	cmd_tm_gamering,
+	cmd_tm_prizes,
+	cmd_tm_sell,
+	cmd_tm_target,
+	cmd_tm_coins,
+	cmd_tm_players,
+	cmd_tm_start,
+	cmd_tm_endgame
+]
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -2756,7 +2780,8 @@ item_def_list = [
 		item_props = {
 			"tm_item_id": "",
 			"tm_name": "Turtle Murder Item",
-			"tm_desc": "Used for the Turtle Murder game"
+			"tm_desc": "Used for the Turtle Murder game",
+			"price" : 0
 		}
 	)
 
@@ -6639,6 +6664,16 @@ tm_item_id_animetshirt = "animetshirt"
 tm_item_id_animepillow = "animepillow"
 tm_item_id_animebluray = "animebluray"
 tm_item_id_animefigure = "animefigure"
+
+tm_max_merchandise = 100
+tm_merchandise = [
+	tm_item_id_animepin,
+	tm_item_id_animeposter,
+	tm_item_id_animetshirt,
+	tm_item_id_animepillow,
+	tm_item_id_animebluray,
+	tm_item_id_animefigure
+]
 
 str_tm_arcadegames = [
 	"You play a virtual card game. The card backs are emblazoned with the colours red, green, white, blue and black in a pentagon.",

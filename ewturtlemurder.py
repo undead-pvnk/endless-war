@@ -777,6 +777,7 @@ async def tm_defend(cmd):
 
 	if game_data.game_state != ewcfg.tm_game_state_bossfight:
 		turtle_data.last_action = ""
+		turtle_data.time_last_action = time_now
 		turtle_data.persist()
 		response = "What are you afraid of?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -871,7 +872,8 @@ async def tm_use(cmd, id_item):
 		reward_props = {
 			"tm_item_id": reward_item.id_item,
 			"tm_name": reward_item.str_name,
-			"tm_desc": reward_item.str_desc
+			"tm_desc": reward_item.str_desc,
+			"price": reward_item.price
 		}
 		ewitem.item_create(
 			item_type = ewcfg.it_turtlemurder,
@@ -887,7 +889,8 @@ async def tm_use(cmd, id_item):
 			reward_props = {
 				"tm_item_id": reward_item.id_item,
 				"tm_name": reward_item.str_name,
-				"tm_desc": reward_item.str_desc
+				"tm_desc": reward_item.str_desc,
+				"price": reward_item.price
 			}
 			ewitem.item_create(
 				item_type = ewcfg.it_turtlemurder,
@@ -1065,7 +1068,8 @@ async def tm_pray(cmd):
 		item_props = {
 			"tm_item_id": item_crystal.id_item,
 			"tm_name": item_crystal.str_name,
-			"tm_desc": item_crystal.str_desc
+			"tm_desc": item_crystal.str_desc,
+			"price": item_crystal.price
 		}
 		ewitem.item_create(
 			item_type = ewcfg.it_turtlemurder,
@@ -1363,595 +1367,364 @@ async def tm_yahtzee(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+def tm_gamering(cmd):
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
+
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**NO MORE GAMES.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+	turtle_data.last_action = ewcfg.tm_action_gamering
+	turtle_data.time_last_action = time_now
+	
+	if user_data.poi != ewcfg.poi_id_turtlearcade:
+		response = "There are no videogames here."
+	else:
+		if turtle_data.coins < ewcfg.tm_arcade_cost:
+			response = "Playing an arcade game costs {} coin, but you only have {}.".format(ewcfg.tm_arcade_cost, turtle_data.coins)
+		else:
+			turtle_data.coins -= ewcfg.tm_arcade_cost
+			response = "You insert {} coin into one of the arcade machines.\n".format(ewcfg.tm_arcade_cost)
+			response += random.choice(ewcfg.str_tm_arcadegames)
+	turtle_data.persist()
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-			
-			
-			
-
-
-			case 'play':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **I DON'T PLAY GAMES**",
-						typing: true
-					});
-					break;
-				} else if (channelID == channels.get("casino")) {
-					if (!casinoOpen) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: the casino attendant regrets to inform you that they don't have any dice to play with. you can still buy and sell prizes for coins, though.",
-							typing: true
-						});
-						break;
-
-					} else {
-
-						var dicetype;
-						var price = 2;
-
-						switch (obj) {
-							case '4':
-							case 'd4':
-							case '2d4':
-								if (casinoDice.includes(4)) {
-									dicetype = 4;
-									price = 1;
-								}
-								break;
-							case '6':
-							case 'd6':
-							case '2d6':
-								if (casinoDice.includes(6)) {
-									dicetype = 6;
-								}
-								break;
-							case '8':
-							case 'd8':
-							case '2d8':
-							case '':
-								if (casinoDice.includes(8)) {
-									dicetype = 8;
-								}
-								break;
-							case '10':
-							case 'd10':
-							case '2d10':
-								if (casinoDice.includes(10)) {
-									dicetype = 10;
-								}
-								break;
-							case '12':
-							case 'd12':
-							case '2d12':
-								if (casinoDice.includes(12)) {
-									dicetype = 12;
-								}
-								break;
-							case '20':
-							case 'd20':
-							case '2d20':
-								if (casinoDice.includes(20)) {
-									dicetype = 20;
-									price = 4;
-								}
-								break;
-							
-						}
-
-						if (dicetype == null) {
-							sendMessage({
-								to: channelID,
-								message: "**" + user + "**: that's not a valid game to play at this time.",
-								typing: true
-							});
-							break;
-						}
-
-						if (activePlayer.coins < price) {
-							sendMessage({
-								to: channelID,
-								message: "**" + user + "**: you don't have enough coins to buy into this game.",
-								typing: true
-							});
-							break;
-
-
-
-						}
-
-						players.forEach( function (p) {
-							if (p.id == userID) {
-								p.coins -= price;
-
-								var dice = rollxdy(2,dicetype);
-								var result;
-								if (price == 1) {
-									result = "**" + user + "**: You pay " + price + " coin to play. You roll 2d" + dicetype + ". If you get doubles, you win the number you got doubles of squared coins.\n" + dice + "\n";
-								} else {
-									result = "**" + user + "**: You pay " + price + " coins to play. You roll 2d" + dicetype + ". If you get doubles, you win the number you got doubles of squared coins.\n" + dice + "\n";
-								}
-								if (dice[0] == dice[1]) {
-									var prize = dice[0] * dice[0];
-									result += "It's your lucky day! You win " + prize + " coins. You can trade them for prizes."
-									p.coins += prize;
-								} else {
-									result += "You lose. Better luck next time."
-								}
-								sendMessage({
-									to: channelID,
-									message: result,
-									typing: true
-								});
-
-							}
-
-						});
-					}
-
-
-				} else if (channelID == channels.get("arcade")) {
-					var result = "**" + user + "**: ";
-					players.forEach( function(p) {
-						if (p.id == userID) {
-							if (p.coins > 0) {
-								p.coins--;
-
-								var i;
-								for (i = 0; i < 1000; i++) {
-									arcadeGames = arcadeGames.sort(randomSort);
-								}
-								result += "You insert a coin into one of the machines.\n" + arcadeGames[0];
-							} else {
-								result += "you don't have any coins to play with."
-							}
-						}
-					});
-					sendMessage({
-						to: channelID,
-						message: result,
-						typing: true
-					});
-					break;
-					
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there aren't any games to play here.",
-						typing: true
-					});
-					break;
-
-				}
-
-			break;
 async def tm_prizes(cmd):
-			case 'prizes':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **YOUR ONLY PRIZE WILL BE A SWIFT DEMISE, IF YOU SUBMIT NOW**",
-						typing: true
-					});
-					break;
-				} else if (channelID != channels.get("casino")) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there are no prizes here.",
-						typing: true
-					});
-					break;
-				} else {
-					var result = "**" + user + "**: the casino offers the following prizes:"
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
 
-					casinoInventory.forEach( function (i) {
-						result += "\n" + i + ": " + database.casinoprices[i] + " coins";
-						
-					});
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**YOUR ONLY PRIZE WILL BE A SWIFT DEMISE, IF YOU SUBMIT NOW.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
+	turtle_data.last_action = ewcfg.tm_action_prizes
+	turtle_data.time_last_action = time_now
+	turtle_data.persist()
+	
+	if user_data.poi != ewcfg.poi_id_turtlecasino:
+		response = "There are no prizes here."
+	else:
+		response = "The casino offers the following prizes."
+		prizes = ewitem.inventory(
+			id_server = cmd.message.server.id,
+			id_user = ewcfg.poi_id_turtlecasino,
+			item_type_filter = ewcfg.it_turtlemurder
+		)
+		str_prize = ""
+		for prize in prizes:
+			str_prize = "\n{}: {} coins".format(prize.get("name"), prize.get("price"))
+			response += str_prize
 
-					sendMessage({
-						to: channelID,
-						message: result,
-						typing: true
-					});
-				}
-			break;
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 async def tm_buy(cmd):
-			case 'buy':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **I HAVE NO USE FOR THOSE RIDICULOUS TOKENS OF YOURS**",
-						typing: true
-					});
-					break;
-				} else if (channelID != channels.get("casino")) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there's nothing to buy here",
-						typing: true
-					});
-					break;
-				} else if (obj == "") {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: please specify what you want to buy. (!prizes to see what items are on offer)",
-						typing: true
-					});
-					break;					
-				} else if (!casinoInventory.includes(obj)) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: they don't have that item. (!prizes to see what items are on offer)",
-						typing: true
-					});
-					break;					
-				}  else {
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
 
-					players.forEach (function (p) {
-						if (p.id == userID) {
-							var price = database.casinoprices[obj];
-							if (p.coins < price) {
-								result = "**" + user + "**: you can't afford this item";
-							} else {
-								p.coins -= price;
-								casinoInventory = casinoInventory.filter( function (i) { return i != obj; });
-								p.addItem(obj);
-								result = "**" + user + "**: you successfully purchase the " + obj;
-							}
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**I HAVE NO USE FOR THOSE RIDICULOUS TOKENS OF YOURS.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-						}
+	turtle_data.last_action = ewcfg.tm_action_buy
+	turtle_data.time_last_action = time_now
+	turtle_data.persist()
 
-					});
-					sendMessage({
-						to: channelID,
-						message: result,
-						typing: true
-					});
-					break;					
-				}
-			break;
+
+	if user_data.poi != ewcfg.poi_id_turtlecasino:
+		response = "There are no prizes here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	if len(item_search) == 0:
+		response = "Please specify which prize you would like to buy. (check with {})".format(ewcfg.cmd_tm_prizes)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_sought = ewitem.find_item(
+		item_search = item_search,
+		id_server = cmd.message.server.id,
+		id_user = ewcfg.poi_id_turtlecasino
+	)
+
+	if item_sought is None:
+		response = "They don't have that prize."
+
+	elif item_sought.get("price") > turtle_data.coins:
+		response = "That prize costs {} coin, but you only have {}.".format(item_sought.get("price"), turtle_data.coins)
+	else:
+		turtle_data.coins -= item_sought.get("price")
+		turtle_data.persist()
+		ewitem.give_item(
+			id_item = item_sought.get("id_item"),
+			id_user = user_data.id_user,
+			id_server = user_data.id_server
+		)
+		response = "You got the {}.".format(item_sought.get("name"))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 async def tm_sell(cmd):
-			case 'sell':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **I DON'T MAKE DEALS WITH VERMIN**",
-						typing: true
-					});
-					break;
-				} else if (channelID != channels.get("casino")) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: nobody here will buy this",
-						typing: true
-					});
-					break;
-				} else if (obj == "") {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: please specify what you want to sell. (!inventory to see what items you have)",
-						typing: true
-					});
-					break;									
-				}  else {
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
 
-					players.forEach (function (p) {
-						if (p.id == userID) {
-							var price = database.casinoprices[obj] / 2;
-							if (!p.hasItem(obj)) {
-								result = "**" + user + "**: you don't own that item (!inventory to see what items you have)";
-							} else {
-								p.coins += price;
-								casinoInventory.push(obj);
-								p.removeItem(obj);
-								if(p.weapon == obj) {p.weapon = "fists";}
-								result = "**" + user + "**: you successfully sell the " + obj + " for " + price + " coins.";
-							}
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**I DON'T MAKE DEALS WITH VERMIN.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-						}
+	turtle_data.last_action = ewcfg.tm_action_buy
+	turtle_data.time_last_action = time_now
+	turtle_data.persist()
 
-					});
-					casinoInventory = casinoInventory.filter(function(item) {return !animeMerch.includes(item);});
-					sendMessage({
-						to: channelID,
-						message: result,
-						typing: true
-					});
-					break;					
-				}
 
-			break;
+	if user_data.poi != ewcfg.poi_id_turtlecasino:
+		response = "Nobody here wants to buy that."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	if len(item_search) == 0:
+		response = "Please specify which prize you would like to buy. (check with {})".format(ewcfg.cmd_tm_prizes)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_sought = ewitem.find_item(
+		item_search = item_search,
+		id_server = cmd.message.server.id,
+		id_user = cmd.message.author.id
+	)
+
+	if item_sought is None:
+		response = "You don't have that item."
+	else:
+		value = int(item_sought.get("price") / 2)
+		turtle_data.coins += value
+		turtle_data.persist()
+		ewitem.give_item(
+			id_item = item_sought.get("id_item"),
+			id_user = user_data.id_user,
+			id_server = ewcfg.poi_id_turtlecasino
+		)
+		response = "You sold the {} and got {} coins.".format(item_sought.get("name"), price)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 async def tm_enter(cmd):
-			case 'enter':
-				if (players.some(function(value) {return value.id == userID;})) {
-					if (bossFight) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: **YOU'RE ALREADY SUFFERING**",
-							typing: true
-						});
-						break;
-					} else {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you're already playing!",
-							typing: true
-						});
-					}
-				} else if (playing) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: game already in progress. you'll have to wait for the next round.",
-						typing: true
-					});
-				} else {
-					players.push(new Player(user, userID));
-					sendMessage({
-						to: channelID,
-						message: user + " entered the game",
-						typing: true
-					});
-				}
-								
-				break;
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
+
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**YOU'RE ALREADY SUFFERING.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+	if user_data.turtlemurder:
+		response = "You're already playing."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if game_data.game_state != ewcfg.tm_game_state_pregame:
+		response = "The game has already started, please wait for the next round."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	user_data.turtlemurder = True
+	user_data.persist()
+	turtle_data.persist()
+
+	response = "Entering."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 async def tm_players(cmd):
-			case 'players':
-				sendMessage({
-					to: channelID,
-					message: "players:",
-					typing: true
-				});
+	response = "The following turtles are currently playing:"
+	players = tm_get_players(id_server = cmd.message.server.id)
+	for id_user in players:
+		player_data = EwPlayer(id_user = id_user)
+		response += "\n" + player_data.display_name
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-				players.forEach(function(value) {
-					sendMessage({
-						to: channelID,
-						message: "<@" + value.id + ">",
-						typing: true
-					});
-				});
-				break;
 async def tm_start(cmd):
-			case 'start':
-				if(!checkIfPlayer(userID)) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	time_now = time.time()
+
+	if game_data.game_state != ewcfg.tm_game_state_pregame:
+		response = "Game already in progress."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		game_data.game_state = ewcfg.tm_game_state_murder
+		game_data.time_start = time_now
+		game_data.persist()
+		players = tm_get_players(id_server = game_data.id_server)
+		targets = players.copy()
+		starting_items = ewcfg.tm_starting_items.copy()
+		for id_user in players:
+			user_data = EwUser(id_user = id_user, id_server = game_data.id_server)
+			turtle_data = EwTurtle(id_user = id_user, id_server = game_data.id_server)
+			user_data.poi = ewcfg.poi_id_turtlelobby
+			turtle_data.id_target = random.choice(targets)
+			while len(targets) > 1 and turtle_data.id_target == id_user:
+				turtle_data.id_target = random.choice(targets)
+
+			targets.remove(turtle_data.id_target)
+
+			turtle_data.coins = 5
+			item = random.choice(starting_items)
+			starting_items.remove(item)
+			if item is not None:
+				item_def = ewcfg.id_to_tmitem.get(item)
+				item_props = {
+					"tm_item_id": item_def.id_item,
+					"tm_name": item_def.str_name,
+					"tm_desc": item_def.str_desc,
+					"price": item_def.price
 				}
-				if(playing) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: game already in progress.",
-						typing: true
-					});
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "initializing game",
-						typing: true
-					});
+				create_item(
+					id_user = id_user,
+					id_server = cmd.message.server.id,
+					item_type = ewcfg.it_turtlemurder,
+					item_props = item_props
+				)
+			else:
+				turtle_data.coins += 10
 
-					players.forEach(function(p) {
-						var guild = bot.channels.get(channelID).guild;
-						var member = guild.members.get(p.id);
-						member.addRole(p.room);
-					});
+			item_def = ewcfg.id_to_tmitem.get(ewcfg.tm_item_id_turtleknife)
+			item_props = {
+				"tm_item_id": item_def.id_item,
+				"tm_name": item_def.str_name,
+				"tm_desc": item_def.str_desc,
+				"price": item_def.price
+			}
+			create_item(
+				id_user = id_user,
+				id_server = cmd.message.server.id,
+				item_type = ewcfg.it_turtlemurder,
+				item_props = item_props
+			)
+
+			turtle_data.persist()
+			user_data.persist()
+
+		casino_items = ewcfg.casino_items.copy()
+		casino_items.extend(starting_items)
+
+		for item in casino_items:
+			item_def = ewcfg.id_to_tmitem.get(item)
+			item_props = {
+				"tm_item_id": item_def.id_item,
+				"tm_name": item_def.str_name,
+				"tm_desc": item_def.str_desc,
+				"price": item_def.price
+			}
+			create_item(
+				id_user = ewcfg.poi_id_turtlecasino,
+				id_server = cmd.message.server.id,
+				item_type = ewcfg.it_turtlemurder,
+				item_props = item_props
+			)
+
+		merchandise = []
+		while random.randrange(ewcfg.tm_max_merchandise) > len(merchandise):
+			merchandise.append(random.choice(ewcfg.tm_merchandise))
+
+		merchandise.append(ewcfg.tm_item_id_dnddice)
+
+		for item in merchandise:
+			item_def = ewcfg.id_to_tmitem.get(item)
+			item_props = {
+				"tm_item_id": item_def.id_item,
+				"tm_name": item_def.str_name,
+				"tm_desc": item_def.str_desc,
+				"price": item_def.price
+			}
+			create_item(
+				id_user = ewcfg.poi_id_turtleweebcorner,
+				id_server = cmd.message.server.id,
+				item_type = ewcfg.it_turtlemurder,
+				item_props = item_props
+			)
+			
+		for id_user in players:
+			member = cmd.message.server.get_member(id_user)
+			await ewrolemgr.updateRoles(
+				client = cmd.client,
+				member = member
+			)
+
+		response = "The old turtle leads you into the mansion and locks the door behind you. You know what you must do."
+		resp_cont.add_channel_response(ewcfg.channel_turtlelobby, response)
+		await resp_cont.post()
+
+		for id_user in players:
+			member = cmd.message.server.get_member(id_user)
+			turtle_data = EwTurtle(id_user = id_user, id_server = cmd.message.server.id)
+
+			target_data = EwUser(id_user = turtle_data.id_target, id_server = turtle_data.id_server)
+			response = "Your target is {}.\n".format(target_data.get_mention())
+
+			items = ewitem.inventory(
+				id_user = id_user,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_turtlemurder
+			)
+			response += "You are carrying the following items:\n"
+			for item in items:
+				response += item.get("name") + "\n"
+
+			await turtle_data.direct_message(response)
 
 
-					var targets = [];
-					players.forEach(function(value,index) {targets[index] = players[index];});
 
-					
-
-					var i;
-					for(i = 0; i < 1000; i++) {
-						targets.sort(randomSort);
-						players.sort(randomSort);
-					}
-					
-
-					players.forEach(function(value, index) {
-						if (index != players.length - 1) {
-							while(value.id == targets[targets.length - 1].id) {
-								targets.sort(randomSort);
-							}
-						}
-						value.target = targets.pop().id;
-					});
-					for(i = 0; i < 1000; i++) {
-						startingItems.sort(randomSort);
-						players.sort(randomSort);
-					}
-					players.forEach(function(p) {
-						if (startingItems.length > 0) {
-							p.addItem(startingItems.pop());
-							p.coins = 5;
-						} else {
-							p.coins = 10;
-						}
-
-						var i;
-						var max = Math.random() * 2 + 4;
-						for (i = 0; i < max; i++) {
-							var rndm = Math.random();
-							if (rndm < 0.35) {
-								animePile.push(animeMerch[0]);
-							} else if (rndm < 0.6) {
-								animePile.push(animeMerch[1]);
-							} else if (rndm < 0.75) {
-								animePile.push(animeMerch[2]);
-							} else if (rndm < 0.87) {
-								animePile.push(animeMerch[3]);
-							} else if (rndm < 0.95) {
-								animePile.push(animeMerch[4]);
-							} else {
-								animePile.push(animeMerch[5]);
-							}
-						}
-
-						
-					});
-					animePile.push("dnd-dice");
-					for(i = 0; i < 1000; i++) {
-						animePile.sort(randomSort);
-					}
-					playing = true;
-					casinoInventory = casinoInventory.concat(startingItems);
-
-					sendMessage({
-						to: channelID,
-						message: "you can start playing now (!help for help)",
-						typing: true
-					});
-				}
-				
-				break;
 async def tm_target(cmd):
-			case 'target':
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch ) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **YOUR PETTY SQUABBLES DON'T MATTER ANYMORE**",
-						typing: true
-					});
-					break;
-				}
-				players.forEach(function(value) {
-				if (value.id == userID)
-				 {sendMessage({
-					to: userID,
-					message:"your target is <@" +  value.target + ">",
-					typing: true
-					});}});
-				break;
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
+
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**YOUR PETTY SQUABBLES DON'T MATTER ANYMORE.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+	target_data = EwUser(id_user = turtle_data.id_target, id_server = cmd.message.server.id)
+	response = "Your target is {}.".format(target_data.get_mention())
+	
+	await turtle_data.direct_message(response)
+
 async def tm_coins(cmd):
-			case 'coin':
-			case 'coins':
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch ) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **YOUR RICHES ARE WORTHLESS NOW**",
-						typing: true
-					});
-					break;
-				}
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
 
-				var result = "**" + user + "**: you have ";
-				players.forEach( function(p) {
-					
-					if (p.id == userID) {
-							result += p.coins + " coins.";
-					}
-				});
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**YOUR RICHES ARE WORTHLESS NOW.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-				sendMessage({
-					to: channelID,
-					message: result
-				});
-				break;
+	target_data = EwUser(id_user = turtle_data.id_target, id_server = cmd.message.server.id)
+	response = "Your target is {}.".format(target_data.get_mention())
+
+	await turtle_data.direct_message(response)
+
+
+
 async def tm_endgame(cmd):
-			case 'endgame':
-				reset();
+	players = tm_get_players()
+	await tm_reset()
 
-				sendMessage({
-					to: turtlemurder.ch,
-					message: "game ended by " + user + "."
-				});
-				break;
-async def tm_help(cmd):
-			case 'help':
-				sendMessage({
-					to: userID,
-					message:"Welcome to Happy Turtle Murder Extravaganza. In this game you play an assassin, who has to kill their target without anyone noticing. But watch out, someone else has you as their target, too. After a murder has occurred, everyone gets to vote on who they think did it. If the culprit receives more votes than any other player, they are executed. Otherwise the killer wins and everyone else loses. The game continues, as long as there are at least 4 players left alive, or until a player wins.\n" +
-						"__Note about weapons:__ Weapons are single use. You can only kill one person with each weapon. Most weapons will also be automatically left behind at the crime scene for everyone to see.\n" +
-						"__Note about targets:__ If you kill someone other than your target, the player who had that target will immediately be notified to receive their substitute target, so avoid unnecessary bloodshed.\n" + 
-						"__Note about the trial-grounds:__ The trial-grounds are where you can cast your votes on who you think the culprit was for each case. The trial-grounds are a strict no-combat zone. You are completely safe there. The voting only starts once everyone has entered the trial-grounds. You can go there at any time and from anywhere. However, it's a one-way trip. Once you enter the trial-grounds, you won't be able to leave, until a verdict has been reached.\n" 
-				});
+	response = "Game ended by {}.".format(cmd.message.author.display_name)
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	resp_cont.add_channel_response(ewcfg.channel_kameisland)
+	return await resp_cont.post()
 
-				sendMessage({
-					to: userID,
-					message:"**Game Setup:**\n" +
-						"'!help': display this help message\n" +
-						"'!enter': enter the game\n" + 
-						"'!start': start a game with all entered players\n" +
-						"'!players': list all entered players\n" +
-						"'!endgame': ends the game for everyone\n" +
-						"**Information:**\n" +
-						"'!peek <room>': check which players are in an adjacent room.\n" +
-						"'!look': shows information about the room you're currently in\n" +
-						"'!target': find out who you're supposed to kill\n" +
-						"'!inventory': shows what items you are carrying\n" +
-						"'!weapon': check which weapon you have equipped\n" +
-						"'!coins': check how many coins you have to your name\n" +
-						"**Basic Actions:**\n" +
-						"'!goto <room>': move to a new room. you can only move to rooms that are adjacent to yours, except for the trial-grounds\n" +
-						"'!use <item>': use an item from your inventory\n" +
-						"'!equip <weapon>': equip a weapon from your inventory\n" +
-						"'!attack <@player>': attack a player with your equipped weapon. only works if you're in the same room with them\n" +
-						"'!vote <@player>': cast your vote for who you think the killer is. only works in the trial-grounds"
-				});
-				break;
