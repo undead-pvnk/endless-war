@@ -796,6 +796,14 @@ async def on_message(message):
 
 			return
 
+		if cmd in ewcfg.turtle_only_commands and not user_data.turtlemurder:
+
+			response = "{} is a turtle-only command.".format(cmd)
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+			return
+
 		# Check the main command map for the requested command.
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)

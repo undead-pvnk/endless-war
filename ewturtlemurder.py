@@ -121,10 +121,11 @@ class EwTurtle:
 	weapon = ""
 	life_state = ewcfg.tm_life_state_active
 	win_state = ewcfg.tm_win_state_neutral
-	bleeding = False
+	combat_level = 0
 	last_action = ""
 	time_last_action = 0
 	coins = 0
+	
 
 	def __init__(
 		self,
@@ -135,15 +136,15 @@ class EwTurtle:
 			self.id_server = id_server
 			self.id_user = id_user
 
-			data = ewutils.execute_sql_query("SELECT {id_target}, {weapon}, {life_state}, {win_state}, {bleeding}, {last_action}, {time_last_action}, {coins} FROM tm_turtles WHERE {id_server} = %s AND {id_user} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {id_target}, {weapon}, {life_state}, {win_state}, {combat_level}, {last_action}, {time_last_action}, {coins} FROM tm_turtles WHERE {id_server} = %s AND {id_user} = %s".format(
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user,
 				id_target = ewcfg.col_tm_id_target,
 				weapon = ewcfg.col_tm_weapon,
 				life_state = ewcfg.col_tm_life_state,
 				win_state = ewcfg.col_tm_win_state,
-				bleeding = ewcfg.col_tm_bleeding,
-				last_action = ewcfg.col_tm_last_action
+				combat_level = ewcfg.col_tm_combat_level,
+				last_action = ewcfg.col_tm_last_action,
 				time_last_action = ewcfg.col_tm_time_last_action,
 				coins = ewcfg.col_tm_coins
 			    
@@ -157,7 +158,7 @@ class EwTurtle:
 				self.weapon = data[0][1]
 				self.life_state = data[0][2]
 				self.win_state = data[0][3]
-				self.bleeding = (data[0][4] == 1)
+				self.combat_level = data[0][4]
 				self.last_action = data[0][5]
 				self.time_last_action = data[0][6]
 				self.coins = data[0][7]
@@ -165,14 +166,14 @@ class EwTurtle:
 				self.persist()
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{id_user},{id_target},{weapon},{life_state},{win_state},{bleeding}, {last_action}, {time_last_action}, {coins}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
+		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{id_user},{id_target},{weapon},{life_state},{win_state},{combat_level}, {last_action}, {time_last_action}, {coins}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user,
 				id_target = ewcfg.col_tm_id_target,
 				weapon = ewcfg.col_tm_weapon,
 				life_state = ewcfg.col_tm_life_state,
 				win_state = ewcfg.col_tm_win_state,
-				bleeding = ewcfg.col_tm_bleeding,
+				combat_level = ewcfg.col_tm_combat_level,
 				last_action = ewcfg.col_tm_last_action,
 				time_last_action = ewcfg.col_tm_time_last_action,
 				coins = ewcfg.col_tm_coins
@@ -184,7 +185,7 @@ class EwTurtle:
 				self.weapon,
 				self.life_state,
 				self.win_state,
-				(1 if self.bleeding else 0),
+				self.combat_level,
 				self.last_action,
 				self.time_last_action,
 				self.coins
@@ -195,6 +196,7 @@ class EwTurtle:
 		self.life_state = ewcfg.tm_life_state_dead
 		self.weapon = ""
 		self.coins = 0
+		self.combat_level = 0
 		turtle_items = ewitems.inventory(
 			id_server = self.id_server,
 			id_user = self.id_user,
@@ -833,8 +835,11 @@ async def tm_use(cmd, id_item):
 	success = False
 	user_inball = None
 	format_map = {}
+	turtle_data.last_action = ewcfg.tm_action_use
+	turtle_data.time_last_action = time_now
+
 	if item_def.id_item == ewcfg.tm_item_id_turtleknife:
-		turtle_data.bleeding = True
+		turtle_data.last_action = ewcfg.tm_action_bleed
 		success = True
 
 	elif item_def.id_item in [ewcfg.tm_item_id_fluoriteoctet, ewcfg.tm_item_id_dnddice]:
@@ -918,8 +923,6 @@ async def tm_use(cmd, id_item):
 
 
 			
-	turtle_data.last_action = ewcfg.tm_action_use
-	turtle_data.time_last_action = time_now
 	turtle_data.persist()
 	game_state.persist()
 	if user_inball is not None:
@@ -1179,235 +1182,194 @@ async def tm_oracle(cmd):
 	return await resp_cont.post()
 	
 async def tm_dance(cmd):
-			case 'dance':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command"
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **QUIT THE FANCY FOOTWORK**"
-					});
-					break;
-				} else if (channelID == channels.get("disco")) {
-					var activePlayer = players.find(function (p) {return p.id == userID;});
-					if (activePlayer.dancing) {
-						activePlayer.dancing = false;
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you stop dancing."
-						});
-						break;
-						
-					} else {
-						if (players.some(function (p) {return p.dancing;})) {
-							var otherDancer = players.find(function(p) {return p.dancing;});
-							activePlayer.dancing = true;
-							sendMessage({
-								to: channelID,
-								message: user + " joins " + otherDancer.name + " on the dance floor.\nseeing the two of you moving your bodies to the music, the space marine can't hold back any longer and finally lets loose. you are both in awe of his sweet dance moves. you never would have guessed anyone could move like this with all that heavy armour on.\n"
-							});
-							if (activePlayer.edge == 0) {
-								activePlayer.edge = 1;
-								sendMessage({
-									to: channelID,
-									message: "**" + activePlayer.name + "**: dancing with the space marine has temporarily increased your physical prowess. you will have an edge for the next fight you're involved in."
-								});
-							} else {
-								sendMessage({
-									to: channelID,
-									message: "**" + activePlayer.name + "**: you already have an edge."
-								});
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	time_now = time.time()
+	if not user_data.turtlemurder:
+		response = "No."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
-							}
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**QUIT THE FANCY FOOTWORK.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-							if (otherDancer.edge == 0) {
-								otherDancer.edge = 1;
-								sendMessage({
-									to: channelID,
-									message: "**" + otherDancer.name + "**: dancing with the space marine has temporarily increased your physical prowess. you will have an edge for the next fight you're involved in."
-								});
-							} else {
-								sendMessage({
-									to: channelID,
-									message: "**" + otherDancer.name + "**: you already have an edge."
-								});
+	if user_data.poi != ewcfg.poi_id_turtledisco:
+		response = "You do a little jig, but you can't really get into it without some decent music."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-							}
+	turtle_data.last_action = ewcfg.tm_action_dance
+	turtle_data.persist()
+	dancing_players = tm_get_players(id_server = cmd.message.server.id)
 
-							otherDancer.dancing = false;
-							activePlayer.dancing = false;
-							break;
+	for id_dancer in dancing_players:
+		turtle_dance = EwTurtle(id_user = id_dancer, id_server = user_data.id_server)
+		if turtle_dance.last_action != ewcfg.tm_action_dance:
+			dancing_players.remove(id_dancer)
 
+	if len(dancing_players) < 2:
+		response = "You start busting out some moves on the dance floor. You notice the space marine tapping along with his foot, but when you look at him directly, he stops and looks away bashfully. Maybe if you got some more company, he would feel comfortable joining in."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-						} else {
-							activePlayer.dancing = true;
-							sendMessage({
-								to: channelID,
-								message: "**" + user + "**: you start busting out some moves on the dance floor. you notice the space marine tapping along with his foot, but when you look at him directly, he stops and looks away bashfully. maybe if you got some more company, he would feel comfortable joining in."
-							});
-							break;
-						}
+	response = "{} enters the dance floor. Seeing everyone moving your bodies to the music, the space marine can't hold back any longer and finally lets loose. You are in awe of his sweet dance moves. You never would have guessed anyone could move like this in all that heavy armor.".format(cmd.message.author.display_name)
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-					}
+	for id_user in dancing_players:
+		turtle_data = EwTurtle(id_user = id_user, id_server = cmd.message.server.id)
+		member = cmd.message.server.get_member(id_user)
+		if turtle_data.combat_level > 0:
+			response = "You already have an edge."
+		else:
+			turtle_data.combat_level += 1
+			response = "Dancing with the space marine has temporarily increased your physical prowess. You will have an edge for the next fight you're involved in."
+			
+		resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(member, response))
+		turtle_data.last_action = ""
+		turtle_data.persist()
 
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you do a little jig, but you can't really get into it without some decent music."
-					});
-					break;
-
-
-				}
-
-			break;
+	return await resp_cont.post()
+	
 async def tm_mine(cmd):
-			case 'mine':
-			case 'dig':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				var now = new Date();
-				now = now.getTime();
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **YOU CAN'T ESCAPE**",
-						typing: true
-					});
-					break;
-				} else if (channelID == channels.get("weeb-corner")) {
-					if (players.some(function(p) {return p.id == userID && now - p.cds.mine < 20000;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can only use this command once every 20 seconds"
-						});
-						break;
-					}
-					if (!players.some(function(p) {return p.id != userID && p.distracting;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: as soon as you make a move for the anime piles, the otaku turns away from the TV and looks directly at you, like he *knows*. you decide it's better not to incur his wrath. it seems like you will need a distraction."
-						});
-						break;
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
 
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**NO GRINDING YOURSELF PAST THIS ONE.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-					} else {
-						activePlayer.cds.mine = now;
-						if (animePile.length > 0) {
-							var rndm = Math.random();
-							if (rndm > 0.33) {
-								var loot = animePile.pop();
-								players.forEach(function (p) {
-									if (p.id == userID) {
-										p.addItem(loot);
-									}
-								});
-								sendMessage({
-									to: channelID,
-									message: "**" + user + "**: you dig through the piles and find " + loot,
-									typing: true
-								});
+	if user_data.poi != ewcfg.poi_id_turtleweebcorner:
+		response = "You can't {} here.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-							} else {
-								sendMessage({
-									to: channelID,
-									message: "**" + user + "**: you dig through the piles, but you find only worthless trash.",
-									typing: true
-								});
-							}
+	weeb_distracted = False
+	players = tm_get_players(cmd.message.server.id)
 
-						} else {
-							sendMessage({
-								to: channelID,
-								message: "**" + user + "**: you dig through the piles, but you find only worthless trash. you think this well has dried up.",
-								typing: true
-							});
-							break;
-						}
-						
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you can't do that here.",
-						typing: true
-					});
-					break;
+	for id_distracter in players:
+		if id_distracter == user_data.id_user:
+			continue
 
-				}
+		distract_data = EwUser(id_user = id_distracter, id_server = user_data.id_server)
+		distract_turtle = EwTurtle(id_user = id_distracter, id_server = user_data.id_server)
+		if distract_data == ewcfg.poi_id_turtleweebcorner and distract_turtle.last_action == ewcfg.tm_action_distract:
+			weeb_distracted = True
+			break
 
-			break;
+	if weeb_distracted:
+		if turtle_data.time_last_action + ewcfg.cd_tm_mine > time_now:
+			response = "You can only use this command once every {} seconds.".format(ewcfg.cd_tm_mine)
+		else:
+			turtle_data.last_action = ewcfg.tm_action_mine
+			turtle_data.time_last_action = time_now
+			response = ewitem.item_lootrandom(id_user = user_data.id_user, id_server = user_data.id_server)
+	else:
+		turtle_data.last_action = ewcfg.tm_action_mine
+		turtle_data.time_last_action = time_now
+		response = "As soon as you make a move for the anime piles, the otaku turns away from the TV and looks directly at you, like he *knows*. You decide it's better not to incur his wrath. It seems like you will need a distraction."
+
+	turtle_data.persist()
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 async def tm_distract(cmd):
-			case 'distract':
-			case 'distraction':
-				if (isPlayer) {
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command",
-						typing: true
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **I DON'T FALL FOR CHEAP TRICKS LIKE THAT**",
-						typing: true
-					});
-					break;
-				} else if (channelID == channels.get("weeb-corner")) {
-					var activePlayer = players.find(function(p) {return p.id == userID;});
-					if (activePlayer.distracting) {
-						activePlayer.distracting = false;
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you make up some excuse for why you have to go and leave the otaku to his animes."
-						});
-						break;
-					} else if (players.some(function(p) {return p.id != userID && p.distracting;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: someone else is already hogging the otaku's attention"
-						});
-						break;
-					} else {
-						activePlayer.distracting = true;
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you pretend to be interested in anime to get the otaku's attention. he pauses his TV and starts bombarding you with information about all of his favorite animes and waifus. it's the most mind-numbing stuff you've ever had to listen to. you immediately regret this decision."
-						});
-						break;
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you act in a very distracting manner, but nobody cares.",
-						typing: true
-					});
-					break;
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
 
-				}
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**I DON'T FALL FOR CHEAP TRICKS LIKE THAT.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-			break;
-async def tm_play(cmd):
+	turtle_data.last_action = ewcfg.tm_action_distract
+	turtle_data.time_last_action = time_now
+	turtle_data.persist()
+
+	if user_data.poi != ewcfg.poi_id_turtleweebcorner:
+		response = "Behind you!"
+	else:
+		response = "You pretend to be interested in anime to get the otaku's attention. He pauses his TV and starts bombarding you with information about all of his favorite animes and waifus. It's the most mind-numbing stuff you've ever had to listen to. You immediately regret this decision."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def tm_yahtzee(cmd):
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
+	response = ""
+	time_now = time.time()
+	int_token = ewutils.getIntToken(cmd.tokens[1:])
+
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**NO MORE GAMES.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+	turtle_data.last_action = ewcfg.tm_action_yahtzee
+	turtle_data.time_last_action = time_now
+	turtle_data.persist()
+
+	if turtle_data.coins < ewcfg.tm_yahtzee_bet:
+		response = "The bet for a round of turtle yahtzee is {} coins, but you only have {}.".format(ewcfg.tm_yahtzee_bet, turtle_data.coins)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if int_token is None:
+		response = "Please specify which kind of dice you would like to use."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi != ewcfg.poi_id_turtlecasino:
+		response = "You can only play turtle yahtzee at the turtle casino."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		dice_available = []
+		if game_data.casino_state == ewcfg.tm_casino_state_closed:
+			response = "The casino attendant regrets to inform you that they don't have any dice to play with. You can still buy and sell prizes for coins, though."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif game_data.casino_state == ewcfg.tm_casino_state_octet:
+			dice_available.append(8)
+		elif game_data.casino_state == ewcfg.tm_casino_state_dnd:
+			dice_available = [4, 6, 8, 10, 12, 20]
+
+		if int_token not in dice_available:
+			response = "They don't have {}-sided dice. Try one of these: {}".format(int_token, dice_available)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			turtle_data.coins -= 2
+			turtle_data.persist()
+
+			response = "You pay {} coins and roll 2 {}-sided dice.".format(ewcfg.tm_yahtzee_bet, int_token)
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			dice = [int_token, int_token]
+			result = []
+			for die in dice:
+				result.append(random.randrange(die) + 1)
+
+			response = "{}".format(result)
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			turtle_data = EwTurtle(id_user = turtle_data.id_user, id_server = turtle_data.id_server)
+			if result[0] == result[1]:
+				winnings = result[0] ** 2
+				turtle_data.coins += winnings
+				turtle_data.persist()
+				response = "You win {} coins!".format(winnings)
+			else:
+				response = "You lost your bet..."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+
+			
+			
+			
+
+
 			case 'play':
 				if (isPlayer) {
 					activePlayer.distracting = false;
