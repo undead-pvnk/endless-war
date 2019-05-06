@@ -1075,417 +1075,109 @@ async def tm_pray(cmd):
 
 
 async def tm_oracle(cmd):
-			case 'oracle':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command"
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **THAT FOOL HAS NO POWER OVER MY REALM**"
-					});
-					break;
-				} else if (channelID == channels.get("throne-room")) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: " + database.oracle
-					});
-					break;
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	time_now = time.time()
+	if not user_data.turtlemurder:
+		response = "There is no oracle here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+    
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		response = "**THAT FOOL HAS NO POWER OVER MY REALM.**"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there's nobody with prophetic abilities here"
-					});
-					break;
-				}
+	if user_data.poi != ewcfg.poi_id_turtlethroneroom:
+		response = "There is no oracle here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if cmd.tokens_count < 2:
+		response = "Hussie offers the following services:\nlocation: For 1 coin you will learn the location of a player.\nweapon: For 5 coins you will learn what weapon a player currently has equipped.\ninventory: For 10 coins you will learn the entire inventory of a player.\ntarget: For 20 coins you will learn the target of a player.",
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if cmd.mentions_count == 0:
+		response = "Please specify which player you want an oracle on."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if cmd.mentions_count > 1:
+		response = "Only one oracle at a time."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	member = cmd.mentions[0]
 
-			break;
+	target_data = EwUser(member = member)
+	target_turtle = EwTurtle(id_user = target_data.id_user, id_server = target_data.id_server)
+	target_poi = ewcfg.id_to_poi.get(target_data.poi)
+	if not target_data.turtlemurder:
+		response = "That person is beyond my vision."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	arg_string = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	arg_int = ewutils.getIntToken(cmd.tokens[1:])
+	if arg_int is None:
+		arg_int = -1
 
-			case 'oracle-location':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command"
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **THAT FOOL HAS NO POWER OVER MY REALM**"
-					});
-					break;
-				} else if (channelID == channels.get("throne-room")) {
+	price = 0
+	if arg_string == "target" or arg_int >= 20:
+		price = 20
+		if turtle_data.coins < price:
+			response = "You can't afford this service."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		vision_player = EwPlayer(id_user = target_turtle.id_target)
 
-					obj = obj.replace(/[<>@!]/g, "");
-					if (obj == "") {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: please specify which player you want to get an oracle about"
-						});
-						break;
+		response = "{}'s target is {}.".format(member.display_name, vision_player.display_name)
 
+	elif arg_string == "inventory" or arg_int >= 10:
+		price = 10
+		if turtle_data.coins < price:
+			response = "You can't afford this service."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+		vision_items = ewitems.inventory(
+			member = member,
+			item_type_filer = ewcfg.it_turtlemurder
+		)
+		if len(vision_items) == 0:
+			response = "{} has no items.".format(member.display_name)
+		else:	
+			str_items = ""
+			for item in vision_items:
+				str_items += "{}\n".format(item.get("name"))
+			response = "{} has the following items:\n{}.".format(member.display_name, str_items)
 
+	elif arg_string == "weapon" or arg_int >= 5:
+		price = 5
+		if turtle_data.coins < price:
+			response = "You can't afford this service."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		item_sought = ewitem.find_item(
+			id_user = target_data.id_user,
+			id_server = target_data.id_server,
+			item_search = target_data.weapon
+		)
+		if item_sought is None:
+			response = "{} has no weapon equipped.".format(member.display_name)
+		else:
+			response = "{} has a {} equipped.".format(member.display_name, item_sought.get("name"))
+	elif arg_string == "location" or arg_int >= 1:
+		price = 1
+		if turtle_data.coins < price:
+			response = "You can't afford this service."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-					} else if (!checkIfPlayer(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: I don't recognize that player"
-						});
-						break;
-					} else if (!players.some(function(p) {return p.id == userID && p.coins > 0;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't afford this service"
-						});
-						break;
+		response = "{} is currently in {}.".format(member.display_name, target_poi.str_name)
 
-					} else if (!checkIfAlive(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't get an oracle about a dead player"
-						});
-						break;
+	resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
+	resp_cont.add_channel_response(target_poi.channel, ewutils.formatMessage(member, "You feel like you are being watched."))
 
-					} else {
-						var result = "";
-						players.forEach(function(p) {
-							if (p.id == obj) {
-								switch (p.room) {
-									case roomIDs[0]:
-										result = "the requested player is currently in the arcade"
-										break;
-									case roomIDs[1]:
-										result = "the requested player is currently in the casino"
-										break;
-									case roomIDs[2]:
-										result = "the requested player is currently in the disco"
-										break;
-									case roomIDs[3]:
-										result = "the requested player is currently in the throne-room"
-										break;
-									case roomIDs[4]:
-										result = "the requested player is currently in the lobby"
-										break;
-									case roomIDs[5]:
-										result = "the requested player is currently in the graveyard"
-										break;
-									case roomIDs[6]:
-										result = "the requested player is currently in the laboratory"
-										break;
-									case roomIDs[7]:
-										result = "the requested player is currently in the arena"
-										break;
-									case roomIDs[8]:
-										result = "the requested player is currently in the weeb-corner"
-										break;
-									case trialgrounds.id:
-										result = "the requested player is currently in the trial-grounds"
-										break;
-									case ko.id:
-										result = "the requested player is currently unconscious"
-										break;
-									case pokeball.id:
-										result = "the requested player is currently trapped inside a pocket dimension"
-										break;
+	turtle_data.coins -= price
+	turtle_data.persist()
 
-								}
-
-							}
-							if (p.id == userID) {
-
-								p.coins -= 1;
-							}
-
-						});
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you pay 1 coin.\n" + result
-						});
-
-						sendMessage({
-							to: obj,
-							message: "you feel like you're being watched."
-						});
-						break;
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there's nobody with prophetic abilities here"
-					});
-					break;
-				}
-
-
-			break;
-
-			case 'oracle-weapon':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command"
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **THAT FOOL HAS NO POWER OVER MY REALM**"
-					});
-					break;
-				} else if (channelID == channels.get("throne-room")) {
-
-					obj = obj.replace(/[<>@!]/g, "");
-					if (obj == "") {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: please specify which player you want to get an oracle about"
-						});
-						break;
-
-
-
-					} else if (!checkIfPlayer(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: I don't recognize that player"
-						});
-						break;
-					} else if (!players.some(function(p) {return p.id == userID && p.coins > 4;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't afford this service"
-						});
-						break;
-
-					} else if (!checkIfAlive(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't get an oracle about a dead player"
-						});
-						break;
-
-					} else {
-						var result = "";
-						players.forEach(function(p) {
-							if (p.id == obj) {
-								result = "the requested player currently has their " + p.weapon + " equipped.";
-
-							}
-							if (p.id == userID) {
-
-								p.coins -= 5;
-							}
-
-						});
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you pay 5 coins.\n" + result
-						});
-
-						sendMessage({
-							to: obj,
-							message: "you feel like you're being watched."
-						});
-						break;
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there's nobody with prophetic abilities here"
-					});
-					break;
-				}
-
-
-			break;
-
-			case 'oracle-inventory':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command"
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **THAT FOOL HAS NO POWER OVER MY REALM**"
-					});
-					break;
-				} else if (channelID == channels.get("throne-room")) {
-
-					obj = obj.replace(/[<>@!]/g, "");
-					if (obj == "") {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: please specify which player you want to get an oracle about"
-						});
-						break;
-
-
-
-					} else if (!checkIfPlayer(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: I don't recognize that player"
-						});
-						break;
-					} else if (!players.some(function(p) {return p.id == userID && p.coins > 9;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't afford this service"
-						});
-						break;
-
-					} else if (!checkIfAlive(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't get an oracle about a dead player"
-						});
-						break;
-
-
-					} else {
-						var result = "";
-						players.forEach(function(p) {
-							if (p.id == obj) {
-								result = "the requested player currently has the following items in their inventory:\n";
-								p.inventory.forEach(function(item) {result += item + "\n";});
-
-							}
-							if (p.id == userID) {
-
-								p.coins -= 10;
-							}
-
-						});
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you pay 10 coins.\n" + result
-						});
-
-						sendMessage({
-							to: obj,
-							message: "you feel like you're being watched."
-						});
-						break;
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there's nobody with prophetic abilities here"
-					});
-					break;
-				}
-
-
-			break;
-
-			case 'oracle-target':
-				if (isPlayer) {
-					activePlayer.distracting = false;
-					activePlayer.dancing = false;
-				}
-				if(!(checkIfPlayer(userID) && playing && checkIfAlive(userID)) || channelID == turtlemurder.ch || channelID == trialgrounds.ch || channelID == pokeball.ch || channelID == ko.ch) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: you're not authorized to use this command"
-					});
-					break;
-				} else if (bossFight) {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: **THAT FOOL HAS NO POWER OVER MY REALM**"
-					});
-					break;
-				} else if (channelID == channels.get("throne-room")) {
-
-					obj = obj.replace(/[<>@!]/g, "");
-					if (obj == "") {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: please specify which player you want to get an oracle about"
-						});
-						break;
-
-
-
-					} else if (!checkIfPlayer(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: I don't recognize that player"
-						});
-						break;
-					} else if (!players.some(function(p) {return p.id == userID && p.coins > 19;})) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't afford this service"
-						});
-						break;
-
-					} else if (!checkIfAlive(obj)) {
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you can't get an oracle about a dead player"
-						});
-						break;
-
-					} else {
-						var result = "";
-						players.forEach(function(p) {
-							if (p.id == obj) {
-								result = "the requested player currently has <@" + p.target + "> as their target.";
-
-							}
-							if (p.id == userID) {
-
-								p.coins -= 20;
-							}
-
-						});
-						sendMessage({
-							to: channelID,
-							message: "**" + user + "**: you pay 20 coins.\n" + result
-						});
-
-						sendMessage({
-							to: obj,
-							message: "you feel like you're being watched."
-						});
-						break;
-					}
-				} else {
-					sendMessage({
-						to: channelID,
-						message: "**" + user + "**: there's nobody with prophetic abilities here"
-					});
-					break;
-				}
-
-
-			break;
+	return await resp_cont.post()
+	
 async def tm_dance(cmd):
 			case 'dance':
 				if (isPlayer) {
