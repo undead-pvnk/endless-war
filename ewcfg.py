@@ -6081,14 +6081,35 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "combust"
-mutation_id_spoiledappetite = "spoiled"
-mutation_id_bigbones = "bones"
+mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_thickerthanblood = "thickerthanblood" #TODO
+mutation_id_graveyardswift = "graveyardswift" #TODO
+mutation_id_sharptoother = "sharptoother" #TODO
+mutation_id_2ndamendment = "2ndamendment" #TODO
+mutation_id_openarms = "openarms" #TODO
+mutation_id_panicattacks = "panicattacks" #TODO
+mutation_id_twobirdswithonekidneystone = "2birds1stone" #TODO
+mutation_id_shellshock = "shellshock" #TODO
+mutation_id_bleedingheart = "bleedingheart" #TODO
+mutation_id_nosferatu = "nosferatu" #TODO
+mutation_id_organicfursuit = "organicfursuit" #TODO
+mutation_id_lightasafeather = "lightasafeather" #TODO
+mutation_id_spoiledappetite = "spoiledappetite"
+mutation_id_bigbones = "bigbones"
+mutation_id_fatchance = "fatchance" #TODO
 mutation_id_fastmetabolism = "fastmetabolism"
+mutation_id_bingeeater = "bingeeater" #TODO
+mutation_id_bitethehandsthatfeedsyou = "bitethehand" #TODO
 mutation_id_lonewolf = "lonewolf"
+mutation_id_quantumlegs = "quantumlegs" #TODO
+mutation_id_chameleonskin = "chameleonskin" #TODO
+mutation_id_dressedtokill = "dressedtokill" #TODO
 mutation_id_keensmell = "keensmell"
+mutation_id_enlargedbladder = "enlargedbladder" #TODO
+mutation_id_dumpsterdiver = "dumpsterdiver" #TODO
+mutation_id_trashmouth = "trashmouth" #TODO
 
-mutation_milestones = [10,20,30,40,50]
+mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 
 mutations = [
 	EwMutationFlavor(
