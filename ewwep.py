@@ -154,11 +154,13 @@ async def attack(cmd):
 	levelup_response = ""
 	coinbounty = 0
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	market_data = EwMarket(id_server = cmd.message.server.id)
 
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	weapon_item = EwItem(id_item = user_data.weapon)
 	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
@@ -432,6 +434,27 @@ async def attack(cmd):
 				# Remove !revive invulnerability.
 				user_data.time_lastrevive = 0
 
+				if ewcfg.mutation_id_organicfursuit in user_mutations and market_data.day % 30 == 0:
+					slimes_damage *= 2
+				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
+					slimes_damage *= 0.75
+
+				if ewcfg.mutation_id_dressedtokill in user_mutations:
+					items = ewitem.inventory(
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_type_filter = ewcfg.it_cosmetic
+					)
+
+					adorned_items = 0
+					for it in items:
+						i = EwItem(it.get('id_item'))
+						if i.item_props['adorned'] == 'true':
+							adorned_items += 1
+
+					if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
+						slimes_damage *= 1.2
+
 				# Spend slimes, to a minimum of zero
 				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 
@@ -446,9 +469,10 @@ async def attack(cmd):
 				user_data.persist()
 				shootee_data = EwUser(member = member)
 
+
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
-					if ewcfg.mutation_id_thickerthanblood in mutations:
+					if ewcfg.mutation_id_thickerthanblood in user_mutations:
 						slimes_damage = 0
 					else:
 						slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
@@ -457,16 +481,22 @@ async def attack(cmd):
 				# move around slime as a result of the shot
 				if was_juvenile or user_data.faction == shootee_data.faction:
 					slimes_toboss = 0
-					slimes_tobleed = int(slimes_damage / 2)
 				else:
 					slimes_toboss = int(slimes_damage / 2)
-					slimes_tobleed = int(slimes_damage / 4)
+
 				damage = str(slimes_damage)
+
+				slimes_tobleed = int((slimes_damage - slimes_toboss) / 2)
+				if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.time < 6 or market_data.time >= 20):
+					slimes_tobleed = 0
+				if ewcfg.mutation_id_bleedingheart in shootee_mutations:
+					slimes_tobleed *= 2
+
 				slimes_directdamage = slimes_damage - slimes_tobleed
-				slime_splatter = slimes_damage - slimes_toboss - slimes_tobleed
+				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed
 
 				boss_slimes += slimes_toboss
-				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
 				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
 
@@ -500,7 +530,7 @@ async def attack(cmd):
 					# explode, damaging everyone in the district
 
 					# release bleed storage
-					if ewcfg.mutation_id_thickerthanblood in mutations:
+					if ewcfg.mutation_id_thickerthanblood in user_mutations:
 						slimes_todistrict = 0
 						slimes_tokiller = shootee_data.slimes
 					else:

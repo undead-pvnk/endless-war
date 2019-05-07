@@ -43,7 +43,7 @@ class EwMutation:
 	id_user = ""
 	id_mutation = ""
 
-	time_lastuse = -1
+	data = ""
 
 	# unique id for every instance of a mutation. auto increments
 	# a counter of -1 means the player doesn't have this mutation
@@ -63,8 +63,8 @@ class EwMutation:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lastuse}, {mutation_counter} FROM mutations WHERE id_user = %s AND id_server = %s AND {id_mutation} = %s".format(
-					time_lastuse = ewcfg.col_time_lastuse,
+				cursor.execute("SELECT {data}, {mutation_counter} FROM mutations WHERE id_user = %s AND id_server = %s AND {id_mutation} = %s".format(
+					data = ewcfg.col_mutation_data,
 					mutation_counter = ewcfg.col_mutation_counter,
 					id_mutation = ewcfg.col_id_mutation
 				), (
@@ -76,7 +76,7 @@ class EwMutation:
 
 				if result != None:
 					# Record found: apply the data to this object.
-					self.time_lastuse = result[0]
+					self.data = result[0]
 					self.mutation_counter = result[1]
 
 			finally:
@@ -96,15 +96,15 @@ class EwMutation:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {time_lastuse}, {mutation_counter}) VALUES(%s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {data}, {mutation_counter}) VALUES(%s, %s, %s, %s, %s)".format(
 					id_mutation = ewcfg.col_id_mutation,
-					time_lastuse = ewcfg.col_time_lastuse,
+					data = ewcfg.col_mutation_data,
 					mutation_counter = ewcfg.col_mutation_counter
 				), (
 					self.id_user,
 					self.id_server,
 					self.id_mutation,
-					self.time_lastuse,
+					self.data,
 					self.mutation_counter
 				))
 

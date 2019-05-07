@@ -757,6 +757,8 @@ def food_carry_capacity_bylevel(slimelevel):
 def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
+def max_adorn_bylevel(slimelevel):
+        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
 """
 	Returns an EwUser object of the selected kingpin
 """

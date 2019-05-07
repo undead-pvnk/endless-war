@@ -12,8 +12,23 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewtransport import EwTransport
+from ewmarket import EwMarket
 
 move_counter = 0
+
+def get_move_speed(user_data):
+	mutations = user_data.get_mutations()
+	market_data = EwMarket(id_server = user_data.id_server)
+	move_speed = 1
+	if ewcfg.mutation_id_organicfursuit in mutations and market_data.day % 30 == 0:
+		move_speed *= 2
+	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
+		move_speed *= 2
+	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
+		move_speed *= 2
+
+	return move_speed
+
 
 """
 	Returns true if the specified point of interest is a PvP zone.
@@ -271,7 +286,6 @@ class EwPath:
 	Add coord_next to the path.
 """
 def path_step(path, coord_next, user_data, coord_end):
-	mutations = user_data.get_mutations()
 	visited_set_y = path.visited.get(coord_next[0])
 	if visited_set_y == None:
 		path.visited[coord_next[0]] = { coord_next[1]: True }
@@ -311,11 +325,8 @@ def path_step(path, coord_next, user_data, coord_end):
 					cost_next = 0
 
 	path.steps.append(coord_next)
-	if ewcfg.mutation_id_bigbones in mutations:
-		cost_next *= 1
 
-	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
-		cost_next = int(cost_next / 2)
+	cost_next = int(cost_next / get_move_speed(user_data))
 
 	path.cost += cost_next
 
@@ -510,6 +521,7 @@ async def move(cmd):
 	poi_current = ewcfg.id_to_poi.get(user_data.poi)
 	poi = ewcfg.id_to_poi.get(target_name)
 
+
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
 
@@ -635,7 +647,7 @@ async def move(cmd):
 				poi_current = ewcfg.coord_to_poi.get(ewcfg.alias_to_coord.get(step))
 
 			user_data = EwUser(member = cmd.message.author)
-			mutations = user_data.get_mutations()
+			#mutations = user_data.get_mutations()
 			if poi_current != None:
 
 				# If the player dies or enlists or whatever while moving, cancel the move.
@@ -709,20 +721,14 @@ async def move(cmd):
 								boost = ewcfg.territory_time_gain
 							else:
 								territory_slowdown = ewcfg.territory_time_gain
-								if ewcfg.mutation_id_bigbones in mutations:
-									territory_slowdown *= 1
-								if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
-									territory_slowdown = int(territory_slowdown / 2)
+								territory_slowdown = int(territory_slowdown / get_move_speed(user_data))
 								await asyncio.sleep(territory_slowdown)
 			else:
 				if val > 0:
 					val_actual = val - boost
 					boost = 0
-					if ewcfg.mutation_id_bigbones in mutations:
-					    val_actual *= 1
-					if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
-					    val_actual = int(val_actual / 2)
 
+					val_actual = int(val_actual / get_move_speed(user_data))
 					if val_actual > 0:
 						await asyncio.sleep(val_actual)
 
@@ -740,6 +746,55 @@ async def halt(cmd):
 	ewutils.moves_active[cmd.message.author.id] = 0
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You {} dead in your tracks.".format(cmd.cmd[1:])))
 
+async def teleport(cmd):
+	if channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+	if cmd.tokens_count < 2:
+		response = "Teleport where?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
+	response = ""
+	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	poi = ewcfg.id_to_poi.get(target_name)
+
+	if poi is None:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+	if poi.id_poi == user_data.poi:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
+
+	if inaccessible(user_data = user_data, poi = poi):
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+
+
+	if ewcfg.mutation_id_quantumlegs in mutations:
+		valid_destinations = set()
+		neighbors = ewcfg.poi_neighbors.get(user_data.poi)
+		for neigh in neighbors:
+			valid_destinations.add(neigh)
+			valid_destinations.update(ewcfg.poi_neighbors.get(neigh))
+
+		if poi.id_poi not in valid_destinations:
+			response = "You can't {} that far.".format(cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		ewutils.moves_active[cmd.message.author.id] = 0
+		user_data.poi = poi.id_poi
+		user_data.persist()
+		response = "WHOOO-"
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+		response = "-OOOP!"
+		return await ewutils.send_message(cmd.client, cmd.message.server.get_channel(poi.channel), ewutils.formatMessage(cmd.message.author, response))
+	else:
+		response = "You don't have any toilet paper."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	
 
 """
 	Dump out the visual description of the area you're in.
@@ -853,6 +908,12 @@ async def scout(cmd):
 		players_in_district = district_data.get_players_in_district(min_level = min_level, life_states = life_states)
 		if user_data.id_user in players_in_district:
 			players_in_district.remove(user_data.id_user)
+
+		for player in players_in_district:
+			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
+			scoutee_mutations = scoutee_data.get_mutations()
+			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
+				players_in_district.remove(player)
 	
 		num_players = len(players_in_district)
 		players_resp = "\n\n"

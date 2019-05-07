@@ -457,6 +457,23 @@ cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
 cmd_get_ashen = cmd_prefix + "ashen"
 cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 
+offline_cmds = [
+	cmd_move,
+	cmd_move_alt1,
+	cmd_move_alt2,
+	cmd_move_alt3,
+	cmd_halt,
+	cmd_halt_alt1,
+	cmd_embark,
+	cmd_embark_alt1,
+	cmd_disembark,
+	cmd_disembark_alt1,
+	cmd_look,
+	cmd_scout,
+	cmd_scout_alt1
+]
+		
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -805,7 +822,7 @@ col_district_slimes = 'slimes'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
-col_time_lastuse = 'time_lastuse'
+col_mutation_data = 'data'
 col_mutation_counter = 'mutation_counter'
 
 # Database columns for transports
@@ -6082,36 +6099,46 @@ thrownobjects_list = [
 ]
 
 mutation_id_spontaneouscombustion = "spontaneouscombustion" 
-mutation_id_thickerthanblood = "thickerthanblood" #TODO
+mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
+mutation_id_fungalfeaster = "fungalfeaster"#TODO
 mutation_id_sharptoother = "sharptoother" #TODO
-mutation_id_2ndamendment = "2ndamendment" #TODO
 mutation_id_openarms = "openarms" #TODO
+mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
 mutation_id_twobirdswithonekidneystone = "2birds1stone" #TODO
 mutation_id_shellshock = "shellshock" #TODO
-mutation_id_bleedingheart = "bleedingheart" #TODO
-mutation_id_nosferatu = "nosferatu" #TODO
-mutation_id_organicfursuit = "organicfursuit" #TODO
-mutation_id_lightasafeather = "lightasafeather" #TODO
+mutation_id_bleedingheart = "bleedingheart"
+mutation_id_paranoia = "paranoia" #TODO
+mutation_id_cloakandstagger = "cloakandstagger" #TODO
+mutation_id_nosferatu = "nosferatu"
+mutation_id_organicfursuit = "organicfursuit"
+mutation_id_lightasafeather = "lightasafeather"
+mutation_id_whitenationalist = "whitenationalist" #TODO
 mutation_id_spoiledappetite = "spoiledappetite"
 mutation_id_bigbones = "bigbones"
-mutation_id_fatchance = "fatchance" #TODO
+mutation_id_fatchance = "fatchance"
 mutation_id_fastmetabolism = "fastmetabolism"
-mutation_id_bingeeater = "bingeeater" #TODO
-mutation_id_bitethehandsthatfeedsyou = "bitethehand" #TODO
+mutation_id_bingeeater = "bingeeater"
 mutation_id_lonewolf = "lonewolf"
-mutation_id_quantumlegs = "quantumlegs" #TODO
-mutation_id_chameleonskin = "chameleonskin" #TODO
-mutation_id_dressedtokill = "dressedtokill" #TODO
+mutation_id_quantumlegs = "quantumlegs"
+mutation_id_chameleonskin = "chameleonskin"
+mutation_id_patriot = "patriot" #TODO
+mutation_id_socialanimal = "socialanimal" #TODO
+mutation_id_threesashroud = "threesashroud" #TODO
+mutation_id_aposematicstench = "aposematicstench" #TODO
+mutation_id_paintrain = "paintrain" #TODO
+mutation_id_lucky = "lucky" #TODO
+mutation_id_dressedtokill = "dressedtokill" 
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder" #TODO
-mutation_id_dumpsterdiver = "dumpsterdiver" #TODO
-mutation_id_trashmouth = "trashmouth" #TODO
+mutation_id_dumpsterdiver = "dumpsterdiver"
+mutation_id_trashmouth = "trashmouth"
+mutation_id_webbedfeet = "webbedfeet"
 
 mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 
-mutations = [
+mutations = [ # TODO all placeholders, add real flavor
 	EwMutationFlavor(
 		id_mutation = mutation_id_spontaneouscombustion,
 		str_describe_self = "You explode on death.",

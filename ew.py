@@ -6,6 +6,7 @@ import ewcfg
 import ewstats
 import ewitem
 
+food_multiplier = {}
 
 """ Market data model for database persistence """
 
@@ -215,7 +216,16 @@ class EwUser:
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
 			ewitem.item_drop(food_item.id_item)
 		else:
-			self.hunger -= int(item_props['recover_hunger'])
+			hunger_restored = int(item_props['recover_hunger'])
+			if self.id_user in food_multiplier and food_multiplier.get(self.id_user) > 0:
+				if ewcfg.mutation_id_bingeeater in mutations:
+					hunger_restored *= food_multiplier.get(self.id_user)
+				food_multiplier[self.id_user] += 1
+			else:
+				food_multiplier[self.id_user] = 1
+			asyncio.ensure_future(self.decrease_food_multiplier)
+				
+			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
 			self.inebriation += int(item_props['inebriation'])
@@ -237,6 +247,11 @@ class EwUser:
 			ewitem.item_delete(food_item.id_item)
 
 		return response
+
+	async def decrease_food_multiplier(self):
+		await asyncio.sleep(5)
+		if self.id_user in food_multiplier:
+			food_multiplier[self.id_user] = max(0, food_multiplier.get(self.id_user) - 1)
 
 	def add_mutation(self, id_mutation):
 		mutations = self.get_mutations()
@@ -310,17 +325,24 @@ class EwUser:
 		return response
 
 	def get_weapon_capacity(self):
-		return ewutils.weapon_carry_capacity_bylevel(self.slimelevel)
+		mutations = self.get_mutations()
+		base_capacity = ewutils.weapon_carry_capacity_bylevel(self.slimelevel)
+		if ewcfg.mutation_id_2ndamendment in mutations:
+			return base_capacity + 1
+		else:
+			return base_capacity
 
 	def get_food_capacity(self):
 		mutations = self.get_mutations()
+		base_capacity = ewutils.food_carry_capacity_bylevel(self.slimelevel)
 		if ewcfg.mutation_id_bigbones in mutations:
-			return 2 * ewutils.food_carry_capacity_bylevel(self.slimelevel)
+			return 2 * base_capacity
 		else:
-			return ewutils.food_carry_capacity_bylevel(self.slimelevel)
+			return base_capacity
 
 	def get_hunger_max(self):
 		return ewutils.hunger_max_bylevel(self.slimelevel)
+
 
 	def get_mention(self):
 		return "<@{id_user}>".format(id_user = self.id_user)

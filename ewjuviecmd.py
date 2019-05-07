@@ -211,6 +211,7 @@ async def mismine(cmd, user_data, cause):
 async def scavenge(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 
 
 	time_now = int(time.time())
@@ -240,7 +241,14 @@ async def scavenge(cmd):
 			# add scavenged slime to user
 			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
 
+			if ewcfg.mutation_id_trashmouth in mutations:
+				time_since_last_scavenge *= 3
+
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
+
+			if ewcfg.mutation_id_webbedfeet in mutations:
+				district_slimelevel = len(str(district_data.slimes))
+				scavenge_mod *= max(1, min(district_slimelevel - 3, 4))
 
 			scavenge_yield = math.floor(scavenge_mod * district_data.slimes)
 
@@ -253,6 +261,8 @@ async def scavenge(cmd):
 			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 			loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
 			loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
+			if ewcfg.mutation_id_dumpsterdiver in mutations:
+				loot_chance *= 2
 			if random.random() < loot_chance:
 				loot_resp = ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
 				response += loot_resp

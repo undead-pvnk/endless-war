@@ -783,23 +783,25 @@ async def on_message(message):
 		if len(message.author.roles) < 3:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
+		user_data = EwUser(member = message.author)
+		mutations = user_data.get_mutations()
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
 
-			response = "You cannot participate in the ENDLESS WAR while offline."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				response = "You cannot participate in the ENDLESS WAR while offline."
+    
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
-		user_data = EwUser(member = message.author)
 		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
 
-			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
+				response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
 		# Check the main command map for the requested command.
 		global cmd_map

@@ -120,7 +120,7 @@ async def adorn(cmd):
 				item.item_props['adorned'] = 'false'
 				response = "You successfully dedorn your " + item.item_props['cosmetic_name'] + "."
 			else:
-				if adorned_items >= math.ceil(user_data.slimelevel / ewcfg.max_adorn_mod):
+				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
 					response = "You can't adorn anymore cosmetics."
 				else:
 					item.item_props['adorned'] = 'true'
