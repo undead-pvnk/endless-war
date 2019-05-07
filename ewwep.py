@@ -438,7 +438,16 @@ async def attack(cmd):
 					slimes_damage *= 2
 				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
 					slimes_damage *= 0.75
+				if ewcfg.mutation_id_socialanimal in user_mutations:
+					allies_in_district = district_data.get_players_in_district(
+						min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
+						life_states = [ewcfg.life_state_enlisted],
+						factions = [user_data.faction]
+					)
+					if user_data.id_user in allies_in_district:
+						allies_in_district.remove(user_data.id_user)
 
+					slimes_damage *= 1 + 0.05 * len(allies_in_district)
 				if ewcfg.mutation_id_dressedtokill in user_mutations:
 					items = ewitem.inventory(
 						id_user = cmd.message.author.id,
@@ -538,6 +547,8 @@ async def attack(cmd):
 						slimes_tokiller = shotee_data.slimes / 2
 					district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
 					levelup_response = user_data.change_slimes(n = slimes_tokiller, source = ewcfg.source_killing)
+					if ewcfg.mutation_id_fungalfeaster in user_mutations:
+						user_data.hunger = max(0, user_data.hunger - user_data.get_hunger_max() / 2)
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user

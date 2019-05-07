@@ -909,24 +909,37 @@ async def scout(cmd):
 		if user_data.id_user in players_in_district:
 			players_in_district.remove(user_data.id_user)
 
+
+		killers_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [ewcfg.faction_killers])
+
+		rowdys_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [ewcfg.faction_killers])
+		num_players = 0
+		players_resp = "\n\n"
+		detailed_resp = ":"
 		for player in players_in_district:
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
 			scoutee_mutations = scoutee_data.get_mutations()
 			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
-				players_in_district.remove(player)
+				continue
+			if ewcfg.mutation_id_whitenationalist in scoutee_mutations and market_data.weather == "snowy":
+				continue
+			if ewcfg.mutation_id_threesashroud in scoutee_mutations and scoutee_data.life_state == ewcfg.life_state_enlisted:
+				allies_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [scoutee_data.faction])
+				if len(allies_in_district) > 4:
+					continue
+			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
+				num_players += math.floor(scoutee_data.slimelevel / 5)
+
+			detailed_resp += "\n" + scoutee_data.get_mention()
+			num_players += 1
 	
-		num_players = len(players_in_district)
-		players_resp = "\n\n"
 		if num_players == 1:
 			players_resp += "You notice 1 suspicious figure in this location"
 		else:
 			players_resp += "You notice {} suspicious figures in this location".format(num_players)
 
 		if ewcfg.mutation_id_keensmell in mutations:
-			players_resp += ":"
-			for player in players_in_district:
-				scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
-				players_resp += "\n" + scoutee_data.get_mention()
+			players_resp += detailed_resp
 		else:
 			players_resp += "."
 

@@ -462,9 +462,14 @@ async def capture_tick(id_server):
 
 					else:  # if the district isn't already controlled by the player's faction and the capture isn't halted by an enemy
 						faction_capture = player_faction
-						capture_speed += 1
+						player_capture_speed = 1
 						if ewcfg.mutation_id_lonewolf in mutations and len(gangsters_in_district) == 1:
-							capture_speed += 1
+							player_capture_speed *= 2
+						if ewcfg.mutation_id_patriot in mutations and dist.controlling_faction == player_faction:
+							player_capture_speed *= 2
+							
+
+						capture_speed += player_capture_speed
 						dc_stat_increase_list.append(player_id)
 
 
