@@ -448,21 +448,27 @@ async def attack(cmd):
 
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
+					if ewcfg.mutation_id_thickerthanblood in mutations:
+						slimes_damage = 0
+					else:
+						slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
 
 				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
-				slime_splatter = min(slimes_damage, max(shootee_data.slimes - shootee_data.bleed_storage, 0))
 				if was_juvenile or user_data.faction == shootee_data.faction:
-					district_data.change_slimes(n = slime_splatter / 2, source = ewcfg.source_killing)
-					shootee_data.bleed_storage += int(slime_splatter / 2)
-					shootee_data.change_slimes(n = -int(slime_splatter / 2), source = ewcfg.source_damage)
-					damage = str(slimes_damage)
+					slimes_toboss = 0
+					slimes_tobleed = int(slimes_damage / 2)
 				else:
-					boss_slimes += int(slime_splatter / 2)
-					district_data.change_slimes(n = slime_splatter / 4, source = ewcfg.source_killing)
-					shootee_data.bleed_storage += int(slime_splatter / 4)
-					shootee_data.change_slimes(n = -int(3 * slime_splatter / 4), source = ewcfg.source_damage)
-					damage = str(slimes_damage)
+					slimes_toboss = int(slimes_damage / 2)
+					slimes_tobleed = int(slimes_damage / 4)
+				damage = str(slimes_damage)
+				slimes_directdamage = slimes_damage - slimes_tobleed
+				slime_splatter = slimes_damage - slimes_toboss - slimes_tobleed
+
+				boss_slimes += slimes_toboss
+				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+				shootee_data.bleed_storage += slimes_tobleed
+				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
 
 				if was_killed:
 					#adjust statistics
@@ -494,8 +500,14 @@ async def attack(cmd):
 					# explode, damaging everyone in the district
 
 					# release bleed storage
-					district_data.change_slimes(n = shootee_data.slimes / 2, source = ewcfg.source_killing)
-					levelup_response = user_data.change_slimes(n = shootee_data.slimes / 2, source = ewcfg.source_killing)
+					if ewcfg.mutation_id_thickerthanblood in mutations:
+						slimes_todistrict = 0
+						slimes_tokiller = shootee_data.slimes
+					else:
+						slimes_todistrict = shootee_data.slimes / 2
+						slimes_tokiller = shotee_data.slimes / 2
+					district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
+					levelup_response = user_data.change_slimes(n = slimes_tokiller, source = ewcfg.source_killing)
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
