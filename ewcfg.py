@@ -535,6 +535,88 @@ cmd_tm_players = cmd_tm_prefix + "players"
 cmd_tm_start = cmd_tm_prefix + "start"
 cmd_tm_endgame = cmd_tm_prefix + "endgame"
 
+turtle_commands = [
+
+	cmd_kill,
+	cmd_shoot,
+	cmd_shoot_alt1,
+	cmd_attack,
+	cmd_mine,
+	cmd_harvest,
+	cmd_salute,
+	cmd_unsalute,
+	cmd_hurl,
+	cmd_equip,
+	cmd_data,
+	cmd_patchnotes,
+	cmd_howl,
+	cmd_howl_alt1,
+	cmd_order,
+	cmd_inventory,
+	cmd_inventory_alt1,
+	cmd_inventory_alt2,
+	cmd_inventory_alt3,
+	cmd_move,
+	cmd_move_alt1,
+	cmd_move_alt2,
+	cmd_move_alt3,
+	cmd_halt,
+	cmd_halt_alt1,
+	cmd_inspect,
+	cmd_inspect_alt1,
+	cmd_look,
+	cmd_scout,
+	cmd_map,
+	cmd_wiki,
+	cmd_booru,
+	cmd_use,
+	cmd_news,
+	cmd_buy,
+	cmd_accept,
+	cmd_refuse,
+	cmd_give,
+	cmd_leaderboard,
+	cmd_leaderboard_alt1,
+	
+	cmd_restoreroles,
+	
+	cmd_slimeoid,
+	cmd_challenge,
+	cmd_slimeoidbattle,
+	
+	# Quadrants commands
+	cmd_add_quadrant,
+	cmd_get_quadrants,
+	cmd_get_flushed,
+	cmd_get_flushed_alt1,
+	cmd_get_pale,
+	cmd_get_pale_alt1,
+	cmd_get_caliginous,
+	cmd_get_caliginous_alt1,
+	cmd_get_ashen,
+	cmd_get_ashen_alt1,
+	
+	# Turtle Murder Command
+	cmd_tm_defend,
+	cmd_tm_vote,
+	cmd_tm_pray,
+	cmd_tm_oracle,
+	cmd_tm_dance,
+	cmd_tm_distract,
+	cmd_tm_yahtzee,
+	cmd_tm_gamering,
+	cmd_tm_prizes,
+	cmd_tm_sell,
+	cmd_tm_target,
+	cmd_tm_coins,
+	cmd_tm_enter,
+	cmd_tm_players,
+	cmd_tm_start,
+	cmd_tm_endgame
+
+
+]
+
 turtle_only_commands = [
 	cmd_tm_defend, 
 	cmd_tm_vote,
@@ -6711,7 +6793,7 @@ tm_items = [
 		str_name = "Turtle Knife",
 		str_desc = "Knife with a turtle-shaped handle. Level 1 Weapon.",
 		use_pois = turtlemansion_pois,
-		str_use_success = "You prick yourself in the finger. Ouch! You bleed all over the floor.",
+		str_use_success = "You prick yourself in the finger. Ouch!",
 		
 
 		str_kill = "You attack {target} with your {weapon}.",

@@ -19,11 +19,7 @@ class EwTurtleMurder:
 	game_state = ewcfg.tm_game_state_inactive
 	casino_state = ewcfg.tm_casino_state_closed
 
-	magic_blue = False
-	magic_green = False
-	magic_red = False
-	magic_black = False
-	magic_white = False
+	magic = {}
 
 	boss_hp = 8
 	boss_last_action = ""
@@ -36,18 +32,21 @@ class EwTurtleMurder:
 	):
 		if id_server != None:
 			self.id_server = id_server
+			self.magic = {
+				"blue": False,
+				"green": False,
+				"red": False,
+				"black": False,
+				"white": False
+			}
 
-			data = ewutils.execute_sql_query("SELECT {time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action}, {current_victim} FROM tm_turtles WHERE {id_server} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {time_start}, {game_state}, {casino_state}, {magic}, {boss_hp}, {boss_last_action}, {time_boss_last_action}, {current_victim} FROM tm_turtles WHERE {id_server} = %s".format(
 				id_server = ewcfg.col_id_server,
 				time_start = ewcfg.col_tm_time_start,
 				game_state = ewcfg.col_tm_game_state,
 				casino_state = ewcfg.col_tm_casino_state,
 
-				magic_blue = ewcfg.col_tm_magic_blue,
-				magic_green = ewcfg.col_tm_magic_green,
-				magic_red = ewcfg.col_tm_magic_red,
-				magic_black = ewcfg.col_tm_magic_black,
-				magic_white = ewcfg.col_tm_magic_white,
+				magic = ewcfg.col_tm_magic,
 
 				boss_hp = ewcfg.col_tm_boss_hp,
 				boss_last_action = ewcfg.col_tm_boss_last_action,
@@ -63,31 +62,34 @@ class EwTurtleMurder:
 				self.game_state = data[0][1]
 				self.casino_state = data[0][2]
 
-				self.magic_blue = data[0][3]
-				self.magic_green = data[0][4]
-				self.magic_red = data[0][5]
-				self.magic_black = data[0][6]
-				self.magic_white = data[0][7]
+				self.magic["blue"] = ("1" == data[0][3][0])
+				self.magic["green"] = ("1" == data[0][3][1])
+				self.magic["red"] = ("1" == data[0][3][2])
+				self.magic["black"] = ("1" == data[0][3][3])
+				self.magic["white"] = ("1" == data[0][3][4])
 
-				self.boss_hp = data[0][8]
-				self.boss_last_action = data[0][9]
-				self.time_boss_last_action = data[0][10]
-				self.current_victim = data[0][11]
+				self.boss_hp = data[0][4]
+				self.boss_last_action = data[0][5]
+				self.time_boss_last_action = data[0][6]
+				self.current_victim = data[0][7]
 			else:
 				self.persist()
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{time_start}, {game_state}, {casino_state}, {magic_blue}, {magic_green}, {magic_red}, {magic_black}, {magic_white}, {boss_hp}, {boss_last_action}, {time_boss_last_action}, {current_victim}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
+		magic = ""
+		magic.append(str(int(self.magic["blue"])))
+		magic.append(str(int(self.magic["green"])))
+		magic.append(str(int(self.magic["red"])))
+		magic.append(str(int(self.magic["black"])))
+		magic.append(str(int(self.magic["white"])))
+
+		ewutils.execute_sql_query("REPLACE INTO tm_turtles({id_server},{time_start}, {game_state}, {casino_state}, {magic}, {boss_hp}, {boss_last_action}, {time_boss_last_action}, {current_victim}) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)".format(
 				id_server = ewcfg.col_id_server,
 				time_start = ewcfg.col_tm_time_start,
 				game_state = ewcfg.col_tm_game_state,
 				casino_state = ewcfg.col_tm_casino_state,
 
-				magic_blue = ewcfg.col_tm_magic_blue,
-				magic_green = ewcfg.col_tm_magic_green,
-				magic_red = ewcfg.col_tm_magic_red,
-				magic_black = ewcfg.col_tm_magic_black,
-				magic_white = ewcfg.col_tm_magic_white,
+				magic = ewcfg.col_tm_magic,
 
 				boss_hp = ewcfg.col_tm_boss_hp,
 				boss_last_action = ewcfg.col_tm_boss_last_action,
@@ -99,11 +101,7 @@ class EwTurtleMurder:
 				self.game_state,
 				self.casino_state,
 
-				(1 if self.magic_blue else 0),
-				(1 if self.magic_green else 0),
-				(1 if self.magic_red else 0),
-				(1 if self.magic_black else 0),
-				(1 if self.magic_white else 0),
+				magic,
 
 				self.boss_hp,
 				self.boss_last_action,
@@ -221,6 +219,36 @@ class EwTurtle:
 			channel = ewutils.get_channel(server, poi.channel)
 			await ewutils.send_message(client, channel, ewutils.formatMessage(member,message))
 
+	def get_combat_power(self):
+		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		user_data = EwUser(id_user = self.id_user, id_server =  self.id_server)
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		if self.weapon == "":
+			return self.combat_level, resp_cont
+		weapon_item = EwItem(id_item = turtle_data.weapon)
+		weapon_def = ewitem.id_to_tmitem.get(weapon_item.item_props.get("tm_item_id"))
+		attack_power = self.combat_level
+		if weapon_def.weapon_level < 0:
+			if weapon_def.id_item == ewcfg.tm_item_id_fluorite_octet:
+				dice = [8, 8, 8, 8, 8, 8, 8, 8]
+				result = []
+				for die in dice:
+					result.append(random.randrange(die) + 1)
+				for die in result:
+					if die == 8:
+						attack_power += 1
+				resp_cont.add_channel_response(
+					poi.channel,
+					"Rolling the {}: {}".format(weapon_def.str_name, result)
+				)
+			else:
+				attack_power = -1
+		else:
+			attack_power += weapon_def.weapon_level
+
+		return [attack_power, resp_cont]
+		
+
 class EwMurder:
 	id_server = ""
 	id_culprit = ""
@@ -288,6 +316,8 @@ class EwMurder:
 		next_action = ""
 		if self.boss_last_action == ewcfg.tm_boss_action_charge:
 			next_action = ewcfg.tm_boss_action_aoe
+		elif self.boss_last_action == "":
+			next_action = ewcfg.tm_boss_action_charge
 		elif random.random() > 0.33:
 			next_action = ewcfg.tm_boss_action_strike
 		else:
@@ -690,6 +720,35 @@ async def tm_fix_targets(id_server):
 	return
 
 	
+async def tm_boss_begin(id_server):
+	game_data = EwTurtleMurder(id_server = id_server)
+	for color in game_data.magic:
+		if not color:
+			return
+
+	client = ewutils.get_client()
+	server = ewcfg.server_list.get(id_server)
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+
+	game_data.game_state = ewcfg.tm_game_state_bossfight
+	game_data.persist()
+	players = tm_get_players(id_server)
+	for id_user in players:
+		turtle_data = EwTurtle(id_user = id_user, id_server = id_server)
+		if turtle_data.life_state == ewcfg.tm_life_state_active:
+			user_data = EwUser(id_user = id_user, id_server = id_server)
+			user_data.poi = ewcfg.poi_id_turtlegraveyard
+			member = server.get_member(id_user)
+			await ewrolemgr.updateRoles(
+				client = client,
+				member = member
+			)
+
+	response = ewcfg.str_tm_bossfight["begin"]
+	resp_cont.add_channel_response(ewcfg.channel_turtlegraveyard, response)
+	await resp_cont.post()
+	await tm_boss_act(id_server)
+
 	
 
 async def tm_boss_act(id_server):
@@ -753,6 +812,212 @@ async def tm_boss_act(id_server):
 
 
 
+async def tm_attack(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	time_now = time.time()
+    
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
+	if turtle_data.life_state == ewcfg.tm_life_state_dead:
+		response = "Too late for that."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)a
+	weapon_def = None
+	if turtle_data.weapon != "":
+		weapon_item = EwItem(id_item = turtle_data.weapon)
+		weapon_def = ewitem.id_to_tmitem.get(weapon_item.item_props.get("tm_item_id"))
+
+	if game_data.game_state == ewcfg.tm_game_state_bossfight:
+		if turtle_data.time_last_action > game_data.time_boss_last_action:
+			response = "You've already acted this turn."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+		[attack_power, power_response] = turtle_data.get_combat_power()
+		turtle_data.last_action = ewcfg.tm_action_attack
+		turtle_data.time_last_action = time_now
+		turtle_data.combat_level = 0
+		turtle_data.persist()
+
+
+		if weapon_def is None:
+			response = "You attack the Endless Turtle with your bare fists."
+		else:
+			response = weapon_def.str_kill.format(target = "the Endless Turtle", weapon = weapon_def.str_name)
+
+		resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
+
+		resp_cont.add_response_container(power_response)
+		if attack_power > 0:
+			game_data.boss_hp -= attack_power
+			game_data.persist()
+			response = "You deal {} points of damage.".format(attack_power)
+		else:
+			response = "But it has no effect."
+
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+		
+		await resp_cont.post()
+
+		if game_data.boss_hp <= 0:
+			return await tm_boss_defeat(id_server = cmd.message.server.id)
+		else:
+			return await tm_boss_act(id_server = cmd.message.server.id)
+
+	
+	if not poi.pvp:
+		turtle_data.last_action = ewcfg.tm_action_attack
+		turtle_data.time_last_action = 0
+		turtle_data.persist()
+		response = "Violence is forbidden here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif cmd.mentions_count == 0:
+		turtle_data.last_action = ewcfg.tm_action_attack
+		turtle_data.time_last_action = 0
+		turtle_data.persist()
+		response = "Please specify a target."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	elif cmd.mentions_count > 1:
+		turtle_data.last_action = ewcfg.tm_action_attack
+		turtle_data.time_last_action = 0
+		turtle_data.persist()
+		response = "Only one murder at a time."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		
+		if turtle_data.time_last_action + ewcfg.cd_tm_kill > time_now:
+			response = "You can only {} every {} seconds.".format(cmd.tokens[0], ewcfg.cd_tm_kill
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		member = cmd.mentions[0]
+		target_data = EwUser(member = member)
+		target_turtle = EwTurtle(id_user = target_data.id_user, id_server = target_data.id_server)
+		if not target_data.turtlemurder:
+			response = "You can only attack other turtles."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if target_data.poi != user_data.poi \
+		and (weapon_def is None or weapon_def.id_item != ewcfg.tm_item_id_deathnote):
+			response = "You can't reach them from here."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+		[defense_power, defense_response] = target_turtle.get_combat_power()
+		target_turtle.combat_level = 0
+		target_turtle.persist()
+
+		[attack_power, power_response] = turtle_data.get_combat_power()
+		turtle_data.combat_level = 0
+		turtle_data.last_action = ewcfg.tm_action_attack
+		turtle_data.time_last_action = time_now
+		turtle_data.persist()
+
+		was_killed = False
+		weapon_id = "" if weapon_def is None else weapon_def.id_item
+
+		if weapon_def is None:
+			response = "You attack {} with your bare fists.".format(member.display_name)
+		elif attack_power > 0:
+			response = weapon_def.str_kill.format(target = member.display_name, weapon = weapon_def.str_name)
+		elif weapon_def.id_item == ewcfg.tm_id_item_deathnote:
+			if turtle_data.last_action == ewcfg.tm_action_bleed:
+				turtle_data.last_action = ewcfg.tm_action_attack
+				turtle_data.time_last_action = 0
+				turtle_data.persist()
+				response = weapon_def.str_kill.format(target = member.display_name, weapon = weapon_def.str_name)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(40)
+				target_data = EwUser(member = member)
+				target_turtle = EwTurtle(id_user = target_data.id_user, id_server = target_data.id_server)
+				if target_data.poi in ewcfg.turtlemansion_pois:
+					was_killed = True
+					response = "You grasp your chest, as your heart suddenly gives out and you die. The contents of your inventory are transferred to the casino."
+					deathreport = "You have died from a heart attack."
+					murder_data = EwMurder(
+						id_server = user_data.id_server,
+						id_victim = target_data.id_user,
+						id_culprit = user_data.id_user,
+						poi = target_data.poi,
+						weapon = weapon_id
+					)
+					target_data.poi = ewcfg.poi_id_turtlehell
+					target_data.persist()
+					game_data.game_state = ewcfg.tm_game_state_investigation
+					game_data.persist()
+					target_turtle.die()
+					target_turtle.persist()
+					resp_cont.add_channel_response(ewcfg.id_to_poi.get(target_data.poi).channel, ewutils.formatMessage(member, response))
+					resp_cont.add_channel_response(ewcfg.channel_turtlehell, ewutils.formatMessage(member, response))
+					return await resp_cont.post()
+				else:
+					return
+
+				
+			else:
+				response = "You need something to write with."
+				resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
+				return await resp_cont.post()
+		elif weapon_def.id_item == ewcfg.tm_item_id_pokeball:
+			pokeball_district = EwDistrict(id_server = id_server, district = ewcfg.poi_id_turtlepokeball)
+			players = pokeball_district.get_players_in_district()
+			for id_inball in players:
+				user_inball = EwUser(id_user = id_inball, id_server = id_server)
+				if user_inball.turtlemurder:
+					response = "You can only capture one turtle at a time."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			target_data.poi = ewcfg.poi_id_turtlepokeball
+			target_data.persist()
+			response = "You can capture {} in your {}.".format(member.display_name, weapon_def.str_name)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+				
+			
+		resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
+		resp_cont.add_response_container(power_response)
+		resp_cont.add_response_container(defense_response)
+
+		if attack_power >= defense_power:
+			was_killed = True
+		else:
+			response = "But they parry with their {}".(("fists" if defense_weapon_def is None else defense_weapon_def.str_name)
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
+
+		if was_killed:
+			deathreport = "You were killed by {}.".format(cmd.message.author.display_name)
+			murder_data = EwMurder(
+				id_server = user_data.id_server,
+				id_victim = target_data.id_user,
+				id_culprit = user_data.id_user,
+				poi = target_data.poi,
+				weapon = weapon_id
+			)
+			target_data.poi = ewcfg.poi_id_turtlehell
+			target_data.persist()
+			game_data.game_state = ewcfg.tm_game_state_investigation
+			game_data.persist()
+			target_turtle.die()
+			target_turtle.persist()
+			resp_cont.add_channel_response(ewcfg.channel_turtlehell, ewutils.formatMessage(member, response))
+			await resp_cont.post()
+			return await ewrolesmgr.updateRoles(
+				client = cmd.client,
+				member = member
+			)
+		else:
+			return await resp_cont.post()
+			
+
+
+
+		
+		
+	
 
 async def tm_defend(cmd):
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -760,15 +1025,12 @@ async def tm_defend(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	time_now = time.time()
-	if not user_data.turtlemurder:
-		response = "The best defense is a good offense."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
     
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
 
 	if turtle_data.life_state == ewcfg.tm_life_state_dead:
-		response = "You're too busy being dead to {}.".format(cmd.tokens[0])
+		response = "Too late for that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if turtle_data.life_state == ewcfg.tm_life_state_pregame:
@@ -796,6 +1058,8 @@ async def tm_defend(cmd):
 		
 
 async def tm_use(cmd, id_item):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	id_server = cmd.message.server.id
 	id_user = cmd.message.author.id
@@ -902,23 +1166,23 @@ async def tm_use(cmd, id_item):
 	elif item_def.id_item == ewcfg.tm_item_id_badge:
 		ewitem.item_delete(id_item = id_item)
 		success = True
-		game_state.magic_red = True
+		game_state.magic["red"] = True
 	elif item_def.id_item == ewcfg.tm_item_id_dollarbill:
 		ewitem.item_delete(id_item = id_item)
 		success = True
-		game_state.magic_green = True
+		game_state.magic["green"] = True
 	elif item_def.id_item == ewcfg.tm_item_id_pearl:
 		ewitem.item_delete(id_item = id_item)
 		success = True
-		game_state.magic_white = True
+		game_state.magic["white"] = True
 	elif item_def.id_item == ewcfg.tm_item_id_miniature:
 		ewitem.item_delete(id_item = id_item)
 		success = True
-		game_state.magic_blue = True
+		game_state.magic["blue"] = True
 	elif item_def.id_item == ewcfg.tm_item_id_crystal:
 		ewitem.item_delete(id_item = id_item)
 		success = True
-		game_state.magic_red = True
+		game_state.magic["black"] = True
 	elif item_def.id_item == ewcfg.tm_item_id_cheatcode:
 		success = True
 		user_data.poi = ewcfg.poi_id_turtleweebcorner
@@ -947,6 +1211,7 @@ async def tm_use(cmd, id_item):
 		client = cmd.client,
 		member = cmd.message.author
 	)
+	await tm_boss_begin(id_server = cmd.message.server.id)
 
 
 
@@ -956,9 +1221,6 @@ async def tm_vote(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	time_now = time.time()
-	if not user_data.turtlemurder:
-		response = "Vote with your slime."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
     
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
@@ -1007,9 +1269,6 @@ async def tm_pray(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	time_now = time.time()
-	if not user_data.turtlemurder:
-		response = "Your prayer goes unanswered."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
     
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
@@ -1082,13 +1341,12 @@ async def tm_pray(cmd):
 
 
 async def tm_oracle(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	time_now = time.time()
-	if not user_data.turtlemurder:
-		response = "There is no oracle here."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
     
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
@@ -1186,13 +1444,12 @@ async def tm_oracle(cmd):
 	return await resp_cont.post()
 	
 async def tm_dance(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	time_now = time.time()
-	if not user_data.turtlemurder:
-		response = "No."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
     
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_user)
@@ -1237,6 +1494,8 @@ async def tm_dance(cmd):
 	return await resp_cont.post()
 	
 async def tm_mine(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1280,6 +1539,8 @@ async def tm_mine(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 async def tm_distract(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1303,6 +1564,8 @@ async def tm_distract(cmd):
 
 
 async def tm_yahtzee(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1395,6 +1658,8 @@ def tm_gamering(cmd):
 
 
 async def tm_prizes(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1426,6 +1691,8 @@ async def tm_prizes(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def tm_buy(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1474,6 +1741,8 @@ async def tm_buy(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 async def tm_sell(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1519,6 +1788,8 @@ async def tm_sell(cmd):
 		response = "You sold the {} and got {} coins.".format(item_sought.get("name"), price)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 async def tm_enter(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1545,6 +1816,8 @@ async def tm_enter(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 async def tm_players(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	response = "The following turtles are currently playing:"
 	players = tm_get_players(id_server = cmd.message.server.id)
 	for id_user in players:
@@ -1553,6 +1826,8 @@ async def tm_players(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def tm_start(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
@@ -1686,6 +1961,8 @@ async def tm_start(cmd):
 
 
 async def tm_target(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1702,6 +1979,8 @@ async def tm_target(cmd):
 	await turtle_data.direct_message(response)
 
 async def tm_coins(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
@@ -1717,6 +1996,46 @@ async def tm_coins(cmd):
 
 	await turtle_data.direct_message(response)
 
+async def tm_look(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	event_resp = ""
+	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
+	if user_data.poi == ewcfg.poi_id_turtlelab:
+		for color in game_data.magic:
+			if game_data.magic.get(color):
+				event_resp += "\nThe {} socket glows brightly.".format(color)
+
+	if len(event_resp) > 0:
+		event_resp += "\n"
+	victims = tm_get_victims(id_server = cmd.message.server.id)
+	for id_victim in victims:
+		victim_player = EwPlayer(id_user = id_victim)
+		murder_data = EwTurtle(id_victim = id_victim, id_server = cmd.message.server.id)
+		if murder_data.resolved:
+			continue
+		if murder_data.weapon in ewcfg.id_to_tmitem:
+			event_resp += "\n" + ewcfg.id_to_tmitem.get(murder_data.weapon).str_crimescene.format(victim = victim_player.display_name)
+		elif weapon == "":
+			event_resp += "\n{victim} lies dead on the floor with several bruises on their face and strangling marks on their throat.".format(victim = victim_player.display_name)
+		elif weapon == ewcfg.tm_weapon_prayer:
+			event_resp += "\nAn unrecognizable figure lies dead on the floor. Their flesh is pitch-black and cracked and their face is contorted in agony."
+
+	# post result to channel
+	if poi != None:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"You stand {} {}.\n\n{}\n{}".format(
+				poi.str_in,
+				poi.str_name,
+				poi.str_desc,
+				event_resp
+			)
+		))
+	
 
 
 async def tm_endgame(cmd):
@@ -1725,6 +2044,6 @@ async def tm_endgame(cmd):
 
 	response = "Game ended by {}.".format(cmd.message.author.display_name)
 	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
-	resp_cont.add_channel_response(ewcfg.channel_kameisland)
+	resp_cont.add_channel_response(ewcfg.channel_kameisland, response)
 	return await resp_cont.post()
 
