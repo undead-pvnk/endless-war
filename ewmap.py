@@ -118,7 +118,7 @@ class EwPoi:
 	transport_lines = set()
 
         # if it's part of the turtle mansion
-        turtlemurder = False
+	turtlemurder = False
 
 
 	def __init__(

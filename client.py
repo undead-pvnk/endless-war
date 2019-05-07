@@ -179,7 +179,6 @@ cmd_map = {
 	ewcfg.cmd_slimecoin: ewmarket.slimecoin,
 	ewcfg.cmd_slimecoin_alt1: ewmarket.slimecoin,
 	ewcfg.cmd_slimecoin_alt2: ewmarket.slimecoin,
-	ewcfg.cmd_slimecoin_alt3: ewmarket.slimecoin,
 
 	# Donate your slime to SlimeCorp in exchange for SlimeCoin.
 	ewcfg.cmd_donate: ewmarket.donate,

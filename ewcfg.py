@@ -9,6 +9,7 @@ from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+from ewturtlemurder import EwTurtleItem
 
 # Global configuration options.
 version = "v3.2"
@@ -40,10 +41,11 @@ slimeoid_state_active = 2
 slimeoid_state_stored = 3
 
 # turtle murder game states
-tm_game_state_inactive = 0
+tm_game_state_pregame = 0
 tm_game_state_murder = 1
 tm_game_state_investigate = 2
 tm_game_state_trial = 3
+tm_game_state_postgame = 4
 tm_game_state_bossfight = 10
 
 # turtle murder casino states
@@ -5016,7 +5018,7 @@ for poi in poi_list:
 
 	if poi.turtlemurder:
 		turtlemurder_pois.append(poi.id_poi)
-		if poi.pvp
+		if poi.pvp:
 			turtlemansion_pois.append(poi.id_poi)
 
 # maps districts to their immediate neighbors
@@ -6805,7 +6807,7 @@ tm_items = [
 		weapon = True,
 		weapon_level = 2,
 		str_name = "Scissor Blade.",
-		str_desc = "Don't lose your way! Level 2 Weapon."
+		str_desc = "Don't lose your way! Level 2 Weapon.",
 		
 
 		str_kill = "You attack {target} with your {weapon}.",
@@ -6820,7 +6822,7 @@ tm_items = [
 		str_desc = "There she is. Forged in fire by the smiths of Pipplemop, commissioned by the sage Lord of the Wozzinjay Fiefdom in the Realm of the Snargly Fruzmigbubbins, The Warhammer Of Zillyhoo. Level 2 Weapon.",
 		
 
-		str_kill = "You attack {target} with your {weapon}."
+		str_kill = "You attack {target} with your {weapon}.",
 		str_crime_scene = "{victim} lies dead on the floor, their head bashed in from heavy blunt force trauma. The Warhammer of Zillyhoo.",
 	),
 	EwTurtleItem(
@@ -6948,7 +6950,7 @@ tm_items = [
 		str_name = "Nendoroid",
 		str_desc = "A cute little figure of your favorite anime character.",
 		use_pois = [poi_id_turtleweebcorner],
-		use_rewards = [tm_item_id_scissorblade, tm_item_id_deathnote, tm_item_cheatcode],
+		use_rewards = [tm_item_id_scissorblade, tm_item_id_deathnote, tm_item_id_cheatcode],
 		str_use_success = "The otaku goes crazy with joy over the little plastic figure.",
 		
 

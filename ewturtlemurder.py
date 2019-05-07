@@ -16,8 +16,8 @@ class EwTurtleMurder:
 	id_server = ""
 
 	time_start = 0
-	game_state = ewcfg.tm_game_state_inactive
-	casino_state = ewcfg.tm_casino_state_closed
+	game_state = 0
+	casino_state = 0
 
 	magic = {}
 
@@ -117,8 +117,8 @@ class EwTurtle:
 
 	id_target = ""
 	weapon = ""
-	life_state = ewcfg.tm_life_state_active
-	win_state = ewcfg.tm_win_state_neutral
+	life_state = 1
+	win_state = 0
 	combat_level = 0
 	last_action = ""
 	time_last_action = 0
@@ -480,8 +480,8 @@ def tm_get_victims(id_server):
 def tm_get_votes(id_server, id_victim):
 	votes = {}
 	data = ewutils.execute_sql_query("SELECT {id_user}, {id_votee} FROM tm_votes WHERE id_server = %s AND {id_victim} = %s".format(
-		id_user = ewcfg.col_id_user
-		id_votee = ewcfg.col_tm_id_votee
+		id_user = ewcfg.col_id_user,
+		id_votee = ewcfg.col_tm_id_votee,
 		id_victim = ewcfg.col_tm_id_victim
 	),(
 		id_server,
@@ -587,7 +587,7 @@ async def tm_trial_advance(id_server):
 	if tie or found_guilty_id != murder_data.id_culprit:
 		response += "You voted incorrectly. The culprit will not be punished. Case closed.\n"
 		if game_data.current_victim == culprit_data.current_victim:
-			if culprit_data.win_state != ewcfg.tm_win_state_lost
+			if culprit_data.win_state != ewcfg.tm_win_state_lost:
 				culprit_data.win_state = ewcfg.tm_win_state_won
 	else:
 		response += "You voted correctly. The culprit will be punished. Case closed.\n"
@@ -825,7 +825,7 @@ async def tm_attack(cmd):
 		response = "Too late for that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(user_data.poi)a
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	weapon_def = None
 	if turtle_data.weapon != "":
 		weapon_item = EwItem(id_item = turtle_data.weapon)
@@ -892,7 +892,7 @@ async def tm_attack(cmd):
 	else:
 		
 		if turtle_data.time_last_action + ewcfg.cd_tm_kill > time_now:
-			response = "You can only {} every {} seconds.".format(cmd.tokens[0], ewcfg.cd_tm_kill
+			response = "You can only {} every {} seconds.".format(cmd.tokens[0], ewcfg.cd_tm_kill)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		member = cmd.mentions[0]
 		target_data = EwUser(member = member)
@@ -985,7 +985,8 @@ async def tm_attack(cmd):
 		if attack_power >= defense_power:
 			was_killed = True
 		else:
-			response = "But they parry with their {}".(("fists" if defense_weapon_def is None else defense_weapon_def.str_name)
+			def_name = "fists" if defense_weapon_def is None else defense_weapon_def.str_name
+			response = "But they parry with their {}".format(def_name)
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
 		if was_killed:
@@ -1630,7 +1631,7 @@ async def tm_yahtzee(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-def tm_gamering(cmd):
+async def tm_gamering(cmd):
 	game_data = EwTurtleMurder(id_server = cmd.message.server.id)
 	user_data = EwUser(member = cmd.message.author)
 	turtle_data = EwTurtle(id_server = user_data.id_server, id_user = user_data.id_server)
