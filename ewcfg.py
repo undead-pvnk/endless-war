@@ -1647,6 +1647,22 @@ food_list = [
 
 	),
 	EwFood(
+		id_food = "pepperoniTwo",
+		alias = [
+			"peperoni2",
+			"pep2"
+		],
+		recover_hunger = 60,
+		price = 6,
+		inebriation = 0,
+		str_name = 'slice of pepperoni pizza',
+		vendors = [vendor_pizzahut],
+		str_eat = "You chomp right into the salty, spicy sausage slice, bro! Cowabunga, my dude!!",
+
+		str_desc = "An apparently appetizing slice of pepperoni pizza. It’s crust is limp and soggy from the excess grease it's slathered in, which is about the only thing you can taste on it. Pure Bliss."
+
+	),
+	EwFood(
 		id_food = "meatlovers",
 		alias = [
 			"meatlovers",
