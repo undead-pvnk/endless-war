@@ -216,7 +216,6 @@ async def scavenge(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
 
-
 	time_now = int(time.time())
 	response = ""
 
