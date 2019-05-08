@@ -205,7 +205,7 @@ CREATE TABLE mutations (
 	id_server varchar(128) NOT NULL,
 	id_user varchar(128) NOT NULL,
 	mutation varchar(32) NOT NULL,
-	time_lastuse int NOT NULL DEFAULT '0',
+	data varchar(128) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (mutation_counter)
 );
