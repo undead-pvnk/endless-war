@@ -221,3 +221,60 @@ CREATE TABLE transports (
 
 	PRIMARY KEY(id_server, poi)
 );
+
+CREATE TABLE tm_games (
+	id_server varchar(128) NOT NULL,
+
+	time_start int NOT NULL DEFAULT '0',
+	game_state int NOT NULL DEFAULT '0',
+	casino_state int NOT NULL DEFAULT '0',
+
+	magic varchar(32) NOT NULL DEFAULT '00000',
+
+	boss_hp int NOT NULL DEFAULT '8',
+	boss_last_action varchar(32) NOT NULL DEFAULT '',
+	time_boss_last_action int NOT NULL DEFAULT '0',
+
+	current_victim varchar(128) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server)
+);
+
+CREATE TABLE tm_turtles (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+
+	id_target varchar(128) NOT NULL DEFAULT '',
+	weapon varchar(128) NOT NULL DEFAULT '',
+
+	life_state int NOT NULL DEFAULT '0',
+	win_state int NOT NULL DEFAULT '0',
+	combat_level int NOT NULL DEFAULT '0',
+
+	last_action varchar(32) NOT NULL DEFAULT '',
+	time_last_action int NOT NULL DEFAULT '0',
+	coins int NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_server, id_user)
+);
+
+CREATE TABLE tm_murders (
+	id_server varchar(128) NOT NULL,
+	id_victim varchar(128) NOT NULL,
+
+	id_culprit varchar(128) NOT NULL DEFAULT '',
+	weapon varchar(128) NOT NULL DEFAULT '',
+	poi varchar(32) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, id_victim)
+);
+
+CREATE TABLE tm_votes (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+
+	id_victim varchar(128) NOT NULL DEFAULT '',
+	id_votee varchar(128) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, id_user)
+);
