@@ -592,7 +592,7 @@ async def suicide(cmd):
 
 	# Only allowed in the combat zone.
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = "You must go into the city to commit suicide."
+		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
 	else:
 		# Get the user data.
 		user_data = EwUser(member = cmd.message.author)

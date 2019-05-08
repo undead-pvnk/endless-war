@@ -77,6 +77,8 @@ cmd_map = {
 
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
+	ewcfg.cmd_suicide_alt1: ewwep.suicide,
+	ewcfg.cmd_suicide_alt2: ewwep.suicide,
 
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
