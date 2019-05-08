@@ -62,12 +62,16 @@ active_users_map = {}
 
 # Map of all command words in the game to their implementing function.
 cmd_map = {
+	"!dumpwef": ewwep.dumpwef,
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
+	#reload
+	ewcfg.cmd_reload : ewwep.reload,
+	
 	# Get a weapon into your inventory
 	ewcfg.cmd_arm: ewwep.arm,
 	ewcfg.cmd_arsenalize: ewwep.arm,

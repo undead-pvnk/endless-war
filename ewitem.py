@@ -234,6 +234,8 @@ def item_create(
 	item_type = None,
 	id_user = None,
 	id_server = None,
+	stack_max = -1,
+	stack_size = 0,
 	item_props = None
 ):
 	item_def = ewcfg.item_def_map.get(item_type)
@@ -261,8 +263,8 @@ def item_create(
 			id_user,
 			id_server,
 			(1 if item_def.soulbound else 0),
-			item_def.stack_max,
-			item_def.stack_size
+			stack_max,
+			stack_size
 		))
 
 		item_id = cursor.lastrowid

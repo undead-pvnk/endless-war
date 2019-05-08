@@ -12,6 +12,7 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
+from ewitem import EwItem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
@@ -70,6 +71,8 @@ async def enlist(cmd):
 async def mine(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	weapon_item = EwItem(id_item = user_data.weapon)
+	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 	# Kingpins can't mine.
 	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
@@ -92,6 +95,10 @@ async def mine(cmd):
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 		else:
+			pickaxe_bonus = 0
+			if weapon != None and ewcfg.weapon_class_pickaxes in weapon.classes:
+				pickaxe_bonus = float(weapon_item.item_props.get("ammo"))
+
 			# Determine if a poudrin is found.
 			poudrin = False
 			poudrinamount = 0
@@ -113,6 +120,8 @@ async def mine(cmd):
 			alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
 			mining_yield = min(mining_yield, alternate_yield)
+
+			mining_yield = mining_yield + (mining_yield * pickaxe_bonus)
 
 			user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
 
