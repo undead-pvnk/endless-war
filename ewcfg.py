@@ -6129,7 +6129,7 @@ mutation_id_corpseparty = "corpseparty" #TODO
 mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
-mutation_id_lucky = "lucky" #TODO
+mutation_id_lucky = "lucky"
 mutation_id_dressedtokill = "dressedtokill" 
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder" #TODO
@@ -6180,11 +6180,11 @@ mutations = [ # TODO all placeholders, add real flavor
 
 mutations_map = {}
 
-mutation_ids = []
+mutation_ids = set()
 
 for mutation in mutations:
 	mutations_map[mutation.id_mutation] = mutation
-	mutation_ids.append(mutation.id_mutation)
+	mutation_ids.add(mutation.id_mutation)
 
 quadrant_flushed = "flushed"
 quadrant_pale = "pale"

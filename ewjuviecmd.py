@@ -70,6 +70,7 @@ async def enlist(cmd):
 async def mine(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 
 	# Kingpins can't mine.
 	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
@@ -97,10 +98,13 @@ async def mine(cmd):
 			poudrinamount = 0
 
 			# juvies get poudrins 4 times as often as enlisted players
-			poudrin_rarity = ewcfg.poudrin_rarity / (2 if user_data.life_state == ewcfg.life_state_juvenile else 1)
-			poudrin_mined = random.randint(1, poudrin_rarity)
+			poudrin_chance = 1 / ewcfg.poudrin_rarity
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				poudrin_chance *= 2
+			if ewcfg.mutation_id_lucky in mutations:
+				poudrin_chance *= 1.33
 
-			if poudrin_mined == 1:
+			if random.random() < poudrin_chance:
 				poudrin = True
 				poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 

@@ -13,6 +13,7 @@ from ew import EwUser
 from ewdistrict import EwDistrict
 from ewtransport import EwTransport
 from ewmarket import EwMarket
+from ewmutation import EwMutation
 
 move_counter = 0
 
@@ -754,6 +755,7 @@ async def teleport(cmd):
 		response = "Teleport where?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	time_now = time.time()
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	response = ""
@@ -772,6 +774,16 @@ async def teleport(cmd):
 
 
 	if ewcfg.mutation_id_quantumlegs in mutations:
+		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
+		if len(mutation_data.data) > 0:
+			time_lastuse = int(mutation_data.data)
+		else:
+			time_lastuse = 0
+
+		if time_lastuse + 30*60 > time_now:
+			response = "You can't do that again yet."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
 		valid_destinations = set()
 		neighbors = ewcfg.poi_neighbors.get(user_data.poi)
 		for neigh in neighbors:
@@ -781,7 +793,8 @@ async def teleport(cmd):
 		if poi.id_poi not in valid_destinations:
 			response = "You can't {} that far.".format(cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+		mutation_data.data = str(time_now)
+		mutation_data.persist()
 		ewutils.moves_active[cmd.message.author.id] = 0
 		user_data.poi = poi.id_poi
 		user_data.persist()
