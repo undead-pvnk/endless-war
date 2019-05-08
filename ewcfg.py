@@ -488,6 +488,7 @@ togo_price_increase = 2
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
+farm_food_expir = 12 * 3600 * 4 # 2 days
 
 # property classes
 property_class_s = "s"
@@ -1412,6 +1413,7 @@ vendor_seafood = 'Red Mobster Seafood'	#rate of seafood is 1 slimecoin to 9 hung
 vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
 vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and Red Mobster
 vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
+vendor_farm = "Farm" #contains all the vegetables you can !reap
 
 # stock ids
 stock_kfc = "kfc"
@@ -1421,6 +1423,24 @@ stock_tacobell = "tacobell"
 # default stock rates
 default_stock_market_rate = 1000
 default_stock_exchange_rate = 1000000
+
+# dye ids
+dye_black = "blackdye"
+dye_maroon = "maroondye"
+dye_green = "greendye"
+dye_brown = "browndye"
+dye_tan = "tandye"
+dye_purple = "purpledye"
+dye_teal = "tealdye"
+dye_orange = "orangedye"
+dye_gray = "graydye"
+dye_red = "reddye"
+dye_lime = "limedye"
+dye_yellow = "yellowdye"
+dye_blue = "bluedye"
+dye_fuchsia = "fuchsiadye"
+dye_aqua = "aquadye"
+dye_white = "whitedye"
 
 
 # A map of name to EwWeather objects.
@@ -2519,6 +2539,166 @@ food_list = [
 		str_eat = "You pop open the lid of the heart-shaped box and shower yourself in warm sugary delicates! Your face and shirt is grazed numerous times by the melted confections, smearing brown all over you. Baby made a mess.",
 		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
 	),
+	EwFood(
+		id_food = "pinkrowddishes", #todo add eat text
+		recover_hunger = 60,
+		str_name = 'Pink Rowddishes',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The sweet-smelling tubers stain your hands pink.",
+		time_expir = farm_food_expir,
+		mill_result = dye_fuchsia
+	),
+	EwFood(
+		id_food = "sludgeberries",
+		recover_hunger = 60,
+		str_name = 'Sludgeberries',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The thick syrup covering the green and teal berries makes your hands sticky.",
+		time_expir = farm_food_expir,
+		mill_result = dye_teal
+	),
+	EwFood(
+		id_food = "pulpgourds",
+		recover_hunger = 60,
+		str_name = 'Pulp Gourds',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The easily malleable gourds form indents from even your lightest touch.",
+		time_expir = farm_food_expir,
+		mill_result = dye_orange
+	),
+	EwFood(
+		id_food = "joybeans",
+		recover_hunger = 60,
+		str_name = 'Joybeans',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The sugary candy-like beans have a thick gel interior that rots your teeth.",
+		time_expir = farm_food_expir,
+		mill_result = dye_blue
+	),
+	EwFood(
+		id_food = "brightshade",
+		recover_hunger = 60,
+		str_name = 'Brightshade',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The dangerously toxic chemicals that cover the flower bud burn your eyes and nose.",
+		time_expir = farm_food_expir,
+		mill_result = dye_white
+	),
+	EwFood(
+		id_food = "direapples",
+		recover_hunger = 60,
+		str_name = 'Dire Apples',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The vicious acidity from from the cyan and orange apples makes your mouth contort in pain with every bite.",
+		time_expir = farm_food_expir,
+		mill_result = dye_aqua
+	),
+	EwFood(
+		id_food = "purplekilliflower",
+		recover_hunger = 60,
+		str_name = 'Purple Killiflower',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The deep purple head has an extremely bitter aftertaste.",
+		time_expir = farm_food_expir,
+		mill_result = dye_purple
+	),
+	EwFood(
+		id_food = "razornuts",
+		recover_hunger = 60,
+		str_name = 'Razornuts',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The sharp edges of the hard nut slice open your mouth so that you taste slight hints of copper from your blood every bite.",
+		time_expir = farm_food_expir,
+		mill_result = dye_tan
+	),
+	EwFood(
+		id_food = "poketubers",
+		recover_hunger = 60,
+		str_name = 'Poke-tubers',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The lame, sad, lumpy roots barely support a bulbous crop that’s indiscernible taste is not complemented by it’s awkward texture.",
+		time_expir = farm_food_expir,
+		mill_result = dye_red
+	),
+	EwFood(
+		id_food = "suganmanuts",
+		recover_hunger = 60,
+		str_name = 'Suganma Nuts',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The difficult nuts infuriate you for reasons you don’t really underst-- HEY WAIT A SECOND!!",
+		time_expir = farm_food_expir,
+		mill_result = dye_brown
+	),
+	EwFood(
+		id_food = "dankwheat",
+		recover_hunger = 60,
+		str_name = 'Dankwheat',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The damp barley milled from this moist wheat causes hallucinations and intoxication once digested fully.",
+		time_expir = farm_food_expir,
+		mill_result = dye_lime
+	),
+	EwFood(
+		id_food = "blacklimes",
+		recover_hunger = 60,
+		str_name = 'Black Limes',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The sour juice squeezed from just one of these small dark grey limes can flavor an entire production of Warheads hard candy.",
+		time_expir = farm_food_expir,
+		mill_result = dye_black
+	),
+	EwFood(
+		id_food = "phosphorpoppies",
+		recover_hunger = 60,
+		str_name = 'Phosphorpoppies',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The vivid and unnatural colors of this plant reveal it’s man made origin. Some say SlimeCorp designed the plant’s addictive and anxiety/paranoia inducing nature to keep juveniles weak and disenfranchised.",
+		time_expir = farm_food_expir,
+		mill_result = dye_yellow
+	),
+	EwFood(
+		id_food = "sourpotatoes",
+		recover_hunger = 60,
+		str_name = 'Sour Potatoes',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The staple of many unhealthy juveniles’ diet. It’s revolting taste leaves much to be desired.",
+		time_expir = farm_food_expir,
+		mill_result = dye_brown
+	),
+	EwFood(
+		id_food = "bloodcabbages",
+		recover_hunger = 60,
+		str_name = 'Blood Cabbages',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "The dripping mass of dark crimson leaves have become the staple special effects tool for aspiration amatuer filmmakers in the city for it’s uncanny resemblance to human blood.",
+		time_expir = farm_food_expir,
+		mill_result = dye_maroon
+	),
+	EwFood(
+		id_food = "pawpaw",
+		recover_hunger = 60,
+		str_name = 'Pawpaw',
+		vendors = [vendor_farm],
+		str_eat = "",
+		str_desc = "An American classic.",
+		time_expir = farm_food_expir,
+		mill_result = dye_green
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -2547,6 +2727,16 @@ for food in food_list:
 
 	for alias in food.alias:
 		food_map[alias] = food
+
+# list of crops you're able to !reap
+vegetable_list = []
+
+# seperate the crops from the normal foods
+for v in food_list:
+	if v.vendors != [vendor_farm]:
+		pass
+	else:
+		vegetable_list.append(v)
 
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
@@ -2625,7 +2815,8 @@ item_def_list = [
 			'inebriation': 0,
 			'vendor': None,
 			'str_eat': 'You eat the food item.',
-			'time_expir': std_food_expir
+			'time_expir': std_food_expir,
+			'mill_result': 'minecraft'
 		}
 	),
 
@@ -6204,121 +6395,45 @@ stock_emotes = {
     stock_tacobell : emote_tacobell
 }
 
-# all the vegetables you can !reap from farming #todo add str_eat flavor text
-vegetable_list = [
-	EwFood(
-		id_food = "pinkrowddishes",
-		recover_hunger = 10,
-		str_name = 'Pink Rowddishes',
-		str_eat = "",
-		str_desc = "The sweet-smelling tubers stain your hands pink."
-	),
-	EwFood(
-		id_food = "sludgeberries",
-		recover_hunger = 10,
-		str_name = 'Sludgeberries',
-		str_eat = "",
-		str_desc = "The thick syrup covering the green and teal berries makes your hands sticky."
-	),
-	EwFood(
-		id_food = "pulpgourds",
-		recover_hunger = 10,
-		str_name = 'Pulp Gourds',
-		str_eat = "",
-		str_desc = "The easily malleable gourds form indents from even your lightest touch."
-	),
-	EwFood(
-		id_food = "joybeans",
-		recover_hunger = 10,
-		str_name = 'Joybeans',
-		str_eat = "",
-		str_desc = "The sugary candy-like beans have a thick gel interior that rots your teeth."
-	),
-	EwFood(
-		id_food = "brightshade",
-		recover_hunger = 10,
-		str_name = 'Brightshade',
-		str_eat = "",
-		str_desc = "The dangerously toxic chemicals that cover the flower bud burn your eyes and nose."
-	),
-	EwFood(
-		id_food = "direapples",
-		recover_hunger = 10,
-		str_name = 'Dire Apples',
-		str_eat = "",
-		str_desc = "The vicious acidity from from the cyan and orange apples makes your mouth contort in pain with every bite."
-	),
-	EwFood(
-		id_food = "purplekilliflower",
-		recover_hunger = 10,
-		str_name = 'Purple Killiflower',
-		str_eat = "",
-		str_desc = "The deep purple head has an extremely bitter aftertaste."
-	),
-	EwFood(
-		id_food = "razornuts",
-		recover_hunger = 10,
-		str_name = 'Razornuts',
-		str_eat = "",
-		str_desc = "The sharp edges of the hard nut slice open your mouth so that you taste slight hints of copper from your blood every bite."
-	),
-	EwFood(
-		id_food = "poketubers",
-		recover_hunger = 10,
-		str_name = 'Poke-tubers',
-		str_eat = "",
-		str_desc = "The lame, sad, lumpy roots barely support a bulbous crop that’s indiscernible taste is not complemented by it’s awkward texture."
-	),
-	EwFood(
-		id_food = "suganmanuts",
-		recover_hunger = 10,
-		str_name = 'Suganma Nuts',
-		str_eat = "",
-		str_desc = "The difficult nuts infuriate you for reasons you don’t really underst-- HEY WAIT A SECOND!!"
-	),
-	EwFood(
-		id_food = "dankwheat",
-		recover_hunger = 10,
-		str_name = 'Dankwheat',
-		str_eat = "",
-		str_desc = "The damp barley milled from this moist wheat causes hallucinations and intoxication once digested fully."
-	),
-	EwFood(
-		id_food = "blacklimes",
-		recover_hunger = 10,
-		str_name = 'Black Limes',
-		str_eat = "",
-		str_desc = "The sour juice squeezed from just one of these small dark grey limes can flavor an entire production of Warheads hard candy."
-	),
-	EwFood(
-		id_food = "phosphorpoppies",
-		recover_hunger = 10,
-		str_name = 'Phosphorpoppies',
-		str_eat = "",
-		str_desc = "The vivid and unnatural colors of this plant reveal it’s man made origin. Some say SlimeCorp designed the plant’s addictive and anxiety/paranoia inducing nature to keep juveniles weak and disenfranchised."
-	),
-	EwFood(
-		id_food = "sourpotatoes",
-		recover_hunger = 10,
-		str_name = 'Sour Potatoes',
-		str_eat = "",
-		str_desc = "The staple of many unhealthy juveniles’ diet. It’s revolting taste leaves much to be desired."
-	),
-	EwFood(
-		id_food = "bloodcabbages",
-		recover_hunger = 10,
-		str_name = 'Blood Cabbages',
-		str_eat = "",
-		str_desc = "The dripping mass of dark crimson leaves have become the staple special effects tool for aspiration amatuer filmmakers in the city for it’s uncanny resemblance to human blood."
-	),
-	EwFood(
-		id_food = "pawpaw",
-		recover_hunger = 10,
-		str_name = 'Pawpaw',
-		str_eat = "",
-		str_desc = "An American classic."
-	),
+#	dye ids
+dyes = [
+	dye_black,
+	dye_maroon,
+	dye_green,
+	dye_tan,
+	dye_brown,
+	dye_purple,
+	dye_teal,
+	dye_orange,
+	dye_gray,
+	dye_red,
+	dye_lime,
+	dye_yellow,
+	dye_blue,
+	dye_fuchsia,
+	dye_aqua,
+	dye_white,
 ]
+
+#	dye ids
+dye_names = {
+	dye_black : "Black Dye",
+	dye_maroon : "Maroon Dye",
+	dye_green : "Green Dye",
+	dye_tan : "Tan Dye",
+	dye_brown : "Brown Dye",
+	dye_purple : "Purple Dye",
+	dye_teal : "Teal Dye",
+	dye_orange : "Orange Dye",
+	dye_gray : "Gray Dye",
+	dye_red : "Red Dye",
+	dye_lime : "Lime Dye",
+	dye_yellow : "Yellow Dye",
+	dye_blue : "Blue Dye",
+	dye_fuchsia : "Fuchsia Dye",
+	dye_aqua : "Aqua Dye",
+	dye_white : "White Dye",
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

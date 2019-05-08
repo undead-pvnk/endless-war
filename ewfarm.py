@@ -1,6 +1,7 @@
 import time
 import random
 import ewcfg
+import ewfood
 
 import ewitem
 import ewutils
@@ -205,3 +206,52 @@ async def sow(cmd):
 				farm.persist()
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def mill(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+		response = "You can only !mill in farms."
+
+	else:
+		vegetable_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		author = cmd.message.author
+		server = cmd.message.server
+
+		vegetable_sought = ewitem.find_item(item_search = vegetable_search, id_user = author.id, id_server = server.id)
+
+		if vegetable_sought:
+			item = ewitem.EwItem(id_item = vegetable_sought.get('id_item'))
+
+			if item not in ewcfg.vegetable_list:
+				response = "Use which item? You can only !mill vegetables."
+
+			else:
+				matched_item = []
+
+				if EwFood.mill_result in ewcfg.dyes:
+					matched_item.append()
+				else
+
+					#todo make dyes actual items, in the style of the default item def
+			#todo then, match mill_result to the id of the new items, then have it print out that. refer to !smelt and !invest
+
+
+
+
+
+
+
+
+			response = user_data.eat(item)
+			user_data.persist()
+
+		else:
+			if vegetable_search:
+				response = "You don't have one."
+			else:
+				response = "Use which item? "
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+

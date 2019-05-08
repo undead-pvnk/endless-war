@@ -37,6 +37,9 @@ class EwFood:
 	# Flavor text displayed when you inspect this food.
 	str_desc = ""
 
+	# For !milling. Checks to see what dyes you're able to produce with each crop.
+	mill_result = ""
+
 	# Expiration time (can be left blank for standard expiration time)
 	time_expir = 0
 
@@ -51,7 +54,8 @@ class EwFood:
 		str_eat = "",
 		inebriation = 0,
 		str_desc = "",
-		time_expir = 0
+		time_expir = 0,
+		mill_result = "",
 	):
 		self.id_food = id_food
 		self.alias = alias
@@ -62,7 +66,8 @@ class EwFood:
 		self.str_eat = str_eat
 		self.inebriation = inebriation
 		self.str_desc = str_desc
-		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir
+		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir,
+		self.mill_result = "",
 
 
 """ show all available food items """
