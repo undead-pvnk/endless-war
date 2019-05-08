@@ -263,13 +263,27 @@ async def scavenge(cmd):
 			if levelup_response != "":
 				response += levelup_response + "\n\n"
 			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
-			loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
-			loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
-			if ewcfg.mutation_id_dumpsterdiver in mutations:
-				loot_chance *= 2
-			if random.random() < loot_chance:
-				loot_resp = ewitem.item_lootrandom(id_server = user_data.id_server, id_user = user_data.id_user)
+			if cmd.tokens_count > 1:
+				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				loot_resp = ewitem.item_lootspecific(
+					id_server = user_data.id_server,
+					id_user = user_data.id_user,
+					item_search = item_search
+				)
+
 				response += loot_resp
+
+			else:
+				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
+				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
+				if ewcfg.mutation_id_dumpsterdiver in mutations:
+					loot_chance *= 2
+				if random.random() < loot_chance:
+					loot_resp = ewitem.item_lootrandom(
+						id_server = user_data.id_server,
+						id_user = user_data.id_user
+					)
+					response += loot_resp
 
 
 			# Fatigue the scavenger.
