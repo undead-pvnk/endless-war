@@ -861,3 +861,35 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 			response += "."
 		
 	return response
+
+
+async def quarterlyreport(cmd):
+	progress = 0
+	objective = 300000000
+	goal = "SLIME DONATED"
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		# Display the progress towards the current Quarterly Goal, whatever that may be.
+		cursor.execute("SELECT sum({}) FROM market WHERE id_server = %s AND {} < 0".format(
+			ewcfg.col_donated_slimes,
+			ewcfg.col_donated_slimes
+		), (cmd.message.server.id, ))
+
+		result = cursor.fetchone();
+
+		if result != None:
+			progress = result[0]
+
+			if progress == None:
+				progress = 0
+	finally:
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	response = "{} / {} {}.".format(progress, objective, goal)
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
