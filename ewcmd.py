@@ -1658,10 +1658,13 @@ async def slimeoidbattle(cmd):
 		accepted = 0
 
 	challengee = EwUser(member = member)
+	challenger = EwUser(member = member)
 
 	challengee.rr_challenger = ""
+	challenger.rr_challenger = ""
 
 	challengee.persist()
+	challenger.persist()
 
 	#Start game
 	if accepted == 1:
