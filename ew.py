@@ -229,6 +229,33 @@ class EwUser:
 
 		return response
 
+	def getStatusEffects(self):
+		values = {}
+
+		try:
+			data = ewutils.execute_sql_query("SELECT {id_status}, {time_expire} FROM status_effects WHERE {id_server} = %s and {id_user} = %s".format(
+				time_expire = ewcfg.col_time_expir,
+				id_status = ewcfg.col_id_status,
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user
+			), (
+				self.id_server,
+				self.id_user
+			))
+
+			for row in data:
+				values[row[0]] = row[1]
+
+			# Make sure we return at least one value.
+			if len(values) == 0:
+				values = None
+
+		except Exception as e: 
+			print(e)
+		finally:
+			return values
+
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 		if(id_user == None) and (id_server == None):

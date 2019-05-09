@@ -11,6 +11,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
+from ewstatusffects import EwStatusEffect
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -258,6 +259,15 @@ async def data(cmd):
 
 		if user_data.busted and user_data.life_state == ewcfg.life_state_corpse:
 			response += " You are busted and therefore cannot leave the sewers without reviving."
+
+		statuses = user_data.getStatusEffects()
+		
+		if statuses is not None:
+			for status in statuses.keys():
+				if statuses.get(status) > time.time() or statuses.get(status) == -1:
+					status_flavor = ewcfg.status_effects_map.get(status)
+					if status_flavor is not None:
+						response += " " + status_flavor.str_describe_self
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
@@ -2402,3 +2412,28 @@ def calculate_clout_gain(clout):
 		clout = 100
 
 	return clout
+
+async def acquireStatus(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response = ""
+
+	value = None
+	status = None
+	if cmd.tokens_count > 0:
+		value = cmd.tokens[1]
+		value = value.lower()
+
+	if value != None:
+		status = ewcfg.status_effects_map.get(value)
+	
+	if status != None:
+		response = status.str_acquire
+
+		status_effect = EwStatusEffect(status = status, id_server=user_data.id_server, id_user=user_data.id_user)
+		status_effect.persist()
+
+	else:
+		response = "Not a valid status"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+

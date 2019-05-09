@@ -63,6 +63,7 @@ active_users_map = {}
 # Map of all command words in the game to their implementing function.
 cmd_map = {
 	"!dumpwef": ewwep.dumpwef,
+	"!acquirestatus": ewcmd.acquireStatus,
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
@@ -81,6 +82,8 @@ cmd_map = {
 
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
+	ewcfg.cmd_suicide_alt1: ewwep.suicide,
+	ewcfg.cmd_suicide_alt2: ewwep.suicide,
 
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
