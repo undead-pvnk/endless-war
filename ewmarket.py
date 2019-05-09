@@ -874,9 +874,8 @@ async def quarterlyreport(cmd):
 		cursor = conn.cursor()
 
 		# Display the progress towards the current Quarterly Goal, whatever that may be.
-		cursor.execute("SELECT sum({}) FROM market WHERE id_server = %s AND {} < 0".format(
-			ewcfg.col_donated_slimes,
-			ewcfg.col_donated_slimes
+		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
+			metric = ewcfg.col_donated_slimes
 		), (cmd.message.server.id, ))
 
 		result = cursor.fetchone();
@@ -890,6 +889,6 @@ async def quarterlyreport(cmd):
 		cursor.close()
 		ewutils.databaseClose(conn_info)
 
-	response = "{} / {} {}.".format(progress, objective, goal)
+	response = "{:,} / {:,} {}.".format(progress, objective, goal)
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
