@@ -62,6 +62,7 @@ active_users_map = {}
 
 # Map of all command words in the game to their implementing function.
 cmd_map = {
+	"!acquirestatus": ewcmd.acquireStatus,
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,

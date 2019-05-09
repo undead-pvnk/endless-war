@@ -9,6 +9,7 @@ from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+from ewstatusffects import EwStatusEffectDef
 
 # Global configuration options.
 version = "v3.2"
@@ -806,6 +807,9 @@ col_current_stop = 'current_stop'
 col_quadrant = 'quadrant'
 col_quadrants_target = 'id_target'
 col_quadrants_target2 = 'id_target2'
+
+# Database columns for status effects
+col_id_status = 'id_status'
 
 # Item type names
 it_medal = "medal"
@@ -6320,6 +6324,31 @@ vegetable_list = [
 		str_desc = "An American classic."
 	),
 ]
+
+status_effect_list = [
+	EwStatusEffectDef(
+		id_status = 'vapecloud',
+		time_expire = 30,
+		str_acquire = 'A cloud of smoke envelops your entire body.',
+		str_describe = 'They are covered by a cloud of smoke.',
+		str_describe_self = 'You are covered by a cloud of smoke.',
+		type = ["aim"],
+		value = [0.2]
+	),
+	EwStatusEffectDef(
+		id_status = 'drunk',
+		str_acquire = 'You\'ve become inebriated.',
+		str_describe = 'They\'re drunk.',
+		str_describe_self = 'You are drunk.',
+		type = ["aim"],
+		value = [0.2]
+	)
+]
+
+status_effects_map = {}
+
+for status in status_effect_list:
+	status_effects_map[status.id_status] = status
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

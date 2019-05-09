@@ -221,3 +221,13 @@ CREATE TABLE transports (
 
 	PRIMARY KEY(id_server, poi)
 );
+
+CREATE TABLE status_effects (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	id_status varchar(64) NOT NULL,
+	
+	time_expir int NOT NULL DEFAULT '-1',
+
+	PRIMARY KEY (id_server, id_user, id_status)
+)
