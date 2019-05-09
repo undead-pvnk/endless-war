@@ -62,6 +62,28 @@ class EwFarm:
 			)
 		)
 
+"""
+	milled items
+"""
+class EwMilledItem:
+	# The name of the cosmetic item
+	name = ""
+
+	# The text displayed when you look at it
+	description = ""
+
+	# The item(s) necessary to create this item
+    ingredients = ""
+
+	def __init__(
+		self,
+		name = "",
+		description = "",
+		raw_parents = ""
+	):
+		self.name = name
+		self.description = description
+		self.ingredients = ingredients
 
 """
 	Reap planted crops.
@@ -235,6 +257,7 @@ async def mill(cmd):
 
 					#todo make dyes actual items, in the style of the default item def
 			#todo then, match mill_result to the id of the new items, then have it print out that. refer to !smelt and !invest
+            #todo make a subset of trash items that do nothing. if you mix two veggies together that don't result in a recipe, you get that.
 
 
 

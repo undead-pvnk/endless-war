@@ -134,4 +134,3 @@ async def adorn(cmd):
 			cmd.message.author,
 			'Adorn which cosmetic? Check your **!inventory**.'
 		))
-

@@ -1,6 +1,7 @@
 import random
 
 from ewcosmeticitem import EwCosmeticItem
+from ewfarm import EwMilledItem
 from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
@@ -821,6 +822,8 @@ it_cosmetic = 'cosmetic'
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
 rarity_princeps = "Princeps"
+
+it_milleditem =  'milleditem'
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"
@@ -2842,6 +2845,16 @@ item_def_list = [
 			'cosmetic_name': 'Cosmetic Item',
 			'cosmetic_desc': 'Cosmetic Item.',
 			'rarity': rarity_plebeian
+		}
+	),
+	EwItemDef(
+		item_type = it_milleditem,
+		str_name = "{milled_name}",
+		str_desc = "{milled_desc}",
+		item_props = {
+			'milled_name': 'milled Item',
+			'milled_desc': 'milled Item.',
+			'ingredients': 'dire apple'
 		}
 	)
 ]
@@ -6434,6 +6447,10 @@ dye_names = {
 	dye_aqua : "Aqua Dye",
 	dye_white : "White Dye",
 }
+
+ingredients_list = [
+
+]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
