@@ -862,6 +862,7 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 		
 	return response
 
+
 async def quarterlyreport(cmd):
 	progress = 0
 	objective = 300000000
