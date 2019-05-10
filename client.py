@@ -565,6 +565,8 @@ async def on_ready():
 		# Adjust the exchange rate of slime for the market.
 		try:
 			for server in client.servers:
+				ewutils.removeExpiredStatuses(id_server = server.id, time = time_now)
+
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
 

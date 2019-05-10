@@ -6649,6 +6649,8 @@ status_effect_target_self = "status_effect_target_self"
 status_effect_target_other = "status_effect_target_other"
 
 status_burning_id = "burning"
+status_drunk_id = "drunk"
+status_ghostbust_id = "ghostbust"
 
 status_effect_list = [
 	EwStatusEffectDef(
@@ -6662,9 +6664,9 @@ status_effect_list = [
 		target = status_effect_target_self
 	),
 	EwStatusEffectDef(
-		id_status = 'drunk',
-		str_acquire = 'You\'ve become inebriated.',
-		str_describe = 'They\'re drunk.',
+		id_status = status_drunk_id,
+		str_acquire = 'You\'re drunk.',
+		str_describe = 'They are drunk.',
 		str_describe_self = 'You are drunk.',
 		types = [status_effect_type_aim, status_effect_type_damage],
 		values = [0.2, 0.5],
@@ -6674,8 +6676,16 @@ status_effect_list = [
 		id_status = status_burning_id,
 		time_expire = 10,
 		str_acquire = '{name_player}\'s body is engulfed in flames.',
-		str_describe = 'They\'re burning.',
+		str_describe = 'They are burning.',
 		str_describe_self = 'You are burning.',
+		types = [status_effect_type_misc]
+	),
+	EwStatusEffectDef(
+		id_status = status_ghostbust_id,
+		time_expire = 86400,
+		str_acquire = 'You can now fight ghosts',
+		str_describe = '',
+		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts',
 		types = [status_effect_type_misc]
 	)
 ]

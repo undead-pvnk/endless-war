@@ -199,6 +199,7 @@ def canAttack(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	weapon_item = EwItem(id_item = user_data.weapon)
 	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	statuses = user_data.getStatusEffects()
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
@@ -257,7 +258,7 @@ def canAttack(cmd):
 			# Target is already dead and not a ghost.
 			response = "{} is already dead.".format(member.display_name)
 
-		elif shootee_data.life_state == ewcfg.life_state_corpse and user_data.ghostbust == False:
+		elif shootee_data.life_state == ewcfg.life_state_corpse and (statuses == None or ewcfg.status_ghostbust_id not in statuses.keys()):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 			

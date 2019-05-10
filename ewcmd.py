@@ -7,6 +7,7 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
+import ewstatuseffects
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
@@ -188,6 +189,15 @@ def gen_data_text(
 
 		if len(adorned_cosmetics) > 0:
 			response += " They have a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+		statuses = user_data.getStatusEffects()
+		
+		if statuses is not None:
+			for status in statuses.keys():
+				if statuses.get(status) > time.time() or statuses.get(status) == -1:
+					status_flavor = ewcfg.status_effects_map.get(status)
+					if status_flavor is not None:
+						response += " " + status_flavor.str_describe
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
@@ -2427,9 +2437,8 @@ async def acquireStatus(cmd):
 		status = ewcfg.status_effects_map.get(value)
 	
 	if status != None:
-		response = status.str_acquire
-
-		status_effect = EwStatusEffect(status = status, user_data=user_data)
+		
+		response = ewstatuseffects.applyStatus(user_data=user_data, id_status=status.id_status)
 
 	else:
 		response = "Not a valid status"

@@ -12,6 +12,7 @@ from ewutils import EwResponseContainer
 
 class EwStatusEffectDef:
 	id_status = ""
+	# Time until expiration, negative values have non time based expire conditions
 	time_expire = -1
     
 	str_acquire = ""
@@ -23,6 +24,7 @@ class EwStatusEffectDef:
 	# values = [0.2, 0.3]
 	types = []
 	values = []
+	# Target for statuses used in damage calculation
 	target = ""
 
 	def __init__(
@@ -148,8 +150,6 @@ def applyStatus(user_data = None, id_status = None, value = 0):
 
 		if status != None:
 			statuses = user_data.getStatusEffects()
-			
-			response = status.str_acquire
 
 			status_effect = EwStatusEffect(status=status, user_data=user_data, value = value)
 
@@ -157,10 +157,15 @@ def applyStatus(user_data = None, id_status = None, value = 0):
 				if id_status in statuses.keys():
 					status_effect.value = value
 
-					if status.time_expire > 0:
+					if status.time_expire > 0 and id_status != ewcfg.status_ghostbust_id:
 						status_effect.time_expire += status.time_expire
+						response = status.str_acquire
 
 					status_effect.persist() 
+				else:
+					response = status.str_acquire
+			else:
+				response = status.str_acquire
 
 	return response
 

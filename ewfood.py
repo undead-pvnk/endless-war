@@ -5,6 +5,7 @@ import ewcfg
 import ewitem
 import ewutils
 import ewrolemgr
+import ewstatuseffects
 from ew import EwUser
 from ewmarket import EwMarket, EwCompany, EwStock
 
@@ -83,6 +84,7 @@ async def menu(cmd):
 				for food_item_name in ewcfg.food_vendor_inv[vendor]:
 					food_item = ewcfg.food_map.get(food_item_name)
 					# increase profits for the stock market
+					stock_data = None
 					if vendor in ewcfg.vendor_stock_map:
 						stock = ewcfg.vendor_stock_map.get(vendor)
 						stock_data = EwStock(id_server = user_data.id_server, stock = stock)
@@ -154,6 +156,8 @@ async def order(cmd):
 		elif member is not None and member_data.poi != user_data.poi:
 			response = "The delivery service has become unavailable due to unforeseen circumstances."
 		else:
+			resp_status = ""
+			
 			market_data = EwMarket(id_server = cmd.message.server.id)
 
 			target_data = None
@@ -216,10 +220,13 @@ async def order(cmd):
 						if user_data.hunger < 0:
 							user_data.hunger = 0
 						user_data.inebriation += food.inebriation
+						if user_data.inebriation >= 10:
+							resp_status = "\n" + ewstatuseffects.applyStatus(user_data=user_data, id_status=ewcfg.status_drunk_id)
 						if user_data.inebriation > ewcfg.inebriation_max:
 							user_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
-							user_data.ghostbust = True
+							#user_data.ghostbust = True
+							ewstatuseffects.applyStatus(user_data=user_data, id_status=ewcfg.status_ghostbust_id)
 							#Bust player if they're a ghost
 							if user_data.life_state == ewcfg.life_state_corpse:
 								user_data.die(cause = ewcfg.cause_busted)
@@ -262,6 +269,10 @@ async def order(cmd):
 					sharetext = (". " if member == None else " and give it to {}.\n\n{}".format(member.display_name, ewutils.formatMessage(member, ""))),
 					flavor = food.str_eat if not togo else ""
 				)
+
+				if resp_status:
+					response += resp_status
+
 				if member == None and user_data.hunger <= 0 and not togo:
 					response += "\n\nYou're stuffed!"
 

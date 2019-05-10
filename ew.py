@@ -110,30 +110,6 @@ class EwUser:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_ghost_level, value = self.slimelevel)
 			else:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_level, value = self.slimelevel)
-		
-	def clear_status(self, id_status = None):
-		if id_status != None:
-			try:
-				conn_info = ewutils.databaseConnect()
-				conn = conn_info.get('conn')
-				cursor = conn.cursor()
-
-				# Save the object.
-				cursor.execute("DELETE FROM status_effects WHERE {id_status} = %s and {id_user} = %s and {id_server} = %s".format(
-					id_status = ewcfg.col_id_status,
-					id_user = ewcfg.col_id_user,
-					id_server = ewcfg.col_id_server
-				), (
-					id_status,
-					self.id_user,
-					self.id_server
-				))
-
-				conn.commit()
-			finally:
-				# Clean up the database handles.
-				cursor.close()
-				ewutils.databaseClose(conn_info)
 
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
@@ -285,6 +261,29 @@ class EwUser:
 		finally:
 			return values
 
+	def clear_status(self, id_status = None):
+		if id_status != None:
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor()
+
+				# Save the object.
+				cursor.execute("DELETE FROM status_effects WHERE {id_status} = %s and {id_user} = %s and {id_server} = %s".format(
+					id_status = ewcfg.col_id_status,
+					id_user = ewcfg.col_id_user,
+					id_server = ewcfg.col_id_server
+				), (
+					id_status,
+					self.id_user,
+					self.id_server
+				))
+
+				conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):

@@ -348,6 +348,7 @@ def decaySlimes(id_server = None):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)	
+			
 """
 	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
 """
@@ -467,6 +468,45 @@ def pushdownServerInebriation(id_server = None):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
+
+""" Decay slime totals for all users """
+def removeExpiredStatuses(id_server = None, time = None):
+	if id_server != None and time != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s".format(
+			), (
+				id_server,
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				
+				statuses = user_data.getStatusEffects()
+
+				if statuses != None:
+					for status in statuses.keys():
+						status_def = ewcfg.status_effects_map.get(status)
+						if status_def.time_expire > 0:
+							if statuses[status] < time:
+								user_data.clear_status(id_status=status)
+								logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
+						else:
+							if status == ewcfg.status_drunk_id:
+								if user_data.inebriation < 10:
+									user_data.clear_status(id_status=status)
+									logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)	
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
 def getIntToken(tokens = [], allow_all = False):
