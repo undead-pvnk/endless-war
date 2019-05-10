@@ -111,6 +111,30 @@ class EwUser:
 			else:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_level, value = self.slimelevel)
 		
+	def clear_status(self, id_status = None):
+		if id_status != None:
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor()
+
+				# Save the object.
+				cursor.execute("DELETE FROM status_effects WHERE {id_status} = %s and {id_user} = %s and {id_server} = %s".format(
+					id_status = ewcfg.col_id_status,
+					id_user = ewcfg.col_id_user,
+					id_server = ewcfg.col_id_server
+				), (
+					id_status,
+					self.id_user,
+					self.id_server
+				))
+
+				conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
 			self.busted = True
@@ -139,6 +163,12 @@ class EwUser:
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
+
+		statuses = self.getStatusEffects()
+
+		if statuses != None:
+			for status in statuses.keys():
+				self.clear_status(id_status=status)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 
@@ -250,8 +280,8 @@ class EwUser:
 			if len(values) == 0:
 				values = None
 
-		except Exception as e: 
-			print(e)
+		except:
+			pass
 		finally:
 			return values
 

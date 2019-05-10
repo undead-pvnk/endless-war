@@ -41,6 +41,7 @@ import ewslimeoid
 import ewdistrict
 import ewquadrants
 import ewtransport
+import ewstatuseffects
 
 from ewitem import EwItem
 from ew import EwUser
@@ -64,6 +65,7 @@ active_users_map = {}
 cmd_map = {
 	"!dumpwef": ewwep.dumpwef,
 	"!acquirestatus": ewcmd.acquireStatus,
+	"!statusinfo": ewcmd.statusInfo,
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
@@ -480,6 +482,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewstatuseffects.burn_tick_loop(id_server = server.id))
 		await ewtransport.init_transports(id_server = server.id)
 
 	try:

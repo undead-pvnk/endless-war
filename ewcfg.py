@@ -11,7 +11,7 @@ from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
-from ewstatusffects import EwStatusEffectDef
+from ewstatuseffects import EwStatusEffectDef
 
 # Global configuration options.
 version = "v3.2"
@@ -975,6 +975,7 @@ cause_leftserver = 6
 cause_drowning = 7
 cause_falling = 8
 cause_bleeding = 9
+cause_burning = 10
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -1001,15 +1002,15 @@ def wef_gun(ctn = None):
 def wef_dualpistols(ctn = None):
 	aim = (random.randrange(100) + 1)
 
-	if aim <= 40:
+	if aim <= (40 + int(100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= 80:
+	elif aim >= (80 + int(100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
-# weapon effect function for "rifle"
-def wef_rifle(ctn = None):
+# weapon effect function for "rifle" 
+def wef_rifle(ctn = None): # TODO
 	miss = False
 	aim = (random.randrange(20) + 1)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.25) 
@@ -1019,7 +1020,7 @@ def wef_rifle(ctn = None):
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "nun-chucks"
-def wef_nunchucks(ctn = None):
+def wef_nunchucks(ctn = None): #TODO
 	ctn.strikes = 0
 	dmg = ctn.slimes_damage 
 	ctn.slimes_damage = 0
@@ -1038,20 +1039,18 @@ def wef_nunchucks(ctn = None):
 		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
 
 # weapon effect function for "katana"
-def wef_katana(ctn = None):
+def wef_katana(ctn = None): #TODO
 	ctn.miss = False
 	ctn.slimes_damage = int(ctn.slimes_damage) * 0.5
-
-	
 
 	if(random.randrange(100) + 1) <= 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "bat"
-def wef_bat(ctn = None):
+def wef_bat(ctn = None): 
 	aim = (random.randrange(10, 27) - 10)
-	if aim <= 0:
+	if aim <= (0 + int(16 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -1062,12 +1061,12 @@ def wef_bat(ctn = None):
 	else:
 		ctn.slimes_damage = int(ctn.slimes_damage * min(max(0.5, aim / 10) , 1.5))
 
-		if aim >= 16:
+		if aim >= (16 + int(16 * ctn.crit_mod)):
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
 # weapon effect function for "garrote"
-def wef_garrote(ctn = None):
+def wef_garrote(ctn = None): #TODO
 	ctn.slimes_damage *= 0.5
 	aim = (random.randrange(100) + 1)
 	if aim <= 50:
@@ -1078,7 +1077,7 @@ def wef_garrote(ctn = None):
 		ctn.crit = True
 
 # weapon effect function for "brassknuckles"
-def wef_brassknuckles(ctn = None):
+def wef_brassknuckles(ctn = None): #TODO? i'll look it over later
 	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
 	successful_timing = True if (ctn.time_now - last_attack) == 2 else False
 
@@ -1096,9 +1095,9 @@ def wef_brassknuckles(ctn = None):
 		whiff1 = 1
 		whiff2 = 1
 
-		if aim1 <= 20:
+		if aim1 <= (20 + int(100 * ctn.miss_mod)):
 			whiff1 = 0
-		if aim2 <= 20:
+		if aim2 <= (20 + int(100 * ctn.miss_mod)):
 			whiff2 = 0
 
 		if whiff1 == 0 and whiff2 == 0:
@@ -1118,6 +1117,8 @@ def wef_molotov(ctn = None):
 	ctn.slimes_spent *= 2
 	aim = (random.randrange(100) + 1)
 
+	ctn.bystander_damage = 0
+
 	if aim <= 20:
 		ctn.backfire = True
 		ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
@@ -1129,28 +1130,9 @@ def wef_molotov(ctn = None):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 		
-		###Add fire status effect###
-#		conn_info = ewutils.databaseConnect()
-#		conn = conn_info.get('conn')
-#		cursor = conn.cursor()
-#
-#		data = cursor.execute("SELECT {id_user} FROM users WHERE {id_server} = %s AND {poi} = %s AND {id_user} != %s AND {id_user} != %s AND life_state > 0 AND (faction = {faction} or faction = '')".format(
-#			poi = ewcfg.col_poi,
-#			id_server = ewcfg.col_id_server,
-#			id_user = ewcfg.col_id_user#add faction
-#		), (
-#			user_data.id_server,
-#			poi,
-#			user_data.id_server,
-#			shootee_data.id_server#add faction for backfire
-#		))
-#		
-#		bystanders = cursor.fetchall()
-#		foreach bystanders apply burning
-		
 		
 # weapon effect function for "knives"
-def wef_knives(ctn = None):
+def wef_knives(ctn = None): #TODO
 	ctn.slimes_spent -= int(ctn.slimes_spent * 0.33)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.85)
 	aim = (random.randrange(10) + 1)
@@ -1163,7 +1145,7 @@ def wef_knives(ctn = None):
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
 # weapon effect function for "scythe"
-def wef_scythe(ctn = None):
+def wef_scythe(ctn = None): #TODO
 	ctn.slimes_spent += int(ctn.slimes_spent * 0.33)
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	aim = (random.randrange(10) + 1)
@@ -1176,7 +1158,7 @@ def wef_scythe(ctn = None):
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "yo-yos"
-def wef_yoyo(ctn = None):
+def wef_yoyo(ctn = None): #TODO
 	dmg = ctn.slime_damage
 	aim = (random.uniform(0, 100))
 
@@ -1188,7 +1170,7 @@ def wef_yoyo(ctn = None):
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "pickaxe"
-def wef_pickaxe(ctn = None):
+def wef_pickaxe(ctn = None): #TOREMOVE??
 	dmg = ctn.slime_damage
 	ctn.slimes_damage = int(dmg * 0.5)
 	aim = (random.randrange(10) + 1)
@@ -1207,9 +1189,9 @@ def wef_shotgun(ctn = None):
 
 	aim = (random.randrange(100) + 1)
 
-	if aim <= 10:
+	if aim <= (10 + int(100 * ctn.miss_mod)):
 		ctn.miss = True
-	elif aim >= 90:
+	elif aim >= (90 + int(100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1225,13 +1207,13 @@ def wef_grenade(ctn = None):
 
 	aim = (random.randrange(100) + 1)
 
-	if aim <= 10:
+	if aim <= (10 + int(100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.bystander_damage = 0
 	elif aim > 10 and aim <= 20:
 		ctn.backfire = True
 		ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
-	elif aim >= 90:
+	elif aim >= (90 + int(100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
@@ -1459,7 +1441,7 @@ weapon_list = [
 			"bomb",
 			"bombs"
 		],
-		str_crit = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
+		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
 		str_equip = "You equip the molotov cocktail.",
 		str_weapon = "molotov cocktails",
@@ -1475,7 +1457,7 @@ weapon_list = [
 		str_description = "They're molotov bottles",
 		price = 200,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown]
+		classes = [weapon_class_thrown, weapon_class_exploding]
 	),
 	EwWeapon( # 10
 		id_weapon = "knives",
@@ -6656,6 +6638,18 @@ vegetable_list = [
 	),
 ]
 
+
+status_effect_type_aim = "aim"
+status_effect_type_crit = "crit"
+status_effect_type_damage = "dmg"
+#doesn't fit into the other status types
+status_effect_type_misc = "misc"
+
+status_effect_target_self = "status_effect_target_self"
+status_effect_target_other = "status_effect_target_other"
+
+status_burning_id = "burning"
+
 status_effect_list = [
 	EwStatusEffectDef(
 		id_status = 'vapecloud',
@@ -6663,16 +6657,26 @@ status_effect_list = [
 		str_acquire = 'A cloud of smoke envelops your entire body.',
 		str_describe = 'They are covered by a cloud of smoke.',
 		str_describe_self = 'You are covered by a cloud of smoke.',
-		type = ["aim"],
-		value = [0.2]
+		types = [status_effect_type_aim],
+		values = [0.2],
+		target = status_effect_target_self
 	),
 	EwStatusEffectDef(
 		id_status = 'drunk',
 		str_acquire = 'You\'ve become inebriated.',
 		str_describe = 'They\'re drunk.',
 		str_describe_self = 'You are drunk.',
-		type = ["aim"],
-		value = [0.2]
+		types = [status_effect_type_aim, status_effect_type_damage],
+		values = [0.2, 0.5],
+		target = status_effect_target_self
+	),
+	EwStatusEffectDef(
+		id_status = status_burning_id,
+		time_expire = 10,
+		str_acquire = '{name_player}\'s body is engulfed in flames.',
+		str_describe = 'They\'re burning.',
+		str_describe_self = 'You are burning.',
+		types = [status_effect_type_misc]
 	)
 ]
 

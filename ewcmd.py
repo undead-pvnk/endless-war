@@ -11,7 +11,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
-from ewstatusffects import EwStatusEffect
+from ewstatuseffects import EwStatusEffect
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -2429,8 +2429,28 @@ async def acquireStatus(cmd):
 	if status != None:
 		response = status.str_acquire
 
-		status_effect = EwStatusEffect(status = status, id_server=user_data.id_server, id_user=user_data.id_user)
-		status_effect.persist()
+		status_effect = EwStatusEffect(status = status, user_data=user_data)
+
+	else:
+		response = "Not a valid status"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def statusInfo(cmd):
+	value = None
+	status = None
+	if cmd.tokens_count > 0:
+		value = cmd.tokens[1]
+		value = value.lower()
+
+	if value != None:
+		status = ewcfg.status_effects_map.get(value)
+	
+	if status != None:
+		response = ""
+
+		for type in status.types:
+			response += "Value for {type} is {value}".format(type = type, value = status.values[status.types.index(type)])
 
 	else:
 		response = "Not a valid status"
