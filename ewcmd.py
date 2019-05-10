@@ -404,7 +404,7 @@ async def leaderboard(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
 
 """
-Custom command created by Strauberry
+    Custom command created by Strauberry
 """
 async def cry(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'https://www.youtube.com/watch?v=CNP_6e81ToE'))

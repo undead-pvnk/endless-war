@@ -294,6 +294,8 @@ cmd_map = {
 	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
 	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
+	ewcfg.cmd_cry: ewcmd.cry,
+
 
 	# Slimeoids
 
@@ -338,7 +340,7 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
-debug = False
+debug = True
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True

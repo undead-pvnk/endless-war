@@ -306,6 +306,9 @@ cmd_harvest = cmd_prefix + 'harvest'
 cmd_salute = cmd_prefix + 'salute'
 cmd_unsalute = cmd_prefix + 'unsalute'
 cmd_hurl = cmd_prefix + 'hurl'
+
+cmd_cry = cmd_prefix + 'cry'
+
 cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
 cmd_haunt = cmd_prefix + 'haunt'
