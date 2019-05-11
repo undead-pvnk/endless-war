@@ -14,6 +14,8 @@ from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
 from ewstatuseffects import EwStatusEffect
 
+active_slimeoidbattles = {}
+
 """ class to send general data about an interaction to a command """
 class EwCmd:
 	cmd = ""
@@ -431,9 +433,9 @@ async def accept(cmd):
 		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
 			challenger.rr_challenger = user.id_user
 			challenger.persist()
-			if cmd.message.channel.name == ewcfg.channel_arena:
+			if cmd.message.channel.name == ewcfg.channel_arena and active_slimeoidbattles.get(cmd.message.author.id):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
-			else:
+			elif cmd.message.channel.name == ewcfg.channel_casino:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1613,15 +1615,12 @@ async def slimeoidbattle(cmd):
 	challengee = EwUser(member = member)
 	challengee_slimeoid = EwSlimeoid(member = member)
 
-	challenger.rr_challenger = ""
-	challengee.rr_challenger = ""
-
 	#Players have been challenged
-	if challenger.rr_challenger != "":
+	if active_slimeoidbattles.get(author.id):
 		response = "You are already in the middle of a challenge."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	if challengee.rr_challenger != "":
+	if active_slimeoidbattles.get(member.id):
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
@@ -1657,10 +1656,11 @@ async def slimeoidbattle(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged
-	challenger.rr_challenger = challenger.id_user
+	active_slimeoidbattles[author.id] = True
+	active_slimeoidbattles[member.id] = True
+
 	challengee.rr_challenger = challenger.id_user
 
-	challenger.persist()
 	challengee.persist()
 
 	response = "You have been challenged by {} to a Slimeoid Battle. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
@@ -1677,15 +1677,14 @@ async def slimeoidbattle(cmd):
 	except:
 		accepted = 0
 
-	# Clear challenger field.
-	challenger = EwUser(member = author)
 	challengee = EwUser(member = member)
+	challenger = EwUser(member = member)
 
-	challenger.rr_challenger = ""
 	challengee.rr_challenger = ""
+	challenger.rr_challenger = ""
 
-	challenger.persist()
 	challengee.persist()
+	challenger.persist()
 
 	#Start game
 	if accepted == 1:
@@ -2396,6 +2395,9 @@ async def slimeoidbattle(cmd):
 
 		# Send the response to the player.
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	active_slimeoidbattles[member.id] = False
+	active_slimeoidbattles[author.id] = False
 
 
 # Slimeoids lose more clout for losing at higher levels.

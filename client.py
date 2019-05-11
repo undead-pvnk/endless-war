@@ -121,9 +121,11 @@ cmd_map = {
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
 
-
 	# Show the total of negative slime in the world.
 	#ewcfg.cmd_negaslime: ewspooky.negaslime,
+
+	# Display the progress towards the current Quarterly Goal.
+	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
