@@ -298,24 +298,22 @@ async def attack(cmd):
 		strikes = 0
 		miss_mod = 0
 		crit_mod = 0
-		#dmg_mod = 0
+		dmg_mod = 0
 
-		miss_mod = apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_self)
-		crit_mod = apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other)
-
-		#ewutils.logMsg("Miss modifier is {}".format(miss_mod))
-		#ewutils.logMsg("Crit modifier is {}".format(crit_mod))
-
+		miss_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_other)
+		crit_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other)
+		dmg_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other)
+		
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 
-		slimes_spent = math.ceil(ewutils.slime_bylevel(user_data.slimelevel) / 20)
-		slimes_damage = int((slimes_spent * 2) * (100 + (user_data.weaponskill * 10)) / 100.0)
+		slimes_spent = math.ceil(ewutils.slime_bylevel(user_data.slimelevel) / 40)
+		slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
+
+		slimes_damage += int(slimes_damage * dmg_mod)
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
-		
-		#apply dmg mod
 
 		slimes_dropped = shootee_data.totaldamage + shootee_data.slimes
 
@@ -1146,6 +1144,7 @@ async def arm(cmd):
 
 		if weapon != None and current_vendor != None:
 			has_weapon = False
+
 			# Amount to buy for stackable weapons
 			n = 1					
 			for token in cmd.tokens[1:]:
@@ -1422,9 +1421,18 @@ async def dumpwef(cmd):
 	crit = False
 	time_now = int(time.time())
 	strikes = 0
-	slimes_spent = math.ceil(ewutils.slime_bylevel(user_data.slimelevel) / 20)
-	slimes_damage = int((slimes_spent * 2) * (100 + (user_data.weaponskill * 10)) / 100.0) #10 hits
+	slimes_spent = math.ceil(ewutils.slime_bylevel(user_data.slimelevel) / 40)
+	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
+	miss_mod = 0
+	crit_mod = 0
+	dmg_mod = 0
 
+	miss_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_other)
+	crit_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other)
+	dmg_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other)
+		
+	slimes_damage += int(slimes_damage * dmg_mod)
+		
 	ctn = EwEffectContainer(
 		miss = miss,
 		crit = crit,
@@ -1434,7 +1442,9 @@ async def dumpwef(cmd):
 		user_data = user_data,
 		shootee_data = user_data,
 		weapon_item = weapon_item,
-		time_now = time_now
+		time_now = time_now,
+		miss_mod = miss_mod,
+		crit_mod = crit_mod
 	)
 
 	# Make adjustments
@@ -1461,17 +1471,5 @@ def apply_status_mods(user_data = None, desired_type = None, target = None):
 						
 						if desired_type in status_flavor.types:
 							modifier += status_flavor.values[status_flavor.types.index(desired_type)]
-							#ewutils.logMsg("{} Value for {} is {}".format(desired_type, status, status_flavor.values[status_flavor.types.index(desired_type)]))
 
 		return modifier
-					# Miss chance statuses
-					#if ewcfg.status_effect_type_aim in status_flavor.types:
-					#	miss_mod += status_flavor.values[status_flavor.index(ewcfg.status_effect_type_aim)]
-
-					# Crit chance statuses
-					#if ewcfg.status_effect_type_crit in status_flavor.types:
-					#	crit_mod += status_flavor.values[status_flavor.index(ewcfg.status_effect_type_crit)]
-
-					# Damage statuses
-					#if ewcfg.status_effect_type_aim in status_flavor.types:
-					#	miss_mod += status_flavor.values[status_flavor.index(ewcfg.status_effect_type_aim)]
