@@ -7,6 +7,7 @@ import time
 import re
 import random
 import asyncio
+import math
 
 import ewstats
 import ewitem
@@ -468,6 +469,69 @@ def pushdownServerInebriation(id_server = None):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
+
+"""
+	Coroutine that continually calls burnEffect; is called once per server, and not just once globally
+"""
+async def burn_tick_loop(id_server):
+	interval = 1#ewcfg.burn_tick_length
+	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
+	while True:
+		await burnSlimes(id_server = id_server)
+		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
+
+		await asyncio.sleep(interval)
+
+""" Burn slime for all users """
+async def burnSlimes(id_server = None):
+	if id_server != None:
+		time_now = int(time.time())
+		client = get_client()
+		server = client.get_server(id_server)
+
+		results = {}
+
+		data = execute_sql_query("SELECT {id_user}, {time_expire}, {value} from status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			time_expire = ewcfg.col_time_expir,
+			value = ewcfg.col_value,
+			id_status = ewcfg.col_id_status,
+			id_server = ewcfg.col_id_server
+		), (
+			ewcfg.status_burning_id,
+			id_server
+		))
+
+
+		deathreport = ""
+		resp_cont = EwResponseContainer(id_server = id_server)
+		for result in data:
+			user_data = EwUser(id_user = result[0], id_server = id_server)
+			if result[1] >= time_now:
+				slimes_dropped = user_data.totaldamage + user_data.slimes
+
+				slime_to_burn = math.ceil(int(result[2]) * 0.1)
+
+				user_data.change_slimes(n = -slime_to_burn, source=ewcfg.source_damage)
+
+				if user_data.slimes < 0:
+					member = server.get_member(user_data.id_user)
+
+					user_data.die(cause = ewcfg.cause_burning)
+					user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+					player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
+					deathreport = "{skull} *{uname}*: You have succumbed to your burns. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
+					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+
+					user_data.trauma = 'molotov'
+					await ewrolemgr.updateRoles(client = client, member = member)
+				user_data.persist()
+
+			else:
+				user_data.clear_status(id_status = ewcfg.status_burning_id)
+
+		await resp_cont.post()	
+
 
 """ Decay slime totals for all users """
 def removeExpiredStatuses(id_server = None, time = None):

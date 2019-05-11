@@ -207,10 +207,12 @@ async def order(cmd):
 						if target_data.hunger < 0:
 							target_data.hunger = 0
 						target_data.inebriation += food.inebriation
+						if target_data.inebriation >= 10:
+							resp_status = "\n" + ewstatuseffects.applyStatus(user_data=target_data, id_status=ewcfg.status_drunk_id)
 						if target_data.inebriation > ewcfg.inebriation_max:
 							target_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
-							target_data.ghostbust = True
+							ewstatuseffects.applyStatus(user_data=target_data, id_status=ewcfg.status_ghostbust_id)
 							#Bust target if they're a ghost
 							if target_data.life_state == ewcfg.life_state_corpse:
 								target_data.die(cause = ewcfg.cause_busted)
@@ -225,7 +227,6 @@ async def order(cmd):
 						if user_data.inebriation > ewcfg.inebriation_max:
 							user_data.inebriation = ewcfg.inebriation_max
 						if food.id_food == "coleslaw":
-							#user_data.ghostbust = True
 							ewstatuseffects.applyStatus(user_data=user_data, id_status=ewcfg.status_ghostbust_id)
 							#Bust player if they're a ghost
 							if user_data.life_state == ewcfg.life_state_corpse:

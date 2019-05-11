@@ -4,8 +4,7 @@ import ewutils
 import ewcfg
 import ewstats
 import ewitem
-
-""" Market data model for database persistence """
+import ewstatuseffects
 
 """ User model for database persistence """
 class EwUser:
@@ -198,16 +197,19 @@ class EwUser:
 		if float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
 		else:
+			resp_status = ""
 			self.hunger -= int(item_props['recover_hunger'])
 			if self.hunger < 0:
 				self.hunger = 0
 			self.inebriation += int(item_props['inebriation'])
 			if self.inebriation > 20:
 				self.inebriation = 20
-
+			if self.inebriation >= 10:
+				resp_status = "\n" + ewstatuseffects.applyStatus(user_data=self, id_status=ewcfg.status_drunk_id)
+						
 			try:
 				if item_props['id_food'] == "coleslaw":
-					self.ghostbust = True
+					ewstatuseffects.applyStatus(user_data=self, id_status=ewcfg.status_ghostbust_id)
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
 						self.die(cause = ewcfg.cause_busted)
@@ -216,6 +218,9 @@ class EwUser:
 				pass
 
 			response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
+
+			if resp_status:
+				response += resp_status	
 
 		ewitem.item_delete(food_item.id_item)
 
@@ -492,3 +497,4 @@ class EwUser:
 			# Clean up the database handles.
 			cursor.close()
 			ewutils.databaseClose(conn_info)
+
