@@ -308,7 +308,7 @@ async def attack(cmd):
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 
 		slimes_spent = math.ceil(ewutils.slime_bylevel(user_data.slimelevel) / 40)
-		slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
+		slimes_damage = math.ceil((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
 
 		slimes_damage += int(slimes_damage * dmg_mod)
 
@@ -503,7 +503,7 @@ async def attack(cmd):
 				was_shot = True
 
 			if was_shot:
-				if slimes_damage >= shootee_data.slimes:
+				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
 
 				# move around slime as a result of the shot
@@ -536,7 +536,7 @@ async def attack(cmd):
 						user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 					# Increment weapon's kills stat
-					weapon_item.item_props["kills"] = weapon_kills + 1
+					weapon_item.item_props["kills"] = int(weapon_item.item_props['kills']) + 1
 
 					# Steal items
 					ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
