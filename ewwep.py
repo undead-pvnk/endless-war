@@ -481,6 +481,8 @@ async def attack(cmd):
 
 			# Persist every users' data.
 			user_data.persist()
+			weapon_item.item_props['time_lastattack'] = time_now
+			weapon_item.persist()
 			shootee_data.persist()
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.server.get_member(shootee_data.id_user))
