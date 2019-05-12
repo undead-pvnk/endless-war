@@ -300,7 +300,7 @@ async def attack(cmd):
 		crit_mod = 0
 		dmg_mod = 0
 
-		miss_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_other)
+		miss_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other)
 		crit_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other)
 		dmg_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other)
 		
@@ -1429,10 +1429,13 @@ async def dumpwef(cmd):
 	crit_mod = 0
 	dmg_mod = 0
 
-	miss_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_aim, target = ewcfg.status_effect_target_other)
-	crit_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other)
-	dmg_mod += apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other)
-		
+	miss_mod += round(apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other), 1)
+	crit_mod += round(apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other), 1)
+	dmg_mod += round(apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_status_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other), 1)
+
+	print("Miss mod {}".format(miss_mod))
+	print("Crit mod {}".format(crit_mod))
+	print("Dmg mod {}".format(dmg_mod))
 	slimes_damage += int(slimes_damage * dmg_mod)
 		
 	ctn = EwEffectContainer(
@@ -1469,9 +1472,20 @@ def apply_status_mods(user_data = None, desired_type = None, target = None):
 				# Only apply non expired statuses
 				if user_statuses.get(status) > time.time() or user_statuses.get(status) == -1:
 					status_flavor = ewcfg.status_effects_map.get(status)
-					if status_flavor is not None and status_flavor.target == target:
-						
-						if desired_type in status_flavor.types:
-							modifier += status_flavor.values[status_flavor.types.index(desired_type)]
-
+					if status_flavor is not None:
+						if target == ewcfg.status_effect_target_self:
+							if desired_type == ewcfg.status_effect_type_miss:
+								modifier += status_flavor.miss_mod_self
+							elif desired_type == ewcfg.status_effect_type_crit:
+								modifier += status_flavor.crit_mod_self
+							elif desired_type == ewcfg.status_effect_type_damage:
+								modifier += status_flavor.dmg_mod_self
+							
+						elif target == ewcfg.status_effect_target_other:
+							if desired_type == ewcfg.status_effect_type_miss:
+								modifier += status_flavor.miss_mod
+							elif desired_type == ewcfg.status_effect_type_crit:
+								modifier += status_flavor.crit_mod
+							elif desired_type == ewcfg.status_effect_type_damage:
+								modifier += status_flavor.dmg_mod
 		return modifier

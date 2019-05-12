@@ -6640,11 +6640,9 @@ vegetable_list = [
 ]
 
 
-status_effect_type_aim = "aim"
+status_effect_type_miss = "miss"
 status_effect_type_crit = "crit"
 status_effect_type_damage = "dmg"
-#doesn't fit into the other status types
-status_effect_type_misc = "misc"
 
 status_effect_target_self = "status_effect_target_self"
 status_effect_target_other = "status_effect_target_other"
@@ -6660,34 +6658,37 @@ status_effect_list = [
 		str_acquire = 'A cloud of smoke envelops your entire body.',
 		str_describe = 'They are covered by a cloud of smoke.',
 		str_describe_self = 'You are covered by a cloud of smoke.',
-		types = [status_effect_type_aim],
-		values = [0.2],
-		target = status_effect_target_self
+		miss_mod = 0.2
 	),
 	EwStatusEffectDef(
 		id_status = status_drunk_id,
 		str_acquire = 'You\'re drunk.',
 		str_describe = 'They are drunk.',
 		str_describe_self = 'You are drunk.',
-		types = [status_effect_type_aim, status_effect_type_damage],
-		values = [0.2, 0.5],
-		target = status_effect_target_self
+		dmg_mod_self = 0.5,
+		miss_mod_self= 0.2
 	),
 	EwStatusEffectDef(
 		id_status = status_burning_id,
 		time_expire = 10,
 		str_acquire = '{name_player}\'s body is engulfed in flames.',
 		str_describe = 'They are burning.',
-		str_describe_self = 'You are burning.',
-		types = [status_effect_type_misc]
+		str_describe_self = 'You are burning.'
 	),
 	EwStatusEffectDef(
 		id_status = status_ghostbust_id,
 		time_expire = 86400,
 		str_acquire = 'You can now fight ghosts',
 		str_describe = '',
+		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts'
+	),
+	EwStatusEffectDef(
+		id_status = "thirdeye",
+		time_expire = 86400,
+		str_acquire = 'You can now fight ghosts',
+		str_describe = '',
 		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts',
-		types = [status_effect_type_misc]
+		miss_mod_self = -0.3
 	)
 ]
 

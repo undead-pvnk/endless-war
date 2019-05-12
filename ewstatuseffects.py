@@ -17,14 +17,12 @@ class EwStatusEffectDef:
 	str_acquire = ""
 	str_describe = ""
 	str_describe_self = ""
-	# Values have to be in the same position as types 
-	# ie: if there's a 20% aim bonus and 30% damage bonus you would put 
-	# types = ["aim", "dmg"]
-	# values = [0.2, 0.3]
-	types = []
-	values = []
-	# Target for statuses used in damage calculation
-	target = ""
+	dmg_mod_self = 0
+	miss_mod_self = 0
+	crit_mod_self = 0
+	dmg_mod = 0
+	miss_mod = 0
+	crit_mod = 0
 
 	def __init__(
         self,
@@ -33,18 +31,24 @@ class EwStatusEffectDef:
         str_acquire = "",
         str_describe = "",
         str_describe_self = "",
-		types = [],
-		values = [],
-		target = ""
+		dmg_mod_self = 0,
+		miss_mod_self = 0,
+		crit_mod_self = 0,
+		dmg_mod = 0,
+		miss_mod = 0,
+		crit_mod = 0
     ):
 		self.id_status = id_status
 		self.time_expire = time_expire
 		self.str_acquire = str_acquire
 		self.str_describe = str_describe
 		self.str_describe_self = str_describe_self
-		self.types = types
-		self.values = values
-		self.target = target
+		self.dmg_mod_self = dmg_mod_self
+		self.miss_mod_self = miss_mod_self
+		self.crit_mod_self = crit_mod_self
+		self.dmg_mod = dmg_mod
+		self.miss_mod = miss_mod
+		self.crit_mod = crit_mod
 
 class EwStatusEffect:
 	id_server = ""
