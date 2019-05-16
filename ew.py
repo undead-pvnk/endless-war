@@ -315,6 +315,8 @@ class EwUser:
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
 				else:
+					self.poi = ewcfg.poi_id_downtown
+					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,
