@@ -377,7 +377,42 @@ async def patchnotes(cmd):
 	advertise help services
 """
 async def help(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Check out the guide for help: https://ew.krakissi.net/guide/'))
+
+
+	response = ""
+	topic = None
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	# help only checks for districts while in game channels
+	if False:
+		# if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+			response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'Additionally, you can also visit N.L.A.C.U (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+	else:
+		# checks if user is in a college
+		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
+			if not len(cmd.tokens) > 1:
+				# list off help topics to player at college
+				response = 'What would you like to learn about? Topics include \'bleeding\', \'food\', and \'scavenging\''
+			else:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic == 'bleeding':
+					response = 'Bleeding is bad!'
+				elif topic == 'food':
+					response = 'Food is good!'
+				elif topic == 'scavenging':
+					response = 'Scavenging can be good or bad depending on the situation!'
+				else:
+					response = 'Sorry, but that\'s not a topic I recognize.'
+		else:
+			# user not in college, check what help message would apply to the subzone they are in
+
+			# placeholder response
+			response = '**DEBUG** -- Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'Additionally, you can also visit N.L.A.C.U (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """
 	Link to the world map.
