@@ -7,6 +7,7 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
+import ewmap
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
@@ -377,17 +378,14 @@ async def patchnotes(cmd):
 	advertise help services
 """
 async def help(cmd):
-
-
 	response = ""
 	topic = None
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
 	# help only checks for districts while in game channels
-	if False:
-		# if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-			response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'Additionally, you can also visit N.L.A.C.U (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'Additionally, you can also visit N.L.A.C.U (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
 	else:
 		# checks if user is in a college
 		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
