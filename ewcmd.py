@@ -391,21 +391,19 @@ async def help(cmd):
 		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
 			if not len(cmd.tokens) > 1:
 				# list off help topics to player at college
-				response = 'What would you like to learn about? Topics include \'bleeding\', \'food\', and \'scavenging\''
+				response = 'What would you like to learn about? Topics include: \n' \
+						   '**mining**, **food**, **capturing**, **dojo**, **bleeding**, **scavenging**,\n' \
+						   '**farming**, **slimeoids**, **transportation**, **scouting**, and **offline**.'
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
-				if topic == 'bleeding':
-					response = 'Bleeding is bad!'
-				elif topic == 'food':
-					response = 'Food is good!'
-				elif topic == 'scavenging':
-					response = 'Scavenging can be good or bad depending on the situation!'
+				if topic in ewcfg.help_responses:
+					response = ewcfg.help_responses[topic]
 				else:
 					response = 'Sorry, but that\'s not a topic I recognize.'
 		else:
 			# user not in college, check what help message would apply to the subzone they are in
 
-			# placeholder response
+			# catch-all response for when user isn't in a sub-zone with a help response
 			response = '**DEBUG** -- Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'Additionally, you can also visit N.L.A.C.U (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
 
 	# Send the response to the player.
