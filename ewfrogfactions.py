@@ -51,6 +51,10 @@ class EwFrogFaction:
 	evolution_points = 0
 	technology_points = 0
 
+class EwFactionEvolution:
+	id_faction = ""
+	id_evolution = ""
+
 class EwFrogEvolution:
 
 	id_evolution = ""
@@ -84,6 +88,10 @@ def ff_choose_target(faction_data, targets):
 async def ff_tick(id_server):
 	env_data = EwFrogEnvironment(id_server = id_server)
 	factions = ff_get_factions(id_server)
+	response = ""
+	client = ewutils.get_client()
+	server = ewcfg.server_list.get(id_server)
+	channel = ewutils.get_channel(server = server, channel_name = ewcfg.channel_frogfactions)
 
 	random.shuffle(factions)
 	total_biomass_lost = 0
@@ -117,9 +125,13 @@ async def ff_tick(id_server):
 			if len(targets) > 0:
 				target = random.choice(targets)
 				target_data = EwFrogFaction(id_faction = target)
+				response += "{} preyed on {}.\n".format(faction_data.faction_name, target_data.faction_name)
 			else:
 				target = faction
 				target_data = faction_data
+				response += "{} couldn't find any prey, so they cannibalized themselves.\n".format(faction_data.faction_name)
+
+
 
 
 			defense_mod = 0
@@ -132,7 +144,7 @@ async def ff_tick(id_server):
 
 
 			strategies = []
-			if target_data.intelligence < 1:
+			if target_data.intelligence < 1 or target == faction:
 				strategies = [ewcfg.ff_strategy_fight]
 			elif target_data.intelligence < 3:
 				strategies = [ewcfg.ff_strategy_fight, ewcfg.ff_strategy_run]
@@ -168,10 +180,18 @@ async def ff_tick(id_server):
 				hide = random.randrange(target_data.stealth + int(env_data.vegetation/10) - 5 )
 				seek = random.randrange(faction_data.perception)
 				defense_mod = seek - hide
+				if defense_mod < 0:
+					response += "{} hid from their attackers.\n".format(target_data.faction_name)
+				else:
+					response += "{} tried to conceal themselves from their attackers, but were discovered.\n".format(target_data.faction_name)
 			elif defense_strategy == ewcfg.ff_strategy_run:
 				run = random.randrange(target_data.speed - env_data.slime_viscosity + 5)
 				chase = random.randrange(faction_data.speed)
 				defense_mod = chase - run
+				if defense_mod < 0:
+					response += "{} ran from their attackers.\n".format(target_data.faction_name)
+				else:
+					response += "{} tried to flee from their attackers, but were chased down.\n".format(target_data.faction_name)
 		
 			elif defense_strategy == ewcfg.ff_strategy_fight:
 				ambush = False
@@ -184,10 +204,16 @@ async def ff_tick(id_server):
 					if ambush_mod < 0:
 						ambush = True
 
-				if ambush:
+				if target == faction:
+					defense_mod = 0
+				elif ambush:
 					ambush = random.randrange(faction_data.stealth + int(env_data.vegetation/10) - 5)
 					awareness = random.randrange(target_data.perception)
-					defense_mod = ambush - awareness + combat_mod
+					defense_mod = ambush - awareness - combat_mod
+					if defense_mod < -combat_mod:
+						response += "{} ambushed their prey.\n".format(faction_data.faction_name)
+					else:
+						response += "{} tried to sneak up on their prey, but were noticed.\n".format(faction_data.faction_name)
 				else:
 					defense_mod = 0
 
@@ -203,7 +229,9 @@ async def ff_tick(id_server):
 			faction_data.population -= attacker_losses
 			target_data.population -= defender_losses
 
-			faction_data.evolution_points += 10 * defender_losses * target_data.size
+			ev_points_gain = 10 * defender_losses * target_data.size
+
+			faction_data.evolution_points += ev_points_gain
 
 			sludge_damage = random.randrange(target_data.sludge)
 			sludge_resistance = random.randrange(faction_data.constitution)
@@ -215,13 +243,26 @@ async def ff_tick(id_server):
 			total_biomass_lost += 0.5 * defender_losses * target_data.size
 
 			target_data.persist()
+			if target == faction:
+				response += "{} lost {} frogs from eating their own kind.\n".format(faction_data.faction_name)
+			else:
+				if defender_losses > 0:
+					response += "{} lost {} frogs in the attack.\n".format(target_data.faction_name, defender_losses)
+					response += "{} gained {} Evolution Points.\n".format(faction_data.faction_name, ev_points_gain)
+				if attacker_losses > 0:
+					response += "{} lost {} frogs in the fighting.\n".format(faction_data.faction_name, attacker_losses)
+				if sludge_losses > 0:
+					response += "{} lost {} frogs to sludge poisoning.\n".format(faction_data.faction_name, sludge_losses)
+
 		else:
 			vegetation_eaten = 0.01 * faction_data.population * faction_data.size
 			vegetation_eaten = min(vegetation_eaten, 0.5 * env_data.vegetation)
 
 			env_data.vegetation -= vegetation_eaten
+			
+			ev_points_gain = vegetation_eaten
 
-			faction_data.evolution_points += vegetation_eaten
+			faction_data.evolution_points += ev_points_gain
 
 			sludge_damage = random.randrange(env_data.sludge)
 			sludge_resistance = random.randrange(faction_data.constitution)
@@ -231,10 +272,34 @@ async def ff_tick(id_server):
 
 			total_biomass_lost += sludge_losses * faction_data.size
 
+			response += "{} gained {} Evolution Points by eating plants.\n".format(faction_data.faction_name, ev_points_gain)
+			if sludge_losses > 0:
+				response += "{} lost {} frogs to sludge poisoning.\n".format(faction_data.faction_name, sludge_losses)
+
 		faction_data.persist()
 		env_data.persist()
 
 		# reproduce
+
+		respawn = int(faction_data.population * faction_data.respawn_rate / 100)
+
+		faction_data.population += respawn
+		faction_data.persist()
+
+		response += "{} produced {} new frogs.\n".format(faction_data.faction_name, respawn)
+
+		if len(response) > 1500:
+			await ewutils.send_message(client, channel, response)
+			response = ""
+
+	if len(response) > 0:
+		await ewutils.send_message(client, channel, response)
+
+
+
+	env_data.vegetation += int(env_data.vegetation * 0.1)
+	env_data.vegetation += total_biomass_lost
+	env_data.persist()
 
 	
 	
