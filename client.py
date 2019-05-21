@@ -338,7 +338,7 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
-debug = True
+debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
