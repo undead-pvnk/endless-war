@@ -294,8 +294,6 @@ cmd_map = {
 	ewcfg.cmd_leaderboard: ewcmd.leaderboard,
 	ewcfg.cmd_leaderboard_alt1: ewcmd.leaderboard,
 
-	ewcfg.cmd_cry: ewcmd.cry,
-
 
 	# Slimeoids
 
