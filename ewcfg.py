@@ -2720,10 +2720,10 @@ vegetable_list = []
 
 # seperate the crops from the normal foods
 for v in food_list:
-	if [vendor_farm] in v.vendors:
-		vegetable_list.append(v)
-	else:
+	if EwFood.vendors != [vendor_farm]:
 		pass
+	else:
+		vegetable_list.append(v)
 
 # List of items you can obtain via milling.
 milled_item_list = [
