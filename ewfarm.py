@@ -253,7 +253,7 @@ async def mill(cmd):
 				if result.ingredients != vegetable:
 					pass
 				else:
-					item = result
+					item.append(result)
 
 			ewitem.item_create(
 				item_type = ewcfg.it_milleditem,
