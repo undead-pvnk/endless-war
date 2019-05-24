@@ -158,6 +158,10 @@ async def reap(cmd):
 						'time_expir': time.time() + (vegetable.time_expir if vegetable.time_expir is not None else ewcfg.farm_food_expir)
 					}
 
+
+
+
+
 					for vcreate in range(4):
 						ewitem.item_create(
 							id_user = cmd.message.author.id,
