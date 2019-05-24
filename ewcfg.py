@@ -2720,7 +2720,7 @@ vegetable_list = []
 
 # seperate the crops from the normal foods
 for v in food_list:
-	if v.vendors != [vendor_farm]:
+	if v.vendors == [vendor_farm]:
 		pass
 	else:
 		vegetable_list.append(v)
