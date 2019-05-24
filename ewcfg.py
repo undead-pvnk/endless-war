@@ -2842,13 +2842,6 @@ milled_item_list = [
 	),
 ]
 
-
-milled_item_map = {}
-
-# Populate millable map
-for milled_item in milled_item_list:
-	milled_item_map[milled_item.id_milled_item] = milled_item
-
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
 	vendor_pizzahut : stock_pizzahut,
