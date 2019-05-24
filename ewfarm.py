@@ -1,9 +1,9 @@
 import time
 import random
-import ewcfg
 
 import ewitem
 import ewutils
+import ewcfg
 from ew import EwUser
 
 class EwFarm:
