@@ -816,6 +816,7 @@ it_slimepoudrin = "slimepoudrin"
 it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
+it_milleditem = "milleditem"
 
 it_cosmetic = 'cosmetic'
 
@@ -823,8 +824,6 @@ it_cosmetic = 'cosmetic'
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
 rarity_princeps = "Princeps"
-
-it_milleditem =  'milleditem'
 
 # Leaderboard score categories
 leaderboard_slimes = "SLIMIEST"

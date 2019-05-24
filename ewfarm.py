@@ -244,11 +244,10 @@ async def mill(cmd):
 		response = "You can only !mill in farms."
 
 	if item_sought:
-		ingredient = "purplekilliflower"
 		item = None
 
 		for result in ewcfg.milled_item_list:
-			if result.ingredients != ingredient:
+			if result.ingredients != item_search:
 				pass
 			else:
 				item = result
@@ -263,7 +262,7 @@ async def mill(cmd):
 					'milled_desc': item.desc,
 					'context_name': item.context_name,
 					'context_desc': item.context_desc,
-					'ingredients': ingredient,
+					'ingredients': item.ingredients,
 				}
 			)
 			response = "You milled a {item_name}!".format(item_name = item.name)
