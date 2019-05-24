@@ -255,7 +255,7 @@ async def mill(cmd):
 				else:
 					matched_item = result
 
-			item = matched_item
+			item = matched_item[random.randint(0, len(matched_item) - 1)]
 
 			ewitem.item_create(
 				item_type = ewcfg.it_milleditem,
