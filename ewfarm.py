@@ -239,14 +239,15 @@ async def mill(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
+
 	if user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 		response = "You can only !mill in farms."
 
 	if item_sought:
-		if item_sought not in ewcfg.vegetable_list:
+		vegetable = EwItem(id_item = item_sought.get("id_item"))
+		if vegetable not in ewcfg.vegetable_list:
 			response = "You can only !mill vegetables."
 		else:
-			vegetable = EwItem(id_item = item_sought.get("id_item"))
 			item = None
 
 			for result in ewcfg.milled_item_list:
