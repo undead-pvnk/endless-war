@@ -271,7 +271,7 @@ async def mill(cmd):
 
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
 
-			response = "You milled a {item_name}! Your {ingredient} was destroyed in the process.".format(item_name = item.name, ingredient = item_sought.name)
+			response = "You milled a {item_name}!".format(item_name = item.name)
 			user_data.persist()
 		else:
 			response = "You can only mill vegetables."
