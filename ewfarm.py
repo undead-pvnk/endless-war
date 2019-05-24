@@ -147,7 +147,8 @@ async def reap(cmd):
 						)
 
 					#  Determine what crop is grown.
-					vegetable = random.choice(ewcfg.vegetable_list)
+					result = random.choice(ewcfg.vegetable_list)
+					vegetable = ewcfg.food_map.get(result)
 
 					#  Create and give a bushel of whatever crop was grown.
 					for vcreate in range(4):
