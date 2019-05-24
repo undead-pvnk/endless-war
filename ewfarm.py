@@ -78,11 +78,15 @@ class EwMilledItem:
 	def __init__(
 		self,
 		name = "",
-		description = "",
+		desc = "",
+		context_name = "",
+		context_desc = "",
 		ingredients = ""
 	):
 		self.name = name
-		self.description = description
+		self.desc = desc
+		self.context_name = context_name
+		self.context_desc = context_desc
 		self.ingredients = ingredients
 
 """
@@ -231,49 +235,44 @@ async def sow(cmd):
 
 async def mill(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	ingredient_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	ingredient_sought = ewitem.find_item(item_search = ingredient_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 	if user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 		response = "You can only !mill in farms."
 
-	else:
-		vegetable_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-		author = cmd.message.author
-		server = cmd.message.server
+	elif ingredient_sought not in ewcfg.vegetable_list:
+		response = "You can only !mill vegetables."
 
-		vegetable_sought = ewitem.find_item(item_search = vegetable_search, id_user = author.id, id_server = server.id)
+		if ingredient_sought:
+			vegetable = EwItem(id_item = ingredient_sought.get("id_item"))
+			matched_item = ""
 
-		if vegetable_sought:
-			item = ewitem.EwItem(id_item = vegetable_sought.get('id_item'))
+			for result in ewcfg.milled_item_list:
+				if EwMilledItem.ingredients != vegetable:
+					pass
+				else:
+					matched_item = result
 
-			if item not in ewcfg.vegetable_list:
-				response = "Use which item? You can only !mill vegetables."
+			item = matched_item
 
-			else:
-				matched_item = []
-
-				if EwFood.mill_result in ewcfg.dyes:
-					matched_item.append()
-				else
-
-					#todo make dyes actual items, in the style of the default item def
-			#todo then, match mill_result to the id of the new items, then have it print out that. refer to !smelt and !invest
-            #todo make a subset of trash items that do nothing. if you mix two veggies together that don't result in a recipe, you get that.
-
-
-
-
-
-
-
-
-			response = user_data.eat(item)
+			ewitem.item_create(
+				item_type = ewcfg.it_milleditem,
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_props = {
+					'milled_name': item.name,
+					'milled_desc': item.desc,
+					'context_name': item.context_name,
+					'context_desc': item.context_desc,
+					'ingredients': vegetable,
+				}
+			)
+			response = "You milled a {item_name}!".format(item_name = item.name)
 			user_data.persist()
 
 		else:
-			if vegetable_search:
-				response = "You don't have one."
-			else:
-				response = "Use which item? "
+			response = "You don't have one."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

@@ -2550,7 +2550,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The sweet-smelling tubers stain your hands pink.",
 		time_expir = farm_food_expir,
-		mill_result = dye_fuchsia
 	),
 	EwFood(
 		id_food = "sludgeberries",
@@ -2560,7 +2559,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The thick syrup covering the green and teal berries makes your hands sticky.",
 		time_expir = farm_food_expir,
-		mill_result = dye_teal
 	),
 	EwFood(
 		id_food = "pulpgourds",
@@ -2570,7 +2568,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The easily malleable gourds form indents from even your lightest touch.",
 		time_expir = farm_food_expir,
-		mill_result = dye_orange
 	),
 	EwFood(
 		id_food = "joybeans",
@@ -2580,7 +2577,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The sugary candy-like beans have a thick gel interior that rots your teeth.",
 		time_expir = farm_food_expir,
-		mill_result = dye_blue
 	),
 	EwFood(
 		id_food = "brightshade",
@@ -2590,7 +2586,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The dangerously toxic chemicals that cover the flower bud burn your eyes and nose.",
 		time_expir = farm_food_expir,
-		mill_result = dye_white
 	),
 	EwFood(
 		id_food = "direapples",
@@ -2600,7 +2595,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The vicious acidity from from the cyan and orange apples makes your mouth contort in pain with every bite.",
 		time_expir = farm_food_expir,
-		mill_result = dye_aqua
 	),
 	EwFood(
 		id_food = "purplekilliflower",
@@ -2610,7 +2604,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The deep purple head has an extremely bitter aftertaste.",
 		time_expir = farm_food_expir,
-		mill_result = dye_purple
 	),
 	EwFood(
 		id_food = "razornuts",
@@ -2620,7 +2613,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The sharp edges of the hard nut slice open your mouth so that you taste slight hints of copper from your blood every bite.",
 		time_expir = farm_food_expir,
-		mill_result = dye_tan
 	),
 	EwFood(
 		id_food = "poketubers",
@@ -2630,7 +2622,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The lame, sad, lumpy roots barely support a bulbous crop that’s indiscernible taste is not complemented by it’s awkward texture.",
 		time_expir = farm_food_expir,
-		mill_result = dye_red
 	),
 	EwFood(
 		id_food = "suganmanuts",
@@ -2640,7 +2631,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The difficult nuts infuriate you for reasons you don’t really underst-- HEY WAIT A SECOND!!",
 		time_expir = farm_food_expir,
-		mill_result = dye_brown
 	),
 	EwFood(
 		id_food = "dankwheat",
@@ -2650,7 +2640,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The damp barley milled from this moist wheat causes hallucinations and intoxication once digested fully.",
 		time_expir = farm_food_expir,
-		mill_result = dye_lime
 	),
 	EwFood(
 		id_food = "blacklimes",
@@ -2660,7 +2649,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The sour juice squeezed from just one of these small dark grey limes can flavor an entire production of Warheads hard candy.",
 		time_expir = farm_food_expir,
-		mill_result = dye_black
 	),
 	EwFood(
 		id_food = "phosphorpoppies",
@@ -2670,7 +2658,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The vivid and unnatural colors of this plant reveal it’s man made origin. Some say SlimeCorp designed the plant’s addictive and anxiety/paranoia inducing nature to keep juveniles weak and disenfranchised.",
 		time_expir = farm_food_expir,
-		mill_result = dye_yellow
 	),
 	EwFood(
 		id_food = "sourpotatoes",
@@ -2680,7 +2667,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The staple of many unhealthy juveniles’ diet. It’s revolting taste leaves much to be desired.",
 		time_expir = farm_food_expir,
-		mill_result = dye_brown
 	),
 	EwFood(
 		id_food = "bloodcabbages",
@@ -2690,7 +2676,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "The dripping mass of dark crimson leaves have become the staple special effects tool for aspiration amatuer filmmakers in the city for it’s uncanny resemblance to human blood.",
 		time_expir = farm_food_expir,
-		mill_result = dye_maroon
 	),
 	EwFood(
 		id_food = "pawpaw",
@@ -2700,7 +2685,6 @@ food_list = [
 		str_eat = "",
 		str_desc = "An American classic.",
 		time_expir = farm_food_expir,
-		mill_result = dye_green
 	),
 ]
 
@@ -2744,14 +2728,116 @@ for v in food_list:
 # List of items you can obtain via milling.
 milled_item_list = [
 	EwMilledItem(
-		name = "wvwvw",
-		description = "wvrv",
-		ingredients = "fwvvr"
+		name = "White Dye",
+		desc = "",
+		context_name = "white",
+		context_desc = "",
+		ingredients = "poketuber"
 	),
 	EwMilledItem(
-		name = "wvwvw",
-		description = "wvrv",
-		ingredients = "fwvvr"
+		name = "Yellow Dye",
+		desc = "",
+		context_name = "yellow",
+		context_desc = "",
+		ingredients = "phosphorpoppies"
+	),
+	EwMilledItem(
+		name = "Orange Dye",
+		desc = "",
+		context_name = "orange",
+		context_desc = "",
+		ingredients = "sourpotatoes"
+	),
+	EwMilledItem(
+		name = "Red Dye",
+		desc = "",
+		context_name = "red",
+		context_desc = "",
+		ingredients = "sourpotatoes"
+	),
+	EwMilledItem(
+		name = "Magenta Dye",
+		desc = "",
+		context_name = "magenta",
+		context_desc = "",
+		ingredients = "joybeans"
+	),
+	EwMilledItem(
+		name = "Purple Dye",
+		desc = "",
+		context_name = "purple",
+		context_desc = "",
+		ingredients = "purplekilliflower"
+	),
+	EwMilledItem(
+		name = "Blue Dye",
+		desc = "",
+		context_name = "blue",
+		context_desc = "",
+		ingredients = "razornuts"
+	),
+	EwMilledItem(
+		name = "Cyan Die",
+		desc = "",
+		context_name = "cyan",
+		context_desc = "",
+		ingredients = "direapples"
+	),
+	EwMilledItem(
+		name = "Green Dye",
+		desc = "",
+		context_name = "green",
+		context_desc = "",
+		ingredients = "pawpaw"
+	),
+	EwMilledItem(
+		name = "Teal Dye",
+		desc = "",
+		context_name = "teal",
+		context_desc = "",
+		ingredients = "sludgeberries"
+	),
+	EwMilledItem(
+		name = "Brown Dye",
+		desc = "",
+		context_name = "brown",
+		context_desc = "",
+		ingredients = "suganmanuts",
+	),
+	EwMilledItem(
+		name = "Olive Dye",
+		desc = "",
+		context_name = "olive",
+		context_desc = "",
+		ingredients = "pulpgourds"
+	),
+	EwMilledItem(
+		name = "Pink Dye",
+		desc = "",
+		context_name = "pink",
+		context_desc = "",
+		ingredients = "pinkrowddishes"
+	),
+	EwMilledItem(
+		name = "Grey Dye",
+		desc = "",
+		context_name = "grey",
+		context_desc = "",
+		ingredients = "dankwheat"
+	),
+	EwMilledItem(
+		name = "Indigo Dye",
+		desc = "",
+		context_name = "indigo",
+		context_desc = "",
+		ingredients = "brightshade"
+	),
+	EwMilledItem(
+		name = "Black Dye",
+		desc = "",
+		context_name = "black",
+		context_desc = "",
+		ingredients = "blacklimes"
 	),
 ]
 
@@ -2868,7 +2954,9 @@ item_def_list = [
 		item_props = {
 			'milled_name': 'milled Item',
 			'milled_desc': 'milled Item.',
-			'ingredients': 'dire apple'
+			'context_name': 'Milled Item.',
+			'context_desc': 'Milled Item.',
+			'ingredients': 'direapple'
 		}
 	)
 ]
@@ -6421,50 +6509,6 @@ stock_emotes = {
     stock_pizzahut : emote_pizzahut,
     stock_tacobell : emote_tacobell
 }
-
-#	dye ids
-dyes = [
-	dye_black,
-	dye_maroon,
-	dye_green,
-	dye_tan,
-	dye_brown,
-	dye_purple,
-	dye_teal,
-	dye_orange,
-	dye_gray,
-	dye_red,
-	dye_lime,
-	dye_yellow,
-	dye_blue,
-	dye_fuchsia,
-	dye_aqua,
-	dye_white,
-]
-
-#	dye ids
-dye_names = {
-	dye_black : "Black Dye",
-	dye_maroon : "Maroon Dye",
-	dye_green : "Green Dye",
-	dye_tan : "Tan Dye",
-	dye_brown : "Brown Dye",
-	dye_purple : "Purple Dye",
-	dye_teal : "Teal Dye",
-	dye_orange : "Orange Dye",
-	dye_gray : "Gray Dye",
-	dye_red : "Red Dye",
-	dye_lime : "Lime Dye",
-	dye_yellow : "Yellow Dye",
-	dye_blue : "Blue Dye",
-	dye_fuchsia : "Fuchsia Dye",
-	dye_aqua : "Aqua Dye",
-	dye_white : "White Dye",
-}
-
-ingredients_list = [
-
-]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
