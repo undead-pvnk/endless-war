@@ -161,7 +161,7 @@ async def reap(cmd):
 								'recover_hunger': vegetable.recover_hunger,
 								'str_eat': vegetable.str_eat,
 								'time_expir': time.time() + (vegetable.time_expir if vegetable.time_expir is not None else ewcfg.farm_food_expir)
-							},
+							}
 						)
 
 					slime_gain = ewcfg.reap_gain
