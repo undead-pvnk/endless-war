@@ -73,13 +73,13 @@ class EwMilledItem:
 	description = ""
 
 	# The item(s) necessary to create this item
-    ingredients = ""
+	ingredients = ""
 
 	def __init__(
 		self,
 		name = "",
 		description = "",
-		raw_parents = ""
+		ingredients = ""
 	):
 		self.name = name
 		self.description = description

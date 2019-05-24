@@ -2741,6 +2741,20 @@ for v in food_list:
 	else:
 		vegetable_list.append(v)
 
+# List of items you can obtain via milling.
+milled_item_list = [
+	EwMilledItem(
+		name = "wvwvw",
+		description = "wvrv",
+		ingredients = "fwvvr"
+	),
+	EwMilledItem(
+		name = "wvwvw",
+		description = "wvrv",
+		ingredients = "fwvvr"
+	),
+]
+
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
 	vendor_pizzahut : stock_pizzahut,
