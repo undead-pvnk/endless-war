@@ -245,7 +245,6 @@ async def mill(cmd):
 	if ingredient_sought:
 		if ingredient_sought not in ewcfg.vegetable_list:
 			response = "You can only !mill vegetables."
-
 		else:
 			vegetable = EwItem(id_item = ingredient_sought.get("id_item"))
 			item = None
@@ -270,8 +269,8 @@ async def mill(cmd):
 					response = "You milled a {item_name}!".format(item_name = item.name)
 					user_data.persist()
 
-		else:
-			response = "You don't have one."
+	else:
+		response = "You don't have one."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
