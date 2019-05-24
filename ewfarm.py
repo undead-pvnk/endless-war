@@ -249,6 +249,7 @@ async def mill(cmd):
 		for result in ewcfg.milled_item_list:
 			if result.ingredients != vegetable:
 				pass
+				response = "oh"
 			else:
 				item = result
 				ewitem.item_create(
