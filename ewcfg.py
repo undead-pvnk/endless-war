@@ -12,7 +12,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.2"
+version = "MILLING"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
