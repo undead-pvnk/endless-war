@@ -567,7 +567,7 @@ invuln_onrevive = 0
 weapon_fee = 100
 
 # farming
-crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
+crops_time_to_grow = 1  # in minutes; 180 minutes are 3 hours
 reap_gain = 160000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
