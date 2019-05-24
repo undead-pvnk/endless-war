@@ -254,9 +254,10 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_mill: ewfarm.mill,
 
-        #scavenging
-        ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+     #scavenging
+	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
 	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
