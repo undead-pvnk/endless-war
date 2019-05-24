@@ -2719,11 +2719,11 @@ for food in food_list:
 vegetable_list = []
 
 # seperate the crops from the normal foods
-for v in food_list:
-	if EwFood.vendors == [vendor_farm]:
-		vegetable_list.append(v)
+for veg in food_list:
+	if EwFood.vendors != [vendor_farm]:
+
 	else:
-		pass
+		vegetable_list.append(veg)
 
 # List of items you can obtain via milling.
 milled_item_list = [
