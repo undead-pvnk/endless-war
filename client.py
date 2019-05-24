@@ -17,10 +17,9 @@ import re
 import os
 import shlex
 
-import ewfarm
-
 import ewutils
 import ewcfg
+import ewfarm
 import ewcmd
 import ewcasino
 import ewfood
