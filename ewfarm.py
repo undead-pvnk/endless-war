@@ -161,7 +161,7 @@ async def reap(cmd):
 								'food_desc': vegetable.str_desc,
 								'recover_hunger': vegetable.recover_hunger,
 								'str_eat': vegetable.str_eat,
-								'time_expir': (vegetable.time_expir if vegetable.time_expir is not None else ewcfg.farm_food_expir) + time.time()
+								'time_expir': time.time() + (ewcfg.farm_food_expir)
 							}
 						)
 
