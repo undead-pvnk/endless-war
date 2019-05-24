@@ -253,22 +253,21 @@ async def mill(cmd):
 				if result.ingredients != vegetable:
 					pass
 				else:
-					item.append(result)
-
-			ewitem.item_create(
-				item_type = ewcfg.it_milleditem,
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_props = {
-					'milled_name': item.name,
-					'milled_desc': item.desc,
-					'context_name': item.context_name,
-					'context_desc': item.context_desc,
-					'ingredients': vegetable,
-				}
-			)
-			response = "You milled a {item_name}!".format(item_name = item.name)
-			user_data.persist()
+					item = result
+					ewitem.item_create(
+						item_type = ewcfg.it_milleditem,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = {
+							'milled_name': item.name,
+							'milled_desc': item.desc,
+							'context_name': item.context_name,
+							'context_desc': item.context_desc,
+							'ingredients': vegetable,
+						}
+					)
+					response = "You milled a {item_name}!".format(item_name = item.name)
+					user_data.persist()
 
 		else:
 			response = "You don't have one."
