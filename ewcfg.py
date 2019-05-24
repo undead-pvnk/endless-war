@@ -2723,7 +2723,7 @@ for v in food_list:
 	if v.vendors != [vendor_farm]:
 		pass
 	else:
-		vegetable_list[v.id_food] = v
+		vegetable_list.append(v)
 
 # List of items you can obtain via milling.
 milled_item_list = [
