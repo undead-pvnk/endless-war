@@ -148,6 +148,7 @@ async def reap(cmd):
 
 					#  Determine what crop is grown.
 					vegetable = random.choice(ewcfg.vegetable_list)
+					food = ewcfg.food_map.get(vegetable)
 
 					#  Create and give a bushel of whatever crop was grown.
 					for vcreate in range(4):
@@ -161,7 +162,7 @@ async def reap(cmd):
 								'food_desc': vegetable.str_desc,
 								'recover_hunger': vegetable.recover_hunger,
 								'str_eat': vegetable.str_eat,
-								'time_expir': time.time() + (ewcfg.farm_food_expir)
+								'time_expir': time.time() + (food.time_expir if food.time_expir is not None else ewcfg.std_food_expir)
 							}
 						)
 
