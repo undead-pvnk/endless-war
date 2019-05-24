@@ -249,7 +249,6 @@ async def mill(cmd):
 		for result in ewcfg.milled_item_list:
 			if result.ingredients != vegetable:
 				pass
-				response = "oh"
 			else:
 				item = result
 				ewitem.item_create(
@@ -264,11 +263,13 @@ async def mill(cmd):
 						'ingredients': vegetable,
 					}
 				)
-				response = "You milled a {item_name}!".format(item_name = item.name)
-				user_data.persist()
-
+			response = "You milled a {item_name}!".format(item_name = item.name)
+			user_data.persist()
 	else:
-		response = "You don't have one."
+		if item_search:  # if they didnt forget to specify an item and it just wasn't found
+			response = "You don't have one."
+		else:
+			response = "Mill which item? (check **!inventory**)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
