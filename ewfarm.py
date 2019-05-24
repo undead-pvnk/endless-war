@@ -247,15 +247,14 @@ async def mill(cmd):
 
 		if ingredient_sought:
 			vegetable = EwItem(id_item = ingredient_sought.get("id_item"))
-			matched_item = []
+			item = []
 
 			for result in ewcfg.milled_item_list:
 				if result.ingredients != vegetable:
 					pass
 				else:
-					matched_item = result
+					item = result
 
-			item = matched_item[random.randint(0, len(matched_item) - 1)]
 
 			ewitem.item_create(
 				item_type = ewcfg.it_milleditem,
