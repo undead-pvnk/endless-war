@@ -1,10 +1,12 @@
 import time
 import random
 
+import ewcfg
 import ewitem
 import ewutils
-import ewcfg
+
 from ew import EwUser
+from ewitem import EwItem
 
 class EwFarm:
 	id_server = ""
