@@ -149,19 +149,22 @@ async def reap(cmd):
 					#  Determine what crop is grown.
 					vegetable = ewcfg.food_map.get(random.choice(ewcfg.vegetable_list))
 
+					item_props = {
+						'id_food': vegetable.id_food,
+						'food_name': vegetable.str_name,
+						'food_desc': vegetable.str_desc,
+						'recover_hunger': vegetable.recover_hunger,
+						'str_eat': vegetable.str_eat,
+						'time_expir': time.time() + (
+							vegetable.time_expir if vegetable.time_expir is not None else ewcfg.farm_food_expir)
+					}
+
 					for vcreate in range(4):
 						ewitem.item_create(
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
 							item_type = ewcfg.it_food,
-							item_props = {
-								'id_food': vegetable.id_food,
-								'food_name': vegetable.str_name,
-								'food_desc': vegetable.str_desc,
-								'recover_hunger': vegetable.recover_hunger,
-								'str_eat': vegetable.str_eat,
-								'time_expir': time.time() + (vegetable.time_expir if vegetable.time_expir is not None else ewcfg.farm_food_expir)
-							}
+							item_props = item_props
 						)
 
 					slime_gain = ewcfg.reap_gain
