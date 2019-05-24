@@ -240,10 +240,13 @@ async def mill(cmd):
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 
-	if user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	# Checking availability of milling
+	if user_data.life_state != ewcfg.life_state_juvenile:
+		response = "Only Juveniles of pure heart and with nothing better to do can spend several hours hand milling radioactive vegetables into useful materials."
+	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 		response = "You can only !mill in farms."
 
-	if item_sought:
+	elif item_sought:
 		item = None
 
 		for result in ewcfg.milled_item_list:
@@ -265,7 +268,10 @@ async def mill(cmd):
 					'ingredients': item.ingredients,
 				}
 			)
-			response = "You milled a {item_name}!".format(item_name = item.name)
+
+			ewitem.item_delete(id_item = item_sought.get('id_item'))
+
+			response = "You milled a {item_name}! Your {ingredient} was destroyed in the process.".format(item_name = item.name, ingredient = item_sought.name)
 			user_data.persist()
 		else:
 			response = "You can only mill vegetables."
