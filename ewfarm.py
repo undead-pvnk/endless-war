@@ -265,6 +265,8 @@ async def mill(cmd):
 				)
 				response = "You milled a {item_name}!".format(item_name = item.name)
 				user_data.persist()
+
+			response = "You can't mill that!"
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."
