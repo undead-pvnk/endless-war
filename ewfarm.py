@@ -244,16 +244,16 @@ async def mill(cmd):
 		response = "You can only !mill in farms."
 
 	if item_sought:
-		vegetable = EwItem(id_item = item_sought.get("id_item"))
+		ingredient = "purplekilliflower"
 		item = None
 
 		for result in ewcfg.milled_item_list:
-			if result.ingredients != vegetable:
+			if result.ingredients != ingredient:
 				pass
 			else:
 				item = result
 
-		if item != None:
+		if item is not None:
 			ewitem.item_create(
 				item_type = ewcfg.it_milleditem,
 				id_user = cmd.message.author.id,
@@ -263,7 +263,7 @@ async def mill(cmd):
 					'milled_desc': item.desc,
 					'context_name': item.context_name,
 					'context_desc': item.context_desc,
-					'ingredients': vegetable,
+					'ingredients': ingredient,
 				}
 			)
 			response = "You milled a {item_name}!".format(item_name = item.name)
