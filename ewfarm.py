@@ -248,24 +248,28 @@ async def mill(cmd):
 		item = None
 
 		for result in ewcfg.milled_item_list:
-			if item.ingredients != vegetable:
+			if result.ingredients != vegetable:
 				pass
 			else:
 				item = result
-				ewitem.item_create(
-					item_type = ewcfg.it_milleditem,
-					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
-					item_props = {
-						'milled_name': item.name,
-						'milled_desc': item.desc,
-						'context_name': item.context_name,
-						'context_desc': item.context_desc,
-						'ingredients': vegetable,
-					}
-				)
-				response = "You milled a {item_name}!".format(item_name = item.name)
-				user_data.persist()
+
+		if item != None:
+			ewitem.item_create(
+				item_type = ewcfg.it_milleditem,
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_props = {
+					'milled_name': item.name,
+					'milled_desc': item.desc,
+					'context_name': item.context_name,
+					'context_desc': item.context_desc,
+					'ingredients': vegetable,
+				}
+			)
+			response = "You milled a {item_name}!".format(item_name = item.name)
+			user_data.persist()
+		else:
+			response = "You can only mill vegetables."
 
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
