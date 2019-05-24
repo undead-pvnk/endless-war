@@ -247,7 +247,6 @@ async def mill(cmd):
 
 		if ingredient_sought:
 			vegetable = EwItem(id_item = ingredient_sought.get("id_item"))
-			item = ""
 
 			for result in ewcfg.milled_item_list:
 				if result.ingredients != vegetable:
