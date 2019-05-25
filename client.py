@@ -263,6 +263,7 @@ cmd_map = {
 	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_decorate: ewcosmeticitem.decorate,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
