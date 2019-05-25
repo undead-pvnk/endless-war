@@ -121,6 +121,7 @@ class EwUser:
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
+		ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
