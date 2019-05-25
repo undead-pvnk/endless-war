@@ -2919,7 +2919,6 @@ item_def_list = [
 			'vendor': None,
 			'str_eat': 'You eat the food item.',
 			'time_expir': std_food_expir,
-			'mill_result': 'minecraft'
 		}
 	),
 

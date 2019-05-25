@@ -1008,8 +1008,8 @@ async def marry(cmd):
 	elif weapon is None:
 		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	#Makes sure you have a displayed rank 8 or higher weapon.
-	elif user_data.weaponskill < 12:
+	#Makes sure you have a displayed rank 6 or higher weapon.
+	elif user_data.weaponskill < 10:
 		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
