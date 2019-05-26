@@ -6392,19 +6392,19 @@ hue_list = [
 	),
 ]
 
-# A map of id_hue to EwHue objects.
-hue_map = {}
-
-# A list of hue names
-hue_names = []
-
-# Populate hue map, including all aliases.
-for hue in hue_list:
-	hue_map[hue.id_hue] = hue
-	hue_names.append(hue.id_hue)
-
-	for alias in hue.alias:
-		hue_map[alias] = hue
+# # A map of id_hue to EwHue objects.
+# hue_map = {}
+#
+# # A list of hue names
+# hue_names = []
+#
+# # Populate hue map, including all aliases.
+# for hue in hue_list:
+# 	hue_map[hue.id_hue] = hue
+# 	hue_names.append(hue.id_hue)
+#
+# 	for alias in hue.alias:
+# 		hue_map[alias] = hue
 
 # Things a slimeoid might throw
 thrownobjects_list = [
