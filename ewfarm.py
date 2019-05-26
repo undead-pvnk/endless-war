@@ -220,13 +220,15 @@ async def mill(cmd):
 		response = "You can only !mill in farms."
 
 	elif item_sought:
-		item = None
+		items = []
 
 		for result in ewcfg.mill_results:
 			if result.ingredients != item_search:
 				pass
 			else:
-				item = result
+				items.append(result)
+
+		item = items[random.randint(0, len(items) - 1)]
 
 		if item is not None:
 			if item.id_item != None:
