@@ -852,6 +852,30 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
 
+		elif debug == True and cmd == '!createapple':
+			ewitem.item_create(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type = ewcfg.it_food,
+				item_props = {
+					'id_food': "direapple",
+					'food_name': "Dire Apple",
+					'food_desc': "This sure is a illegal Dire Apple!",
+					'recover_hunger': 500,
+					'str_eat': "You chomp into this illegal Dire Apple.",
+					'time_expir': time.time() + ewcfg.farm_food_expir
+				}
+			)
+
+			ewutils.logMsg('Created item: {}'.format(item_id))
+			item = EwItem(id_item = item_id)
+			item.item_props['test'] = 'meow'
+			item.persist()
+
+			item = EwItem(id_item = item_id)
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
+
 
 
 		# FIXME debug
