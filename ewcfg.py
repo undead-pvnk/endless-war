@@ -443,7 +443,7 @@ cmd_petslimeoid = cmd_prefix + 'petslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
-#cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
+cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_adornslimeoid = cmd_prefix + 'adornslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
@@ -1058,10 +1058,10 @@ item_list = [
 		ingredients = "sludgeberries",
 	),
 	EwDefaultItem(
-		id_item = "browndye",
+		id_item = "rainbowdye",
 		context = "dye",
-		subcontext = "brown",
-		str_name = "Brown Dye",
+		subcontext = "rainbow",
+		str_name = "***Rainbow Dye!!!!***",
 		str_desc = "",
 		ingredients = "suganmanuts",
 	),
@@ -1082,10 +1082,10 @@ item_list = [
 		ingredients = "dankwheat",
 	),
 	EwDefaultItem(
-		id_item = "indigodye",
+		id_item = "cobaltdye",
 		context = "dye",
-		subcontext = "indigo",
-		str_name = "Indigo Dye",
+		subcontext = "cobalt",
+		str_name = "Cobalt Dye",
 		str_desc = "",
 		ingredients = "brightshades",
 	),
@@ -1098,10 +1098,10 @@ item_list = [
 		ingredients = "blacklimes",
 	),
 	EwDefaultItem(
-		id_item = "beigedye",
+		id_item = "limedye",
 		context = "dye",
-		subcontext = "beige",
-		str_name = "Beige Dye",
+		subcontext = "lime",
+		str_name = "Lime Dye",
 		str_desc = "",
 		ingredients = "pulpgourds",
 	),

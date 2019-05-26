@@ -583,37 +583,37 @@ async def walkslimeoid(cmd):
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 
-# async def saturateslimeoid(cmd):
-# 	user_data = EwUser(member = cmd.message.author)
-# 	slimeoid = EwSlimeoid(member = cmd.message.author)
-#
-# 	elif user_data.life_state == ewcfg.life_state_corpse:
-# 		response = "Slimeoids don't fuck with ghosts."
-#
-# 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-# 	response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
-#
-# 	else:
-# 		value = None
-#
-# 		if cmd.tokens_count > 1:
-# 			value = cmd.tokens[1]
-# 			value = value.lower()
-# 			body = ewcfg.body_map.get(value)
-# 			if body != None:
-# 				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-# 					response = " {}".format(body.str_create)
-# 					slimeoid.body = body.id_body
-# 					slimeoid.persist()
-# 				else:
-# 					response = "Choose an option from the buttons on the body console labelled A through G."
-# 			else:
-# 				response = "Choose an option from the buttons on the body console labelled A through G."
-# 		else:
-# 			response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
-#
-# 	# Send the response to the player.
-# 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
+async def saturateslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+
+	elif user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+	response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	else:
+		value = None
+
+		if cmd.tokens_count > 1:
+			value = cmd.tokens[1]
+			value = value.lower()
+			body = ewcfg.body_map.get(value)
+			if body != None:
+				if value in ["a", "b", "c", "d", "e", "f", "g"]:
+					response = " {}".format(body.str_create)
+					slimeoid.body = body.id_body
+					slimeoid.persist()
+				else:
+					response = "Choose an option from the buttons on the body console labelled A through G."
+			else:
+				response = "Choose an option from the buttons on the body console labelled A through G."
+		else:
+			response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
+
+	# Send the response to the player.
+	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 
 
 
@@ -1858,6 +1858,26 @@ async def slimeoidbattle(cmd):
 				s1chutzpah += 2
 				challenger_weakness = " {}'s quantum particles are excited by the high-frequency radiation, destabilizing its structure!".format(challenger_slimeoid.name)
 
+		challenger_supereffective = ""
+		challengee_supereffective = ""
+
+		if challengee_slimeoid.hue == None:
+			if challenger_slimeoid.hue == "rainbow":
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'red':
+			if challenger_slimeoid.hue == 'cobalt':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'teal':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
 
 		s1_active = False
 		in_range = False

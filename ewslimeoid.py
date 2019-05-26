@@ -31,6 +31,7 @@ class EwSlimeoid:
 	level = 0
 	time_defeated = 0
 	clout = 0
+	hue = ""
 
 	#slimeoid = EwSlimeoid(member = cmd.message.author, )
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
@@ -78,6 +79,7 @@ class EwSlimeoid:
 					ewcfg.col_level,
 					ewcfg.col_time_defeated,
 					ewcfg.col_clout,
+					ewcfg.col_hue,
 					query_suffix
 				))
 				result = cursor.fetchone();
@@ -103,6 +105,7 @@ class EwSlimeoid:
 					self.level = result[16]
 					self.time_defeated = result[17]
 					self.clout = result[18]
+					self.hue = result[19]
 
 			finally:
 				# Clean up the database handles.
@@ -376,6 +379,4 @@ class EwHue:
 		self.str_name= "",
 		self.str_desc = "",
 		self.id_dye = "",
-		self.supereffect1 = "",
-		self.supereffect2 = "",
 

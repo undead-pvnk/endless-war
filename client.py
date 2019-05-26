@@ -321,8 +321,8 @@ cmd_map = {
 	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
-#	ewcfg.cmd_saturateslimeoid: ewcmd.saturateslimeoid,
-#	ewcfg.cmd_adornslimeoid: ewcmd.adornslimeoid,
+	ewcfg.cmd_saturateslimeoid: ewcmd.saturateslimeoid,
+	ewcfg.cmd_adornslimeoid: ewcmd.adornslimeoid,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,

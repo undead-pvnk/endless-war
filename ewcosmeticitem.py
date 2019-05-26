@@ -12,11 +12,14 @@ from ewitem import EwItem
 	Cosmetic item model object
 """
 class EwCosmeticItem:
-	# The name of the cosmetic item
-	name = ""
+	# The proper name of the cosmetic item
+	id_cosmetic = ""
+
+	# The string name of the cosmetic item
+	str_name = ""
 
 	# The text displayed when you look at it
-	description = ""
+	str_desc = ""
 
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
@@ -26,13 +29,15 @@ class EwCosmeticItem:
 
 	def __init__(
 		self,
-		name = "",
-		description = "",
+		id_cosmetic = ""
+		str_name = "",
+		str_desc = "",
 		rarity = "",
 		ingredients = ""
 	):
-		self.name = name
-		self.description = description
+		self.id_cosmetic = id_cosmetic
+		self.str_name = str_name
+		self.str_desc = str_desc
 		self.rarity = rarity
 		self.ingredients = ingredients
 
@@ -73,9 +78,9 @@ async def smelt(cmd):
 			item_type = ewcfg.it_cosmetic,
 			id_user = cmd.message.author.id,
 			id_server = cmd.message.server.id,
-			item_props = {
-				'cosmetic_name': item.name,
-				'cosmetic_desc': item.description,
+			item_props = { #todo make st_name and shit
+				'cosmetic_name': item.str_name,
+				'cosmetic_desc': item.str_description,
 				'rarity': item.rarity,
 				'adorned': 'false'
 			}
