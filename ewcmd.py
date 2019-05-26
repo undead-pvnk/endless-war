@@ -8,6 +8,7 @@ import ewitem
 import ewrolemgr
 import ewstats
 import ewstatuseffects
+import ewmap
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
@@ -399,7 +400,58 @@ async def patchnotes(cmd):
 	advertise help services
 """
 async def help(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Check out the guide for help: https://ew.krakissi.net/guide/'))
+	response = ""
+	topic = None
+	user_data = EwUser(member = cmd.message.author)
+
+	# help only checks for districts while in game channels
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+	else:
+		# checks if user is in a college
+		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
+			if not len(cmd.tokens) > 1:
+				# list off help topics to player at college
+				response = 'What would you like to learn about? Topics include: \n' \
+						   '**mining**, **food**, **capturing**, **dojo**, **bleeding**, **scavenging**,\n' \
+						   '**farming**, **slimeoids**, **transportation**, **scouting**, and **offline**.'
+			else:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic in ewcfg.help_responses:
+					response = ewcfg.help_responses[topic]
+				else:
+					response = 'ENDLESS WAR questions your belief in the existence of such a topic.'
+		else:
+			# user not in college, check what help message would apply to the subzone they are in
+
+			# poi variable assignment used for checking if player is in a vendor subzone or not
+			poi = ewcfg.id_to_poi.get(user_data.poi)
+
+			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+				# mine help
+				response = ewcfg.help_responses['mining']
+			elif (len(poi.vendors) >= 1):
+				response = ewcfg.help_responses['food']
+				# food help
+			elif user_data.poi in ewcfg.poi_id_dojo:
+				# dojo help
+				response = ewcfg.help_responses['dojo']
+			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+				# farming help
+				response = ewcfg.help_responses['farming']
+			elif user_data.poi in ewcfg.poi_id_slimeoidlab:
+				# slimeoid help (somewhat redundant, but may help by pointing player towards !instructions)
+				response = ewcfg.help_responses['slimeoids']
+			elif user_data.poi in ewcfg.transport_stops:
+				# transportation help
+				response =  ewcfg.help_responses['transportation']
+			else:
+				# catch-all response for when user isn't in a sub-zone with a help response
+				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """
 	Link to the world map.

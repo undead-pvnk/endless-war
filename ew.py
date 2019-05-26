@@ -120,6 +120,7 @@ class EwUser:
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
+		ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
@@ -374,6 +375,8 @@ class EwUser:
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
 				else:
+					self.poi = ewcfg.poi_id_downtown
+					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,

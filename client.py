@@ -70,6 +70,7 @@ cmd_map = {
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
+	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	#reload

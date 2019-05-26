@@ -197,7 +197,7 @@ async def sow(cmd):
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
 				# Sowing
-				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about a day."
+				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about half a day."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
 				ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins

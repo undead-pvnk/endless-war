@@ -221,6 +221,9 @@ def item_drop(
 	try:
 		item_data = EwItem(id_item = id_item)
 		user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
+		if item_data.item_type == ewcfg.it_cosmetic:
+			item_data.item_props["adorned"] = "false"
+		item_data.persist()
 		give_item(id_user = user_data.poi, id_server = item_data.id_server, id_item = item_data.id_item)
 	except:
 		ewutils.logMsg("Failed to drop item {}.".format(id_item))
@@ -312,6 +315,31 @@ def item_dropall(
 
 	except:
 		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
+
+
+"""
+	Dedorn all of a player's cosmetics
+"""
+def item_dedorn_cosmetics(
+	id_server = None,
+	id_user = None
+):
+	try:
+		
+		ewutils.execute_sql_query(
+			"UPDATE items_prop SET value = 'false' WHERE name = 'adorned' AND {id_item} IN (\
+				SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
+			)".format(
+				id_item = ewcfg.col_id_item,
+				id_user = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			),(
+				id_user,
+				id_server
+			))
+
+	except:
+		ewutils.logMsg('Failed to dedorn cosmetics for user with id {}'.format(id_user))
 
 
 def item_lootspecific(id_server = None, id_user = None, item_search = None):
@@ -453,24 +481,25 @@ def item_loot(
 		target_data = EwUser(id_user = id_user_target, id_server = member.server.id)
 		source_data = EwUser(member = member)
 
-		# Get database handles if they weren't passed.
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
-
 		# Transfer adorned cosmetics
-		cursor.execute((
-			"UPDATE items SET id_user = %s " +
+		data = ewutils.execute_sql_query(
+			"SELECT id_item FROM items " +
 			"WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
 				"SELECT id_item FROM items_prop " +
 				"WHERE name = 'adorned' AND value = 'true' " +
 			")"
-		), (
-			id_user_target,
+		,(
 			member.id,
 			member.server.id,
 			ewcfg.it_cosmetic
 		))
+
+		for row in data:
+			item_data = EwItem(id_item = row[0])
+			item_data.item_props["adorned"] = 'false'
+			item_data.id_owner = id_user_target
+			item_data.persist()
+				
 
 		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
 
@@ -483,15 +512,13 @@ def item_loot(
 
 			if len(weapons_held) <= math.floor(target_data.slimelevel / ewcfg.max_weapon_mod) if target_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) < 1:
 				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
+
+	except:
+		ewutils.logMsg("Failed to loot items from user {}".format(member.id))
 			
 
 
 
-		conn.commit()
-	finally:
-		# Clean up the database handles.
-		cursor.close()
-		ewutils.databaseClose(conn_info)
 
 
 def check_inv_capacity(id_user = None, id_server = None, item_type = None):
@@ -886,6 +913,11 @@ async def give(cmd):
 			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
 				response  = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if item_sought.get('item_type') == ewcfg.it_cosmetic:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			item_data.item_props["adorned"] = 'false'
+			item_data.persist()
 
 
 		if item_sought.get('soulbound'):
