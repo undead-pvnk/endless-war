@@ -258,7 +258,7 @@ async def mill(cmd):
 						'recover_hunger': item.recover_hunger,
 						'inebriation': item.inebriation,
 						'str_eat': item.str_eat,
-						'time_expir': time.time() + (item.time_expir if item.time_expir is not None else ewcfg.std_food_expir)
+						'time_expir': time.time() + item.time_expir
 					}
 				),
 
