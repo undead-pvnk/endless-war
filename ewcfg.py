@@ -6571,7 +6571,7 @@ stock_emotes = {
 mill_results = []
 
 # gather all items that can be the result of milling.
-for m in item_list, food_list, cosmetic_items_list:
+for m in zip(item_list, food_list, cosmetic_items_list):
 	if m.ingredients != None:
 		pass
 	else:
