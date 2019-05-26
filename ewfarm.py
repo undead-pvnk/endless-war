@@ -246,7 +246,7 @@ async def mill(cmd):
 					}
 				),
 
-			if item.id_food != None:
+			elif item is ewcfg.it_food:
 				ewitem.item_create(
 					item_type = ewcfg.it_food,
 					id_user = cmd.message.author.id,
@@ -262,7 +262,7 @@ async def mill(cmd):
 					}
 				),
 
-			if item.cosmetic_name != None:
+			elif item.cosmetic_name != None:
 				ewitem.item_create(
 					item_type = ewcfg.it_cosmetic,
 					id_user = cmd.message.author.id,
