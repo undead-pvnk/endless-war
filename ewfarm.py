@@ -229,7 +229,7 @@ async def mill(cmd):
 				item = result
 
 		if item is not None:
-			if item is ewcfg.it_item:
+			if item.id_item != None:
 				ewitem.item_create(
 					item_type = ewcfg.it_item,
 					id_user = cmd.message.author.id,
@@ -244,7 +244,7 @@ async def mill(cmd):
 					}
 				),
 
-			if item is ewcfg.it_food:
+			if item.id_food != None:
 				ewitem.item_create(
 					item_type = ewcfg.it_food,
 					id_user = cmd.message.author.id,
@@ -260,7 +260,7 @@ async def mill(cmd):
 					}
 				),
 
-			if item is ewcfg.it_cosmetic:
+			if item.cosmetic_name != None:
 				ewitem.item_create(
 					item_type = ewcfg.it_cosmetic,
 					id_user = cmd.message.author.id,
