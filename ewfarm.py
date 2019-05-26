@@ -231,7 +231,7 @@ async def mill(cmd):
 		item = items[random.randint(0, len(items) - 1)]
 
 		if item is not None:
-			if item.id_item != None:
+			if hasattr(item, 'id_name'):
 				ewitem.item_create(
 					item_type = ewcfg.it_item,
 					id_user = cmd.message.author.id,
@@ -246,7 +246,7 @@ async def mill(cmd):
 					}
 				),
 
-			elif item is ewcfg.it_food:
+			elif hasattr(item, 'id_food'):
 				ewitem.item_create(
 					item_type = ewcfg.it_food,
 					id_user = cmd.message.author.id,
@@ -262,7 +262,7 @@ async def mill(cmd):
 					}
 				),
 
-			elif item.cosmetic_name != None:
+			elif hasattr(item, 'cosmetic_name'):
 				ewitem.item_create(
 					item_type = ewcfg.it_cosmetic,
 					id_user = cmd.message.author.id,
