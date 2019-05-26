@@ -212,7 +212,6 @@ async def mill(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can spend several hours hand milling radioactive vegetables into useful materials."
@@ -277,7 +276,7 @@ async def mill(cmd):
 
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
 
-			response = "You milled a {item_name}!".format(item_name = item.name)
+			response = "You milled a {}!".format(item.str_name)
 			user_data.persist()
 		else:
 			response = "You can only mill vegetables."

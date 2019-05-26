@@ -586,31 +586,44 @@ async def walkslimeoid(cmd):
 async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
+	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-	response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+		response = "You do not have a Slimeoid to saturate."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
 	else:
-		value = None
+		elif item_sought:
+		items = []
 
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()
-			body = ewcfg.body_map.get(value)
-			if body != None:
-				if value in ["a", "b", "c", "d", "e", "f", "g"]:
-					response = " {}".format(body.str_create)
-					slimeoid.body = body.id_body
-					slimeoid.persist()
+			for result in ewcfg.mill_results:
+				if result.ingredients != item_search:
+					pass
+				else:
+					items.append(result)
+			value = None
+
+			if cmd.tokens_count > 1:
+				value = cmd.tokens[1]
+				value = value.lower()
+				body = ewcfg.body_map.get(value)
+				if body != None:
+					if value in :
+						response = " {}".format(body.str_create)
+						slimeoid.body = body.id_body
+						slimeoid.persist()
+					else:
+						response = "Choose an option from the buttons on the body console labelled A through G."
 				else:
 					response = "Choose an option from the buttons on the body console labelled A through G."
 			else:
-				response = "Choose an option from the buttons on the body console labelled A through G."
-		else:
-			response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
+				response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
 
 	# Send the response to the player.
 	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
@@ -1861,23 +1874,408 @@ async def slimeoidbattle(cmd):
 		challenger_supereffective = ""
 		challengee_supereffective = ""
 
+	#challengee hue supereffectiveness
 		if challengee_slimeoid.hue == None:
-			if challenger_slimeoid.hue == "rainbow":
+			if challenger_slimeoid.hue == 'rainbow':
 				s2grit -= 2
 				if s2grit <= 1:
 					s2grit = 1
-				challenger_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
 		if challengee_slimeoid.hue == 'red':
 			if challenger_slimeoid.hue == 'cobalt':
 				s2grit -= 2
 				if s2grit <= 1:
 					s2grit = 1
-				challenger_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
 			if challenger_slimeoid.hue == 'teal':
 				s2grit -= 2
 				if s2grit <= 1:
 					s2grit = 1
-				challenger_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'pink':
+			if challenger_slimeoid.hue == 'cyan':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'lime':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'magenta':
+			if challenger_slimeoid.hue == 'teal':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'lime':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'purple':
+			if challenger_slimeoid.hue == 'green':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'yellow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'blue':
+			if challenger_slimeoid.hue == 'lime':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'orange':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'cobalt':
+			if challenger_slimeoid.hue == 'yellow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'red':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'cyan':
+			if challenger_slimeoid.hue == 'orange':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'teal':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'teal':
+			if challenger_slimeoid.hue == 'red':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'magenta':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'green':
+			if challenger_slimeoid.hue == 'pink':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'purple':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'lime':
+			if challenger_slimeoid.hue == 'magenta':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'blue':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'yellow':
+			if challenger_slimeoid.hue == 'blue':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'cobalt':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+		if challengee_slimeoid.hue == 'orange':
+			if challenger_slimeoid.hue == 'blue':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'cyan':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			if challenger_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challengee_supereffective = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+
+	#chalenger hue supereffectiveness
+		if challenger_slimeoid.hue == None:
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'red':
+			if challengee_slimeoid.hue == 'cobalt':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'teal':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'pink':
+			if challengee_slimeoid.hue == 'cyan':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'lime':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'magenta':
+			if challengee_slimeoid.hue == 'teal':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'lime':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'purple':
+			if challengee_slimeoid.hue == 'green':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'yellow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'blue':
+			if challengee_slimeoid.hue == 'lime':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'orange':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'cobalt':
+			if challengee_slimeoid.hue == 'yellow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'red':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'cyan':
+			if challengee_slimeoid.hue == 'orange':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'teal':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'teal':
+			if challengee_slimeoid.hue == 'red':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'magenta':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'green':
+			if challengee_slimeoid.hue == 'pink':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'purple':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'lime':
+			if challengee_slimeoid.hue == 'magenta':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'blue':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'yellow':
+			if challengee_slimeoid.hue == 'blue':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'cobalt':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+		if challenger_slimeoid.hue == 'orange':
+			if challengee_slimeoid.hue == 'blue':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'cyan':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+			if challengee_slimeoid.hue == 'rainbow':
+				s2grit -= 2
+				if s2grit <= 1:
+					s2grit = 1
+				challenger_supereffective = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+
+
+
 
 		s1_active = False
 		in_range = False
