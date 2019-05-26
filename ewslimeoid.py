@@ -352,3 +352,30 @@ class EwBrain:
 		self.str_pet = str_pet
 		self.str_walk = str_walk
 		self.str_observe = str_observe
+
+class EwHue:
+	id_hue = ""
+	alias = []
+	str_name= ""
+	str_desc = ""
+	id_dye = ""
+	supereffect1 = ""
+	supereffect2 = ""
+	def __init__(
+		self,
+		id_hue = "",
+		alias = [],
+		str_name= "",
+		str_desc = "",
+		id_dye = "",
+		supereffect1 = "",
+		supereffect2 = "",
+	):
+		self.id_hue = "",
+		self.alias = [],
+		self.str_name= "",
+		self.str_desc = "",
+		self.id_dye = "",
+		self.supereffect1 = "",
+		self.supereffect2 = "",
+

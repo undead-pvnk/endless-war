@@ -21,15 +21,20 @@ class EwCosmeticItem:
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
 
+	# The ingredients necessary to make this item via milling.
+	ingredients = ""
+
 	def __init__(
 		self,
 		name = "",
 		description = "",
-		rarity = ""
+		rarity = "",
+		ingredients = ""
 	):
 		self.name = name
 		self.description = description
 		self.rarity = rarity
+		self.ingredients = ingredients
 
 """
 	Smelt command
@@ -130,36 +135,4 @@ async def adorn(cmd):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			'Adorn which cosmetic? Check your **!inventory**.'
-		))
-
-async def decorate(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
-
-	target_cosmetic = None
-	decoration = None
-
-	items = ewitem.inventory(
-		id_user = cmd.message.author.id,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_cosmetic
-	)
-
-	if cmd.tokens_count > 1:
-		for token in cmd.tokens[1:]:
-			if token.lower() in ewcfg.milled_item_list:
-				decoration = token
-				break
-
-		for token in cmd.tokens[1:]:
-			if token.lower() in ewcfg.cosmetic_items_list:
-				target_cosmetic = token
-				break
-
-	response = "you want to use a {decoration} on your {target_cosmetic}.".format(decoration = decoration, target_cosmetic = target_cosmetic)
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))

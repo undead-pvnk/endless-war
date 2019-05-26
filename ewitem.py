@@ -186,6 +186,36 @@ class EwItem:
 			cursor.close()
 			ewutils.databaseClose(conn_info)
 
+"""
+	These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
+"""
+class EwDefaultItem:
+	id_item = " "
+	alias = []
+	context = ""
+	subcontext = ""
+	str_name = ""
+	str_desc = ""
+	ingredients = ""
+
+	def __init__(
+		self,
+		id_item = " ",
+		alias = [],
+		context = "",
+		subcontext = "",
+		str_name = "",
+		str_desc = "",
+		ingredients = "",
+	):
+		self.id_item = id_item
+		self.alias = alias
+		self.context = context
+		self.subcontext = subcontext
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.ingredients = ingredients
+
 
 """
 	Delete the specified item by ID. Also deletes all items_prop values.

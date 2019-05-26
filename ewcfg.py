@@ -1,13 +1,12 @@
 import random
 
 from ewcosmeticitem import EwCosmeticItem
-from ewfarm import EwMilledItem
 from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
-from ewitem import EwItemDef
+from ewitem import EwItemDef, EwDefaultItem
 from ewmap import EwPoi
-from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
+from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
@@ -404,7 +403,6 @@ cmd_mill = cmd_prefix + 'mill'
 cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
-cmd_decorate = cmd_prefix + 'decorate'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -445,6 +443,8 @@ cmd_petslimeoid = cmd_prefix + 'petslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
+cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
+cmd_adornslimeoid = cmd_prefix + 'adornslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -812,13 +812,12 @@ col_quadrants_target = 'id_target'
 col_quadrants_target2 = 'id_target2'
 
 # Item type names
+it_item = "item"
 it_medal = "medal"
 it_slimepoudrin = "slimepoudrin"
 it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
-it_milleditem = "milleditem"
-
 it_cosmetic = 'cosmetic'
 
 # Cosmetic item rarities
@@ -982,6 +981,138 @@ stats_clear_on_death = [
 	stat_ghostbusts,
         stat_slimesfarmed,
         stat_slimesscavenged
+]
+
+# List of normal items.
+item_list = [
+	EwDefaultItem(
+		id_item = "whitedye",
+		context = "dye",
+		subcontext = "white",
+		str_name = "White Dye",
+		str_desc = "",
+		ingredients = "poketuber",
+	),
+	EwDefaultItem(
+		id_item = "yellowdye",
+		context = "dye",
+		subcontext = "yellow",
+		str_name = "Yellow Dye",
+		str_desc = "",
+		ingredients = "phosphorpoppies",
+	),
+	EwDefaultItem(
+		id_item = "orangedye",
+		context = "dye",
+		subcontext = "orange",
+		str_name = "Orange Dye",
+		str_desc = "",
+		ingredients = "sourpotatoes",
+	),
+	EwDefaultItem(
+		id_item = "reddye",
+		context = "dye",
+		subcontext = "red",
+		str_name = "Red Dye",
+		str_desc = "",
+		ingredients = "bloodcabbages",
+	),
+	EwDefaultItem(
+		id_item = "magentadye",
+		context = "dye",
+		subcontext = "magenta",
+		str_name = "Magenta Dye",
+		str_desc = "",
+		ingredients = "joybeans",
+	),
+	EwDefaultItem(
+		id_item = "purpledye",
+		context = "dye",
+		subcontext = "purple",
+		str_name = "Purple Dye",
+		str_desc = "",
+		ingredients = "purplekilliflower",
+	),
+	EwDefaultItem(
+		id_item = "bluedye",
+		context = "dye",
+		subcontext = "blue",
+		str_name = "Blue Dye",
+		str_desc = "",
+		ingredients = "razornuts",
+	),
+	EwDefaultItem(
+		id_item = "greendye",
+		context = "dye",
+		subcontext = "green",
+		str_name = "Green Dye",
+		str_desc = "",
+		ingredients = "pawpaw",
+	),
+	EwDefaultItem(
+		id_item = "tealdye",
+		context = "dye",
+		subcontext = "teal",
+		str_name = "Teal Dye",
+		str_desc = "",
+		ingredients = "sludgeberries",
+	),
+	EwDefaultItem(
+		id_item = "browndye",
+		context = "dye",
+		subcontext = "brown",
+		str_name = "Brown Dye",
+		str_desc = "",
+		ingredients = "suganmanuts",
+	),
+	EwDefaultItem(
+		id_item = "pinkdye",
+		context = "dye",
+		subcontext = "pink",
+		str_name = "Pink Dye",
+		str_desc = "",
+		ingredients = "pinkrowddishes",
+	),
+	EwDefaultItem(
+		id_item = "greydye",
+		context = "dye",
+		subcontext = "grey",
+		str_name = "Grey Dye",
+		str_desc = "",
+		ingredients = "dankwheat",
+	),
+	EwDefaultItem(
+		id_item = "indigodye",
+		context = "dye",
+		subcontext = "indigo",
+		str_name = "Indigo Dye",
+		str_desc = "",
+		ingredients = "brightshades",
+	),
+	EwDefaultItem(
+		id_item = "blackdye",
+		context = "dye",
+		subcontext = "black",
+		str_name = "Black Dye",
+		str_desc = "",
+		ingredients = "blacklimes",
+	),
+	EwDefaultItem(
+		id_item = "beigedye",
+		context = "dye",
+		subcontext = "beige",
+		str_name = "Beige Dye",
+		str_desc = "",
+		ingredients = "pulpgourds",
+	),
+	EwDefaultItem(
+		id_item = "cyandye",
+		context = "dye",
+		subcontext = "cyan",
+		str_name = "Cyan Dye",
+		str_desc = "",
+		ingredients = "direapples",
+	),
 ]
 
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
@@ -1465,7 +1596,8 @@ food_list = [
 		str_name = 'slime n\' tonic',
 		vendors = [vendor_bar, vendor_countryclub],
 		str_eat = "You stir your slime n' tonic with a thin straw before chugging it lustily.",
-		str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could."
+		str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could.",
+		ingredients = "purplekilliflower",
 	),
 	EwFood(
 		id_food = "slimacolada",
@@ -2726,122 +2858,6 @@ for v in food_list:
 	else:
 		vegetable_list.append(v)
 
-# List of items you can obtain via milling.
-milled_item_list = [
-	EwMilledItem(
-		name = "White Dye",
-		desc = "a",
-		context_name = "white",
-		context_desc = "",
-		ingredients = "poketuber"
-	),
-	EwMilledItem(
-		name = "Yellow Dye",
-		desc = "a",
-		context_name = "yellow",
-		context_desc = "",
-		ingredients = "phosphorpoppies"
-	),
-	EwMilledItem(
-		name = "Orange Dye",
-		desc = "a",
-		context_name = "orange",
-		context_desc = "",
-		ingredients = "sourpotatoes"
-	),
-	EwMilledItem(
-		name = "Red Dye",
-		desc = "a",
-		context_name = "red",
-		context_desc = "",
-		ingredients = "sourpotatoes"
-	),
-	EwMilledItem(
-		name = "Magenta Dye",
-		desc = "a",
-		context_name = "magenta",
-		context_desc = "",
-		ingredients = "joybeans"
-	),
-	EwMilledItem(
-		name = "Purple Dye",
-		desc = "a",
-		context_name = "purple",
-		context_desc = "",
-		ingredients = "purplekilliflower"
-	),
-	EwMilledItem(
-		name = "Blue Dye",
-		desc = "a",
-		context_name = "blue",
-		context_desc = "",
-		ingredients = "razornuts"
-	),
-	EwMilledItem(
-		name = "Cyan Die",
-		desc = "a",
-		context_name = "cyan",
-		context_desc = "",
-		ingredients = "direapples"
-	),
-	EwMilledItem(
-		name = "Green Dye",
-		desc = "a",
-		context_name = "green",
-		context_desc = "",
-		ingredients = "pawpaw"
-	),
-	EwMilledItem(
-		name = "Teal Dye",
-		desc = "a",
-		context_name = "teal",
-		context_desc = "",
-		ingredients = "sludgeberries"
-	),
-	EwMilledItem(
-		name = "Brown Dye",
-		desc = "a",
-		context_name = "brown",
-		context_desc = "",
-		ingredients = "suganmanuts",
-	),
-	EwMilledItem(
-		name = "Olive Dye",
-		desc = "a",
-		context_name = "olive",
-		context_desc = "",
-		ingredients = "pulpgourds"
-	),
-	EwMilledItem(
-		name = "Pink Dye",
-		desc = "a",
-		context_name = "pink",
-		context_desc = "",
-		ingredients = "pinkrowddishes"
-	),
-	EwMilledItem(
-		name = "Grey Dye",
-		desc = "a",
-		context_name = "grey",
-		context_desc = "",
-		ingredients = "dankwheat"
-	),
-	EwMilledItem(
-		name = "Indigo Dye",
-		desc = "a",
-		context_name = "indigo",
-		context_desc = "",
-		ingredients = "brightshade"
-	),
-	EwMilledItem(
-		name = "Black Dye",
-		desc = "a",
-		context_name = "black",
-		context_desc = "",
-		ingredients = "blacklimes"
-	),
-]
-
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
 	vendor_pizzahut : stock_pizzahut,
@@ -2875,6 +2891,20 @@ item_def_list = [
 
 		# The description shown when you look at an item.
 		str_desc = "A demonstration item."
+	),
+
+	EwItemDef(
+		item_type = it_item,
+		str_name = "{item_name}",
+		str_desc = "{item_desc}",
+		item_props = {
+			'id_name': 'normalitem',
+			'context': 'context',
+			'subcontext': 'subocontext',
+			'str_name': 'Normal Item.',
+			'str_desc': 'This is a normal item.',
+			'ingredients': 'vegetable'
+		}
 	),
 
 	# A customizable award object.
@@ -2947,18 +2977,6 @@ item_def_list = [
 			'rarity': rarity_plebeian
 		}
 	),
-	EwItemDef(
-		item_type = it_milleditem,
-		str_name = "{milled_name}",
-		str_desc = "{milled_desc}",
-		item_props = {
-			'milled_name': 'milled Item',
-			'milled_desc': 'milled Item.',
-			'context_name': 'Milled Item.',
-			'context_desc': 'Milled Item.',
-			'ingredients': 'direapple'
-		}
-	)
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -5262,7 +5280,8 @@ cosmetic_items_list = [
 	EwCosmeticItem(
 		name = "propeller hat",
 		description = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		ingredients = "purplekilliflower",
 	),
 	EwCosmeticItem(
 		name = "mining helmet",
@@ -6349,6 +6368,44 @@ for brain in brain_list:
 	for alias in brain.alias:
 		brain_map[alias] = brain
 
+# All color attributes in the game.
+hue_list = [
+	EwHue(
+		id_hue = "purple",
+		alias = [
+			"killer"
+		],
+		str_name= "Purple",
+		str_desc = "It's brilliant purple sheen blinds you.",
+		id_dye = "purpledye",
+		supereffect1 = "",
+		supereffect2 = "",
+	),
+	EwHue(
+		id_hue = "",
+		alias = [],
+		str_name = "",
+		str_desc = "",
+		id_dye = "",
+		supereffect1 = "",
+		supereffect2 = "",
+	),
+]
+
+# A map of id_hue to EwHue objects.
+hue_map = {}
+
+# A list of hue names
+hue_names = []
+
+# Populate hue map, including all aliases.
+for hue in hue_list:
+	hue_map[hue.id_hue] = hue
+	hue_names.append(hue.id_hue)
+
+	for alias in hue.alias:
+		brain_map[alias] = hue
+
 # Things a slimeoid might throw
 thrownobjects_list = [
 	"sewer cap",
@@ -6509,6 +6566,17 @@ stock_emotes = {
     stock_pizzahut : emote_pizzahut,
     stock_tacobell : emote_tacobell
 }
+
+# List of items you can obtain via milling.
+mill_results = []
+
+# gather all items that can be the result of milling.
+for m in item_list, food_list, cosmetic_items_list:
+	if m.ingredients != None:
+		pass
+	else:
+		mill_results.append(m)
+
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

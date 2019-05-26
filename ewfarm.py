@@ -64,33 +64,6 @@ class EwFarm:
 		)
 
 """
-	milled items
-"""
-class EwMilledItem:
-	# The name of the cosmetic item
-	name = ""
-
-	# The text displayed when you look at it
-	description = ""
-
-	# The item(s) necessary to create this item
-	ingredients = ""
-
-	def __init__(
-		self,
-		name = "",
-		desc = "",
-		context_name = "",
-		context_desc = "",
-		ingredients = ""
-	):
-		self.name = name
-		self.desc = desc
-		self.context_name = context_name
-		self.context_desc = context_desc
-		self.ingredients = ingredients
-
-"""
 	Reap planted crops.
 """
 async def reap(cmd):
@@ -249,25 +222,56 @@ async def mill(cmd):
 	elif item_sought:
 		item = None
 
-		for result in ewcfg.milled_item_list:
+		for result in ewcfg.mill_results:
 			if result.ingredients != item_search:
 				pass
 			else:
 				item = result
 
 		if item is not None:
-			ewitem.item_create(
-				item_type = ewcfg.it_milleditem,
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_props = {
-					'milled_name': item.name,
-					'milled_desc': item.desc,
-					'context_name': item.context_name,
-					'context_desc': item.context_desc,
-					'ingredients': item.ingredients,
-				}
-			)
+			if item is ewcfg.it_item:
+				ewitem.item_create(
+					item_type = ewcfg.it_item,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = {
+						'id_name': item.id_name,
+						'context': item.context,
+						'subcontext': item.subcontext,
+						'str_name': item.str_name,
+						'str_desc': item.str_desc,
+						'ingredients': item.ingredients,
+					}
+				),
+
+			if item is ewcfg.it_food:
+				ewitem.item_create(
+					item_type = ewcfg.it_food,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = {
+						'id_food': item.id_food,
+						'food_name': item.str_name,
+						'food_desc': item.str_desc,
+						'recover_hunger': item.recover_hunger,
+						'inebriation': item.inebriation,
+						'str_eat': item.str_eat,
+						'time_expir': time.time() + (item.time_expir if item.time_expir is not None else ewcfg.std_food_expir)
+					}
+				),
+
+			if item is ewcfg.it_cosmetic:
+				ewitem.item_create(
+					item_type = ewcfg.it_cosmetic,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = {
+						'cosmetic_name': item.name,
+						'cosmetic_desc': item.description,
+						'rarity': item.rarity,
+						'adorned': 'false'
+					}
+				),
 
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
 
@@ -277,7 +281,7 @@ async def mill(cmd):
 			response = "You can only mill vegetables."
 
 	else:
-		if item_search:  # if they didnt forget to specify an item and it just wasn't found
+		if item_search:  # if they didn't forget to specify an item and it just wasn't found
 			response = "You don't have one."
 		else:
 			response = "Mill which item? (check **!inventory**)"
