@@ -6572,19 +6572,19 @@ mill_results = []
 
 # gather all items that can be the result of milling.
 for m in item_list:
-	if m.ingredients != None:
+	if m.ingredients == None:
 		pass
 	else:
 		mill_results.append(m)
 
 for m in food_list:
-	if m.ingredients != None:
+	if m.ingredients == None:
 		pass
 	else:
 		mill_results.append(m)
 
 for m in cosmetic_items_list:
-	if m.ingredients != None:
+	if m.ingredients == None:
 		pass
 	else:
 		mill_results.append(m)
