@@ -6404,7 +6404,7 @@ for hue in hue_list:
 	hue_names.append(hue.id_hue)
 
 	for alias in hue.alias:
-		brain_map[alias] = hue
+		hue_map[alias] = hue
 
 # Things a slimeoid might throw
 thrownobjects_list = [
