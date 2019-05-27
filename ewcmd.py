@@ -602,6 +602,12 @@ async def saturateslimeoid(cmd):
 
 		dye = item_sought.subcontext
 
+		for result in ewcfg.dye_list:
+			if result.subcontext != item_search:
+				pass
+			else:
+				dye.append(result)
+
 		hue = ewcfg.hue_map.get(dye)
 		response = " {}".format(hue.str_saturate)
 		slimeoid.body = hue.id_hue
