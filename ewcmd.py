@@ -603,7 +603,7 @@ async def saturateslimeoid(cmd):
 		hue = ewcfg.hue_map.get(value)
 
 		if hue != None:
-			if value in ewcfg.dye_list.subcontext:
+			if value in ewcfg.dye_list:
 				slimeoid.body = hue.id_hue
 				slimeoid.persist()
 				response = ""
