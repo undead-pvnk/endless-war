@@ -603,7 +603,7 @@ async def saturateslimeoid(cmd):
 		hue = ewcfg.hue_map.get(value)
 
 		if hue != None:
-			slimeoid.body = hue.id_hue
+			slimeoid.hue = hue.id_hue
 			slimeoid.persist()
 			response = ""
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
