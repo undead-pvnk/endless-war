@@ -6446,7 +6446,7 @@ hue_list = [
 		],
 		str_saturate = "You saturate your Slimeoid with the Cyan Dye!",
 		str_name= "Cyan",
-		str_desc = "It's brilliant cyan sheen blinds you"
+		str_desc = "It's brilliant cyan sheen blinds you."
 	),
 	EwHue(
 		id_hue = "red",

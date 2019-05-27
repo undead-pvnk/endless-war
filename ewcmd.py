@@ -599,29 +599,28 @@ async def saturateslimeoid(cmd):
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
 	elif item_sought:
+		value = item_search
+		hue = ewcfg.hue_map.get(value)
 
-		dye = None
-
-		for result in ewcfg.dye_list:
-			if result.subcontext != item_sought.subcontext:
-				pass
-			else:
-				dye.append(result)
-
-			if dye != None:
-				hue = ewcfg.hue_map.get(dye)
-				response = " {}".format(hue.str_saturate)
-
+		if hue != None:
+			if value in ewcfg.dye_list.subcontext:
 				slimeoid.body = hue.id_hue
 				slimeoid.persist()
+				response = ""
 				ewitem.item_delete(id_item = item_sought.get('id_item'))
 				user_data.persist()
+
+			else:
+				response = "You can only saturate your slimeoid with dyes."
+
+		else:
+			response = "You can only saturate your slimeoid with dyes"
 
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found
 			response = "You can only saturate your slimeoid with dyes."
 		else:
-			response = "Saturate your ? (check **!inventory**)"
+			response = "Saturate your slimeoid with what? (check **!inventory**)"
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
