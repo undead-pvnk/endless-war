@@ -586,8 +586,8 @@ async def walkslimeoid(cmd):
 async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
-	hue_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	hue_sought = ewitem.find_item(item_search = hue_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."
@@ -598,19 +598,19 @@ async def saturateslimeoid(cmd):
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
-	elif hue_sought:
+	elif item_sought:
 
-		dye = hue_sought.subcontext
+		dye = item_sought.subcontext
 
 		hue = ewcfg.hue_map.get(dye)
 		response = " {}".format(hue.str_saturate)
 		slimeoid.body = hue.id_hue
 		slimeoid.persist()
-		ewitem.item_delete(id_item = hue_sought.get('id_item'))
+		ewitem.item_delete(id_item = item_sought.get('id_item'))
 		user_data.persist()
 
 	else:
-		if hue_search:  # if they didn't forget to specify an item and it just wasn't found
+		if item_search:  # if they didn't forget to specify an item and it just wasn't found
 			response = "You can only saturate your slimeoid with dyes."
 		else:
 			response = "Saturate your ? (check **!inventory**)"
