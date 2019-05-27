@@ -94,7 +94,7 @@ async def smelt(cmd):
 				'adorned': 'false'
 			}
 		)
-		response = "You smelted a {item_name}!".format(item_name = item.name)
+		response = "You smelted a {item_name}!".format(item_name = item.str_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def adorn(cmd):
