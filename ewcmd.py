@@ -586,8 +586,8 @@ async def walkslimeoid(cmd):
 async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
-	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	hue_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	hue_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."
@@ -596,39 +596,38 @@ async def saturateslimeoid(cmd):
 		response = "You do not have a Slimeoid to saturate."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
-			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	elif hue_sought:
+
+		dye = None
+
+		for color in ewcfg.dye_list:
+			if color.subcontext != hue_search:
+				pass
+			else:
+				dye.append(color)
+
+		if dye != None:
+			hue = ewcfg.hue_map.get(dye)
+			response = " {}".format(hue.str_saturate)
+
+			slimeoid.body = hue.id_hue
+			slimeoid.persist()
+
+			ewitem.item_delete(id_item = hue_sought.get('id_item'))
+			user_data.persist()
+		else:
+			response = "You can only saturate your slimeoid with colors found in dyes."
 
 	else:
-		elif item_sought:
-		items = []
-
-			for result in ewcfg.mill_results:
-				if result.ingredients != item_search:
-					pass
-				else:
-					items.append(result)
-			value = None
-
-			if cmd.tokens_count > 1:
-				value = cmd.tokens[1]
-				value = value.lower()
-				body = ewcfg.body_map.get(value)
-				if body != None:
-					if value in :
-						response = " {}".format(body.str_create)
-						slimeoid.body = body.id_body
-						slimeoid.persist()
-					else:
-						response = "Choose an option from the buttons on the body console labelled A through G."
-				else:
-					response = "Choose an option from the buttons on the body console labelled A through G."
-			else:
-				response = "You must specify a body type. Choose an option from the buttons on the body console labelled A through G."
+		if hue_search:  # if they didn't forget to specify an item and it just wasn't found
+			response = "You can only saturate your slimeoid with colors found in dyes."
+		else:
+			response = "Saturate your ? (check **!inventory**)"
 
 	# Send the response to the player.
-	await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
-
-
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # read the instructions
 async def instructions(cmd):

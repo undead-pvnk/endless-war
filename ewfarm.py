@@ -229,7 +229,7 @@ async def mill(cmd):
 
 		item = items[random.randint(0, len(items) - 1)]
 
-		if item is not None:
+		if item != None:
 			if hasattr(item, 'id_name'):
 				ewitem.item_create(
 					item_type = ewcfg.it_item,

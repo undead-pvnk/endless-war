@@ -1115,6 +1115,16 @@ item_list = [
 	),
 ]
 
+# list of dyes you're able to saturate your Slimeoid with
+dye_list = []
+
+# seperate the dyes from the other normal items
+for c in dye_list:
+	if c.context != "dye":
+		pass
+	else:
+		dye_list.append(c)
+
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
 	aim = (random.randrange(10) + 1)
@@ -6375,11 +6385,9 @@ hue_list = [
 		alias = [
 			"killer"
 		],
+		str_staturate = "",
 		str_name= "Purple",
-		str_desc = "It's brilliant purple sheen blinds you.",
-		id_dye = "purpledye",
-		supereffect1 = "",
-		supereffect2 = "",
+		str_desc = "It's brilliant purple sheen blinds you."
 	),
 	EwHue(
 		id_hue = "",
@@ -6392,19 +6400,19 @@ hue_list = [
 	),
 ]
 
-# # A map of id_hue to EwHue objects.
-# hue_map = {}
-#
-# # A list of hue names
-# hue_names = []
-#
-# # Populate hue map, including all aliases.
-# for hue in hue_list:
-# 	hue_map[hue.id_hue] = hue
-# 	hue_names.append(hue.id_hue)
-#
-# 	for alias in hue.alias:
-# 		hue_map[alias] = hue
+# A map of id_hue to EwHue objects.
+hue_map = {}
+
+# A list of hue names
+hue_names = []
+
+# Populate hue map, including all aliases.
+for hue in hue_list:
+	hue_map[hue.id_hue] = hue
+	hue_names.append(hue.id_hue)
+
+	for alias in hue.alias:
+		hue_map[alias] = hue
 
 # Things a slimeoid might throw
 thrownobjects_list = [
