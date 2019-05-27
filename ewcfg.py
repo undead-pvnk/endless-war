@@ -2919,14 +2919,14 @@ item_def_list = [
 
 	EwItemDef(
 		item_type = it_item,
-		str_name = "{item_name}",
-		str_desc = "{item_desc}",
+		str_name = "{defaultitem_name}",
+		str_desc = "{defaultitem_desc}",
 		item_props = {
 			'id_defaultitem': 'normalitem',
 			'context': 'context',
 			'subcontext': 'subocontext',
-			'item_name': 'Normal Item.',
-			'item_desc': 'This is a normal item.',
+			'defaultitem_name': 'Normal Item.',
+			'defaultitem_desc': 'This is a normal item.',
 			'ingredients': 'vegetable'
 		}
 	),
