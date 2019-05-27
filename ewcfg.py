@@ -1115,7 +1115,7 @@ item_list = [
 	),
 ]
 
-# A map of id_item to EwDefaultItem objects.
+# A map of id_defaultitem to EwDefaultItem objects.
 item_map = {}
 
 # A list of food names
@@ -2922,7 +2922,7 @@ item_def_list = [
 		str_name = "{item_name}",
 		str_desc = "{item_desc}",
 		item_props = {
-			'id_name': 'normalitem',
+			'id_defaultitem': 'normalitem',
 			'context': 'context',
 			'subcontext': 'subocontext',
 			'item_name': 'Normal Item.',
