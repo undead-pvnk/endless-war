@@ -6436,17 +6436,36 @@ for brain in brain_list:
 		brain_map[alias] = brain
 
 # All color attributes in the game.
-hue_list = [
+hue_list = [ #todo better desc
 	EwHue(
-		id_hue = "cyan",
+		id_hue = "white",
 		alias = [
-			"dire"
-			"apples"
-			"direapples"
+			"whitedye",
+			"poketuber"
 		],
-		str_saturate = "It turns a bright shade of cyan, blinding you shortly.",
-		str_name= "Cyan",
-		str_desc = "It's brilliant cyan sheen blinds you."
+		str_saturate = "It looks so purdy now!",
+		str_name = "White",
+		str_desc = "It's brilliant white sheen blinds you."
+	),
+	EwHue(
+		id_hue = "yellow",
+		alias = [
+			"yellowdye",
+			"phosphorpoppies"
+		],
+		str_saturate = "It turns a bright shade of yellow, blinding you shortly.",
+		str_name = "Yellow",
+		str_desc = "It's brilliant yellow sheen blinds you."
+	),
+	EwHue(
+		id_hue = "orange",
+		alias = [
+			"orangedye",
+			"sourpotatoes"
+		],
+		str_saturate = "It turns a bright shade of orange, blinding you shortly.",
+		str_name= "Orange",
+		str_desc = "It's brilliant orange sheen blinds you."
 	),
 	EwHue(
 		id_hue = "red",
@@ -6457,6 +6476,128 @@ hue_list = [
 		str_saturate = "You saturate your Slimeoid with the Red Dye!",
 		str_name = "Red",
 		str_desc = "It's brilliant red sheen blinds you"
+	),
+	EwHue(
+		id_hue = "magenta",
+		alias = [
+			"magentadye",
+			"joybeans"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Magenta",
+		str_desc = "It's brilliant Magenta sheen blinds you."
+	),
+	EwHue(
+		id_hue = "purple",
+		alias = [
+			"purpledye",
+			"purplekilliflower",
+			"killer"
+		],
+		str_saturate = "It looks so KILLER now!",
+		str_name = "Purple",
+		str_desc = "It's brilliant purple sheen blinds you."
+	),
+	EwHue(
+		id_hue = "blue",
+		alias = [
+			"bluedye",
+			"razornuts"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Blue",
+		str_desc = "It's brilliant blue sheen blinds you."
+	),
+	EwHue(
+		id_hue = "green",
+		alias = [
+			"greendye",
+			"pawpaw",
+			"juvie"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Green",
+		str_desc = "It's brilliant green sheen blinds you."
+	),
+	EwHue(
+		id_hue = "teal",
+		alias = [
+			"tealdye",
+			"sludgeberries"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Teal",
+		str_desc = "It's brilliant teal sheen blinds you."
+	),
+	EwHue(
+		id_hue = "rainbow",
+		alias = [
+			"rainbowdye",
+			"suganmanuts"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "***Rainbow***",
+		str_desc = "It's brilliant ****Rainbow*** sheen blinds you."
+	),
+	EwHue(
+		id_hue = "pink",
+		alias = [
+			"pinkdye",
+			"pinkrowddishes"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Pink",
+		str_desc = "It's brilliant pink sheen blinds you."
+	),
+	EwHue(
+		id_hue = "grey",
+		alias = [
+			"greydye",
+			"dankwheat"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Grey",
+		str_desc = "It's brilliant grey sheen blinds you."
+	),
+	EwHue(
+		id_hue = "cobalt",
+		alias = [
+			"cobaltdye",
+			"brightshade"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Cobalt",
+		str_desc = "It's brilliant cobalt sheen blinds you."
+	),
+	EwHue(
+		id_hue = "black",
+		alias = [
+			"blackdye",
+			"blacklimes"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Black",
+		str_desc = "It's brilliant black sheen blinds you."
+	),
+	EwHue(
+		id_hue = "lime",
+		alias = [
+			"limedye",
+			"pulpgourds"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Lime",
+		str_desc = "It's brilliant lime sheen blinds you."
+	),
+	EwHue(
+		id_hue = "cyan",
+		alias = [
+			"cyandye",
+			"direapples"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Cyan",
+		str_desc = "It's brilliant cyan sheen blinds you."
 	),
 ]
 
