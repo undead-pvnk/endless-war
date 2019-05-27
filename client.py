@@ -857,8 +857,8 @@ async def on_message(message):
 				id_server = message.server.id,
 				item_type = ewcfg.it_food,
 				item_props = {
-					'id_food': "direapple",
-					'food_name': "Dire Apple",
+					'id_food': "direapples",
+					'food_name': "Dire Apples",
 					'food_desc': "This sure is a illegal Dire Apple!",
 					'recover_hunger': 500,
 					'str_eat': "You chomp into this illegal Dire Apple.",

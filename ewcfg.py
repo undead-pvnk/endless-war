@@ -2197,7 +2197,6 @@ food_list = [
 				  "You just end up destroying the entire table you’re eating at.",
 		str_desc = "Two imposing 1½ lb Arizonian Kingpin Crabs, steamed and split, served with a small side of melted butter. Their unique pink and purple carapaces that distinguish them are purely cosmetic, "
 				   "but you’ll always think one color tastes better than the other. D’awww...",
-		ingredients = "direapple",
 	),
 	EwFood(
 		id_food = "champagne",
@@ -2518,7 +2517,6 @@ food_list = [
 		vendors = [vendor_tacobell],
 		str_eat = "You shovel fistfuls of nacho detritus into your gaping maw. Your gums are savaged by the sharp edges of the crips corny chips.",
 		str_desc = "A plate full of crisp tortilla chips onto which ground beef, sour cream, cheese, tomatoes, and various assorted bullshit has been dumped.",
-		ingredients = "direapple",
 	),
 	EwFood(
 		id_food = "energytaco",
@@ -2550,7 +2548,6 @@ food_list = [
 		vendors = [vendor_mtndew],
 		str_eat = "You pour the molasses-like liquid down your throat. It stings your teeth and clings to your esophagus on the way down, but you feel suddenly invigorated as your blood sugar skyrockets!!",
 		str_desc = "This thick, viscous green fluid reeks with a sickly-sweet citrusy odor.",
-		ingredients = "direapple",
 	),
 	EwFood(
 		id_food = "bajablastsyrup",
@@ -5295,14 +5292,12 @@ cosmetic_items_list = [
 		str_name = "propeller hat",
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
-		ingredients = "direapple",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
 		str_name = "mining helmet",
 		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian,
-		ingredients = "direapple",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pickelhaube",
@@ -5363,7 +5358,6 @@ cosmetic_items_list = [
 		str_name = "bandanna",
 		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian,
-		ingredients = "direapple",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofsunglasses",
@@ -5391,7 +5385,7 @@ cosmetic_items_list = [
 	),
 	EwCosmeticItem(
 		str_name = "witch hat",
-			id_cosmetic = "witchhat",
+		id_cosmetic = "witchhat",
 		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian
 	),
@@ -5400,7 +5394,6 @@ cosmetic_items_list = [
 		str_name = "bomber hat",
 		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian,
-		ingredients = "direapple",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tuxedo",
@@ -5557,7 +5550,6 @@ cosmetic_items_list = [
 		str_name = "heart boxers",
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
-		ingredients = "direapple",
 	)
 ]
 
@@ -6435,8 +6427,8 @@ hue_list = [
 		id_hue = "cyan",
 		alias = [
 			"dire"
-			"apple"
-			"direapple"
+			"apples"
+			"direapples"
 		],
 		str_saturate = "You saturate your Slimeoid with the Cyan Dye!",
 		str_name= "Cyan",
