@@ -5288,224 +5288,268 @@ for line in transport_lines:
 
 cosmetic_items_list = [
 	EwCosmeticItem(
-		name = "propeller hat",
-		description = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
+		id_cosmetic = "propellerhat",
+		str_name = "propeller hat",
+		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
 		ingredients = "purplekilliflower",
 	),
 	EwCosmeticItem(
-		name = "mining helmet",
-		description = "A typical construction hard hat with a head lamp strapped onto it.",
+		id_cosmetic = "mininghelmet",
+		str_name = "mining helmet",
+		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pickelhaube",
-		description = "A traditional Prussian spiked helmet from the nineteenth century.",
+		id_cosmetic = "pickelhaube",
+		str_name = "pickelhaube",
+		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "fedora",
-		description = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
+		id_cosmetic = "fedora",
+		str_name = "fedora",
+		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "baseball cap",
-		description = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
+		id_cosmetic = "baseballcap",
+		str_name = "baseball cap",
+		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "backwards baseball cap",
-		description = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
+		id_cosmetic = "backwardsbaseballcap",
+		str_name = "backwards baseball cap",
+		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pirate hat",
-		description = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
+		id_cosmetic = "piratehat",
+		str_name = "pirate hat",
+		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "eyepatch",
-		description = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
+		id_cosmetic = "eyepatch",
+		str_name = "eyepatch",
+		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "cigarette",
-		description = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
+		id_cosmetic = "cigarette",
+		str_name = "cigarette",
+		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "headband",
-		description = "A headband wrapped tightly around your forehead with long, flowing ends.",
+		id_cosmetic = "headband",
+		str_name = "headband",
+		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "handkerchief",
-		description = "A bandanna tied on your head, creating a simple cap.",
+		id_cosmetic = "handkerchief",
+		str_name = "handkerchief",
+		str_desc = "A bandanna tied on your head, creating a simple cap.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bandanna",
-		description = "A handkerchief tied around your neck and covering your lower face.",
+		id_cosmetic = "bandanna",
+		str_name = "bandanna",
+		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of sunglasses",
-		description = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
+		id_cosmetic = "pairofsunglasses",
+		str_name = "pair of sunglasses",
+		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of glasses",
-		description = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
+		id_cosmetic = "pairofglasses",
+		str_name = "pair of glasses",
+		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "birthday hat",
-		description = "A striped, multi-color birthday hat. ",
+		id_cosmetic = "birthdayhat",
+		str_name = "birthday hat",
+		str_desc = "A striped, multi-color birthday hat. ",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "scarf",
-		description = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
+		id_cosmetic = "scarf",
+		str_name = "scarf",
+		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "witch hat",
-		description = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
+		str_name = "witch hat",
+			id_cosmetic = "witchhat",
+		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bomber hat",
-		description = "A thick fur and leather aviator’s hat.",
+		id_cosmetic = "bomberhat",
+		str_name = "bomber hat",
+		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "tuxedo",
-		description = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
+		id_cosmetic = "tuxedo",
+		str_name = "tuxedo",
+		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "beanie",
-		description = "A simple beanie with a pointed top and a slip stitch brim.",
+		id_cosmetic = "beanie",
+		str_name = "beanie",
+		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "jester's hat",
-		description = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
+		id_cosmetic = "jestershat",
+		str_name = "jester's hat",
+		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of 3D glasses",
-		description = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
+		id_cosmetic = "pairof3dglasses",
+		str_name = "pair of 3D glasses",
+		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "necktie",
-		description = "A vintage necktie, reeking of coffee, college, and shaving cream.",
+		id_cosmetic = "necktie",
+		str_name = "necktie",
+		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "viking helmet",
-		description = "A pointy bronze helmet with two sharp horns jutting out of the base.",
+		id_cosmetic = "vikinghelmet",
+		str_name = "viking helmet",
+		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of flip flops",
-		description = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
+		id_cosmetic = "pairofflipflops",
+		str_name = "pair of flip flops",
+		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "fez",
-		description = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
+		id_cosmetic = "fez",
+		str_name = "fez",
+		str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bowtie",
-		description = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
+		id_cosmetic = "bowtie",
+		str_name = "bowtie",
+		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "cowboy hat",
-		description = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
+		id_cosmetic = "cowboyhat",
+		str_name = "cowboy hat",
+		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "kepi",
-		description = "A short kepi with a sunken top and an insignia on the front.",
+		id_cosmetic = "kepi",
+		str_name = "kepi",
+		str_desc = "A short kepi with a sunken top and an insignia on the front.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "tam o' shanter",
-		description = "A traditional Scottish wool bonnet with a plaid pattern.",
+		id_cosmetic = "tamoshanter",
+		str_name = "tam o' shanter",
+		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "ushanka",
-		description = "A traditional Russian fur cap with thick wool ear flaps.",
+		id_cosmetic = "ushanka",
+		str_name = "ushanka",
+		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "karategi",
-		description = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
+		id_cosmetic = "karategi",
+		str_name = "karategi",
+		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "turban",
-		description = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
+		id_cosmetic = "turban",
+		str_name = "turban",
+		str_desc = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "nemes",
-		description = "The traditional ancient Egyptian pharaoh's striped head cloth.",
+		id_cosmetic = "nemes",
+		str_name = "nemes",
+		str_desc = "The traditional ancient Egyptian pharaoh's striped head cloth.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "varsity jacket",
-		description = "An American baseball jacket, with a large insignia on the left side of the chest.",
+		id_cosmetic = "varsityjacket",
+		str_name = "varsity jacket",
+		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "sombrero",
-		description = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
+		id_cosmetic = "sombrero",
+		str_name = "sombrero",
+		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "hawaiian shirt",
-		description = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
+		id_cosmetic = "hawaiianshirt",
+		str_name = "hawaiian shirt",
+		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "fursuit",
-		description = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
+		id_cosmetic = "fursuit",
+		str_name = "fursuit",
+		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "diadem",
-		description = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
+		id_cosmetic = "diadem",
+		str_name = "diadem",
+		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "Bill's Hat",
-		description = "A military beret with a shield insignia on the front.",
+		id_cosmetic = "billshat",
+		str_name = "Bill's Hat",
+		str_desc = "A military beret with a shield insignia on the front.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "wedding ring",
-		description = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
+		id_cosmetic = "weddingring",
+		str_name = "wedding ring",
+		str_desc = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "earbuds",
-		description = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
+		id_cosmetic = "earbuds",
+		str_name = "earbuds",
+		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "nurse's outfit",
-		description = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
+		id_cosmetic = "nursesoutfit",
+		str_name = "nurse's outfit",
+		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "heart boxers",
-		description = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
+		id_cosmetic = "heartboxers",
+		str_name = "heart boxers",
+		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian
 	)
 ]

@@ -29,7 +29,7 @@ class EwCosmeticItem:
 
 	def __init__(
 		self,
-		id_cosmetic = ""
+		id_cosmetic = "",
 		str_name = "",
 		str_desc = "",
 		rarity = "",
@@ -64,9 +64,17 @@ async def smelt(cmd):
 		if patrician_smelted == 1:
 			patrician = True
 
+		cosmetics_list = []
+
+		for result in ewcfg.cosmetic_items_list:
+			if result.ingredients != None:
+				cosmetics_list.append(result)
+			else:
+				pass
+
 		items = []
 
-		for cosmetic in ewcfg.cosmetic_items_list:
+		for cosmetic in cosmetics_list:
 			if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
 				items.append(cosmetic)
 			elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
@@ -78,7 +86,8 @@ async def smelt(cmd):
 			item_type = ewcfg.it_cosmetic,
 			id_user = cmd.message.author.id,
 			id_server = cmd.message.server.id,
-			item_props = { #todo make st_name and shit
+			item_props = {
+				'id_cosmetic': item.id_cosmetic,
 				'cosmetic_name': item.str_name,
 				'cosmetic_desc': item.str_description,
 				'rarity': item.rarity,
