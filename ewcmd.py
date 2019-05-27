@@ -600,29 +600,18 @@ async def saturateslimeoid(cmd):
 
 	elif hue_sought:
 
-		dye = None
+		dye = hue_sought.subcontext
 
-		for color in ewcfg.dye_list:
-			if color.subcontext != hue_search:
-				pass
-			else:
-				dye.append(color)
-
-		if dye != None:
-			hue = ewcfg.hue_map.get(dye)
-			response = " {}".format(hue.str_saturate)
-
-			slimeoid.body = hue.id_hue
-			slimeoid.persist()
-
-			ewitem.item_delete(id_item = hue_sought.get('id_item'))
-			user_data.persist()
-		else:
-			response = "You can only saturate your slimeoid using dyes you own!"
+		hue = ewcfg.hue_map.get(dye)
+		response = " {}".format(hue.str_saturate)
+		slimeoid.body = hue.id_hue
+		slimeoid.persist()
+		ewitem.item_delete(id_item = hue_sought.get('id_item'))
+		user_data.persist()
 
 	else:
 		if hue_search:  # if they didn't forget to specify an item and it just wasn't found
-			response = "You can only saturate your slimeoid with colors found in dyes."
+			response = "You can only saturate your slimeoid with dyes."
 		else:
 			response = "Saturate your ? (check **!inventory**)"
 
