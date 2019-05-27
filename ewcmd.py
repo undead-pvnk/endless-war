@@ -618,7 +618,7 @@ async def saturateslimeoid(cmd):
 			ewitem.item_delete(id_item = hue_sought.get('id_item'))
 			user_data.persist()
 		else:
-			response = "You can only saturate your slimeoid with colors found in dyes."
+			response = "You can only saturate your slimeoid using dyes you own!"
 
 	else:
 		if hue_search:  # if they didn't forget to specify an item and it just wasn't found

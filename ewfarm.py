@@ -280,7 +280,7 @@ async def mill(cmd):
 			response = "You milled a {}!".format(item.str_name)
 			user_data.persist()
 		else:
-			response = "You can only mill vegetables."
+			response = "You can only mill vegetables. Use their proper names."
 
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found
