@@ -230,13 +230,13 @@ async def mill(cmd):
 		if len(items) > 0:
 			item = random.choice(items)
 
-			if hasattr(item, 'id_item'):
+			if hasattr(item, 'id_defaultitem'):
 				ewitem.item_create(
 					item_type = ewcfg.it_item,
 					id_user = cmd.message.author.id,
 					id_server = cmd.message.server.id,
 					item_props = {
-						'id_item': item.id_item,
+						'id_defaultitem': item.id_defaultitem,
 						'context': item.context,
 						'subcontext': item.subcontext,
 						'item_name': item.str_name,

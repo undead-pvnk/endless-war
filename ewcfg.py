@@ -986,7 +986,7 @@ stats_clear_on_death = [
 # List of normal items.
 item_list = [
 	EwDefaultItem(
-		id_item = "whitedye",
+		id_defaultitem = "whitedye",
 		context = "dye",
 		subcontext = "white",
 		str_name = "White Dye",
@@ -994,7 +994,7 @@ item_list = [
 		ingredients = "poketuber",
 	),
 	EwDefaultItem(
-		id_item = "yellowdye",
+		id_defaultitem = "yellowdye",
 		context = "dye",
 		subcontext = "yellow",
 		str_name = "Yellow Dye",
@@ -1002,7 +1002,7 @@ item_list = [
 		ingredients = "phosphorpoppies",
 	),
 	EwDefaultItem(
-		id_item = "orangedye",
+		id_defaultitem = "orangedye",
 		context = "dye",
 		subcontext = "orange",
 		str_name = "Orange Dye",
@@ -1010,7 +1010,7 @@ item_list = [
 		ingredients = "sourpotatoes",
 	),
 	EwDefaultItem(
-		id_item = "reddye",
+		id_defaultitem = "reddye",
 		context = "dye",
 		subcontext = "red",
 		str_name = "Red Dye",
@@ -1018,7 +1018,7 @@ item_list = [
 		ingredients = "bloodcabbages",
 	),
 	EwDefaultItem(
-		id_item = "magentadye",
+		id_defaultitem = "magentadye",
 		context = "dye",
 		subcontext = "magenta",
 		str_name = "Magenta Dye",
@@ -1026,7 +1026,7 @@ item_list = [
 		ingredients = "joybeans",
 	),
 	EwDefaultItem(
-		id_item = "purpledye",
+		id_defaultitem = "purpledye",
 		context = "dye",
 		subcontext = "purple",
 		str_name = "Purple Dye",
@@ -1034,7 +1034,7 @@ item_list = [
 		ingredients = "purplekilliflower",
 	),
 	EwDefaultItem(
-		id_item = "bluedye",
+		id_defaultitem = "bluedye",
 		context = "dye",
 		subcontext = "blue",
 		str_name = "Blue Dye",
@@ -1042,7 +1042,7 @@ item_list = [
 		ingredients = "razornuts",
 	),
 	EwDefaultItem(
-		id_item = "greendye",
+		id_defaultitem = "greendye",
 		context = "dye",
 		subcontext = "green",
 		str_name = "Green Dye",
@@ -1050,7 +1050,7 @@ item_list = [
 		ingredients = "pawpaw",
 	),
 	EwDefaultItem(
-		id_item = "tealdye",
+		id_defaultitem = "tealdye",
 		context = "dye",
 		subcontext = "teal",
 		str_name = "Teal Dye",
@@ -1058,7 +1058,7 @@ item_list = [
 		ingredients = "sludgeberries",
 	),
 	EwDefaultItem(
-		id_item = "rainbowdye",
+		id_defaultitem = "rainbowdye",
 		context = "dye",
 		subcontext = "rainbow",
 		str_name = "***Rainbow Dye!!!!***",
@@ -1066,7 +1066,7 @@ item_list = [
 		ingredients = "suganmanuts",
 	),
 	EwDefaultItem(
-		id_item = "pinkdye",
+		id_defaultitem = "pinkdye",
 		context = "dye",
 		subcontext = "pink",
 		str_name = "Pink Dye",
@@ -1074,7 +1074,7 @@ item_list = [
 		ingredients = "pinkrowddishes",
 	),
 	EwDefaultItem(
-		id_item = "greydye",
+		id_defaultitem = "greydye",
 		context = "dye",
 		subcontext = "grey",
 		str_name = "Grey Dye",
@@ -1082,7 +1082,7 @@ item_list = [
 		ingredients = "dankwheat",
 	),
 	EwDefaultItem(
-		id_item = "cobaltdye",
+		id_defaultitem = "cobaltdye",
 		context = "dye",
 		subcontext = "cobalt",
 		str_name = "Cobalt Dye",
@@ -1090,7 +1090,7 @@ item_list = [
 		ingredients = "brightshades",
 	),
 	EwDefaultItem(
-		id_item = "blackdye",
+		id_defaultitem = "blackdye",
 		context = "dye",
 		subcontext = "black",
 		str_name = "Black Dye",
@@ -1098,7 +1098,7 @@ item_list = [
 		ingredients = "blacklimes",
 	),
 	EwDefaultItem(
-		id_item = "limedye",
+		id_defaultitem = "limedye",
 		context = "dye",
 		subcontext = "lime",
 		str_name = "Lime Dye",
@@ -1106,7 +1106,7 @@ item_list = [
 		ingredients = "pulpgourds",
 	),
 	EwDefaultItem(
-		id_item = "cyandye",
+		id_defaultitem = "cyandye",
 		context = "dye",
 		subcontext = "cyan",
 		str_name = "Cyan Dye",
@@ -1123,8 +1123,8 @@ item_names = []
 
 # Populate food map, including all aliases.
 for item in item_list:
-	item_map[item.id_item] = item
-	item_names.append(item.id_item)
+	item_map[item.id_defaultitem] = item
+	item_names.append(item.id_defaultitem)
 
 	for alias in item.alias:
 		item_map[alias] = item
