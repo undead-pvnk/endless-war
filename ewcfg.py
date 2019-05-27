@@ -1115,6 +1115,20 @@ item_list = [
 	),
 ]
 
+# A map of id_item to EwDefaultItem objects.
+item_map = {}
+
+# A list of food names
+item_names = []
+
+# Populate food map, including all aliases.
+for item in item_list:
+	item_map[item.id_item] = item
+	item_names.append(item.id_item)
+
+	for alias in item.alias:
+		item_map[alias] = item
+
 # list of dyes you're able to saturate your Slimeoid with
 dye_list = []
 
