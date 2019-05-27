@@ -611,14 +611,14 @@ async def saturateslimeoid(cmd):
 				user_data.persist()
 
 			else:
-				response = "You can only saturate your slimeoid with dyes."
+				response = "You can only saturate your slimeoid with dyes. 3"
 
 		else:
-			response = "You can only saturate your slimeoid with dyes"
+			response = "You can only saturate your slimeoid with dyes. 2"
 
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found
-			response = "You can only saturate your slimeoid with dyes."
+			response = "You can only saturate your slimeoid with dyes. 1"
 		else:
 			response = "Saturate your slimeoid with what? (check **!inventory**)"
 
