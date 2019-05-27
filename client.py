@@ -853,7 +853,6 @@ async def on_message(message):
 
 		elif debug == True and cmd == '!createapple':
 			ewitem.item_create(
-				id_user = cmd.message.author.id,
 				id_server = cmd.message.server.id,
 				item_type = ewcfg.it_food,
 				item_props = {
