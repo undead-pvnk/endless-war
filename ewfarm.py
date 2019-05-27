@@ -227,9 +227,9 @@ async def mill(cmd):
 			else:
 				items.append(result)
 
-		item = random.choice(items)
+		if len(items) > 0:
+			item = random.choice(items)
 
-		if item != None:
 			if hasattr(item, 'id_name'):
 				ewitem.item_create(
 					item_type = ewcfg.it_item,
