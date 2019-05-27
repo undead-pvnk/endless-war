@@ -852,7 +852,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
 
 		elif debug == True and cmd == '!createapple':
-			ewitem.item_create(
+			item_id = ewitem.item_create(
 				id_user = message.author.id,
 				id_server = message.server.id,
 				item_type = ewcfg.it_food,
