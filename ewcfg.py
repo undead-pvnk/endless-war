@@ -6444,7 +6444,7 @@ hue_list = [
 			"apples"
 			"direapples"
 		],
-		str_saturate = "You saturate {} with the Cyan Dye!".format(slimeoid.name),
+		str_saturate = "You saturate {} with the Cyan Dye!",
 		str_name= "Cyan",
 		str_desc = "It's brilliant cyan sheen blinds you."
 	),
