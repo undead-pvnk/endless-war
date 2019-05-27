@@ -444,7 +444,6 @@ cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
-cmd_adornslimeoid = cmd_prefix + 'adornslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
