@@ -227,7 +227,7 @@ async def mill(cmd):
 			else:
 				items.append(result)
 
-		item = items[random.randint(0, len(items) - 1)]
+		item = random.choice(items)
 
 		if item != None:
 			if hasattr(item, 'id_name'):
