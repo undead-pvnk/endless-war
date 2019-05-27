@@ -757,6 +757,7 @@ col_intel = 'intel'
 col_level = 'level'
 col_time_defeated = 'time_defeated'
 col_clout = 'clout'
+col_hue = 'hue'
 
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'
