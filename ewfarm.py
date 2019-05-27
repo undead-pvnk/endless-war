@@ -261,7 +261,7 @@ async def mill(cmd):
 					}
 				),
 
-			elif hasattr(item, 'cosmetic_name'):
+			elif hasattr(item, 'id_cosmetic'):
 				ewitem.item_create(
 					item_type = ewcfg.it_cosmetic,
 					id_user = cmd.message.author.id,
