@@ -89,7 +89,7 @@ async def smelt(cmd):
 			item_props = {
 				'id_cosmetic': item.id_cosmetic,
 				'cosmetic_name': item.str_name,
-				'cosmetic_desc': item.str_description,
+				'cosmetic_desc': item.str_desc,
 				'rarity': item.rarity,
 				'adorned': 'false'
 			}
