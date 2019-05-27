@@ -6425,22 +6425,25 @@ for brain in brain_list:
 # All color attributes in the game.
 hue_list = [
 	EwHue(
-		id_hue = "purple",
+		id_hue = "cyan",
 		alias = [
-			"killer"
+			"dire"
+			"apple"
+			"direapple"
 		],
-		str_staturate = "",
-		str_name= "Purple",
-		str_desc = "It's brilliant purple sheen blinds you."
+		str_saturate = "You saturate your Slimeoid with the Cyan Dye!",
+		str_name= "Cyan",
+		str_desc = "It's brilliant cyan sheen blinds you"
 	),
 	EwHue(
-		id_hue = "",
-		alias = [],
-		str_name = "",
-		str_desc = "",
-		id_dye = "",
-		supereffect1 = "",
-		supereffect2 = "",
+		id_hue = "red",
+		alias = [
+			"blood"
+			"cabbage"
+		],
+		str_saturate = "You saturate your Slimeoid with the Red Dye!",
+		str_name = "Red",
+		str_desc = "It's brilliant red sheen blinds you"
 	),
 ]
 

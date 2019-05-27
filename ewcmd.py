@@ -1486,6 +1486,10 @@ def slimeoid_describe(slimeoid):
 	if brain != None:
 		response += " {}".format(brain.str_brain)
 
+	hue = ewcfg.hue_map.get(slimeoid.hue)
+	if hue != None:
+		response += " {}".format(hue.str_desc)
+
 	stat_desc = []
 
 	stat = slimeoid.atk
