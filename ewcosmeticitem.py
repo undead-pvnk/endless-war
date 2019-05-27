@@ -123,7 +123,7 @@ async def adorn(cmd):
 		if item_sought != None:
 			id_item = item_sought.get('id_item')
 			item_def = item_sought.get('item_def')
-			name = item_sought.get('name')
+			name = item_sought.get('id_cosmetic')
 			item_type = item_sought.get('item_type')
 
 			adorned_items = 0
