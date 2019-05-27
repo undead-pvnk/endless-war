@@ -871,7 +871,7 @@ async def on_message(message):
 			item.item_props['test'] = 'meow'
 			item.persist()
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
 
 
 
