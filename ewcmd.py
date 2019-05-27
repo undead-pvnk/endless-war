@@ -617,9 +617,6 @@ async def saturateslimeoid(cmd):
 				ewitem.item_delete(id_item = item_sought.get('id_item'))
 				user_data.persist()
 
-			else:
-				response = "You can only saturate your slimeoid with dyes."
-
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found
 			response = "You can only saturate your slimeoid with dyes."

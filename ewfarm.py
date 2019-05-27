@@ -236,7 +236,7 @@ async def mill(cmd):
 					id_user = cmd.message.author.id,
 					id_server = cmd.message.server.id,
 					item_props = {
-						'id_name': item.id_name,
+						'id_item': item.id_item,
 						'context': item.context,
 						'subcontext': item.subcontext,
 						'str_name': item.str_name,
