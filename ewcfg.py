@@ -1110,7 +1110,7 @@ item_list = [
 		context = "dye",
 		subcontext = "cyan",
 		str_name = "Cyan Dye",
-		str_desc = "",
+		str_desc = "huh",
 		ingredients = "direapples",
 	),
 ]
