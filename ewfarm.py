@@ -239,8 +239,8 @@ async def mill(cmd):
 						'id_item': item.id_item,
 						'context': item.context,
 						'subcontext': item.subcontext,
-						'str_name': item.str_name,
-						'str_desc': item.str_desc,
+						'item_name': item.str_name,
+						'item_desc': item.str_desc,
 						'ingredients': item.ingredients,
 					}
 				),

@@ -2911,8 +2911,8 @@ item_def_list = [
 			'id_name': 'normalitem',
 			'context': 'context',
 			'subcontext': 'subocontext',
-			'str_name': 'Normal Item.',
-			'str_desc': 'This is a normal item.',
+			'item_name': 'Normal Item.',
+			'item_desc': 'This is a normal item.',
 			'ingredients': 'vegetable'
 		}
 	),
