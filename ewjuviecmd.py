@@ -70,8 +70,12 @@ async def renounce(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.life_state != ewcfg.life_state_enlisted:
+	elif user_data.life_state != ewcfg.life_state_enlisted:
 		response = "You are not currently enlisted in any gang!!"
+
+	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+		response = "To turn in your badge, you must return to your soon-to-be former gang base."
+
 	else:
 		faction = user_data.faction
 		user_data.life_state = ewcfg.life_state_juvenile
