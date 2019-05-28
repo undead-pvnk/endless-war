@@ -174,7 +174,7 @@ def gen_data_text(
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
 
-		trauma = ewcfg.Hweapon_map.get(user_data.trauma)
+		trauma = ewcfg.weapon_map.get(user_data.trauma)
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
