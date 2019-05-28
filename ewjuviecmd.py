@@ -83,7 +83,7 @@ async def renounce(cmd):
 		user_data.life_state = ewcfg.life_state_juvenile
 		user_data.persist()
 		response = "You are no longer enlisted in the {}, but you are not free of association with them.".format(faction)
-		await ewrolemgr.updateRoles(client = cmd.client, member = user_data)
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
