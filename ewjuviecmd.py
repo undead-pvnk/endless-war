@@ -29,12 +29,6 @@ async def enlist(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif user_data.faction != None:
-		if user_data.faction == ewcfg.faction_killers:
-			response = "To reenlist in the hardboiled and calculating {}, {} in {}.".format(ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
-		else:
-			response = "To reenlist in the hot blooded and reckless {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys)
-
 	elif user_data.life_state == ewcfg.life_state_enlisted:
 			if user_data.faction == ewcfg.faction_killers:
 				color = "purple"
