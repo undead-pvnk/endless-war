@@ -90,7 +90,7 @@ cmd_map = {
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
-	ewcfg.renounce: ewjuviecmd.renounce,
+	ewcfg.cmd_renounce: ewjuviecmd.renounce,
 
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
