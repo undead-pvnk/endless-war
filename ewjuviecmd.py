@@ -22,14 +22,18 @@ last_mismined_times = {}
 
 """ player enlists in a faction/gang """
 async def enlist(cmd):
-	time_now = int(time.time())
-	response = ""
 	user_data = EwUser(member = cmd.message.author)
 	user_slimes = user_data.slimes
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_data.faction != None:
+		if user_data.faction == ewcfg.faction_killers:
+			response = "To reenlist in the hardboiled and calculating {}, {} in {}.".format(ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
+		else:
+			response = "To reenlist in the hot blooded and reckless {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys)
 
 	elif user_data.life_state == ewcfg.life_state_enlisted:
 			if user_data.faction == ewcfg.faction_killers:
@@ -64,6 +68,25 @@ async def enlist(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def renounce(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're dead, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state != ewcfg.life_state_enlisted:
+		response = "You are not currently enlisted in any gang!!"
+	else:
+		faction = user_data.faction
+		user_data.life_state = ewcfg.life_state_juvenile
+		user_data.persist()
+		response = "You are no longer enlisted in the {}, but you are not free of association with them.".format(faction)
+		await ewrolemgr.updateRoles(client = cmd.client, member = user_data)
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """ mine for slime (or endless rocks) """
 async def mine(cmd):

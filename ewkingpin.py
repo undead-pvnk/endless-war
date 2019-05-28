@@ -12,7 +12,6 @@ from ew import EwUser
 	Returns enlisted players to juvenile.
 """
 async def pardon(cmd):
-	response = ""
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin:
