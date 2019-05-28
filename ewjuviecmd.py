@@ -27,15 +27,11 @@ async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	user_slimes = user_data.slimes
 
-	if user_data.life_state == ewcfg.life_state_grandfoe:
-		response = "Hehehehe, this response will never be seen. If you're reading this, you're a Github Goon."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.life_state == ewcfg.life_state_enlisted:
+	elif user_data.life_state == ewcfg.life_state_enlisted:
 			if user_data.faction == ewcfg.faction_killers:
 				color = "purple"
 			else:
@@ -43,16 +39,16 @@ async def enlist(cmd):
 			response = "You are already enlisted in the {}! Look, your name is {}! Get a clue, idiot.".format(user_data.faction, color)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.poi != ewcfg.poi_id_rowdyroughhouse or ewcfg.poi_id_copkilltown:
+	elif user_data.poi != ewcfg.poi_id_rowdyroughhouse or ewcfg.poi_id_copkilltown:
 		# Only allowed to !enlist at a gang base.
 		response = "Which faction? If you want to join a gang, you have to {} at their homebase. Dumbass.\nTo join the hot blooded and reckless {}, {} in {}.\nTo join the hardboiled and calculating {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_slimes < ewcfg.slimes_toenlist:
+	elif user_slimes < ewcfg.slimes_toenlist:
 		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.life_state == ewcfg.life_state_juvenile:
+	elif user_data.life_state == ewcfg.life_state_juvenile:
 		if user_data.poi == ewcfg.poi_id_copkilltown:
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
 			user_data.life_state = ewcfg.life_state_enlisted
