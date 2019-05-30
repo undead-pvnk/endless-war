@@ -133,6 +133,7 @@ async def reap(cmd):
 								'food_desc': vegetable.str_desc,
 								'recover_hunger': vegetable.recover_hunger,
 								'str_eat': vegetable.str_eat,
+								'time_expir': time.time() + (vegetable.time_expir if vegetable.time_expir is not None else ewcfg.std_food_expir)
 							}
 						)
 
@@ -196,7 +197,7 @@ async def sow(cmd):
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
 				# Sowing
-				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about a day."
+				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about half a day."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
 				ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins

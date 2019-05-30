@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v2.22e"
+version = "v3.2help"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -291,6 +291,7 @@ cmd_revive = cmd_prefix + 'revive'
 cmd_kill = cmd_prefix + 'kill'
 cmd_shoot = cmd_prefix + 'shoot'
 cmd_shoot_alt1 = cmd_prefix + 'bonk'
+cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_attack = cmd_prefix + 'attack'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
@@ -305,8 +306,11 @@ cmd_help_alt3 = cmd_prefix + 'guide'
 cmd_harvest = cmd_prefix + 'harvest'
 cmd_salute = cmd_prefix + 'salute'
 cmd_unsalute = cmd_prefix + 'unsalute'
+cmd_hurl = cmd_prefix + 'hurl'
 cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
+cmd_suicide_alt1 = cmd_prefix + 'seppuku'
+cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_slimepachinko = cmd_prefix + 'slimepachinko'
 cmd_slimeslots = cmd_prefix + 'slimeslots'
@@ -340,6 +344,8 @@ cmd_withdraw = cmd_prefix + 'withdraw'
 cmd_exchangerate = cmd_prefix + 'exchangerate'
 cmd_exchangerate_alt1 = cmd_prefix + 'exchange'
 cmd_exchangerate_alt2 = cmd_prefix + 'rate'
+cmd_exchangerate_alt3 = cmd_prefix + 'exchangerates'
+cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
 cmd_negaslime = cmd_prefix + 'negaslime'
@@ -367,6 +373,7 @@ cmd_inventory_alt3 = cmd_prefix + 'bag'
 cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
+cmd_move_alt3 = cmd_prefix + 'sny'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
 cmd_embark = cmd_prefix + 'embark'
@@ -398,6 +405,7 @@ cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
+cmd_discard_alt1 = cmd_prefix + 'drop'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
@@ -405,6 +413,8 @@ cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
+cmd_capture_progress = cmd_prefix + 'progress'
+cmd_quarterly_report = cmd_prefix + 'quarterlyreport'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 
@@ -434,6 +444,17 @@ cmd_petslimeoid = cmd_prefix + 'petslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
+
+cmd_add_quadrant = cmd_prefix + "addquadrant"
+cmd_get_quadrants = cmd_prefix + "quadrants"
+cmd_get_flushed = cmd_prefix + "flushed"
+cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
+cmd_get_pale = cmd_prefix + "pale"
+cmd_get_pale_alt1 = cmd_prefix + "moirail"
+cmd_get_caliginous = cmd_prefix + "caliginous"
+cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
+cmd_get_ashen = cmd_prefix + "ashen"
+cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -536,6 +557,9 @@ bleed_tick_length = 10
 # Poudrin rarity (for enlisted players)
 poudrin_rarity = 1500
 
+# Chance to loot an item while scavenging
+scavenge_item_rarity = 1000
+
 # Lifetimes
 invuln_onrevive = 0
 
@@ -566,7 +590,7 @@ time_pvp_invest_withdraw = 180
 time_pvp = 1800
 
 # time to get kicked out of subzone
-time_kickout = 3 * 60 * 60  # 3 hours
+time_kickout = 60 * 60  # 1 hour
 
 # time after coming online before you can act
 time_offline = 10
@@ -618,7 +642,14 @@ emote_ht = "<:ht:492067823150039063>"
 emote_hs = "<:hs:492067783396294658>"
 emote_he = "<:he:492067814933266443>"
 emote_h_ = "<:h_:492067806465228811>"
-emote_blank = "<:blank:492087853702971403>"
+emote_blank = "<:blank:570060211327336472>"
+
+# Emotes for troll romance
+emote_hearts = ":hearts:"
+emote_diamonds = ":diamonds:"
+emote_spades = ":spades:"
+emote_clubs = ":clubs:"
+emote_broken_heart = ":broken_heart:"
 
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
@@ -706,6 +737,7 @@ col_time_lastscavenge = 'time_lastscavenge'
 col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
+col_time_joined = 'time_joined'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -737,6 +769,7 @@ col_clock = 'clock'
 col_weather = 'weather'
 col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
+col_donated_slimes = 'donated_slimes'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -936,6 +969,7 @@ cause_suicide = 5
 cause_leftserver = 6
 cause_drowning = 7
 cause_falling = 8
+cause_bleeding = 9
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -978,7 +1012,7 @@ def wef_nunchucks(ctn = None):
 	for count in range(5):
 		if random.randint(1, 3) == 1:
 			ctn.strikes += 1
-			ctn.slimes_damage += int(dmg / 2)
+			ctn.slimes_damage += int((dmg * 3) / 5)
 
 	if ctn.strikes == 5:
 		ctn.crit = True
@@ -989,10 +1023,10 @@ def wef_nunchucks(ctn = None):
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
 	ctn.miss = False
-	ctn.slimes_damage = int(0.8 * ctn.slimes_damage)
+	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
 	if(random.randrange(10) + 1) == 10:
 		ctn.crit = True
-		ctn.slimes_damage *= 2
+		ctn.slimes_damage *= 2.1
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None):
@@ -1562,8 +1596,8 @@ food_list = [
 			"nuts",
 			"packet"
 		],
-		recover_hunger = 20,
-		price = 2,
+		recover_hunger = 50,
+		price = 8,
 		inebriation = 0,
 		str_name = 'packet of salted razornuts',
 		vendors = [vendor_bar],
@@ -1878,6 +1912,7 @@ food_list = [
 		id_food = "shrimpcocktail",
 		alias = [
 			"shimp",
+			"shrimp",
 			"cocktail",
 		],
 		recover_hunger = 180,
@@ -2450,6 +2485,8 @@ food_list = [
 			"stuffed",
 			"stuffedcrust",
 			"double",
+			"doub",
+			"dou"
 		],
 		recover_hunger = 500,
 		price = 50,
@@ -2793,9 +2830,9 @@ poi_list = [
 		],
 		str_name = "Green Light District",
 		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
-		coord = (29, 13),
+		coord = (28, 13),
 		coord_alias = [
-			(28, 13),
+			(29, 13),
 			(30, 13)
 		],
 		channel = "green-light-district",
@@ -2958,7 +2995,7 @@ poi_list = [
 			"ss"
 		],
 		str_name = "South Sleezeborough",
-		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay, To the East is Ooze Gardens.",
+		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline.",
 		coord = (12, 22),
 		coord_alias = [
 			(12, 23),
@@ -3209,9 +3246,9 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain",
 		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford.",
-		coord = (5, 19),
+		coord = (4, 19),
 		coord_alias = [
-			(4, 19),
+			(5, 19),
 			(5, 20)
 		],
 		channel = "jaywalker-plain",
@@ -3258,7 +3295,8 @@ poi_list = [
 			"ghost",
 			"ghosts",
 			"ts",
-			"s"
+			"s",
+			"loser"
 		],
 		str_name = "The Sewers",
 		str_desc = "A vast subterranean maze of concrete tunnels, eternally echoing with the dripping of water and decayed slime runoff. All the waste of NLACakaNM eventually winds up here, citizens included.",
@@ -3281,10 +3319,11 @@ poi_list = [
 			"sec",
 			"sx",
 			"scex",
-			"scx"
+			"scx",
+			"findom"
 		],
 		str_name = "The SlimeCorp Stock Exchange",
-		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular.\n\nExits into Downtown NLACakaNM.",
+		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
 		channel = channel_stockexchange,
 		role = "Stock Exchange",
 		coord = (21, 16),
@@ -3340,7 +3379,8 @@ poi_list = [
 			"tacobell",
 			"kfc",
 			"fcourt",
-			"fc"
+			"fc",
+			"marketmanipulation"
 		],
 		str_name = "The NLACakaNM Food Court",
 		str_desc = "Inside a large shopping mall lies the city’s prized food court. This large, brightly-lit area with tiled walls and floors and numerous clashing, "
@@ -3519,7 +3559,6 @@ poi_list = [
 			"slimecasino",
 			"theslimecasino",
 			"tc",  # the casino
-			"sc",  # slime casino
 			"cas",
 			"c"
 		],
@@ -3578,9 +3617,10 @@ poi_list = [
 			"smokers",
 			"cough",
 			"smc",
-			"wf", #wreckington food
+			"sc",
 			"rf", #rowdy food
-			"sm"
+			"sm",
+			#"k0ff"
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
@@ -3707,7 +3747,7 @@ poi_list = [
 			"r",
 		],
 		str_name = "The Resort",
-		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported white sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
+		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported red sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
 		coord = (42, 6),
 		channel = channel_beachresort,
 		role = "Beach Resort",
@@ -3754,6 +3794,7 @@ poi_list = [
 			"wtferry",
 			"wtp",
 			"wtfp",
+			"wf"
 		],
 		str_name = "The Wreckington Ferry Port",
 		str_desc = "Caddy corner to Wreckington’s iconic junkyard lies its less famous shipyard, filled mostly with dozens upon dozens of different garbage barges dumping off metric tons of trash every day but also hosting this very terminal! The ferry takes you from here to Vagrant’s Corner, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Wreckington.",
@@ -3776,6 +3817,7 @@ poi_list = [
 			"vcferry",
 			"vcp",
 			"vcfp",
+			"vf"
 		],
 		str_name = "The Vagrant's Corner Ferry Port",
 		str_desc = "Down one of hundreds of piers on the crowded Vagrant’s Corner wharf sits this dingy dinghy terminal. The ferry takes you from here to Wreckington, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Vagrant's Corner.",
@@ -3915,7 +3957,8 @@ poi_list = [
 			"cksub",
 			"ckstation",
 			"copkills",
-			"cks"
+			"cks",
+			"cs"
 		],
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
@@ -4039,7 +4082,7 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_glocksbury,
 		is_transport_stop = True,
-		transport_lines = set()	
+		transport_lines = set()
 	),
 	EwPoi(  # West Glocksbury Subway Station
 		id_poi = poi_id_wgb_subway_station,
@@ -4100,6 +4143,7 @@ poi_list = [
 	EwPoi(  # North Sleezeborough Subway Station
 		id_poi = poi_id_nsb_subway_station,
 		alias = [
+			"northsleezeboroughsubwaystation",
 			"northsleezeboroughsubway",
 			"northsleezeboroughsub",
 			"northsleezeboroughstation",
@@ -4128,6 +4172,7 @@ poi_list = [
 	EwPoi(  # South Sleezeborough Subway Station
 		id_poi = poi_id_ssb_subway_station,
 		alias = [
+			"southsleezeboroughsubwaystation",
 			"southsleezeboroughsubway",
 			"southsleezeboroughsub",
 			"southsleezeboroughstation",
@@ -4239,6 +4284,7 @@ poi_list = [
 	EwPoi(  # Green Light District Subway Station
 		id_poi = poi_id_gld_subway_station,
 		alias = [
+			"greenlightdistrictsubwaystation",
 			"greenlightdistrictsubway",
 			"greenlightdistrictsub",
 			"greenlightdistrictstation",
@@ -4323,6 +4369,7 @@ poi_list = [
 	EwPoi(  # Assault Flats Beach Subway Station
 		id_poi = poi_id_afb_subway_station,
 		alias = [
+			"assaultflatsbeachsubwaystation",
 			"assaultflatsbeachsubway",
 			"assaultflatsbeachsub",
 			"assaultflatsbeachstation",
@@ -4352,7 +4399,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
+	EwPoi(  # Dreadford Blimp Tower
 		id_poi = poi_id_df_blimp_tower,
 		alias = [
 			"dreadfordblimptower",
@@ -4376,7 +4423,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-	EwPoi(  # Assault Flats Beach Subway Station
+	EwPoi(  # Assault Flats Beach Blimp Tower
 		id_poi = poi_id_afb_blimp_tower,
 		alias = [
 			"assaultflatsbeachblimptower",
@@ -4393,7 +4440,7 @@ poi_list = [
 			"afbtower"
 		],
 		str_name = "The Assault Flats Beach Blimp Tower",
-		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.", 
+		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.",
 		coord = (40, 2),
 		channel = channel_afb_blimp_tower,
 		role = "Assault Flats Beach Blimp Tower",
@@ -4560,6 +4607,7 @@ for poi in poi_list:
 		# Populate the map of coordinate aliases to the main coordinate.
 		for coord_alias in poi.coord_alias:
 			alias_to_coord[coord_alias] = poi.coord
+			coord_to_poi[coord_alias] = poi
 
 	# Populate the map of point of interest names/aliases to the POI.
 	id_to_poi[poi.id_poi] = poi
@@ -4905,7 +4953,7 @@ for line in transport_lines:
 		poi_data = id_to_poi.get(poi)
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
-        
+
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -6020,7 +6068,8 @@ thrownobjects_list = [
 	"small motor vehicle",
 	"chunk of broken concrete",
 	"piece of rusted scrap metal",
-	"box overflowing with KFC branded bbq sauce"
+	"box overflowing with KFC branded bbq sauce",
+	"Nokia 3310"
 ]
 
 quadrant_flushed = "flushed"
@@ -6273,6 +6322,22 @@ vegetable_list = [
 		str_desc = "An American classic."
 	),
 ]
+
+
+# Dict of all help responses linked to their associated topics
+help_responses = {
+	"mining":"Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets, and the higher your level gets, the more slime you gain with every '!mine' command, resulting in exponential gains. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively.",
+	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food and eat it at the same time, or add **'togo'** (or just 't') at the end of your order to place it in your inventory (example: !order pizza togo). Ordering it togo **doubles** the price, however, and you can only carry a certain amount of food depending on your level. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
+	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. If you reach **level 10** (done by gaining at least 10,000 slime), you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"dojo":"The Dojo is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!arm [weapon]'**. There are many weapons you can choose from, and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. Sparring can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is what's actually important. Once you reach mastery rank 1 (Again, this would be level 5), the damage you do with that weapon type is increased, and when you next revive, you will now **permanently** be at level 3 for that weapon type. Essentially, this means you would only have to '!spar' or '!annoint twice to get back up to rank 1. Once you reach **rank 6**, you can no longer spar or annoint your weapon rank any higher, and must instead kill other players (that are higher in slime level than you) to do so. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a five minute cooldown and raises your hunger by about 15%, so make sure to bring some food with you beforehand. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
+	"bleeding":"When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
+	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 0.8% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel.",
+	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. Currently, it is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 160,000 slime, with a 1/3 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days), it will **die out**. In addition to slime, farming also provides you with various **crops**. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
+	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park.",
+	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** and **The Blimp** can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do.",
+	"scouting":"Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even ghosts. Scouting will list all players above your own level, as well as players below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less.",
+	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

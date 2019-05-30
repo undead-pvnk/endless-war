@@ -52,7 +52,7 @@ def make_slimeoids_top_board(server = None):
 		if data != None:
 			for row in data:
 				board += "{} `{:_>3} | {}'s {}`\n".format(
-					"<:blank:492087853702971403>",
+					ewcfg.emote_blank,
 					row[2],
 					row[0],
 					row[1]

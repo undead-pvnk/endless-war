@@ -215,7 +215,13 @@ class EwDistrict:
 							district = ewcfg.id_to_poi[self.name].str_name,
 							progress = progress_percent_after
 						)
-						channels = ewcfg.hideout_channels
+						if self.controlling_faction == ewcfg.faction_rowdys:
+							channels = [ewcfg.channel_rowdyroughhouse]
+						elif self.controlling_faction == ewcfg.faction_killers:
+							channels = [ewcfg.channel_copkilltown]
+						else:
+							channels = ewcfg.hideout_channels
+
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
@@ -360,6 +366,34 @@ class EwDistrict:
 		change = int(n)
 		self.slimes += change
 
+"""
+	Informs the player about their current zone's capture progress
+"""
+async def capture_progress(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	response += "**{}**: ".format(poi.str_name)
+
+	if not user_data.poi in ewcfg.capturable_districts:
+		response += "This zone cannot be captured."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
+
+
+	if district_data.controlling_faction != "":
+		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
+	elif district_data.capturing_faction != "":
+		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
+	else:
+		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
+
+	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+		
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -457,6 +491,8 @@ async def capture_tick(id_server):
 					friendly_neighbors = dist.get_number_of_friendly_neighbors()
 					if dist.all_neighbors_friendly():
 						capture_speed = 0
+					elif dist.controlling_faction == faction_capture:
+						capture_speed *= 1 + 0.1 * friendly_neighbors
 					else:
 						capture_speed /= 1 + 0.1 * friendly_neighbors
 

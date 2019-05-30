@@ -87,7 +87,7 @@ class EwUser:
 			if source != ewcfg.source_spending and source != ewcfg.source_ghostification:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = change)
 
-			if source == ewcfg.source_damage:
+			if source == ewcfg.source_damage or source == ewcfg.source_bleeding:
 				self.totaldamage += change
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_hitsurvived, value = change)
 
@@ -119,8 +119,10 @@ class EwUser:
 			self.life_state = ewcfg.life_state_corpse
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
-			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide:
+			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
+		ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user)
+		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
 		self.bounty = 0
@@ -134,9 +136,10 @@ class EwUser:
 		self.weapon = ""
 		self.weaponskill = 0
 		self.weaponmarried = False
+		ewutils.moves_active[self.id_user] = 0
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
-		ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
+		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 
@@ -313,6 +316,8 @@ class EwUser:
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
 				else:
+					self.poi = ewcfg.poi_id_downtown
+					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,

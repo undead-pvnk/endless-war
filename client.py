@@ -66,6 +66,7 @@ cmd_map = {
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
+	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Get a weapon into your inventory
@@ -77,6 +78,8 @@ cmd_map = {
 
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
+	ewcfg.cmd_suicide_alt1: ewwep.suicide,
+	ewcfg.cmd_suicide_alt2: ewwep.suicide,
 
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
@@ -112,9 +115,11 @@ cmd_map = {
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
 
-
 	# Show the total of negative slime in the world.
 	#ewcfg.cmd_negaslime: ewspooky.negaslime,
+
+	# Display the progress towards the current Quarterly Goal.
+	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
@@ -193,6 +198,8 @@ cmd_map = {
 	ewcfg.cmd_exchangerate: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt3: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt4: ewmarket.rate,
 
 	# show player's current shares in a compant
 	ewcfg.cmd_shares: ewmarket.shares,
@@ -225,6 +232,7 @@ cmd_map = {
 	ewcfg.cmd_move: ewmap.move,
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
+	ewcfg.cmd_move_alt3: ewmap.move,
 
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
@@ -242,6 +250,9 @@ cmd_map = {
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
+
+	# Check your current POI capture progress
+	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -261,8 +272,9 @@ cmd_map = {
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
 
-	#throw away an item
+	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
+	ewcfg.cmd_discard_alt1: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -279,6 +291,7 @@ cmd_map = {
 	ewcfg.cmd_harvest: ewcmd.harvest,
 	ewcfg.cmd_salute: ewcmd.salute,
 	ewcfg.cmd_unsalute: ewcmd.unsalute,
+	ewcfg.cmd_hurl: ewcmd.hurl,
 	ewcfg.cmd_news: ewcmd.patchnotes,
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
@@ -289,30 +302,30 @@ cmd_map = {
 
 	# Slimeoids
 
-	ewcfg.cmd_incubateslimeoid: ewcmd.incubateslimeoid,
-	ewcfg.cmd_growbody: ewcmd.growbody,
-	ewcfg.cmd_growhead: ewcmd.growhead,
-	ewcfg.cmd_growlegs: ewcmd.growlegs,
-	ewcfg.cmd_growweapon: ewcmd.growweapon,
-	ewcfg.cmd_growarmor: ewcmd.growarmor,
-	ewcfg.cmd_growspecial: ewcmd.growspecial,
-	ewcfg.cmd_growbrain: ewcmd.growbrain,
-	ewcfg.cmd_nameslimeoid: ewcmd.nameslimeoid,
-	ewcfg.cmd_raisemoxie: ewcmd.raisemoxie,
-	ewcfg.cmd_lowermoxie: ewcmd.lowermoxie,
-	ewcfg.cmd_raisegrit: ewcmd.raisegrit,
-	ewcfg.cmd_lowergrit: ewcmd.lowergrit,
-	ewcfg.cmd_raisechutzpah: ewcmd.raisechutzpah,
-	ewcfg.cmd_lowerchutzpah: ewcmd.lowerchutzpah,
-	ewcfg.cmd_spawnslimeoid: ewcmd.spawnslimeoid,
-	ewcfg.cmd_dissolveslimeoid: ewcmd.dissolveslimeoid,
-	ewcfg.cmd_slimeoid: ewcmd.slimeoid,
-	ewcfg.cmd_instructions: ewcmd.instructions,
-	ewcfg.cmd_playfetch: ewcmd.playfetch,
-	ewcfg.cmd_petslimeoid: ewcmd.petslimeoid,
-	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
-	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+	ewcfg.cmd_incubateslimeoid: ewslimeoid.incubateslimeoid,
+	ewcfg.cmd_growbody: ewslimeoid.growbody,
+	ewcfg.cmd_growhead: ewslimeoid.growhead,
+	ewcfg.cmd_growlegs: ewslimeoid.growlegs,
+	ewcfg.cmd_growweapon: ewslimeoid.growweapon,
+	ewcfg.cmd_growarmor: ewslimeoid.growarmor,
+	ewcfg.cmd_growspecial: ewslimeoid.growspecial,
+	ewcfg.cmd_growbrain: ewslimeoid.growbrain,
+	ewcfg.cmd_nameslimeoid: ewslimeoid.nameslimeoid,
+	ewcfg.cmd_raisemoxie: ewslimeoid.raisemoxie,
+	ewcfg.cmd_lowermoxie: ewslimeoid.lowermoxie,
+	ewcfg.cmd_raisegrit: ewslimeoid.raisegrit,
+	ewcfg.cmd_lowergrit: ewslimeoid.lowergrit,
+	ewcfg.cmd_raisechutzpah: ewslimeoid.raisechutzpah,
+	ewcfg.cmd_lowerchutzpah: ewslimeoid.lowerchutzpah,
+	ewcfg.cmd_spawnslimeoid: ewslimeoid.spawnslimeoid,
+	ewcfg.cmd_dissolveslimeoid: ewslimeoid.dissolveslimeoid,
+	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
+	ewcfg.cmd_instructions: ewslimeoid.instructions,
+	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
+	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
+	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
+	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -385,7 +398,7 @@ async def on_ready():
 			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
 		elif poi.id_poi == ewcfg.poi_id_thesewers:
 			neighbors = ewcfg.poi_list
-			
+
 		if neighbors != None:
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
@@ -394,7 +407,7 @@ async def on_ready():
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
-		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
+		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -562,6 +575,7 @@ async def on_ready():
 							market_response = ewmarket.market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
 
+					market_data = EwMarket(id_server = server.id)
 					market_data.time_lasttick = time_now
 
 					# Advance the time and potentially change weather.
@@ -571,12 +585,16 @@ async def on_ready():
 						market_data.clock = 0
 						market_data.day += 1
 
+					market_data.persist()
+
 					if market_data.clock == 6:
-						response = ' The Slime Stock Exchange is now open for business.'
+						response = ' The SlimeCorp Stock Exchange is now open for business.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
-					elif market_data.clock == 18:
-						response = ' The Slime Stock Exchange has closed for the night.'
+					elif market_data.clock == 20:
+						response = ' The SlimeCorp Stock Exchange has closed for the night.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+
+					market_data = EwMarket(id_server = server.id)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
@@ -775,7 +793,7 @@ async def on_message(message):
 
 		user_data = EwUser(member = message.author)
 		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
-			
+
 			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
