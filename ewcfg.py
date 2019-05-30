@@ -83,7 +83,6 @@ poi_id_subway_blue01 = "subwayblue01"
 poi_id_subway_blue02 = "subwayblue02"
 poi_id_blimp = "blimp"
 
-
 # ferry ports
 poi_id_wt_port = "wreckingtonport"
 poi_id_vc_port = "vagrantscornerport"
@@ -815,6 +814,7 @@ col_quadrants_target2 = 'id_target2'
 
 # Database columns for status effects
 col_id_status = 'id_status'
+col_source = 'source'
 
 # Item type names
 it_medal = "medal"
@@ -1045,6 +1045,8 @@ def wef_katana(ctn = None): #TODO
 	ctn.miss = False
 	ctn.slimes_damage = int(ctn.slimes_damage) * 0.5
 
+	#ctn.slimes_damage = max(dmg, ())
+
 	if(random.randrange(100) + 1) <= 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -1068,23 +1070,22 @@ def wef_bat(ctn = None):
 			ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
 # weapon effect function for "garrote"
-def wef_garrote(ctn = None): #TODO
-	ctn.slimes_damage *= 0.5
+def wef_garrote(ctn = None):
+	dmg = ctn.slimes_damage * 15
+
 	aim = (random.randrange(100) + 1)
-	if aim <= 50:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim == 100:
-		ctn.slimes_damage *= 100
+	if aim == 1:
+		dmg *= 10
 		ctn.crit = True
+
+	ctn.slimes_damage = 0
+	#ctn.user_data.applyStatus(id_status=status_stunned_id)
+	ctn.shootee_data.applyStatus(id_status=status_strangled_id, value=dmg, source=ctn.user_data.id_user)
 
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None): #TODO? i'll look it over later
 	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
 	successful_timing = True if (ctn.time_now - last_attack) == 2 else False
-
-	print(str(ctn.time_now))
-	print(successful_timing)
 
 	if int(ctn.weapon_item.item_props.get("consecutive_hits")) == 2 and successful_timing:
 		ctn.crit = True
@@ -1110,7 +1111,6 @@ def wef_brassknuckles(ctn = None): #TODO? i'll look it over later
 			ctn.slimes_damage = (ctn.slimes_damage * whiff1) + (ctn.slimes_damage * whiff2)
 			if successful_timing:
 				ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props.get("consecutive_hits")) + 1 
-		
 
 # weapon effect function for "molotov"
 def wef_molotov(ctn = None):
@@ -1131,7 +1131,6 @@ def wef_molotov(ctn = None):
 		if aim >= 90:
 			ctn.crit = True
 			ctn.slimes_damage *= 2
-		
 		
 # weapon effect function for "knives"
 def wef_knives(ctn = None): #TODO
@@ -1407,6 +1406,7 @@ weapon_list = [
 		fn_effect = wef_garrote,
 		str_description = "It's a garrote",
 		price = 1000,
+		cooldown = 20,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_melee]
 	),
@@ -6648,8 +6648,10 @@ status_effect_target_self = "status_effect_target_self"
 status_effect_target_other = "status_effect_target_other"
 
 status_burning_id = "burning"
+status_strangled_id = "strangled"
 status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
+status_stunned_id = "stunned"
 
 status_effect_list = [
 	EwStatusEffectDef(
@@ -6678,17 +6680,24 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_ghostbust_id,
 		time_expire = 86400,
-		str_acquire = 'You can now fight ghosts',
-		str_describe = '',
 		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts'
 	),
 	EwStatusEffectDef(
 		id_status = "thirdeye",
 		time_expire = 86400,
-		str_acquire = 'You can now fight ghosts',
-		str_describe = '',
-		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts',
+		str_acquire = 'test aim',
+		str_describe_self = 'test aim',
 		miss_mod_self = -0.3
+	),
+	EwStatusEffectDef(
+		id_status = status_strangled_id,
+		time_expire = 5,
+		str_describe = 'They are being strangled.'
+	),
+	EwStatusEffectDef(
+		id_status = status_stunned_id,
+		time_expire = 20,
+		str_describe = 'They are stunned'
 	)
 ]
 
@@ -6696,6 +6705,11 @@ status_effects_map = {}
 
 for status in status_effect_list:
 	status_effects_map[status.id_status] = status
+
+stackable_status_effects = [
+	status_burning_id
+]
+
 # Dict of all help responses linked to their associated topics
 help_responses = {
 	"mining":"Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets, and the higher your level gets, the more slime you gain with every '!mine' command, resulting in exponential gains. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively.",

@@ -308,7 +308,6 @@ cmd_map = {
 
 
 	# Slimeoids
-
 	ewcfg.cmd_incubateslimeoid: ewcmd.incubateslimeoid,
 	ewcfg.cmd_growbody: ewcmd.growbody,
 	ewcfg.cmd_growhead: ewcmd.growhead,
@@ -486,6 +485,8 @@ async def on_ready():
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
+
+		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		await ewtransport.init_transports(id_server = server.id)
 
 	try:
@@ -568,7 +569,6 @@ async def on_ready():
 		# Adjust the exchange rate of slime for the market.
 		try:
 			for server in client.servers:
-				ewutils.removeExpiredStatuses(id_server = server.id, time = time_now)
 
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
@@ -738,6 +738,21 @@ async def on_message(message):
 		except:
 			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
 
+		#remove strangling status for garrote attacks
+		try:
+			ewutils.execute_sql_query("DELETE from status_effects WHERE {id_status} = %s and {id_user} = %s and {id_server} = %s".format(
+				id_status = ewcfg.col_id_status,
+				id_user = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			), (
+				ewcfg.status_strangled_id,
+				message.author.id,
+				message.server.id
+			))
+		except:
+			ewutils.logMsg('server {}: failed to remove strangled status for {}'.format(message.server.id, message.author.id))
+
+
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
 		"""
 			Wake up if we need to respond to messages. Could be:
@@ -808,6 +823,12 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+			return
+		
+		statuses = user_data.getStatusEffects()
+		# Ignore stunned players
+		if ewcfg.status_stunned_id in statuses:
+			ewutils.logMsg("this nibba tryna speak")
 			return
 
 		# Check the main command map for the requested command.

@@ -195,12 +195,12 @@ def gen_data_text(
 
 		statuses = user_data.getStatusEffects()
 		
-		if statuses is not None:
-			for status in statuses.keys():
-				if statuses.get(status) > time.time() or statuses.get(status) == -1:
-					status_flavor = ewcfg.status_effects_map.get(status)
-					if status_flavor is not None:
-						response += " " + status_flavor.str_describe
+		for status in statuses:
+			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
+			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+				status_flavor = ewcfg.status_effects_map.get(status)
+				if status_flavor is not None:
+					response += " " + status_flavor.str_describe
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
@@ -275,12 +275,12 @@ async def data(cmd):
 
 		statuses = user_data.getStatusEffects()
 		
-		if statuses is not None:
-			for status in statuses.keys():
-				if statuses.get(status) > time.time() or statuses.get(status) == -1:
-					status_flavor = ewcfg.status_effects_map.get(status)
-					if status_flavor is not None:
-						response += " " + status_flavor.str_describe_self
+		for status in statuses:
+			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
+			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+				status_flavor = ewcfg.status_effects_map.get(status)
+				if status_flavor is not None:
+					response += " " + status_flavor.str_describe_self	
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response += " You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
@@ -2491,8 +2491,7 @@ async def acquireStatus(cmd):
 		status = ewcfg.status_effects_map.get(value)
 	
 	if status != None:
-		
-		response = ewstatuseffects.applyStatus(user_data=user_data, id_status=status.id_status)
+		response = user_data.applyStatus(id_status=status.id_status)
 
 	else:
 		response = "Not a valid status"
