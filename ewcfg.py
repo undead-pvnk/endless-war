@@ -467,6 +467,7 @@ slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
+slimes_permill = 40000
 
 # hunger
 min_stamina = 100
@@ -1000,7 +1001,7 @@ item_list = [
 		subcontext = "yellow",
 		str_name = "Yellow Dye",
 		str_desc = "",
-		ingredients = "phosphorpoppies",
+		ingredients = "pulpgourds",
 	),
 	EwDefaultItem(
 		id_item = "orangedye",
@@ -1104,7 +1105,7 @@ item_list = [
 		subcontext = "lime",
 		str_name = "Lime Dye",
 		str_desc = "",
-		ingredients = "pulpgourds",
+		ingredients = "phosphorpoppies",
 	),
 	EwDefaultItem(
 		id_item = "cyandye",
@@ -6444,15 +6445,15 @@ hue_list = [ #todo better desc
 			"whitedye",
 			"poketuber"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a ghostly white, it’s body begins to slightly illuminate your surroundings.",
 		str_name = "White",
-		str_desc = "It's brilliant white sheen blinds you."
+		str_desc = "It’s bright white body hue contrasts it’s pitch black features."
 	),
 	EwHue(
 		id_hue = "yellow",
 		alias = [
 			"yellowdye",
-			"phosphorpoppies"
+			"pulpgourds"
 		],
 		str_saturate = "It turns a bright shade of yellow, blinding you shortly.",
 		str_name = "Yellow",
@@ -6584,7 +6585,7 @@ hue_list = [ #todo better desc
 		id_hue = "lime",
 		alias = [
 			"limedye",
-			"pulpgourds"
+			"phosphorpoppies"
 		],
 		str_saturate = "It looks so purdy now!",
 		str_name = "Lime",

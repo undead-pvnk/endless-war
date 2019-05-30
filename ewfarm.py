@@ -6,6 +6,7 @@ import ewitem
 import ewutils
 
 from ew import EwUser
+from ewmarket import EwMarket
 from ewitem import EwItem
 
 class EwFarm:
@@ -209,6 +210,7 @@ async def sow(cmd):
 
 async def mill(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
@@ -275,9 +277,13 @@ async def mill(cmd):
 					}
 				),
 
-			ewitem.item_delete(id_item = item_sought.get('id_item'))
+			response = "You walk up to the SlimeCorp mill and place in your veggie. You milled a {}!".format(item.str_name)
 
-			response = "You milled a {}!".format(item.str_name)
+			market_data.donated_slimes += ewcfg.slimes_permill
+			market_data.persist()
+
+			ewitem.item_delete(id_item = item_sought.get('id_item'))
+			user_data.change_slimes(n = ewcfg.slimes_permill, source = ewcfg.source_spending)
 			user_data.persist()
 		else:
 			response = "You can only mill vegetables. Use their proper names."
