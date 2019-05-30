@@ -2806,6 +2806,7 @@ async def slimeoidbattle(cmd):
 								inactive=s2name,
 							)
 							challenger_resistance = ""
+							challenger_analogous = ""
 						elif (s1hpmax/s1hp) > 3:
 							response += s1weapon.str_attack_weak.format(
 								active=s1name,
@@ -2827,6 +2828,12 @@ async def slimeoidbattle(cmd):
 							response = ""
 							if challenger_resistance != "":
 								response += challenger_resistance
+
+						if challenger_analogous != "" or s2hp > 0:
+							response = ""
+							if challenger_analogous != "":
+								response += challenger_analogous
+
 							if s2hp > 0:
 								if hp/damage > 10:
 									response += " {} barely notices the damage.".format(challenger_slimeoid.name)
@@ -2935,7 +2942,7 @@ async def slimeoidbattle(cmd):
 								object=thrownobject
 							)
 							challengee_weakness = ""
-							challengee_splitcomplementary
+							challengee_splitcomplementary = ""
 						elif (s2hpmax/s2hp) > 3:
 							response += s2special.str_special_attack_weak.format(
 								active=s2name,
@@ -3037,6 +3044,7 @@ async def slimeoidbattle(cmd):
 								inactive=s1name,
 							)
 							challengee_resistance = ""
+							challengee_analogous = ""
 						elif (s2hpmax/s2hp) > 3:
 							response += s2weapon.str_attack_weak.format(
 								active=s2name,
@@ -3058,6 +3066,11 @@ async def slimeoidbattle(cmd):
 							response = ""
 							if challengee_resistance != "":
 								response = challengee_resistance
+
+						if challengee_analogous != "" or s2hp > 0:
+							response = ""
+							if challengee_analogous != "":
+								response = challengee_analogous
 
 							if s1hp > 0:
 								if hp/damage > 10:
