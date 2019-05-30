@@ -22,7 +22,6 @@ class EwUser:
 	bounty = 0
 	weapon = ""
 	weaponskill = 0
-	weaponname = ""
 	trauma = ""
 	ghostbust = False
 	inebriation = 0
@@ -169,12 +168,11 @@ class EwUser:
 			if coinsource == ewcfg.coinsource_invest:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_invested, n = change)
 
-	def add_weaponskill(self, n = 0):
+	def add_weaponskill(self, n = 0, weapon_type = None):
 		# Save the current weapon's skill
 		if self.weapon != None and self.weapon != "":
 			if self.weaponskill == None:
 				self.weaponskill = 0
-				self.weaponname = ""
 
 			self.weaponskill += int(n)
 			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_wepskill, value = self.weaponskill)
@@ -182,9 +180,8 @@ class EwUser:
 			ewutils.weaponskills_set(
 				id_server = self.id_server,
 				id_user = self.id_user,
-				weapon = self.weapon,
-				weaponskill = self.weaponskill,
-				weaponname = self.weaponname
+				weapon = weapon_type,
+				weaponskill = self.weaponskill
 			)
 
 	def eat(self, food_item = None):
@@ -216,6 +213,22 @@ class EwUser:
 
 		return response
 
+	def equip(self, weapon_item = None):
+		if self.life_state == ewcfg.life_state_corpse:
+			response = "Ghosts can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile:
+			response = "Juvies can't equip weapons."
+		elif self.weaponmarried == True:
+			current_weapon = ewitem.EwItem(id_item = self.weapon)
+			response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(current_weapon.item_props.get("weapon_name") if len(current_weapon.item_props.get("weapon_name")) > 0 else "partner")
+			#Have to load the item again or the wrong item props are used
+			weapon_item = ewitem.EwItem(id_item = weapon_item.id_item)
+		else:
+			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+			self.weapon = weapon_item.id_item
+
+		return response
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 		if(id_user == None) and (id_server == None):
@@ -234,7 +247,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -249,7 +262,6 @@ class EwUser:
 					ewcfg.col_time_lastspar,
 					ewcfg.col_time_lasthaunt,
 					ewcfg.col_time_lastinvest,
-					ewcfg.col_weaponname,
 					ewcfg.col_ghostbust,
 					ewcfg.col_inebriation,
 					ewcfg.col_faction,
@@ -286,21 +298,20 @@ class EwUser:
 					self.time_lastspar = result[11]
 					self.time_lasthaunt = result[12]
 					self.time_lastinvest = result[13]
-					self.weaponname = result[14]
-					self.ghostbust = (result[15] == 1)
-					self.inebriation = result[16]
-					self.faction = result[17]
-					self.poi = result[18]
-					self.life_state = result[19]
-					self.busted = (result[20] == 1)
-					self.rr_challenger = result[21]
-					self.time_last_action = result[22]
-					self.weaponmarried = (result[23] == 1)
-					self.time_lastscavenge = result[24]
-					self.bleed_storage = result[25]
-					self.time_lastenter = result[26]
-					self.time_lastoffline = result[27]
-					self.time_joined = result[28]
+					self.ghostbust = (result[14] == 1)
+					self.inebriation = result[15]
+					self.faction = result[16]
+					self.poi = result[17]
+					self.life_state = result[18]
+					self.busted = (result[19] == 1)
+					self.rr_challenger = result[20]
+					self.time_last_action = result[21]
+					self.weaponmarried = (result[22] == 1)
+					self.time_lastscavenge = result[23]
+					self.bleed_storage = result[24]
+					self.time_lastenter = result[25]
+					self.time_lastoffline = result[26]
+					self.time_joined = result[27]
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -321,20 +332,19 @@ class EwUser:
 						id_server = id_server,
 						id_user = id_user
 					)
-					skill_data = skills.get(self.weapon)
+
+					weapon_item = ewitem.EwItem(id_item = self.weapon)
+
+					skill_data = skills.get(weapon_item.item_props.get("weapon_type"))
 					if skill_data != None:
 						self.weaponskill = skill_data['skill']
-						self.weaponname = skill_data['name']
 					else:
 						self.weaponskill = 0
-						self.weaponname = ""
 
 					if self.weaponskill == None:
 						self.weaponskill = 0
-						self.weaponname = ""
 				else:
 					self.weaponskill = 0
-					self.weaponname = ""
 
 				self.limit_fix();
 			finally:
@@ -355,7 +365,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -373,7 +383,6 @@ class EwUser:
 				ewcfg.col_time_lastspar,
 				ewcfg.col_time_lasthaunt,
 				ewcfg.col_time_lastinvest,
-				ewcfg.col_weaponname,
 				ewcfg.col_ghostbust,
 				ewcfg.col_inebriation,
 				ewcfg.col_faction,
@@ -406,7 +415,6 @@ class EwUser:
 				self.time_lastspar,
 				self.time_lasthaunt,
 				self.time_lastinvest,
-				self.weaponname,
 				(1 if self.ghostbust else 0),
 				self.inebriation,
 				self.faction,

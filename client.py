@@ -40,6 +40,7 @@ import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
 import ewquadrants
+import ewtransport
 
 from ewitem import EwItem
 from ew import EwUser
@@ -66,6 +67,10 @@ cmd_map = {
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
+
+	# Get a weapon into your inventory
+	ewcfg.cmd_arm: ewwep.arm,
+	ewcfg.cmd_arsenalize: ewwep.arm,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
@@ -225,6 +230,13 @@ cmd_map = {
 	ewcfg.cmd_halt: ewmap.halt,
 	ewcfg.cmd_halt_alt1: ewmap.halt,
 
+	# public transportation
+	ewcfg.cmd_embark: ewtransport.embark,
+	ewcfg.cmd_embark_alt1: ewtransport.embark,
+	ewcfg.cmd_disembark: ewtransport.disembark,
+	ewcfg.cmd_disembark_alt1: ewtransport.disembark,
+	ewcfg.cmd_checkschedule: ewtransport.check_schedule,
+
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 
@@ -248,6 +260,9 @@ cmd_map = {
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
+
+	#throw away an item
+	ewcfg.cmd_discard: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -375,7 +390,7 @@ async def on_ready():
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
-		ewcfg.poi_neighbors[poi.id_poi] = neighbor_ids
+		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 	try:
@@ -450,6 +465,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+		await ewtransport.init_transports(id_server = server.id)
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
