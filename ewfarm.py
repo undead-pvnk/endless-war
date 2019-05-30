@@ -220,6 +220,9 @@ async def mill(cmd):
 	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 		response = "You can only !mill in farms."
 
+	elif user_data.slimes < ewcfg.slimes_permill:
+		response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
+
 	elif item_sought:
 		items = []
 

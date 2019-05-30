@@ -467,7 +467,7 @@ slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
-slimes_permill = 40000
+slimes_permill = 75000
 
 # hunger
 min_stamina = 100
@@ -571,7 +571,7 @@ weapon_fee = 100
 
 # farming
 crops_time_to_grow = 1  # in minutes; 180 minutes are 3 hours
-reap_gain = 160000  # this takes about 1 hour to mine, so mining is more efficient
+reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
 cd_kill = 5
