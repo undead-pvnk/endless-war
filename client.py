@@ -736,6 +736,12 @@ async def on_message(message):
 				user is new/has no roles (len(roles) < 2)
 		"""
 
+		#Ignore users with weird characters in their name
+		try:
+			message.author.display_name[:3].encode('utf-8').decode('ascii')
+		except UnicodeError:
+			return
+
 		# tokenize the message. the command should be the first word.
 		try:
 			tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
