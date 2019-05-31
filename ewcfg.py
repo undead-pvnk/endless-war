@@ -390,6 +390,7 @@ cmd_map = cmd_prefix + 'map'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
 cmd_pardon = cmd_prefix + 'pardon'
+cmd_banish = cmd_prefix + 'banish'
 cmd_writhe = cmd_prefix + 'writhe'
 cmd_use = cmd_prefix + 'use'
 cmd_news = cmd_prefix + 'news'
@@ -1091,7 +1092,7 @@ item_list = [
 		subcontext = "cobalt",
 		str_name = "Cobalt Dye",
 		str_desc = "",
-		ingredients = "brightshades",
+		ingredients = "brightshade",
 	),
 	EwDefaultItem(
 		id_item = "blackdye",
@@ -5790,7 +5791,7 @@ cosmetic_items_list = [
 		id_cosmetic = "cobalthat",
 		str_name = "Cobalt Hat",
 		str_desc = "This is a hat.",
-		ingredients = "brightshades",
+		ingredients = "brightshade",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "blackhat",

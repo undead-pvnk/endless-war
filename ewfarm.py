@@ -216,9 +216,9 @@ async def mill(cmd):
 
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
-		response = "Only Juveniles of pure heart and with nothing better to do can spend several hours hand milling radioactive vegetables into useful materials."
+		response = "Only Juveniles of pure heart and with nothing better to do can mill their vegetables."
 	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
-		response = "You can only !mill in farms."
+		response = "Alas, there doesn’t seem to be an official SlimeCorp milling station anywhere around here. Probably because you’re in the middle of the fucking city. Try looking where you reaped your vegetable in the first place, dumbass."
 
 	elif user_data.slimes < ewcfg.slimes_permill:
 		response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
@@ -280,7 +280,7 @@ async def mill(cmd):
 					}
 				),
 
-			response = "You walk up to the SlimeCorp mill and place in your veggie. You milled a {}!".format(item.str_name)
+			response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You prick your finger, dripping {} slimes into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(ewcfg.slimes_permill, item.str_name)
 
 			market_data.donated_slimes += ewcfg.slimes_permill
 			market_data.persist()
@@ -289,7 +289,7 @@ async def mill(cmd):
 			user_data.change_slimes(n = ewcfg.slimes_permill, source = ewcfg.source_spending)
 			user_data.persist()
 		else:
-			response = "You can only mill vegetables. Use their proper names."
+			response = "You can only mill fresh vegetables! SlimeCorp obviously wants you to support local farmers."
 
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found

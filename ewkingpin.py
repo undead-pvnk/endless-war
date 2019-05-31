@@ -43,7 +43,7 @@ async def pardon(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def ban(cmd):
+async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin:
@@ -66,7 +66,7 @@ async def ban(cmd):
 				member_data.life_state = ewcfg.life_state_juvenile
 
 			member_data.persist()
-			response = "{} has been banned from enlisting in either gangs.".format(member.display_name, faction_old)
+			response = "{} has been banned from enlisting in gangs, and are hereby forced to live the rest of their lives as a lowily juvenile.".format(member.display_name, faction_old)
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
 

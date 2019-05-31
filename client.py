@@ -221,6 +221,7 @@ cmd_map = {
 
 	# Release a player from their faction.
 	ewcfg.cmd_pardon: ewkingpin.pardon,
+	ewcfg.cmd_banish: ewkingpin.banish,
 
 
 	# Navigate the world map.
