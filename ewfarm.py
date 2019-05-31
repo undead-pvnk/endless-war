@@ -282,11 +282,11 @@ async def mill(cmd):
 
 			response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You prick your finger, dripping {} slimes into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(ewcfg.slimes_permill, item.str_name)
 
-			market_data.donated_slimes -= ewcfg.slimes_permill
+			market_data.donated_slimes += ewcfg.slimes_permill
 			market_data.persist()
 
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
-			user_data.change_slimes(n = ewcfg.slimes_permill, source = ewcfg.source_spending)
+			user_data.change_slimes(n = -ewcfg.slimes_permill, source = ewcfg.source_spending)
 			user_data.persist()
 		else:
 			response = "You can only mill fresh vegetables! SlimeCorp obviously wants you to support local farmers."
