@@ -2,6 +2,7 @@
 	Commands and utilities related to dead players.
 """
 import time
+import random
 
 import ewcmd
 import ewcfg
@@ -189,7 +190,7 @@ async def summon_negaslimeoid(cmd):
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
 	if user_data.life_state != user_data.life_state_corpse:
-		response = "Only the dead have the occult knowledge required to summon a Negaslimeoid."
+		response = "Only the dead have the occult knowledge required to summon a cosmic horror."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi not in ewcfg.capturable_districts:
@@ -227,10 +228,18 @@ async def summon_negaslimeoid(cmd):
 			slimeoid.body = random.choice(ewcfg.body_names)
 			slimeoid.head = random.choice(ewcfg.head_names)
 			slimeoid.legs = random.choice(ewcfg.mobility_names)
-			armor = random.choice(ewcfg.defense_names)
-			weapon = random.choice(ewcfg.offense_names)
-			special = random.choice(ewcfg.special_names)
-			ai = random.choice(ewcfg.brain_names)
+			slimeoid.armor = random.choice(ewcfg.defense_names)
+			slimeoid.weapon = random.choice(ewcfg.offense_names)
+			slimeoid.special = random.choice(ewcfg.special_names)
+			slimeoid.ai = random.choice(ewcfg.brain_names)
+			for i in range(level):
+				rand = random.randrange(3)
+				if rand == 0:
+					slimeoid.attack += 1
+				elif rand == 1:
+					slimeoid.defense += 1
+				else:
+					slimeoid.intel += 1
 
 
 
@@ -241,4 +250,20 @@ async def summon_negaslimeoid(cmd):
 	else:
 		response = "Specify how much negative slime you will sacrifice."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-        
+
+def generate_negaslimeoid_name():
+	name_length = random.randrange(5,10)
+	consonants = "bccfftthhllwgpqx"
+	vowels = "aeuuooyy"
+	num_vowels = random.randrange(1,4)
+	name_list = []
+	for i in range(name_length):
+		if i < num_vowels:
+			name_list.append(random.choice(vowels))
+		else:
+			name_list.append(random.choice(consonants))
+	random.shuffle(name_list)
+	apostrophe = random.randrange(1,name_length)
+	name = ewutils.flattenTokenListToString(name_list[:apostrophe]) + "'" + ewutils.flattenTokenListToString(name_list[apostrophe:])
+	name = name.capitalize()
+	return name

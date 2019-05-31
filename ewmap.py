@@ -484,7 +484,7 @@ def inaccessible(user_data = None, poi = None):
 		user_data.life_state not in poi.life_states
 	):
 		return True
-	elif user_data.life_state = ewcfg.life_state_corpse:
+	elif user_data.life_state == ewcfg.life_state_corpse:
 		ghost_range = int(user_data.slimelevel / 10)
 		pois_in_range = set(ewcfg.poi_id_thesewers, user_data.poi_death)
 		for i in range(ghost_range):

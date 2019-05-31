@@ -40,9 +40,9 @@ slimeoid_state_active = 2
 slimeoid_state_stored = 3
 
 # slimeoid types
-sltype_lab = 'lab'
-sltype_nega = 'nega'
-sltype_wild = 'wild'
+sltype_lab = 'Lab'
+sltype_nega = 'Nega'
+sltype_wild = 'Wild'
 
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
