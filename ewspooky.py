@@ -200,32 +200,45 @@ async def summon_negaslimeoid(cmd):
 
 	value = None
 	if cmd.tokens_count > 1:
-		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
 	if value != None:
-		slimeoid = EwSlimeoid(sltype = ewcfg.sltype_nega)
+		slimeoid = EwSlimeoid(member = cmd.message.author, sltype = ewcfg.sltype_nega)
+		if slimeoid.life_state != ewcfg.slimeoid_state_none:
+			response = "You already have an active negaslimeoid."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		market_data = EwMarket(id_server = cmd.message.author.server.id)
-		if value == -1:
-			value = user_data.slimes * 10
-		if value / 10 < user_data.slimes:
-			response = "You do not have that much negative slime to use in the ritual."
-		elif value < market_data.negaslime:
+		if value < 0:
+			value = -user_data.slimes * 10
+		if -value / 10 < user_data.slimes:
+			response = "You do not have enough negative slime to use in the ritual."
+		elif -value < market_data.negaslime:
 			response = "The dead have not gathered enough negative slime."
 
 		else:
-			level = len(str(value)) -1
-			user_data.change_slimes(n = int(-value/10))
-			market_data.negaslime -= value
+			level = len(str(value))
+			user_data.change_slimes(n = int(value/10))
+			market_data.negaslime += value
 			slimeoid.life_state = ewcfg.slimeoid_state_active
 			slimeoid.level = level
 			slimeoid.id_user = user_data.id_user
 			slimeoid.id_server = user_data.id_server
 			slimeoid.poi = user_data.poi
+			slimeoid.name = generate_negaslimeoid_name()
+			slimeoid.body = random.choice(ewcfg.body_names)
+			slimeoid.head = random.choice(ewcfg.head_names)
+			slimeoid.legs = random.choice(ewcfg.mobility_names)
+			armor = random.choice(ewcfg.defense_names)
+			weapon = random.choice(ewcfg.offense_names)
+			special = random.choice(ewcfg.special_names)
+			ai = random.choice(ewcfg.brain_names)
+
+
 
 			user_data.persist()
 			slimeoid.persist()
 
 
 	else:
-		response = "You must contribute some of your own slime to create a Slimeoid. Specify how much slime you will sacrifice."
+		response = "Specify how much negative slime you will sacrifice."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
         

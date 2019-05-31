@@ -469,18 +469,22 @@ def pushdownServerInebriation(id_server = None):
 			databaseClose(conn_info)
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
-def getIntToken(tokens = [], allow_all = False):
+def getIntToken(tokens = [], allow_all = False, negate = False):
 	value = None
 
 	for token in tokens[1:]:
 		try:
 			value = int(token.replace(",", ""))
-			if value < 0:
+			if value < 0 and not negate:
 				value = None
+			elif value > 0 and negate:
+				value = None
+			elif negate:
+				value = -value
 			break
 		except:
 			if allow_all and ("{}".format(token)).lower() == 'all':
-				value = -1
+				return -1
 			else:
 				value = None
 
