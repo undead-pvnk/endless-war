@@ -133,7 +133,7 @@ async def haunt(cmd):
 			if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
 				haunted_slimes = -user_data.slimes
 
-			haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
+			haunted_data.change_slimes(n = int(-haunted_slimes / 10), source = ewcfg.source_haunted)
 			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
 			user_data.time_lasthaunt = time_now
 

@@ -473,7 +473,7 @@ def map_draw(path = None, coord = None):
 
 def inaccessible(user_data = None, poi = None):
 	if poi == None or user_data == None:
-		return True;
+		return True
 
 	if(
 		len(poi.factions) > 0 and
@@ -484,6 +484,17 @@ def inaccessible(user_data = None, poi = None):
 		user_data.life_state not in poi.life_states
 	):
 		return True
+	elif user_data.life_state = ewcfg.life_state_corpse:
+		ghost_range = int(user_data.slimelevel / 10)
+		pois_in_range = set(ewcfg.poi_id_thesewers, user_data.poi_death)
+		for i in range(ghost_range):
+			new_pois_in_range = set()
+			for in_range in pois_in_range:
+				new_pois_in_range = new_pois_in_range.union(ewcfg.neighbors.get(in_range))
+			pois_in_range = pois_in_range.union(new_pois_in_range)
+
+		if poi.id_poi not in pois_in_range:
+			return True
 	else:
 		return False
 
@@ -522,7 +533,7 @@ async def move(cmd):
 			return
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
-		if user_data.life_state == ewcfg.life_state_corpse:
+		if user_data.life_state == ewcfg.life_state_corpse and not inaccessible(user_data = user_data, poi = poi):
 			path = EwPath(cost = 60)
 		else:
 			path = None
