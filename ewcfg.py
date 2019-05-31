@@ -205,6 +205,7 @@ faction_killers = "Killers"
 gangbase_killers = "Cop Killtown"
 faction_rowdys = "Rowdys"
 gangbase_rowdys = "Rowdy Roughhouse"
+factoin_banned = "Banned"
 factions = [faction_killers, faction_rowdys]
 
 # Channel names
@@ -493,6 +494,7 @@ togo_price_increase = 2
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
+milled_food_expir = 12 * 3600 * 14 # 2 weeks
 
 # property classes
 property_class_s = "s"
@@ -1575,7 +1577,7 @@ vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
 vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and Red Mobster
 vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
 vendor_farm = "Farm" #contains all the vegetables you can !reap
-
+vendor_none = "None" #Currently used for millable items so that they can't be bought from any vendor
 # stock ids
 stock_kfc = "kfc"
 stock_pizzahut = "pizzahut"
@@ -2844,6 +2846,150 @@ food_list = [
 		str_eat = "a",
 		str_desc = "An American classic.",
 		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "pinkrowddishesfood",
+		recover_hunger = 800,
+		str_name = 'Pink Rowddishes Food',
+		ingredients = "pinkrowddishes",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "sludgeberriesfood",
+		recover_hunger = 800,
+		str_name = 'Sludgeberries Food',
+		ingredients = "sludgeberries",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "pulpgourdsfood",
+		recover_hunger = 800,
+		str_name = 'Pulp Gourds Food',
+		ingredients = "pulpgourds",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "joybeansfood",
+		recover_hunger = 800,
+		str_name = 'Joybeans Food',
+		ingredients = "joybeans",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "brightshadefood",
+		recover_hunger = 800,
+		str_name = 'Brightshade Food',
+		ingredients = "brightshade",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "direapplesfood",
+		recover_hunger = 800,
+		str_name = 'Dire Apples Food',
+		ingredients = "direapple",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "purplekilliflowerfood",
+		recover_hunger = 800,
+		str_name = 'Purple Killiflower Food',
+		ingredients = "purplekilliflower",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "razornutsfood",
+		recover_hunger = 800,
+		str_name = 'Razornuts Food',
+		ingredients = "razornuts",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "poketubersfood",
+		recover_hunger = 800,
+		str_name = 'Poke-tubers Food',
+		ingredients = "poketubers",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "suganmanutsfood",
+		recover_hunger = 800,
+		str_name = 'Suganma Nuts Food',
+		ingredients = "suganmanuts",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "dankwheatfood",
+		recover_hunger = 800,
+		str_name = 'Dankwheat Food',
+		ingredients = "dankwheat",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "blacklimesfood",
+		recover_hunger = 800,
+		str_name = 'Black Limes Food',
+		ingredients = "blacklimes",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "phosphorpoppiesfood",
+		recover_hunger = 800,
+		str_name = 'Phosphorpoppies Food',
+		ingredients = "phosphorpoppies",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "sourpotatoesfood",
+		recover_hunger = 800,
+		str_name = 'Sour Potatoes Food',
+		ingredients = "sourpotatoes",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "bloodcabbagesfood",
+		recover_hunger = 800,
+		str_name = 'Blood Cabbages Food',
+		ingredients = "bloodcabbage",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "pawpawfood",
+		recover_hunger = 800,
+		str_name = 'Pawpaw Food',
+		ingredients = "pinkrowddishes",
+		str_eat = "You eat the food.",
+		str_desc = "This is an item description.",
+		time_expir = milled_food_expir,
 	),
 ]
 
@@ -5566,7 +5712,104 @@ cosmetic_items_list = [
 		str_name = "heart boxers",
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
-	)
+	),
+	EwCosmeticItem(
+		id_cosmetic = "whitehat",
+		str_name = "White Hat",
+		str_desc = "This is a hat.",
+		ingredients = "poketuber",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "yellowhat",
+
+		str_name = "Yellow Hat",
+		str_desc = "This is a hat.",
+		ingredients = "pulpgourds",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "orangehat",
+		str_name = "Orange Hat",
+		str_desc = "This is a hat.",
+		ingredients = "sourpotatoes",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "redhat",
+		str_name = "Red Hat",
+		str_desc = "This is a hat.",
+		ingredients = "bloodcabbages",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "magentahat",
+		str_name = "Magenta Hat",
+		str_desc = "This is a hat.",
+		ingredients = "joybeans",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "purplehat",
+		str_name = "Purple Hat",
+		str_desc = "This is a hat.",
+		ingredients = "purplekilliflower",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "bluehat",
+		str_name = "Blue Hat",
+		str_desc = "This is a hat.",
+		ingredients = "razornuts",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "greenhat",
+		str_name = "Green Hat",
+		str_desc = "This is a hat.",
+		ingredients = "pawpaw",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "tealhat",
+		str_name = "Teal Hat",
+		str_desc = "This is a hat.",
+		ingredients = "sludgeberries",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "rainbowhat",
+		str_name = "***Rainbow Hat!!!!***",
+		str_desc = "This is a hat.",
+		ingredients = "suganmanuts",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pinkhat",
+		str_name = "Pink Hat",
+		str_desc = "This is a hat.",
+		ingredients = "pinkrowddishes",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "greyhat",
+		str_name = "Grey Hat",
+		str_desc = "This is a hat.",
+		ingredients = "dankwheat",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "cobalthat",
+		str_name = "Cobalt Hat",
+		str_desc = "This is a hat.",
+		ingredients = "brightshades",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "blackhat",
+		str_name = "Black Hat",
+		str_desc = "This is a hat.",
+		ingredients = "blacklimes",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "limehat",
+		str_name = "Lime Hat",
+		str_desc = "This is a hat.",
+		ingredients = "phosphorpoppies",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "cyanhat",
+		str_name = "Cyan Hat",
+		str_desc = "This is a hat.",
+		ingredients = "direapples",
+	),
 ]
 
 # Slimeoid attributes.
