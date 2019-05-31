@@ -227,40 +227,11 @@ async def attack(cmd):
 
 		elif shootee_data.life_state == ewcfg.life_state_corpse and user_data.ghostbust == True:
 			# Attack a ghostly target
-			was_busted = False
+			was_busted = True
 
 			#hunger drain
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 			
-			# Weaponized flavor text.
-			randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
-
-			# Weapon-specific adjustments
-			if weapon != None and weapon.fn_effect != None:
-				# Build effect container
-				ctn = EwEffectContainer(
-					miss = miss,
-					crit = crit,
-					slimes_damage = slimes_damage,
-					slimes_spent = slimes_spent,
-					user_data = user_data,
-					shootee_data = shootee_data
-				)
-
-				# Make adjustments
-				weapon.fn_effect(ctn)
-
-				# Apply effects for non-reference values
-				miss = ctn.miss
-				crit = ctn.crit
-				slimes_damage = ctn.slimes_damage
-				slimes_spent = ctn.slimes_spent
-				strikes = ctn.strikes
-				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
-
-				if miss:
-					slimes_damage = 0
-
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
 
@@ -275,12 +246,7 @@ async def attack(cmd):
 			if user_data.id_killer == shootee_data.id_user:
 				user_data.id_killer = ""
 
-			if slimes_damage >= -shootee_data.slimes:
-				was_busted = True
-
 			if was_busted:
-				# Move around slime as a result of the shot.
-				user_data.change_slimes(n = ewutils.slime_bylevel(shootee_data.slimelevel), source = ewcfg.source_busting)
 				coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)
 				user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
@@ -289,7 +255,6 @@ async def attack(cmd):
 				# Steal items
 				ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
 
-				# Player was busted.
 				shootee_data.die(cause = ewcfg.cause_busted)
 
 				response = "{name_target}\'s ghost has been **BUSTED**!!".format(name_target = member.display_name)
@@ -303,41 +268,6 @@ async def attack(cmd):
 				#adjust busts
 				ewstats.increment_stat(user = user_data, metric = ewcfg.stat_ghostbusts)
 
-			else:
-				# A non-lethal blow!
-				shootee_data.change_slimes(n = slimes_damage, source = ewcfg.source_busting)
-				damage = str(slimes_damage)
-
-				if weapon != None:
-					if miss:
-						response = "{}".format(weapon.str_miss.format(
-							name_player = cmd.message.author.display_name,
-							name_target = member.display_name + "\'s ghost"
-						))
-					else:
-						response = weapon.str_damage.format(
-							name_player = cmd.message.author.display_name,
-							name_target = member.display_name + "\'s ghost",
-							hitzone = randombodypart,
-							strikes = strikes
-						)
-						if crit:
-							response += " {}".format(weapon.str_crit.format(
-								name_player = cmd.message.author.display_name,
-								name_target = member.display_name + "\'s ghost"
-							))
-						response += " {target_name} loses {damage} antislime!".format(
-							target_name = (member.display_name + "\'s ghost"),
-							damage = damage
-						)
-				else:
-					if miss:
-						response = "{}\'s ghost is unharmed.".format(member.display_name)
-					else:
-						response = "{target_name} is hit!! {target_name} loses {damage} antislime!".format(
-							target_name = (member.display_name + "\'s ghost"),
-							damage = damage
-						)
 
 			# Persist every users' data.
 			user_data.persist()

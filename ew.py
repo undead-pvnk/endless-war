@@ -114,8 +114,10 @@ class EwUser:
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
 			self.busted = True
+			self.slimes = int(self.slimes * 0.9)
 		else:
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
+			self.slimes = 0
 			self.life_state = ewcfg.life_state_corpse
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
@@ -123,7 +125,6 @@ class EwUser:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 		ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
-		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
 		self.bounty = 0
 		self.totaldamage = 0
