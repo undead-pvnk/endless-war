@@ -6682,16 +6682,16 @@ for brain in brain_list:
 		brain_map[alias] = brain
 
 # All color attributes in the game.
-hue_list = [ #todo better desc
+hue_list = [
 	EwHue(
 		id_hue = "white",
 		alias = [
 			"whitedye",
 			"poketuber"
 		],
-		str_saturate = "It turns a ghostly white, it’s body begins to slightly illuminate your surroundings.",
+		str_saturate = "It begins to glow a ghostly white!",
 		str_name = "White",
-		str_desc = "It’s bright white body hue contrasts it’s pitch black features."
+		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
 	),
 	EwHue(
 		id_hue = "yellow",
@@ -6699,9 +6699,9 @@ hue_list = [ #todo better desc
 			"yellowdye",
 			"pulpgourds"
 		],
-		str_saturate = "It turns a bright shade of yellow, blinding you shortly.",
+		str_saturate = "It begins to shine a bright yellow!",
 		str_name = "Yellow",
-		str_desc = "It's brilliant yellow sheen blinds you."
+		str_desc = "Its bright yellow hue is delightfully radiant."
 	),
 	EwHue(
 		id_hue = "orange",
@@ -6709,9 +6709,9 @@ hue_list = [ #todo better desc
 			"orangedye",
 			"sourpotatoes"
 		],
-		str_saturate = "It turns a bright shade of orange, blinding you shortly.",
+		str_saturate = "It turns a warm orange!",
 		str_name= "Orange",
-		str_desc = "It's brilliant orange sheen blinds you."
+		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book."
 	),
 	EwHue(
 		id_hue = "red",
@@ -6719,9 +6719,9 @@ hue_list = [ #todo better desc
 			"blood"
 			"cabbage"
 		],
-		str_saturate = "You saturate your Slimeoid with the Red Dye!",
+		str_saturate = "It darkens a deep shade of crimson red!",
 		str_name = "Red",
-		str_desc = "It's brilliant red sheen blinds you"
+		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin."
 	),
 	EwHue(
 		id_hue = "magenta",
@@ -6729,9 +6729,9 @@ hue_list = [ #todo better desc
 			"magentadye",
 			"joybeans"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a vivid magenta!",
 		str_name = "Magenta",
-		str_desc = "It's brilliant Magenta sheen blinds you."
+		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it."
 	),
 	EwHue(
 		id_hue = "purple",
@@ -6740,9 +6740,9 @@ hue_list = [ #todo better desc
 			"purplekilliflower",
 			"killer"
 		],
-		str_saturate = "It looks so KILLER now!",
+		str_saturate = "It turns a dark purple!",
 		str_name = "Purple",
-		str_desc = "It's brilliant purple sheen blinds you."
+		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible."
 	),
 	EwHue(
 		id_hue = "blue",
@@ -6750,9 +6750,9 @@ hue_list = [ #todo better desc
 			"bluedye",
 			"razornuts"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a deep blue!",
 		str_name = "Blue",
-		str_desc = "It's brilliant blue sheen blinds you."
+		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea."
 	),
 	EwHue(
 		id_hue = "green",
@@ -6761,9 +6761,9 @@ hue_list = [ #todo better desc
 			"pawpaw",
 			"juvie"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a shade of green that barely distinguishes itself from a Slimeoid’s standard hue.",
 		str_name = "Green",
-		str_desc = "It's brilliant green sheen blinds you."
+		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class."
 	),
 	EwHue(
 		id_hue = "teal",
@@ -6773,7 +6773,7 @@ hue_list = [ #todo better desc
 		],
 		str_saturate = "It looks so purdy now!",
 		str_name = "Teal",
-		str_desc = "It's brilliant teal sheen blinds you."
+		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, because coming to your senses and realizing there is no legal system here."
 	),
 	EwHue(
 		id_hue = "rainbow",
@@ -6781,9 +6781,9 @@ hue_list = [ #todo better desc
 			"rainbowdye",
 			"suganmanuts"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a fantastic shade of... well, everything!!",
 		str_name = "***Rainbow***",
-		str_desc = "It's brilliant ****Rainbow*** sheen blinds you."
+		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!"
 	),
 	EwHue(
 		id_hue = "pink",
@@ -6791,9 +6791,9 @@ hue_list = [ #todo better desc
 			"pinkdye",
 			"pinkrowddishes"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a vibrant shade of  pink!",
 		str_name = "Pink",
-		str_desc = "It's brilliant pink sheen blinds you."
+		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin."
 	),
 	EwHue(
 		id_hue = "grey",
@@ -6801,9 +6801,9 @@ hue_list = [ #todo better desc
 			"greydye",
 			"dankwheat"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a dull, somber grey.",
 		str_name = "Grey",
-		str_desc = "It's brilliant grey sheen blinds you."
+		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
 	),
 	EwHue(
 		id_hue = "cobalt",
@@ -6811,9 +6811,9 @@ hue_list = [ #todo better desc
 			"cobaltdye",
 			"brightshade"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a shimmering cobalt!",
 		str_name = "Cobalt",
-		str_desc = "It's brilliant cobalt sheen blinds you."
+		str_desc = "Its shimmering cobalt hue can reflect images if properly polished."
 	),
 	EwHue(
 		id_hue = "black",
@@ -6821,9 +6821,9 @@ hue_list = [ #todo better desc
 			"blackdye",
 			"blacklimes"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns pitch black!",
 		str_name = "Black",
-		str_desc = "It's brilliant black sheen blinds you."
+		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
 	),
 	EwHue(
 		id_hue = "lime",
@@ -6831,9 +6831,9 @@ hue_list = [ #todo better desc
 			"limedye",
 			"phosphorpoppies"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turns a heavily saturated lime!",
 		str_name = "Lime",
-		str_desc = "It's brilliant lime sheen blinds you."
+		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully."
 	),
 	EwHue(
 		id_hue = "cyan",
@@ -6841,9 +6841,9 @@ hue_list = [ #todo better desc
 			"cyandye",
 			"direapples"
 		],
-		str_saturate = "It looks so purdy now!",
+		str_saturate = "It turned a light cyan!",
 		str_name = "Cyan",
-		str_desc = "It's brilliant cyan sheen blinds you."
+		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street."
 	),
 ]
 
