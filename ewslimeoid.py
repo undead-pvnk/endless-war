@@ -39,7 +39,7 @@ class EwSlimeoid:
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
 
 	""" Load the slimeoid data for this user from the database. """
-	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None):
+	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = None):
 		query_suffix = ""
 
 		if id_slimeoid != None:
@@ -111,6 +111,9 @@ class EwSlimeoid:
 				# Clean up the database handles.
 				cursor.close()
 				ewutils.databaseClose(conn_info)
+
+		elif sltype != None:
+			self.sltype = sltype
 
 	""" Save slimeoid data object to the database. """
 	def persist(self):
@@ -537,7 +540,7 @@ async def incubateslimeoid(cmd):
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
 	elif user_data.life_state == ewcfg.life_state_corpse:
-			response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+		response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
 	elif poudrins_count < 1:
 		response = "You need a slime poudrin."

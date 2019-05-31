@@ -99,12 +99,11 @@ async def haunt(cmd):
 
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
+		market_data = EwMarket(id_server = cmd.message.server.id)
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
 			response = "You can't haunt now. Try {}.".format(ewcfg.cmd_suicide)
-		elif user_data.busted:
-			response = "You can't haunt while you're busted."
 		elif haunted_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow haunting of generals.
 			response = "He is too far from the sewers in his ivory tower, and thus cannot be haunted."
@@ -135,11 +134,14 @@ async def haunt(cmd):
 
 			haunted_data.change_slimes(n = int(-haunted_slimes / 10), source = ewcfg.source_haunted)
 			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
+			market_data.negaslime -= haunted_slimes
 			user_data.time_lasthaunt = time_now
+			user_data.busted = False
 
 			# Persist changes to the database.
 			user_data.persist()
 			haunted_data.persist()
+			market_data.persist()
 
 			response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
 		else:
@@ -182,3 +184,48 @@ async def negaslime(cmd):
 	negaslime += market_data.negaslime
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(negaslime)))
+
+async def summon_negaslimeoid(cmd):
+	response = ""
+	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state != user_data.life_state_corpse:
+		response = "Only the dead have the occult knowledge required to summon a Negaslimeoid."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi not in ewcfg.capturable_districts:
+		response = "You can't conduct the ritual here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+	value = None
+	if cmd.tokens_count > 1:
+		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	if value != None:
+		slimeoid = EwSlimeoid(sltype = ewcfg.sltype_nega)
+		market_data = EwMarket(id_server = cmd.message.author.server.id)
+		if value == -1:
+			value = user_data.slimes * 10
+		if value / 10 < user_data.slimes:
+			response = "You do not have that much negative slime to use in the ritual."
+		elif value < market_data.negaslime:
+			response = "The dead have not gathered enough negative slime."
+
+		else:
+			level = len(str(value)) -1
+			user_data.change_slimes(n = int(-value/10))
+			market_data.negaslime -= value
+			slimeoid.life_state = ewcfg.slimeoid_state_active
+			slimeoid.level = level
+			slimeoid.id_user = user_data.id_user
+			slimeoid.id_server = user_data.id_server
+			slimeoid.poi = user_data.poi
+
+			user_data.persist()
+			slimeoid.persist()
+
+
+	else:
+		response = "You must contribute some of your own slime to create a Slimeoid. Specify how much slime you will sacrifice."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        
