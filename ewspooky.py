@@ -253,9 +253,9 @@ async def summon_negaslimeoid(cmd):
 
 def generate_negaslimeoid_name():
 	name_length = random.randrange(5,10)
-	consonants = "bccfftthhllwgpqx"
+	consonants = random.choice(["chlt","crwx","fhlt","bghl","brpq"])
 	vowels = "aeuuooyy"
-	num_vowels = random.randrange(1,4)
+	num_vowels = random.randrange(int(name_length / 4), int(name_length/3)+1)
 	name_list = []
 	for i in range(name_length):
 		if i < num_vowels:
@@ -266,4 +266,8 @@ def generate_negaslimeoid_name():
 	apostrophe = random.randrange(1,name_length)
 	name = ewutils.flattenTokenListToString(name_list[:apostrophe]) + "'" + ewutils.flattenTokenListToString(name_list[apostrophe:])
 	name = name.capitalize()
-	return name
+	titles = ["Horror", "Gaping Maw", "Apostle", "Nemesis", "Harbinger", "Reaper", "Incarnation", "Ambassador", "Anomaly", "Daemon"]
+	domains = ["Darkness", "Madness", "the Void", "the Deep", "Nightmares", "Wrath", "Pestilence", "the End", "Terror", "Souls", "Secrets", "Ruin", "Hatred", "Shadows", "the Night"]
+	title = "{} of {}".format(random.choice(titles), random.choice(domains))
+	full_name = "{}, {}".format(name, title)
+	return full_name
