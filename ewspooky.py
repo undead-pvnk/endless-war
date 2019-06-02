@@ -9,6 +9,7 @@ import ewcfg
 import ewutils
 import ewmap
 import ewrolemgr
+import ewslimeoid
 from ew import EwUser
 from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
@@ -235,7 +236,7 @@ async def summon_negaslimeoid(cmd):
 			for i in range(level):
 				rand = random.randrange(3)
 				if rand == 0:
-					slimeoid.attack += 1
+					slimeoid.atk += 1
 				elif rand == 1:
 					slimeoid.defense += 1
 				else:
@@ -246,13 +247,19 @@ async def summon_negaslimeoid(cmd):
 			user_data.persist()
 			slimeoid.persist()
 
+			response = "You have summoned **{}**, a {}-feet tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
+			desc = ewslimeoid.slimeoid_describe(slimeoid)
+			response += "\n\n" + desc
 
 	else:
 		response = "Specify how much negative slime you will sacrifice."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def generate_negaslimeoid_name():
-	name_length = random.randrange(5,10)
+	titles = ["Angel", "Emissary", "Gaping Maw", "Apostle", "Nemesis", "Harbinger", "Reaper", "Incarnation", "Wanderer", "Berserker", "Outcast", "Monarch", "Anomaly"]
+	domains = ["Curses", "Doom", "Oblivion", "Darkness", "Madness", "the Void", "the Deep", "Nightmares", "Wrath", "Pestilence", "the End", "Terror", "Sorrow", "Pain", "Despair", "Souls", "Secrets", "Ruin", "Hatred", "Shadows", "the Night"]
+	title = "{} of {}".format(random.choice(titles), random.choice(domains))
+	name_length = random.randrange(5,min(10,31-len(title)))
 	consonants = random.choice(["chlt","crwx","fhlt","bghl","brpq"])
 	vowels = "aeuuooyy"
 	num_vowels = random.randrange(int(name_length / 4), int(name_length/3)+1)
@@ -266,8 +273,5 @@ def generate_negaslimeoid_name():
 	apostrophe = random.randrange(1,name_length)
 	name = ewutils.flattenTokenListToString(name_list[:apostrophe]) + "'" + ewutils.flattenTokenListToString(name_list[apostrophe:])
 	name = name.capitalize()
-	titles = ["Horror", "Gaping Maw", "Apostle", "Nemesis", "Harbinger", "Reaper", "Incarnation", "Ambassador", "Anomaly", "Daemon"]
-	domains = ["Darkness", "Madness", "the Void", "the Deep", "Nightmares", "Wrath", "Pestilence", "the End", "Terror", "Souls", "Secrets", "Ruin", "Hatred", "Shadows", "the Night"]
-	title = "{} of {}".format(random.choice(titles), random.choice(domains))
 	full_name = "{}, {}".format(name, title)
 	return full_name

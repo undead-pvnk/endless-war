@@ -116,7 +116,7 @@ cmd_map = {
 	ewcfg.cmd_dab: ewcmd.dab,
 
 	# Show the total of negative slime in the world.
-	#ewcfg.cmd_negaslime: ewspooky.negaslime,
+	ewcfg.cmd_negaslime: ewspooky.negaslime,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
@@ -126,6 +126,7 @@ cmd_map = {
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
+	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
 
 
 	# Play slime pachinko!
