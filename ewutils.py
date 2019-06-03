@@ -800,3 +800,22 @@ async def edit_message(client, message, text):
 		return await client.edit_message(message, text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
+
+"""
+	Returns a list of slimeoid ids in the district
+"""
+def get_slimeoids_in_poi(id_server, poi):
+	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {poi} = %s AND {id_server} = %s".format(
+		id_slimeoid = ewcfg.col_id_slimeoid,
+		poi = ewcfg.col_poi,
+		id_server = ewcfg.col_id_server
+	),(
+		poi,
+		id_server
+	))
+
+	slimeoids = []
+	for row in data:
+		slimeoids.append(row[0])
+
+	return slimeoids

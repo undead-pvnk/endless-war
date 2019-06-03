@@ -9,6 +9,7 @@ import ewrolemgr
 import ewstats
 from ew import EwUser
 from ewmarket import EwMarket
+from ewdistrict import EwDistrict
 
 active_slimeoidbattles = {}
 
@@ -1526,6 +1527,49 @@ async def slimeoid(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
+# Show a player's slimeoid data.
+async def negaslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	if cmd.mentions_count > 0:
+		# Can't mention any players
+		response = "Negaslimeoids obey no masters. You'll have to address the beast directly."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if cmd.tokens_count < 2:
+		response = "Name the horror you wish to behold."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	slimeoid_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+
+	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = challenger.poi)
+
+	negaslimeoid = None
+	for id_slimeoid in potential_slimeoids:
+		
+		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
+		name = slimeoid_data.name
+		name = name.replace(" ", "").lower()
+		if slimeoid_search in name:
+			negaslimeoid = slimeoid_data
+			break
+
+	if negaslimeoid is None:
+		response = "There is no Negaslimeoid by that name here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if negaslimeoid.sltype != ewcfg.sltype_nega:
+		response = "That's not a Negaslimeoid's name."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	response = "{} is a {}-foot-tall Negaslimeoid.".format(negaslimeoid.name, negaslimeoid.level)
+	response += slimeoid_describe(negaslimeoid)
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 def check(str):
 	if str.content == ewcfg.cmd_accept or str.content == ewcfg.cmd_refuse:
 		return True
@@ -1617,7 +1661,7 @@ async def slimeoidbattle(cmd):
 		accepted = 0
 
 	challengee = EwUser(member = member)
-	challenger = EwUser(member = member)
+	challenger = EwUser(member = author)
 
 	challengee.rr_challenger = ""
 	challenger.rr_challenger = ""
@@ -1628,6 +1672,12 @@ async def slimeoidbattle(cmd):
 	#Start game
 	if accepted == 1:
 		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = ewcfg.poi_id_arena, battle_type = ewcfg.battle_type_arena)
+		if result == -1:
+			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name)
+			await ewutils.send_message(client, channel, response)
+		elif result == 1:
+			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name)
+			await ewutils.send_message(client, channel, response)
 
 	else:
 		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
@@ -1640,9 +1690,13 @@ async def slimeoidbattle(cmd):
 
 async def negaslimeoidbattle(cmd):
 
+	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
+		response = "You must go into the city to challenge an eldritch abomination."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if cmd.mentions_count > 0:
 		# Can't mention any players
-		response = "Negaslimeoids obey no masters. You'll have to address your challenge to the beast directly."
+		response = "Negaslimeoids obey no masters. You'll have to address the beast directly."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.tokens_count < 2:
@@ -1662,7 +1716,7 @@ async def negaslimeoidbattle(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 
-	potential_challengees = get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = challenger.poi)
+	potential_challengees = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = challenger.poi)
 
 	challengee_slimeoid = None
 	for id_slimeoid in potential_challengees:
@@ -1708,6 +1762,31 @@ async def negaslimeoidbattle(cmd):
 
 	#Start game
 	result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challenger_data.poi, battle_type = ewcfg.battle_type_nega)
+	if result == -1:
+		# Losing in a nega battle means death
+		district_data = EwDistrict(district = challenger_data.poi, id_server = cmd.message.server.id)
+		slimes = int(10 ** (challengee_slimeoid.level - 2))
+		district_data.change_slimes(n = slimes)
+		district_data.persist()
+		challengee_slimeoid.delete()
+		response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
+		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	elif result == 1:
+		# Losing in a nega battle means death
+		challenger_slimeoid.delete()
+		response = "{} feasts on {}'s slime and consumes its soul.".format(challengee_slimeoid.name, challenger_slimeoid.name)
+		response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
+		if challenger_slimeoid.level >= challengee_slimeoid.level:
+			challengee_slimeoid.level += 1
+			rand = random.randrange(3)
+			if rand == 0:
+				challengee_slimeoid.atk += 1
+			elif rand == 1:
+				challengee_slimeoid.defense += 1
+			else:
+				challengee_slimeoid.intel += 1
+			response += "\n\n{} was empowered by the slaughter and grew a foot taller.".format(challengee_slimeoid.name)
+		await ewutils.send_message(cmd.client, cmd.message.channel, response)
 	# Send the response to the player.
 	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
@@ -2430,58 +2509,29 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(2)
-		if battle_type == ewcfg.battle_type_arena:
-			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challenger_slimeoid.name, challenger_slimeoid.name, challenger.display_name)
-			await ewutils.send_message(client, channel, response)
-			await asyncio.sleep(2)
-		elif battle_type == ewcfg.battle_type_nega:
-			# Losing in a nega battle means death
-			challengee_slimeoid.delete()
-			response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
-			await ewutils.send_message(client, channel, response)
 	else:
 		result = 1
-		if battle_type == ewcfg.battle_type_arena:
-			response = "\n" + s2legs.str_defeat.format(
-				slimeoid_name=s2name
-			)
-			response += " {}".format(ewcfg.emote_slimeskull)
-			response += "\n" + s1brain.str_victory.format(
-				slimeoid_name=s1name
-			)
+		response = "\n" + s2legs.str_defeat.format(
+			slimeoid_name=s2name
+		)
+		response += " {}".format(ewcfg.emote_slimeskull)
+		response += "\n" + s1brain.str_victory.format(
+			slimeoid_name=s1name
+		)
 
-			challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
-			challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
+		challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
+		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 	
-			# store defeated slimeoid's defeat time in the database
-			challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
-			challenger_slimeoid.time_defeated = int(time.time())
-			challenger_slimeoid.persist()
+		# store defeated slimeoid's defeat time in the database
+		challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
+		challenger_slimeoid.time_defeated = int(time.time())
+		challenger_slimeoid.persist()
 
-			challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
-			challengee_slimeoid.persist()
+		challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
+		challengee_slimeoid.persist()
 
-			await ewutils.send_message(client, channel, response)
-			await asyncio.sleep(2)
-			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challengee_slimeoid.name, challengee_slimeoid.name, challengee.display_name)
-			await ewutils.send_message(client, channel, response)
-			await asyncio.sleep(2)
-		elif battle_type == ewcfg.battle_type_nega:
-			# Losing in a nega battle means death
-			challenger_slimeoid.delete()
-			response = "{} feasts on {}'s slime and consumes its soul.".format(challengee_slimeoid.name, challenger_slimeoid.name)
-			response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
-			if challenger_slimeoid.level >= challengee_slimeoid.level:
-				challengee_slimeoid.level += 1
-				rand = random.randrange(3)
-				if rand == 0:
-					challengee_slimeoid.atk += 1
-				elif rand == 1:
-					challengee_slimeoid.defense += 1
-				else:
-					challengee_slimeoid.intel += 1
-				response = "\n\n{} was empowered by its triumph and grew a foot taller.".format(challengee_slimeoid.name)
-			await ewutils.send_message(client, channel, response)
+		await ewutils.send_message(client, channel, response)
+		await asyncio.sleep(2)
 	return result
 
 async def slimeoid_tick_loop(id_server):
@@ -2510,18 +2560,3 @@ async def slimeoid_tick(id_server):
 
 	await resp_cont.post()
 
-def get_slimeoids_in_poi(id_server, poi):
-	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {poi} = %s AND {id_server} = %s".format(
-		id_slimeoid = ewcfg.col_id_slimeoid,
-		poi = ewcfg.col_poi,
-		id_server = ewcfg.col_id_server
-	),(
-		poi,
-		id_server
-	))
-
-	slimeoids = []
-	for row in data:
-		slimeoids.append(row[0])
-
-	return slimeoids

@@ -154,9 +154,20 @@ class EwDistrict:
 			all_neighbors_friendly = self.all_neighbors_friendly()
 
 
-			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+			nega_present = False
+			for id_slimeoid in slimeoids:
+				slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
+				if slimeoid_data.sltype == ewcfg.sltype_nega:
+					nega_present = True
+					break
+			if nega_present:
+				decay *= 5
+
+
+			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				responses = self.change_capture_points(-math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				responses = self.change_capture_points(decay, ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
 		if self.capture_points < 0:
@@ -445,6 +456,17 @@ async def capture_tick(id_server):
 		for district in all_districts:
 			district_name = district[0]
 			controlling_faction = district[1]
+
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server)
+			
+			nega_present = False
+			for id_slimeoid in slimeoids:
+				slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
+				if slimeoid_data.sltype == ewcfg.sltype_nega:
+					nega_present = True
+					break
+			if nega_present:
+				continue
 
 			# the faction that's actively capturing the district this tick
 			# if no players are present, it's None, if only players of one faction (ignoring juvies and ghosts) are,
