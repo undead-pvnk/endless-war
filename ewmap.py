@@ -12,6 +12,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewtransport import EwTransport
+from ewslimeoid import EwSlimeoid
 
 move_counter = 0
 
@@ -473,7 +474,10 @@ def map_draw(path = None, coord = None):
 
 def inaccessible(user_data = None, poi = None):
 	if poi == None or user_data == None:
-		return True;
+		return True
+
+	if user_data.life_state == ewcfg.life_state_observer:
+		return False
 
 	if(
 		len(poi.factions) > 0 and
@@ -484,6 +488,16 @@ def inaccessible(user_data = None, poi = None):
 		user_data.life_state not in poi.life_states
 	):
 		return True
+	elif user_data.life_state == ewcfg.life_state_corpse:
+		ghost_range = int(user_data.slimelevel / 10)
+		pois_in_range = set([ewcfg.poi_id_thesewers, user_data.poi_death])
+		for i in range(ghost_range):
+			new_pois_in_range = set()
+			for in_range in pois_in_range:
+				new_pois_in_range.update(ewcfg.poi_neighbors.get(in_range))
+			pois_in_range.update(new_pois_in_range)
+
+		return poi.id_poi not in pois_in_range
 	else:
 		return False
 
@@ -522,7 +536,7 @@ async def move(cmd):
 			return
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
-		if user_data.life_state == ewcfg.life_state_corpse:
+		if user_data.life_state == ewcfg.life_state_corpse and not inaccessible(user_data = user_data, poi = poi):
 			path = EwPath(cost = 60)
 		else:
 			path = None
@@ -758,16 +772,31 @@ async def look(cmd):
 	else:
 		players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
 
+	
+	slimeoids_resp = ""
+
+	slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = poi.id_poi)
+
+	for id_slimeoid in slimeoids_in_district:
+		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
+		if slimeoid_data.sltype == ewcfg.sltype_nega:
+			slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
+
+	if slimeoids_resp != "":
+		slimeoids_resp = "\n" + slimeoids_resp
+
+
 	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}{}".format(
+			"You stand {} {}.\n\n{}{}{}{}{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
 				slimes_resp,
 				players_resp,
+				slimeoids_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")

@@ -32,12 +32,24 @@ life_state_juvenile = 1
 life_state_enlisted = 2
 life_state_grandfoe = 8
 life_state_kingpin = 10
+life_state_observer = 20
+
+slimeoid_tick_length = 5 * 60 #5 minutes
 
 # slimeoid life states
 slimeoid_state_none = 0
 slimeoid_state_forming = 1
 slimeoid_state_active = 2
 slimeoid_state_stored = 3
+
+# slimeoid types
+sltype_lab = 'Lab'
+sltype_nega = 'Nega'
+sltype_wild = 'Wild'
+
+# slimeoid battle types
+battle_type_arena = 0
+battle_type_nega = 1
 
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
@@ -316,6 +328,9 @@ cmd_suicide = cmd_prefix + 'suicide'
 cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
+cmd_summonnegaslimeoid = cmd_prefix + 'summon'
+cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
+cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_slimepachinko = cmd_prefix + 'slimepachinko'
 cmd_slimeslots = cmd_prefix + 'slimeslots'
 cmd_slimecraps = cmd_prefix + 'slimecraps'
@@ -468,7 +483,7 @@ slimes_onrevive = 20
 slimes_onrevive_everyone = 20
 slimes_toenlist = 50000
 slimes_perspar_base = 0
-slimes_hauntratio = 40
+slimes_hauntratio = 400
 slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
@@ -748,6 +763,7 @@ col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
+col_poi_death = 'poi_death'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -6685,6 +6701,12 @@ for brain in brain_list:
 	for alias in brain.alias:
 		brain_map[alias] = brain
 
+hue_analogous = -1
+hue_neutral = 0
+hue_atk_complementary = 1
+hue_special_complementary = 2
+hue_full_complementary = 3
+
 # All color attributes in the game.
 hue_list = [
 	EwHue(
@@ -6705,7 +6727,14 @@ hue_list = [
 		],
 		str_saturate = "It begins to shine a bright yellow!",
 		str_name = "Yellow",
-		str_desc = "Its bright yellow hue is delightfully radiant."
+		str_desc = "Its bright yellow hue is delightfully radiant.",
+		effectiveness = {
+			"orange": hue_analogous,
+			"lime": hue_analogous,
+			"purple": hue_atk_complementary,
+			"cobalt": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
 	),
 	EwHue(
 		id_hue = "orange",
@@ -6715,7 +6744,14 @@ hue_list = [
 		],
 		str_saturate = "It turns a warm orange!",
 		str_name= "Orange",
-		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book."
+		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book.",
+		effectiveness = {
+			"red": hue_analogous,
+			"yellow": hue_analogous,
+			"blue": hue_atk_complementary,
+			"cyan": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
 	),
 	EwHue(
 		id_hue = "red",
@@ -6725,7 +6761,14 @@ hue_list = [
 		],
 		str_saturate = "It darkens a deep shade of crimson red!",
 		str_name = "Red",
-		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin."
+		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin.",
+		effectiveness = {
+			"pink": hue_analogous,
+			"orange": hue_analogous,
+			"cobalt": hue_atk_complementary,
+			"teal": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
 	),
 	EwHue(
 		id_hue = "magenta",
@@ -6735,7 +6778,14 @@ hue_list = [
 		],
 		str_saturate = "It turns a vivid magenta!",
 		str_name = "Magenta",
-		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it."
+		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it.",
+		effectiveness = {
+			"pink": hue_analogous,
+			"purple": hue_analogous,
+			"teal": hue_atk_complementary,
+			"lime": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
 	),
 	EwHue(
 		id_hue = "purple",
@@ -6746,7 +6796,14 @@ hue_list = [
 		],
 		str_saturate = "It turns a dark purple!",
 		str_name = "Purple",
-		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible."
+		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible.",
+		effectiveness = {
+			"blue": hue_analogous,
+			"magenta": hue_analogous,
+			"green": hue_atk_complementary,
+			"yellow": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
 	),
 	EwHue(
 		id_hue = "blue",
@@ -6756,7 +6813,14 @@ hue_list = [
 		],
 		str_saturate = "It turns a deep blue!",
 		str_name = "Blue",
-		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea."
+		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea.",
+		effectiveness = {
+			"cobalt": hue_analogous,
+			"purple": hue_analogous,
+			"lime": hue_atk_complementary,
+			"orange": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
 	),
 	EwHue(
 		id_hue = "green",
@@ -6767,7 +6831,15 @@ hue_list = [
 		],
 		str_saturate = "It turns a shade of green that barely distinguishes itself from a Slimeoid’s standard hue.",
 		str_name = "Green",
-		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class."
+		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class.",
+		effectiveness = {
+			"lime": hue_analogous,
+			"teal": hue_analogous,
+			"pink": hue_atk_complementary,
+			"purple": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
 	),
 	EwHue(
 		id_hue = "teal",
@@ -6777,7 +6849,15 @@ hue_list = [
 		],
 		str_saturate = "It looks so purdy now!",
 		str_name = "Teal",
-		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here."
+		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here.",
+		effectiveness = {
+			"green": hue_analogous,
+			"cyan": hue_analogous,
+			"red": hue_atk_complementary,
+			"magenta": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
 	),
 	EwHue(
 		id_hue = "rainbow",
@@ -6797,7 +6877,15 @@ hue_list = [
 		],
 		str_saturate = "It turns a vibrant shade of  pink!",
 		str_name = "Pink",
-		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin."
+		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin.",
+		effectiveness = {
+			"magenta": hue_analogous,
+			"red": hue_analogous,
+			"teal": hue_atk_complementary,
+			"lime": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
 	),
 	EwHue(
 		id_hue = "grey",
@@ -6817,7 +6905,15 @@ hue_list = [
 		],
 		str_saturate = "It turns a shimmering cobalt!",
 		str_name = "Cobalt",
-		str_desc = "Its shimmering cobalt hue can reflect images if properly polished."
+		str_desc = "Its shimmering cobalt hue can reflect images if properly polished.",
+		effectiveness = {
+			"cyan": hue_analogous,
+			"blue": hue_analogous,
+			"yellow": hue_atk_complementary,
+			"red": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
 	),
 	EwHue(
 		id_hue = "black",
@@ -6837,7 +6933,15 @@ hue_list = [
 		],
 		str_saturate = "It turns a heavily saturated lime!",
 		str_name = "Lime",
-		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully."
+		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully.",
+		effectiveness = {
+			"yellow": hue_analogous,
+			"green": hue_analogous,
+			"magenta": hue_atk_complementary,
+			"blue": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
 	),
 	EwHue(
 		id_hue = "cyan",
@@ -6847,7 +6951,15 @@ hue_list = [
 		],
 		str_saturate = "It turned a light cyan!",
 		str_name = "Cyan",
-		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street."
+		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street.",
+		effectiveness = {
+			"teal": hue_analogous,
+			"cobalt": hue_analogous,
+			"orange": hue_atk_complementary,
+			"pink": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
 	),
 ]
 

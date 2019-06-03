@@ -116,7 +116,7 @@ cmd_map = {
 	ewcfg.cmd_dab: ewcmd.dab,
 
 	# Show the total of negative slime in the world.
-	#ewcfg.cmd_negaslime: ewspooky.negaslime,
+	ewcfg.cmd_negaslime: ewspooky.negaslime,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
@@ -126,7 +126,6 @@ cmd_map = {
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
-
 
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -329,6 +328,12 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
+	
+	# Negaslimeoids
+
+	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -397,10 +402,11 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			fake_ghost = EwUser()
-			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
-		elif poi.id_poi == ewcfg.poi_id_thesewers:
-			neighbors = ewcfg.poi_list
+			fake_observer = EwUser()
+			fake_observer.life_state = ewcfg.life_state_observer
+			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
+		#elif poi.id_poi == ewcfg.poi_id_thesewers:
+		#	neighbors = ewcfg.poi_list
 
 		if neighbors != None:
 			for neighbor in neighbors:
@@ -477,16 +483,13 @@ async def on_ready():
 				dist.persist()
 				await resp_cont.post()
 
-				asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
-				asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-				await ewtransport.init_transports(id_server = server.id)
-				# await ewtransport.init_transports(id_server = server.id)
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		#await ewtransport.init_transports(id_server = server.id)
+		await ewtransport.init_transports(id_server = server.id)
+		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
