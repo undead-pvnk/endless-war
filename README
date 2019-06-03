@@ -39,6 +39,7 @@ CREATE TABLE users (
 	time_lastenter int NOT NULL DEFAULT '0',
 	time_lastoffline int NOT NULL DEFAULT '0',
 	time_joined int NOT NULL DEFAULT '0',
+	poi_death varchar(64) NOT NULL default '',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
