@@ -154,9 +154,19 @@ class EwDistrict:
 			all_neighbors_friendly = self.all_neighbors_friendly()
 
 
-			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
+			
+			nega_present = len(slimeoids) > 0
+                        
+			if nega_present:
+				decay *= 5
+
+
+			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				responses = self.change_capture_points(-math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				responses = self.change_capture_points(decay, ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
 		if self.capture_points < 0:
@@ -446,6 +456,12 @@ async def capture_tick(id_server):
 			district_name = district[0]
 			controlling_faction = district[1]
 
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
+			
+			nega_present = len(slimeoids) > 0
+			if nega_present:
+				continue
+
 			# the faction that's actively capturing the district this tick
 			# if no players are present, it's None, if only players of one faction (ignoring juvies and ghosts) are,
 			# it's the faction's name, i.e. 'rowdys' or 'killers', and if both are present, it's 'both'
@@ -462,7 +478,7 @@ async def capture_tick(id_server):
 				player_faction = player[1]
 				player_life_state = player[2]
 				player_id = player[3]
-				player_slimes = player[4]
+				#player_slimes = player[4] #commented because now you have to have 50k slime to enlist anyway
 
 				if player_poi == district_name and player_life_state == ewcfg.life_state_enlisted:  # if the player is in the district and a gang member
 					try:
@@ -472,7 +488,8 @@ async def capture_tick(id_server):
 
 					#ewutils.logMsg("Online status checked. Time elapsed: %f" % (time.time() - time_old) + " Server: %s" % id_server + " Player: %s" % player_id + " Status: %s" % ("online" if player_online else "offline"))
 
-					if player_online and player_slimes >= 10000:
+					#if player_online and player_slimes >= 50000:
+					if player_online:
 						if faction_capture != None and faction_capture != player_faction:  # if someone of the opposite faction is in the district
 							faction_capture = 'both'  # standstill, gang violence has to happen
 							capture_speed = 0
