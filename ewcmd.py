@@ -464,7 +464,8 @@ async def accept(cmd):
 		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
 			challenger.rr_challenger = user.id_user
 			challenger.persist()
-			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(cmd.message.author.id):
+			slimeoid_data = EwSlimeoid(member = cmd.message.author)
+			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
 			elif cmd.message.channel.name == ewcfg.channel_casino:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."

@@ -428,7 +428,7 @@ async def on_ready():
 	# If no twitch client ID is available, twitch integration will be disabled.
 	# FIXME debug - temporarily disable Twitch integration.
 	if True:
-		twich_client_id = None
+		twitch_client_id = None
 		ewutils.logMsg('Twitch integration disabled.')
 	elif twitch_client_id == None or len(twitch_client_id) == 0:
 		ewutils.logMsg('No twitch_client_id file found. Twitch integration disabled.')

@@ -211,7 +211,6 @@ class EwSlimeoid:
 		for row in data:
 			haunted_data = EwUser(id_user = row[0], id_server = self.id_server)
 			haunted_player = EwPlayer(id_user = row[0])
-			ewutils.logMsg("{} haunts {}".format(self.name, haunted_player.display_name))
 
 			if haunted_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]:
 				haunted_slimes = 2 * int(haunted_data.slimes / ewcfg.slimes_hauntratio)
@@ -224,7 +223,6 @@ class EwSlimeoid:
 
 				# Persist changes to the database.
 				haunted_data.persist()
-				ewutils.logMsg("{} haunted {}".format(self.name, haunted_player.display_name))
 				response = "{} has been haunted by {}! Slime has been lost!".format(haunted_player.display_name, self.name)
 				resp_cont.add_channel_response(ch_name, response)
 		market_data.persist()
@@ -1690,10 +1688,10 @@ async def slimeoidbattle(cmd):
 		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = ewcfg.poi_id_arena, battle_type = ewcfg.battle_type_arena)
 		if result == -1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name)
-			await ewutils.send_message(client, channel, response)
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 		elif result == 1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name)
-			await ewutils.send_message(client, channel, response)
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 
 	else:
 		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
