@@ -200,7 +200,7 @@ async def sow(cmd):
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
 				# Sowing
-				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about a day."
+				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about 3 hours."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
 				ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
@@ -229,7 +229,7 @@ async def mill(cmd):
 		vegetable = EwItem(id_item = item_sought.get('id_item'))
 
 		for result in ewcfg.mill_results:
-			if result.ingredients != vegetable:
+			if result.ingredients != vegetable.item_props.get('id_food'):
 				pass
 			else:
 				items.append(result)
