@@ -128,7 +128,6 @@ cmd_map = {
 	ewcfg.cmd_haunt: ewspooky.haunt,
 	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
 
-
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
 
@@ -327,6 +326,8 @@ cmd_map = {
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
+	
+	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -480,6 +481,7 @@ async def on_ready():
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		await ewtransport.init_transports(id_server = server.id)
+		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
