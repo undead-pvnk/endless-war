@@ -12,6 +12,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewtransport import EwTransport
+from ewslimeoid import EwSlimeoid
 
 move_counter = 0
 
@@ -769,16 +770,31 @@ async def look(cmd):
 	else:
 		players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
 
+	
+	slimeoids_resp = ""
+
+	slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = poi.id_poi)
+
+	for id_slimeoid in slimeoids_in_district:
+		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
+		if slimeoid_data.sltype == ewcfg.sltype_nega:
+			slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
+
+	if slimeoids_resp != "":
+		slimeoids_resp = "\n" + slimeoids_resp
+
+
 	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}{}".format(
+			"You stand {} {}.\n\n{}{}{}{}{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
 				slimes_resp,
 				players_resp,
+				slimeoids_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")

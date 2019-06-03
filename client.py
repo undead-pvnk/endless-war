@@ -126,7 +126,6 @@ cmd_map = {
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
-	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
 
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -327,6 +326,10 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	
+	# Negaslimeoids
+
+	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 
 	# troll romance
