@@ -476,6 +476,9 @@ def inaccessible(user_data = None, poi = None):
 	if poi == None or user_data == None:
 		return True
 
+	if user_data.life_state == ewcfg.life_state_observer:
+		return False
+
 	if(
 		len(poi.factions) > 0 and
 		len(user_data.faction) > 0 and
@@ -487,15 +490,14 @@ def inaccessible(user_data = None, poi = None):
 		return True
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		ghost_range = int(user_data.slimelevel / 10)
-		pois_in_range = set(ewcfg.poi_id_thesewers, user_data.poi_death)
+		pois_in_range = set([ewcfg.poi_id_thesewers, user_data.poi_death])
 		for i in range(ghost_range):
 			new_pois_in_range = set()
 			for in_range in pois_in_range:
-				new_pois_in_range = new_pois_in_range.union(ewcfg.neighbors.get(in_range))
-			pois_in_range = pois_in_range.union(new_pois_in_range)
+				new_pois_in_range.update(ewcfg.poi_neighbors.get(in_range))
+			pois_in_range.update(new_pois_in_range)
 
-		if poi.id_poi not in pois_in_range:
-			return True
+		return poi.id_poi not in pois_in_range
 	else:
 		return False
 

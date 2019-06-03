@@ -155,12 +155,11 @@ class EwDistrict:
 
 
 			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
-			nega_present = False
-			for id_slimeoid in slimeoids:
-				slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
-				if slimeoid_data.sltype == ewcfg.sltype_nega:
-					nega_present = True
-					break
+
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
+			
+			nega_present = len(slimeoids) > 0
+                        
 			if nega_present:
 				decay *= 5
 
@@ -457,14 +456,9 @@ async def capture_tick(id_server):
 			district_name = district[0]
 			controlling_faction = district[1]
 
-			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server)
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
 			
-			nega_present = False
-			for id_slimeoid in slimeoids:
-				slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
-				if slimeoid_data.sltype == ewcfg.sltype_nega:
-					nega_present = True
-					break
+			nega_present = len(slimeoids) > 0
 			if nega_present:
 				continue
 

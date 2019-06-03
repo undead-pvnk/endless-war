@@ -804,17 +804,25 @@ async def edit_message(client, message, text):
 """
 	Returns a list of slimeoid ids in the district
 """
-def get_slimeoids_in_poi(id_server, poi):
-	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {poi} = %s AND {id_server} = %s".format(
+def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
+	slimeoids = []
+	if id_server is None or poi is None:
+		return slimeoids
+
+	query = "SELECT {id_slimeoid} FROM slimeoids WHERE {poi} = %s AND {id_server} = %s".format(
 		id_slimeoid = ewcfg.col_id_slimeoid,
 		poi = ewcfg.col_poi,
 		id_server = ewcfg.col_id_server
-	),(
+	)
+
+	if sltype is not None:
+		query += " AND {} = '{}'".format(ewcfg.col_type, sltype)
+
+	data = execute_sql_query(query,(
 		poi,
 		id_server
 	))
 
-	slimeoids = []
 	for row in data:
 		slimeoids.append(row[0])
 

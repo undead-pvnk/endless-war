@@ -166,7 +166,7 @@ async def negaslime(cmd):
 async def summon_negaslimeoid(cmd):
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
-	if user_data.life_state != user_data.life_state_corpse:
+	if user_data.life_state != ewcfg.life_state_corpse:
 		response = "Only the dead have the occult knowledge required to summon a cosmic horror."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -196,6 +196,7 @@ async def summon_negaslimeoid(cmd):
 			level = len(str(value))
 			user_data.change_slimes(n = int(value/10))
 			market_data.negaslime += value
+			slimeoid.sltype = ewcfg.sltype_nega
 			slimeoid.life_state = ewcfg.slimeoid_state_active
 			slimeoid.level = level
 			slimeoid.id_user = user_data.id_user
@@ -222,10 +223,11 @@ async def summon_negaslimeoid(cmd):
 
 			user_data.persist()
 			slimeoid.persist()
+			market_data.persist()
 
-			response = "You have summoned **{}**, a {}-feet tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
+			response = "You have summoned **{}**, a {}-foot-tall Negaslimeoid.".format(slimeoid.name, slimeoid.level)
 			desc = ewslimeoid.slimeoid_describe(slimeoid)
-			response += "\n\n" + desc
+			response += desc
 
 	else:
 		response = "Specify how much negative slime you will sacrifice."

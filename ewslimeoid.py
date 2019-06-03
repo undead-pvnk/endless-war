@@ -7,9 +7,12 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
+import ewmap
+
 from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
+from ewplayer import EwPlayer
 
 active_slimeoidbattles = {}
 
@@ -41,7 +44,7 @@ class EwSlimeoid:
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
 
 	""" Load the slimeoid data for this user from the database. """
-	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = None):
+	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = "Lab"):
 		query_suffix = ""
 
 		if id_slimeoid != None:
@@ -56,7 +59,7 @@ class EwSlimeoid:
 				if life_state != None:
 					query_suffix += " AND life_state = '{}'".format(life_state)
 				if sltype != None:
-					query_suffix += " AND sltype = '{}'".format(sltype)
+					query_suffix += " AND type = '{}'".format(sltype)
 
 		if query_suffix != "":
 			try:
@@ -186,10 +189,10 @@ class EwSlimeoid:
 	
 	def haunt(self):
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
-		if (self.sltype is not ewcfg.sltype_nega) or active_slimeoidbattles.get(self.id_slimeoid):
+		if (self.sltype != ewcfg.sltype_nega) or active_slimeoidbattles.get(self.id_slimeoid):
 			return resp_cont
 		market_data = EwMarket(id_server = self.id_server)
-		ch_name = ewcfg.id_to_poi(self.poi).channel
+		ch_name = ewcfg.id_to_poi.get(self.poi).channel
 
 		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
@@ -202,6 +205,9 @@ class EwSlimeoid:
 
 		for row in data:
 			haunted_data = EwUser(id_user = row[0], id_server = self.id_server)
+			haunted_player = EwPlayer(id_user = row[0])
+			ewutils.logMsg("{} haunts {}".format(self.name, haunted_player.display_name))
+
 			if haunted_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]:
 				haunted_slimes = 2 * int(haunted_data.slimes / ewcfg.slimes_hauntratio)
 
@@ -213,7 +219,7 @@ class EwSlimeoid:
 
 				# Persist changes to the database.
 				haunted_data.persist()
-				haunted_player = EwPlayer(id_user = row[0])
+				ewutils.logMsg("{} haunted {}".format(self.name, haunted_player.display_name))
 				response = "{} has been haunted by {}! Slime has been lost!".format(haunted_player.display_name, self.name)
 				resp_cont.add_channel_response(ch_name, response)
 		market_data.persist()
@@ -225,9 +231,9 @@ class EwSlimeoid:
 		if active_slimeoidbattles.get(self.id_slimeoid):
 			return resp_cont
 		try:
-			destinations = ewcfg.neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+			destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
 			if len(destinations) > 0:
-				self.poi = random.choice(destinations)
+				self.poi = random.choice(list(destinations))
 				ch_name = ewcfg.id_to_poi.get(self.poi).channel
 		
 				response = "The air grows colder and color seems to drain from the streets and buildings around you. {} has arrived.".format(self.name)
@@ -1471,14 +1477,15 @@ def slimeoid_describe(slimeoid):
 	response += " It has {}.".format(ewutils.formatNiceList(names = stat_desc))
 
 	clout = slimeoid.clout
-	if clout >= 50:
-		response += " A **LIVING LEGEND** on the arena."
-	elif clout >= 30:
-		response += " A **BRUTAL CHAMPION** on the arena."
-	elif clout >= 15:
-		response += " This slimeoid has proven itself on the arena."
-	elif clout == 0:
-		response += " A pitiable baby, this slimeoid has no clout whatsoever."
+	if slimeoid.sltype != ewcfg.sltype_nega:
+		if clout >= 50:
+			response += " A **LIVING LEGEND** on the arena."
+		elif clout >= 30:
+			response += " A **BRUTAL CHAMPION** on the arena."
+		elif clout >= 15:
+			response += " This slimeoid has proven itself on the arena."
+		elif clout == 0:
+			response += " A pitiable baby, this slimeoid has no clout whatsoever."
 
 	if (int(time.time()) - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
 			response += " It is currently incapacitated after being defeated in the Battle Arena."
@@ -1544,7 +1551,7 @@ async def negaslimeoid(cmd):
 	slimeoid_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 
-	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = challenger.poi)
+	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = user_data.poi)
 
 	negaslimeoid = None
 	for id_slimeoid in potential_slimeoids:
@@ -1761,10 +1768,10 @@ async def negaslimeoidbattle(cmd):
 
 
 	#Start game
-	result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challenger_data.poi, battle_type = ewcfg.battle_type_nega)
+	result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challengee_slimeoid.poi, battle_type = ewcfg.battle_type_nega)
 	if result == -1:
 		# Losing in a nega battle means death
-		district_data = EwDistrict(district = challenger_data.poi, id_server = cmd.message.server.id)
+		district_data = EwDistrict(district = challenger.poi, id_server = cmd.message.server.id)
 		slimes = int(10 ** (challengee_slimeoid.level - 2))
 		district_data.change_slimes(n = slimes)
 		district_data.persist()
@@ -1785,6 +1792,7 @@ async def negaslimeoidbattle(cmd):
 				challengee_slimeoid.defense += 1
 			else:
 				challengee_slimeoid.intel += 1
+			challengee_slimeoid.persist()
 			response += "\n\n{} was empowered by the slaughter and grew a foot taller.".format(challengee_slimeoid.name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
 	# Send the response to the player.
@@ -2542,7 +2550,7 @@ async def slimeoid_tick_loop(id_server):
 async def slimeoid_tick(id_server):
 	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
 		id_slimeoid = ewcfg.col_id_slimeoid,
-		sltype = ewcfg.col_sltype,
+		sltype = ewcfg.col_type,
 		id_server = ewcfg.col_id_server
 	),(
 		ewcfg.sltype_nega,
@@ -2554,9 +2562,10 @@ async def slimeoid_tick(id_server):
 		slimeoid_data = EwSlimeoid(id_slimeoid = row[0])
 		haunt_resp = slimeoid_data.haunt()
 		resp_cont.add_response_container(haunt_resp)
-		if random.random() < 0.1:
+		if random.random() < 0.2:
 			move_resp = slimeoid_data.move()
 			resp_cont.add_response_container(move_resp)
+		slimeoid_data.persist()
 
 	await resp_cont.post()
 

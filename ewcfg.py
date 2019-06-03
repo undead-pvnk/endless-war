@@ -32,6 +32,9 @@ life_state_juvenile = 1
 life_state_enlisted = 2
 life_state_grandfoe = 8
 life_state_kingpin = 10
+life_state_observer = 20
+
+slimeoid_tick_length = 5 * 60 #5 minutes
 
 # slimeoid life states
 slimeoid_state_none = 0
@@ -750,6 +753,7 @@ col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
+col_poi_death = 'poi_death'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
