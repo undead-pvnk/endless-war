@@ -44,6 +44,10 @@ sltype_lab = 'Lab'
 sltype_nega = 'Nega'
 sltype_wild = 'Wild'
 
+# slimeoid battle types
+battle_type_arena = 0
+battle_type_nega = 1
+
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
@@ -469,7 +473,7 @@ slimes_onrevive = 20
 slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
-slimes_hauntratio = 40
+slimes_hauntratio = 400
 slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500

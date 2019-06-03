@@ -176,6 +176,63 @@ class EwSlimeoid:
 			cursor.close()
 			ewutils.databaseClose(conn_info)
 
+	def delete(self):
+		ewutils.execute_sql_query("DELETE FROM slimeoids WHERE {id_slimeoid} = %s".format(
+			id_slimeoid = ewcfg.col_id_slimeoid
+		),(
+			self.id_slimeoid,
+		))
+	
+	def haunt(self):
+		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		if self.sltype is not ewcfg.sltype_nega:
+			return resp_cont
+		market_data = EwMarket(id_server = self.id_server)
+		ch_name = ewcfg.id_to_poi(self.poi).channel
+
+		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			poi = ewcfg.col_poi,
+			id_server = ewcfg.col_id_server
+		),(
+			self.poi,
+			self.id_server
+		))
+
+		for row in data:
+			haunted_data = EwUser(id_user = row[0], id_server = self.id_server)
+			if haunted_data.life_state in [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]:
+				haunted_slimes = 2 * int(haunted_data.slimes / ewcfg.slimes_hauntratio)
+
+				haunt_cap = 10 ** (self.level-1)
+				haunted_slimes = min(haunt_cap, haunted_slimes) # cap on for how much you can haunt
+
+				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
+				market_data.negaslime -= haunted_slimes
+
+				# Persist changes to the database.
+				haunted_data.persist()
+				haunted_player = EwPlayer(id_user = row[0])
+				response = "{} has been haunted by {}! Slime has been lost!".format(haunted_player.display_name, self.name)
+				resp_cont.add_channel_response(ch_name, response)
+		market_data.persist()
+
+		return resp_cont
+
+	def move(self):
+		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+		try:
+			destinations = ewcfg.neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+			if len(destinations) > 0:
+				self.poi = random.choice(destinations)
+				ch_name = ewcfg.id_to_poi.get(self.poi).channel
+		
+				response = "The air grows colder and color seems to drain from the streets and buildings around you. {} has arrived.".format(self.name)
+				resp_cont.add_channel_response(ch_name, response)
+		finally:
+			return resp_cont
+
+
 """ slimeoid model object """
 class EwBody:
 	id_body = ""
@@ -1802,11 +1859,11 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 	s1hpmax = 50 + (challengee_slimeoid.level * 20)
 	if challengee_slimeoid.sltype == ewcfg.sltype_nega:
-		s1hpmax *= 2
+		s1hpmax *= 1.5
 
 	s2hpmax = 50 + (challenger_slimeoid.level * 20)
 	if challenger_slimeoid.sltype == ewcfg.sltype_nega:
-		s2hpmax *= 2
+		s2hpmax *= 1.5
 
 	s1hp = s1hpmax
 	s2hp = s2hpmax
@@ -2300,7 +2357,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challenger_slimeoid.name, challenger_slimeoid.name, challenger.display_name)
 			await ewutils.send_message(client, channel, response)
 			await asyncio.sleep(2)
-		elif battle_type in [ewcfg.battle_type_nega, ewcfg.battle_type_negapve]:
+		elif battle_type == ewcfg.battle_type_nega:
 			# Losing in a nega battle means death
 			challengee_slimeoid.delete()
 	else:
@@ -2330,7 +2387,33 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challengee_slimeoid.name, challengee_slimeoid.name, challengee.display_name)
 			await ewutils.send_message(client, channel, response)
 			await asyncio.sleep(2)
-		elif battle_type in [ewcfg.battle_type_nega, ewcfg.battle_type_negapve]:
+		elif battle_type == ewcfg.battle_type_nega:
 			# Losing in a nega battle means death
 			challenger_slimeoid.delete()
 	return result
+
+async def slimeoid_tick_loop(id_server):
+	while True:
+		await slimeoid_tick(id_server)
+		await asyncio.sleep(ewcfg.slimeoid_tick_length)
+
+async def slimeoid_tick(id_server):
+	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
+		id_slimeoid = ewcfg.col_id_slimeoid,
+		sltype = ewcfg.col_sltype,
+		id_server = ewcfg.col_id_server
+	),(
+		ewcfg.sltype_nega,
+		id_server
+	))
+
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	for row in data:
+		slimeoid_data = EwSlimeoid(id_slimeoid = row[0])
+		haunt_resp = slimeoid_data.haunt()
+		resp_cont.add_response_container(haunt_resp)
+		if random.random() < 0.1:
+			move_resp = slimeoid_data.move()
+			resp_cont.add_response_container(move_resp)
+
+	await resp_cont.post()

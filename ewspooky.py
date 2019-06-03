@@ -134,7 +134,7 @@ async def haunt(cmd):
 			if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
 				haunted_slimes = -user_data.slimes
 
-			haunted_data.change_slimes(n = int(-haunted_slimes / 10), source = ewcfg.source_haunted)
+			haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
 			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
 			market_data.negaslime -= haunted_slimes
 			user_data.time_lasthaunt = time_now
@@ -157,33 +157,9 @@ async def haunt(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def negaslime(cmd):
-	negaslime = 0
-
-	try:
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
-
-		# Count all negative slime currently possessed by dead players.
-		cursor.execute("SELECT sum({}) FROM users WHERE id_server = %s AND {} < 0".format(
-			ewcfg.col_slimes,
-			ewcfg.col_slimes
-		), (cmd.message.server.id, ))
-
-		result = cursor.fetchone();
-
-		if result != None:
-			negaslime = result[0]
-
-			if negaslime == None:
-				negaslime = 0
-	finally:
-		cursor.close()
-		ewutils.databaseClose(conn_info)
-
 	# Add persisted negative slime.
 	market_data = EwMarket(id_server = cmd.message.server.id)
-	negaslime += market_data.negaslime
+	negaslime = market_data.negaslime
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(negaslime)))
 
