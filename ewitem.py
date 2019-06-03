@@ -79,7 +79,7 @@ class EwItem:
 
 			# the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
 			self.item_props.clear()
-
+			self.item_props = {}
 			try:
 				conn_info = ewutils.databaseConnect()
 				conn = conn_info.get('conn')
@@ -776,7 +776,6 @@ async def item_use(cmd):
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 	if item_sought:		
-		# Load the user before the item so that the right item props are used
 		user_data = EwUser(member = author)
 
 		item = EwItem(id_item = item_sought.get('id_item'))

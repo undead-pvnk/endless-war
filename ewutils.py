@@ -621,22 +621,28 @@ async def removeExpiredStatuses(id_server = None):
 
 							# Garrote effect
 							if status == ewcfg.status_strangled_id:											
-								await ewwep.damage_player(client=client, id_server=server.id, shooter=status_effect.source, shootee=user_data.id_user, slimes_damage=int(status_effect.value) )
+								await ewwep.damage_player(client=client, id_server=server.id, shooter=status_effect.source, shootee=user_data.id_user, slimes_damage=int(status_effect.value), time_now=time_now )
 								break
 
-						# Status that expire under special conditions
-						else:
-							if status == ewcfg.status_drunk_id:
-								if user_data.inebriation < 10:
-									user_data.clear_status(id_status=status)
-									logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
+					# Status that expire under special conditions
+					else:
+						if status == ewcfg.status_drunk_id:
+							if user_data.inebriation < 10:
+								user_data.clear_status(id_status=status)
+								logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
+
+						elif status == ewcfg.status_stunned_id:
+							if int(status_effect.value) < time_now:
+								user_data.clear_status(id_status=status)
+								logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
 
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 				await resp_cont.post()
 			conn.commit()
 
-		except:
-			logMsg("Failed to clear status")
+		except Exception as deets:
+			#TODO pass
+			logMsg("Failed to clear status for user with id - {} in {}".format(user_data.id_user, id_server))
 
 		finally:
 			# Clean up the database handles.

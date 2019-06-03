@@ -7,6 +7,7 @@ from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
 from ewitem import EwItemDef
+from ewitem import EwItem
 from ewmap import EwPoi
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewquadrants import EwQuadrantFlavor
@@ -1034,7 +1035,6 @@ def wef_nunchucks(ctn = None): #TODO
 
 	if ctn.strikes == 4:
 		ctn.crit = True
-		# *4
 		ctn.slimes_damage *= 2
 	elif ctn.strikes == 0:
 		ctn.miss = True
@@ -1043,13 +1043,25 @@ def wef_nunchucks(ctn = None): #TODO
 # weapon effect function for "katana"
 def wef_katana(ctn = None): #TODO
 	ctn.miss = False
-	ctn.slimes_damage = int(ctn.slimes_damage) * 0.5
-
-	#ctn.slimes_damage = max(dmg, ())
+	base_damage = int(ctn.slimes_damage) * 0.5
+	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
+	if last_attack > 0:
+		print(ctn.time_now)
+		print(last_attack)
+		last_attack = ctn.time_now - last_attack
+		ctn.slimes_damage = max(base_damage, min(base_damage * (last_attack/8640),10))
 
 	if(random.randrange(100) + 1) <= 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+
+	shootee_weapon = EwItem(id_item = ctn.shootee_data.weapon)
+	if shootee_weapon.item_props.get("weapon_type") == 'katana' and int(shootee_weapon.item_props.get("time_lastattack")) > 0 and (ctn.time_now - int(shootee_weapon.item_props.get("time_lastattack"))) >= 86400 and last_attack >= 86400:
+		shootee_weapon.item_props["time_lastattack"] = ctn.time_now
+		ctn.slimes_damage = 0
+		print("el perro")
+		#ctn.parry = true TODO
+		shootee_weapon.persist()
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None): 
@@ -1078,8 +1090,13 @@ def wef_garrote(ctn = None):
 		dmg *= 10
 		ctn.crit = True
 
+	#Damage is delayed, user doesn't deal damage for now
 	ctn.slimes_damage = 0
-	#ctn.user_data.applyStatus(id_status=status_stunned_id)
+	#Stop movement
+	ewutils.moves_active[ctn.user_data.id_user] = 0
+	#Stun player for 5 seconds
+	ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
+	#Start strangling target
 	ctn.shootee_data.applyStatus(id_status=status_strangled_id, value=dmg, source=ctn.user_data.id_user)
 
 # weapon effect function for "brassknuckles"
@@ -6696,7 +6713,6 @@ status_effect_list = [
 	),
 	EwStatusEffectDef(
 		id_status = status_stunned_id,
-		time_expire = 20,
 		str_describe = 'They are stunned'
 	)
 ]

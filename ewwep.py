@@ -294,7 +294,7 @@ async def attack(cmd):
 		# Get target's info.
 		member = cmd.mentions[0]	
 		shootee_data = EwUser(member = member)
-
+		
 		miss = False
 		crit = False
 		backfire = False
@@ -1120,9 +1120,6 @@ async def arm(cmd):
 			# Player doesn't have enough money
 			if weapon.price > 0 and (weapon.price * n) > user_data.slimecoin:
 				response = "The fee for taking the {weapon} is {price} slimecoin and you only have {coin}.".format(weapon=weapon.str_weapon, price=weapon.price, coin=user_data.slimecoin)
-				
-			elif user_data.life_state == ewcfg.life_state_juvenile and weapon.id_weapon not in ewcfg.weapon_vendor_inv[ewcfg.vendor_mines]:
-				response = "Juvies don't know how to hold weapons."	
 
 			else:
 				item_props = {

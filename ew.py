@@ -230,11 +230,11 @@ class EwUser:
 	def equip(self, weapon_item = None):
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile:
+			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
 			response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(current_weapon.item_props.get("weapon_name") if len(current_weapon.item_props.get("weapon_name")) > 0 else "partner")
-			#Have to load the item again or the wrong item props are used
-			weapon_item = ewitem.EwItem(id_item = weapon_item.id_item)
 		else:
 			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 			self.weapon = weapon_item.id_item
