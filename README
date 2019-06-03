@@ -177,6 +177,7 @@ CREATE TABLE slimeoids (
 	level int NOT NULL DEFAULT '0',
 	time_defeated int NOT NULL DEFAULT '0',
 	clout int NOT NULL DEFAULT '0',
+	hue varchar(32) NOT NULL DEFAULT '',
 	
 	PRIMARY KEY (id_slimeoid)
 );

@@ -34,6 +34,7 @@ class EwSlimeoid:
 	level = 0
 	time_defeated = 0
 	clout = 0
+	hue = ""
 
 	#slimeoid = EwSlimeoid(member = cmd.message.author, )
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
@@ -61,7 +62,7 @@ class EwSlimeoid:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM slimeoids{}".format(
 					ewcfg.col_id_slimeoid,
 					ewcfg.col_id_user,
 					ewcfg.col_id_server,
@@ -81,6 +82,7 @@ class EwSlimeoid:
 					ewcfg.col_level,
 					ewcfg.col_time_defeated,
 					ewcfg.col_clout,
+					ewcfg.col_hue,
 					query_suffix
 				))
 				result = cursor.fetchone();
@@ -106,6 +108,7 @@ class EwSlimeoid:
 					self.level = result[16]
 					self.time_defeated = result[17]
 					self.clout = result[18]
+					self.hue = result[19]
 
 			finally:
 				# Clean up the database handles.
@@ -120,7 +123,7 @@ class EwSlimeoid:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO slimeoids({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_slimeoid,
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
@@ -139,7 +142,8 @@ class EwSlimeoid:
 				ewcfg.col_intel,
 				ewcfg.col_level,
 				ewcfg.col_time_defeated,
-				ewcfg.col_clout
+				ewcfg.col_clout,
+				ewcfg.col_hue
 			), (
 				self.id_slimeoid,
 				self.id_user,
@@ -159,7 +163,8 @@ class EwSlimeoid:
 				self.intel,
 				self.level,
 				self.time_defeated,
-				self.clout
+				self.clout,
+				self.hue
 			))
 
 			conn.commit()
@@ -1335,6 +1340,10 @@ def slimeoid_describe(slimeoid):
 	if brain != None:
 		response += " {}".format(brain.str_brain)
 
+	hue = ewcfg.hue_map.get(slimeoid.hue)
+	if hue != None:
+		response += " {}".format(hue.str_desc)
+
 	stat_desc = []
 
 	stat = slimeoid.atk
@@ -2296,3 +2305,62 @@ def calculate_clout_gain(clout):
 		clout = 100
 
 	return clout
+
+class EwHue:
+	id_hue = ""
+	alias = []
+	str_saturate = ""
+	str_name= ""
+	str_desc = ""
+	def __init__(
+		self,
+		id_hue = "",
+		alias = [],
+		str_saturate = "",
+		str_name= "",
+		str_desc = "",
+	):
+		self.id_hue = id_hue
+		self.alias = alias
+		self.str_saturate = str_saturate
+		self.str_name= str_name
+		self.str_desc = str_desc
+
+async def saturateslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "Wow, great idea! Too bad you don’t even have a slimeoid with which to saturate! You’d think you’d remember really obvious stuff like that, but no. What a dumbass."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	elif item_sought:
+		value = item_search
+		hue = ewcfg.hue_map.get(value)
+
+		if hue != None:
+			response = "You saturate your {} with the {} Dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
+			slimeoid.hue = hue.id_hue
+			slimeoid.persist()
+
+			ewitem.item_delete(id_item = item_sought.get('id_item'))
+			user_data.persist()
+
+		else:
+			response = "You can only saturate your slimeoid with dyes."
+
+	else:
+		if item_search:  # if they didn't forget to specify an item and it just wasn't found
+			response = "You can only saturate your slimeoid with dyes."
+		else:
+			response = "Saturate your slimeoid with what, exactly? (check **!inventory**)"
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

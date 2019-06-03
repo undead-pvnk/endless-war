@@ -462,7 +462,7 @@ async def capture_tick(id_server):
 				player_faction = player[1]
 				player_life_state = player[2]
 				player_id = player[3]
-				player_slimes = player[4]
+				#player_slimes = player[4] #commented because now you have to have 50k slime to enlist anyway
 
 				if player_poi == district_name and player_life_state == ewcfg.life_state_enlisted:  # if the player is in the district and a gang member
 					try:
@@ -472,7 +472,8 @@ async def capture_tick(id_server):
 
 					#ewutils.logMsg("Online status checked. Time elapsed: %f" % (time.time() - time_old) + " Server: %s" % id_server + " Player: %s" % player_id + " Status: %s" % ("online" if player_online else "offline"))
 
-					if player_online and player_slimes >= 10000:
+					#if player_online and player_slimes >= 50000:
+					if player_online:
 						if faction_capture != None and faction_capture != player_faction:  # if someone of the opposite faction is in the district
 							faction_capture = 'both'  # standstill, gang violence has to happen
 							capture_speed = 0

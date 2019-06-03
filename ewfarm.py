@@ -1,10 +1,14 @@
 import time
 import random
-import ewcfg
 
+import ewcfg
 import ewitem
 import ewutils
+
 from ew import EwUser
+from ewmarket import EwMarket
+from ewfood import EwFood
+from ewitem import EwItem
 
 class EwFarm:
 	id_server = ""
@@ -60,7 +64,6 @@ class EwFarm:
 				self.time_lastsow
 			)
 		)
-
 
 """
 	Reap planted crops.
@@ -133,7 +136,7 @@ async def reap(cmd):
 								'food_desc': vegetable.str_desc,
 								'recover_hunger': vegetable.recover_hunger,
 								'str_eat': vegetable.str_eat,
-								'time_expir': time.time() + (vegetable.time_expir if vegetable.time_expir is not None else ewcfg.std_food_expir)
+								'time_expir': time.time() + ewcfg.farm_food_expir
 							}
 						)
 
@@ -197,7 +200,7 @@ async def sow(cmd):
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
 				# Sowing
-				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about half a day."
+				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about 3 hours."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
 				ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
@@ -205,3 +208,97 @@ async def sow(cmd):
 				farm.persist()
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def mill(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+	# Checking availability of milling
+	if user_data.life_state != ewcfg.life_state_juvenile:
+		response = "Only Juveniles of pure heart and with nothing better to do can mill their vegetables."
+	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+		response = "Alas, there doesn’t seem to be an official SlimeCorp milling station anywhere around here. Probably because you’re in the middle of the fucking city. Try looking where you reaped your vegetable in the first place, dumbass."
+
+	elif user_data.slimes < ewcfg.slimes_permill:
+		response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
+
+	elif item_sought:
+		items = []
+		vegetable = EwItem(id_item = item_sought.get('id_item'))
+
+		for result in ewcfg.mill_results:
+			if result.ingredients != vegetable.item_props.get('id_food'):
+				pass
+			else:
+				items.append(result)
+
+		if len(items) > 0:
+			item = random.choice(items)
+
+			if hasattr(item, 'id_item'):
+				ewitem.item_create(
+					item_type = ewcfg.it_item,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = {
+						'id_item': item.id_item,
+						'context': item.context,
+						'subcontext': item.subcontext,
+						'item_name': item.str_name,
+						'item_desc': item.str_desc,
+						'ingredients': item.ingredients,
+					}
+				),
+
+			elif hasattr(item, 'id_food'):
+				ewitem.item_create(
+					item_type = ewcfg.it_food,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = {
+						'id_food': item.id_food,
+						'food_name': item.str_name,
+						'food_desc': item.str_desc,
+						'recover_hunger': item.recover_hunger,
+						'inebriation': item.inebriation,
+						'str_eat': item.str_eat,
+						'time_expir': time.time() + ewcfg.farm_food_expir
+					}
+				),
+
+			elif hasattr(item, 'id_cosmetic'):
+				ewitem.item_create(
+					item_type = ewcfg.it_cosmetic,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = {
+						'id_cosmetic': item.id_cosmetic,
+						'cosmetic_name': item.str_name,
+						'cosmetic_desc': item.str_desc,
+						'rarity': item.rarity,
+						'adorned': 'false'
+					}
+				),
+
+			response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You painfully grip the needle-covered crank handle, dripping {} slime into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(ewcfg.slimes_permill, item.str_name)
+
+			market_data.donated_slimes += ewcfg.slimes_permill
+			market_data.persist()
+
+			ewitem.item_delete(id_item = item_sought.get('id_item'))
+			user_data.change_slimes(n = -ewcfg.slimes_permill, source = ewcfg.source_spending)
+			user_data.persist()
+		else:
+			response = "You can only mill fresh vegetables! SlimeCorp obviously wants you to support local farmers."
+
+	else:
+		if item_search:  # if they didn't forget to specify an item and it just wasn't found
+			response = "You don't have one."
+		else:
+			response = "Mill which item? (check **!inventory**)"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+

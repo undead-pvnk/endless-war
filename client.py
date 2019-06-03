@@ -17,10 +17,9 @@ import re
 import os
 import shlex
 
-import ewfarm
-
 import ewutils
 import ewcfg
+import ewfarm
 import ewcmd
 import ewcasino
 import ewfood
@@ -94,6 +93,7 @@ cmd_map = {
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
+	ewcfg.cmd_renounce: ewjuviecmd.renounce,
 
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
@@ -226,6 +226,7 @@ cmd_map = {
 
 	# Release a player from their faction.
 	ewcfg.cmd_pardon: ewkingpin.pardon,
+	ewcfg.cmd_banish: ewkingpin.banish,
 
 
 	# Navigate the world map.
@@ -260,9 +261,10 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_mill: ewfarm.mill,
 
-        #scavenging
-        ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+     #scavenging
+	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
 	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
@@ -326,6 +328,7 @@ cmd_map = {
 	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
+	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -473,12 +476,17 @@ async def on_ready():
 				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
 				await resp_cont.post()
+
+				asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
+				asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+				await ewtransport.init_transports(id_server = server.id)
+				# await ewtransport.init_transports(id_server = server.id)
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		await ewtransport.init_transports(id_server = server.id)
+		#await ewtransport.init_transports(id_server = server.id)
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -860,6 +868,28 @@ async def on_message(message):
 			user_data.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+
+		elif debug == True and cmd == '!createapple':
+			item_id = ewitem.item_create(
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_type = ewcfg.it_food,
+				item_props = {
+					'id_food': "direapples",
+					'food_name': "Dire Apples",
+					'food_desc': "This sure is a illegal Dire Apple!",
+					'recover_hunger': 500,
+					'str_eat': "You chomp into this illegal Dire Apple.",
+					'time_expir': time.time() + ewcfg.farm_food_expir
+				}
+			)
+
+			ewutils.logMsg('Created item: {}'.format(item_id))
+			item = EwItem(id_item = item_id)
+			item.item_props['test'] = 'meow'
+			item.persist()
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
 
 
 

@@ -421,12 +421,15 @@ async def attack(cmd):
 					was_killed = True
 
 				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				slime_splatter = min(slimes_damage, max(shootee_data.slimes - shootee_data.bleed_storage, 0))
+				slime_drained = int(slime_splatter / 2) + int(slime_splatter / 4) # 3/4
 				if was_juvenile or user_data.faction == shootee_data.faction:
-					district_data.change_slimes(n = slime_splatter / 2, source = ewcfg.source_killing)
-					shootee_data.bleed_storage += int(slime_splatter / 2)
-					shootee_data.change_slimes(n = -int(slime_splatter / 2), source = ewcfg.source_damage)
+					sewer_data.change_slimes(n = slime_drained)
+					district_data.change_slimes(n = slime_splatter / 8, source = ewcfg.source_killing)
+					shootee_data.bleed_storage += int(slime_splatter / 8)
+					shootee_data.change_slimes(n = -int(slime_splatter / 8), source = ewcfg.source_damage)
 					damage = str(slimes_damage)
 				else:
 					boss_slimes += int(slime_splatter / 2)
@@ -1005,8 +1008,8 @@ async def marry(cmd):
 	elif weapon is None:
 		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	#Makes sure you have a displayed rank 8 or higher weapon.
-	elif user_data.weaponskill < 12:
+	#Makes sure you have a displayed rank 6 or higher weapon.
+	elif user_data.weaponskill < 10:
 		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
