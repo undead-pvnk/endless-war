@@ -30,7 +30,7 @@ async def enlist(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.faction == ewcfg.factoin_banned:
-		response = "You are banned from enlisting in either gangs."
+		response = "You are banned from enlisting in gangs."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state == ewcfg.life_state_enlisted:
