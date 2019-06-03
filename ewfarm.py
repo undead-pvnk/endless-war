@@ -7,6 +7,7 @@ import ewutils
 
 from ew import EwUser
 from ewmarket import EwMarket
+from ewfood import EwFood
 from ewitem import EwItem
 
 class EwFarm:
@@ -121,7 +122,7 @@ async def reap(cmd):
 						)
 
 					#  Determine what crop is grown.
-					vegetable = ewcfg.vegetable_list[random.randint(0, len(ewcfg.vegetable_list) - 1)]
+					vegetable = random.choice(ewcfg.vegetable_list)
 
 					#  Create and give a bushel of whatever crop was grown.
 					for vcreate in range(4):
@@ -225,9 +226,10 @@ async def mill(cmd):
 
 	elif item_sought:
 		items = []
+		vegetable = EwItem(id_item = item_sought.get('id_item'))
 
 		for result in ewcfg.mill_results:
-			if result.ingredients != item_search:
+			if result.ingredients != vegetable:
 				pass
 			else:
 				items.append(result)

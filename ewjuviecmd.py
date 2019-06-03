@@ -29,7 +29,7 @@ async def enlist(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.faction == ewcfg.factoin_banned:
+	if user_data.faction == ewcfg.faction_banned:
 		response = "You are banned from enlisting in gangs."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -61,6 +61,9 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.persist()
+
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 	else:
 		response = "You can't do that right now, bitch."
 
@@ -75,7 +78,7 @@ async def renounce(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state != ewcfg.life_state_enlisted:
-		response = "What exactly are you renouncing? Your lackisdical, idyllic life free of vice and violence? You aren't currently enlisted in any gang, retard!"
+		response = "What exactly are you renouncing? Your lackadaisical, idyllic life free of vice and violence? You aren't currently enlisted in any gang, retard!"
 
 	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
 		response = "To turn in your badge, you must return to your soon-to-be former gang base."

@@ -57,20 +57,17 @@ async def revive(cmd):
 
 			# Shower every district in the city with slime from the sewers.
 			# Get a list of all the districts
-			for poi_object in ewcfg.poi_list:
+			for poi_object in ewcfg.capturable_districts:
 				poi = poi_object.id_poi
 				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 
-				# the amount of slime showered is divided equally amongst the 32 districts
-				geyser_amount = int(district_data.slimes / 32)
+				# the amount of slime showered is divided equally amongst the districts
+				districts_amount = len(ewcfg.capturable_districts)
+				geyser_amount = int(district_data.slimes / districts_amount)
 
-				# Doesn't spray into sub-zones
-				if poi_object.is_capturable == False:
-					pass
-				else:
-					district_data.change_slimes(n = geyser_amount)
-					sewer_data.change_slimes(n = -1 * geyser_amount)
+				district_data.change_slimes(n = geyser_amount)
+				sewer_data.change_slimes(n = -1 * geyser_amount)
 
 				district_data.persist()
 				sewer_data.persist()

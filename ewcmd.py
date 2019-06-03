@@ -593,7 +593,7 @@ async def saturateslimeoid(cmd):
 		response = "Slimeoids don't fuck with ghosts."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-		response = "You do not have a Slimeoid to saturate."
+		response = "Wow, great idea! Too bad you don’t even have a slimeoid with which to saturate! You’d think you’d remember really obvious stuff like that, but no. What a dumbass."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
@@ -611,13 +611,13 @@ async def saturateslimeoid(cmd):
 			user_data.persist()
 
 		else:
-			response = "You can only saturate your slimeoid with dyes. 2"
+			response = "You can only saturate your slimeoid with dyes."
 
 	else:
 		if item_search:  # if they didn't forget to specify an item and it just wasn't found
-			response = "You can only saturate your slimeoid with dyes. 1"
+			response = "You can only saturate your slimeoid with dyes."
 		else:
-			response = "Saturate your slimeoid with what? (check **!inventory**)"
+			response = "Saturate your slimeoid with what, exactly? (check **!inventory**)"
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -2732,7 +2732,7 @@ async def slimeoidbattle(cmd):
 						if challenger_splitcomplementary != "" or s2hp > 0:
 							response = ""
 							if challenger_splitcomplementary != "":
-								response = challenger_splitcomplementary
+								response += challenger_splitcomplementary
 
 							if s2hp > 0:
 								if hp/damage > 10:

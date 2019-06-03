@@ -59,16 +59,16 @@ async def banish(cmd):
 			response = "Who?"
 		else:
 			member_data = EwUser(member = member)
-			faction_old = member_data.faction
-			member_data.faction = ewcfg.factoin_banned
+			member_data.faction = ewcfg.faction_banned
 
 			if member_data.life_state == ewcfg.life_state_enlisted:
 				member_data.life_state = ewcfg.life_state_juvenile
 
 			member_data.persist()
-			response = "{} has been banned from enlisting in gangs, and are hereby forced to live the rest of their lives as a lowily juvenile.".format(member.display_name, faction_old)
+			response = "{} has been banned from enlisting in gangs, and are hereby forced to live the rest of their lives as a lowly juvenile.".format(member.display_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ Destroy a megaslime of your own for lore reasons. """
 async def deadmega(cmd):

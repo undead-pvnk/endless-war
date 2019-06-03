@@ -735,7 +735,6 @@ async def look(cmd):
 	# get information about slime levels in the district
 	slimes = district_data.slimes
 	slimes_resp = "\n\n"
-	slimes_resp += "There is exactly {} slime in this district. Hi M@!".format(district_data.slimes)
 	if slimes < 10000:
 		slimes_resp += "There are a few specks of slime splattered across the city streets."
 	elif slimes < 100000:

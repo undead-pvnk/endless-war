@@ -471,6 +471,11 @@ async def on_ready():
 				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
 				await resp_cont.post()
+
+				asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
+				asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+				await ewtransport.init_transports(id_server = server.id)
+				# await ewtransport.init_transports(id_server = server.id)
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 

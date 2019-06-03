@@ -201,11 +201,11 @@ faction_roles = [
 	]
 
 # Faction names and bases
-faction_killers = "Killers"
+faction_killers = "killers"
 gangbase_killers = "Cop Killtown"
-faction_rowdys = "Rowdys"
+faction_rowdys = "rowdys"
 gangbase_rowdys = "Rowdy Roughhouse"
-factoin_banned = "Banned"
+faction_banned = "banned"
 factions = [faction_killers, faction_rowdys]
 
 # Channel names
@@ -573,7 +573,7 @@ invuln_onrevive = 0
 weapon_fee = 100
 
 # farming
-crops_time_to_grow = 1  # in minutes; 180 minutes are 3 hours
+crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
@@ -6772,7 +6772,7 @@ hue_list = [
 		],
 		str_saturate = "It looks so purdy now!",
 		str_name = "Teal",
-		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, because coming to your senses and realizing there is no legal system here."
+		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here."
 	),
 	EwHue(
 		id_hue = "rainbow",
