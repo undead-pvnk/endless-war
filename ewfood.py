@@ -66,7 +66,7 @@ class EwFood:
 		self.str_eat = str_eat
 		self.inebriation = inebriation
 		self.str_desc = str_desc
-		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir,
+		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir
 		self.ingredients = ingredients
 
 
