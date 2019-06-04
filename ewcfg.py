@@ -212,6 +212,13 @@ faction_roles = [
 	role_grandfoe
 	]
 
+role_to_pvp_role = {
+	role_juvenile : role_juvenile_pvp,
+	role_rowdyfuckers : role_rowdyfuckers_pvp,
+	role_copkillers : role_copkillers_pvp,
+	role_corpse : role_corpse_pvp
+	}
+
 # Faction names and bases
 faction_killers = "killers"
 gangbase_killers = "Cop Killtown"
