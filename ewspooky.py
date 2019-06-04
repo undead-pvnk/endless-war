@@ -59,8 +59,7 @@ async def revive(cmd):
 
 			# Shower every district in the city with slime from the sewers.
 			# Get a list of all the districts
-			for poi_object in ewcfg.capturable_districts:
-				poi = poi_object.id_poi
+			for poi in ewcfg.capturable_districts:
 				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 
