@@ -67,7 +67,7 @@ async def smelt(cmd):
 		cosmetics_list = []
 
 		for result in ewcfg.cosmetic_items_list:
-			if result.ingredients == None:
+			if result.ingredients == "":
 				cosmetics_list.append(result)
 			else:
 				pass
