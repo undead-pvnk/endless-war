@@ -127,7 +127,7 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return 0
 
-		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} = %s".format(
 			id_user = ewcfg.col_id_user,
 			slimelevel = ewcfg.col_slimelevel,
 			poi = ewcfg.col_poi,
@@ -135,7 +135,7 @@ class EwDistrict:
 		),(
 			self.id_server,
 			self.name,
-			ewcfg.life_state_kingpin
+			ewcfg.life_state_enlisted
 		))
 
 		num_players = 0

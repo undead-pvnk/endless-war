@@ -763,7 +763,7 @@ async def look(cmd):
 
 	# get information about players in the district
 	players_in_district = district_data.get_number_of_players(min_level = min_level)
-	if user_data.life_state != ewcfg.life_state_kingpin:
+	if user_data.life_state == ewcfg.life_state_enlisted:
 		players_in_district -= 1
 
 	players_resp = "\n\n"
@@ -859,7 +859,7 @@ async def scout(cmd):
 
 		# get information about other gangsters in the district
 		players_in_district = district_data.get_number_of_players(min_level = min_level)
-		if poi.id_poi == user_poi.id_poi and user_data.life_state != ewcfg.life_state_kingpin:
+		if poi.id_poi == user_poi.id_poi and user_data.life_state == ewcfg.life_state_enlisted:
 			players_in_district -= 1
 
 		players_resp = ""
