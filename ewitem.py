@@ -68,7 +68,7 @@ class EwItem:
 	stack_size = 0
 	soulbound = False
 
-	item_props = {}
+	item_props = None
 
 	def __init__(
 		self,
@@ -77,8 +77,9 @@ class EwItem:
 		if(id_item != None):
 			self.id_item = id_item
 
+			self.item_props = {}
 			# the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
-			self.item_props.clear()
+			#self.item_props.clear()
 
 			try:
 				conn_info = ewutils.databaseConnect()
