@@ -742,7 +742,7 @@ def market_tick(stock_data, id_server):
 			stock_data.total_shares -= shares_lost
 			updateUserTotalShares(stock = stock_data.id_stock, id_user = majority_shareholder, id_server = stock_data.id_server, shares = shares - shares_lost)
 			response += ' The majority shareholder {} is held responsible. SlimeCorp seizes 90% of their shares in the company to pay for the damages.'.format(player_data.display_name)
-			stock_data.exchange_rate = 1000
+			stock_data.exchange_rate = 10000
 		else:
 			response += ' SlimeCorp pumps several billion slimecoin into bailing the company out and a new image campaign.'
 			stock_data.exchange_rate = ewcfg.default_stock_exchange_rate
