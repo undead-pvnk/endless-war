@@ -459,8 +459,8 @@ async def capture_tick(id_server):
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
 			
 			nega_present = len(slimeoids) > 0
-			if nega_present:
-				continue
+#			if nega_present:
+#				continue
 
 			# the faction that's actively capturing the district this tick
 			# if no players are present, it's None, if only players of one faction (ignoring juvies and ghosts) are,
