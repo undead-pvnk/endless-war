@@ -986,15 +986,15 @@ stats_clear_on_death = [
 	stat_slimesfromkills,
 	stat_kills,
 	stat_ghostbusts,
-        stat_slimesfarmed,
-        stat_slimesscavenged
+    stat_slimesfarmed,
+     stat_slimesscavenged
 ]
 
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
 	aim = (random.randrange(100) + 1)
 
-	if aim <= (10 + int(100 * ctn.miss_mod)):
+	if aim <= (10 + (100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim >= (90 + (100 * ctn.crit_mod)):
@@ -1005,10 +1005,10 @@ def wef_gun(ctn = None):
 def wef_dualpistols(ctn = None):
 	aim = (random.randrange(100) + 1)
 
-	if aim <= (40 + int(100 * ctn.miss_mod)):
+	if aim <= (40 + (100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= (80 + int(100 * ctn.crit_mod)):
+	elif aim >= (80 + (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
@@ -1044,14 +1044,18 @@ def wef_nunchucks(ctn = None): #TODO
 def wef_katana(ctn = None): #TODO
 	ctn.miss = False
 	base_damage = int(ctn.slimes_damage) * 0.5
+	aim = (random.randrange(100) + 1)
+
 	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
+
 	if last_attack > 0:
-		print(ctn.time_now)
-		print(last_attack)
 		last_attack = ctn.time_now - last_attack
 		ctn.slimes_damage = max(base_damage, min(base_damage * (last_attack/8640),10))
 
-	if(random.randrange(100) + 1) <= 20:
+	if aim <= (100 * ctn.miss_mod):
+		ctn.miss = True
+		ctn.slimes_damage = 0
+	elif aim <= 20 + (100 * ctn.crit_mod):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1066,7 +1070,7 @@ def wef_katana(ctn = None): #TODO
 # weapon effect function for "bat"
 def wef_bat(ctn = None): 
 	aim = (random.randrange(10, 27) - 10)
-	if aim <= (0 + int(16 * ctn.miss_mod)):
+	if aim <= (0 + (16 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
@@ -1077,7 +1081,7 @@ def wef_bat(ctn = None):
 	else:
 		ctn.slimes_damage = int(ctn.slimes_damage * min(max(0.5, aim / 10) , 1.5))
 
-		if aim >= (16 + int(16 * ctn.crit_mod)):
+		if aim >= (16 + (16 * ctn.crit_mod)):
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
@@ -1086,21 +1090,25 @@ def wef_garrote(ctn = None):
 	dmg = ctn.slimes_damage * 15
 
 	aim = (random.randrange(100) + 1)
-	if aim == 1:
+	if aim <= (100 * ctn.miss_mod):
+		dmg = 0
+		ctn.miss = True 
+	elif aim == 1 + (100 * ctn.crit_mod):
 		dmg *= 10
 		ctn.crit = True
 
 	#Damage is delayed, user doesn't deal damage for now
 	ctn.slimes_damage = 0
-	#Stop movement
-	ewutils.moves_active[ctn.user_data.id_user] = 0
-	#Stun player for 5 seconds
-	ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
-	#Start strangling target
-	ctn.shootee_data.applyStatus(id_status=status_strangled_id, value=dmg, source=ctn.user_data.id_user)
+	if dmg > 0:
+		#Stop movement
+		ewutils.moves_active[ctn.user_data.id_user] = 0
+		#Stun player for 5 seconds
+		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
+		#Start strangling target
+		ctn.shootee_data.applyStatus(id_status=status_strangled_id, value=dmg, source=ctn.user_data.id_user)
 
 # weapon effect function for "brassknuckles"
-def wef_brassknuckles(ctn = None): #TODO? i'll look it over later
+def wef_brassknuckles(ctn = None):
 	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
 	successful_timing = True if (ctn.time_now - last_attack) == 2 else False
 
@@ -1115,9 +1123,9 @@ def wef_brassknuckles(ctn = None): #TODO? i'll look it over later
 		whiff1 = 1
 		whiff2 = 1
 
-		if aim1 <= (20 + int(100 * ctn.miss_mod)):
+		if aim1 <= (20 + (100 * ctn.miss_mod)):
 			whiff1 = 0
-		if aim2 <= (20 + int(100 * ctn.miss_mod)):
+		if aim2 <= (20 + (100 * ctn.miss_mod)):
 			whiff2 = 0
 
 		if whiff1 == 0 and whiff2 == 0:
@@ -1141,11 +1149,11 @@ def wef_molotov(ctn = None):
 	if aim <= 20:
 		ctn.backfire = True
 		ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
-	elif aim > 20 and aim <= 30:
+	elif aim > 20 and aim <= 30 + (100 * ctn.miss_mod):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	else:
-		if aim >= 90:
+		if aim >= 90 + (100 * ctn.crit_mod):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 		
@@ -1207,9 +1215,9 @@ def wef_shotgun(ctn = None):
 
 	aim = (random.randrange(100) + 1)
 
-	if aim <= (10 + int(100 * ctn.miss_mod)):
+	if aim <= (10 + (100 * ctn.miss_mod)):
 		ctn.miss = True
-	elif aim >= (90 + int(100 * ctn.crit_mod)):
+	elif aim >= (90 + (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1225,13 +1233,15 @@ def wef_grenade(ctn = None):
 
 	aim = (random.randrange(100) + 1)
 
-	if aim <= (10 + int(100 * ctn.miss_mod)):
+	if aim <= (10 + (100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.bystander_damage = 0
+
 	elif aim > 10 and aim <= 20:
 		ctn.backfire = True
 		ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
-	elif aim >= (90 + int(100 * ctn.crit_mod)):
+
+	elif aim >= (90 + (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
@@ -2964,7 +2974,7 @@ item_def_list = [
 			'kills': 0,
 			# Successful consecutive hits
 			'consecutive_hits': 0,
-			'time_lastattack': 0
+			'time_lastattack': 0,
 		}
 	),
 	EwItemDef(
@@ -6672,14 +6682,6 @@ status_stunned_id = "stunned"
 
 status_effect_list = [
 	EwStatusEffectDef(
-		id_status = 'vapecloud',
-		time_expire = 30,
-		str_acquire = 'A cloud of smoke envelops your entire body.',
-		str_describe = 'They are covered by a cloud of smoke.',
-		str_describe_self = 'You are covered by a cloud of smoke.',
-		miss_mod = 0.2
-	),
-	EwStatusEffectDef(
 		id_status = status_drunk_id,
 		str_acquire = 'You\'re drunk.',
 		str_describe = 'They are drunk.',
@@ -6698,13 +6700,6 @@ status_effect_list = [
 		id_status = status_ghostbust_id,
 		time_expire = 86400,
 		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts'
-	),
-	EwStatusEffectDef(
-		id_status = "thirdeye",
-		time_expire = 86400,
-		str_acquire = 'test aim',
-		str_describe_self = 'test aim',
-		miss_mod_self = -0.3
 	),
 	EwStatusEffectDef(
 		id_status = status_strangled_id,
