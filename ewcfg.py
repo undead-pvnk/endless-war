@@ -521,7 +521,7 @@ togo_price_increase = 2
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
-milled_food_expir = 12 * 3600 * 14 # 2 weeks
+milled_food_expir = 12 * 3600 * 28 # 2 weeks
 
 # property classes
 property_class_s = "s"
@@ -5756,8 +5756,8 @@ cosmetic_items_list = [
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowlerhat",
-		str_name = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
-		str_desc = "This is a hat.",
+		str_name = "Bowler Hat",
+		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
 		ingredients = "sourpotatoes",
 	),
 	EwCosmeticItem(
@@ -6888,8 +6888,8 @@ hue_list = [
 		effectiveness = {
 			"magenta": hue_analogous,
 			"red": hue_analogous,
-			"teal": hue_atk_complementary,
-			"lime": hue_special_complementary,
+			"cyan": hue_atk_complementary,
+			"green": hue_special_complementary,
 			"rainbow": hue_full_complementary
 		}
 
