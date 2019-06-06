@@ -1555,7 +1555,7 @@ async def negaslimeoid(cmd):
 		response = "Name the horror you wish to behold."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):]
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower()
 
 
 	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = user_data.poi)
@@ -1564,7 +1564,7 @@ async def negaslimeoid(cmd):
 	for id_slimeoid in potential_slimeoids:
 		
 		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
-		name = slimeoid_data.name
+		name = slimeoid_data.name.lower()
 		if slimeoid_search in name:
 			negaslimeoid = slimeoid_data
 			break
@@ -1716,7 +1716,7 @@ async def negaslimeoidbattle(cmd):
 		response = "Name the horror you wish to face."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):]
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower()
 
 	author = cmd.message.author
 
@@ -1735,7 +1735,7 @@ async def negaslimeoidbattle(cmd):
 	for id_slimeoid in potential_challengees:
 		
 		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
-		name = slimeoid_data.name
+		name = slimeoid_data.name.lower()
 		if slimeoid_search in name:
 			challengee_slimeoid = slimeoid_data
 			break
