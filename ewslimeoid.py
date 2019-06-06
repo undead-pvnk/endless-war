@@ -1565,7 +1565,6 @@ async def negaslimeoid(cmd):
 		
 		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
 		name = slimeoid_data.name
-		name = name.replace(" ", "").lower()
 		if slimeoid_search in name:
 			negaslimeoid = slimeoid_data
 			break
@@ -1737,7 +1736,6 @@ async def negaslimeoidbattle(cmd):
 		
 		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
 		name = slimeoid_data.name
-		name = name.replace(" ", "").lower()
 		if slimeoid_search in name:
 			challengee_slimeoid = slimeoid_data
 			break
