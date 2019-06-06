@@ -6,12 +6,11 @@ import ewcfg
 import ewutils
 import ewrolemgr
 
-#from ew import EwUser
 from ewplayer import EwPlayer
 
 class EwStatusEffectDef:
 	id_status = ""
-	# Time until expiration, negative values have non time based expire conditions
+	# Time until expiration, negative values have specific expiration conditions
 	time_expire = -1
     
 	str_acquire = ""

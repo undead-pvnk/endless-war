@@ -997,7 +997,7 @@ def wef_gun(ctn = None):
 	if aim <= (10 + (100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= (90 + (100 * ctn.crit_mod)):
+	elif aim >= (90 - (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1008,7 +1008,7 @@ def wef_dualpistols(ctn = None):
 	if aim <= (40 + (100 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= (80 + (100 * ctn.crit_mod)):
+	elif aim >= (80 - (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
@@ -1041,7 +1041,7 @@ def wef_nunchucks(ctn = None): #TODO
 		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
 
 # weapon effect function for "katana"
-def wef_katana(ctn = None): #TODO
+def wef_katana(ctn = None):
 	ctn.miss = False
 	base_damage = int(ctn.slimes_damage) * 0.5
 	aim = (random.randrange(100) + 1)
@@ -1055,7 +1055,7 @@ def wef_katana(ctn = None): #TODO
 	if aim <= (100 * ctn.miss_mod):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim <= 20 + (100 * ctn.crit_mod):
+	elif aim <= 20 - (100 * ctn.crit_mod):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1081,7 +1081,7 @@ def wef_bat(ctn = None):
 	else:
 		ctn.slimes_damage = int(ctn.slimes_damage * min(max(0.5, aim / 10) , 1.5))
 
-		if aim >= (16 + (16 * ctn.crit_mod)):
+		if aim >= (16 - (16 * ctn.crit_mod)):
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
@@ -1093,7 +1093,7 @@ def wef_garrote(ctn = None):
 	if aim <= (100 * ctn.miss_mod):
 		dmg = 0
 		ctn.miss = True 
-	elif aim == 1 + (100 * ctn.crit_mod):
+	elif aim == 1 - (100 * ctn.crit_mod):
 		dmg *= 10
 		ctn.crit = True
 
@@ -1153,7 +1153,7 @@ def wef_molotov(ctn = None):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	else:
-		if aim >= 90 + (100 * ctn.crit_mod):
+		if aim >= 90 - (100 * ctn.crit_mod):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 		
@@ -1195,20 +1195,6 @@ def wef_yoyo(ctn = None): #TODO
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "pickaxe"
-def wef_pickaxe(ctn = None): #TOREMOVE??
-	dmg = ctn.slime_damage
-	ctn.slimes_damage = int(dmg * 0.5)
-	aim = (random.randrange(10) + 1)
-
-	if aim <= 2:
-		ctn.miss = True
-	elif aim == 9:
-		ctn.user_data.change_slimes(n = -dmg * 2)
-	elif aim == 10:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
 def wef_shotgun(ctn = None):
 	ctn.slimes_damage *= 2
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
@@ -1217,7 +1203,7 @@ def wef_shotgun(ctn = None):
 
 	if aim <= (10 + (100 * ctn.miss_mod)):
 		ctn.miss = True
-	elif aim >= (90 + (100 * ctn.crit_mod)):
+	elif aim >= (90 - (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1241,19 +1227,17 @@ def wef_grenade(ctn = None):
 		ctn.backfire = True
 		ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
-	elif aim >= (90 + (100 * ctn.crit_mod)):
+	elif aim >= (90 - (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
 
 vendor_dojo = "Dojo"
-vendor_mines = "Mines"
 
 weapon_class_ammo = "ammo"
 weapon_class_melee = "melee"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
-weapon_class_pickaxes = "pickaxes"
 
 # All weapons in the game.
 weapon_list = [
@@ -1563,31 +1547,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_melee]
 	),
-	#	EwWeapon( # 13	
-	#	id_weapon = "pickaxe",
-	#	alias = [
-	#		"pick"
-	#	],
-	#	str_crit = "**Critical hit!!** {name_target} pickaxe",
-	#	str_miss = "**MISS!!** {name_player} pickaxe",
-	#	str_equip = "You equip the pickaxe.",
-	#	str_weapon = "a wooden pickaxe",
-	#	str_weaponmaster_self = "You are a rank {rank} master of the pickaxe.",
-	#	str_weaponmaster = "They are a rank {rank} master of the pickaxe.",
-	#	str_trauma_self = "pickaxe trauma self.",
-	#	str_trauma = "pickaxe trauma.",
-	#	str_kill = "pickaxe kill",
-	#	str_killdescriptor = "pickaxe kill description",
-	#	str_damage = "pickaxe dmg",
-	#	str_duel = "pickaxe spar.",
-	#	fn_effect = wef_pickaxe,
-	#	str_description = "A regular wooden pickaxe. It's better for mining than your bare hands, but you feel like it could be improved.",
-	#	# Clip size for pickaxes is the mining bonus
-	#	clip_size = 0.15,
-	#	vendors = [vendor_mines],
-	#	classes = [weapon_class_melee, weapon_class_pickaxes]
-	#),
-			EwWeapon( # 14
+	EwWeapon( # 13
 		id_weapon = "shotgun",
 		#alias = [
 		#	"brap"
@@ -1610,7 +1570,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo]
 	),
-	EwWeapon( # 15	
+	EwWeapon( # 14	
 		id_weapon = "grenade",
 		alias = [
 			"nade"
@@ -1636,8 +1596,7 @@ weapon_list = [
 ]
 
 weapon_vendors = [
-	vendor_dojo,
-	vendor_mines
+	vendor_dojo
 ]
 
 weapon_vendor_inv = {}
@@ -3885,10 +3844,7 @@ poi_list = [
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
-		vendors = [
-			vendor_mines
-		]
+		mother_district = poi_id_juviesrow
 	),
 	EwPoi( # the-casino
 		id_poi = poi_id_thecasino,
@@ -3927,10 +3883,7 @@ poi_list = [
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_cratersville,
-		vendors = [
-			vendor_mines
-		]
+		mother_district = poi_id_cratersville
 	),
 	EwPoi(  # toxington mines
 		id_poi = poi_id_tt_mines,
@@ -3949,10 +3902,7 @@ poi_list = [
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
-		vendors = [
-			vendor_mines
-		]
+		mother_district = poi_id_toxington
 	),
 	EwPoi( # smokers-cough
 		id_poi = poi_id_diner,
