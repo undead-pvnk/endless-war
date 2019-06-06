@@ -1555,7 +1555,7 @@ async def negaslimeoid(cmd):
 		response = "Name the horror you wish to behold."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	slimeoid_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):]
 
 
 	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = user_data.poi)
@@ -1717,7 +1717,7 @@ async def negaslimeoidbattle(cmd):
 		response = "Name the horror you wish to face."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	slimeoid_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):]
 
 	author = cmd.message.author
 
@@ -1775,38 +1775,39 @@ async def negaslimeoidbattle(cmd):
 
 
 	#Start game
-	result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challengee_slimeoid.poi, battle_type = ewcfg.battle_type_nega)
-	if result == -1:
-		# Losing in a nega battle means death
-		district_data = EwDistrict(district = challenger.poi, id_server = cmd.message.server.id)
-		slimes = int(10 ** (challengee_slimeoid.level - 2))
-		district_data.change_slimes(n = slimes)
-		district_data.persist()
-		challengee_slimeoid.delete()
-		response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
-		await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	elif result == 1:
-		# Losing in a nega battle means death
-		challenger_slimeoid.delete()
-		response = "{} feasts on {}'s slime and consumes its soul.".format(challengee_slimeoid.name, challenger_slimeoid.name)
-		response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
-		if challenger_slimeoid.level >= challengee_slimeoid.level:
-			challengee_slimeoid.level += 1
-			rand = random.randrange(3)
-			if rand == 0:
-				challengee_slimeoid.atk += 1
-			elif rand == 1:
-				challengee_slimeoid.defense += 1
-			else:
-				challengee_slimeoid.intel += 1
-			challengee_slimeoid.persist()
-			response += "\n\n{} was empowered by the slaughter and grew a foot taller.".format(challengee_slimeoid.name)
-		await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	# Send the response to the player.
-	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-
-	active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = False
-	active_slimeoidbattles[challengee_slimeoid.id_slimeoid] = False
+	try:
+		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challengee_slimeoid.poi, battle_type = ewcfg.battle_type_nega)
+		if result == -1:
+			# Losing in a nega battle means death
+			district_data = EwDistrict(district = challenger.poi, id_server = cmd.message.server.id)
+			slimes = int(10 ** (challengee_slimeoid.level - 2))
+			district_data.change_slimes(n = slimes)
+			district_data.persist()
+			challengee_slimeoid.delete()
+			response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		elif result == 1:
+			# Losing in a nega battle means death
+			challenger_slimeoid.delete()
+			response = "{} feasts on {}'s slime and consumes its soul.".format(challengee_slimeoid.name, challenger_slimeoid.name)
+			response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
+			if challenger_slimeoid.level >= challengee_slimeoid.level:
+				challengee_slimeoid.level += 1
+				rand = random.randrange(3)
+				if rand == 0:
+					challengee_slimeoid.atk += 1
+				elif rand == 1:
+					challengee_slimeoid.defense += 1
+				else:
+					challengee_slimeoid.intel += 1
+				challengee_slimeoid.persist()
+				response += "\n\n{} was empowered by the slaughter and grew a foot taller.".format(challengee_slimeoid.name)
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	except:
+		ewutils.logMsg("An error occured in the Negaslimeoid battle against {}".format(challengee_slimeoid.name))
+	finally:
+		active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = False
+		active_slimeoidbattles[challengee_slimeoid.id_slimeoid] = False
 
 # Slimeoids lose more clout for losing at higher levels.
 def calculate_clout_loss(clout):

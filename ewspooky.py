@@ -5,6 +5,7 @@ from ewdistrict import EwDistrict
 """
 import time
 import random
+import re
 
 import ewcmd
 import ewcfg
@@ -102,6 +103,7 @@ async def revive(cmd):
 async def haunt(cmd):
 	time_now = int(time.time())
 	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
 	if cmd.mentions_count > 1:
 		response = "You can only spook one person at a time. Who do you think you are, the Lord of Ghosts?"
@@ -156,6 +158,15 @@ async def haunt(cmd):
 			market_data.persist()
 
 			response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
+
+			haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
+			haunt_message = "You feel a cold shiver run down your spine"
+			if cmd.tokens_count > 1:
+				haunt_message_content = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
+				haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
+			haunt_message += "."
+			haunt_message = ewutils.formatMessage(member, haunt_message)
+			resp_cont.add_channel_response(haunted_channel, haunt_message)
 		else:
 			# Some condition we didn't think of.
 			response = "You cannot haunt {}.".format(member.display_name)
@@ -164,7 +175,9 @@ async def haunt(cmd):
 		response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	await resp_cont.post()
+	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def negaslime(cmd):
 	# Add persisted negative slime.
