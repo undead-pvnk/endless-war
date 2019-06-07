@@ -354,7 +354,7 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
-debug = False
+debug = True
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
@@ -491,7 +491,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		await ewtransport.init_transports(id_server = server.id)
+		# await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 
 	try:
