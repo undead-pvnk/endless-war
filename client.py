@@ -333,7 +333,10 @@ cmd_map = {
 
 	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
 	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid_alt1: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,

@@ -161,7 +161,7 @@ async def haunt(cmd):
 
 			haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
 			haunt_message = "You feel a cold shiver run down your spine"
-			if cmd.tokens_count > 1:
+			if cmd.tokens_count > 2:
 				haunt_message_content = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
 				haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
 			haunt_message += "."
