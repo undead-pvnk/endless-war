@@ -223,8 +223,8 @@ class EwSlimeoid:
 
 				# Persist changes to the database.
 				haunted_data.persist()
-				response = "{} has been haunted by {}! Slime has been lost!".format(haunted_player.display_name, self.name)
-				resp_cont.add_channel_response(ch_name, response)
+		response = "{} lets out a blood curdling screech. Everyone in the district loses slime.".format(self.name)
+		resp_cont.add_channel_response(ch_name, response)
 		market_data.persist()
 
 		return resp_cont
