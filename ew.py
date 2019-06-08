@@ -235,6 +235,33 @@ class EwUser:
 
 		return response
 
+	def ban(self, faction = None):
+		if faction is None:
+			return
+		ewutils.execute_sql_query("INSERT INTO bans ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server,
+			self.faction
+		))
+
+	def unban(self, faction = None):
+		if faction is None:
+			return
+		ewutils.execute_sql_query("DELETE FROM bans WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server,
+			self.faction
+		))
+	
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 		if(id_user == None) and (id_server == None):
