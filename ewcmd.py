@@ -392,14 +392,15 @@ async def help(cmd):
 			if not len(cmd.tokens) > 1:
 				# list off help topics to player at college
 				response = 'What would you like to learn about? Topics include: \n' \
-						   '**mining**, **food**, **capturing**, **dojo**, **bleeding**, **scavenging**,\n' \
-						   '**farming**, **slimeoids**, **transportation**, **scouting**, and **offline**.'
+						   '**gangs**, **mining**, **food**, **capturing**, **transportation**, **death**, \n' \
+						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **haunting**, **scouting**, \n' \
+						   '**cosmetics**, **sparring**, **bleeding**, **stocks**, **casino**, and **offline**.'
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				if topic in ewcfg.help_responses:
 					response = ewcfg.help_responses[topic]
 				else:
-					response = 'ENDLESS WAR questions your belief in the existence of such a topic.'
+					response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
 		else:
 			# user not in college, check what help message would apply to the subzone they are in
 
@@ -412,9 +413,17 @@ async def help(cmd):
 			elif (len(poi.vendors) >= 1):
 				response = ewcfg.help_responses['food']
 				# food help
-			elif user_data.poi in ewcfg.poi_id_dojo:
+			elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
 				# dojo help
-				response = ewcfg.help_responses['dojo']
+				response = "For general dojo information, do **'!help dojo'**. For information about the sparring system, do **'!help sparring.'**"
+			elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic == 'dojo':
+					response = ewcfg.help_responses['dojo']
+				elif topic == 'sparring':
+					response = ewcfg.help_responses['sparring']
+				else:
+					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
 			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 				# farming help
 				response = ewcfg.help_responses['farming']
