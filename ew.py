@@ -204,7 +204,7 @@ class EwUser:
 				self.inebriation = 20
 
 			try:
-				if item_props['id_food'] == "coleslaw" or "bloodcabbagecoleslaw":
+				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
 					self.ghostbust = True
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
