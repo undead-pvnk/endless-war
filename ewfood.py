@@ -82,7 +82,7 @@ async def menu(cmd):
 		response = ewcfg.str_food_channelreq.format(action = "see the menu")
 	else:
 		response = "{} Menu:\n\n".format(poi.str_name)
-		valid_vendors = (set(poi.vendors).intersection(set(ewcfg.food_vendors)))
+		valid_vendors = (set(poi.vendors).difference(set(ewcfg.weapon_vendors)))
 		if len(valid_vendors) > 0:
 			for vendor in valid_vendors:
 				food_items = []
