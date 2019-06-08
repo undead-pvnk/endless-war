@@ -632,18 +632,22 @@ async def removeExpiredStatuses(id_server = None):
 
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
-def getIntToken(tokens = [], allow_all = False):
+def getIntToken(tokens = [], allow_all = False, negate = False):
 	value = None
 
 	for token in tokens[1:]:
 		try:
 			value = int(token.replace(",", ""))
-			if value < 0:
+			if value < 0 and not negate:
 				value = None
+			elif value > 0 and negate:
+				value = None
+			elif negate:
+				value = -value
 			break
 		except:
 			if allow_all and ("{}".format(token)).lower() == 'all':
-				value = -1
+				return -1
 			else:
 				value = None
 
@@ -959,3 +963,30 @@ async def edit_message(client, message, text):
 		return await client.edit_message(message, text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
+
+"""
+	Returns a list of slimeoid ids in the district
+"""
+def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
+	slimeoids = []
+	if id_server is None or poi is None:
+		return slimeoids
+
+	query = "SELECT {id_slimeoid} FROM slimeoids WHERE {poi} = %s AND {id_server} = %s".format(
+		id_slimeoid = ewcfg.col_id_slimeoid,
+		poi = ewcfg.col_poi,
+		id_server = ewcfg.col_id_server
+	)
+
+	if sltype is not None:
+		query += " AND {} = '{}'".format(ewcfg.col_type, sltype)
+
+	data = execute_sql_query(query,(
+		poi,
+		id_server
+	))
+
+	for row in data:
+		slimeoids.append(row[0])
+
+	return slimeoids

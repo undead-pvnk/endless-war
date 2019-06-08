@@ -68,7 +68,7 @@ class EwItem:
 	stack_size = 0
 	soulbound = False
 
-	item_props = {}
+	item_props = None
 
 	def __init__(
 		self,
@@ -77,9 +77,10 @@ class EwItem:
 		if(id_item != None):
 			self.id_item = id_item
 
-			# the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
-			self.item_props.clear()
 			self.item_props = {}
+			# the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
+			#self.item_props.clear()
+
 			try:
 				conn_info = ewutils.databaseConnect()
 				conn = conn_info.get('conn')
@@ -185,6 +186,36 @@ class EwItem:
 			# Clean up the database handles.
 			cursor.close()
 			ewutils.databaseClose(conn_info)
+
+"""
+	These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
+"""
+class EwDefaultItem:
+	id_item = " "
+	alias = []
+	context = ""
+	subcontext = ""
+	str_name = ""
+	str_desc = ""
+	ingredients = ""
+
+	def __init__(
+		self,
+		id_item = " ",
+		alias = [],
+		context = "",
+		subcontext = "",
+		str_name = "",
+		str_desc = "",
+		ingredients = "",
+	):
+		self.id_item = id_item
+		self.alias = alias
+		self.context = context
+		self.subcontext = subcontext
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.ingredients = ingredients
 
 
 """

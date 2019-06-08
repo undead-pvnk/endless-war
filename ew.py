@@ -23,6 +23,7 @@ class EwUser:
 	weapon = ""
 	weaponskill = 0
 	trauma = ""
+	poi_death = ""
 	ghostbust = False
 	inebriation = 0
 	faction = ""
@@ -114,16 +115,18 @@ class EwUser:
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
 			self.busted = True
+			self.slimes = int(self.slimes * 0.9)
 		else:
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
+			self.slimes = 0
 			self.life_state = ewcfg.life_state_corpse
+			self.poi_death = self.poi
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 			if cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding:
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 		ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
-		self.slimes = 0
 		self.poi = ewcfg.poi_id_thesewers
 		self.bounty = 0
 		self.totaldamage = 0
@@ -209,8 +212,8 @@ class EwUser:
 				resp_status = "\n" + self.applyStatus(id_status=ewcfg.status_drunk_id)
 						
 			try:
-				if item_props['id_food'] == "coleslaw":
-					self.applyStatus(id_status=ewcfg.status_ghostbust_id)
+				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
+					self.ghostbust = True
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
 						self.die(cause = ewcfg.cause_busted)
@@ -330,7 +333,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -358,7 +361,8 @@ class EwUser:
 					ewcfg.col_bleed_storage,
 					ewcfg.col_time_lastenter,
 					ewcfg.col_time_lastoffline,
-					ewcfg.col_time_joined
+					ewcfg.col_time_joined,
+					ewcfg.col_poi_death,
 				), (
 					id_user,
 					id_server
@@ -395,6 +399,7 @@ class EwUser:
 					self.time_lastenter = result[25]
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
+					self.poi_death = result[28]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -450,7 +455,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -481,7 +486,8 @@ class EwUser:
 				ewcfg.col_bleed_storage,
 				ewcfg.col_time_lastenter,
 				ewcfg.col_time_lastoffline,
-				ewcfg.col_time_joined
+				ewcfg.col_time_joined,
+				ewcfg.col_poi_death,
 			), (
 				self.id_user,
 				self.id_server,
@@ -513,7 +519,8 @@ class EwUser:
 				self.bleed_storage,
 				self.time_lastenter,
 				self.time_lastoffline,
-				self.time_joined
+				self.time_joined,
+				self.poi_death
 			))
 
 			conn.commit()

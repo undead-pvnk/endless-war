@@ -163,6 +163,12 @@ async def updateRoles(
 
 	faction_roles_remove.remove(faction_role)
 
+	pvp_role = None
+	if faction_role in ewcfg.role_to_pvp_role:
+		if user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_juviesrow]:
+			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
+			faction_roles_remove.remove(pvp_role)
+
 	# Manage location roles.
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -196,12 +202,20 @@ async def updateRoles(
 		ewutils.logMsg('error: couldn\'t find role {}'.format(faction_role))
 
 	try:
+		role_data = EwRole(id_server = id_server, name = pvp_role)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(pvp_role))
+
+	try:
 		role_data = EwRole(id_server = id_server, name = poi_role)
 		if not role_data.id_role in role_ids:
 			role_ids.append(role_data.id_role)
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(faction_role))
+		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_role))
 
 	#if faction_role not in role_names:
 	#	role_names.append(faction_role)

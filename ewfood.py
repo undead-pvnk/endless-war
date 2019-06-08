@@ -41,6 +41,9 @@ class EwFood:
 	# Expiration time (can be left blank for standard expiration time)
 	time_expir = 0
 
+	# The ingredients necessary to make this item via milling.
+	ingredients = ""
+
 	def __init__(
 		self,
 		id_food = "",
@@ -52,7 +55,8 @@ class EwFood:
 		str_eat = "",
 		inebriation = 0,
 		str_desc = "",
-		time_expir = 0
+		time_expir = 0,
+		ingredients = ""
 	):
 		self.id_food = id_food
 		self.alias = alias
@@ -64,6 +68,7 @@ class EwFood:
 		self.inebriation = inebriation
 		self.str_desc = str_desc
 		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir
+		self.ingredients = ingredients
 
 
 """ show all available food items """
@@ -105,7 +110,7 @@ async def menu(cmd):
 		else:
 			response = ewcfg.str_food_channelreq.format(action = "see the menu")
 
-	# Send the response to the player.
+	# Send the response to the player.1
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ players order food, for themselves or somebody else """
