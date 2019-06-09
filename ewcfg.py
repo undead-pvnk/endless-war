@@ -2761,7 +2761,7 @@ food_list = [
 		recover_hunger = 60,
 		str_name = 'Pulp Gourds',
 		vendors = [vendor_farm],
-		str_eat = "a",
+		str_eat = "You chomp into the raw Pulp Gourds. It isn't terrible, but you feel like there is a more constructive use for it.",
 		str_desc = "The easily malleable gourds form indents from even your lightest touch.",
 		time_expir = farm_food_expir,
 	),
