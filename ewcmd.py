@@ -393,7 +393,7 @@ async def help(cmd):
 				# list off help topics to player at college
 				response = 'What would you like to learn about? Topics include: \n' \
 						   '**gangs**, **mining**, **food**, **capturing**, **transportation**, **death**, \n' \
-						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **haunting**, **scouting**, \n' \
+						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **ghosts**, **scouting**, \n' \
 						   '**cosmetics**, **sparring**, **bleeding**, **stocks**, **casino**, and **offline**.'
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
