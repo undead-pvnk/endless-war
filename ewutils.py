@@ -689,6 +689,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 	elif life_state == ewcfg.life_state_grandfoe:
 		faction_role = ewcfg.role_grandfoe
 
+	elif life_state == ewcfg.life_state_lucky:
+		faction_role = ewcfg.role_slimecorp
+
 	return faction_role
 
 def get_faction_symbol(faction = "", faction_raw = ""):

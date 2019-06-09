@@ -197,6 +197,7 @@ role_corpse = "corpse"
 role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
+role_slimecorp = "slimecorp"
 
 faction_roles = [
 	role_juvenile,
@@ -210,7 +211,8 @@ faction_roles = [
 	role_corpse,
 	role_corpse_pvp,
 	role_kingpin,
-	role_grandfoe
+	role_grandfoe,
+	role_slimecorp
 	]
 
 role_to_pvp_role = {
