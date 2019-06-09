@@ -479,6 +479,8 @@ def inaccessible(user_data = None, poi = None):
 	if user_data.life_state == ewcfg.life_state_observer:
 		return False
 
+	bans = user_data.get_bans()
+
 	if(
 		len(poi.factions) > 0 and
 		len(user_data.faction) > 0 and
@@ -486,6 +488,12 @@ def inaccessible(user_data = None, poi = None):
 	) or (
 		len(poi.life_states) > 0 and
 		user_data.life_state not in poi.life_states
+	):
+		return True
+	elif(
+		len(poi.factions) > 0 and 
+		len(bans) > 0 and 
+		set(poi.factions).issubset(set(bans))
 	):
 		return True
 	elif user_data.life_state == ewcfg.life_state_corpse:

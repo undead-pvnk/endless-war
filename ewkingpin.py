@@ -27,10 +27,10 @@ async def pardon(cmd):
 			response = "Who?"
 		else:
 			member_data = EwUser(member = member)
-                        member_data.unban(faction = user_data.faction)
+			member_data.unban(faction = user_data.faction)
 
 			if member_data.faction == "":
-				response = "{} isn't enlisted.".format(member.display_name)
+				response = "{} has been allowed to join the {} again.".format(member.display_name, user_data.faction)
 			else:
 				faction_old = member_data.faction
 				member_data.faction = ""
@@ -63,7 +63,7 @@ async def banish(cmd):
 			member_data.ban(faction = user_data.faction)
 
 			if member_data.faction == user_data.faction:
-                                member_data.faction = ""
+				member_data.faction = ""
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 

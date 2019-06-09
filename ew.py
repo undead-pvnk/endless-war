@@ -245,7 +245,7 @@ class EwUser:
 		),(
 			self.id_user,
 			self.id_server,
-			self.faction
+			faction
 		))
 
 	def unban(self, faction = None):
@@ -258,8 +258,25 @@ class EwUser:
 		),(
 			self.id_user,
 			self.id_server,
-			self.faction
+			faction
 		))
+
+	def get_bans(self):
+		bans = []
+		data = ewutils.execute_sql_query("SELECT {faction} FROM bans WHERE {id_user} = %s AND {id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+		for row in data:
+			bans.append(row[0])
+
+		return bans
+
 	
 
 	""" Create a new EwUser and optionally retrieve it from the database. """

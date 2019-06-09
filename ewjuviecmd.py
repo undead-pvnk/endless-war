@@ -29,9 +29,6 @@ async def enlist(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.faction == ewcfg.faction_banned:
-		response = "You are banned from enlisting in gangs."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state == ewcfg.life_state_enlisted:
 			if user_data.faction == ewcfg.faction_killers:
@@ -51,12 +48,20 @@ async def enlist(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state == ewcfg.life_state_juvenile:
+		bans = user_data.get_bans()
+
 		if user_data.poi == ewcfg.poi_id_copkilltown:
+			if ewcfg.faction_killers in bans:
+				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.persist()
 		else:
+			if ewcfg.faction_rowdys in bans:
+				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
