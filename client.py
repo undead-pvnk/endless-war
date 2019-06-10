@@ -898,6 +898,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
 
 
+
 		# FIXME debug
 		# Test item deletion
 		elif debug == True and cmd == '!delete':

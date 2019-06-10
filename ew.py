@@ -104,10 +104,6 @@ class EwUser:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_hauntinflicted, value = change)
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeshaunted, n = change)
 
-			if source == ewcfg.source_donating:
-				ewstats.track_maximum(user = self, metric = ewcfg.stat_donations, value = change)
-				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_donations, n = change)
-
 		# potentially level up
 		new_level = ewutils.level_byslime(self.slimes)
 		if new_level > self.slimelevel:

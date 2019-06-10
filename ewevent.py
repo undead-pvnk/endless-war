@@ -49,8 +49,8 @@ def init_stat_function_map():
 		ewcfg.stat_ghostbusts: process_ghostbusts,
 		ewcfg.stat_max_ghostbusts: process_max_ghostbusts,
 		ewcfg.stat_poudrins_looted: process_poudrins_looted,
-		ewcfg.stat_slimesfarmed: process_slimesfarmed,
-		ewcfg.stat_slimesscavenged: process_slimesscavenged,
+                ewcfg.stat_slimesfarmed: process_slimesfarmed,
+                ewcfg.stat_slimesscavenged: process_slimesscavenged
 	}
 	global fns_initialized
 	fns_initialized = True

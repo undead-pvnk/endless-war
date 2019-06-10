@@ -467,7 +467,7 @@ async def donate(cmd):
 			market_data.persist()
 			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
 			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
-			user_data.slime (n = cost_total)
+			user_data.slime_donations += cost_total
 
 			# Persist changes
 			user_data.persist()
