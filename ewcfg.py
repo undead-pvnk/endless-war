@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.3a"
+version = "v3.3b"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -777,6 +777,7 @@ col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
+col_slime_donations = 'donated_slimes'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -871,6 +872,7 @@ leaderboard_podrins = "PODRIN LORDS"
 leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
+leaderboard_donated = "LOYALEST CONSUMERS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1220,7 +1222,13 @@ def wef_nunchucks(ctn = None):
 def wef_katana(ctn = None):
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-	if(random.randrange(10) + 1) == 10:
+
+	#lucky lucy's lucky katana always crits
+	if ctn.user_data.life_state == life_state_lucky:
+		ctn.crit = True
+		ctn.slimes_damage *= 7.77
+
+	elif(random.randrange(10) + 1) == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2.1
 
