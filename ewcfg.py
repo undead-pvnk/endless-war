@@ -1222,7 +1222,13 @@ def wef_nunchucks(ctn = None):
 def wef_katana(ctn = None):
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-	if(random.randrange(10) + 1) == 10:
+
+	#lucky lucy's lucky katana always crits
+	if ctn.user_data.life_state == life_state_lucky:
+		ctn.crit = True
+		ctn.slimes_damage *= 7.77
+
+	elif(random.randrange(10) + 1) == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2.1
 
