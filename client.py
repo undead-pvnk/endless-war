@@ -354,7 +354,7 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
-debug = False
+debug = True
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
@@ -896,7 +896,6 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
-
 
 
 		# FIXME debug

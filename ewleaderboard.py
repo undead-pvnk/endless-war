@@ -25,6 +25,8 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	topdonated = make_userdata_board(server = server, category = ewcfg.col_user_donated_slimes, title = ewcfg.leaderboard_donated)
+	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
 
@@ -87,7 +89,7 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 		i = 0
 		row = cursor.fetchone()
 		while (row != None) and (i < rows):
-			if row[1] == ewcfg.life_state_kingpin or row[1] == ewcfg.life_state_grandfoe:
+			if row[1] == ewcfg.life_state_kingpin or row[1] == ewcfg.life_state_grandfoe or row[1] == ewcfg.life_state_lucky:
 				row = cursor.fetchone()
 			else:
 				entries.append(row)
@@ -198,6 +200,10 @@ def board_header(title):
 
 	elif title == ewcfg.leaderboard_districts:
 		emote = ewcfg.emote_nlacakanm
+		bar += " "
+
+	elif title == ewcfg.leaderboard_donated:
+		emote = ewcfg.emote_slimecorp
 		bar += " "
 
 	return emote + bar + title + bar + emote + "\n"

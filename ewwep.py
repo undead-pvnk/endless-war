@@ -334,6 +334,10 @@ async def attack(cmd):
 					strikes = ctn.strikes
 					# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
+					#lucky lucy always crits
+					if user_data.life_state == ewcfg.life_state_lucky:
+						crit = True
+
 				# can't hit lucky lucy
 				if shootee_data.life_state == ewcfg.life_state_lucky:
 					miss = True

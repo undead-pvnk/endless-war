@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.3a"
+version = "v3.3b"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -777,6 +777,7 @@ col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
+col_user_donated_slimes = 'donated_slimes'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -871,6 +872,7 @@ leaderboard_podrins = "PODRIN LORDS"
 leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
+leaderboard_donated = "LOYALEST CONSUMERS"
 
 # leaderboard entry types
 entry_type_player = "player"
