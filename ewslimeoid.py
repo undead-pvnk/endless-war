@@ -2137,12 +2137,8 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 
 	s1hpmax = 50 + (challengee_slimeoid.level * 20)
-	if challengee_slimeoid.sltype == ewcfg.sltype_nega:
-		s1hpmax *= 1.5
 
 	s2hpmax = 50 + (challenger_slimeoid.level * 20)
-	if challenger_slimeoid.sltype == ewcfg.sltype_nega:
-		s2hpmax *= 1.5
 
 	s1hp = s1hpmax
 	s2hp = s2hpmax
