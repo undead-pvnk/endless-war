@@ -777,7 +777,7 @@ col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
-col_user_donated_slimes = 'donated_slimes'
+col_slime_donations = 'donated_slimes'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
