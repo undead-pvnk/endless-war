@@ -51,7 +51,6 @@ def init_stat_function_map():
 		ewcfg.stat_poudrins_looted: process_poudrins_looted,
 		ewcfg.stat_slimesfarmed: process_slimesfarmed,
 		ewcfg.stat_slimesscavenged: process_slimesscavenged,
-		ewcfg.stat_donations: process_donated
 	}
 	global fns_initialized
 	fns_initialized = True
