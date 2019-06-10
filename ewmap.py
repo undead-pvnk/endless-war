@@ -915,16 +915,17 @@ async def kick(id_server):
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
 			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
-				server = ewcfg.server_list[id_server]
-				member_object = server.get_member(id_user)
+				if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_lucky:
+					server = ewcfg.server_list[id_server]
+					member_object = server.get_member(id_user)
 
-				user_data.poi = poi.mother_district
-				user_data.time_lastenter = int(time.time())
-				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = member_object)
+					user_data.poi = poi.mother_district
+					user_data.time_lastenter = int(time.time())
+					user_data.persist()
+					await ewrolemgr.updateRoles(client = client, member = member_object)
 
-				mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
-				response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
-				await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
+					mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
+					response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
+					await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
 			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))

@@ -15,6 +15,7 @@ class EwUser:
 
 	slimes = 0
 	slimecoin = 0
+	slime_donations = 0
 	slimelevel = 1
 	hunger = 0
 	totaldamage = 0
@@ -297,7 +298,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -327,6 +328,7 @@ class EwUser:
 					ewcfg.col_time_lastoffline,
 					ewcfg.col_time_joined,
 					ewcfg.col_poi_death,
+					ewcfg.col_slime_donations,
 				), (
 					id_user,
 					id_server
@@ -364,6 +366,7 @@ class EwUser:
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
 					self.poi_death = result[28]
+					self.slime_donations = result[29]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -419,7 +422,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -452,6 +455,7 @@ class EwUser:
 				ewcfg.col_time_lastoffline,
 				ewcfg.col_time_joined,
 				ewcfg.col_poi_death,
+				ewcfg.col_slime_donations,
 			), (
 				self.id_user,
 				self.id_server,
@@ -484,7 +488,8 @@ class EwUser:
 				self.time_lastenter,
 				self.time_lastoffline,
 				self.time_joined,
-				self.poi_death
+				self.poi_death,
+				self.slime_donations,
 			))
 
 			conn.commit()
