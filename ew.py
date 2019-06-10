@@ -455,6 +455,7 @@ class EwUser:
 				ewcfg.col_time_lastoffline,
 				ewcfg.col_time_joined,
 				ewcfg.col_poi_death,
+				ewcfg.col_slime_donations,
 			), (
 				self.id_user,
 				self.id_server,
@@ -487,7 +488,8 @@ class EwUser:
 				self.time_lastenter,
 				self.time_lastoffline,
 				self.time_joined,
-				self.poi_death
+				self.poi_death,
+				self.slime_donations,
 			))
 
 			conn.commit()
