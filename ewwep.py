@@ -175,7 +175,10 @@ async def attack(cmd):
 
 		# Get target's info.
 		member = cmd.mentions[0]
-		shootee_data = EwUser(member = member)
+		if member.id == cmd.message.author.id:
+			shootee_data = user_data
+		else:
+			shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
 
 		miss = False
@@ -195,6 +198,7 @@ async def attack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
+		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -214,7 +218,7 @@ async def attack(cmd):
 		elif ewmap.poi_is_pvp(shootee_data.poi) == False:
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
-		elif user_iskillers == False and user_isrowdys == False:
+		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				response = "Juveniles lack the moral fiber necessary for violence."
@@ -293,7 +297,7 @@ async def attack(cmd):
 			was_killed = False
 			was_shot = False
 
-			if (shootee_data.life_state == ewcfg.life_state_enlisted) or (shootee_data.life_state == ewcfg.life_state_juvenile):
+			if shootee_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky]:
 				# User can be shot.
 				if shootee_data.life_state == ewcfg.life_state_juvenile:
 					was_juvenile = True
@@ -330,8 +334,12 @@ async def attack(cmd):
 					strikes = ctn.strikes
 					# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
-					if miss:
-						slimes_damage = 0
+				# can't hit lucky lucy
+				if shootee_data.life_state == ewcfg.life_state_lucky:
+					miss = True
+
+				if miss:
+					slimes_damage = 0
 
 				# Remove !revive invulnerability.
 				user_data.time_lastrevive = 0
@@ -476,11 +484,13 @@ async def attack(cmd):
 								damage = damage
 							)
 					else:
-						# unarmed attacks have no miss or crit chance
-						response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
-							target_name = member.display_name,
-							damage = damage
-						)
+						if miss:
+							response = "{target_name} dodges your strike.".format(target_name = member.display_name)
+						else:
+							response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
+								target_name = member.display_name,
+								damage = damage
+							)
 			else:
 				response = 'You are unable to attack {}.'.format(member.display_name)
 

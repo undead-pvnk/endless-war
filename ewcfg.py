@@ -11,7 +11,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.3a"
+version = "v3.3b"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -30,6 +30,7 @@ max_iw_swing = 30
 life_state_corpse = 0
 life_state_juvenile = 1
 life_state_enlisted = 2
+life_state_lucky = 7
 life_state_grandfoe = 8
 life_state_kingpin = 10
 life_state_observer = 20
@@ -196,6 +197,7 @@ role_corpse = "corpse"
 role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
+role_slimecorp = "slimecorp"
 
 faction_roles = [
 	role_juvenile,
@@ -209,7 +211,8 @@ faction_roles = [
 	role_corpse,
 	role_corpse_pvp,
 	role_kingpin,
-	role_grandfoe
+	role_grandfoe,
+	role_slimecorp
 	]
 
 role_to_pvp_role = {
@@ -664,7 +667,7 @@ emote_purple = "<:purple:496397848343216138>"
 emote_pink = "<:pink:496397871180939294>"
 emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
-emote_slimecorp = "<:slimecorp:522416869127225344>"
+emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 
 # Emotes for the negaslime writhe animation
@@ -774,6 +777,7 @@ col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
+col_slime_donations = 'donated_slimes'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -868,6 +872,7 @@ leaderboard_podrins = "PODRIN LORDS"
 leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
+leaderboard_donated = "LOYALEST CONSUMERS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1217,7 +1222,13 @@ def wef_nunchucks(ctn = None):
 def wef_katana(ctn = None):
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-	if(random.randrange(10) + 1) == 10:
+
+	#lucky lucy's lucky katana always crits
+	if ctn.user_data.life_state == life_state_lucky:
+		ctn.crit = True
+		ctn.slimes_damage *= 7.77
+
+	elif(random.randrange(10) + 1) == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2.1
 
@@ -2758,7 +2769,7 @@ food_list = [
 		recover_hunger = 60,
 		str_name = 'Pulp Gourds',
 		vendors = [vendor_farm],
-		str_eat = "a",
+		str_eat = "You chomp into the raw Pulp Gourds. It isn't terrible, but you feel like there is a more constructive use for it.",
 		str_desc = "The easily malleable gourds form indents from even your lightest touch.",
 		time_expir = farm_food_expir,
 	),

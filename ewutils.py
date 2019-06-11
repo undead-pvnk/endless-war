@@ -689,6 +689,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 	elif life_state == ewcfg.life_state_grandfoe:
 		faction_role = ewcfg.role_grandfoe
 
+	elif life_state == ewcfg.life_state_lucky:
+		faction_role = ewcfg.role_slimecorp
+
 	return faction_role
 
 def get_faction_symbol(faction = "", faction_raw = ""):
@@ -806,21 +809,22 @@ async def edit_message(client, message, text):
 """
 def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
 	slimeoids = []
-	if id_server is None or poi is None:
+	if id_server is None:
 		return slimeoids
 
-	query = "SELECT {id_slimeoid} FROM slimeoids WHERE {poi} = %s AND {id_server} = %s".format(
+	query = "SELECT {id_slimeoid} FROM slimeoids WHERE {id_server} = %s".format(
 		id_slimeoid = ewcfg.col_id_slimeoid,
-		poi = ewcfg.col_poi,
 		id_server = ewcfg.col_id_server
 	)
 
 	if sltype is not None:
 		query += " AND {} = '{}'".format(ewcfg.col_type, sltype)
 
+	if poi is not None:
+		query += " AND {} = '{}'".format(ewcfg.col_poi, poi)
+
 	data = execute_sql_query(query,(
-		poi,
-		id_server
+		id_server,
 	))
 
 	for row in data:
