@@ -933,8 +933,8 @@ async def give(cmd):
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if user_data.weaponmarried:
-				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('weapon_name'))
+			if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
+				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif recipient_data.life_state == ewcfg.life_state_corpse:
 				response = "Ghosts can't hold weapons."
