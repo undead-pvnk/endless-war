@@ -239,7 +239,7 @@ class EwUser:
 	def ban(self, faction = None):
 		if faction is None:
 			return
-		ewutils.execute_sql_query("INSERT INTO bans ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
+		ewutils.execute_sql_query("REPLACE INTO bans ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			faction = ewcfg.col_faction

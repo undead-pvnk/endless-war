@@ -392,14 +392,15 @@ async def help(cmd):
 			if not len(cmd.tokens) > 1:
 				# list off help topics to player at college
 				response = 'What would you like to learn about? Topics include: \n' \
-						   '**mining**, **food**, **capturing**, **dojo**, **bleeding**, **scavenging**,\n' \
-						   '**farming**, **slimeoids**, **transportation**, **scouting**, and **offline**.'
+						   '**gangs**, **mining**, **food**, **capturing**, **transportation**, **death**, \n' \
+						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **ghosts**, **scouting**, \n' \
+						   '**cosmetics**, **sparring**, **bleeding**, **stocks**, **casino**, and **offline**.'
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				if topic in ewcfg.help_responses:
 					response = ewcfg.help_responses[topic]
 				else:
-					response = 'ENDLESS WAR questions your belief in the existence of such a topic.'
+					response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
 		else:
 			# user not in college, check what help message would apply to the subzone they are in
 
@@ -410,11 +411,19 @@ async def help(cmd):
 				# mine help
 				response = ewcfg.help_responses['mining']
 			elif (len(poi.vendors) >= 1):
-				response = ewcfg.help_responses['food']
 				# food help
-			elif user_data.poi in ewcfg.poi_id_dojo:
+				response = ewcfg.help_responses['food']
+			elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
 				# dojo help
-				response = ewcfg.help_responses['dojo']
+				response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**"
+			elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic == 'dojo':
+					response = ewcfg.help_responses['dojo']
+				elif topic == 'sparring':
+					response = ewcfg.help_responses['sparring']
+				else:
+					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
 			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 				# farming help
 				response = ewcfg.help_responses['farming']
@@ -424,6 +433,15 @@ async def help(cmd):
 			elif user_data.poi in ewcfg.transport_stops:
 				# transportation help
 				response =  ewcfg.help_responses['transportation']
+			elif user_data.poi in ewcfg.poi_id_stockexchange:
+				# stock exchange help
+				response = ewcfg.help_responses['stocks']
+			elif user_data.poi in ewcfg.poi_id_thecasino:
+				# casino help
+				response = ewcfg.help_responses['casino']
+			elif user_data.poi in ewcfg.poi_id_thesewers:
+				# death help
+				response = ewcfg.help_responses['death']
 			else:
 				# catch-all response for when user isn't in a sub-zone with a help response
 				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
