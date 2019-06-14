@@ -154,8 +154,9 @@ async def attack(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
-	weapon_item = EwItem(id_item = user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	if user_data.weapon >= 0:
+		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
@@ -896,7 +897,7 @@ async def annoint(cmd):
 				item_type_filter = ewcfg.it_weapon
 			)
 			for weapon in all_weapons:
-				if weapon.get("name") == annoint_name and int(weapon.get("id_item")) != int(user_data.weapon):
+				if weapon.get("name") == annoint_name and weapon.get("id_item") != user_data.weapon:
 					response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -906,7 +907,7 @@ async def annoint(cmd):
 				response = "You need a slime poudrin."
 			elif user_data.slimes < 100:
 				response = "You need more slime."
-			elif user_data.weapon == "":
+			elif user_data.weapon < 0:
 				response = "Equip a weapon first."
 			else:
 				# Perform the ceremony.
@@ -1047,7 +1048,7 @@ async def divorce(cmd):
 
 			#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
 			user_data.weaponmarried = False
-			user_data.weapon = ""
+			user_data.weapon = -1
 			ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
 
 			fee = (user_data.slimecoin / 2)

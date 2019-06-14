@@ -21,7 +21,7 @@ class EwUser:
 	totaldamage = 0
 	bleed_storage = 0
 	bounty = 0
-	weapon = ""
+	weapon = -1
 	weaponskill = 0
 	trauma = ""
 	poi_death = ""
@@ -137,7 +137,7 @@ class EwUser:
 		self.inebriation = 0
 		self.ghostbust = False
 		# Clear weapon and weaponskill.
-		self.weapon = ""
+		self.weapon = -1
 		self.weaponskill = 0
 		self.weaponmarried = False
 		ewutils.moves_active[self.id_user] = 0
@@ -177,7 +177,7 @@ class EwUser:
 
 	def add_weaponskill(self, n = 0, weapon_type = None):
 		# Save the current weapon's skill
-		if self.weapon != None and self.weapon != "":
+		if self.weapon != None and self.weapon >= 0:
 			if self.weaponskill == None:
 				self.weaponskill = 0
 
@@ -384,7 +384,7 @@ class EwUser:
 					self.time_joined = int(member.joined_at.timestamp())
 
 				# Get the skill for the user's current weapon.
-				if self.weapon != None and self.weapon != "":
+				if self.weapon != None and self.weapon >= 0:
 					skills = ewutils.weaponskills_get(
 						id_server = id_server,
 						id_user = id_user

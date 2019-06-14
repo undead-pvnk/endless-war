@@ -532,7 +532,7 @@ def item_loot(
 
 		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
 
-		if source_data.weapon != "":
+		if source_data.weapon >= 0:
 			weapons_held = inventory(
 				id_user = target_data.id_user,
 				id_server = target_data.id_server,
@@ -963,7 +963,7 @@ async def give(cmd):
 			)
 
 			if item_sought.get('id_item') == user_data.weapon:
-				user_data.weapon = ""
+				user_data.weapon = -1
 				user_data.persist()
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -990,13 +990,13 @@ async def discard(cmd):
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if not item.soulbound:
-			if item.item_type == ewcfg.it_weapon and user_data.weapon != "" and item.id_item == int(user_data.weapon):
+			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
 				if user_data.weaponmarried:
 					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
 					response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:
-					user_data.weapon = ""
+					user_data.weapon = -1
 					user_data.persist()
 				
 			response = "You throw away your " + item_sought.get("name")
