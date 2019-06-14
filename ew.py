@@ -15,12 +15,13 @@ class EwUser:
 
 	slimes = 0
 	slimecoin = 0
+	slime_donations = 0
 	slimelevel = 1
 	hunger = 0
 	totaldamage = 0
 	bleed_storage = 0
 	bounty = 0
-	weapon = ""
+	weapon = -1
 	weaponskill = 0
 	trauma = ""
 	poi_death = ""
@@ -136,7 +137,7 @@ class EwUser:
 		self.inebriation = 0
 		self.ghostbust = False
 		# Clear weapon and weaponskill.
-		self.weapon = ""
+		self.weapon = -1
 		self.weaponskill = 0
 		self.weaponmarried = False
 		ewutils.moves_active[self.id_user] = 0
@@ -176,7 +177,7 @@ class EwUser:
 
 	def add_weaponskill(self, n = 0, weapon_type = None):
 		# Save the current weapon's skill
-		if self.weapon != None and self.weapon != "":
+		if self.weapon != None and self.weapon >= 0:
 			if self.weaponskill == None:
 				self.weaponskill = 0
 
@@ -204,7 +205,7 @@ class EwUser:
 				self.inebriation = 20
 
 			try:
-				if item_props['id_food'] == "coleslaw" or "bloodcabbagecoleslaw":
+				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
 					self.ghostbust = True
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
@@ -235,6 +236,50 @@ class EwUser:
 
 		return response
 
+	def ban(self, faction = None):
+		if faction is None:
+			return
+		ewutils.execute_sql_query("REPLACE INTO bans ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server,
+			faction
+		))
+
+	def unban(self, faction = None):
+		if faction is None:
+			return
+		ewutils.execute_sql_query("DELETE FROM bans WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server,
+			faction
+		))
+
+	def get_bans(self):
+		bans = []
+		data = ewutils.execute_sql_query("SELECT {faction} FROM bans WHERE {id_user} = %s AND {id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+		for row in data:
+			bans.append(row[0])
+
+		return bans
+
+	
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 		if(id_user == None) and (id_server == None):
@@ -253,7 +298,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -283,6 +328,7 @@ class EwUser:
 					ewcfg.col_time_lastoffline,
 					ewcfg.col_time_joined,
 					ewcfg.col_poi_death,
+					ewcfg.col_slime_donations,
 				), (
 					id_user,
 					id_server
@@ -320,6 +366,7 @@ class EwUser:
 					self.time_lastoffline = result[26]
 					self.time_joined = result[27]
 					self.poi_death = result[28]
+					self.slime_donations = result[29]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -337,7 +384,7 @@ class EwUser:
 					self.time_joined = int(member.joined_at.timestamp())
 
 				# Get the skill for the user's current weapon.
-				if self.weapon != None and self.weapon != "":
+				if self.weapon != None and self.weapon >= 0:
 					skills = ewutils.weaponskills_get(
 						id_server = id_server,
 						id_user = id_user
@@ -375,7 +422,7 @@ class EwUser:
 
 			# Save the object.
 			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -408,6 +455,7 @@ class EwUser:
 				ewcfg.col_time_lastoffline,
 				ewcfg.col_time_joined,
 				ewcfg.col_poi_death,
+				ewcfg.col_slime_donations,
 			), (
 				self.id_user,
 				self.id_server,
@@ -440,7 +488,8 @@ class EwUser:
 				self.time_lastenter,
 				self.time_lastoffline,
 				self.time_joined,
-				self.poi_death
+				self.poi_death,
+				self.slime_donations,
 			))
 
 			conn.commit()

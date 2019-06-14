@@ -289,6 +289,7 @@ async def mill(cmd):
 
 			ewitem.item_delete(id_item = item_sought.get('id_item'))
 			user_data.change_slimes(n = -ewcfg.slimes_permill, source = ewcfg.source_spending)
+			user_data.slime_donations += ewcfg.slimes_permill
 			user_data.persist()
 		else:
 			response = "You can only mill fresh vegetables! SlimeCorp obviously wants you to support local farmers."

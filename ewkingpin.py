@@ -27,9 +27,10 @@ async def pardon(cmd):
 			response = "Who?"
 		else:
 			member_data = EwUser(member = member)
+			member_data.unban(faction = user_data.faction)
 
 			if member_data.faction == "":
-				response = "{} isn't enlisted.".format(member.display_name)
+				response = "{} has been allowed to join the {} again.".format(member.display_name, user_data.faction)
 			else:
 				faction_old = member_data.faction
 				member_data.faction = ""
@@ -59,13 +60,15 @@ async def banish(cmd):
 			response = "Who?"
 		else:
 			member_data = EwUser(member = member)
-			member_data.faction = ewcfg.faction_banned
+			member_data.ban(faction = user_data.faction)
 
-			if member_data.life_state == ewcfg.life_state_enlisted:
-				member_data.life_state = ewcfg.life_state_juvenile
+			if member_data.faction == user_data.faction:
+				member_data.faction = ""
+				if member_data.life_state == ewcfg.life_state_enlisted:
+					member_data.life_state = ewcfg.life_state_juvenile
 
 			member_data.persist()
-			response = "{} has been banned from enlisting in gangs, and are hereby forced to live the rest of their lives as a lowly juvenile.".format(member.display_name)
+			response = "{} has been banned from enlisting in the {}".format(member.display_name, user_data.faction)
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
