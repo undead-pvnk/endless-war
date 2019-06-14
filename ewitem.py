@@ -530,7 +530,7 @@ def item_loot(
 			item_data.persist()
 				
 
-		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
+		ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
 
 		if source_data.weapon >= 0:
 			weapons_held = inventory(
