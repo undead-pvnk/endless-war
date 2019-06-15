@@ -33,8 +33,17 @@ class EwMutationFlavor:
 		str_acquire = ""):
 
 		self.id_mutation = id_mutation
+
+		if str_describe_self == "":
+			str_describe_self = "You have the {} mutation.".format(self.id_mutation)
 		self.str_describe_self = str_describe_self
+
+		if str_describe_other == "":
+			str_describe_other = "They have the {} mutation.".format(self.id_mutation)
 		self.str_describe_other = str_describe_other
+
+		if str_acquire == "":
+			str_acquire = "You have acquired the {} mutation.".format(self.id_mutation)
 		self.str_acquire = str_acquire
 
 
@@ -165,9 +174,9 @@ async def reroll_last_mutation(cmd):
 
 
 	mutation_data = EwMutation(id_server = user_data.id_server, id_user = user_data.id_user, id_mutation = last_mutation)
-	new_mutation = random.choice(ewcfg.mutation_ids)
+	new_mutation = random.choice(list(ewcfg.mutation_ids))
 	while new_mutation in mutations:
-		new_mutation = random.choice(ewcfg.mutation_ids)
+		new_mutation = random.choice(list(ewcfg.mutation_ids))
 
 	mutation_data.id_mutation = new_mutation
 	mutation_data.time_lastuse = int(time.time())

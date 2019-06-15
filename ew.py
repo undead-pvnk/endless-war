@@ -116,9 +116,9 @@ class EwUser:
 			current_mutations = self.get_mutations()
 			for level in range(self.slimelevel+1, new_level+1):
 				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
-					new_mutation = random.choice(ewcfg.mutation_ids)
+					new_mutation = random.choice(list(ewcfg.mutation_ids))
 					while new_mutation in current_mutations:
-						new_mutation = random.choice(ewcfg.mutation_ids)
+						new_mutation = random.choice(list(ewcfg.mutation_ids))
 
 					add_success = self.add_mutation(new_mutation)
 					if add_success:
@@ -263,16 +263,14 @@ class EwUser:
 		if id_mutation in mutations:
 			return False
 		try:
-			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}, {time_lastuse}) VALUES (%s, %s, %s, %s)".format(
+			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}) VALUES (%s, %s, %s)".format(
 					id_server = ewcfg.col_id_server,
 					id_user = ewcfg.col_id_user,
-					id_mutation = ewcfg.col_id_mutation,
-					time_lastuse = ewcfg.col_time_lastuse
+					id_mutation = ewcfg.col_id_mutation
 				),(
 					self.id_server,
 					self.id_user,
-					id_mutation,
-					0
+					id_mutation
 				))
 
 			return True

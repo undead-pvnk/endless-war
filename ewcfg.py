@@ -7148,40 +7148,85 @@ mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 
 mutations = [ # TODO all placeholders, add real flavor
 	EwMutationFlavor(
-		id_mutation = mutation_id_spontaneouscombustion,
-		str_describe_self = "You explode on death.",
-		str_describe_other = "They explode on death.",
-		str_acquire = "You have acquired the ability to explode on death."
+		id_mutation = mutation_id_spontaneouscombustion
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_spoiledappetite,
-		str_describe_self = "You can eat spoiled food.",
-		str_describe_other = "They can eat spoiled food.",
-		str_acquire = "You have acquired the ability to eat spoiled food."
+		id_mutation = mutation_id_thickerthanblood
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_bigbones,
-		str_describe_self = "You have big bones.",
-		str_describe_other = "They have big bones.",
-		str_acquire = "You have acquired big bones."
+		id_mutation = mutation_id_fungalfeaster
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_fastmetabolism,
-		str_describe_self = "You have a fast metabolism.",
-		str_describe_other = "They have a fast metabolism.",
-		str_acquire = "You have acquired a fast metabolism."
+		id_mutation = mutation_id_2ndamendment
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_lonewolf,
-		str_describe_self = "You are a lone wolf.",
-		str_describe_other = "They are a lone wolf.",
-		str_acquire = "You have become a lone wolf."
+		id_mutation = mutation_id_bleedingheart
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_keensmell,
-		str_describe_self = "You have a keen smell.",
-		str_describe_other = "They have a keen smell.",
-		str_acquire = "You have acquired a keen smell."
+		id_mutation = mutation_id_nosferatu
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_organicfursuit
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lightasafeather
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_whitenationalist
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_spoiledappetite
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bigbones
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fatchance
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fastmetabolism
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bingeeater
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lonewolf
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_quantumlegs
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_chameleonskin
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_patriot
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_socialanimal
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_threesashroud
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_aposematicstench
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lucky
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dressedtokill
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_keensmell
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dumpsterdiver
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_trashmouth
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_webbedfeet
 		)
 	]
 
