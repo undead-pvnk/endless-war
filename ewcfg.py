@@ -7109,7 +7109,7 @@ mutation_id_spontaneouscombustion = "spontaneouscombustion"
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother" #TODO
+mutation_id_sharptoother = "sharptoother" 
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -7155,6 +7155,9 @@ mutations = [ # TODO all placeholders, add real flavor
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fungalfeaster
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_sharptoother
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_2ndamendment

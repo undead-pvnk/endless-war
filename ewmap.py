@@ -873,6 +873,7 @@ async def look(cmd):
 	else:
 		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
+	players_resp = ""
 	
 	slimeoids_resp = ""
 

@@ -158,6 +158,8 @@ async def attack(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
+	weapon = None
+	weapon_item = None
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -360,6 +362,10 @@ async def attack(cmd):
 					strikes = ctn.strikes
 					# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
+				if ewcfg.mutation_id_sharptoother in user_mutations:
+					if random.random() < 0.5:
+						miss = False
+
 				# can't hit lucky lucy
 				if shootee_data.life_state == ewcfg.life_state_lucky:
 					miss = True
@@ -484,7 +490,7 @@ async def attack(cmd):
 						slimes_tokiller = shootee_data.slimes
 					else:
 						slimes_todistrict = shootee_data.slimes / 2
-						slimes_tokiller = shotee_data.slimes / 2
+						slimes_tokiller = shootee_data.slimes / 2
 					district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
 					levelup_response = user_data.change_slimes(n = slimes_tokiller, source = ewcfg.source_killing)
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
