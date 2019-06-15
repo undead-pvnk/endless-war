@@ -20,7 +20,7 @@ CREATE TABLE users (
 	time_lastinvest int NOT NULL DEFAULT '0',
 	slimelevel int NOT NULL DEFAULT '1',
 	hunger int NOT NULL DEFAULT '0',
-	weapon varchar(64) NOT NULL DEFAULT '',
+	weapon int NOT NULL DEFAULT '-1',
 	trauma varchar(64) NOT NULL DEFAULT '',
 	totaldamage bigint NOT NULL DEFAULT '0',
 	weaponskill int NOT NULL DEFAULT '0',
@@ -39,6 +39,8 @@ CREATE TABLE users (
 	time_lastenter int NOT NULL DEFAULT '0',
 	time_lastoffline int NOT NULL DEFAULT '0',
 	time_joined int NOT NULL DEFAULT '0',
+	poi_death varchar(64) NOT NULL default '',
+	donated_slimes bigint NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -61,6 +63,7 @@ CREATE TABLE markets (
 	weather varchar(32) NOT NULL DEFAULT 'sunny',
 	day int NOT NULL DEFAULT '726',
 	decayed_slimes bigint NOT NULL DEFAULT '0',
+	donated_slimes bigint NOT NULL DEFAULT '0',
 
 
 	PRIMARY KEY (id_server)
@@ -176,6 +179,8 @@ CREATE TABLE slimeoids (
 	level int NOT NULL DEFAULT '0',
 	time_defeated int NOT NULL DEFAULT '0',
 	clout int NOT NULL DEFAULT '0',
+	hue varchar(32) NOT NULL DEFAULT '',
+	poi varchar(64) NOT NULL DEFAULT '',
 	
 	PRIMARY KEY (id_slimeoid)
 );
@@ -230,4 +235,12 @@ CREATE TABLE transports (
 	current_stop varchar(64) NOT NULL DEFAULT '',
 
 	PRIMARY KEY(id_server, poi)
+);
+
+CREATE TABLE bans (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	faction varchar(32) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, id_user, faction)
 );

@@ -158,8 +158,9 @@ async def attack(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
-	weapon_item = EwItem(id_item = user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	if user_data.weapon >= 0:
+		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -185,7 +186,7 @@ async def attack(cmd):
 
 		# Get target's info.
 		member = cmd.mentions[0]
-		if member.id == user_data.id_user:
+		if member.id == cmd.message.author.id:
 			shootee_data = user_data
 		else:
 			shootee_data = EwUser(member = member)
@@ -211,6 +212,7 @@ async def attack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
+		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -235,7 +237,7 @@ async def attack(cmd):
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-		elif user_iskillers == False and user_isrowdys == False:
+		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				response = "Juveniles lack the moral fiber necessary for violence."
@@ -250,40 +252,11 @@ async def attack(cmd):
 
 		elif shootee_data.life_state == ewcfg.life_state_corpse and user_data.ghostbust == True:
 			# Attack a ghostly target
-			was_busted = False
+			was_busted = True
 
 			#hunger drain
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 			
-			# Weaponized flavor text.
-			randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
-
-			# Weapon-specific adjustments
-			if weapon != None and weapon.fn_effect != None:
-				# Build effect container
-				ctn = EwEffectContainer(
-					miss = miss,
-					crit = crit,
-					slimes_damage = slimes_damage,
-					slimes_spent = slimes_spent,
-					user_data = user_data,
-					shootee_data = shootee_data
-				)
-
-				# Make adjustments
-				weapon.fn_effect(ctn)
-
-				# Apply effects for non-reference values
-				miss = ctn.miss
-				crit = ctn.crit
-				slimes_damage = ctn.slimes_damage
-				slimes_spent = ctn.slimes_spent
-				strikes = ctn.strikes
-				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
-
-				if miss:
-					slimes_damage = 0
-
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
 
@@ -298,12 +271,7 @@ async def attack(cmd):
 			if user_data.id_killer == shootee_data.id_user:
 				user_data.id_killer = ""
 
-			if slimes_damage >= -shootee_data.slimes:
-				was_busted = True
-
 			if was_busted:
-				# Move around slime as a result of the shot.
-				levelup_response = user_data.change_slimes(n = ewutils.slime_bylevel(shootee_data.slimelevel), source = ewcfg.source_busting)
 				coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)
 				user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
@@ -312,7 +280,6 @@ async def attack(cmd):
 				# Steal items
 				ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
 
-				# Player was busted.
 				shootee_data.die(cause = ewcfg.cause_busted)
 
 				response = "{name_target}\'s ghost has been **BUSTED**!!".format(name_target = member.display_name)
@@ -326,41 +293,6 @@ async def attack(cmd):
 				#adjust busts
 				ewstats.increment_stat(user = user_data, metric = ewcfg.stat_ghostbusts)
 
-			else:
-				# A non-lethal blow!
-				shootee_data.change_slimes(n = slimes_damage, source = ewcfg.source_busting)
-				damage = str(slimes_damage)
-
-				if weapon != None:
-					if miss:
-						response = "{}".format(weapon.str_miss.format(
-							name_player = cmd.message.author.display_name,
-							name_target = member.display_name + "\'s ghost"
-						))
-					else:
-						response = weapon.str_damage.format(
-							name_player = cmd.message.author.display_name,
-							name_target = member.display_name + "\'s ghost",
-							hitzone = randombodypart,
-							strikes = strikes
-						)
-						if crit:
-							response += " {}".format(weapon.str_crit.format(
-								name_player = cmd.message.author.display_name,
-								name_target = member.display_name + "\'s ghost"
-							))
-						response += " {target_name} loses {damage} antislime!".format(
-							target_name = (member.display_name + "\'s ghost"),
-							damage = damage
-						)
-				else:
-					if miss:
-						response = "{}\'s ghost is unharmed.".format(member.display_name)
-					else:
-						response = "{target_name} is hit!! {target_name} loses {damage} antislime!".format(
-							target_name = (member.display_name + "\'s ghost"),
-							damage = damage
-						)
 
 			# Persist every users' data.
 			user_data.persist()
@@ -391,7 +323,7 @@ async def attack(cmd):
 			was_killed = False
 			was_shot = False
 
-			if (shootee_data.life_state == ewcfg.life_state_enlisted) or (shootee_data.life_state == ewcfg.life_state_juvenile):
+			if shootee_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky]:
 				# User can be shot.
 				if shootee_data.life_state == ewcfg.life_state_juvenile:
 					was_juvenile = True
@@ -428,8 +360,12 @@ async def attack(cmd):
 					strikes = ctn.strikes
 					# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
-					if miss:
-						slimes_damage = 0
+				# can't hit lucky lucy
+				if shootee_data.life_state == ewcfg.life_state_lucky:
+					miss = True
+
+				if miss:
+					slimes_damage = 0
 
 				# Remove !revive invulnerability.
 				user_data.time_lastrevive = 0
@@ -487,27 +423,31 @@ async def attack(cmd):
 						slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
 
 				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				if was_juvenile or user_data.faction == shootee_data.faction:
+					slimes_drained = int(3 * slimes_damage / 4) # 3/4
 					slimes_toboss = 0
 				else:
+					slimes_drained = 0
 					slimes_toboss = int(slimes_damage / 2)
 
 				damage = str(slimes_damage)
 
-				slimes_tobleed = int((slimes_damage - slimes_toboss) / 2)
+				slimes_tobleed = int((slimes_damage - slimes_toboss - slimes_drained) / 2)
 				if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.time < 6 or market_data.time >= 20):
 					slimes_tobleed = 0
 				if ewcfg.mutation_id_bleedingheart in shootee_mutations:
 					slimes_tobleed *= 2
 
 				slimes_directdamage = slimes_damage - slimes_tobleed
-				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed
+				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
 				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
+				sewer_data.change_slimes(n = slimes_drained)
 
 				if was_killed:
 					#adjust statistics
@@ -635,12 +575,13 @@ async def attack(cmd):
 								damage = damage
 							)
 					else:
-						# unarmed attacks have no miss or crit chance
-						response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
-							target_name = member.display_name,
-							damage = damage
-						)
-
+						if miss:
+							response = "{target_name} dodges your strike.".format(target_name = member.display_name)
+						else:
+							response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
+								target_name = member.display_name,
+								damage = damage
+							)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 			else:
 				response = 'You are unable to attack {}.'.format(member.display_name)
@@ -687,7 +628,7 @@ async def suicide(cmd):
 
 	# Only allowed in the combat zone.
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = "You must go into the city to commit suicide."
+		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
 	else:
 		# Get the user data.
 		user_data = EwUser(member = cmd.message.author)
@@ -1033,7 +974,7 @@ async def annoint(cmd):
 				item_type_filter = ewcfg.it_weapon
 			)
 			for weapon in all_weapons:
-				if weapon.get("name") == annoint_name and int(weapon.get("id_item")) != int(user_data.weapon):
+				if weapon.get("name") == annoint_name and weapon.get("id_item") != user_data.weapon:
 					response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1043,7 +984,7 @@ async def annoint(cmd):
 				response = "You need a slime poudrin."
 			elif user_data.slimes < 100:
 				response = "You need more slime."
-			elif user_data.weapon == "":
+			elif user_data.weapon < 0:
 				response = "Equip a weapon first."
 			else:
 				# Perform the ceremony.
@@ -1085,8 +1026,8 @@ async def marry(cmd):
 	elif weapon is None:
 		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	#Makes sure you have a displayed rank 8 or higher weapon.
-	elif user_data.weaponskill < 12:
+	#Makes sure you have a displayed rank 6 or higher weapon.
+	elif user_data.weaponskill < 10:
 		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
@@ -1184,7 +1125,7 @@ async def divorce(cmd):
 
 			#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
 			user_data.weaponmarried = False
-			user_data.weapon = ""
+			user_data.weapon = -1
 			ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
 
 			fee = (user_data.slimecoin / 2)
