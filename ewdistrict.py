@@ -127,7 +127,7 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return 0
 
-		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} != %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimelevel} FROM users WHERE id_server = %s AND {poi} = %s AND {life_state} = %s".format(
 			id_user = ewcfg.col_id_user,
 			slimelevel = ewcfg.col_slimelevel,
 			poi = ewcfg.col_poi,
@@ -135,7 +135,7 @@ class EwDistrict:
 		),(
 			self.id_server,
 			self.name,
-			ewcfg.life_state_kingpin
+			ewcfg.life_state_enlisted
 		))
 
 		num_players = 0
@@ -154,9 +154,19 @@ class EwDistrict:
 			all_neighbors_friendly = self.all_neighbors_friendly()
 
 
-			if self.controlling_faction == "" or not all_neighbors_friendly:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
+			
+			nega_present = len(slimeoids) > 0
+                        
+			if nega_present:
+				decay *= 5
+
+
+			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				responses = self.change_capture_points(-math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier)), ewcfg.actor_decay)
+				responses = self.change_capture_points(decay, ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
 		if self.capture_points < 0:
@@ -215,7 +225,13 @@ class EwDistrict:
 							district = ewcfg.id_to_poi[self.name].str_name,
 							progress = progress_percent_after
 						)
-						channels = ewcfg.hideout_channels
+						if self.controlling_faction == ewcfg.faction_rowdys:
+							channels = [ewcfg.channel_rowdyroughhouse]
+						elif self.controlling_faction == ewcfg.faction_killers:
+							channels = [ewcfg.channel_copkilltown]
+						else:
+							channels = ewcfg.hideout_channels
+
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
@@ -360,6 +376,34 @@ class EwDistrict:
 		change = int(n)
 		self.slimes += change
 
+"""
+	Informs the player about their current zone's capture progress
+"""
+async def capture_progress(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	response += "**{}**: ".format(poi.str_name)
+
+	if not user_data.poi in ewcfg.capturable_districts:
+		response += "This zone cannot be captured."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
+
+
+	if district_data.controlling_faction != "":
+		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
+	elif district_data.capturing_faction != "":
+		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
+	else:
+		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
+
+	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+		
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -412,6 +456,12 @@ async def capture_tick(id_server):
 			district_name = district[0]
 			controlling_faction = district[1]
 
+			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
+			
+			nega_present = len(slimeoids) > 0
+#			if nega_present:
+#				continue
+
 			# the faction that's actively capturing the district this tick
 			# if no players are present, it's None, if only players of one faction (ignoring juvies and ghosts) are,
 			# it's the faction's name, i.e. 'rowdys' or 'killers', and if both are present, it's 'both'
@@ -428,7 +478,7 @@ async def capture_tick(id_server):
 				player_faction = player[1]
 				player_life_state = player[2]
 				player_id = player[3]
-				player_slimes = player[4]
+				#player_slimes = player[4] #commented because now you have to have 50k slime to enlist anyway
 
 				if player_poi == district_name and player_life_state == ewcfg.life_state_enlisted:  # if the player is in the district and a gang member
 					try:
@@ -438,7 +488,8 @@ async def capture_tick(id_server):
 
 					#ewutils.logMsg("Online status checked. Time elapsed: %f" % (time.time() - time_old) + " Server: %s" % id_server + " Player: %s" % player_id + " Status: %s" % ("online" if player_online else "offline"))
 
-					if player_online and player_slimes >= 10000:
+					#if player_online and player_slimes >= 50000:
+					if player_online:
 						if faction_capture != None and faction_capture != player_faction:  # if someone of the opposite faction is in the district
 							faction_capture = 'both'  # standstill, gang violence has to happen
 							capture_speed = 0
@@ -457,6 +508,8 @@ async def capture_tick(id_server):
 					friendly_neighbors = dist.get_number_of_friendly_neighbors()
 					if dist.all_neighbors_friendly():
 						capture_speed = 0
+					elif dist.controlling_faction == faction_capture:
+						capture_speed *= 1 + 0.1 * friendly_neighbors
 					else:
 						capture_speed /= 1 + 0.1 * friendly_neighbors
 

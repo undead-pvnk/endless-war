@@ -17,10 +17,9 @@ import re
 import os
 import shlex
 
-import ewfarm
-
 import ewutils
 import ewcfg
+import ewfarm
 import ewcmd
 import ewcasino
 import ewfood
@@ -66,6 +65,7 @@ cmd_map = {
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
+	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Get a weapon into your inventory
@@ -77,6 +77,8 @@ cmd_map = {
 
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
+	ewcfg.cmd_suicide_alt1: ewwep.suicide,
+	ewcfg.cmd_suicide_alt2: ewwep.suicide,
 
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
@@ -91,6 +93,7 @@ cmd_map = {
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
+	ewcfg.cmd_renounce: ewjuviecmd.renounce,
 
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
@@ -112,16 +115,17 @@ cmd_map = {
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
 
-
 	# Show the total of negative slime in the world.
-	#ewcfg.cmd_negaslime: ewspooky.negaslime,
+	ewcfg.cmd_negaslime: ewspooky.negaslime,
+
+	# Display the progress towards the current Quarterly Goal.
+	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
-
 
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -221,12 +225,14 @@ cmd_map = {
 
 	# Release a player from their faction.
 	ewcfg.cmd_pardon: ewkingpin.pardon,
+	ewcfg.cmd_banish: ewkingpin.banish,
 
 
 	# Navigate the world map.
 	ewcfg.cmd_move: ewmap.move,
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
+	ewcfg.cmd_move_alt3: ewmap.move,
 
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
@@ -245,15 +251,19 @@ cmd_map = {
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
 
+	# Check your current POI capture progress
+	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
+
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
 
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_mill: ewfarm.mill,
 
-        #scavenging
-        ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+     #scavenging
+	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
 	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
@@ -263,8 +273,9 @@ cmd_map = {
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
 
-	#throw away an item
+	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
+	ewcfg.cmd_discard_alt1: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -292,30 +303,40 @@ cmd_map = {
 
 	# Slimeoids
 
-	ewcfg.cmd_incubateslimeoid: ewcmd.incubateslimeoid,
-	ewcfg.cmd_growbody: ewcmd.growbody,
-	ewcfg.cmd_growhead: ewcmd.growhead,
-	ewcfg.cmd_growlegs: ewcmd.growlegs,
-	ewcfg.cmd_growweapon: ewcmd.growweapon,
-	ewcfg.cmd_growarmor: ewcmd.growarmor,
-	ewcfg.cmd_growspecial: ewcmd.growspecial,
-	ewcfg.cmd_growbrain: ewcmd.growbrain,
-	ewcfg.cmd_nameslimeoid: ewcmd.nameslimeoid,
-	ewcfg.cmd_raisemoxie: ewcmd.raisemoxie,
-	ewcfg.cmd_lowermoxie: ewcmd.lowermoxie,
-	ewcfg.cmd_raisegrit: ewcmd.raisegrit,
-	ewcfg.cmd_lowergrit: ewcmd.lowergrit,
-	ewcfg.cmd_raisechutzpah: ewcmd.raisechutzpah,
-	ewcfg.cmd_lowerchutzpah: ewcmd.lowerchutzpah,
-	ewcfg.cmd_spawnslimeoid: ewcmd.spawnslimeoid,
-	ewcfg.cmd_dissolveslimeoid: ewcmd.dissolveslimeoid,
-	ewcfg.cmd_slimeoid: ewcmd.slimeoid,
-	ewcfg.cmd_instructions: ewcmd.instructions,
-	ewcfg.cmd_playfetch: ewcmd.playfetch,
-	ewcfg.cmd_petslimeoid: ewcmd.petslimeoid,
-	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
-	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+	ewcfg.cmd_incubateslimeoid: ewslimeoid.incubateslimeoid,
+	ewcfg.cmd_growbody: ewslimeoid.growbody,
+	ewcfg.cmd_growhead: ewslimeoid.growhead,
+	ewcfg.cmd_growlegs: ewslimeoid.growlegs,
+	ewcfg.cmd_growweapon: ewslimeoid.growweapon,
+	ewcfg.cmd_growarmor: ewslimeoid.growarmor,
+	ewcfg.cmd_growspecial: ewslimeoid.growspecial,
+	ewcfg.cmd_growbrain: ewslimeoid.growbrain,
+	ewcfg.cmd_nameslimeoid: ewslimeoid.nameslimeoid,
+	ewcfg.cmd_raisemoxie: ewslimeoid.raisemoxie,
+	ewcfg.cmd_lowermoxie: ewslimeoid.lowermoxie,
+	ewcfg.cmd_raisegrit: ewslimeoid.raisegrit,
+	ewcfg.cmd_lowergrit: ewslimeoid.lowergrit,
+	ewcfg.cmd_raisechutzpah: ewslimeoid.raisechutzpah,
+	ewcfg.cmd_lowerchutzpah: ewslimeoid.lowerchutzpah,
+	ewcfg.cmd_spawnslimeoid: ewslimeoid.spawnslimeoid,
+	ewcfg.cmd_dissolveslimeoid: ewslimeoid.dissolveslimeoid,
+	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
+	ewcfg.cmd_instructions: ewslimeoid.instructions,
+	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
+	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
+	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
+	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
+	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
+	
+	# Negaslimeoids
+
+	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid_alt1: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -384,10 +405,11 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			fake_ghost = EwUser()
-			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
-		elif poi.id_poi == ewcfg.poi_id_thesewers:
-			neighbors = ewcfg.poi_list
+			fake_observer = EwUser()
+			fake_observer.life_state = ewcfg.life_state_observer
+			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
+		#elif poi.id_poi == ewcfg.poi_id_thesewers:
+		#	neighbors = ewcfg.poi_list
 
 		if neighbors != None:
 			for neighbor in neighbors:
@@ -409,7 +431,7 @@ async def on_ready():
 	# If no twitch client ID is available, twitch integration will be disabled.
 	# FIXME debug - temporarily disable Twitch integration.
 	if True:
-		twich_client_id = None
+		twitch_client_id = None
 		ewutils.logMsg('Twitch integration disabled.')
 	elif twitch_client_id == None or len(twitch_client_id) == 0:
 		ewutils.logMsg('No twitch_client_id file found. Twitch integration disabled.')
@@ -463,12 +485,14 @@ async def on_ready():
 				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
 				await resp_cont.post()
+
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		await ewtransport.init_transports(id_server = server.id)
+		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -726,6 +750,12 @@ async def on_message(message):
 				user is new/has no roles (len(roles) < 2)
 		"""
 
+		#Ignore users with weird characters in their name
+		try:
+			message.author.display_name[:3].encode('utf-8').decode('ascii')
+		except UnicodeError:
+			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "We don't take kindly to moon runes around here."))
+
 		# tokenize the message. the command should be the first word.
 		try:
 			tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
@@ -844,6 +874,28 @@ async def on_message(message):
 			user_data.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+
+		elif debug == True and cmd == '!createapple':
+			item_id = ewitem.item_create(
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_type = ewcfg.it_food,
+				item_props = {
+					'id_food': "direapples",
+					'food_name': "Dire Apples",
+					'food_desc': "This sure is a illegal Dire Apple!",
+					'recover_hunger': 500,
+					'str_eat': "You chomp into this illegal Dire Apple.",
+					'time_expir': time.time() + ewcfg.farm_food_expir
+				}
+			)
+
+			ewutils.logMsg('Created item: {}'.format(item_id))
+			item = EwItem(id_item = item_id)
+			item.item_props['test'] = 'meow'
+			item.persist()
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
 
 
 

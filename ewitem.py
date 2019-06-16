@@ -1,5 +1,6 @@
 import math
 import time
+import random
 
 import ewutils
 import ewcfg
@@ -59,7 +60,7 @@ class EwItemDef:
 class EwItem:
 	id_item = -1
 	id_server = ""
-	id_user = ""
+	id_owner = ""
 	item_type = ""
 	time_expir = -1
 
@@ -67,7 +68,7 @@ class EwItem:
 	stack_size = 0
 	soulbound = False
 
-	item_props = {}
+	item_props = None
 
 	def __init__(
 		self,
@@ -76,8 +77,9 @@ class EwItem:
 		if(id_item != None):
 			self.id_item = id_item
 
+			self.item_props = {}
 			# the item props don't reset themselves automatically which is why the items_prop table had tons of extraneous rows (like food items having medal_names)
-			self.item_props.clear()
+			#self.item_props.clear()
 
 			try:
 				conn_info = ewutils.databaseConnect()
@@ -101,7 +103,7 @@ class EwItem:
 				if result != None:
 					# Record found: apply the data to this object.
 					self.id_server = result[0]
-					self.id_user = result[1]
+					self.id_owner = result[1]
 					self.item_type = result[2]
 					self.time_expir = result[3]
 					self.stack_max = result[4]
@@ -152,7 +154,7 @@ class EwItem:
 			), (
 				self.id_item,
 				self.id_server,
-				self.id_user,
+				self.id_owner,
 				self.item_type,
 				self.time_expir if self.time_expir is not None else self.item_props['time_expir'] if 'time_expir' in self.item_props.keys() else 0,
 				self.stack_max,
@@ -185,6 +187,36 @@ class EwItem:
 			cursor.close()
 			ewutils.databaseClose(conn_info)
 
+"""
+	These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
+"""
+class EwDefaultItem:
+	id_item = " "
+	alias = []
+	context = ""
+	subcontext = ""
+	str_name = ""
+	str_desc = ""
+	ingredients = ""
+
+	def __init__(
+		self,
+		id_item = " ",
+		alias = [],
+		context = "",
+		subcontext = "",
+		str_name = "",
+		str_desc = "",
+		ingredients = "",
+	):
+		self.id_item = id_item
+		self.alias = alias
+		self.context = context
+		self.subcontext = subcontext
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.ingredients = ingredients
+
 
 """
 	Delete the specified item by ID. Also deletes all items_prop values.
@@ -209,6 +241,23 @@ def item_delete(
 		# Clean up the database handles.
 		cursor.close()
 		ewutils.databaseClose(conn_info)
+
+
+"""
+	Drop item into current district.
+"""
+def item_drop(
+	id_item = None
+):
+	try:
+		item_data = EwItem(id_item = id_item)
+		user_data = EwUser(id_user = item_data.id_owner, id_server = item_data.id_server)
+		if item_data.item_type == ewcfg.it_cosmetic:
+			item_data.item_props["adorned"] = "false"
+		item_data.persist()
+		give_item(id_user = user_data.poi, id_server = item_data.id_server, id_item = item_data.id_item)
+	except:
+		ewutils.logMsg("Failed to drop item {}.".format(id_item))
 
 """
 	Create a new item and give it to a player.
@@ -275,7 +324,147 @@ def item_create(
 
 	return item_id
 
+"""
+	Drop all of a player's non-soulbound items into their district
+"""
+def item_dropall(
+	id_server = None,
+	id_user = None
+):
+	
+	try:
+		user_data = EwUser(id_server = id_server, id_user = id_user)
+		
+		ewutils.execute_sql_query(
+			"UPDATE items SET id_user = %s WHERE id_user = %s AND id_server = %s AND soulbound = 0",(
+				user_data.poi,
+				id_user,
+				id_server
+			))
 
+	except:
+		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
+
+
+"""
+	Dedorn all of a player's cosmetics
+"""
+def item_dedorn_cosmetics(
+	id_server = None,
+	id_user = None
+):
+	try:
+		
+		ewutils.execute_sql_query(
+			"UPDATE items_prop SET value = 'false' WHERE name = 'adorned' AND {id_item} IN (\
+				SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
+			)".format(
+				id_item = ewcfg.col_id_item,
+				id_user = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			),(
+				id_user,
+				id_server
+			))
+
+	except:
+		ewutils.logMsg('Failed to dedorn cosmetics for user with id {}'.format(id_user))
+
+
+def item_lootspecific(id_server = None, id_user = None, item_search = None):
+	response = ""
+	if id_server is not None and id_user is not None:
+		user_data = EwUser(id_user = id_user, id_server = id_server)
+		item_sought = find_item(
+			item_search = item_search, 
+			id_server = user_data.id_server, 
+			id_user = user_data.poi
+		)
+		if item_sought is not None:
+			item_type = item_sought.get("item_type")
+			response += "You found a {}!".format(item_sought.get("name"))
+			can_loot = check_inv_capacity(id_server = id_server, id_user = id_user, item_type = item_type)
+			if can_loot:
+				give_item(
+					id_item = item_sought.get("id_item"),
+					id_user = user_data.id_user,
+					id_server = user_data.id_server
+				)
+			else:
+				response += " But you couldn't carry any more {} items, so you tossed it back.".format(item_type)
+	return response
+
+
+"""
+	Transfer a random item from district inventory to player inventory
+"""
+def item_lootrandom(id_server = None, id_user = None):
+	response = ""
+
+	try:
+
+		user_data = EwUser(id_server = id_server, id_user = id_user)
+
+		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+				id_item = ewcfg.col_id_item,
+				id_owner = ewcfg.col_id_user,
+				id_server = ewcfg.col_id_server
+			),(
+				user_data.poi,
+				id_server
+			))
+
+		if len(items_in_poi) > 0:
+			id_item = random.choice(items_in_poi)[0]
+
+			item_sought = find_item(item_search = str(id_item), id_user = user_data.poi, id_server = id_server)
+
+			response += "You found a {}!".format(item_sought.get('name'))
+
+			if item_sought.get('item_type') == ewcfg.it_food:
+				food_items = inventory(
+					id_user = id_user,
+					id_server = id_server,
+					item_type_filter = ewcfg.it_food
+				)
+
+				if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+					response += " But you couldn't carry any more food items, so you tossed it back."
+				else:
+					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+			elif item_sought.get('item_type') == ewcfg.it_weapon:
+				weapons_held = inventory(
+					id_user = id_user,
+					id_server = id_server,
+					item_type_filter = ewcfg.it_weapon
+				)
+
+				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+					response += " But you couldn't carry any more weapons, so you tossed it back."
+				else:
+					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+
+			else:
+				if item_sought.get('item_type') == ewcfg.it_slimepoudrin:
+					ewstats.change_stat(
+						id_server = user_data.id_server,
+						id_user = user_data.id_user,
+						metric = ewcfg.stat_poudrins_looted,
+						n = 1
+					)
+				give_item(id_user = id_user, id_server = id_server, id_item = id_item)
+
+
+
+
+		else:
+			response += "You found a... oh, nevermind, it's just a piece of trash."
+
+	except:
+		ewutils.logMsg("Failed to loot random item")
+
+	finally:
+		return response
 """
 	Destroy all of a player's non-soulbound items.
 """
@@ -318,55 +507,102 @@ def item_loot(
 		return
 
 	try:
-		# Get database handles if they weren't passed.
-		conn_info = ewutils.databaseConnect()
-		conn = conn_info.get('conn')
-		cursor = conn.cursor()
+		target_data = EwUser(id_user = id_user_target, id_server = member.server.id)
+		source_data = EwUser(member = member)
 
 		# Transfer adorned cosmetics
-		cursor.execute((
-			"UPDATE items SET id_user = %s " +
+		data = ewutils.execute_sql_query(
+			"SELECT id_item FROM items " +
 			"WHERE id_user = %s AND id_server = %s AND soulbound = 0 AND item_type = %s AND id_item IN (" +
 				"SELECT id_item FROM items_prop " +
 				"WHERE name = 'adorned' AND value = 'true' " +
 			")"
-		), (
-			id_user_target,
+		,(
 			member.id,
 			member.server.id,
 			ewcfg.it_cosmetic
 		))
 
-		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
+		for row in data:
+			item_data = EwItem(id_item = row[0])
+			item_data.item_props["adorned"] = 'false'
+			item_data.id_owner = id_user_target
+			item_data.persist()
+				
 
-		# Transfer slimepoudrins
-		cursor.execute((
-			"UPDATE items SET id_user = %s " +
-			"WHERE id_user = %s AND id_server = %s AND item_type = %s "
-		), (
-			id_user_target,
-			member.id,
-			member.server.id,
-			ewcfg.it_slimepoudrin
-		))
+		ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
 
-		poudrins_looted = cursor.rowcount
+		if source_data.weapon >= 0:
+			weapons_held = inventory(
+				id_user = target_data.id_user,
+				id_server = target_data.id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
 
-		ewstats.change_stat(
-			id_server = member.server.id,
-			id_user = id_user_target,
-			metric = ewcfg.stat_poudrins_looted,
-			n = poudrins_looted
-		)
+			if len(weapons_held) <= math.floor(target_data.slimelevel / ewcfg.max_weapon_mod) if target_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) < 1:
+				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
 
-		ewutils.logMsg('Transferred {} slime poudrins.'.format(poudrins_looted))
+	except:
+		ewutils.logMsg("Failed to loot items from user {}".format(member.id))
+			
 
-		conn.commit()
-	finally:
-		# Clean up the database handles.
-		cursor.close()
-		ewutils.databaseClose(conn_info)
 
+
+
+
+def check_inv_capacity(id_user = None, id_server = None, item_type = None):
+	if id_user is not None and id_server is not None and item_type is not None:
+		user_data = EwUser(id_user = id_user, id_server = id_server)
+		if item_type == ewcfg.it_food:
+			food_items = inventory(
+				id_user = id_user,
+				id_server = id_server,
+				item_type_filter = ewcfg.it_food
+			)
+
+			if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+				return False
+			else:
+				return True
+		elif item_type == ewcfg.it_weapon:
+			weapons_held = inventory(
+				id_user = id_user,
+				id_server = id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				return False
+			else:
+				return True
+		else:
+			return True
+		
+	else:
+		return False
+
+"""
+	Check how many items are in a given district or player's inventory
+"""
+def get_inventory_size(owner = None, id_server = None):
+	if owner != None and id_server != None:
+		try:
+			items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+					id_item = ewcfg.col_id_item,
+					id_owner = ewcfg.col_id_user,
+					id_server = ewcfg.col_id_server
+				),(
+					owner,
+					id_server
+				))
+
+			return len(items_in_poi)
+
+		except:
+			return 0
+	else:
+		return 0
+	
 
 """
 	Returns true if the command string is !inv or equivalent.
@@ -381,27 +617,25 @@ def cmd_is_inventory(cmd):
 	inserted into SQL without validation/sanitation.
 """
 def inventory(
-	id_user = "",
+	id_user = None,
 	id_server = None,
 	item_type_filter = None
 ):
 	items = []
 
 	try:
-		player = EwPlayer(
-			id_user = id_user,
-			id_server = id_server
-		)
 
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		sql = "SELECT {}, {}, {}, {}, {} FROM items WHERE {} = %s AND {} = %s"
+		sql = "SELECT {}, {}, {}, {}, {} FROM items WHERE {} = %s"
+		if id_user != None:
+			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
 		if item_type_filter != None:
 			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
 
-		if player.id_server != None:
+		if id_server != None:
 			cursor.execute(sql.format(
 				ewcfg.col_id_item,
 				ewcfg.col_item_type,
@@ -409,12 +643,10 @@ def inventory(
 				ewcfg.col_stack_max,
 				ewcfg.col_stack_size,
 
-				ewcfg.col_id_user,
 				ewcfg.col_id_server
-			), (
-				player.id_user,
-				player.id_server
-			))
+			), [
+				id_server
+			])
 
 			for row in cursor:
 				id_item = row[0]
@@ -476,9 +708,11 @@ def inventory(
 async def inventory_print(cmd):
 	can_message_user = True
 
+	player = EwPlayer(id_user = cmd.message.author.id)
+
 	items = inventory(
 		id_user = cmd.message.author.id,
-		id_server = (cmd.message.server.id if (cmd.message.server != None) else None)
+		id_server = player.id_server
 	)
 
 	if len(items) == 0:
@@ -633,7 +867,7 @@ def soulbind(id_item):
 """
 	Find a single item in the player's inventory (returns either a (non-EwItem) item or None)
 """
-def find_item(item_search, id_user, id_server):
+def find_item(item_search = None, id_user = None, id_server = None):
 	item_sought = None
 
 	# search for an ID instead of a name
@@ -693,8 +927,27 @@ async def give(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if item_sought.get('item_type') == ewcfg.it_weapon:
-			response = "You can't give that away"
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			weapons_held = inventory(
+				id_user = recipient.id,
+				id_server = server.id,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
+				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif recipient_data.life_state == ewcfg.life_state_corpse:
+				response = "Ghosts can't hold weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				response  = "They can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if item_sought.get('item_type') == ewcfg.it_cosmetic:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			item_data.item_props["adorned"] = 'false'
+			item_data.persist()
+
 
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
@@ -708,6 +961,10 @@ async def give(cmd):
 				recipient = recipient.display_name,
 				item = item_sought.get('name')
 			)
+
+			if item_sought.get('id_item') == user_data.weapon:
+				user_data.weapon = -1
+				user_data.persist()
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
@@ -718,7 +975,9 @@ async def give(cmd):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-#Throw away an item
+"""
+	Throw away an item
+"""
 async def discard(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
@@ -731,20 +990,20 @@ async def discard(cmd):
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if not item.soulbound:
-			if item.item_type == ewcfg.it_weapon and user_data.weapon != "" and item.id_item == int(user_data.weapon):
+			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
 				if user_data.weaponmarried:
 					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
 					response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:
-					user_data.weapon = ""
+					user_data.weapon = -1
 					user_data.persist()
 				
 			response = "You throw away your " + item_sought.get("name")
-			item_delete(id_item = item.id_item)
+			item_drop(id_item = item.id_item)
 
 		else:
-			response = "You throw away soulbound items."
+			response = "You can't throw away soulbound items."
 	else:
 		if item_search:
 			response = "You don't have one"

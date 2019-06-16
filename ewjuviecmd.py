@@ -22,49 +22,81 @@ last_mismined_times = {}
 
 """ player enlists in a faction/gang """
 async def enlist(cmd):
-	time_now = int(time.time())
-	response = ""
 	user_data = EwUser(member = cmd.message.author)
+	user_slimes = user_data.slimes
 
-	if user_data.life_state == ewcfg.life_state_grandfoe:
-		return
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're dead, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.life_state == ewcfg.life_state_juvenile:
-		faction = ""
-		if cmd.tokens_count > 1:
-			faction = cmd.tokens[1].lower()
 
-		user_slimes = user_data.slimes
-
-		if user_slimes < ewcfg.slimes_toenlist:
-			response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
-		else:
-			if faction == "":
-				faction = user_data.faction
-
-			if faction == ewcfg.faction_rowdys or faction == ewcfg.faction_killers:
-				if len(user_data.faction) > 0 and user_data.faction != faction:
-					# Disallow joining a new faction. Player must be pardoned first.
-					response = "Disgusting traitor. You can only join the {}.".format(user_data.faction)
-				else:
-					response = "Enlisting in the {}.".format(faction)
-
-					user_data.life_state = ewcfg.life_state_enlisted
-					user_data.faction = faction
-					user_data.persist()
-
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+	elif user_data.life_state == ewcfg.life_state_enlisted:
+			if user_data.faction == ewcfg.faction_killers:
+				color = "purple"
 			else:
-				response = "Which faction? Say '{} {}' or '{} {}'.".format(ewcfg.cmd_enlist, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.faction_rowdys)
+				color = "pink"
+			response = "You are already enlisted in the {}! Look, your name is {}! Get a clue, idiot.".format(user_data.faction, color)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif user_data.life_state == ewcfg.life_state_corpse:
-		response = 'You are dead, bitch.'
+	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+		# Only allowed to !enlist at a gang base.
+		response = "Which faction? If you want to join a gang, you have to {} at their homebase. Dumbass.\nTo join the hot blooded and reckless {}, {} in {}.\nTo join the hardboiled and calculating {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_slimes < ewcfg.slimes_toenlist:
+		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_data.life_state == ewcfg.life_state_juvenile:
+		bans = user_data.get_bans()
+
+		if user_data.poi == ewcfg.poi_id_copkilltown:
+			if ewcfg.faction_killers in bans:
+				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_killers
+			user_data.persist()
+		else:
+			if ewcfg.faction_rowdys in bans:
+				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_rowdys
+			user_data.persist()
+
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		response = "You can't do that right now, bitch."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def renounce(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're dead, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif user_data.life_state != ewcfg.life_state_enlisted:
+		response = "What exactly are you renouncing? Your lackadaisical, idyllic life free of vice and violence? You aren't currently enlisted in any gang, retard!"
+
+	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+		response = "To turn in your badge, you must return to your soon-to-be former gang base."
+
+	else:
+		faction = user_data.faction
+		user_data.life_state = ewcfg.life_state_juvenile
+		user_data.persist()
+		response = "You are no longer enlisted in the {}, but you are not free of association with them.".format(faction)
+		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """ mine for slime (or endless rocks) """
 async def mine(cmd):
@@ -213,7 +245,6 @@ async def scavenge(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
 
-
 	time_now = int(time.time())
 	response = ""
 
@@ -230,7 +261,7 @@ async def scavenge(cmd):
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
 
-	# Mine only in your location channel
+	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
@@ -247,10 +278,28 @@ async def scavenge(cmd):
 
 			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
-
-			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
-
 			district_data.persist()
+
+			if cmd.tokens_count > 1:
+				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				loot_resp = ewitem.item_lootspecific(
+					id_server = user_data.id_server,
+					id_user = user_data.id_user,
+					item_search = item_search
+				)
+
+				response += loot_resp
+
+			else:
+				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
+				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
+				if random.random() < loot_chance:
+					loot_resp = ewitem.item_lootrandom(
+						id_server = user_data.id_server,
+						id_user = user_data.id_user
+					)
+					response += loot_resp
+
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
