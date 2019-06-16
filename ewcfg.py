@@ -798,6 +798,14 @@ col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
 
+#Database columns for enemies
+col_id_enemyid= 'id_enemy'
+col_enemyai = 'enemyai'
+col_enemytype = 'enemytype'
+col_enemyname = 'enemyname'
+col_enemylevel = 'enemylevel'
+col_enemypoi = 'enemypoi'
+
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'
 col_stat_value = 'stat_value'
