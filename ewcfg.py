@@ -4,15 +4,15 @@ from ewcosmeticitem import EwCosmeticItem
 from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
-from ewitem import EwItemDef
+from ewitem import EwItemDef, EwDefaultItem
 from ewmap import EwPoi
-from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain
 from ewmutation import EwMutationFlavor
+from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.2"
+version = "v3.3FUCK"
 dir_msgqueue = 'msgqueue'
 
 # Update intervals
@@ -31,14 +31,27 @@ max_iw_swing = 30
 life_state_corpse = 0
 life_state_juvenile = 1
 life_state_enlisted = 2
+life_state_lucky = 7
 life_state_grandfoe = 8
 life_state_kingpin = 10
+life_state_observer = 20
+
+slimeoid_tick_length = 5 * 60 #5 minutes
 
 # slimeoid life states
 slimeoid_state_none = 0
 slimeoid_state_forming = 1
 slimeoid_state_active = 2
 slimeoid_state_stored = 3
+
+# slimeoid types
+sltype_lab = 'Lab'
+sltype_nega = 'Nega'
+sltype_wild = 'Wild'
+
+# slimeoid battle types
+battle_type_arena = 0
+battle_type_nega = 1
 
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
@@ -185,6 +198,7 @@ role_corpse = "corpse"
 role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
+role_slimecorp = "slimecorp"
 
 faction_roles = [
 	role_juvenile,
@@ -198,12 +212,23 @@ faction_roles = [
 	role_corpse,
 	role_corpse_pvp,
 	role_kingpin,
-	role_grandfoe
+	role_grandfoe,
+	role_slimecorp
 	]
 
-# Faction names
+role_to_pvp_role = {
+	role_juvenile : role_juvenile_pvp,
+	role_rowdyfuckers : role_rowdyfuckers_pvp,
+	role_copkillers : role_copkillers_pvp,
+	role_corpse : role_corpse_pvp
+	}
+
+# Faction names and bases
 faction_killers = "killers"
+gangbase_killers = "Cop Killtown"
 faction_rowdys = "rowdys"
+gangbase_rowdys = "Rowdy Roughhouse"
+faction_banned = "banned"
 factions = [faction_killers, faction_rowdys]
 
 # Channel names
@@ -288,10 +313,12 @@ hideout_by_faction = {
 # Commands
 cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
+cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
 cmd_kill = cmd_prefix + 'kill'
 cmd_shoot = cmd_prefix + 'shoot'
 cmd_shoot_alt1 = cmd_prefix + 'bonk'
+cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_attack = cmd_prefix + 'attack'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
@@ -309,7 +336,15 @@ cmd_unsalute = cmd_prefix + 'unsalute'
 cmd_hurl = cmd_prefix + 'hurl'
 cmd_spar = cmd_prefix + 'spar'
 cmd_suicide = cmd_prefix + 'suicide'
+cmd_suicide_alt1 = cmd_prefix + 'seppuku'
+cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
+cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
+cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
+cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
+cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
+cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
+cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
 cmd_slimepachinko = cmd_prefix + 'slimepachinko'
 cmd_slimeslots = cmd_prefix + 'slimeslots'
 cmd_slimecraps = cmd_prefix + 'slimecraps'
@@ -388,6 +423,7 @@ cmd_map = cmd_prefix + 'map'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
 cmd_pardon = cmd_prefix + 'pardon'
+cmd_banish = cmd_prefix + 'banish'
 cmd_writhe = cmd_prefix + 'writhe'
 cmd_use = cmd_prefix + 'use'
 cmd_news = cmd_prefix + 'news'
@@ -399,6 +435,7 @@ cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
+cmd_mill = cmd_prefix + 'mill'
 cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
@@ -413,6 +450,8 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_capture_progress = cmd_prefix + 'progress'
+cmd_quarterly_report = cmd_prefix + 'quarterlyreport'
+cmd_teleport = cmd_prefix + 'tp'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 
@@ -445,6 +484,7 @@ cmd_petslimeoid = cmd_prefix + 'petslimeoid'
 cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
+cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -477,13 +517,14 @@ offline_cmds = [
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
-slimes_toenlist = 0
+slimes_toenlist = 50000
 slimes_perspar_base = 0
-slimes_hauntratio = 40
+slimes_hauntratio = 400
 slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
+slimes_permill = 75000
 
 # hunger
 min_stamina = 100
@@ -508,6 +549,8 @@ togo_price_increase = 2
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
+farm_food_expir = 12 * 3600 * 4 # 2 days
+milled_food_expir = 12 * 3600 * 28 # 2 weeks
 
 # minimum amount of slime needed to capture territory
 min_slime_to_cap = 50000
@@ -589,7 +632,7 @@ weapon_fee = 100
 
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
-reap_gain = 160000  # this takes about 1 hour to mine, so mining is more efficient
+reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
 cd_kill = 5
@@ -650,7 +693,7 @@ emote_purple = "<:purple:496397848343216138>"
 emote_pink = "<:pink:496397871180939294>"
 emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
-emote_slimecorp = "<:slimecorp:522416869127225344>"
+emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 
 # Emotes for the negaslime writhe animation
@@ -759,6 +802,8 @@ col_bleed_storage = 'bleed_storage'
 col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
+col_poi_death = 'poi_death'
+col_slime_donations = 'donated_slimes'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -777,6 +822,7 @@ col_intel = 'intel'
 col_level = 'level'
 col_time_defeated = 'time_defeated'
 col_clout = 'clout'
+col_hue = 'hue'
 
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'
@@ -836,12 +882,12 @@ col_quadrants_target = 'id_target'
 col_quadrants_target2 = 'id_target2'
 
 # Item type names
+it_item = "item"
 it_medal = "medal"
 it_slimepoudrin = "slimepoudrin"
 it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
-
 it_cosmetic = 'cosmetic'
 
 # Cosmetic item rarities
@@ -857,6 +903,7 @@ leaderboard_podrins = "PODRIN LORDS"
 leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
+leaderboard_donated = "LOYALEST CONSUMERS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1007,6 +1054,162 @@ stats_clear_on_death = [
         stat_slimesscavenged
 ]
 
+# List of normal items.
+item_list = [
+	EwDefaultItem(
+		id_item = "whitedye",
+		context = "dye",
+		subcontext = "white",
+		str_name = "White Dye",
+		str_desc = "A small vial of white dye.",
+		ingredients = "poketuber",
+	),
+	EwDefaultItem(
+		id_item = "yellowdye",
+		context = "dye",
+		subcontext = "yellow",
+		str_name = "Yellow Dye",
+		str_desc = "A small vial of yellow dye.",
+		ingredients = "pulpgourds",
+	),
+	EwDefaultItem(
+		id_item = "orangedye",
+		context = "dye",
+		subcontext = "orange",
+		str_name = "Orange Dye",
+		str_desc = "A small vial of orange dye.",
+		ingredients = "sourpotatoes",
+	),
+	EwDefaultItem(
+		id_item = "reddye",
+		context = "dye",
+		subcontext = "red",
+		str_name = "Red Dye",
+		str_desc = "A small vial of red dye.",
+		ingredients = "bloodcabbages",
+	),
+	EwDefaultItem(
+		id_item = "magentadye",
+		context = "dye",
+		subcontext = "magenta",
+		str_name = "Magenta Dye",
+		str_desc = "A small vial of magenta dye.",
+		ingredients = "joybeans",
+	),
+	EwDefaultItem(
+		id_item = "purpledye",
+		context = "dye",
+		subcontext = "purple",
+		str_name = "Purple Dye",
+		str_desc = "A small vial of purple dye.",
+		ingredients = "purplekilliflower",
+	),
+	EwDefaultItem(
+		id_item = "bluedye",
+		context = "dye",
+		subcontext = "blue",
+		str_name = "Blue Dye",
+		str_desc = "A small vial of blue dye.",
+		ingredients = "razornuts",
+	),
+	EwDefaultItem(
+		id_item = "greendye",
+		context = "dye",
+		subcontext = "green",
+		str_name = "Green Dye",
+		str_desc = "A small vial of green dye.",
+		ingredients = "pawpaw",
+	),
+	EwDefaultItem(
+		id_item = "tealdye",
+		context = "dye",
+		subcontext = "teal",
+		str_name = "Teal Dye",
+		str_desc = "A small vial of teal dye.",
+		ingredients = "sludgeberries",
+	),
+	EwDefaultItem(
+		id_item = "rainbowdye",
+		context = "dye",
+		subcontext = "rainbow",
+		str_name = "***Rainbow Dye!!***",
+		str_desc = "***A small vial of Rainbow dye!!***",
+		ingredients = "suganmanuts",
+	),
+	EwDefaultItem(
+		id_item = "pinkdye",
+		context = "dye",
+		subcontext = "pink",
+		str_name = "Pink Dye",
+		str_desc = "A small vial of pink dye.",
+		ingredients = "pinkrowddishes",
+	),
+	EwDefaultItem(
+		id_item = "greydye",
+		context = "dye",
+		subcontext = "grey",
+		str_name = "Grey Dye",
+		str_desc = "A small vial of grey dye.",
+		ingredients = "dankwheat",
+	),
+	EwDefaultItem(
+		id_item = "cobaltdye",
+		context = "dye",
+		subcontext = "cobalt",
+		str_name = "Cobalt Dye",
+		str_desc = "A small vial of cobalt dye.",
+		ingredients = "brightshade",
+	),
+	EwDefaultItem(
+		id_item = "blackdye",
+		context = "dye",
+		subcontext = "black",
+		str_name = "Black Dye",
+		str_desc = "A small vial of black dye.",
+		ingredients = "blacklimes",
+	),
+	EwDefaultItem(
+		id_item = "limedye",
+		context = "dye",
+		subcontext = "lime",
+		str_name = "Lime Dye",
+		str_desc = "A small vial of lime dye.",
+		ingredients = "phosphorpoppies",
+	),
+	EwDefaultItem(
+		id_item = "cyandye",
+		context = "dye",
+		subcontext = "cyan",
+		str_name = "Cyan Dye",
+		str_desc = "A small vial of cyan dye.",
+		ingredients = "direapples",
+	),
+]
+
+# A map of id_item to EwDefaultItem objects.
+item_map = {}
+
+# A list of food names
+item_names = []
+
+# Populate food map, including all aliases.
+for item in item_list:
+	item_map[item.id_item] = item
+	item_names.append(item.id_item)
+
+	for alias in item.alias:
+		item_map[alias] = item
+
+# list of dyes you're able to saturate your Slimeoid with
+dye_list = []
+
+# seperate the dyes from the other normal items
+for c in dye_list:
+	if c.context != "dye":
+		pass
+	else:
+		dye_list.append(c)
+
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
 	aim = (random.randrange(10) + 1)
@@ -1050,7 +1253,13 @@ def wef_nunchucks(ctn = None):
 def wef_katana(ctn = None):
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-	if(random.randrange(10) + 1) == 10:
+
+	#lucky lucy's lucky katana always crits
+	if ctn.user_data.life_state == life_state_lucky:
+		ctn.crit = True
+		ctn.slimes_damage *= 7.77
+
+	elif(random.randrange(10) + 1) == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2.1
 
@@ -1440,7 +1649,8 @@ vendor_seafood = 'Red Mobster Seafood'	#rate of seafood is 1 slimecoin to 9 hung
 vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
 vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and Red Mobster
 vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
-
+vendor_farm = "Farm" #contains all the vegetables you can !reap
+vendor_none = "None" #Currently used for millable items so that they can't be bought from any vendor
 # stock ids
 stock_kfc = "kfc"
 stock_pizzahut = "pizzahut"
@@ -1449,6 +1659,24 @@ stock_tacobell = "tacobell"
 # default stock rates
 default_stock_market_rate = 1000
 default_stock_exchange_rate = 1000000
+
+# dye ids
+dye_black = "blackdye"
+dye_maroon = "maroondye"
+dye_green = "greendye"
+dye_brown = "browndye"
+dye_tan = "tandye"
+dye_purple = "purpledye"
+dye_teal = "tealdye"
+dye_orange = "orangedye"
+dye_gray = "graydye"
+dye_red = "reddye"
+dye_lime = "limedye"
+dye_yellow = "yellowdye"
+dye_blue = "bluedye"
+dye_fuchsia = "fuchsiadye"
+dye_aqua = "aquadye"
+dye_white = "whitedye"
 
 
 # A map of name to EwWeather objects.
@@ -1469,7 +1697,8 @@ food_list = [
 		str_name = 'slime n\' tonic',
 		vendors = [vendor_bar, vendor_countryclub],
 		str_eat = "You stir your slime n' tonic with a thin straw before chugging it lustily.",
-		str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could."
+		str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could.",
+		ingredients = "purplekilliflower",
 	),
 	EwFood(
 		id_food = "slimacolada",
@@ -2059,7 +2288,7 @@ food_list = [
 				  "you just whip out whatever weapon you currently have quiped and start to viciously strike the crustaceans in a vain attempt to release their inner, delectable meat. "
 				  "You just end up destroying the entire table you’re eating at.",
 		str_desc = "Two imposing 1½ lb Arizonian Kingpin Crabs, steamed and split, served with a small side of melted butter. Their unique pink and purple carapaces that distinguish them are purely cosmetic, "
-				   "but you’ll always think one color tastes better than the other. D’awww..."
+				   "but you’ll always think one color tastes better than the other. D’awww...",
 	),
 	EwFood(
 		id_food = "champagne",
@@ -2379,7 +2608,7 @@ food_list = [
 		str_name = 'Nacho Supreme',
 		vendors = [vendor_tacobell],
 		str_eat = "You shovel fistfuls of nacho detritus into your gaping maw. Your gums are savaged by the sharp edges of the crips corny chips.",
-		str_desc = "A plate full of crisp tortilla chips onto which ground beef, sour cream, cheese, tomatoes, and various assorted bullshit has been dumped."
+		str_desc = "A plate full of crisp tortilla chips onto which ground beef, sour cream, cheese, tomatoes, and various assorted bullshit has been dumped.",
 	),
 	EwFood(
 		id_food = "energytaco",
@@ -2410,7 +2639,7 @@ food_list = [
 		str_name = 'cup of pure undiluted MTN DEW syrup',
 		vendors = [vendor_mtndew],
 		str_eat = "You pour the molasses-like liquid down your throat. It stings your teeth and clings to your esophagus on the way down, but you feel suddenly invigorated as your blood sugar skyrockets!!",
-		str_desc = "This thick, viscous green fluid reeks with a sickly-sweet citrusy odor."
+		str_desc = "This thick, viscous green fluid reeks with a sickly-sweet citrusy odor.",
 	),
 	EwFood(
 		id_food = "bajablastsyrup",
@@ -2548,6 +2777,345 @@ food_list = [
 		str_eat = "You pop open the lid of the heart-shaped box and shower yourself in warm sugary delicates! Your face and shirt is grazed numerous times by the melted confections, smearing brown all over you. Baby made a mess.",
 		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
 	),
+	EwFood(
+		id_food = "pinkrowddishes",
+		recover_hunger = 60,
+		str_name = 'Pink Rowddishes',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Pink Rowddishes. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The sweet-smelling tubers stain your hands pink.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "sludgeberries",
+		recover_hunger = 60,
+		str_name = 'Sludgeberries',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Sludgeberries. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The thick syrup covering the green and teal berries makes your hands sticky.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "pulpgourds",
+		recover_hunger = 60,
+		str_name = 'Pulp Gourds',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Pulp Gourds. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The easily malleable gourds form indents from even your lightest touch.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "joybeans",
+		recover_hunger = 60,
+		str_name = 'Joybeans',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Joybeans. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The sugary candy-like beans have a thick gel interior that rots your teeth.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "brightshade",
+		recover_hunger = 60,
+		str_name = 'Brightshade',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Brightshade. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The dangerously toxic chemicals that cover the flower bud burn your eyes and nose.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "direapples",
+		recover_hunger = 60,
+		str_name = 'Dire Apples',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Dire Apples. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The vicious acidity from from the cyan and orange apples makes your mouth contort in pain with every bite.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "purplekilliflower",
+		recover_hunger = 60,
+		str_name = 'Purple Killiflower',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Purple Killiflower. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The deep purple head has an extremely bitter aftertaste.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "razornuts",
+		recover_hunger = 60,
+		str_name = 'Razornuts',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Razornuts. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The sharp edges of the hard nut slice open your mouth so that you taste slight hints of copper from your blood every bite.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "poketubers",
+		recover_hunger = 60,
+		str_name = 'Poke-tubers',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Poke-tubers. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The lame, sad, lumpy roots barely support a bulbous crop that’s indiscernible taste is not complemented by it’s awkward texture.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "suganmanuts",
+		recover_hunger = 60,
+		str_name = 'Suganma Nuts',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Suganmanuts. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The difficult nuts infuriate you for reasons you don’t really underst-- HEY WAIT A SECOND!!",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "dankwheat",
+		recover_hunger = 60,
+		str_name = 'Dankwheat',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Dankwheat. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The damp barley milled from this moist wheat causes hallucinations and intoxication once digested fully.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "blacklimes",
+		recover_hunger = 60,
+		str_name = 'Black Limes',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Black Limes. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The sour juice squeezed from just one of these small dark grey limes can flavor an entire production of Warheads hard candy.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "phosphorpoppies",
+		recover_hunger = 60,
+		str_name = 'Phosphorpoppies',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Phosphorpoppies. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The vivid and unnatural colors of this plant reveal it’s man made origin. Some say SlimeCorp designed the plant’s addictive and anxiety/paranoia inducing nature to keep juveniles weak and disenfranchised.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "sourpotatoes",
+		recover_hunger = 60,
+		str_name = 'Sour Potatoes',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Sour Potatoes. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The staple of many unhealthy juveniles’ diet. It’s revolting taste leaves much to be desired.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "bloodcabbages",
+		recover_hunger = 60,
+		str_name = 'Blood Cabbages',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Blood Cabbages. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "The dripping mass of dark crimson leaves have become the staple special effects tool for aspiration amatuer filmmakers in the city for it’s uncanny resemblance to human blood.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "pawpaw",
+		recover_hunger = 60,
+		str_name = 'Pawpaw',
+		vendors = [vendor_farm],
+		str_eat = "You chomp into the raw Pawpaw. It isn't terrible, but you feel like there is a more constructive use for it.",
+		str_desc = "An American classic.",
+		time_expir = farm_food_expir,
+	),
+	EwFood(
+		id_food = "pinkrowdatouille",
+		recover_hunger = 1200,
+		str_name = 'Pink Rowdatouille',
+		ingredients = "pinkrowddishes",
+		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
+		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "sludgeberrypancakes",
+		recover_hunger = 800,
+		str_name = 'Sludgeberry Pancakes',
+		ingredients = "sludgeberries",
+		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
+		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "pulpgourdpie",
+		recover_hunger = 800,
+		str_name = 'Pulp Gourd Pie',
+		ingredients = "pulpgourds",
+		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
+		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "joybeanpastemochi",
+		recover_hunger = 800,
+		str_name = 'Joybean Paste Mochi',
+		ingredients = "joybeans",
+		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
+		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "brightshadeseeds",
+		recover_hunger = 800,
+		str_name = 'Brightshade Seeds',
+		ingredients = "brightshade",
+		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
+		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "direapplejuice",
+		recover_hunger = 800,
+		str_name = 'Dire Apple Juice',
+		ingredients = "direapple",
+		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
+		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "purplekilliflowercrustpizza",
+		recover_hunger = 1200,
+		str_name = 'Purple Killiflower Crust Pizza',
+		ingredients = "purplekilliflower",
+		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
+		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "razornutbutter",
+		recover_hunger = 800,
+		str_name = 'Razornut Butter',
+		ingredients = "razornuts",
+		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
+		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "jellyfilleddoughnut",
+		recover_hunger = 800,
+		str_name = 'Jelly-Filled Doughnut',
+		ingredients = "poketubers",
+		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
+		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "yourfavoritefood",
+		recover_hunger = 800,
+		str_name = '***Your Favorite Food***',
+		ingredients = "suganmanuts",
+		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
+		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "dankwheattoast",
+		recover_hunger = 800,
+		str_name = 'Dankwheat Toast',
+		ingredients = "dankwheat",
+		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
+		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "blacklimesour",
+		recover_hunger = 800,
+		str_name = 'Black Lime Sour',
+		ingredients = "blacklimes",
+		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
+		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "phosphorpoppiesmuffin",
+		recover_hunger = 800,
+		str_name = 'Phosphorpoppies Muffin',
+		ingredients = "phosphorpoppies",
+		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
+		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "sourpotatofrenchfries",
+		recover_hunger = 800,
+		str_name = 'Sour Potato French Fries',
+		ingredients = "sourpotatoes",
+		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
+		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "bloodcabbagecoleslaw",
+		recover_hunger = 800,
+		str_name = 'Blood Cabbage Coleslaw',
+		ingredients = "bloodcabbage",
+		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
+		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "pawpawfood",
+		recover_hunger = 800,
+		str_name = 'Pawpaw Food',
+		ingredients = "pawpaw",
+		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
+		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
+		time_expir = milled_food_expir,
+	),
+	EwFood(
+		id_food = "khaotickilliflowerfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Khaotic Killiflower FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its bitter, low quality artificial Purple Killiflower flavorings remind you of discount children’s cough medicine. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "rampagingrowddishfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Rampaging Rowddish FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its sickeningly sweet artificial Pink Rowddish flavorings taste like if you mixed about 16 packs of Starburst FaveREDs into a blender. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "direappleciderfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Dire Apple Cider FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its wickedly sour artificial Dire Apple flavorings, mixed with its thick consistency, makes it feel like you’re drinking applesauce mixed with a healthy heaping of malic acid. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "ultimateurinefuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Ultimate Urine FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. It literally just tastes like piss. You’re almost positive you’re literally drinking pee right now. It’s not even carbonated. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any otherr living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "superwaterfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Super Water FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+
 ]
 
 # A map of id_food to EwFood objects.
@@ -2576,6 +3144,16 @@ for food in food_list:
 
 	for alias in food.alias:
 		food_map[alias] = food
+
+# list of crops you're able to !reap
+vegetable_list = []
+
+# seperate the crops from the normal foods
+for v in food_list:
+	if v.vendors != [vendor_farm]:
+		pass
+	else:
+		vegetable_list.append(v)
 
 vendor_stock_map = {
 	vendor_kfc : stock_kfc,
@@ -2610,6 +3188,20 @@ item_def_list = [
 
 		# The description shown when you look at an item.
 		str_desc = "A demonstration item."
+	),
+
+	EwItemDef(
+		item_type = it_item,
+		str_name = "{item_name}",
+		str_desc = "{item_desc}",
+		item_props = {
+			'id_name': 'normalitem',
+			'context': 'context',
+			'subcontext': 'subocontext',
+			'item_name': 'Normal Item.',
+			'item_desc': 'This is a normal item.',
+			'ingredients': 'vegetable'
+		}
 	),
 
 	# A customizable award object.
@@ -2654,7 +3246,7 @@ item_def_list = [
 			'inebriation': 0,
 			'vendor': None,
 			'str_eat': 'You eat the food item.',
-			'time_expir': std_food_expir
+			'time_expir': std_food_expir,
 		}
 	),
 
@@ -2681,7 +3273,7 @@ item_def_list = [
 			'cosmetic_desc': 'Cosmetic Item.',
 			'rarity': rarity_plebeian
 		}
-	)
+	),
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -3021,7 +3613,7 @@ poi_list = [
 			"ss"
 		],
 		str_name = "South Sleezeborough",
-		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay, To the East is Ooze Gardens.",
+		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline.",
 		coord = (12, 22),
 		coord_alias = [
 			(12, 23),
@@ -3773,7 +4365,7 @@ poi_list = [
 			"r",
 		],
 		str_name = "The Resort",
-		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported white sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
+		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported red sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
 		coord = (42, 6),
 		channel = channel_beachresort,
 		role = "Beach Resort",
@@ -4983,225 +5575,365 @@ for line in transport_lines:
 
 cosmetic_items_list = [
 	EwCosmeticItem(
-		name = "propeller hat",
-		description = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
+		id_cosmetic = "propellerhat",
+		str_name = "propeller hat",
+		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
+		rarity = rarity_plebeian,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "mininghelmet",
+		str_name = "mining helmet",
+		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
+		rarity = rarity_plebeian,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pickelhaube",
+		str_name = "pickelhaube",
+		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "mining helmet",
-		description = "A typical construction hard hat with a head lamp strapped onto it.",
+		id_cosmetic = "fedora",
+		str_name = "fedora",
+		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pickelhaube",
-		description = "A traditional Prussian spiked helmet from the nineteenth century.",
+		id_cosmetic = "baseballcap",
+		str_name = "baseball cap",
+		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "fedora",
-		description = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
+		id_cosmetic = "backwardsbaseballcap",
+		str_name = "backwards baseball cap",
+		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "baseball cap",
-		description = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
+		id_cosmetic = "piratehat",
+		str_name = "pirate hat",
+		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "backwards baseball cap",
-		description = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
+		id_cosmetic = "eyepatch",
+		str_name = "eyepatch",
+		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pirate hat",
-		description = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
+		id_cosmetic = "cigarette",
+		str_name = "cigarette",
+		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "eyepatch",
-		description = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
+		id_cosmetic = "headband",
+		str_name = "headband",
+		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "cigarette",
-		description = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
+		id_cosmetic = "handkerchief",
+		str_name = "handkerchief",
+		str_desc = "A bandanna tied on your head, creating a simple cap.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "headband",
-		description = "A headband wrapped tightly around your forehead with long, flowing ends.",
+		id_cosmetic = "bandanna",
+		str_name = "bandanna",
+		str_desc = "A handkerchief tied around your neck and covering your lower face.",
+		rarity = rarity_plebeian,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pairofsunglasses",
+		str_name = "pair of sunglasses",
+		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "handkerchief",
-		description = "A bandanna tied on your head, creating a simple cap.",
+		id_cosmetic = "pairofglasses",
+		str_name = "pair of glasses",
+		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bandanna",
-		description = "A handkerchief tied around your neck and covering your lower face.",
+		id_cosmetic = "birthdayhat",
+		str_name = "birthday hat",
+		str_desc = "A striped, multi-color birthday hat. ",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of sunglasses",
-		description = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
+		id_cosmetic = "scarf",
+		str_name = "scarf",
+		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of glasses",
-		description = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
+		str_name = "witch hat",
+		id_cosmetic = "witchhat",
+		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "birthday hat",
-		description = "A striped, multi-color birthday hat. ",
+		id_cosmetic = "bomberhat",
+		str_name = "bomber hat",
+		str_desc = "A thick fur and leather aviator’s hat.",
+		rarity = rarity_plebeian,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "tuxedo",
+		str_name = "tuxedo",
+		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "scarf",
-		description = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
+		id_cosmetic = "beanie",
+		str_name = "beanie",
+		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "witch hat",
-		description = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
+		id_cosmetic = "jestershat",
+		str_name = "jester's hat",
+		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bomber hat",
-		description = "A thick fur and leather aviator’s hat.",
+		id_cosmetic = "pairof3dglasses",
+		str_name = "pair of 3D glasses",
+		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "tuxedo",
-		description = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
+		id_cosmetic = "necktie",
+		str_name = "necktie",
+		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "beanie",
-		description = "A simple beanie with a pointed top and a slip stitch brim.",
+		id_cosmetic = "vikinghelmet",
+		str_name = "viking helmet",
+		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "jester's hat",
-		description = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
+		id_cosmetic = "pairofflipflops",
+		str_name = "pair of flip flops",
+		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of 3D glasses",
-		description = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
+		id_cosmetic = "fez",
+		str_name = "fez",
+		str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "necktie",
-		description = "A vintage necktie, reeking of coffee, college, and shaving cream.",
+		id_cosmetic = "bowtie",
+		str_name = "bowtie",
+		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "viking helmet",
-		description = "A pointy bronze helmet with two sharp horns jutting out of the base.",
+		id_cosmetic = "cowboyhat",
+		str_name = "cowboy hat",
+		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "pair of flip flops",
-		description = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
+		id_cosmetic = "kepi",
+		str_name = "kepi",
+		str_desc = "A short kepi with a sunken top and an insignia on the front.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "fez",
-		description = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
+		id_cosmetic = "tamoshanter",
+		str_name = "tam o' shanter",
+		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "bowtie",
-		description = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
+		id_cosmetic = "ushanka",
+		str_name = "ushanka",
+		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "cowboy hat",
-		description = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
+		id_cosmetic = "karategi",
+		str_name = "karategi",
+		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "kepi",
-		description = "A short kepi with a sunken top and an insignia on the front.",
+		id_cosmetic = "turban",
+		str_name = "turban",
+		str_desc = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "tam o' shanter",
-		description = "A traditional Scottish wool bonnet with a plaid pattern.",
+		id_cosmetic = "nemes",
+		str_name = "nemes",
+		str_desc = "The traditional ancient Egyptian pharaoh's striped head cloth.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "ushanka",
-		description = "A traditional Russian fur cap with thick wool ear flaps.",
+		id_cosmetic = "varsityjacket",
+		str_name = "varsity jacket",
+		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "karategi",
-		description = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
+		id_cosmetic = "sombrero",
+		str_name = "sombrero",
+		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "turban",
-		description = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
+		id_cosmetic = "hawaiianshirt",
+		str_name = "hawaiian shirt",
+		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "nemes",
-		description = "The traditional ancient Egyptian pharaoh's striped head cloth.",
-		rarity = rarity_plebeian
-	),
-	EwCosmeticItem(
-		name = "varsity jacket",
-		description = "An American baseball jacket, with a large insignia on the left side of the chest.",
-		rarity = rarity_plebeian
-	),
-	EwCosmeticItem(
-		name = "sombrero",
-		description = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
-		rarity = rarity_plebeian
-	),
-	EwCosmeticItem(
-		name = "hawaiian shirt",
-		description = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
-		rarity = rarity_plebeian
-	),
-	EwCosmeticItem(
-		name = "fursuit",
-		description = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
+		id_cosmetic = "fursuit",
+		str_name = "fursuit",
+		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "diadem",
-		description = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
+		id_cosmetic = "diadem",
+		str_name = "diadem",
+		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "Bill's Hat",
-		description = "A military beret with a shield insignia on the front.",
+		id_cosmetic = "billshat",
+		str_name = "Bill's Hat",
+		str_desc = "A military beret with a shield insignia on the front.",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "wedding ring",
-		description = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
+		id_cosmetic = "weddingring",
+		str_name = "wedding ring",
+		str_desc = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "earbuds",
-		description = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
+		id_cosmetic = "earbuds",
+		str_name = "earbuds",
+		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician
 	),
 	EwCosmeticItem(
-		name = "nurse's outfit",
-		description = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
+		id_cosmetic = "nursesoutfit",
+		str_name = "nurse's outfit",
+		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
 		rarity = rarity_plebeian
 	),
 	EwCosmeticItem(
-		name = "heart boxers",
-		description = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
-		rarity = rarity_plebeian
-	)
+		id_cosmetic = "heartboxers",
+		str_name = "heart boxers",
+		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
+		rarity = rarity_plebeian,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "captainshat",
+		str_name = "Captain's Hat",
+		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
+		ingredients = "poketuber",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "juveolantern",
+		str_name = "Juve-O'-Lantern",
+		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
+		ingredients = "pulpgourds",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "bowlerhat",
+		str_name = "Bowler Hat",
+		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
+		ingredients = "sourpotatoes",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "cabbagetreehat",
+		str_name = "Cabbage Tree Hat",
+		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
+		ingredients = "bloodcabbages",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "braces",
+		str_name = "Braces",
+		str_desc = "An old fashioned orthodontic headgear. Elaborate metal wires and braces hold your nearly eroded, crooked teeth together in what can genously be called a mouth. You are in agony, and so is everyone that looks at you.",
+		ingredients = "joybeans",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "hoodie",
+		str_name = "Hoodie",
+		str_desc = "Perfect for keeping warm in the middle of the blisteringly hot Arizonian desert! Heatstroke or bust!",
+		ingredients = "purplekilliflower",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "copbadge",
+		str_name = "Cop Badge",
+		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
+		ingredients = "razornuts",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "strawhat",
+		str_name = "Straw Hat",
+		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
+		ingredients = "pawpaw",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "cosplayhorns",
+		str_name = "Cosplay Horns",
+		str_desc = "You’re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them… perhaps you understood their importance in a past life.",
+		ingredients = "sludgeberries",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "youfavoritehat",
+		str_name = "***Your Favorite Hat***",
+		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
+		ingredients = "suganmanuts",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pajamaonesie",
+		str_name = "Pajama Onesie",
+		str_desc = "A soft jumpsuit with an audacious, repeating design printed over the entire cosmetic. You feel like getting a little bit fucking rowdy wearing this outrageous onesie. ",
+		ingredients = "pinkrowddishes",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pairofcircularsunglasses",
+		str_name = "Pair of Circular Sunglasses",
+		str_desc = "Sunglasses, but in a circle! Genius! You can't wait to show the world your hot takes on television shows for girls.",
+		ingredients = "dankwheat",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "flowercrown",
+		str_name = "Flower Crown",
+		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
+		ingredients = "brightshade",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "spikedbracelets",
+		str_name = "Spiked Bracelets",
+		str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You’re hyper aware of these fashion disasters whenever you’re walking, making sure to swing them as far away from your body as possible.",
+		ingredients = "blacklimes",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "slimecorppin",
+		str_name = "SlimeCorp Pin",
+		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
+		ingredients = "phosphorpoppies",
+	),
+	EwCosmeticItem(
+		id_cosmetic = "overalls",
+		str_name = "Overalls",
+		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
+		ingredients = "direapples",
+	),
 ]
 
 # Slimeoid attributes.
@@ -6072,6 +6804,282 @@ for brain in brain_list:
 	for alias in brain.alias:
 		brain_map[alias] = brain
 
+hue_analogous = -1
+hue_neutral = 0
+hue_atk_complementary = 1
+hue_special_complementary = 2
+hue_full_complementary = 3
+
+# All color attributes in the game.
+hue_list = [
+	EwHue(
+		id_hue = "white",
+		alias = [
+			"whitedye",
+			"poketuber"
+		],
+		str_saturate = "It begins to glow a ghostly white!",
+		str_name = "White",
+		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
+	),
+	EwHue(
+		id_hue = "yellow",
+		alias = [
+			"yellowdye",
+			"pulpgourds"
+		],
+		str_saturate = "It begins to shine a bright yellow!",
+		str_name = "Yellow",
+		str_desc = "Its bright yellow hue is delightfully radiant.",
+		effectiveness = {
+			"orange": hue_analogous,
+			"lime": hue_analogous,
+			"purple": hue_atk_complementary,
+			"cobalt": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+	),
+	EwHue(
+		id_hue = "orange",
+		alias = [
+			"orangedye",
+			"sourpotatoes"
+		],
+		str_saturate = "It turns a warm orange!",
+		str_name= "Orange",
+		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book.",
+		effectiveness = {
+			"red": hue_analogous,
+			"yellow": hue_analogous,
+			"blue": hue_atk_complementary,
+			"cyan": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+	),
+	EwHue(
+		id_hue = "red",
+		alias = [
+			"blood"
+			"cabbage"
+		],
+		str_saturate = "It darkens a deep shade of crimson red!",
+		str_name = "Red",
+		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin.",
+		effectiveness = {
+			"pink": hue_analogous,
+			"orange": hue_analogous,
+			"cobalt": hue_atk_complementary,
+			"teal": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+	),
+	EwHue(
+		id_hue = "magenta",
+		alias = [
+			"magentadye",
+			"joybeans"
+		],
+		str_saturate = "It turns a vivid magenta!",
+		str_name = "Magenta",
+		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it.",
+		effectiveness = {
+			"pink": hue_analogous,
+			"purple": hue_analogous,
+			"teal": hue_atk_complementary,
+			"lime": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+	),
+	EwHue(
+		id_hue = "purple",
+		alias = [
+			"purpledye",
+			"purplekilliflower",
+			"killer"
+		],
+		str_saturate = "It turns a dark purple!",
+		str_name = "Purple",
+		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible.",
+		effectiveness = {
+			"blue": hue_analogous,
+			"magenta": hue_analogous,
+			"green": hue_atk_complementary,
+			"yellow": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+	),
+	EwHue(
+		id_hue = "blue",
+		alias = [
+			"bluedye",
+			"razornuts"
+		],
+		str_saturate = "It turns a deep blue!",
+		str_name = "Blue",
+		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea.",
+		effectiveness = {
+			"cobalt": hue_analogous,
+			"purple": hue_analogous,
+			"lime": hue_atk_complementary,
+			"orange": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+	),
+	EwHue(
+		id_hue = "green",
+		alias = [
+			"greendye",
+			"pawpaw",
+			"juvie"
+		],
+		str_saturate = "It turns a shade of green that barely distinguishes itself from a Slimeoid’s standard hue.",
+		str_name = "Green",
+		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class.",
+		effectiveness = {
+			"lime": hue_analogous,
+			"teal": hue_analogous,
+			"pink": hue_atk_complementary,
+			"purple": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
+	),
+	EwHue(
+		id_hue = "teal",
+		alias = [
+			"tealdye",
+			"sludgeberries"
+		],
+		str_saturate = "It looks so purdy now!",
+		str_name = "Teal",
+		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here.",
+		effectiveness = {
+			"green": hue_analogous,
+			"cyan": hue_analogous,
+			"red": hue_atk_complementary,
+			"magenta": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
+	),
+	EwHue(
+		id_hue = "rainbow",
+		alias = [
+			"rainbowdye",
+			"suganmanuts"
+		],
+		str_saturate = "It turns a fantastic shade of... well, everything!!",
+		str_name = "***Rainbow***",
+		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!"
+	),
+	EwHue(
+		id_hue = "pink",
+		alias = [
+			"pinkdye",
+			"pinkrowddishes"
+		],
+		str_saturate = "It turns a vibrant shade of  pink!",
+		str_name = "Pink",
+		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin.",
+		effectiveness = {
+			"magenta": hue_analogous,
+			"red": hue_analogous,
+			"cyan": hue_atk_complementary,
+			"green": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
+	),
+	EwHue(
+		id_hue = "grey",
+		alias = [
+			"greydye",
+			"dankwheat"
+		],
+		str_saturate = "It turns a dull, somber grey.",
+		str_name = "Grey",
+		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
+	),
+	EwHue(
+		id_hue = "cobalt",
+		alias = [
+			"cobaltdye",
+			"brightshade"
+		],
+		str_saturate = "It turns a shimmering cobalt!",
+		str_name = "Cobalt",
+		str_desc = "Its shimmering cobalt hue can reflect images if properly polished.",
+		effectiveness = {
+			"cyan": hue_analogous,
+			"blue": hue_analogous,
+			"yellow": hue_atk_complementary,
+			"red": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
+	),
+	EwHue(
+		id_hue = "black",
+		alias = [
+			"blackdye",
+			"blacklimes"
+		],
+		str_saturate = "It turns pitch black!",
+		str_name = "Black",
+		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
+	),
+	EwHue(
+		id_hue = "lime",
+		alias = [
+			"limedye",
+			"phosphorpoppies"
+		],
+		str_saturate = "It turns a heavily saturated lime!",
+		str_name = "Lime",
+		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully.",
+		effectiveness = {
+			"yellow": hue_analogous,
+			"green": hue_analogous,
+			"magenta": hue_atk_complementary,
+			"blue": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
+	),
+	EwHue(
+		id_hue = "cyan",
+		alias = [
+			"cyandye",
+			"direapples"
+		],
+		str_saturate = "It turned a light cyan!",
+		str_name = "Cyan",
+		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street.",
+		effectiveness = {
+			"teal": hue_analogous,
+			"cobalt": hue_analogous,
+			"orange": hue_atk_complementary,
+			"pink": hue_special_complementary,
+			"rainbow": hue_full_complementary
+		}
+
+	),
+]
+
+# A map of id_hue to EwHue objects.
+hue_map = {}
+
+# A list of hue names
+hue_names = []
+
+# Populate hue map, including all aliases.
+for hue in hue_list:
+	hue_map[hue.id_hue] = hue
+	hue_names.append(hue.id_hue)
+
+	for alias in hue.alias:
+		hue_map[alias] = hue
+
 # Things a slimeoid might throw
 thrownobjects_list = [
 	"sewer cap",
@@ -6102,7 +7110,7 @@ mutation_id_spontaneouscombustion = "spontaneouscombustion"
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother" #TODO
+mutation_id_sharptoother = "sharptoother" 
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -6141,40 +7149,88 @@ mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 
 mutations = [ # TODO all placeholders, add real flavor
 	EwMutationFlavor(
-		id_mutation = mutation_id_spontaneouscombustion,
-		str_describe_self = "You explode on death.",
-		str_describe_other = "They explode on death.",
-		str_acquire = "You have acquired the ability to explode on death."
+		id_mutation = mutation_id_spontaneouscombustion
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_spoiledappetite,
-		str_describe_self = "You can eat spoiled food.",
-		str_describe_other = "They can eat spoiled food.",
-		str_acquire = "You have acquired the ability to eat spoiled food."
+		id_mutation = mutation_id_thickerthanblood
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_bigbones,
-		str_describe_self = "You have big bones.",
-		str_describe_other = "They have big bones.",
-		str_acquire = "You have acquired big bones."
+		id_mutation = mutation_id_fungalfeaster
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_fastmetabolism,
-		str_describe_self = "You have a fast metabolism.",
-		str_describe_other = "They have a fast metabolism.",
-		str_acquire = "You have acquired a fast metabolism."
+		id_mutation = mutation_id_sharptoother
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_lonewolf,
-		str_describe_self = "You are a lone wolf.",
-		str_describe_other = "They are a lone wolf.",
-		str_acquire = "You have become a lone wolf."
+		id_mutation = mutation_id_2ndamendment
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_keensmell,
-		str_describe_self = "You have a keen smell.",
-		str_describe_other = "They have a keen smell.",
-		str_acquire = "You have acquired a keen smell."
+		id_mutation = mutation_id_bleedingheart
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_nosferatu
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_organicfursuit
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lightasafeather
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_whitenationalist
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_spoiledappetite
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bigbones
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fatchance
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fastmetabolism
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bingeeater
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lonewolf
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_quantumlegs
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_chameleonskin
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_patriot
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_socialanimal
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_threesashroud
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_aposematicstench
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lucky
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dressedtokill
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_keensmell
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dumpsterdiver
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_trashmouth
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_webbedfeet
 		)
 	]
 
@@ -6321,121 +7377,51 @@ stock_emotes = {
     stock_tacobell : emote_tacobell
 }
 
-# all the vegetables you can !reap from farming #todo add str_eat flavor text
-vegetable_list = [
-	EwFood(
-		id_food = "pinkrowddishes",
-		recover_hunger = 10,
-		str_name = 'Pink Rowddishes',
-		str_eat = "",
-		str_desc = "The sweet-smelling tubers stain your hands pink."
-	),
-	EwFood(
-		id_food = "sludgeberries",
-		recover_hunger = 10,
-		str_name = 'Sludgeberries',
-		str_eat = "",
-		str_desc = "The thick syrup covering the green and teal berries makes your hands sticky."
-	),
-	EwFood(
-		id_food = "pulpgourds",
-		recover_hunger = 10,
-		str_name = 'Pulp Gourds',
-		str_eat = "",
-		str_desc = "The easily malleable gourds form indents from even your lightest touch."
-	),
-	EwFood(
-		id_food = "joybeans",
-		recover_hunger = 10,
-		str_name = 'Joybeans',
-		str_eat = "",
-		str_desc = "The sugary candy-like beans have a thick gel interior that rots your teeth."
-	),
-	EwFood(
-		id_food = "brightshade",
-		recover_hunger = 10,
-		str_name = 'Brightshade',
-		str_eat = "",
-		str_desc = "The dangerously toxic chemicals that cover the flower bud burn your eyes and nose."
-	),
-	EwFood(
-		id_food = "direapples",
-		recover_hunger = 10,
-		str_name = 'Dire Apples',
-		str_eat = "",
-		str_desc = "The vicious acidity from from the cyan and orange apples makes your mouth contort in pain with every bite."
-	),
-	EwFood(
-		id_food = "purplekilliflower",
-		recover_hunger = 10,
-		str_name = 'Purple Killiflower',
-		str_eat = "",
-		str_desc = "The deep purple head has an extremely bitter aftertaste."
-	),
-	EwFood(
-		id_food = "razornuts",
-		recover_hunger = 10,
-		str_name = 'Razornuts',
-		str_eat = "",
-		str_desc = "The sharp edges of the hard nut slice open your mouth so that you taste slight hints of copper from your blood every bite."
-	),
-	EwFood(
-		id_food = "poketubers",
-		recover_hunger = 10,
-		str_name = 'Poke-tubers',
-		str_eat = "",
-		str_desc = "The lame, sad, lumpy roots barely support a bulbous crop that’s indiscernible taste is not complemented by it’s awkward texture."
-	),
-	EwFood(
-		id_food = "suganmanuts",
-		recover_hunger = 10,
-		str_name = 'Suganma Nuts',
-		str_eat = "",
-		str_desc = "The difficult nuts infuriate you for reasons you don’t really underst-- HEY WAIT A SECOND!!"
-	),
-	EwFood(
-		id_food = "dankwheat",
-		recover_hunger = 10,
-		str_name = 'Dankwheat',
-		str_eat = "",
-		str_desc = "The damp barley milled from this moist wheat causes hallucinations and intoxication once digested fully."
-	),
-	EwFood(
-		id_food = "blacklimes",
-		recover_hunger = 10,
-		str_name = 'Black Limes',
-		str_eat = "",
-		str_desc = "The sour juice squeezed from just one of these small dark grey limes can flavor an entire production of Warheads hard candy."
-	),
-	EwFood(
-		id_food = "phosphorpoppies",
-		recover_hunger = 10,
-		str_name = 'Phosphorpoppies',
-		str_eat = "",
-		str_desc = "The vivid and unnatural colors of this plant reveal it’s man made origin. Some say SlimeCorp designed the plant’s addictive and anxiety/paranoia inducing nature to keep juveniles weak and disenfranchised."
-	),
-	EwFood(
-		id_food = "sourpotatoes",
-		recover_hunger = 10,
-		str_name = 'Sour Potatoes',
-		str_eat = "",
-		str_desc = "The staple of many unhealthy juveniles’ diet. It’s revolting taste leaves much to be desired."
-	),
-	EwFood(
-		id_food = "bloodcabbages",
-		recover_hunger = 10,
-		str_name = 'Blood Cabbages',
-		str_eat = "",
-		str_desc = "The dripping mass of dark crimson leaves have become the staple special effects tool for aspiration amatuer filmmakers in the city for it’s uncanny resemblance to human blood."
-	),
-	EwFood(
-		id_food = "pawpaw",
-		recover_hunger = 10,
-		str_name = 'Pawpaw',
-		str_eat = "",
-		str_desc = "An American classic."
-	),
-]
+# List of items you can obtain via milling.
+mill_results = []
+
+# gather all items that can be the result of milling.
+for m in item_list:
+	if m.ingredients != None:
+		mill_results.append(m)
+	else:
+		pass
+
+for m in food_list:
+	if m.ingredients != None:
+		mill_results.append(m)
+	else:
+		pass
+
+for m in cosmetic_items_list:
+	if m.ingredients != None:
+		mill_results.append(m)
+	else:
+		pass
+
+
+
+# Dict of all help responses linked to their associated topics
+help_responses = {
+	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, and ghosts with the **'!kill'** command. To enlist in a gang, head to a gang base (Rowdy Roughhouse for the ROWDYS, Copkilltown for the KILLERS) and use **'!enlist'**, provided you also have at least 50,000 slime on hand. This will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** in a gang base to return to the life of a juvenile, but you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting.",
+	"mining":"Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets, and the higher your level gets, the more slime you gain with every '!mine' command, resulting in exponential gains. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively.",
+	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food and eat it at the same time, or add **'togo'** (or just 't') at the end of your order to place it in your inventory (example: !order pizza togo). Ordering it togo **doubles** the price, however, and you can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
+	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. If you reach **level 10** (done by gaining at least 10,000 slime), you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"transportation": "There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
+	"death":"Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'**, and you will return to the land of the living as a juvenile. Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges.",
+	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!arm [weapon]'**. There are many weapons you can choose from, and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use !help sparring.",
+	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 0.8% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel.",
+	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 300,000 slime, with a 1/3 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
+	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
+	"ghosts":"Ghosts can perform an action known as **haunting**. Every use of **'!haunt'** takes up 0.2% of the slime of whoever was haunted (you may also add a customized message by doing '!haunt [message]'). It can be done face-to-face like with !kill, or done remotely at the sewers. As a ghost, you can only move within a small radius around the area at which you died. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers and removes 1/10th of the ghost's **negative slime**. Negative slime is gained through haunting, and allows ghosts to summon **negaslimoids** in the city, with the use of **'!summon [ammount]'**. Negaslimeoids haunt all players within a district, and also decay capture progress.",
+	"scouting":"Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even ghosts. Scouting will list all players above your own level, as well as players below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district. See the diagram below for more information.\nhttps://cdn.discordapp.com/attachments/441726245923717129/587337001234333737/scouting.png",
+	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have three slime poudrins, you can use **'!smelt'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **soulbound** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death.",
+	"sparring":"**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach mastery rank 1 (Again, this would be level 5), when you next revive, you will now **permanently** be at level 3 for that weapon type. Essentially, this means you would only have to '!spar' or '!annoint' twice to get back up to rank 1. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players (that are higher in slime level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a five minute cooldown and raises your hunger by about 15%, so make sure to bring some food with you beforehand. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
+	"bleeding":"When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
+	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime. It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
+	"casino":"**The Casino** is a sub-zone in Green Light District where players may bet their slime coin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
+	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

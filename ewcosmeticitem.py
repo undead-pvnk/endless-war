@@ -12,24 +12,34 @@ from ewitem import EwItem
 	Cosmetic item model object
 """
 class EwCosmeticItem:
-	# The name of the cosmetic item
-	name = ""
+	# The proper name of the cosmetic item
+	id_cosmetic = ""
+
+	# The string name of the cosmetic item
+	str_name = ""
 
 	# The text displayed when you look at it
-	description = ""
+	str_desc = ""
 
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
 
+	# The ingredients necessary to make this item via milling.
+	ingredients = ""
+
 	def __init__(
 		self,
-		name = "",
-		description = "",
-		rarity = ""
+		id_cosmetic = "",
+		str_name = "",
+		str_desc = "",
+		rarity = "",
+		ingredients = ""
 	):
-		self.name = name
-		self.description = description
+		self.id_cosmetic = id_cosmetic
+		self.str_name = str_name
+		self.str_desc = str_desc
 		self.rarity = rarity
+		self.ingredients = ingredients
 
 """
 	Smelt command
@@ -54,9 +64,17 @@ async def smelt(cmd):
 		if patrician_smelted == 1:
 			patrician = True
 
+		cosmetics_list = []
+
+		for result in ewcfg.cosmetic_items_list:
+			if result.ingredients == "":
+				cosmetics_list.append(result)
+			else:
+				pass
+
 		items = []
 
-		for cosmetic in ewcfg.cosmetic_items_list:
+		for cosmetic in cosmetics_list:
 			if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
 				items.append(cosmetic)
 			elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
@@ -69,13 +87,14 @@ async def smelt(cmd):
 			id_user = cmd.message.author.id,
 			id_server = cmd.message.server.id,
 			item_props = {
-				'cosmetic_name': item.name,
-				'cosmetic_desc': item.description,
+				'id_cosmetic': item.id_cosmetic,
+				'cosmetic_name': item.str_name,
+				'cosmetic_desc': item.str_desc,
 				'rarity': item.rarity,
 				'adorned': 'false'
 			}
 		)
-		response = "You smelted a {item_name}!".format(item_name = item.name)
+		response = "You smelted a {item_name}!".format(item_name = item.str_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def adorn(cmd):
@@ -104,7 +123,7 @@ async def adorn(cmd):
 		if item_sought != None:
 			id_item = item_sought.get('id_item')
 			item_def = item_sought.get('item_def')
-			name = item_sought.get('name')
+			name = item_sought.get('id_cosmetic')
 			item_type = item_sought.get('item_type')
 
 			adorned_items = 0
@@ -130,8 +149,4 @@ async def adorn(cmd):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			'Adorn which cosmetic? Check your **!inventory**.'
-		))
-
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))

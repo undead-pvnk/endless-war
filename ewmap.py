@@ -14,6 +14,7 @@ from ewdistrict import EwDistrict
 from ewtransport import EwTransport
 from ewmarket import EwMarket
 from ewmutation import EwMutation
+from ewslimeoid import EwSlimeoid
 
 move_counter = 0
 
@@ -492,7 +493,12 @@ def map_draw(path = None, coord = None):
 
 def inaccessible(user_data = None, poi = None):
 	if poi == None or user_data == None:
-		return True;
+		return True
+
+	if user_data.life_state == ewcfg.life_state_observer:
+		return False
+
+	bans = user_data.get_bans()
 
 	if(
 		len(poi.factions) > 0 and
@@ -503,6 +509,22 @@ def inaccessible(user_data = None, poi = None):
 		user_data.life_state not in poi.life_states
 	):
 		return True
+	elif(
+		len(poi.factions) > 0 and 
+		len(bans) > 0 and 
+		set(poi.factions).issubset(set(bans))
+	):
+		return True
+	elif user_data.life_state == ewcfg.life_state_corpse:
+		ghost_range = int(user_data.slimelevel / 10)
+		pois_in_range = set([ewcfg.poi_id_thesewers, user_data.poi_death])
+		for i in range(ghost_range):
+			new_pois_in_range = set()
+			for in_range in pois_in_range:
+				new_pois_in_range.update(ewcfg.poi_neighbors.get(in_range))
+			pois_in_range.update(new_pois_in_range)
+
+		return poi.id_poi not in pois_in_range
 	else:
 		return False
 
@@ -542,7 +564,7 @@ async def move(cmd):
 			return
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
-		if user_data.life_state == ewcfg.life_state_corpse:
+		if user_data.life_state == ewcfg.life_state_corpse and not inaccessible(user_data = user_data, poi = poi):
 			path = EwPath(cost = 60)
 		else:
 			path = None
@@ -755,10 +777,11 @@ async def teleport(cmd):
 		response = "Teleport where?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	time_now = time.time()
+	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	poi = ewcfg.id_to_poi.get(target_name)
@@ -802,7 +825,8 @@ async def teleport(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		response = "-OOOP!"
-		return await ewutils.send_message(cmd.client, cmd.message.server.get_channel(poi.channel), ewutils.formatMessage(cmd.message.author, response))
+		resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await resp_cont.post()
 	else:
 		response = "You don't have any toilet paper."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -840,21 +864,43 @@ async def look(cmd):
 
 	num_players = len(players_in_district)
 	players_resp = "\n\n"
-	if num_players == 1:
-		players_resp += "You notice 1 suspicious figure in this location."
+	if num_players == 0:
+		players_resp += "You don’t notice any activity from this district."
+	elif num_players == 1:
+		players_resp += "You can hear the occasional spray of a spray can from a gangster in this district."
+	elif num_players <= 5:
+		players_resp += "You can make out a distant conversation between a few gangsters in this district."
+	elif num_players <= 10:
+		players_resp += "You can hear shouting and frequent gunshots from a group of gangsters in this district."
 	else:
-		players_resp += "You notice {} suspicious figures in this location.".format(num_players)
+		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
+
+	players_resp = ""
+	
+	slimeoids_resp = ""
+
+	slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = poi.id_poi)
+
+	for id_slimeoid in slimeoids_in_district:
+		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
+		if slimeoid_data.sltype == ewcfg.sltype_nega:
+			slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
+
+	if slimeoids_resp != "":
+		slimeoids_resp = "\n" + slimeoids_resp
+
 
 	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}{}".format(
+			"You stand {} {}.\n\n{}{}{}{}{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
 				slimes_resp,
 				players_resp,
+				slimeoids_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
@@ -916,7 +962,7 @@ async def scout(cmd):
 		# don't show low level players
 		min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
-		life_states = [ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+		life_states = [ewcfg.life_state_enlisted]
 		# get information about players in the district
 		players_in_district = district_data.get_players_in_district(min_level = min_level, life_states = life_states)
 		if user_data.id_user in players_in_district:
@@ -927,8 +973,8 @@ async def scout(cmd):
 
 		rowdys_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [ewcfg.faction_killers])
 		num_players = 0
-		players_resp = "\n\n"
-		detailed_resp = ":"
+		players_resp = ""
+		detailed_resp = "You pick up the scent of the following gangsters:"
 		for player in players_in_district:
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
 			scoutee_mutations = scoutee_data.get_mutations()
@@ -946,15 +992,20 @@ async def scout(cmd):
 			detailed_resp += "\n" + scoutee_data.get_mention()
 			num_players += 1
 	
-		if num_players == 1:
-			players_resp += "You notice 1 suspicious figure in this location"
+
+		if num_players == 0:
+			players_resp += "You don’t notice any activity from this district."
+		elif num_players == 1:
+			players_resp += "You can hear the occasional spray of a spray can from a gangster in this district."
+		elif num_players <= 5:
+			players_resp += "You can make out a distant conversation between a few gangsters in this district."
+		elif num_players <= 10:
+			players_resp += "You can hear shouting and frequent gunshots from a group of gangsters in this district."
 		else:
-			players_resp += "You notice {} suspicious figures in this location".format(num_players)
+			players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
 		if ewcfg.mutation_id_keensmell in mutations:
-			players_resp += detailed_resp
-		else:
-			players_resp += "."
+			players_resp += " " + detailed_resp
 
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -990,16 +1041,17 @@ async def kick(id_server):
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
 			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
-				server = ewcfg.server_list[id_server]
-				member_object = server.get_member(id_user)
+				if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_lucky:
+					server = ewcfg.server_list[id_server]
+					member_object = server.get_member(id_user)
 
-				user_data.poi = poi.mother_district
-				user_data.time_lastenter = int(time.time())
-				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = member_object)
+					user_data.poi = poi.mother_district
+					user_data.time_lastenter = int(time.time())
+					user_data.persist()
+					await ewrolemgr.updateRoles(client = client, member = member_object)
 
-				mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
-				response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
-				await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
+					mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
+					response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
+					await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
 			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))

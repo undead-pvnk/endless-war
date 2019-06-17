@@ -474,18 +474,22 @@ def pushdownServerInebriation(id_server = None):
 			databaseClose(conn_info)
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
-def getIntToken(tokens = [], allow_all = False):
+def getIntToken(tokens = [], allow_all = False, negate = False):
 	value = None
 
 	for token in tokens[1:]:
 		try:
 			value = int(token.replace(",", ""))
-			if value < 0:
+			if value < 0 and not negate:
 				value = None
+			elif value > 0 and negate:
+				value = None
+			elif negate:
+				value = -value
 			break
 		except:
 			if allow_all and ("{}".format(token)).lower() == 'all':
-				value = -1
+				return -1
 			else:
 				value = None
 
@@ -690,6 +694,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 	elif life_state == ewcfg.life_state_grandfoe:
 		faction_role = ewcfg.role_grandfoe
 
+	elif life_state == ewcfg.life_state_lucky:
+		faction_role = ewcfg.role_slimecorp
+
 	return faction_role
 
 def get_faction_symbol(faction = "", faction_raw = ""):
@@ -815,3 +822,31 @@ async def edit_message(client, message, text):
 		return await client.edit_message(message, text)
 	except:
 		logMsg('Failed to edit message. Updated text would have been:\n{}'.format(text))
+
+"""
+	Returns a list of slimeoid ids in the district
+"""
+def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
+	slimeoids = []
+	if id_server is None:
+		return slimeoids
+
+	query = "SELECT {id_slimeoid} FROM slimeoids WHERE {id_server} = %s".format(
+		id_slimeoid = ewcfg.col_id_slimeoid,
+		id_server = ewcfg.col_id_server
+	)
+
+	if sltype is not None:
+		query += " AND {} = '{}'".format(ewcfg.col_type, sltype)
+
+	if poi is not None:
+		query += " AND {} = '{}'".format(ewcfg.col_poi, poi)
+
+	data = execute_sql_query(query,(
+		id_server,
+	))
+
+	for row in data:
+		slimeoids.append(row[0])
+
+	return slimeoids
