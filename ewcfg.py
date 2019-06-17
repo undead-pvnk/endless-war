@@ -451,6 +451,7 @@ cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_quarterly_report = cmd_prefix + 'quarterlyreport'
+cmd_teleport = cmd_prefix + 'tp'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 

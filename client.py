@@ -356,6 +356,7 @@ cmd_map = {
         ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
         ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
+	ewcfg.cmd_teleport: ewmap.teleport,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }

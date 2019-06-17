@@ -777,10 +777,11 @@ async def teleport(cmd):
 		response = "Teleport where?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	time_now = time.time()
+	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	poi = ewcfg.id_to_poi.get(target_name)
@@ -824,7 +825,8 @@ async def teleport(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		response = "-OOOP!"
-		return await ewutils.send_message(cmd.client, cmd.message.server.get_channel(poi.channel), ewutils.formatMessage(cmd.message.author, response))
+		resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
+		return await resp_cont.post()
 	else:
 		response = "You don't have any toilet paper."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
