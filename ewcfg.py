@@ -341,6 +341,10 @@ cmd_haunt = cmd_prefix + 'haunt'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
+
+cmd_summonenemy = cmd_prefix + 'summonenemy'
+cmd_hurtmesoftly = cmd_prefix +'hurtmesoftly'
+
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
@@ -998,6 +1002,7 @@ source_ghostification = 9
 source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
+source_enemydamage = 13
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0

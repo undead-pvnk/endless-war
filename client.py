@@ -40,6 +40,7 @@ import ewslimeoid
 import ewdistrict
 import ewquadrants
 import ewtransport
+import ewhunting
 
 from ewitem import EwItem
 from ew import EwUser
@@ -338,6 +339,10 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
+	# Enemies
+	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
+	ewcfg.cmd_hurtmesoftly: ewhunting.hurtmesoftly,
+
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
@@ -491,7 +496,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		await ewtransport.init_transports(id_server = server.id)
+		# await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 
 	try:
