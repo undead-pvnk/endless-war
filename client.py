@@ -40,6 +40,7 @@ import ewslimeoid
 import ewdistrict
 import ewquadrants
 import ewtransport
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -351,7 +352,10 @@ cmd_map = {
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
 	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+
+	# debug commands
+	ewdebug.cmd_debug1: ewdebug.debug1,
 }
 
 debug = False
