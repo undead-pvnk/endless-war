@@ -185,6 +185,18 @@ CREATE TABLE slimeoids (
 	PRIMARY KEY (id_slimeoid)
 );
 
+CREATE TABLE enemies (
+    id_enemy int NOT NULL AUTO_INCREMENT,
+    id_server varchar(128) NOT NULL,
+    enemyai varchar(32) NOT NULL DEFAULT '',
+    enemytype varchar(32) NOT NULL DEFAULT 'Lab',
+    enemyname varchar(32) NOT NULL DEFAULT '',
+    enemylevel int NOT NULL DEFAULT '0',
+    enemypoi varchar(64) NOT NULL DEFAULT '',
+
+    PRIMARY KEY (id_enemy)
+);
+
 CREATE TABLE districts (
 	id_server varchar(128) NOT NULL,
 	district varchar(32) NOT NULL,

@@ -342,6 +342,7 @@ cmd_map = {
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
 	ewcfg.cmd_hurtmesoftly: ewhunting.hurtmesoftly,
+	ewcfg.cmd_hunt: ewhunting.hunt,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -359,7 +360,7 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
 
-debug = False
+debug = True
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True

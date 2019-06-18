@@ -166,7 +166,7 @@ async def summon_enemy(cmd):
 		enemy.poi = user_data.poi
 		enemy.level = "5"
 		enemy.enemytype = enemytype
-		enemy.name = "THE LOST JUVIE"
+		enemy.name = "the lost juvie"
 
 		enemy.persist()
 
@@ -190,3 +190,55 @@ async def hurtmesoftly(cmd):
 		resp_cont = enemy.kill()
 
 	await resp_cont.post()
+
+async def hunt(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response = None
+
+	# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
+	huntedenemy = " ".join(cmd.tokens[1:]).lower()
+
+
+	if not len(cmd.tokens) > 1:
+		response = "Hunt *what*, exactly?"
+	else:
+		search = find_enemy(huntedenemy, user_data)
+
+		if search != None:
+			response = "You hunt {}. Nice work!".format(search.name)
+			delete_enemy(search)
+
+		elif cmd.mentions_count > 0:
+			response = "You can't hunt other players, dummy. Try using !kill instead."
+		else:
+			print(huntedenemy)
+			response = "You didn't manage to hunt anything by that name"
+
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def find_enemy(enemy_search = None, user_data = None):
+	enemy_sought = None
+	if enemy_search:
+		enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
+			id_enemy=ewcfg.col_id_enemyid,
+			poi=ewcfg.col_enemypoi,
+		), (
+			user_data.poi,
+		))
+
+		# find the first (i.e. the oldest) item that matches the search
+		for row in enemydata:
+			enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
+			if enemy.name == enemy_search:
+				enemy_sought = enemy
+				break
+
+	return enemy_sought
+
+def delete_enemy(enemy):
+	ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemyid} = %s".format(
+		id_enemyid = ewcfg.col_id_enemyid
+	),(
+		enemy.id_enemyid,
+	))

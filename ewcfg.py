@@ -343,7 +343,8 @@ cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 
 cmd_summonenemy = cmd_prefix + 'summonenemy'
-cmd_hurtmesoftly = cmd_prefix +'hurtmesoftly'
+cmd_hurtmesoftly = cmd_prefix + 'hurtmesoftly'
+cmd_hunt = cmd_prefix + 'hunt'
 
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
