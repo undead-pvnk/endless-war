@@ -368,7 +368,7 @@ async def attack(cmd):
 					sewer_data.change_slimes(n = slime_drained)
 					district_data.change_slimes(n = slime_splatter / 8, source = ewcfg.source_killing)
 					shootee_data.bleed_storage += int(slime_splatter / 8)
-					shootee_data.change_slimes(n = -int(slime_splatter / 8), source = ewcfg.source_damage)
+					shootee_data.change_slimes(n = -int(7 * slime_splatter / 8), source = ewcfg.source_damage)
 					damage = str(slimes_damage)
 				else:
 					boss_slimes += int(slime_splatter / 2)
