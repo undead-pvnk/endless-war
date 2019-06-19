@@ -15,6 +15,8 @@ from ewtransport import EwTransportLine
 version = "v3.3FUCK"
 dir_msgqueue = 'msgqueue'
 
+discord_message_length_limit = 2000
+
 # Update intervals
 update_hookstillactive = 60 * 60 * 3
 update_twitch = 60

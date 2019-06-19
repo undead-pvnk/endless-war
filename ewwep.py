@@ -617,12 +617,13 @@ async def attack(cmd):
 				# announce death in kill feed channel
 				#killfeed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_killfeed)
 				killfeed_resp = resp_cont.channel_responses[cmd.message.channel.name]
-				resp_cont.add_channel_response(ewcfg.channel_killfeed, killfeed_resp)
+				for r in killfeed_resp:
+					resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
+				resp_cont.format_channel_response(ewcfg.channel_killfeed, cmd.message.author)
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
 				#await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
 	# Send the response to the player.
-	resp_cont.format_channel_response(ewcfg.channel_killfeed, cmd.message.author)
 	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 	await resp_cont.post()
 

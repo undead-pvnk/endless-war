@@ -521,7 +521,10 @@ def inaccessible(user_data = None, poi = None):
 		for i in range(ghost_range):
 			new_pois_in_range = set()
 			for in_range in pois_in_range:
-				new_pois_in_range.update(ewcfg.poi_neighbors.get(in_range))
+				in_range_neighbors = ewcfg.poi_neighbors.get(in_range)
+				if in_range_neighbors is None:
+					continue
+				new_pois_in_range.update(in_range_neighbors)
 			pois_in_range.update(new_pois_in_range)
 
 		return poi.id_poi not in pois_in_range
