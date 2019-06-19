@@ -9,6 +9,7 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
+import ewhunting
 
 from ew import EwUser
 from ewitem import EwItem
@@ -165,7 +166,39 @@ async def attack(cmd):
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
 	elif cmd.mentions_count <= 0:
-		response = "Your bloodlust is appreciated, but ENDLESS WAR didn't understand that name."
+		# user is going after enemies rather than players
+
+		response = None
+
+		# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
+		huntedenemy = " ".join(cmd.tokens[1:]).lower()
+
+		search = ewhunting.find_enemy(huntedenemy, user_data)
+
+		if search != None:
+			# enemy found
+
+			# Get hunting player's info
+			if user_data.slimelevel <= 0:
+				user_data.slimelevel = 1
+				user_data.persist()
+
+			response = "**DEBUG**: You hunt {}. Nice work!".format(search.name)
+			ewhunting.delete_enemy(search)
+
+			if search.enemytype == "110k slime":
+
+			elif search.enemytype == "2 poudrin dropper":
+
+
+		else:
+
+			# debugger
+			print(huntedenemy)
+
+			# no enemy is found within that district
+			response = "Your bloodlust is appreciated, but ENDLESS WAR couldn't find what you were trying to kill."
+
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
 	elif cmd.mentions_count == 1:
