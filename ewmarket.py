@@ -930,7 +930,7 @@ async def quarterlyreport(cmd):
 			if progress == None:
 				progress = 0
 
-			if progress > objective:
+			if progress >= objective:
 				progress = objective
 				completion = True
 
