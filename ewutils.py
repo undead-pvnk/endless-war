@@ -7,6 +7,7 @@ import time
 import re
 import random
 import asyncio
+import math
 
 import ewstats
 import ewitem
@@ -77,6 +78,10 @@ class EwResponseContainer:
 
 		for ch in resp_cont.channel_topics:
 			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+	def format_channel_response(self, channel, member):
+		if channel in self.channel_responses:
+			self.channel_responses[channel] = formatMessage(member, self.channel_responses[channel])
 
 	async def post(self):
 		self.client = get_client()
@@ -278,7 +283,7 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+	return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
@@ -747,6 +752,20 @@ def hunger_cost_mod(slimelevel):
 	return hunger_max_bylevel(slimelevel) / 200
 
 
+"""
+	Calculate how much food the player can carry
+"""
+def food_carry_capacity_bylevel(slimelevel):
+	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
+        
+"""
+	Calculate how much food the player can carry
+"""
+def weapon_carry_capacity_bylevel(slimelevel):
+	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
+
+def max_adorn_bylevel(slimelevel):
+        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
 """
 	Returns an EwUser object of the selected kingpin
 """

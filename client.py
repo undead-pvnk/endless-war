@@ -38,6 +38,7 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewmutation
 import ewquadrants
 import ewtransport
 
@@ -250,6 +251,7 @@ cmd_map = {
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
+	ewcfg.cmd_scout_alt1: ewmap.scout,
 
 	# Check your current POI capture progress
 	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
@@ -350,6 +352,11 @@ cmd_map = {
 	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
+        # mutations
+        ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+        ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+
+	ewcfg.cmd_teleport: ewmap.teleport,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
 }
@@ -802,23 +809,25 @@ async def on_message(message):
 		if len(message.author.roles) < 3:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
+		user_data = EwUser(member = message.author)
+		mutations = user_data.get_mutations()
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
 
-			response = "You cannot participate in the ENDLESS WAR while offline."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				response = "You cannot participate in the ENDLESS WAR while offline."
+    
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
-		user_data = EwUser(member = message.author)
 		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
 
-			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
+				response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
 		# Check the main command map for the requested command.
 		global cmd_map

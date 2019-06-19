@@ -205,6 +205,16 @@ CREATE TABLE roles (
 	PRIMARY KEY (id_server, name)
 );
 
+CREATE TABLE mutations (
+	mutation_counter int NOT NULL AUTO_INCREMENT,
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	mutation varchar(32) NOT NULL,
+	data varchar(64) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (mutation_counter)
+);
+
 CREATE TABLE quadrants (
 	id_server varchar(128) NOT NULL,
 	id_user varchar(128) NOT NULL,

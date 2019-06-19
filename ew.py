@@ -1,9 +1,12 @@
 import time
+import random
 
 import ewutils
 import ewcfg
 import ewstats
 import ewitem
+
+food_multiplier = {}
 
 """ Market data model for database persistence """
 
@@ -47,8 +50,8 @@ class EwUser:
 
 	""" fix data in this object if it's out of acceptable ranges """
 	def limit_fix(self):
-		if self.hunger > ewutils.hunger_max_bylevel(self.slimelevel):
-			self.hunger = ewutils.hunger_max_bylevel(self.slimelevel)
+		if self.hunger > self.get_hunger_max():
+			self.hunger = self.get_hunger_max()
 
 		if self.inebriation < 0:
 			self.inebriation = 0
@@ -63,6 +66,7 @@ class EwUser:
 	def change_slimes(self, n = 0, source = None):
 		change = int(n)
 		self.slimes += change
+		response = ""
 
 		if n >= 0:
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimes, n = change)
@@ -107,11 +111,27 @@ class EwUser:
 		# potentially level up
 		new_level = ewutils.level_byslime(self.slimes)
 		if new_level > self.slimelevel:
+			if self.life_state != ewcfg.life_state_corpse:
+				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
+			current_mutations = self.get_mutations()
+			for level in range(self.slimelevel+1, new_level+1):
+				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
+					new_mutation = random.choice(list(ewcfg.mutation_ids))
+					while new_mutation in current_mutations:
+						new_mutation = random.choice(list(ewcfg.mutation_ids))
+
+					add_success = self.add_mutation(new_mutation)
+					if add_success:
+						response += "\n\n{}".format(ewcfg.mutations_map[new_mutation].str_acquire)
+						
 			self.slimelevel = new_level
 			if self.life_state == ewcfg.life_state_corpse:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_ghost_level, value = self.slimelevel)
 			else:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_level, value = self.slimelevel)
+
+		return response
+
 		
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
@@ -143,6 +163,8 @@ class EwUser:
 		ewutils.moves_active[self.id_user] = 0
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
+		
+		self.clear_mutations()
 		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
@@ -193,11 +215,22 @@ class EwUser:
 
 	def eat(self, food_item = None):
 		item_props = food_item.item_props
+		mutations = self.get_mutations()
 
-		if float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
+		if ewcfg.mutation_id_spoiledappetite not in mutations and float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
+			ewitem.item_drop(food_item.id_item)
 		else:
-			self.hunger -= int(item_props['recover_hunger'])
+			hunger_restored = int(item_props['recover_hunger'])
+			if self.id_user in food_multiplier and food_multiplier.get(self.id_user) > 0:
+				if ewcfg.mutation_id_bingeeater in mutations:
+					hunger_restored *= food_multiplier.get(self.id_user)
+				food_multiplier[self.id_user] += 1
+			else:
+				food_multiplier[self.id_user] = 1
+			asyncio.ensure_future(self.decrease_food_multiplier)
+				
+			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
 			self.inebriation += int(item_props['inebriation'])
@@ -216,9 +249,67 @@ class EwUser:
 
 			response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
 
-		ewitem.item_delete(food_item.id_item)
+			ewitem.item_delete(food_item.id_item)
 
 		return response
+
+	async def decrease_food_multiplier(self):
+		await asyncio.sleep(5)
+		if self.id_user in food_multiplier:
+			food_multiplier[self.id_user] = max(0, food_multiplier.get(self.id_user) - 1)
+
+	def add_mutation(self, id_mutation):
+		mutations = self.get_mutations()
+		if id_mutation in mutations:
+			return False
+		try:
+			ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}) VALUES (%s, %s, %s)".format(
+					id_server = ewcfg.col_id_server,
+					id_user = ewcfg.col_id_user,
+					id_mutation = ewcfg.col_id_mutation
+				),(
+					self.id_server,
+					self.id_user,
+					id_mutation
+				))
+
+			return True
+		except:
+			ewutils.logMsg("Failed to add mutation for user {}.".format(self.id_user))
+			return False
+
+
+	def get_mutations(self):
+		result = []
+		try:
+			mutations = ewutils.execute_sql_query("SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+					id_mutation = ewcfg.col_id_mutation,
+					id_server = ewcfg.col_id_server,
+					id_user = ewcfg.col_id_user
+				),(
+					self.id_server,
+					self.id_user
+				))
+    
+			for mutation_data in mutations:
+				result.append(mutation_data[0])
+		except:
+			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
+
+		finally:
+			return result
+
+	def clear_mutations(self):
+		try:
+			ewutils.execute_sql_query("DELETE FROM mutations WHERE {id_server} = %s AND {id_user} = %s".format(
+					id_server = ewcfg.col_id_server,
+					id_user = ewcfg.col_id_user
+				),(
+					self.id_server,
+					self.id_user
+				))
+		except:
+			ewutils.logMsg("Failed to clear mutations for user {}.".format(self.id_user))
 
 	def equip(self, weapon_item = None):
 		if self.life_state == ewcfg.life_state_corpse:
@@ -235,6 +326,29 @@ class EwUser:
 			self.weapon = weapon_item.id_item
 
 		return response
+
+	def get_weapon_capacity(self):
+		mutations = self.get_mutations()
+		base_capacity = ewutils.weapon_carry_capacity_bylevel(self.slimelevel)
+		if ewcfg.mutation_id_2ndamendment in mutations:
+			return base_capacity + 1
+		else:
+			return base_capacity
+
+	def get_food_capacity(self):
+		mutations = self.get_mutations()
+		base_capacity = ewutils.food_carry_capacity_bylevel(self.slimelevel)
+		if ewcfg.mutation_id_bigbones in mutations:
+			return 2 * base_capacity
+		else:
+			return base_capacity
+
+	def get_hunger_max(self):
+		return ewutils.hunger_max_bylevel(self.slimelevel)
+
+
+	def get_mention(self):
+		return "<@{id_user}>".format(id_user = self.id_user)
 
 	def ban(self, faction = None):
 		if faction is None:

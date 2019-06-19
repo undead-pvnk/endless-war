@@ -6,6 +6,7 @@ from ewweather import EwWeather
 from ewfood import EwFood
 from ewitem import EwItemDef, EwDefaultItem
 from ewmap import EwPoi
+from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
@@ -417,6 +418,7 @@ cmd_inspect = cmd_prefix + 'inspect'
 cmd_inspect_alt1 = cmd_prefix + 'examine'
 cmd_look = cmd_prefix + 'look'
 cmd_scout = cmd_prefix + 'scout'
+cmd_scout_alt1 = cmd_prefix + 'sniff'
 cmd_map = cmd_prefix + 'map'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
@@ -449,8 +451,12 @@ cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_quarterly_report = cmd_prefix + 'quarterlyreport'
+cmd_teleport = cmd_prefix + 'tp'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
+
+cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
+cmd_clear_mutations = cmd_prefix + 'clearmutations'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -491,6 +497,23 @@ cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
 cmd_get_ashen = cmd_prefix + "ashen"
 cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 
+offline_cmds = [
+	cmd_move,
+	cmd_move_alt1,
+	cmd_move_alt2,
+	cmd_move_alt3,
+	cmd_halt,
+	cmd_halt_alt1,
+	cmd_embark,
+	cmd_embark_alt1,
+	cmd_disembark,
+	cmd_disembark_alt1,
+	cmd_look,
+	cmd_scout,
+	cmd_scout_alt1
+]
+		
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -528,6 +551,9 @@ togo_price_increase = 2
 std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
 milled_food_expir = 12 * 3600 * 28 # 2 weeks
+
+# minimum amount of slime needed to capture territory
+min_slime_to_cap = 50000
 
 # property classes
 property_class_s = "s"
@@ -720,6 +746,7 @@ str_subway_connecting_sentence = "Below it, on a lower level of the station, is 
 
 # Common database columns
 col_id_server = 'id_server'
+col_id_user = 'id_user'
 
 #Database columns for roles
 col_id_role = 'id_role'
@@ -742,7 +769,6 @@ col_avatar = "avatar"
 col_display_name = "display_name"
 
 # Database columns for users
-col_id_user = 'id_user'
 col_slimes = 'slimes'
 col_slimelevel = 'slimelevel'
 col_hunger = 'hunger'
@@ -839,6 +865,11 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
+
+# Database columns for mutations
+col_id_mutation = 'mutation'
+col_mutation_data = 'data'
+col_mutation_counter = 'mutation_counter'
 
 # Database columns for transports
 col_transport_type = 'transport_type'
@@ -7074,6 +7105,142 @@ thrownobjects_list = [
 	"box overflowing with KFC branded bbq sauce",
 	"Nokia 3310"
 ]
+
+mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_thickerthanblood = "thickerthanblood"
+mutation_id_graveyardswift = "graveyardswift" #TODO
+mutation_id_fungalfeaster = "fungalfeaster"
+mutation_id_sharptoother = "sharptoother" 
+mutation_id_openarms = "openarms" #TODO
+mutation_id_2ndamendment = "2ndamendment"
+mutation_id_panicattacks = "panicattacks" #TODO
+mutation_id_twobirdswithonekidneystone = "2birds1stone" #TODO
+mutation_id_shellshock = "shellshock" #TODO
+mutation_id_bleedingheart = "bleedingheart"
+mutation_id_paranoia = "paranoia" #TODO
+mutation_id_cloakandstagger = "cloakandstagger" #TODO
+mutation_id_nosferatu = "nosferatu"
+mutation_id_organicfursuit = "organicfursuit"
+mutation_id_lightasafeather = "lightasafeather"
+mutation_id_whitenationalist = "whitenationalist"
+mutation_id_spoiledappetite = "spoiledappetite"
+mutation_id_bigbones = "bigbones"
+mutation_id_fatchance = "fatchance"
+mutation_id_fastmetabolism = "fastmetabolism"
+mutation_id_bingeeater = "bingeeater"
+mutation_id_lonewolf = "lonewolf"
+mutation_id_quantumlegs = "quantumlegs"
+mutation_id_chameleonskin = "chameleonskin"
+mutation_id_patriot = "patriot"
+mutation_id_socialanimal = "socialanimal"
+mutation_id_corpseparty = "corpseparty" #TODO
+mutation_id_threesashroud = "threesashroud"
+mutation_id_aposematicstench = "aposematicstench"
+mutation_id_paintrain = "paintrain" #TODO
+mutation_id_lucky = "lucky"
+mutation_id_dressedtokill = "dressedtokill" 
+mutation_id_keensmell = "keensmell"
+mutation_id_enlargedbladder = "enlargedbladder" #TODO
+mutation_id_dumpsterdiver = "dumpsterdiver"
+mutation_id_trashmouth = "trashmouth"
+mutation_id_webbedfeet = "webbedfeet"
+
+mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
+
+mutations = [ # TODO all placeholders, add real flavor
+	EwMutationFlavor(
+		id_mutation = mutation_id_spontaneouscombustion
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_thickerthanblood
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fungalfeaster
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_sharptoother
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_2ndamendment
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bleedingheart
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_nosferatu
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_organicfursuit
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lightasafeather
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_whitenationalist
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_spoiledappetite
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bigbones
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fatchance
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fastmetabolism
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bingeeater
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lonewolf
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_quantumlegs
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_chameleonskin
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_patriot
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_socialanimal
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_threesashroud
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_aposematicstench
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lucky
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dressedtokill
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_keensmell
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dumpsterdiver
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_trashmouth
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_webbedfeet
+		)
+	]
+
+mutations_map = {}
+
+mutation_ids = set()
+
+for mutation in mutations:
+	mutations_map[mutation.id_mutation] = mutation
+	mutation_ids.add(mutation.id_mutation)
 
 quadrant_flushed = "flushed"
 quadrant_pale = "pale"

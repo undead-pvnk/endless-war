@@ -428,7 +428,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_food
 				)
 
-				if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+				if len(food_items) >= user_data.get_food_capacity():
 					response += " But you couldn't carry any more food items, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
@@ -439,7 +439,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_weapon
 				)
 
-				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				if len(weapons_held) > user_data.get_weapon_capacity():
 					response += " But you couldn't carry any more weapons, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
@@ -539,7 +539,7 @@ def item_loot(
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if len(weapons_held) <= math.floor(target_data.slimelevel / ewcfg.max_weapon_mod) if target_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) < 1:
+			if len(weapons_held) <= target_data.get_weapon_capacity():
 				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
 
 	except:
@@ -762,6 +762,8 @@ async def item_look(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.message.server
+	user_data = EwUser(member = author)
+	mutations = user_data.get_mutations()
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id if server is not None else None)
 
@@ -781,8 +783,12 @@ async def item_look(cmd):
 
 		if item.item_type == ewcfg.it_food:
 			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
-				response += " This food item is rotten so you decide to throw it away."
-				item_delete(id_item)
+				response += " This food item is rotten"
+				if ewcfg.mutation_id_spoiledappetite in mutations:
+					response += ". Yummy!"
+				else:
+					response += ", so you decide to throw it away."
+					item_drop(id_item)
 
 		response = name + "\n\n" + response
 
@@ -922,7 +928,7 @@ async def give(cmd):
 				item_type_filter = ewcfg.it_food
 			)
 
-			if len(food_items) >= math.ceil(EwUser(member = recipient).slimelevel / ewcfg.max_food_in_inv_mod):
+			if len(food_items) >= recipient_data.get_food_capacity():
 				response = "They can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -939,7 +945,7 @@ async def give(cmd):
 			elif recipient_data.life_state == ewcfg.life_state_corpse:
 				response = "Ghosts can't hold weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+			elif len(weapons_held) >= recipient_data.get_weapon_capacity():
 				response  = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
