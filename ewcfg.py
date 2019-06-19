@@ -7149,7 +7149,10 @@ mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 
 mutations = [ # TODO all placeholders, add real flavor
 	EwMutationFlavor(
-		id_mutation = mutation_id_spontaneouscombustion
+		id_mutation = mutation_id_spontaneouscombustion,
+		str_describe_self = "",
+		str_describe_other = "",
+		str_acquire = "",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_thickerthanblood
@@ -7221,7 +7224,10 @@ mutations = [ # TODO all placeholders, add real flavor
 		id_mutation = mutation_id_dressedtokill
 		),
 	EwMutationFlavor(
-		id_mutation = mutation_id_keensmell
+		id_mutation = mutation_id_keensmell,
+		str_describe_self = "You've got a little snout on ya.",
+		str_describe_other = "They've got a little snout on 'em.",
+		str_acquire = "You grow a lil' snout. Like a doggy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dumpsterdiver

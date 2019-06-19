@@ -104,7 +104,6 @@ class EwMutation:
 
 
 			# Save the object.
-			# Todo Preserve Farming Data 	farmActive, plantType, time_lastsow
 			cursor.execute("REPLACE INTO mutations(id_user, id_server, {id_mutation}, {data}, {mutation_counter}) VALUES(%s, %s, %s, %s, %s)".format(
 					id_mutation = ewcfg.col_id_mutation,
 					data = ewcfg.col_mutation_data,
