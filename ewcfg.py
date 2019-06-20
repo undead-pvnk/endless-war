@@ -804,12 +804,16 @@ col_clout = 'clout'
 col_hue = 'hue'
 
 #Database columns for enemies
-col_id_enemyid= 'id_enemy'
-col_enemyai = 'enemyai'
-col_enemytype = 'enemytype'
-col_enemyname = 'enemyname'
-col_enemylevel = 'enemylevel'
-col_enemypoi = 'enemypoi'
+col_id_enemy = 'id_enemy'
+col_enemy_slimes = 'slimes'
+col_enemy_ai = 'ai'
+col_enemy_type = 'type'
+col_enemy_name = 'name'
+col_enemy_level = 'level'
+col_enemy_poi = 'poi'
+col_enemy_bleed_storage = 'bleed_storage'
+col_enemy_time_lastenter = 'time_lastenter'
+
 
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'

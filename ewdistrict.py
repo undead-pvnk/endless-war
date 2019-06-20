@@ -145,6 +145,27 @@ class EwDistrict:
 
 		return num_players
 
+	def get_number_of_enemies(self):
+		client = ewutils.get_client()
+		server = client.get_server(self.id_server)
+		if server == None:
+			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
+			return 0
+
+		enemies = ewutils.execute_sql_query(
+			"SELECT {id_enemy} FROM enemies WHERE id_server = %s AND {poi} = %s".format(
+				id_user=ewcfg.col_id_user,
+				poi=ewcfg.col_poi,
+			), (
+				self.id_server,
+				self.name,
+			))
+
+		num_enemies = 0
+		for enemy in enemies:
+			num_enemies += 1
+
+		return num_enemies
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)

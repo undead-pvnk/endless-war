@@ -19,14 +19,17 @@ from ewplayer import EwPlayer
 
 
 class EwEnemy:
-	id_enemyid = 0
+	id_enemy = 0
 	id_server = ""
 
+	slimes = 0
 	ai = ""
 	name = ""
 	level = 0
 	poi = ""
-	enemytype = ""
+	type = ""
+	bleed_storage = 0
+	time_lastenter = 0
 
 	# slimeoid = EwSlimeoid(member = cmd.message.author, )
 	# slimeoid = EwSlimeoid(id_slimeoid = 12)
@@ -55,27 +58,33 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
-						ewcfg.col_id_enemyid,
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
-						ewcfg.col_enemyai,
-						ewcfg.col_enemytype,
-						ewcfg.col_enemyname,
-						ewcfg.col_enemylevel,
-						ewcfg.col_enemypoi,
+						ewcfg.col_enemy_slimes,
+						ewcfg.col_enemy_ai,
+						ewcfg.col_enemy_type,
+						ewcfg.col_enemy_name,
+						ewcfg.col_enemy_level,
+						ewcfg.col_enemy_poi,
+						ewcfg.col_enemy_bleed_storage,
+						ewcfg.col_enemy_time_lastenter,
 						query_suffix
 					))
 				result = cursor.fetchone();
 
 				if result != None:
 					# Record found: apply the data to this object.
-					self.id_enemyid = result[0]
+					self.id_enemy = result[0]
 					self.id_server = result[1]
-					self.ai = result[2]
-					self.enemytype = result[3]
-					self.name = result[4]
-					self.level = result[5]
-					self.poi = result[6]
+					self.slimes = result[2]
+					self.ai = result[3]
+					self.type = result[4]
+					self.name = result[5]
+					self.level = result[6]
+					self.poi = result[7]
+					self.bleed_storage = result[8]
+					self.time_lastenter = result[9]
 
 			finally:
 				# Clean up the database handles.
@@ -92,22 +101,28 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
-					ewcfg.col_id_enemyid,
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
-					ewcfg.col_enemyai,
-					ewcfg.col_enemytype,
-					ewcfg.col_enemyname,
-					ewcfg.col_enemylevel,
-					ewcfg.col_enemypoi,
+					ewcfg.col_enemy_slimes,
+					ewcfg.col_enemy_ai,
+					ewcfg.col_enemy_type,
+					ewcfg.col_enemy_name,
+					ewcfg.col_enemy_level,
+					ewcfg.col_enemy_poi,
+					ewcfg.col_enemy_bleed_storage,
+					ewcfg.col_enemy_time_lastenter,
 				), (
-					self.id_enemyid,
+					self.id_enemy,
 					self.id_server,
+					self.slimes,
 					self.ai,
-					self.enemytype,
+					self.type,
 					self.name,
 					self.level,
 					self.poi,
+					self.bleed_storage,
+					self.time_lastenter,
 				))
 
 			conn.commit()
@@ -162,15 +177,18 @@ async def summon_enemy(cmd):
 		enemy = EwEnemy()
 
 		enemy.id_server = user_data.id_server
+		enemy.slimes = 10000
 		enemy.ai = ""
 		enemy.poi = user_data.poi
-		enemy.level = "5"
-		enemy.enemytype = enemytype
+		enemy.level = "10"
+		enemy.type = enemytype
 		enemy.name = "the lost juvie"
+		enemy.bleed_storage = 0
+		enemy.time_lastenter = 0
 
 		enemy.persist()
 
-		response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Type =  {}.".format(enemy.name, enemy.level, enemy.enemytype)
+		response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Type =  {}.".format(enemy.name, enemy.level, enemy.type)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -179,8 +197,8 @@ async def hurtmesoftly(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = user_data.id_server)
 
 	enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
-		id_enemy=ewcfg.col_id_enemyid,
-		poi=ewcfg.col_enemypoi,
+		id_enemy=ewcfg.col_id_enemy_id,
+		poi=ewcfg.col_enemy_poi,
 	), (
 		user_data.poi,
 	))
@@ -221,8 +239,8 @@ def find_enemy(enemy_search = None, user_data = None):
 	enemy_sought = None
 	if enemy_search:
 		enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
-			id_enemy=ewcfg.col_id_enemyid,
-			poi=ewcfg.col_enemypoi,
+			id_enemy=ewcfg.col_id_enemy,
+			poi=ewcfg.col_enemy_poi,
 		), (
 			user_data.poi,
 		))
@@ -237,8 +255,8 @@ def find_enemy(enemy_search = None, user_data = None):
 	return enemy_sought
 
 def delete_enemy(enemy):
-	ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemyid} = %s".format(
-		id_enemyid = ewcfg.col_id_enemyid
+	ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
+		id_enemy = ewcfg.col_id_enemy
 	),(
-		enemy.id_enemyid,
+		enemy.id_enemy,
 	))

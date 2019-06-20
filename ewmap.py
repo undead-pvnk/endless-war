@@ -780,6 +780,13 @@ async def look(cmd):
 	else:
 		players_resp += "You notice {} suspicious figures in this location.".format(players_in_district)
 
+	enemies_in_district = district_data.get_number_of_enemies()
+
+	enemies_resp = "\n\n"
+	if enemies_in_district == 1:
+		enemies_resp += "You notice 1 enemy in this location."
+	else:
+		enemies_resp += "You notice {} enemies in this location."
 	
 	slimeoids_resp = ""
 

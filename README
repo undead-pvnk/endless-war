@@ -188,11 +188,14 @@ CREATE TABLE slimeoids (
 CREATE TABLE enemies (
     id_enemy int NOT NULL AUTO_INCREMENT,
     id_server varchar(128) NOT NULL,
-    enemyai varchar(32) NOT NULL DEFAULT '',
-    enemytype varchar(32) NOT NULL DEFAULT 'Lab',
-    enemyname varchar(32) NOT NULL DEFAULT '',
-    enemylevel int NOT NULL DEFAULT '0',
-    enemypoi varchar(64) NOT NULL DEFAULT '',
+    slimes bigint NOT NULL DEFAULT '0',
+    ai varchar(32) NOT NULL DEFAULT '',
+    type varchar(32) NOT NULL DEFAULT 'Lab',
+    name varchar(32) NOT NULL DEFAULT '',
+    level int NOT NULL DEFAULT '0',
+    poi varchar(64) NOT NULL DEFAULT '',
+    bleed_storage bigint NOT NULL DEFAULT '0',
+    time_lastenter int NOT NULL DEFAULT '0',
 
     PRIMARY KEY (id_enemy)
 );
