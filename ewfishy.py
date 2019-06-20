@@ -787,78 +787,15 @@ async def cast(cmd):
             bun = 0
             while True:
                 damp = random.randrange(fun)
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
-                await asyncio.sleep(5)
-                if user_data.poi != fisher.pier:
-                    fisher.fishing = False
-                    return
-                if fisher.fishing == False:
-                    return
+                timer = 0
+                while timer <= 60:
+                    await asyncio.sleep(1)
+                    if user_data.poi != fisher.pier:
+                        fisher.fishing = False
+                        return
+                    if fisher.fishing == False:
+                        return
+                    timer += 1
                 if damp != 1 and damp != 2 and damp != 3 and damp != 4 and damp != 5 and damp != 6 and damp != 7 and damp != 8 and damp != 9 and damp != 10:
                     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(nobite_text)))
                     fun -= 2
