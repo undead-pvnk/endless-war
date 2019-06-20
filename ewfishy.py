@@ -747,11 +747,11 @@ nobite_text = [
 plebe_bait = ['slimentonic', 'slimacolada', 'slimekashot', 'slimynipple', 'slimeonthebeach', 'goobalibre', 'slimymary',
               'water', 'breadsticks', 'taco', 'nachocheesetaco', 'coolranchtaco', 'coleslaw', 'biscuitngravy', 'barbecuesauce',
               'mtndew', 'bajablast', 'codered', 'pitchblack', 'whiteout', 'livewire', 'sparklingwater', 'homefries',
-              'friedeggs', 'orangejuice', 'milk', 'pinkrowddishes', 'sludgeberries', 'pulpgourds', 'joybeans', 'brightshade',
-              'direapples', 'purplekilliflower', 'razornuts', 'poketubers', 'suganmanuts', 'dankwheat',
-              'phosphorpoppies', 'sourpotatoes', 'bloodcabbages', 'pawpaw', 'pinkrowdatouille', 'sludgeberrypancakes',
-              'pulpgourdpie', 'joybeanpastemochi', 'brightshadeseeds', 'direapplejuice', 'purplekilliflowercrustpizza',
-              'razornutbutter', 'jellyfilleddoughnut', 'yourfavoritefood', 'dankwheattoast', 'blacklimesour', 'phosphorpoppiesmuffin',
+              'friedeggs', 'orangejuice', 'milk', 'sludgeberries', 'pulpgourds', 'joybeans', 'brightshade',
+              'direapples', 'razornuts', 'poketubers', 'suganmanuts', 'dankwheat',
+              'phosphorpoppies', 'sourpotatoes', 'bloodcabbages', 'pawpaw', 'sludgeberrypancakes',
+              'pulpgourdpie', 'joybeanpastemochi', 'brightshadeseeds', 'direapplejuice',
+              'razornutbutter', 'jellyfilleddoughnut', 'yourfavoritefood', 'dankwheattoast', 'phosphorpoppiesmuffin',
               'sourpotatofrenchfries', 'bloodcabbagecoleslaw', 'pawpawfood']
 
 """ Casts a line into the Slime Sea """
