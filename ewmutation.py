@@ -9,6 +9,7 @@ import ewcfg
 import ewstats
 import ewutils
 import ewitem
+from ewmarket import EwMarket
 
 from ew import EwUser
 
@@ -136,6 +137,7 @@ async def reroll_last_mutation(cmd):
 	last_mutation_counter = -1
 	last_mutation = ""
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 
 	if user_data.poi != ewcfg.poi_id_slimeoidlab:
@@ -170,7 +172,10 @@ async def reroll_last_mutation(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
-
+		market_data.donated_poudrins += 1
+		market_data.persist()
+		user_data.poudrin_donations += 1
+		user_data.persist()
 
 	mutation_data = EwMutation(id_server = user_data.id_server, id_user = user_data.id_user, id_mutation = last_mutation)
 	new_mutation = random.choice(list(ewcfg.mutation_ids))
@@ -181,12 +186,13 @@ async def reroll_last_mutation(cmd):
 	mutation_data.time_lastuse = int(time.time())
 	mutation_data.persist()
 
-	response = "{}".format(ewcfg.mutations_map[new_mutation].str_acquire)
+	response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to getting slime. They oblige.\nThey grab a butterfly needle and carefully stab you with it, draining some strangely colored slime from your bloodstream. Almost immediately, the effects of your last mutation fade away… but, this feeling of respite is fleeting. The SlimeCorp employee writes down a few notes, files away the freshly drawn sample, and soon enough you are stabbed with syringes. This time, it’s already filled with some bizarre, multi-colored serum you’ve never seen before. The effects are instantaneous. {}\nYou hand off one of your hard-earned poudrins to the SlimeCorp employee for their troubles.".format(ewcfg.mutations_map[new_mutation].str_acquire)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def clear_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 	if user_data.poi != ewcfg.poi_id_slimeoidlab:
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
@@ -202,6 +208,22 @@ async def clear_mutations(cmd):
 		response = "You have not developed any specialized mutations yet."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poudrins = ewitem.inventory(
+		id_user = cmd.message.author.id,
+		id_server = cmd.message.server.id,
+		item_type_filter = ewcfg.it_slimepoudrin
+	)
+
+	if len(poudrins) < 1:
+		response = "You need a slime poudrin to replace a mutation."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
+		market_data.donated_poudrins += 1
+		market_data.persist()
+		user_data.poudrin_donations += 1
+		user_data.persist()
+
 	user_data.clear_mutations()
-	response = "Your body returns to whatever might be considered normal for your species."
+	response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to getting slime. They oblige.\nThey grab a random used syringe with just a dash of black serum still left inside it. They carefully stab you with it, injecting the mystery formula into your bloodstream. Almost immediately, normalcy returns to your inherently abnormal life… your body returns to whatever might be considered normal for your species. You hand off one of your hard-earned poudrins to the SlimeCorp employee for their troubles."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

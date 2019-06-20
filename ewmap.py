@@ -22,7 +22,7 @@ def get_move_speed(user_data):
 	mutations = user_data.get_mutations()
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
-	if ewcfg.mutation_id_organicfursuit in mutations and market_data.day % 30 == 0:
+	if ewcfg.mutation_id_organicfursuit in mutations and market_data.day % 31 == 0:
 		move_speed *= 2
 	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
 		move_speed *= 2
