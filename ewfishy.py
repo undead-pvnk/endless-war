@@ -839,6 +839,9 @@ async def cast(cmd):
                     if user_data.poi != fisher.pier:
                         fisher.fishing = False
                         return
+                    if user_data.life_state == ewcfg.life_state_corpse:
+                        fisher.fishing = False
+                        return
                     if fisher.fishing == False:
                         return
                     timer += 1

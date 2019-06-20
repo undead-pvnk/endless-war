@@ -182,6 +182,13 @@ async def attack(cmd):
 			shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
 
+		# Knock shootee out of fishing state
+		if member.id in fishers.keys():
+			fishers[cmd.message.author.id].fishing = False
+			fishers[cmd.message.author.id].bite = False
+			fishers[cmd.message.author.id].current_fish = ""
+			fishers[cmd.message.author.id].pier = ""
+
 		miss = False
 		crit = False
 		strikes = 0
@@ -560,6 +567,13 @@ async def suicide(cmd):
 				challenger.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
 				ewitem.item_loot(member = cmd.message.author, id_user_target = user_data.rr_challenger)
 				challenger.persist()
+
+			# Knock player out of fishing state
+			if cmd.message.author.id in fishers.keys():
+				fishers[cmd.message.author.id].fishing = False
+				fishers[cmd.message.author.id].bite = False
+				fishers[cmd.message.author.id].current_fish = ""
+				fishers[cmd.message.author.id].pier = ""
 				
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 			district_data.change_slimes(n = user_data.slimes + user_data.bleed_storage, source = ewcfg.source_killing)

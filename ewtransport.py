@@ -313,6 +313,13 @@ async def disembark(cmd):
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
+		# Knock player out of fishing state
+		if cmd.message.author.id in fishers.keys():
+			fishers[cmd.message.author.id].fishing = False
+			fishers[cmd.message.author.id].bite = False
+			fishers[cmd.message.author.id].current_fish = ""
+			fishers[cmd.message.author.id].pier = ""
+
 		# schedule tasks for concurrent execution
 		message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
 		wait_task = asyncio.ensure_future(asyncio.sleep(5))
