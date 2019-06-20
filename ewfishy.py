@@ -36,19 +36,24 @@ class EwFish:
     # Flavor text upon catch.
     flavor = ""
 
+    # What type of slimewater it resides in (None means either).
+    slime = None
+
     def __init__(
             self,
-            id_fish="",
-            str_name="",
-            str_size="",
-            catch_time=None,
-            flavor=""
+            id_fish = "",
+            str_name = "",
+            str_size = "",
+            catch_time = None,
+            flavor = "",
+            slime = None
     ):
         self.id_fish = id_fish
         self.str_name = str_name
         self.str_size = str_size
         self.catch_time = catch_time
         self.flavor = flavor
+        self.slime = slime
 
 # All the fish, baby!
 fish_list = [
@@ -57,28 +62,32 @@ fish_list = [
         str_name="Neon Eel",
         str_size="a",
         catch_time=None,
-        flavor="Its slippery body is bathed in a bright green glow."
+        flavor="Its slippery body is bathed in a bright green glow.",
+        slime="s"
     ),
     EwFish(
         id_fish="fantaray",
         str_name="Fanta Ray",
         str_size="h",
         catch_time=None,
-        flavor="Wait a minute, wasn't this the thing that killed that famous guy? Better be careful!"
+        flavor="Wait a minute, wasn't this the thing that killed that famous guy? Better be careful!",
+        slime="s"
     ),
     EwFish(
         id_fish="thalamuscaranx",
         str_name="Thalamus Caranx",
         str_size="s",
         catch_time="n",
-        flavor="Finally, a worthy fish emerges."
+        flavor="Finally, a worthy fish emerges.",
+        slime="f"
     ),
     EwFish(
         id_fish="fuckshark",
         str_name="Fuck Shark",
         str_size="b",
         catch_time=None,
-        flavor="You recall reading that this thing has the same nutritional value as SUPER WATER FUCK ENERGY."
+        flavor="You recall reading that this thing has the same nutritional value as SUPER WATER FUCK ENERGY.",
+        slime="s"
     ),
     EwFish(
         id_fish="sourfish",
@@ -92,7 +101,8 @@ fish_list = [
         str_name="Snakehead Trout",
         str_size="a",
         catch_time="n",
-        flavor="It has the body of a trout and the head of a snake. Heavy fuckin' metal."
+        flavor="It has the body of a trout and the head of a snake. Heavy fuckin' metal.",
+        slime="f"
     ),
     EwFish(
         id_fish="gar",
@@ -106,14 +116,16 @@ fish_list = [
         str_name="Clownfish",
         str_size="m",
         catch_time="d",
-        flavor="Its face kinda looks like a clown if you squint."
+        flavor="Its face kinda looks like a clown if you squint.",
+        slime="s"
     ),
     EwFish(
         id_fish="seasaint",
         str_name="Seasaint",
         str_size="m",
         catch_time="n",
-        flavor="It has a beanie on."
+        flavor="It has a beanie on.",
+        slime="s"
     ),
     EwFish(
         id_fish="holykrakerel",
@@ -148,28 +160,32 @@ fish_list = [
         str_name="Slime Squid",
         str_size="a",
         catch_time=None,
-        flavor="It's just a green squid."
+        flavor="It's just a green squid.",
+        slime="s"
     ),
     EwFish(
         id_fish="jellyturkeyfish",
         str_name="Jelly Turkeyfish",
         str_size="a",
         catch_time=None,
-        flavor="You nearly prick your finger on one of the many of the venomous spines on its back."
+        flavor="You nearly prick your finger on one of the many of the venomous spines on its back.",
+        slime="f"
     ),
     EwFish(
         id_fish="iridescentsnapper",
         str_name="Iridescent Snapper",
         str_size="b",
         catch_time=None,
-        flavor="Its scales change color if you shake it. Fun."
+        flavor="Its scales change color if you shake it. Fun.",
+        slime="f"
     ),
     EwFish(
         id_fish="barredkatanajaw",
         str_name="Barred Katanajaw",
         str_size="b",
         catch_time=None,
-        flavor="Its stripes make it look vaguely Japanese."
+        flavor="Its stripes make it look vaguely Japanese.",
+        slime="f"
     ),
     EwFish(
         id_fish="doublestuffedflounder",
@@ -197,28 +213,32 @@ fish_list = [
         str_name="Relicanth",
         str_size="h",
         catch_time="r",
-        flavor="It doesn't have teeth."
+        flavor="It doesn't have teeth.",
+        slime="s"
     ),
     EwFish(
         id_fish="stunfisk",
         str_name="h",
         str_size="Stunfisk",
         catch_time="r",
-        flavor="Its hide is so tough it can be stepped on by Connor without being injured."
+        flavor="Its hide is so tough it can be stepped on by Connor without being injured.",
+        slime="f"
     ),
     EwFish(
         id_fish="bathyphysaheadshark",
         str_name="Bathyphysahead Shark",
         str_size="c",
         catch_time=None,
-        flavor="This one looks fucking terrifying. I'm serious, search for 'bathyphysa' on Google."
+        flavor="This one looks fucking terrifying. I'm serious, search for 'bathyphysa' on Google.",
+        slime="s"
     ),
     EwFish(
         id_fish="anglershark",
         str_name="Angler Shark",
         str_size="h",
         catch_time="n",
-        flavor="It has a little poudrin on its head."
+        flavor="It has a little poudrin on its head.",
+        slime="s"
     ),
     EwFish(
         id_fish="bigtopoctopus",
@@ -232,14 +252,16 @@ fish_list = [
         str_name="Sour Octopus",
         str_size="b",
         catch_time=None,
-        flavor="It would rather be in a jar."
+        flavor="It would rather be in a jar.",
+        slime="f"
     ),
     EwFish(
         id_fish="octohuss",
         str_name="Octohuss",
         str_size="c",
         catch_time=None,
-        flavor="Don't let it near a horse. Or a drawing tablet."
+        flavor="Don't let it near a horse. Or a drawing tablet.",
+        slime="s"
     ),
     EwFish(
         id_fish="jarocephalopod",
@@ -253,14 +275,16 @@ fish_list = [
         str_name="Dab",
         str_size="a",
         catch_time="n",
-        flavor="Pretty Killercore."
+        flavor="Pretty Killercore.",
+        slime="f"
     ),
     EwFish(
         id_fish="thrash",
         str_name="Thrash",
         str_size="a",
         catch_time="d",
-        flavor="Pretty Rowdycore."
+        flavor="Pretty Rowdycore.",
+        slime="f"
     ),
     EwFish(
         id_fish="arsonfish",
@@ -282,7 +306,8 @@ fish_list = [
         str_name="Modelopole",
         str_size="a",
         catch_time=None,
-        flavor="UH-OH, IT'S MODELOPOLE TIME!"
+        flavor="UH-OH, IT'S MODELOPOLE TIME!",
+        slime="f"
     ),
     EwFish(
         id_fish="universefrog",
@@ -359,14 +384,16 @@ fish_list = [
         str_name="Corpse Carp",
         str_size="a",
         catch_time=None,
-        flavor="It smells like a rotting fish."
+        flavor="It smells like a rotting fish.",
+        slime="f"
     ),
     EwFish(
         id_fish="slimewatergoby",
         str_name="Slimewater Goby",
         str_size="m",
         catch_time=None,
-        flavor="This little fucko hates fun."
+        flavor="This little fucko hates fun.",
+        slime="s"
     ),
     EwFish(
         id_fish="nibblefish",
@@ -401,7 +428,8 @@ fish_list = [
         str_name="Mace",
         str_size="s",
         catch_time=None,
-        flavor="These fish are called Mud Carps in Nu Hong Kong."
+        flavor="These fish are called Mud Carps in Nu Hong Kong.",
+        slime="f"
     ),
     EwFish(
         id_fish="blacklimesalmon",
@@ -429,7 +457,8 @@ fish_list = [
         str_name="The Bassed God",
         str_size="c",
         catch_time=None,
-        flavor="This is The Bassed God. He's gonna fuck your bitch."
+        flavor="This is The Bassed God. He's gonna fuck your bitch.",
+        slime="s"
     ),
     EwFish(
         id_fish="flarp",
@@ -478,7 +507,8 @@ fish_list = [
         str_name="Croach",
         str_size="s",
         catch_time=None,
-        flavor="It's very uncommon in North America."
+        flavor="It's very uncommon in North America.",
+        slime="f"
     ),
     EwFish(
         id_fish="slimesmelt",
@@ -534,7 +564,8 @@ fish_list = [
         str_name="Kingpin Crab",
         str_size="h",
         catch_time=None,
-        flavor="It reminds you of your last meal at Red Mobster."
+        flavor="It reminds you of your last meal at Red Mobster.",
+        slime="s"
     ),
     EwFish(
         id_fish="regiarapaima",
@@ -611,7 +642,8 @@ fish_list = [
         str_name="Paradox Crocodile",
         str_size="c",
         catch_time=None,
-        flavor="It has no arms and a blue bandana."
+        flavor="It has no arms and a blue bandana.",
+        slime="f"
     )
 ]
 
@@ -627,7 +659,7 @@ for fish in fish_list:
     fish_names.append(fish.id_fish)
 
 # Randomly generates a fish
-def gen_fish(x):
+def gen_fish(x, cmd):
     all_fish = []
     fish_number = random.randint(0, 99)
     if fish_number >= 0 and fish_number < 5:
@@ -670,6 +702,14 @@ def gen_fish(x):
         for fish in all_fish:
             if fish_map[fish].catch_time != None:
                 all_fish.remove(fish)
+    if cmd.message.channel.name in ["slimes-end-pier", "ferry"]:
+        for fish in all_fish:
+            if fish_map[fish].slime == "f":
+                all_fish.remove(fish)
+    elif cmd.message.channel.name in ["jaywalker-plain-pier", "little-chernobyl-pier"]:
+        for fish in all_fish:
+            if fish_map[fish].slime == "s":
+                all_fish.remove(fish)
     fish = random.choice(all_fish)
     return fish
 
@@ -708,7 +748,7 @@ plebe_bait = ['slimentonic', 'slimacolada', 'slimekashot', 'slimynipple', 'slime
               'water', 'breadsticks', 'taco', 'nachocheesetaco', 'coolranchtaco', 'coleslaw', 'biscuitngravy', 'barbecuesauce',
               'mtndew', 'bajablast', 'codered', 'pitchblack', 'whiteout', 'livewire', 'sparklingwater', 'homefries',
               'friedeggs', 'orangejuice', 'milk', 'pinkrowddishes', 'sludgeberries', 'pulpgourds', 'joybeans', 'brightshade',
-              'direapples', 'purplekilliflower', 'razornuts', 'poketubers', 'suganmanuts', 'dankwheat', 'blacklimes',
+              'direapples', 'purplekilliflower', 'razornuts', 'poketubers', 'suganmanuts', 'dankwheat',
               'phosphorpoppies', 'sourpotatoes', 'bloodcabbages', 'pawpaw', 'pinkrowdatouille', 'sludgeberrypancakes',
               'pulpgourdpie', 'joybeanpastemochi', 'brightshadeseeds', 'direapplejuice', 'purplekilliflowercrustpizza',
               'razornutbutter', 'jellyfilleddoughnut', 'yourfavoritefood', 'dankwheattoast', 'blacklimesour', 'phosphorpoppiesmuffin',
@@ -733,12 +773,12 @@ async def cast(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
                                                                                                  "You've already cast a line."))
     # Only fish at The Pier
-    if cmd.message.channel.name == ewcfg.channel_se_pier or cmd.message.channel.name == ewcfg.channel_jp_pier or cmd.message.channel.name == ewcfg.channel_lc_pier:
+    if cmd.message.channel.name in [ewcfg.channel_se_pier, ewcfg.channel_jp_pier, ewcfg.channel_lc_pier, ewcfg.channel_ferry]:
         if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
                                                                                                      "You've exhausted yourself from fishing. You'll need some refreshment before getting back to work."))
         else:
-            fisher.current_fish = gen_fish(market_data)
+            fisher.current_fish = gen_fish(market_data, cmd)
             fisher.fishing = True
             fisher.bait = False
             fisher.pier = user_data.poi
@@ -758,15 +798,21 @@ async def cast(cmd):
                     elif name == "double Original Stuffed Crust® pizza":
                         if random.randrange(5) == 3:
                             fisher.current_fish = "doublestuffedflounder"
-                    elif name == "8-piece bucket of fried chicken" or name == "KFC Family Meal":
+                    elif name in ["8-piece bucket of fried chicken", "KFC Family Meal"]:
                         if random.randrange(5) == 3:
                             fisher.current_fish = "seacolonel"
-                    elif name == "SteakVolcanoQuesoMachoRito" or name == "Nacho Supreme":
+                    elif name in ["SteakVolcanoQuesoMachoRito", "Nacho Supreme"]:
                         if random.randrange(5) == 3:
                             fisher.current_fish = "marlinsupreme"
-                    elif name == "black limes":
+                    elif name in ["Black Limes", "Black Lime Sour"]:
                         if random.randrange(1) == 1:
                             fisher.current_fish = "blacklimesalmon"
+                    elif name in ["Pink Rowddishes", "Pink Rowdatouille"]:
+                        if random.randrange(1) == 1:
+                            fisher.current_fish = "thrash"
+                    elif name in ["Purple Killiflower Crust Pizza", "Purple Killiflower"]:
+                        if random.randrange(1) == 1:
+                            fisher.current_fish = "dab"
                     elif name == "an Arizonian Kingpin Crab":
                         if random.randrange(5) == 1:
                             fisher.current_fish = "kingpincrab"
@@ -820,7 +866,7 @@ async def cast(cmd):
 
     else:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                                 "You can't fish here. Go to The Pier."))
+                                                                                                 "You can't fish here. Go to a pier."))
 
 """ Reels in the fishing line. """
 async def reel(cmd):
@@ -835,7 +881,7 @@ async def reel(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
                                                                                                  "You can't fish while you're dead. Try {}.".format(
                                                                                                      ewcfg.cmd_revive)))
-    if cmd.message.channel.name == ewcfg.channel_se_pier or cmd.message.channel.name == ewcfg.channel_jp_pier or cmd.message.channel.name == ewcfg.channel_lc_pier:
+    if cmd.message.channel.name in [ewcfg.channel_se_pier, ewcfg.channel_jp_pier, ewcfg.channel_lc_pier, ewcfg.channel_ferry]:
         # Players who haven't cast a line cannot reel.
         if fisher.fishing == False:
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
