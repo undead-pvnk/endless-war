@@ -41,6 +41,7 @@ import ewdistrict
 import ewmutation
 import ewquadrants
 import ewtransport
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -120,7 +121,7 @@ cmd_map = {
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
 
 	# Display the progress towards the current Quarterly Goal.
-	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
+	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
@@ -358,10 +359,14 @@ cmd_map = {
 
 	ewcfg.cmd_teleport: ewmap.teleport,
 	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+
+	# debug commands
+	ewdebug.cmd_debug1: ewdebug.debug1,
+	ewdebug.cmd_debug2: ewdebug.debug2,
 }
 
-debug = False
+debug = True
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
@@ -879,11 +884,20 @@ async def on_message(message):
 		# Gives the user some slime
 		elif debug == True and cmd == '!getslime':
 			user_data = EwUser(member = message.author)
+			user_initial_level = user_data.slimelevel
 
-			user_data.change_slimes(n = 10000)
+			response = "You get 10,000 slime!"
+
+			levelup_response = user_data.change_slimes(n = 10000)
+
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+			if was_levelup:
+				response += " {}".format(levelup_response)
+
 			user_data.persist()
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == '!createapple':
 			item_id = ewitem.item_create(

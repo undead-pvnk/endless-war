@@ -3,3 +3,4 @@ __pycache__
 twitch_client_id
 msgqueue
 vcs.xml
+ewdebug.py

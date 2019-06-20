@@ -379,8 +379,8 @@ async def attack(cmd):
 				user_data.time_lastrevive = 0
 
 				if ewcfg.mutation_id_organicfursuit in user_mutations and (
-					(market_data.day % 30 == 0 and market_data.clock >= 20)
-					or (market_data.day % 30 == 1 and market_data.clock < 6)
+					(market_data.day % 31 == 0 and market_data.clock >= 20)
+					or (market_data.day % 31 == 1 and market_data.clock < 6)
 				):
 					slimes_damage *= 2
 				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
@@ -553,7 +553,7 @@ async def attack(cmd):
 					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 					if ewcfg.mutation_id_spontaneouscombustion in shootee_mutations:
-						explode_resp = "\n{} explodes in a shower of slime!".format(member.display_name)
+						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(member.display_name)
 						resp_cont.add_channel_response(cmd.message.channel.name, explode_resp)
 						explosion = explode(damage = explode_damage, district_data = district_data)
 						resp_cont.add_response_container(explosion)
@@ -707,7 +707,7 @@ def explode(damage = 0, district_data = None):
 
 		if True:
 			player_data = EwPlayer(id_user = user_data.id_user)
-			response = "{} takes {} damage from the blast.".format(player_data.display_name, damage)
+			response = "{} is blown back by the explosion’s sheer force! They loose {} slime!!".format(player_data.display_name, damage)
 			resp_cont.add_channel_response(channel, response)
 			slimes_damage = damage
 			if user_data.slimes < slimes_damage + user_data.bleed_storage:
@@ -721,7 +721,7 @@ def explode(damage = 0, district_data = None):
 				user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 				user_data.persist()
 
-				response = "{} has died in the explosion.".format(player_data.display_name)
+				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
 				resp_cont.add_channel_response(channel, response)
 
 				if ewcfg.mutation_id_spontaneouscombustion in mutations:
