@@ -366,7 +366,7 @@ cmd_map = {
 	ewdebug.cmd_debug2: ewdebug.debug2,
 }
 
-debug = True
+debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
