@@ -928,7 +928,7 @@ def get_majority_shareholder(id_server = None, stock = None):
 
 async def quarterlyreport(cmd):
 	progress = 0
-	objective = 3000
+	objective = 1000
 	goal = "POUDRINS DONATED"
 	completion = False
 
