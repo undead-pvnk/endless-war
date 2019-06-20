@@ -430,6 +430,7 @@ async def withdraw(cmd):
 async def donate(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
+
 	time_now = round(time.time())
 
 	if user_data.poi == ewcfg.poi_id_slimecorphq:
