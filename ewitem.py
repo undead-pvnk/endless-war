@@ -1,6 +1,7 @@
 import math
 import time
 import random
+import asyncio
 
 import ewutils
 import ewcfg
@@ -821,6 +822,7 @@ async def item_use(cmd):
 		if item.item_type == ewcfg.it_food:
 			response = user_data.eat(item)
 			user_data.persist()
+			asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
 
 		if item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)

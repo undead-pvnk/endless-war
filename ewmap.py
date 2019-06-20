@@ -22,7 +22,10 @@ def get_move_speed(user_data):
 	mutations = user_data.get_mutations()
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
-	if ewcfg.mutation_id_organicfursuit in mutations and market_data.day % 30 == 0:
+	if ewcfg.mutation_id_organicfursuit in mutations and (
+		(market_data.day % 30 == 0 and market_data.clock >= 20)
+		or (market_data.day % 30 == 1 and market_data.clock < 6)
+	):
 		move_speed *= 2
 	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
 		move_speed *= 2
@@ -920,6 +923,7 @@ async def scout(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	market_data = EwMarket(id_server = cmd.message.server.id)
 	mutations = user_data.get_mutations()
 
 	# if no arguments given, scout own location
@@ -972,9 +976,6 @@ async def scout(cmd):
 			players_in_district.remove(user_data.id_user)
 
 
-		killers_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [ewcfg.faction_killers])
-
-		rowdys_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [ewcfg.faction_killers])
 		num_players = 0
 		players_resp = ""
 		detailed_resp = "You pick up the scent of the following gangsters:"
@@ -983,11 +984,11 @@ async def scout(cmd):
 			scoutee_mutations = scoutee_data.get_mutations()
 			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
 				continue
-			if ewcfg.mutation_id_whitenationalist in scoutee_mutations and market_data.weather == "snowy":
+			if ewcfg.mutation_id_whitenationalist in scoutee_mutations and market_data.weather == "snow":
 				continue
 			if ewcfg.mutation_id_threesashroud in scoutee_mutations and scoutee_data.life_state == ewcfg.life_state_enlisted:
 				allies_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [scoutee_data.faction])
-				if len(allies_in_district) > 4:
+				if len(allies_in_district) > 3:
 					continue
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)

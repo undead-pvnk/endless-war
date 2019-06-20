@@ -72,6 +72,7 @@ async def reap(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	levelup_response = ""
+	mutations = user_data.get_mutations()
 
 	# Checking availability of reap action
 	if user_data.life_state != ewcfg.life_state_juvenile:
@@ -108,10 +109,12 @@ async def reap(cmd):
 					poudrin = False
 					poudrinamount = 0
 
-					poudrin_rarity = ewcfg.poudrin_rarity / 500  # 1 in 3 chance
-					poudrin_mined = random.randint(1, poudrin_rarity)
+					poudrin_chance = 500 / ewcfg.poudrin_rarity  # 1 in 3 chance
+					
+					if ewcfg.mutation_id_lucky in mutations:
+						poudrin_chance *= 1.33
 
-					if poudrin_mined == 1:
+					if random.random() < poudrin_chance:
 						poudrin = True
 						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 

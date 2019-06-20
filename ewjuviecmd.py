@@ -274,10 +274,11 @@ async def scavenge(cmd):
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
-			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
-
 			if ewcfg.mutation_id_trashmouth in mutations:
 				time_since_last_scavenge *= 3
+
+			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
+
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
 

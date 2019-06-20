@@ -1,12 +1,11 @@
 import time
 import random
+import asyncio
 
 import ewutils
 import ewcfg
 import ewstats
 import ewitem
-
-food_multiplier = {}
 
 """ Market data model for database persistence """
 
@@ -222,13 +221,12 @@ class EwUser:
 			ewitem.item_drop(food_item.id_item)
 		else:
 			hunger_restored = int(item_props['recover_hunger'])
-			if self.id_user in food_multiplier and food_multiplier.get(self.id_user) > 0:
+			if self.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(self.id_user) > 0:
 				if ewcfg.mutation_id_bingeeater in mutations:
-					hunger_restored *= food_multiplier.get(self.id_user)
-				food_multiplier[self.id_user] += 1
+					hunger_restored *= ewutils.food_multiplier.get(self.id_user)
+				ewutils.food_multiplier[self.id_user] += 1
 			else:
-				food_multiplier[self.id_user] = 1
-			asyncio.ensure_future(self.decrease_food_multiplier)
+				ewutils.food_multiplier[self.id_user] = 1
 				
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
@@ -253,10 +251,6 @@ class EwUser:
 
 		return response
 
-	async def decrease_food_multiplier(self):
-		await asyncio.sleep(5)
-		if self.id_user in food_multiplier:
-			food_multiplier[self.id_user] = max(0, food_multiplier.get(self.id_user) - 1)
 
 	def add_mutation(self, id_mutation):
 		mutations = self.get_mutations()

@@ -197,6 +197,8 @@ async def attack(cmd):
 		user_mutations = user_data.get_mutations()
 		shootee_mutations = shootee_data.get_mutations()
 
+		district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
+
 		miss = False
 		crit = False
 		strikes = 0
@@ -376,7 +378,10 @@ async def attack(cmd):
 				# Remove !revive invulnerability.
 				user_data.time_lastrevive = 0
 
-				if ewcfg.mutation_id_organicfursuit in user_mutations and market_data.day % 30 == 0:
+				if ewcfg.mutation_id_organicfursuit in user_mutations and (
+					(market_data.day % 30 == 0 and market_data.clock >= 20)
+					or (market_data.day % 30 == 1 and market_data.clock < 6)
+				):
 					slimes_damage *= 2
 				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
 					slimes_damage *= 0.75
@@ -428,7 +433,6 @@ async def attack(cmd):
 					else:
 						slimes_damage = max(shootee_data.slimes - shootee_data.bleed_storage, 0)
 
-				district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
 				if was_juvenile or user_data.faction == shootee_data.faction:
@@ -441,7 +445,7 @@ async def attack(cmd):
 				damage = str(slimes_damage)
 
 				slimes_tobleed = int((slimes_damage - slimes_toboss - slimes_drained) / 2)
-				if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.time < 6 or market_data.time >= 20):
+				if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.clock < 6 or market_data.clock >= 20):
 					slimes_tobleed = 0
 				if ewcfg.mutation_id_bleedingheart in shootee_mutations:
 					slimes_tobleed *= 2

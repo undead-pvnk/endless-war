@@ -25,6 +25,8 @@ db_pool_id = 0
 # Map of user IDs to their course ID.
 moves_active = {}
 
+food_multiplier = {}
+
 class Message:
 	# Send the message to this exact channel by name.
 	channel = None
@@ -770,7 +772,7 @@ def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
         
 """
-	Calculate how much food the player can carry
+	Calculate how many weapons the player can carry
 """
 def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
@@ -861,3 +863,8 @@ def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
 		slimeoids.append(row[0])
 
 	return slimeoids
+
+async def decrease_food_multiplier(id_user):
+	await asyncio.sleep(5)
+	if id_user in food_multiplier:
+		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
