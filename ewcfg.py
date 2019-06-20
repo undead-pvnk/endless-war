@@ -33,6 +33,7 @@ max_iw_swing = 30
 life_state_corpse = 0
 life_state_juvenile = 1
 life_state_enlisted = 2
+life_state_executive = 6
 life_state_lucky = 7
 life_state_grandfoe = 8
 life_state_kingpin = 10
