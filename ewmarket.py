@@ -29,6 +29,7 @@ class EwMarket:
     negaslime = 0
     decayed_slimes = 0
     donated_slimes = 0
+    donated_poudrins = 0
 
     """ Load the market data for this server from the database. """
 
@@ -43,7 +44,7 @@ class EwMarket:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes} FROM markets WHERE id_server = %s".format(
+                    "SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins} FROM markets WHERE id_server = %s".format(
                         time_lasttick=ewcfg.col_time_lasttick,
                         slimes_revivefee=ewcfg.col_slimes_revivefee,
                         negaslime=ewcfg.col_negaslime,
@@ -51,7 +52,8 @@ class EwMarket:
                         weather=ewcfg.col_weather,
                         day=ewcfg.col_day,
                         decayed_slimes=ewcfg.col_decayed_slimes,
-                        donated_slimes=ewcfg.col_donated_slimes
+                        donated_slimes=ewcfg.col_donated_slimes,
+                        donated_poudrins=ewcfg.col_donated_poudrins,
                     ), (self.id_server,))
                 result = cursor.fetchone();
 
@@ -65,6 +67,7 @@ class EwMarket:
                     self.day = result[5]
                     self.decayed_slimes = result[6]
                     self.donated_slimes = result[7]
+                    self.donated_poudrins = result[8]
                 else:
                     # Create a new database entry if the object is missing.
                     cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server,))
@@ -85,7 +88,7 @@ class EwMarket:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     id_server=ewcfg.col_id_server,
                     time_lasttick=ewcfg.col_time_lasttick,
                     slimes_revivefee=ewcfg.col_slimes_revivefee,
@@ -94,7 +97,8 @@ class EwMarket:
                     weather=ewcfg.col_weather,
                     day=ewcfg.col_day,
                     decayed_slimes=ewcfg.col_decayed_slimes,
-                    donated_slimes=ewcfg.col_donated_slimes
+                    donated_slimes=ewcfg.col_donated_slimes,
+                    donated_poudrins=ewcfg.col_donated_poudrins,
                 ), (
                     self.id_server,
                     self.time_lasttick,
@@ -104,7 +108,8 @@ class EwMarket:
                     self.weather,
                     self.day,
                     self.decayed_slimes,
-                    self.donated_slimes
+                    self.donated_slimes,
+                    self.donated_poudrins,
                 ))
 
             conn.commit()
@@ -459,64 +464,80 @@ async def withdraw(cmd):
 
 
 async def donate(cmd):
-    time_now = round(time.time())
-
-    if cmd.message.channel.name != ewcfg.channel_slimecorphq:
-        # Only allowed in SlimeCorp HQ.
-        response = "You must go to SlimeCorp HQ to donate slime."
-        return await ewutils.send_message(cmd.client, cmd.message.channel,
-                                          ewutils.formatMessage(cmd.message.author, response))
-
     user_data = EwUser(member=cmd.message.author)
     market_data = EwMarket(id_server=user_data.id_server)
 
-    value = None
-    if cmd.tokens_count > 1:
-        value = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+    time_now = round(time.time())
 
-    if value != None:
-        if value < 0:
-            value = user_data.slimes
-        if value <= 0:
-            value = None
+    if user_data.poi == ewcfg.poi_id_slimecorphq:
+        value = None
+        if cmd.tokens_count > 1:
+            value = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
 
-    if value != None and value < ewcfg.slimecoin_exchangerate:
-        response = "You must volunteer to donate at least %d slime to receive compensation." % ewcfg.slimecoin_exchangerate
+        if value != None:
+            if value < 0:
+                value = user_data.slimes
+            if value <= 0:
+                value = None
 
-    elif value != None:
-        # Amount of slime invested.
-        cost_total = round(value)
-        coin_total = round(value / ewcfg.slimecoin_exchangerate)
+        if value != None and value < ewcfg.slimecoin_exchangerate:
+            response = "You must volunteer to donate at least %d slime to receive compensation." % ewcfg.slimecoin_exchangerate
 
-        if user_data.slimes < cost_total:
-            response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
-            market_data.donated_slimes += user_data.slimes
-            market_data.persist()
-            user_data.die(cause=ewcfg.cause_donation)
-            user_data.persist()
-            # Assign the corpse role to the player. He dead.
-            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-            sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-            await ewutils.send_message(cmd.client, sewerchannel,
-                                       "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author,
-                                                                                                    "You have died in a medical mishap. {}".format(
-                                                                                                        ewcfg.emote_slimeskull)))
+        elif value != None:
+            # Amount of slime invested.
+            cost_total = round(value)
+            coin_total = round(value / ewcfg.slimecoin_exchangerate)
+
+            if user_data.slimes < cost_total:
+                response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
+                market_data.donated_slimes += user_data.slimes
+                market_data.persist()
+                user_data.die(cause=ewcfg.cause_donation)
+                user_data.persist()
+                # Assign the corpse role to the player. He dead.
+                await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+                sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+                await ewutils.send_message(cmd.client, sewerchannel,
+                                           "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(
+                                               cmd.message.author,
+                                               "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
+            else:
+                # Do the transfer if the player can afford it.
+                market_data.donated_slimes += cost_total
+                market_data.persist()
+                user_data.change_slimes(n=-cost_total, source=ewcfg.source_spending)
+                user_data.change_slimecoin(n=coin_total, coinsource=ewcfg.coinsource_donation)
+                user_data.slime_donations += cost_total
+
+                # Persist changes
+                user_data.persist()
+
+                response = "You stumble out of a Slimecorp HQ vault room in a stupor. You don't remember what happened in there, but your body hurts and you've got {slimecoin:,} shiny new SlimeCoin in your pocket.".format(
+                    slimecoin=coin_total)
+
         else:
-            # Do the transfer if the player can afford it.
-            market_data.donated_slimes += cost_total
-            market_data.persist()
-            user_data.change_slimes(n=-cost_total, source=ewcfg.source_spending)
-            user_data.change_slimecoin(n=coin_total, coinsource=ewcfg.coinsource_donation)
-            user_data.slime_donations += cost_total
+            response = ewcfg.str_exchange_specify.format(currency="slime", action="donate")
 
-            # Persist changes
+    if user_data.poi == ewcfg.poi_id_slimeoidlab:
+        poudrins = ewitem.inventory(
+            id_user=cmd.message.author.id,
+            id_server=cmd.message.server.id,
+            item_type_filter=ewcfg.it_slimepoudrin
+        )
+
+        if len(poudrins) < 1:
+            response = "You have to own a poudrin in order to donate a poudrin. Duh."
+        else:
+            ewitem.item_delete(id_item=poudrins[0].get('id_item'))  # Remove Poudrins
+            market_data.donated_poudrins += 1
+            market_data.persist()
+            user_data.poudrin_donations += 1
             user_data.persist()
 
-            response = "You stumble out of a Slimecorp HQ vault room in a stupor. You don't remember what happened in there, but your body hurts and you've got {slimecoin:,} shiny new SlimeCoin in your pocket.".format(
-                slimecoin=coin_total)
+            response = "You hand off one of your hard-earned poudrins to the front desk receptionist, who is all too happy to collect it. Pretty uneventful, but at the very least you’re glad donating isn’t physically painful anymore."
 
     else:
-        response = ewcfg.str_exchange_specify.format(currency="slime", action="donate")
+        response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the SlimeCorp Lab in Brawlden."
 
     # Send the response to the player.
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -997,8 +1018,8 @@ def get_majority_shareholder(id_server=None, stock=None):
 
 async def quarterlyreport(cmd):
     progress = 0
-    objective = 300000000
-    goal = "SLIME DONATED"
+    objective = 1000
+    goal = "POUDRINS DONATED"
     completion = False
 
     try:
@@ -1008,7 +1029,7 @@ async def quarterlyreport(cmd):
 
         # Display the progress towards the current Quarterly Goal, whatever that may be.
         cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
-            metric=ewcfg.col_donated_slimes
+            metric=ewcfg.col_donated_poudrins
         ), (cmd.message.server.id,))
 
         result = cursor.fetchone();
@@ -1022,7 +1043,6 @@ async def quarterlyreport(cmd):
             if progress >= objective:
                 progress = objective
                 completion = True
-
 
     finally:
         cursor.close()

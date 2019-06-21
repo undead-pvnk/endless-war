@@ -38,8 +38,10 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewmutation
 import ewquadrants
 import ewtransport
+import ewdebug
 import ewfishy
 
 from ewitem import EwItem
@@ -118,7 +120,7 @@ cmd_map = {
     ewcfg.cmd_negaslime: ewspooky.negaslime,
 
     # Display the progress towards the current Quarterly Goal.
-    ewcfg.cmd_quarterly_report: ewmarket.quarterlyreport,
+    ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
     # revive yourself as a juvenile after having been killed.
     ewcfg.cmd_revive: ewspooky.revive,
@@ -245,6 +247,7 @@ cmd_map = {
 
     # Look around an adjacent POI
     ewcfg.cmd_scout: ewmap.scout,
+    ewcfg.cmd_scout_alt1: ewmap.scout,
 
     # Check your current POI capture progress
     ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
@@ -260,9 +263,9 @@ cmd_map = {
     # scavenging
     ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
-	# fishing
-	ewcfg.cmd_cast: ewfishy.cast,
-	ewcfg.cmd_reel: ewfishy.reel,
+    # fishing
+    ewcfg.cmd_cast: ewfishy.cast,
+    ewcfg.cmd_reel: ewfishy.reel,
 
     # cosmetics
     ewcfg.cmd_smelt: ewcosmeticitem.smelt,
@@ -348,8 +351,17 @@ cmd_map = {
     ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
     ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
+    # mutations
+    ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+    ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+
+    ewcfg.cmd_teleport: ewmap.teleport,
     # restores poi roles to their proper names, only usable by admins
-    ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
+    ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+
+    # debug commands
+    ewdebug.cmd_debug1: ewdebug.debug1,
+    ewdebug.cmd_debug2: ewdebug.debug2,
 }
 
 debug = False
@@ -360,7 +372,7 @@ while sys.argv:
     sys.argv = sys.argv[1:]
 
 # When debug is enabled, additional commands are turned on.
-if debug == False:
+if debug == True:
     ewutils.logMsg('Debug mode enabled.')
 
 
@@ -491,7 +503,8 @@ async def on_ready():
 
         asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server=server.id))
         asyncio.ensure_future(ewutils.bleed_tick_loop(id_server=server.id))
-        await ewtransport.init_transports(id_server=server.id)
+        if not debug:
+            await ewtransport.init_transports(id_server=server.id)
         asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server=server.id))
 
     try:
@@ -503,8 +516,8 @@ async def on_ready():
     ewutils.logMsg('Ready.')
 
     """
-		Set up for infinite loop to perform periodic tasks.
-	"""
+        Set up for infinite loop to perform periodic tasks.
+    """
     time_now = int(time.time())
 
     time_last_twitch = time_now
@@ -709,9 +722,8 @@ async def on_message_delete(message):
     if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(
             ewcfg.cmd_prefix):
         ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
+    # await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
-
-# await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):
@@ -756,11 +768,11 @@ async def on_message(message):
 
     if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
         """
-			Wake up if we need to respond to messages. Could be:
-				message starts with !
-				direct message (server == None)
-				user is new/has no roles (len(roles) < 2)
-		"""
+            Wake up if we need to respond to messages. Could be:
+                message starts with !
+                direct message (server == None)
+                user is new/has no roles (len(roles) < 2)
+        """
 
         # Ignore users with weird characters in their name
         try:
@@ -793,8 +805,8 @@ async def on_message(message):
         )
 
         """
-			Handle direct messages.
-		"""
+            Handle direct messages.
+        """
         if message.server == None:
             # Direct message the player their inventory.
             if ewitem.cmd_is_inventory(cmd):
@@ -818,21 +830,24 @@ async def on_message(message):
         if len(message.author.roles) < 3:
             await ewrolemgr.updateRoles(client=client, member=message.author)
 
+        user_data = EwUser(member=message.author)
+        mutations = user_data.get_mutations()
         # Scold/ignore offline players.
         if message.author.status == discord.Status.offline:
-            response = "You cannot participate in the ENDLESS WAR while offline."
 
-            await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+            if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
+                response = "You cannot participate in the ENDLESS WAR while offline."
 
-            return
+                return await ewutils.send_message(client, message.channel,
+                                                  ewutils.formatMessage(message.author, response))
 
-        user_data = EwUser(member=message.author)
         if user_data.time_lastoffline > time_now - ewcfg.time_offline:
-            response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-            await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+            if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
+                response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-            return
+                return await ewutils.send_message(client, message.channel,
+                                                  ewutils.formatMessage(message.author, response))
 
         # Check the main command map for the requested command.
         global cmd_map
@@ -885,12 +900,20 @@ async def on_message(message):
         # Gives the user some slime
         elif debug == True and cmd == '!getslime':
             user_data = EwUser(member=message.author)
+            user_initial_level = user_data.slimelevel
 
-            user_data.change_slimes(n=10000)
+            response = "You get 10,000 slime!"
+
+            levelup_response = user_data.change_slimes(n=10000)
+
+            was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+            if was_levelup:
+                response += " {}".format(levelup_response)
+
             user_data.persist()
 
-            await ewutils.send_message(client, message.channel,
-                                       ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+            await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
         elif debug == True and cmd == '!createapple':
             item_id = ewitem.item_create(

@@ -8,6 +8,7 @@ import ewrolemgr
 
 from ew import EwUser
 from ewdistrict import EwDistrict
+from ewfishy import fishers
 
 
 """
