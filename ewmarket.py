@@ -478,7 +478,7 @@ async def donate(cmd):
 		else:
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
-	if user_data.poi == ewcfg.poi_id_slimeoidlab:
+	elif user_data.poi == ewcfg.poi_id_slimeoidlab:
 		poudrins = ewitem.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.message.server.id,
