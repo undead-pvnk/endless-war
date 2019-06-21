@@ -189,7 +189,9 @@ async def attack(cmd):
 		# Get target's info.
 		member = cmd.mentions[0]
 		if member.id == cmd.message.author.id:
-			shootee_data = user_data
+			response = "Try {}.".format(ewcfg.cmd_suicide)
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
+			return await resp_cont.post()
 		else:
 			shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
