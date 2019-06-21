@@ -4427,6 +4427,63 @@ poi_list = [
         role="Slime Sea",
         pvp=True
     ),
+    EwPoi(  # Slime's End Pier
+        id_poi=poi_id_se_pier,
+        alias=[
+            "pier",
+            "thepier",
+            "the pier",
+            "sep",
+            "sepier",
+            "slimesendpier"
+        ],
+        str_name="Slime's End Pier",
+        str_desc="A shoddily built pile of wood planks and nails hangs off the edge of the peninsula.\n\nExits into Slime's End.",
+        coord=(42, 16),
+        channel=channel_se_pier,
+        role="Slime's End Pier",
+        pvp=False,
+        is_subzone=True,
+        mother_district=poi_id_slimesend
+    ),
+    EwPoi(  # Jaywalker Plain Pier
+        id_poi=poi_id_jp_pier,
+        alias=[
+            "jpp",
+            "jppier",
+            "jp pier",
+            "jaywalkerplainpier",
+            "jaywalker plain pier"
+        ],
+        str_name="Jaywalker Plain Pier",
+        str_desc="A shoddily built pile of wood planks and nails hangs off the edge of the peninsula.\n\nExits into Jaywalker Plain.",
+        coord=(2, 18),
+        channel=channel_jp_pier,
+        role="Jaywalker Plain Pier",
+        pvp=False,
+        is_subzone=True,
+        mother_district=poi_id_jaywalkerplain
+    ),
+    EwPoi(  # Little Chernobyl Pier
+        id_poi=poi_id_lc_pier,
+        alias=[
+            "lcp",
+            "lcpier",
+            "lc pier",
+            "littlechernobylpier",
+            "lilchernpier",
+            "lilpier",
+            "lilp"
+        ],
+        str_name="Little Chernobyl Pier",
+        str_desc="A shoddily built pile of wood planks and nails hangs off the edge of the peninsula.\n\nExits into Little Chernobyl.",
+        coord=(24, 8),
+        channel=channel_lc_pier,
+        role="Little Chernobyl Pier",
+        pvp=False,
+        is_subzone=True,
+        mother_district=poi_id_littlechernobyl
+    ),
     EwPoi(  # Wreckington Ferry Port
         id_poi=poi_id_wt_port,
         alias=[
