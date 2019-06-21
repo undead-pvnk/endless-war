@@ -542,6 +542,7 @@ hunger_perfarm = 50
 hunger_permine = 1
 hunger_perscavenge = 2
 hunger_pertick = 3
+hunger_perfish = 35
 
 # inebriation
 inebriation_max = 20
@@ -1034,6 +1035,7 @@ source_ghostification = 9
 source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
+source_fishing = 13
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
