@@ -7,6 +7,7 @@ import time
 import re
 import random
 import asyncio
+import math
 
 import ewstats
 import ewitem
@@ -23,6 +24,8 @@ db_pool_id = 0
 
 # Map of user IDs to their course ID.
 moves_active = {}
+
+food_multiplier = {}
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -64,19 +67,26 @@ class EwResponseContainer:
 
 	def add_channel_response(self, channel, response):
 		if channel in self.channel_responses:
-			self.channel_responses[channel] += "\n" + response
+			self.channel_responses[channel].append(response)
 		else:
-			self.channel_responses[channel] = response
+			self.channel_responses[channel] = [response]
 
 	def add_channel_topic(self, channel, topic):
 		self.channel_topics[channel] = topic
 
 	def add_response_container(self, resp_cont):
 		for ch in resp_cont.channel_responses:
-			self.add_channel_response(ch, resp_cont.channel_responses[ch])
+			responses = resp_cont.channel_responses[ch]
+			for r in responses:
+				self.add_channel_response(ch, r)
 
 		for ch in resp_cont.channel_topics:
 			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+	def format_channel_response(self, channel, member):
+		if channel in self.channel_responses:
+			for i in range(len(self.channel_responses[channel])):
+				self.channel_responses[channel][i] = formatMessage(member, self.channel_responses[channel][i])
 
 	async def post(self):
 		self.client = get_client()
@@ -94,7 +104,15 @@ class EwResponseContainer:
 		for ch in self.channel_responses:
 			channel = get_channel(server = server, channel_name = ch)
 			try:
-				message = await send_message(self.client, channel, self.channel_responses[ch])
+				response = ""
+				while len(self.channel_responses[ch]) > 0:
+					if len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+						response += "\n" + self.channel_responses[ch].pop(0)
+					else:
+						message = await send_message(self.client, channel, response)
+						messages.append(message)
+						response = ""
+				message = await send_message(self.client, channel, response)
 				messages.append(message)
 			except:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
@@ -278,7 +296,7 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+	return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
@@ -689,6 +707,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 	elif life_state == ewcfg.life_state_grandfoe:
 		faction_role = ewcfg.role_grandfoe
 
+	elif life_state == ewcfg.life_state_executive:
+		faction_role = ewcfg.role_slimecorp
+
 	elif life_state == ewcfg.life_state_lucky:
 		faction_role = ewcfg.role_slimecorp
 
@@ -747,6 +768,20 @@ def hunger_cost_mod(slimelevel):
 	return hunger_max_bylevel(slimelevel) / 200
 
 
+"""
+	Calculate how much food the player can carry
+"""
+def food_carry_capacity_bylevel(slimelevel):
+	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
+
+"""
+	Calculate how many weapons the player can carry
+"""
+def weapon_carry_capacity_bylevel(slimelevel):
+	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
+
+def max_adorn_bylevel(slimelevel):
+        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
 """
 	Returns an EwUser object of the selected kingpin
 """
@@ -831,3 +866,8 @@ def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
 		slimeoids.append(row[0])
 
 	return slimeoids
+
+async def decrease_food_multiplier(id_user):
+	await asyncio.sleep(5)
+	if id_user in food_multiplier:
+		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)

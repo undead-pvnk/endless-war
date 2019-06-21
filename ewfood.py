@@ -1,5 +1,6 @@
 import math
 import time
+import asyncio
 
 import ewcfg
 import ewitem
@@ -201,7 +202,14 @@ async def order(cmd):
 				if not togo:
 
 					if target_data != None:
-						target_data.hunger -= food.recover_hunger
+						recover_hunger = food.recover_hunger
+						if target_data.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(target_data.id_user) > 0:
+							recover_hunger *= ewutils.food_multiplier.get(target_data.id_user)
+							ewutils.food_multiplier[target_data.id_user] += 1
+						else:
+							ewutils.food_multiplier[target_data.id_user] = 1
+						asyncio.ensure_future(ewutils.decrease_food_multiplier(target_data.id_user))
+						target_data.hunger -= recover_hunger
 						if target_data.hunger < 0:
 							target_data.hunger = 0
 						target_data.inebriation += food.inebriation
@@ -214,7 +222,14 @@ async def order(cmd):
 								target_data.die(cause = ewcfg.cause_busted)
 
 					else:
-						user_data.hunger -= food.recover_hunger
+						recover_hunger = food.recover_hunger
+						if user_data.id_user in ewutils.food_multiplier and ewutils.food_multiplier.get(user_data.id_user) > 0:
+							recover_hunger *= ewutils.food_multiplier.get(user_data.id_user)
+							ewutils.food_multiplier[user_data.id_user] += 1
+						else:
+							ewutils.food_multiplier[user_data.id_user] = 1
+						asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+						user_data.hunger -= recover_hunger
 						if user_data.hunger < 0:
 							user_data.hunger = 0
 						user_data.inebriation += food.inebriation
@@ -233,7 +248,7 @@ async def order(cmd):
 						item_type_filter = ewcfg.it_food
 					)
 
-					if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+					if len(food_items) >= user_data.get_food_capacity():
 						# user_data never got persisted so the player won't lose money unnecessarily
 						response = "You can't carry any more food than that."
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

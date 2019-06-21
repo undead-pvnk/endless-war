@@ -141,6 +141,8 @@ def gen_data_text(
 	)
 	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
 
+	mutations = user_data.get_mutations()
+
 	cosmetics = ewitem.inventory(
 		id_user = user_data.id_user,
 		id_server = user_data.id_server,
@@ -180,6 +182,10 @@ def gen_data_text(
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += " {}".format(mutation_flavor.str_describe_other)
+
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:
 			response += " They have {:,} confirmed kills.".format(user_kills)
@@ -204,6 +210,7 @@ async def data(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 		slimeoid = EwSlimeoid(member = cmd.message.author)
+		mutations = user_data.get_mutations()
 
 		cosmetics = ewitem.inventory(
 			id_user = cmd.message.author.id,
@@ -240,6 +247,10 @@ async def data(cmd):
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += " {}".format(mutation_flavor.str_describe_self)
+
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:
 			response += " You have {:,} confirmed kills.".format(user_kills)
@@ -252,7 +263,7 @@ async def data(cmd):
 
 		if user_data.hunger > 0:
 			response += " You are {}% hungry.".format(
-				round(user_data.hunger * 100.0 / ewutils.hunger_max_bylevel(user_data.slimelevel), 1)
+				round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
 			)
 
 		if user_data.ghostbust:

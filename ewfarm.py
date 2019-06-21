@@ -70,6 +70,9 @@ class EwFarm:
 """
 async def reap(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	levelup_response = ""
+	mutations = user_data.get_mutations()
 
 	# Checking availability of reap action
 	if user_data.life_state != ewcfg.life_state_juvenile:
@@ -106,10 +109,12 @@ async def reap(cmd):
 					poudrin = False
 					poudrinamount = 0
 
-					poudrin_rarity = ewcfg.poudrin_rarity / 500  # 1 in 3 chance
-					poudrin_mined = random.randint(1, poudrin_rarity)
+					poudrin_chance = 500 / ewcfg.poudrin_rarity  # 1 in 3 chance
 
-					if poudrin_mined == 1:
+					if ewcfg.mutation_id_lucky in mutations:
+						poudrin_chance *= 1.33
+
+					if random.random() < poudrin_chance:
 						poudrin = True
 						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
@@ -141,11 +146,11 @@ async def reap(cmd):
 						)
 
 					slime_gain = ewcfg.reap_gain
-					user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
+					levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
 					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
 
-					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(ewcfg.reap_gain)
+					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(slime_gain)
 
 					if poudrin == True:
 						if poudrinamount == 1:
@@ -154,6 +159,8 @@ async def reap(cmd):
 							response += "two slime poudrins, "
 
 					response += "and a bushel of {}!".format(vegetable.str_name)
+					if levelup_response != "":
+						response += "\n\n" + levelup_response
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()
