@@ -216,7 +216,7 @@ async def attack(cmd):
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
-		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -327,7 +327,7 @@ async def attack(cmd):
 			was_killed = False
 			was_shot = False
 
-			if shootee_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky]:
+			if shootee_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
 				# User can be shot.
 				if shootee_data.life_state == ewcfg.life_state_juvenile:
 					was_juvenile = True
