@@ -910,7 +910,6 @@ async def quarterlyreport(cmd):
 	progress = 0
 	objective = 300000000
 	goal = "SLIME DONATED"
-	completion = False
 
 	try:
 		conn_info = ewutils.databaseConnect()
@@ -929,19 +928,10 @@ async def quarterlyreport(cmd):
 
 			if progress == None:
 				progress = 0
-
-			if progress >= objective:
-				progress = objective
-				completion = True
-
-
 	finally:
 		cursor.close()
 		ewutils.databaseClose(conn_info)
 
 	response = "{:,} / {:,} {}.".format(progress, objective, goal)
-
-	if completion == True:
-		response += " THE QUARTERLY GOAL HAS BEEN REACHED. STAY TUNED FOR FURTHER ANNOUNCEMENTS."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
