@@ -18,6 +18,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
+from ewhunting import delete_enemy, EwEnemy
 
 db_pool = {}
 db_pool_id = 0
@@ -375,6 +376,7 @@ async def bleed_tick_loop(id_server):
 	while True:
 		await bleedSlimes(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
+		await enemyBleedSlimes(id_server = id_server)
 
 		await asyncio.sleep(interval)
 
@@ -434,7 +436,55 @@ async def bleedSlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)		
+			databaseClose(conn_info)
+
+""" Bleed slime for all enemies """
+async def enemyBleedSlimes(id_server = None):
+	if id_server != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_enemy FROM enemies WHERE id_server = %s AND {bleed_storage} > 1".format(
+				bleed_storage = ewcfg.col_enemy_bleed_storage
+			), (
+				id_server,
+			))
+
+			enemies = cursor.fetchall()
+			total_bled = 0
+			resp_cont = EwResponseContainer(id_server = id_server)
+			for enemy in enemies:
+				enemy_data = EwEnemy(id_enemy = enemy[0], id_server = id_server)
+				slimes_to_bleed = enemy_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
+				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
+				slimes_to_bleed = min(slimes_to_bleed, enemy_data.bleed_storage)
+
+				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
+
+				#round up or down, randomly weighted
+				remainder = slimes_to_bleed - int(slimes_to_bleed)
+				if random.random() < remainder:
+					slimes_to_bleed += 1
+				slimes_to_bleed = int(slimes_to_bleed)
+
+				if slimes_to_bleed >= 1:
+					enemy_data.bleed_storage -= slimes_to_bleed
+					enemy_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
+					if enemy_data.slimes < 0:
+						delete_enemy(enemy_data)
+					enemy_data.persist()
+					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
+					district_data.persist()
+					total_bled += slimes_to_bleed
+
+			await resp_cont.post()
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
 
 """ Increase hunger for every player in the server. """
 def pushupServerHunger(id_server = None):

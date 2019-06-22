@@ -8,6 +8,7 @@ import ewcfg
 import ewstats
 import ewutils
 from ew import EwUser
+from ewhunting import EwEnemy
 from ewmarket import EwMarket
 
 """
@@ -154,6 +155,27 @@ class EwDistrict:
 
 		return filtered_players
 
+	def get_enemies_in_district(self):
+		client = ewutils.get_client()
+		server = client.get_server(self.id_server)
+		if server == None:
+			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
+			return []
+
+		enemies = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s AND {poi} = %s".format(
+			id_enemy = ewcfg.col_id_enemy,
+			poi = ewcfg.col_enemy_poi
+		),(
+			self.id_server,
+			self.name
+		))
+
+		filtered_enemies = []
+		for enemy in enemies:
+			enemy_data = EwEnemy(id_enemy = enemy[0], id_server = self.id_server)
+			filtered_enemies.append(enemy_data.id_enemy)
+
+		return filtered_enemies
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)

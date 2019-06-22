@@ -881,13 +881,17 @@ async def look(cmd):
 	else:
 		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
-	enemies_in_district = district_data.get_number_of_enemies()
+	enemies_in_district = district_data.get_enemies_in_district()
+	num_enemies = len(enemies_in_district)
 
 	enemies_resp = "\n\n"
-	if enemies_in_district == 1:
+	if num_enemies == 1:
 		enemies_resp += "You notice 1 enemy in this location."
 	else:
-		enemies_resp += "You notice {} enemies in this location."
+		enemies_resp += "You notice {} enemies in this location.".format(num_enemies)
+
+	# enemies_resp = ""
+
 	players_resp = ""
 
 	slimeoids_resp = ""
@@ -907,13 +911,14 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}{}{}{}".format(
+			"You stand {} {}.\n\n{}{}{}{}{}{}".format(
 				poi.str_in,
 				poi.str_name,
 				poi.str_desc,
 				slimes_resp,
 				players_resp,
 				slimeoids_resp,
+				enemies_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")

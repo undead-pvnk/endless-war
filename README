@@ -190,6 +190,7 @@ CREATE TABLE enemies (
     id_enemy int NOT NULL AUTO_INCREMENT,
     id_server varchar(128) NOT NULL,
     slimes bigint NOT NULL DEFAULT '0',
+    totaldamage bigint NOT NULL DEFAULT '0',
     ai varchar(32) NOT NULL DEFAULT '',
     type varchar(32) NOT NULL DEFAULT 'Lab',
     name varchar(32) NOT NULL DEFAULT '',
@@ -197,6 +198,7 @@ CREATE TABLE enemies (
     poi varchar(64) NOT NULL DEFAULT '',
     bleed_storage bigint NOT NULL DEFAULT '0',
     time_lastenter int NOT NULL DEFAULT '0',
+    initialslimes bigint NOT NULL DEFAULT '0',
 
     PRIMARY KEY (id_enemy)
 );

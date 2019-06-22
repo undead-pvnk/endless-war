@@ -12,7 +12,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.4"
+version = "v3.4 - Hunting"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -348,7 +348,6 @@ cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 
 cmd_summonenemy = cmd_prefix + 'summonenemy'
 cmd_hurtmesoftly = cmd_prefix + 'hurtmesoftly'
-cmd_hunt = cmd_prefix + 'hunt'
 
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
@@ -836,6 +835,7 @@ col_hue = 'hue'
 #Database columns for enemies
 col_id_enemy = 'id_enemy'
 col_enemy_slimes = 'slimes'
+col_enemy_totaldamage = 'totaldamage'
 col_enemy_ai = 'ai'
 col_enemy_type = 'type'
 col_enemy_name = 'name'
@@ -843,6 +843,7 @@ col_enemy_level = 'level'
 col_enemy_poi = 'poi'
 col_enemy_bleed_storage = 'bleed_storage'
 col_enemy_time_lastenter = 'time_lastenter'
+col_enemy_initialslimes = 'initialslimes'
 
 
 # Database columns for user statistics

@@ -11,7 +11,6 @@ import ewmap
 
 from ew import EwUser
 from ewmarket import EwMarket
-from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
 
 
@@ -23,6 +22,7 @@ class EwEnemy:
 	id_server = ""
 
 	slimes = 0
+	totaldamage = 0
 	ai = ""
 	name = ""
 	level = 0
@@ -30,13 +30,19 @@ class EwEnemy:
 	type = ""
 	bleed_storage = 0
 	time_lastenter = 0
+	initialslimes = 0
 
 	# slimeoid = EwSlimeoid(member = cmd.message.author, )
 	# slimeoid = EwSlimeoid(id_slimeoid = 12)
 
 	""" Load the enemy data from the database. """
 
-	def __init__(self, member=None, id_enemy=None, life_state=None, id_server=None):
+	def __init__(self, member=None, id_enemy=None, id_server=None):
+		if (id_enemy == None) and (id_server == None):
+			if (member != None):
+				id_server = member.id_server
+				id_enemy = member.id_enemy
+
 		query_suffix = ""
 
 		if id_enemy != None:
@@ -58,10 +64,11 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
+						ewcfg.col_enemy_totaldamage,
 						ewcfg.col_enemy_ai,
 						ewcfg.col_enemy_type,
 						ewcfg.col_enemy_name,
@@ -69,6 +76,7 @@ class EwEnemy:
 						ewcfg.col_enemy_poi,
 						ewcfg.col_enemy_bleed_storage,
 						ewcfg.col_enemy_time_lastenter,
+						ewcfg.col_enemy_initialslimes,
 						query_suffix
 					))
 				result = cursor.fetchone();
@@ -78,13 +86,15 @@ class EwEnemy:
 					self.id_enemy = result[0]
 					self.id_server = result[1]
 					self.slimes = result[2]
-					self.ai = result[3]
-					self.type = result[4]
-					self.name = result[5]
-					self.level = result[6]
-					self.poi = result[7]
-					self.bleed_storage = result[8]
-					self.time_lastenter = result[9]
+					self.totaldamage = result[3]
+					self.ai = result[4]
+					self.type = result[5]
+					self.name = result[6]
+					self.level = result[7]
+					self.poi = result[8]
+					self.bleed_storage = result[9]
+					self.time_lastenter = result[10]
+					self.initialslimes = result[11]
 
 			finally:
 				# Clean up the database handles.
@@ -101,10 +111,11 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
+					ewcfg.col_enemy_totaldamage,
 					ewcfg.col_enemy_ai,
 					ewcfg.col_enemy_type,
 					ewcfg.col_enemy_name,
@@ -112,10 +123,12 @@ class EwEnemy:
 					ewcfg.col_enemy_poi,
 					ewcfg.col_enemy_bleed_storage,
 					ewcfg.col_enemy_time_lastenter,
+					ewcfg.col_enemy_initialslimes,
 				), (
 					self.id_enemy,
 					self.id_server,
 					self.slimes,
+					self.totaldamage,
 					self.ai,
 					self.type,
 					self.name,
@@ -123,6 +136,7 @@ class EwEnemy:
 					self.poi,
 					self.bleed_storage,
 					self.time_lastenter,
+					self.initialslimes,
 				))
 
 			conn.commit()
@@ -162,6 +176,10 @@ class EwEnemy:
 
 		return resp_cont
 
+	def change_slimes(self, n = 0, source = None):
+		change = int(n)
+		self.slimes += change
+
 async def summon_enemy(cmd):
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
@@ -177,7 +195,8 @@ async def summon_enemy(cmd):
 		enemy = EwEnemy()
 
 		enemy.id_server = user_data.id_server
-		enemy.slimes = 10000
+		enemy.slimes = 47000
+		enemy.totaldamage = 0
 		enemy.ai = ""
 		enemy.poi = user_data.poi
 		enemy.level = "10"
@@ -185,10 +204,11 @@ async def summon_enemy(cmd):
 		enemy.name = "the lost juvie"
 		enemy.bleed_storage = 0
 		enemy.time_lastenter = 0
+		enemy.initialslimes = enemy.slimes
 
 		enemy.persist()
 
-		response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Type =  {}.".format(enemy.name, enemy.level, enemy.type)
+		response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Slime =  {}.".format(enemy.name, enemy.level, enemy.slimes)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -209,35 +229,10 @@ async def hurtmesoftly(cmd):
 
 	await resp_cont.post()
 
-async def hunt(cmd):
-	user_data = EwUser(member=cmd.message.author)
-	response = None
-
-	# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
-	huntedenemy = " ".join(cmd.tokens[1:]).lower()
-
-
-	if not len(cmd.tokens) > 1:
-		response = "Hunt *what*, exactly?"
-	else:
-		search = find_enemy(huntedenemy, user_data)
-
-		if search != None:
-			response = "You hunt {}. Nice work!".format(search.name)
-			delete_enemy(search)
-
-		elif cmd.mentions_count > 0:
-			response = "You can't hunt other players, dummy. Try using !kill instead."
-		else:
-			print(huntedenemy)
-			response = "You didn't manage to hunt anything by that name"
-
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def find_enemy(enemy_search = None, user_data = None):
 	enemy_sought = None
-	if enemy_search:
+	if enemy_search != None:
 		enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
 			id_enemy=ewcfg.col_id_enemy,
 			poi=ewcfg.col_enemy_poi,
@@ -255,8 +250,58 @@ def find_enemy(enemy_search = None, user_data = None):
 	return enemy_sought
 
 def delete_enemy(enemy):
+	print("DEBUG - {}".format(enemy.id_enemy))
 	ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
 		id_enemy = ewcfg.col_id_enemy
 	),(
 		enemy.id_enemy,
 	))
+
+def drop_enemy_loot(enemy_data, district_data):
+
+	response = None
+	if enemy_data.type == 'juvie':
+
+		patrician_rarity = 20
+		patrician_dropped = random.randint(1, patrician_rarity)
+		patrician = False
+
+		if patrician_dropped == 1:
+			patrician = True
+
+		cosmetics_list = []
+
+		for result in ewcfg.cosmetic_items_list:
+			if result.ingredients == "":
+				cosmetics_list.append(result)
+			else:
+				pass
+
+		items = []
+
+		for cosmetic in cosmetics_list:
+			if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
+				items.append(cosmetic)
+			elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
+				items.append(cosmetic)
+
+		item = items[random.randint(0, len(items) - 1)]
+
+		ewitem.item_create(
+			item_type=ewcfg.it_cosmetic,
+			id_user=district_data.name,
+			id_server=district_data.id_server,
+			item_props={
+				'id_cosmetic': item.id_cosmetic,
+				'cosmetic_name': item.str_name,
+				'cosmetic_desc': item.str_desc,
+				'rarity': item.rarity,
+				'adorned': 'false'
+			}
+		)
+		response = "They dropped a {item_name}!".format(item_name=item.str_name)
+
+	else:
+		response = "They didn't drop anything..."
+
+	return response
