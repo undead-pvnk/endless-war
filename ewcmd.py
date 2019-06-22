@@ -142,6 +142,8 @@ def gen_data_text(
 		id_server = id_server
 	)
 	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
+	
+	mutations = user_data.get_mutations()
 
 	cosmetics = ewitem.inventory(
 		id_user = user_data.id_user,
@@ -182,6 +184,10 @@ def gen_data_text(
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += " {}".format(mutation_flavor.str_describe_other)
+
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:
 			response += " They have {:,} confirmed kills.".format(user_kills)
@@ -215,6 +221,7 @@ async def data(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 		slimeoid = EwSlimeoid(member = cmd.message.author)
+		mutations = user_data.get_mutations()
 
 		cosmetics = ewitem.inventory(
 			id_user = cmd.message.author.id,
@@ -250,6 +257,10 @@ async def data(cmd):
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
+		
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += " {}".format(mutation_flavor.str_describe_self)
 
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:
@@ -263,7 +274,7 @@ async def data(cmd):
 
 		if user_data.hunger > 0:
 			response += " You are {}% hungry.".format(
-				round(user_data.hunger * 100.0 / ewutils.hunger_max_bylevel(user_data.slimelevel), 1)
+				round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
 			)
 
 		if user_data.ghostbust:
@@ -412,14 +423,15 @@ async def help(cmd):
 			if not len(cmd.tokens) > 1:
 				# list off help topics to player at college
 				response = 'What would you like to learn about? Topics include: \n' \
-						   '**mining**, **food**, **capturing**, **dojo**, **bleeding**, **scavenging**,\n' \
-						   '**farming**, **slimeoids**, **transportation**, **scouting**, and **offline**.'
+						   '**gangs**, **mining**, **food**, **capturing**, **transportation**, **death**, \n' \
+						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **ghosts**, **scouting**, \n' \
+						   '**cosmetics**, **sparring**, **bleeding**, **stocks**, **casino**, and **offline**.'
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				if topic in ewcfg.help_responses:
 					response = ewcfg.help_responses[topic]
 				else:
-					response = 'ENDLESS WAR questions your belief in the existence of such a topic.'
+					response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
 		else:
 			# user not in college, check what help message would apply to the subzone they are in
 
@@ -430,11 +442,19 @@ async def help(cmd):
 				# mine help
 				response = ewcfg.help_responses['mining']
 			elif (len(poi.vendors) >= 1):
-				response = ewcfg.help_responses['food']
 				# food help
-			elif user_data.poi in ewcfg.poi_id_dojo:
+				response = ewcfg.help_responses['food']
+			elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
 				# dojo help
-				response = ewcfg.help_responses['dojo']
+				response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**"
+			elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic == 'dojo':
+					response = ewcfg.help_responses['dojo']
+				elif topic == 'sparring':
+					response = ewcfg.help_responses['sparring']
+				else:
+					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
 			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 				# farming help
 				response = ewcfg.help_responses['farming']
@@ -444,6 +464,15 @@ async def help(cmd):
 			elif user_data.poi in ewcfg.transport_stops:
 				# transportation help
 				response =  ewcfg.help_responses['transportation']
+			elif user_data.poi in ewcfg.poi_id_stockexchange:
+				# stock exchange help
+				response = ewcfg.help_responses['stocks']
+			elif user_data.poi in ewcfg.poi_id_thecasino:
+				# casino help
+				response = ewcfg.help_responses['casino']
+			elif user_data.poi in ewcfg.poi_id_thesewers:
+				# death help
+				response = ewcfg.help_responses['death']
 			else:
 				# catch-all response for when user isn't in a sub-zone with a help response
 				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'

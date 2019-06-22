@@ -1555,10 +1555,10 @@ async def negaslimeoid(cmd):
 		response = "Name the horror you wish to behold."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower()
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower().strip()
 
 
-	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = user_data.poi)
+	potential_slimeoids = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, sltype = ewcfg.sltype_nega)
 
 	negaslimeoid = None
 	for id_slimeoid in potential_slimeoids:
@@ -1570,11 +1570,7 @@ async def negaslimeoid(cmd):
 			break
 
 	if negaslimeoid is None:
-		response = "There is no Negaslimeoid by that name here."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if negaslimeoid.sltype != ewcfg.sltype_nega:
-		response = "That's not a Negaslimeoid's name."
+		response = "There is no Negaslimeoid by that name."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	response = "{} is a {}-foot-tall Negaslimeoid.".format(negaslimeoid.name, negaslimeoid.level)
@@ -1716,7 +1712,7 @@ async def negaslimeoidbattle(cmd):
 		response = "Name the horror you wish to face."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower()
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower().strip()
 
 	author = cmd.message.author
 
@@ -1729,7 +1725,7 @@ async def negaslimeoidbattle(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 
-	potential_challengees = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = challenger.poi)
+	potential_challengees = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = challenger.poi, sltype = ewcfg.sltype_nega)
 
 	challengee_slimeoid = None
 	for id_slimeoid in potential_challengees:
@@ -1743,11 +1739,6 @@ async def negaslimeoidbattle(cmd):
 	if challengee_slimeoid is None:
 		response = "There is no Negaslimeoid by that name here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if challengee_slimeoid.sltype != ewcfg.sltype_nega:
-		response = "That's not a Negaslimeoid's name."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
 
 	#Players have been challenged
 	if active_slimeoidbattles.get(challenger_slimeoid.id_slimeoid):
@@ -2146,12 +2137,8 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 
 	s1hpmax = 50 + (challengee_slimeoid.level * 20)
-	if challengee_slimeoid.sltype == ewcfg.sltype_nega:
-		s1hpmax *= 1.5
 
 	s2hpmax = 50 + (challenger_slimeoid.level * 20)
-	if challenger_slimeoid.sltype == ewcfg.sltype_nega:
-		s2hpmax *= 1.5
 
 	s1hp = s1hpmax
 	s2hp = s2hpmax

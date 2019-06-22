@@ -8,14 +8,17 @@ from ewweather import EwWeather
 from ewfood import EwFood
 from ewitem import EwItemDef, EwDefaultItem, EwItem
 from ewmap import EwPoi
+from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
 
 # Global configuration options.
-version = "v3.3a"
+version = "v3.4"
 dir_msgqueue = 'msgqueue'
+
+discord_message_length_limit = 2000
 
 # Update intervals
 update_hookstillactive = 60 * 60 * 3
@@ -33,6 +36,8 @@ max_iw_swing = 30
 life_state_corpse = 0
 life_state_juvenile = 1
 life_state_enlisted = 2
+life_state_executive = 6
+life_state_lucky = 7
 life_state_grandfoe = 8
 life_state_kingpin = 10
 life_state_observer = 20
@@ -198,6 +203,7 @@ role_corpse = "corpse"
 role_corpse_pvp = "corpsepvp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
+role_slimecorp = "slimecorp"
 
 faction_roles = [
 	role_juvenile,
@@ -211,7 +217,8 @@ faction_roles = [
 	role_corpse,
 	role_corpse_pvp,
 	role_kingpin,
-	role_grandfoe
+	role_grandfoe,
+	role_slimecorp
 	]
 
 role_to_pvp_role = {
@@ -417,6 +424,7 @@ cmd_inspect = cmd_prefix + 'inspect'
 cmd_inspect_alt1 = cmd_prefix + 'examine'
 cmd_look = cmd_prefix + 'look'
 cmd_scout = cmd_prefix + 'scout'
+cmd_scout_alt1 = cmd_prefix + 'sniff'
 cmd_map = cmd_prefix + 'map'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
@@ -448,9 +456,13 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_capture_progress = cmd_prefix + 'progress'
-cmd_quarterly_report = cmd_prefix + 'quarterlyreport'
+cmd_teleport = cmd_prefix + 'tp'
+cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
+
+cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
+cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -491,6 +503,23 @@ cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
 cmd_get_ashen = cmd_prefix + "ashen"
 cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 
+offline_cmds = [
+	cmd_move,
+	cmd_move_alt1,
+	cmd_move_alt2,
+	cmd_move_alt3,
+	cmd_halt,
+	cmd_halt_alt1,
+	cmd_embark,
+	cmd_embark_alt1,
+	cmd_disembark,
+	cmd_disembark_alt1,
+	cmd_look,
+	cmd_scout,
+	cmd_scout_alt1
+]
+		
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -528,6 +557,9 @@ togo_price_increase = 2
 std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
 milled_food_expir = 12 * 3600 * 28 # 2 weeks
+
+# minimum amount of slime needed to capture territory
+min_slime_to_cap = 50000
 
 # property classes
 property_class_s = "s"
@@ -667,7 +699,7 @@ emote_purple = "<:purple:496397848343216138>"
 emote_pink = "<:pink:496397871180939294>"
 emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
-emote_slimecorp = "<:slimecorp:522416869127225344>"
+emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 
 # Emotes for the negaslime writhe animation
@@ -720,6 +752,7 @@ str_subway_connecting_sentence = "Below it, on a lower level of the station, is 
 
 # Common database columns
 col_id_server = 'id_server'
+col_id_user = 'id_user'
 
 #Database columns for roles
 col_id_role = 'id_role'
@@ -742,7 +775,6 @@ col_avatar = "avatar"
 col_display_name = "display_name"
 
 # Database columns for users
-col_id_user = 'id_user'
 col_slimes = 'slimes'
 col_slimelevel = 'slimelevel'
 col_hunger = 'hunger'
@@ -777,6 +809,8 @@ col_time_lastenter = 'time_lastenter'
 col_time_lastoffline = 'time_lastoffline'
 col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
+col_slime_donations = 'donated_slimes'
+col_poudrin_donations = 'donated_poudrins'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -810,6 +844,7 @@ col_weather = 'weather'
 col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
+col_donated_poudrins = 'donated_poudrins'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -838,6 +873,11 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
+
+# Database columns for mutations
+col_id_mutation = 'mutation'
+col_mutation_data = 'data'
+col_mutation_counter = 'mutation_counter'
 
 # Database columns for transports
 col_transport_type = 'transport_type'
@@ -875,6 +915,7 @@ leaderboard_podrins = "PODRIN LORDS"
 leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
+leaderboard_donated = "LOYALEST CONSUMERS"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1244,7 +1285,12 @@ def wef_katana(ctn = None):
 		last_attack = ctn.time_now - last_attack
 		ctn.slimes_damage = max(base_damage, min(base_damage * (last_attack/8640),10))
 
-	if aim <= (100 * ctn.miss_mod):
+	#lucky lucy's lucky katana always crits
+	if ctn.user_data.life_state == life_state_lucky:
+		ctn.crit = True
+		ctn.slimes_damage *= 7.77
+
+	elif aim <= (100 * ctn.miss_mod):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim <= 20 - (100 * ctn.crit_mod):
@@ -3031,7 +3077,7 @@ food_list = [
 		recover_hunger = 60,
 		str_name = 'Pulp Gourds',
 		vendors = [vendor_farm],
-		str_eat = "a",
+		str_eat = "You chomp into the raw Pulp Gourds. It isn't terrible, but you feel like there is a more constructive use for it.",
 		str_desc = "The easily malleable gourds form indents from even your lightest touch.",
 		time_expir = farm_food_expir,
 	),
@@ -3296,6 +3342,57 @@ food_list = [
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
 		time_expir = milled_food_expir,
 	),
+	EwFood(
+		id_food = "khaotickilliflowerfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Khaotic Killiflower FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its bitter, low quality artificial Purple Killiflower flavorings remind you of discount children’s cough medicine. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "rampagingrowddishfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Rampaging Rowddish FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its sickeningly sweet artificial Pink Rowddish flavorings taste like if you mixed about 16 packs of Starburst FaveREDs into a blender. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "direappleciderfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Dire Apple Cider FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its wickedly sour artificial Dire Apple flavorings, mixed with its thick consistency, makes it feel like you’re drinking applesauce mixed with a healthy heaping of malic acid. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "ultimateurinefuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Ultimate Urine FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. It literally just tastes like piss. You’re almost positive you’re literally drinking pee right now. It’s not even carbonated. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any otherr living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+	EwFood(
+		id_food = "superwaterfuckenergy",
+		recover_hunger = 1200,
+		price = 120,
+		inebriation = 1000,
+		vendors = [vendor_mtndew, vendor_vendingmachine],
+		str_name = 'Super Water FUCK ENERGY',
+		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
+		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
+	),
+
 ]
 
 # A map of id_food to EwFood objects.
@@ -4331,7 +4428,7 @@ poi_list = [
 			"slimeoid"
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
-		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\n\nExits into Brawlden.",
+		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
 		coord = (28, 1),
@@ -7293,6 +7390,232 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
+mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_thickerthanblood = "thickerthanblood"
+mutation_id_graveyardswift = "graveyardswift" #TODO
+mutation_id_fungalfeaster = "fungalfeaster"
+mutation_id_sharptoother = "sharptoother" 
+mutation_id_openarms = "openarms" #TODO
+mutation_id_2ndamendment = "2ndamendment"
+mutation_id_panicattacks = "panicattacks" #TODO
+mutation_id_twobirdswithonekidneystone = "2birds1stone" #TODO
+mutation_id_shellshock = "shellshock" #TODO
+mutation_id_bleedingheart = "bleedingheart"
+mutation_id_paranoia = "paranoia" #TODO
+mutation_id_cloakandstagger = "cloakandstagger" #TODO
+mutation_id_nosferatu = "nosferatu"
+mutation_id_organicfursuit = "organicfursuit"
+mutation_id_lightasafeather = "lightasafeather"
+mutation_id_whitenationalist = "whitenationalist"
+mutation_id_spoiledappetite = "spoiledappetite"
+mutation_id_bigbones = "bigbones"
+mutation_id_fatchance = "fatchance"
+mutation_id_fastmetabolism = "fastmetabolism"
+mutation_id_bingeeater = "bingeeater"
+mutation_id_lonewolf = "lonewolf"
+mutation_id_quantumlegs = "quantumlegs"
+mutation_id_chameleonskin = "chameleonskin"
+mutation_id_patriot = "patriot"
+mutation_id_socialanimal = "socialanimal"
+mutation_id_corpseparty = "corpseparty" #TODO
+mutation_id_threesashroud = "threesashroud"
+mutation_id_aposematicstench = "aposematicstench"
+mutation_id_paintrain = "paintrain" #TODO
+mutation_id_lucky = "lucky"
+mutation_id_dressedtokill = "dressedtokill" 
+mutation_id_keensmell = "keensmell"
+mutation_id_enlargedbladder = "enlargedbladder"
+mutation_id_dumpsterdiver = "dumpsterdiver"
+mutation_id_trashmouth = "trashmouth"
+mutation_id_webbedfeet = "webbedfeet"
+
+mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
+
+mutations = [
+	EwMutationFlavor(
+		id_mutation = mutation_id_spontaneouscombustion,
+		str_describe_self = "On the surface you look calm and ready, probably unrelated to your onset of Spontaneous Combustion.",
+		str_describe_other = "On the surface they look calm and ready, probably unrelated to their onset of Spontaneous Combustion.",
+		str_acquire = "Deep inside your chest you feel a slight burning sensation. You suddenly convulse for a few moments, before… returning basically to normal. Huh, that’s weird. Oh well, I guess nothing happened. You have developed the mutation Spontaneous Combustion.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_thickerthanblood,
+		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to Thicker Than Blood.",
+		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to Thicker Than Blood.",
+		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. ",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fungalfeaster,
+		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to Fungal Feaster.",
+		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to Fungal Feaster.",
+		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore the hunger expended on your recent shots.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_sharptoother,
+		str_describe_self = "Your inhuman hand-eye-teeth coordination is the stuff of legends due to Sharptoother.",
+		str_describe_other = "Their inhuman hand-eye-teeth coordination is the stuff of legends due to Sharptoother.",
+		str_acquire = "Your pupils dilate, a cacophony of previously imperceivable noises floods into your head. Your canines pop out of your skull, making room for monstrously oversized saber-tooth replacements. Your fingers twitch frequently, begging to pull a trigger, any trigger. You have developed the mutation Sharptoother. Halved miss chance.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_2ndamendment,
+		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to 2nd Amendment.",
+		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to 2nd Amendment.",
+		str_acquire = "You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation 2nd Amendment. Extra equippable gun slot.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bleedingheart,
+		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to Bleeding Heart.",
+		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to Bleeding Heart.",
+		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation Bleeding Heart. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_nosferatu,
+		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to Noseferatu.",
+		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to Noseferatu.",
+		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation Noseferatu. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_organicfursuit,
+		str_describe_self = "Your shedding is a constant source of embarrassment due to Organic Fursuit.",
+		str_describe_other = "Their shedding is a constant source of embarrassment due to Organic Fursuit.",
+		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage and movement speed every 31st night.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lightasafeather,
+		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to Light As A Feather.",
+		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to Light As A Feather.",
+		str_acquire = "Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation Light As A Feather. Double movement speed while weather is windy.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_whitenationalist,
+		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
+		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
+		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Cannot be scouted while weather is snowy.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_spoiledappetite,
+		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to Spoiled Appetite.",
+		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to Spoiled Appetite.",
+		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation Spoiled Appetite. You can now eat spoiled food.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bigbones,
+		str_describe_self = "You can often be seen consuming enough calories to power a small country due to Big Bones.",
+		str_describe_other = "They can often be seen consuming enough calories to power a small country due to Big Bones.",
+		str_acquire = "Your can actively feel your brain being squeezed and your heart being nearly crushed by your rib cage as every bone in your body doubles in size. Your body fat doubles in density, requiring great strength and energy for even simple movements. You have developed the mutation Big Bones. Double food carrying capacity.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fatchance,
+		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
+		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
+		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 75% hunger.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_fastmetabolism,
+		str_describe_self = "Fierce boiling and sizzling can be heard from deep inside your stomach due to Fast Metabolism.",
+		str_describe_other = "Fierce boiling and sizzling can be heard from deep inside their stomach due to Fast Metabolism.",
+		str_acquire = "An intense heat is felt in the pit of your stomach, which wails in pain as it’s dissolved from the inside out. Your gastric acid roars to an unthinkably destructive fever pitch, ready to completely annihilate whatever poor calories may enter your body before instantly turning them into pure leg muscle. You have developed the mutation Fast Metabolism. Doubled movement speed at below 50% hunger.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_bingeeater,
+		str_describe_self = "You’re always one criticism away from devouring several large pizzas due to Binge Eater.",
+		str_describe_other = "They’re always one criticism away from devouring several large pizzas due to Binge Eater.",
+		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation Binge Eater. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lonewolf,
+		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to Lone Wolf.",
+		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to Lone Wolf.",
+		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate when in a district alone.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_quantumlegs,
+		str_describe_self = "You’ve got nothing of note below the belt due to Quantum Legs.",
+		str_describe_other = "They’ve got nothing of note below the belt due to Quantum Legs.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation Quantum Legs. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 30 minutes.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_chameleonskin,
+		str_describe_self = "Your skin quickly adjusts and camouflages you in your current surroundings due to Chameleon Skin.",
+		str_describe_other = "Their skin quickly adjusts and camouflages them in their current surroundings due to Chameleon Skin.",
+		str_acquire = "You feel a scraping sensation all over your body, like you’re being sunburned and skinned alive at the same exact time. You begin to change hue rapidly, flipping through a thousand different colors, patterns, and textures. Every individual minor change in value across your entire body feels like you’re being dismembered. This transpires for several agonizing seconds before your body settles on a perfect recreation of your current surroundings. For all intents and purposes, you are transparent. You have developed the mutation Chameleon Skin. While offline, you can move and scout other districts. You cannot be scouted.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_patriot,
+		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to Patriot.",
+		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to Patriot.",
+		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double recapture rate.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_socialanimal,
+		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to Social Animal.",
+		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to Social Animal.",
+		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 5% for every ally in your district.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_threesashroud,
+		str_describe_self = "You tend to blend into the crowd due to Three’s A Shroud.",
+		str_describe_other = "They tend to blend into the crowd due to Three’s A Shroud.",
+		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation Three’s A Shroud. Cannot be scouted if there are more than 3 allies in your district.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_aposematicstench,
+		str_describe_self = "A putrid stench permeates around you all hours of the day due to Aposematic Stench.",
+		str_describe_other = "A putrid stench permeates around them all hours of the day due to Aposematic Stench.",
+		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation Aposematic Stench. For every 5 levels you gain, you appear as 1 more person when being scouted.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_lucky,
+		str_describe_self = "You are extremely fortunate due to Lucky.",
+		str_describe_other = "They are extremely fortunate due to Lucky.",
+		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation Lucky. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dressedtokill,
+		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to Dressed to Kill.",
+		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to Dressed to Kill.",
+		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation Dressed to Kill. Damage bonus if all available cosmetic slots are filled.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_keensmell,
+		str_describe_self = "You have an uncanny ability to track and identify scents due to Keen Smell.",
+		str_describe_other = "They have an uncanny ability to track and identify scents due to Keen Smell.",
+		str_acquire = "You can feel your facial muscles being ripped as your skull elongates your mouth and nose, molding them into an uncanny snout. Your nostrils painfully stretch and elongate to allow for a broad range of olfactory sensations you could only have dreamed of experiencing before. Your nose twitches and you begin to growl as you pick up the scent of a nearby enemy gangster. You have developed the mutation Keen Smell. You can now use the !sniff command, allowing you to meticulously list every single player in the targeted district.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_dumpsterdiver,
+		str_describe_self = "You are exceptionally good at picking up trash due to Dumpster Diver.",
+		str_describe_other = "They are exceptionally good at picking up trash due to Dumpster Diver.",
+		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. Double chance to get items while scavenging.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_trashmouth,
+		str_describe_self = "You have the mouth of a sailor and the vocabulary of a fourteen year old due to Trash Mouth.",
+		str_describe_other = "They have the mouth of a sailor and the vocabulary of a fourteen year old due to Trash Mouth.",
+		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation Trash Mouth. Reach maximum power scavenges faster.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_webbedfeet,
+		str_describe_self = "Your toes are connected by a thin layer of skin due to Webbed Feet.",
+		str_describe_other = "Their toes are connected by a thin layer of skin due to Webbed Feet.",
+		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation Webbed Feet. Your scavenging power increases the more slime there is in a district.",
+		),
+	EwMutationFlavor(
+		id_mutation = mutation_id_enlargedbladder,
+		str_describe_self = "You have an enlarged bladder due to Enlarged Bladder.",
+		str_describe_other = "They have an enlarged bladder due to Enlarged Bladder.",
+		str_acquire = "You feel some mild sensation near your kidney, but you don’t really notice it. You have developed the mutation Enlarged Bladder. You may now, finally, piss.",
+		),
+	]
+
+mutations_map = {}
+
+mutation_ids = set()
+
+for mutation in mutations:
+	mutations_map[mutation.id_mutation] = mutation
+	mutation_ids.add(mutation.id_mutation)
+
 quadrant_flushed = "flushed"
 quadrant_pale = "pale"
 quadrant_caliginous = "caliginous"
@@ -7507,16 +7830,23 @@ stackable_status_effects = [
 
 # Dict of all help responses linked to their associated topics
 help_responses = {
+	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, and ghosts with the **'!kill'** command. To enlist in a gang, head to a gang base (Rowdy Roughhouse for the ROWDYS, Copkilltown for the KILLERS) and use **'!enlist'**, provided you also have at least 50,000 slime on hand. This will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** in a gang base to return to the life of a juvenile, but you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting.",
 	"mining":"Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets, and the higher your level gets, the more slime you gain with every '!mine' command, resulting in exponential gains. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively.",
-	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food and eat it at the same time, or add **'togo'** (or just 't') at the end of your order to place it in your inventory (example: !order pizza togo). Ordering it togo **doubles** the price, however, and you can only carry a certain amount of food depending on your level. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
+	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food and eat it at the same time, or add **'togo'** (or just 't') at the end of your order to place it in your inventory (example: !order pizza togo). Ordering it togo **doubles** the price, however, and you can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
 	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. If you reach **level 10** (done by gaining at least 10,000 slime), you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
-	"dojo":"The Dojo is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!arm [weapon]'**. There are many weapons you can choose from, and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. Sparring can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is what's actually important. Once you reach mastery rank 1 (Again, this would be level 5), the damage you do with that weapon type is increased, and when you next revive, you will now **permanently** be at level 3 for that weapon type. Essentially, this means you would only have to '!spar' or '!annoint twice to get back up to rank 1. Once you reach **rank 6**, you can no longer spar or annoint your weapon rank any higher, and must instead kill other players (that are higher in slime level than you) to do so. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a five minute cooldown and raises your hunger by about 15%, so make sure to bring some food with you beforehand. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
-	"bleeding":"When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
+	"transportation": "There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
+	"death":"Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'**, and you will return to the land of the living as a juvenile. Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges.",
+	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!arm [weapon]'**. There are many weapons you can choose from, and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use !help sparring.",
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 0.8% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel.",
-	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. Currently, it is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 160,000 slime, with a 1/3 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days), it will **die out**. In addition to slime, farming also provides you with various **crops**. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
-	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park.",
-	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** and **The Blimp** can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do.",
-	"scouting":"Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even ghosts. Scouting will list all players above your own level, as well as players below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less.",
+	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 300,000 slime, with a 1/3 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
+	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
+	"ghosts":"Ghosts can perform an action known as **haunting**. Every use of **'!haunt'** takes up 0.2% of the slime of whoever was haunted (you may also add a customized message by doing '!haunt [message]'). It can be done face-to-face like with !kill, or done remotely at the sewers. As a ghost, you can only move within a small radius around the area at which you died. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers and removes 1/10th of the ghost's **negative slime**. Negative slime is gained through haunting, and allows ghosts to summon **negaslimoids** in the city, with the use of **'!summon [ammount]'**. Negaslimeoids haunt all players within a district, and also decay capture progress.",
+	"scouting":"Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even ghosts. Scouting will list all players above your own level, as well as players below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district. See the diagram below for more information.\nhttps://cdn.discordapp.com/attachments/441726245923717129/587337001234333737/scouting.png",
+	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have three slime poudrins, you can use **'!smelt'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **soulbound** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death.",
+	"sparring":"**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach mastery rank 1 (Again, this would be level 5), when you next revive, you will now **permanently** be at level 3 for that weapon type. Essentially, this means you would only have to '!spar' or '!annoint' twice to get back up to rank 1. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players (that are higher in slime level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a five minute cooldown and raises your hunger by about 15%, so make sure to bring some food with you beforehand. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
+	"bleeding":"When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
+	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime. It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
+	"casino":"**The Casino** is a sub-zone in Green Light District where players may bet their slime coin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
 }
 

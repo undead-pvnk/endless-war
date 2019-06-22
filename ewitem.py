@@ -1,6 +1,7 @@
 import math
 import time
 import random
+import asyncio
 
 import ewutils
 import ewcfg
@@ -430,7 +431,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_food
 				)
 
-				if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+				if len(food_items) >= user_data.get_food_capacity():
 					response += " But you couldn't carry any more food items, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
@@ -441,7 +442,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_weapon
 				)
 
-				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				if len(weapons_held) > user_data.get_weapon_capacity():
 					response += " But you couldn't carry any more weapons, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
@@ -532,16 +533,16 @@ def item_loot(
 			item_data.persist()
 				
 
-		ewutils.logMsg('Transferred {} cosmetic items.'.format(cursor.rowcount))
+		ewutils.logMsg('Transferred {} cosmetic items.'.format(len(data)))
 
-		if source_data.weapon != "":
+		if source_data.weapon >= 0:
 			weapons_held = inventory(
 				id_user = target_data.id_user,
 				id_server = target_data.id_server,
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if len(weapons_held) <= math.floor(target_data.slimelevel / ewcfg.max_weapon_mod) if target_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) < 1:
+			if len(weapons_held) <= target_data.get_weapon_capacity():
 				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
 
 	except:
@@ -764,6 +765,8 @@ async def item_look(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.message.server
+	user_data = EwUser(member = author)
+	mutations = user_data.get_mutations()
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id if server is not None else None)
 
@@ -783,8 +786,12 @@ async def item_look(cmd):
 
 		if item.item_type == ewcfg.it_food:
 			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
-				response += " This food item is rotten so you decide to throw it away."
-				item_delete(id_item)
+				response += " This food item is rotten"
+				if ewcfg.mutation_id_spoiledappetite in mutations:
+					response += ". Yummy!"
+				else:
+					response += ", so you decide to throw it away."
+					item_drop(id_item)
 
 		response = name + "\n\n" + response
 
@@ -816,6 +823,7 @@ async def item_use(cmd):
 		if item.item_type == ewcfg.it_food:
 			response = user_data.eat(item)
 			user_data.persist()
+			asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
 
 		if item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)
@@ -923,7 +931,7 @@ async def give(cmd):
 				item_type_filter = ewcfg.it_food
 			)
 
-			if len(food_items) >= math.ceil(EwUser(member = recipient).slimelevel / ewcfg.max_food_in_inv_mod):
+			if len(food_items) >= recipient_data.get_food_capacity():
 				response = "They can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -934,13 +942,13 @@ async def give(cmd):
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if user_data.weaponmarried:
-				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('weapon_name'))
+			if user_data.weaponmarried and user_data.weapon == item_sought.get('id_item'):
+				response = "Your cuckoldry is appreciated, but your {} will always remain faithful to you.".format(item_sought.get('name'))
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif recipient_data.life_state == ewcfg.life_state_corpse:
 				response = "Ghosts can't hold weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+			elif len(weapons_held) >= recipient_data.get_weapon_capacity():
 				response  = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -964,7 +972,7 @@ async def give(cmd):
 			)
 
 			if item_sought.get('id_item') == user_data.weapon:
-				user_data.weapon = ""
+				user_data.weapon = -1
 				user_data.persist()
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -991,13 +999,13 @@ async def discard(cmd):
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if not item.soulbound:
-			if item.item_type == ewcfg.it_weapon and user_data.weapon != "" and item.id_item == int(user_data.weapon):
+			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
 				if user_data.weaponmarried:
 					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
 					response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:
-					user_data.weapon = ""
+					user_data.weapon = -1
 					user_data.persist()
 				
 			response = "You throw away your " + item_sought.get("name")

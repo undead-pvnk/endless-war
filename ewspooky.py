@@ -163,6 +163,9 @@ async def haunt(cmd):
 			haunt_message = "You feel a cold shiver run down your spine"
 			if cmd.tokens_count > 2:
 				haunt_message_content = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
+				# Cut down really big messages so discord doesn't crash
+				if len(haunt_message_content) > 500:
+					haunt_message_content = haunt_message_content[:-500]
 				haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
 			haunt_message += "."
 			haunt_message = ewutils.formatMessage(member, haunt_message)

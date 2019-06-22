@@ -30,9 +30,6 @@ async def enlist(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.faction == ewcfg.faction_banned:
-		response = "You are banned from enlisting in gangs."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state == ewcfg.life_state_enlisted:
 			if user_data.faction == ewcfg.faction_killers:
@@ -52,12 +49,20 @@ async def enlist(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state == ewcfg.life_state_juvenile:
+		bans = user_data.get_bans()
+
 		if user_data.poi == ewcfg.poi_id_copkilltown:
+			if ewcfg.faction_killers in bans:
+				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.persist()
 		else:
+			if ewcfg.faction_rowdys in bans:
+				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
@@ -98,6 +103,7 @@ async def renounce(cmd):
 async def mine(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 
 	# Kingpins can't mine.
 	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
@@ -117,7 +123,7 @@ async def mine(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
-		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 		else:
 
@@ -126,10 +132,13 @@ async def mine(cmd):
 			poudrinamount = 0
 
 			# juvies get poudrins 4 times as often as enlisted players
-			poudrin_rarity = ewcfg.poudrin_rarity / (2 if user_data.life_state == ewcfg.life_state_juvenile else 1)
-			poudrin_mined = random.randint(1, poudrin_rarity)
+			poudrin_chance = 1 / ewcfg.poudrin_rarity
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				poudrin_chance *= 2
+			if ewcfg.mutation_id_lucky in mutations:
+				poudrin_chance *= 1.33
 
-			if poudrin_mined == 1:
+			if random.random() < poudrin_chance:
 				poudrin = True
 				poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
@@ -143,7 +152,7 @@ async def mine(cmd):
 
 			mining_yield = min(mining_yield, alternate_yield)
 
-			user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
+			levelup_response = user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
@@ -186,8 +195,7 @@ async def mine(cmd):
 					ewutils.logMsg('{} has found {} poudrin(s)!'.format(cmd.message.author.display_name, poudrinamount))
 
 				if was_levelup:
-					response += "You have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
-
+					response += levelup_response
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't mine here. Go to the mines."))
@@ -241,6 +249,7 @@ async def mismine(cmd, user_data, cause):
 async def scavenge(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
 
 	time_now = int(time.time())
 	response = ""
@@ -260,23 +269,34 @@ async def scavenge(cmd):
 
 	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
-		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
+			if ewcfg.mutation_id_trashmouth in mutations:
+				time_since_last_scavenge *= 3
+
 			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
+
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
 
+			if ewcfg.mutation_id_webbedfeet in mutations:
+				district_slimelevel = len(str(district_data.slimes))
+				scavenge_mod *= max(1, min(district_slimelevel - 3, 4))
+
 			scavenge_yield = math.floor(scavenge_mod * district_data.slimes)
 
-			user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
+			levelup_response = user_data.change_slimes(n = scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.change_slimes(n = -1 * scavenge_yield, source = ewcfg.source_scavenging)
 			district_data.persist()
 
+			if levelup_response != "":
+				response += levelup_response + "\n\n"
+			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 			if cmd.tokens_count > 1:
 				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				loot_resp = ewitem.item_lootspecific(
@@ -290,6 +310,8 @@ async def scavenge(cmd):
 			else:
 				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
 				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
+				if ewcfg.mutation_id_dumpsterdiver in mutations:
+					loot_chance *= 2
 				if random.random() < loot_chance:
 					loot_resp = ewitem.item_lootrandom(
 						id_server = user_data.id_server,
@@ -297,8 +319,6 @@ async def scavenge(cmd):
 					)
 					response += loot_resp
 
-
-			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
 			# Fatigue the scavenger.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
@@ -314,9 +334,6 @@ async def scavenge(cmd):
 
 			user_data.persist()
 
-			# Tell the player their slime level increased and/or a poudrin was found.
-			if was_levelup:
-				response += "You have been empowered by slime and are now a level {} slimeboi!".format(user_data.slimelevel)
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
