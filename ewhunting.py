@@ -30,6 +30,7 @@ class EwEnemy:
 	level = 0
 	poi = ""
 	type = ""
+	attacktype = ""
 	bleed_storage = 0
 	time_lastenter = 0
 	initialslimes = 0
@@ -66,13 +67,14 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
 						ewcfg.col_enemy_totaldamage,
 						ewcfg.col_enemy_ai,
 						ewcfg.col_enemy_type,
+						ewcfg.col_enemy_attacktype,
 						ewcfg.col_enemy_name,
 						ewcfg.col_enemy_level,
 						ewcfg.col_enemy_poi,
@@ -91,12 +93,13 @@ class EwEnemy:
 					self.totaldamage = result[3]
 					self.ai = result[4]
 					self.type = result[5]
-					self.name = result[6]
-					self.level = result[7]
-					self.poi = result[8]
-					self.bleed_storage = result[9]
-					self.time_lastenter = result[10]
-					self.initialslimes = result[11]
+					self.attacktype = result[6]
+					self.name = result[7]
+					self.level = result[8]
+					self.poi = result[9]
+					self.bleed_storage = result[10]
+					self.time_lastenter = result[11]
+					self.initialslimes = result[12]
 
 			finally:
 				# Clean up the database handles.
@@ -113,13 +116,14 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
 					ewcfg.col_enemy_totaldamage,
 					ewcfg.col_enemy_ai,
 					ewcfg.col_enemy_type,
+					ewcfg.col_enemy_attacktype,
 					ewcfg.col_enemy_name,
 					ewcfg.col_enemy_level,
 					ewcfg.col_enemy_poi,
@@ -133,6 +137,7 @@ class EwEnemy:
 					self.totaldamage,
 					self.ai,
 					self.type,
+					self.attacktype,
 					self.name,
 					self.level,
 					self.poi,
@@ -192,9 +197,10 @@ async def summon_enemy(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	enemytype = None
+
 	if len(cmd.tokens) > 1:
 		enemytype = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	if enemytype != None:
+	if enemytype == 'juvie':
 		enemy = EwEnemy()
 
 		enemy.id_server = user_data.id_server
@@ -204,6 +210,7 @@ async def summon_enemy(cmd):
 		enemy.poi = user_data.poi
 		enemy.level = level_byslime(enemy.slimes)
 		enemy.type = enemytype
+		enemy.attacktype = "unarmed-juvie"
 		enemy.name = "the lost juvie"
 		enemy.bleed_storage = 0
 		enemy.time_lastenter = 0
@@ -212,6 +219,8 @@ async def summon_enemy(cmd):
 		enemy.persist()
 
 		response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Slime =  {}.".format(enemy.name, enemy.level, enemy.slimes)
+	else:
+		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -229,7 +238,8 @@ async def hurtmesoftly(cmd):
 
 	for row in enemydata:
 		enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-		resp_cont = enemy.kill()
+		resp_cont += "\n"
+		resp_cont += enemy.kill()
 
 	await resp_cont.post()
 
