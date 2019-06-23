@@ -12,7 +12,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.4"
+version = "v3.4a"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
