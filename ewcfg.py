@@ -625,6 +625,9 @@ bleed_half_life = 60 * 5 #five minutes
 # how often to bleed
 bleed_tick_length = 10
 
+# how often to decide whether or not to spawn an enemy
+enemy_spawn_tick_length = 10
+
 # Poudrin rarity (for enlisted players)
 poudrin_rarity = 1500
 

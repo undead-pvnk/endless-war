@@ -17,7 +17,6 @@ from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -192,7 +191,8 @@ async def attack(cmd):
 		if enemy_data != None:
 			# enemy found, redirect variables to code in ewhunting
 
-			# declared beforehand to prevent circular importing in ewhunting
+			# some variables are declared beforehand to prevent circular importing in ewhunting
+
 			ctn = EwEffectContainer(
 				miss=None,
 				crit=None,

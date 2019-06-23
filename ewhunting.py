@@ -183,6 +183,7 @@ class EwEnemy:
 		self.slimes += change
 
 async def summon_enemy(cmd):
+    # debug command, though could be kept around for events
 	response = ""
 	user_data = EwUser(member = cmd.message.author)
 
@@ -201,7 +202,7 @@ async def summon_enemy(cmd):
 		enemy.totaldamage = 0
 		enemy.ai = ""
 		enemy.poi = user_data.poi
-		enemy.level = "10"
+		enemy.level = level_byslime(enemy.slimes)
 		enemy.type = enemytype
 		enemy.name = "the lost juvie"
 		enemy.bleed_storage = 0
@@ -215,11 +216,12 @@ async def summon_enemy(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def hurtmesoftly(cmd):
+    # debug command
 	user_data = EwUser(member = cmd.message.author)
 	resp_cont = ewutils.EwResponseContainer(id_server = user_data.id_server)
 
 	enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
-		id_enemy=ewcfg.col_id_enemy_id,
+		id_enemy=ewcfg.col_id_enemy,
 		poi=ewcfg.col_enemy_poi,
 	), (
 		user_data.poi,
@@ -231,6 +233,30 @@ async def hurtmesoftly(cmd):
 
 	await resp_cont.post()
 
+async def spawn_enemy(id_server):
+    response = ""
+
+    enemytype = 'juvie'
+    if enemytype != None:
+        enemy = EwEnemy()
+
+        enemy.id_server = id_server
+        enemy.slimes = 47000
+        enemy.totaldamage = 0
+        enemy.ai = ""
+        enemy.poi = 'greenlightdistrict'
+        enemy.level = level_byslime(enemy.slimes)
+        enemy.type = enemytype
+        enemy.name = "the lost juvie"
+        enemy.bleed_storage = 0
+        enemy.time_lastenter = 0
+        enemy.initialslimes = enemy.slimes
+
+        enemy.persist()
+
+        response = "**DEBUG**: Enemy spawned! It's **{}**, a level {} enemy. Slime =  {}.".format(enemy.name, enemy.level, enemy.slimes)
+
+    return response
 
 def find_enemy(enemy_search = None, user_data = None):
 	enemy_sought = None
@@ -593,3 +619,7 @@ def kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, dis
 		district_data.persist()
 
 	return resp_cont
+
+# copied over from ewutils to prevent circular importing
+def level_byslime(slime):
+	return int(abs(slime) ** 0.25)

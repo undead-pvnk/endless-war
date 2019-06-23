@@ -18,7 +18,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import delete_enemy, EwEnemy
+from ewhunting import delete_enemy, EwEnemy, spawn_enemy
 
 db_pool = {}
 db_pool_id = 0
@@ -921,3 +921,18 @@ async def decrease_food_multiplier(id_user):
 	await asyncio.sleep(5)
 	if id_user in food_multiplier:
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
+
+async def spawn_enemies(id_server = None):
+	if random.randint(1, 2) == 1:
+		resp_cont = EwResponseContainer(id_server=id_server)
+		response = await spawn_enemy(id_server)
+		resp_cont.add_channel_response("green-light-district", response)
+		await resp_cont.post()
+
+async def spawn_enemies_tick_loop(id_server):
+	interval = ewcfg.enemy_spawn_tick_length
+	# causes the possibility of an enemy spawning every 10 seconds
+	while True:
+		await spawn_enemies(id_server = id_server)
+
+		await asyncio.sleep(interval)
