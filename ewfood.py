@@ -78,38 +78,35 @@ async def menu(cmd):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	response = ""
 
-	if poi == None or len(poi.vendors) == 0:
+	if poi == None or len(poi.vendors) == 0 or len(set(poi.vendors).difference(set(ewcfg.weapon_vendors))) == 0:
 		# Only allowed in the food court.
 		response = ewcfg.str_food_channelreq.format(action = "see the menu")
 	else:
 		response = "{} Menu:\n\n".format(poi.str_name)
-		valid_vendors = (set(poi.vendors).difference(set(ewcfg.weapon_vendors)))
-		if len(valid_vendors) > 0:
-			for vendor in valid_vendors:
-				food_items = []
-				for food_item_name in ewcfg.food_vendor_inv[vendor]:
-					food_item = ewcfg.food_map.get(food_item_name)
-					# increase profits for the stock market
-					stock_data = None
-					if vendor in ewcfg.vendor_stock_map:
-						stock = ewcfg.vendor_stock_map.get(vendor)
-						stock_data = EwStock(id_server = user_data.id_server, stock = stock)
 
-					value = food_item.price
+		for vendor in poi.vendors:
+			food_items = []
+			for food_item_name in ewcfg.food_vendor_inv[vendor]:
+				food_item = ewcfg.food_map.get(food_item_name)
+				# increase profits for the stock market
+				stock_data = None
+				if vendor in ewcfg.vendor_stock_map:
+					stock = ewcfg.vendor_stock_map.get(vendor)
+					stock_data = EwStock(id_server = user_data.id_server, stock = stock)
 
-					if stock_data != None:
-						value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
+				value = food_item.price
 
-					value = int(value)
+				if stock_data != None:
+					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
 
-					if food_item != None:
-						food_items.append('{name} ({price})'.format(name=food_item_name, price=value))
-					else:
-						food_items.append(food_item_name)
+				value = int(value)
 
-				response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = food_items))
-		else:
-			response = ewcfg.str_food_channelreq.format(action = "see the menu")
+				if food_item != None:
+					food_items.append('{name} ({price})'.format(name=food_item_name, price=value))
+				else:
+					food_items.append(food_item_name)
+
+			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = food_items))
 
 	# Send the response to the player.1
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -120,7 +117,7 @@ async def order(cmd):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	time_now = int(time.time())
 
-	if (poi == None) or (len(poi.vendors) == 0):
+	if (poi == None) or (len(poi.vendors) == 0) or len(set(poi.vendors).difference(set(ewcfg.weapon_vendors))) == 0:
 		# Only allowed in the food court.
 		response = ewcfg.str_food_channelreq.format(action = "order")
 	else:

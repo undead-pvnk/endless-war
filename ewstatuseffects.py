@@ -53,7 +53,10 @@ class EwStatusEffect:
 	id_server = ""
 	id_user = ""
 	id_status = ""
+	
 	time_expire = -1
+	value = 0
+	source = ""
 
 	def __init__(
 		self,
@@ -61,7 +64,7 @@ class EwStatusEffect:
         user_data = None,
 		time_expire = 0,
 		value = 0,
-		source = 0
+		source = ""
 	):
 		if id_status != None and user_data != None:
 			self.id_server = user_data.id_server

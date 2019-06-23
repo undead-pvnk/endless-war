@@ -628,11 +628,6 @@ async def removeExpiredStatuses(id_server = None):
 						user_data.clear_status(id_status=status)
 						logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
 
-						# Garrote effect
-						if status == ewcfg.status_strangled_id:											
-							await ewwep.damage_player(client=client, id_server=server.id, shooter=status_effect.source, shootee=user_data.id_user, slimes_damage=int(status_effect.value), time_now=time_now )
-							break
-
 				# Status that expire under special conditions
 				else:
 					if status == ewcfg.status_drunk_id:

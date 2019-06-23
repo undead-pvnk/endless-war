@@ -1,7 +1,8 @@
 import random
 
 import ewutils
-from ew import EwUser
+import ewstats
+import ewitem
 from ewcosmeticitem import EwCosmeticItem
 from ewwep import EwWeapon
 from ewweather import EwWeather
@@ -324,8 +325,12 @@ cmd_kill = cmd_prefix + 'kill'
 cmd_shoot = cmd_prefix + 'shoot'
 cmd_shoot_alt1 = cmd_prefix + 'bonk'
 cmd_shoot_alt2 = cmd_prefix + 'pat'
+cmd_shoot_alt3 = cmd_prefix + 'ban'
+cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
+cmd_reload_alt1 = cmd_prefix + 'loadthegun'
+cmd_unjam = cmd_prefix + 'unjam'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
 cmd_score = cmd_prefix + 'slimes'
@@ -1225,12 +1230,12 @@ for c in dye_list:
 
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 	aim = (random.randrange(100) + 1)
 
-	if aim <= (10 + (100 * ctn.miss_mod)):
+	if aim <= 10 + int(100 * ctn.miss_mod):
 		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim >= (90 - (100 * ctn.crit_mod)):
+	elif aim >= 90 - int(100 * ctn.crit_mod):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1238,112 +1243,95 @@ def wef_gun(ctn = None):
 def wef_dualpistols(ctn = None):
 	aim = (random.randrange(100) + 1)
 
-	if aim <= (40 + (100 * ctn.miss_mod)):
+	if aim <= 40 + int(100 * ctn.miss_mod):
 		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim >= (80 - (100 * ctn.crit_mod)):
+	elif aim >= 80 - int(100 * ctn.crit_mod):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
-# weapon effect function for "rifle" 
-def wef_rifle(ctn = None): # TODO
-	miss = False
-	aim = (random.randrange(20) + 1)
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.25) 
+# weapon effect function for "shotgun"
+def wef_shotgun(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.65)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
 
-	if aim <= 3:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "nun-chucks"
-def wef_nunchucks(ctn = None): #TODO
-	ctn.strikes = 0
-	dmg = ctn.slimes_damage 
-	ctn.slimes_damage = 0
-
-	for count in range(4):
-		if random.randint(1, 5) > 2:
-			ctn.strikes += 1
-			ctn.slimes_damage += int(dmg * 0.5)
-
-	if ctn.strikes == 4:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-	elif ctn.strikes == 0:
-		ctn.miss = True
-		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
-
-# weapon effect function for "katana"
-def wef_katana(ctn = None):
-	ctn.miss = False
-	base_damage = int(ctn.slimes_damage) * 0.5
 	aim = (random.randrange(100) + 1)
 
-	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
-
-	if last_attack > 0:
-		last_attack = ctn.time_now - last_attack
-		ctn.slimes_damage = max(base_damage, min(base_damage * (last_attack/8640),10))
-
-	#lucky lucy's lucky katana always crits
-	if ctn.user_data.life_state == life_state_lucky:
-		ctn.crit = True
-		ctn.slimes_damage *= 7.77
-
-	elif aim <= (100 * ctn.miss_mod):
+	if aim <= 10 + int(100 * ctn.miss_mod):
 		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim <= 20 - (100 * ctn.crit_mod):
+	elif aim >= 90 - int(100 * ctn.crit_mod):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-	shootee_weapon = EwItem(id_item = ctn.shootee_data.weapon)
-	if shootee_weapon.item_props.get("weapon_type") == 'katana' and int(shootee_weapon.item_props.get("time_lastattack")) > 0 and (ctn.time_now - int(shootee_weapon.item_props.get("time_lastattack"))) >= 86400 and last_attack >= 86400:
-		shootee_weapon.item_props["time_lastattack"] = ctn.time_now
-		ctn.slimes_damage = 0
-		print("el perro")
-		#ctn.parry = true TODO
-		shootee_weapon.persist()
+# weapon effect function for "rifle" 
+def wef_rifle(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)	
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.5) 
+	aim = (random.randrange(100) + 1)
+
+	if aim <= 0 + (100 * ctn.miss_mod):
+		ctn.miss = True
+	if aim >= 80 - int(100 * ctn.crit_mod):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+def wef_smg(ctn = None):
+	dmg = int(ctn.slimes_damage * 0.5)
+	ctn.slimes_damage = 0
+	jam = (random.randrange(10) + 1)
+
+	if jam <= 2:
+		ctn.weapon_item.item_props["jammed"] = True
+		ctn.jammed = True
+	else:
+		for count in range(6):
+			aim = (random.randrange(100) + 1)
+			if aim > 25 + int(100 * ctn.miss_mod):
+				ctn.strikes += 1
+
+				if aim >= 95 - int(100 * ctn.crit_mod):
+					ctn.slimes_damage += int(dmg * 1.5)
+				else:
+					ctn.slimes_damage += int(dmg * 0.5)
+		
+		if ctn.strikes == 0:
+			ctn.miss = True
+
+def wef_minigun(ctn = None):
+	dmg = ctn.slimes_damage
+	ctn.slimes_damage = 0
+
+	for count in range(10):
+		aim = (random.randrange(100) + 1)
+		if aim > 10 + int(100 * ctn.miss_mod):
+			ctn.strikes += 1
+
+			if aim >= 90 - int(100 * ctn.crit_mod):
+				ctn.slimes_damage += dmg * 2
+			else:
+				ctn.slimes_damage += dmg
+	
+	if ctn.strikes == 0:
+		ctn.miss = True
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None): 
-	aim = (random.randrange(10, 27) - 10)
-	if aim <= (0 + (16 * ctn.miss_mod)):
+	aim = (random.randrange(0, 13) - 2)
+
+	# Increased miss chance if attacking within less than two seconds after last attack
+	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+	if time_lastattack > 0:
+		ctn.miss_mod += (2 - min(time_lastattack, 2)) / 10
+
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		ctn.miss = True
-		ctn.slimes_damage = 0
-
-	elif aim == 1:
-		user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+	elif aim == -1:
 		ctn.backfire = True
-		 
-	else:
-		ctn.slimes_damage = int(ctn.slimes_damage * min(max(0.5, aim / 10) , 1.5))
-
-		if aim >= (16 - (16 * ctn.crit_mod)):
-			ctn.crit = True
-			ctn.slimes_damage = int(ctn.slimes_damage * 2)
-
-# weapon effect function for "garrote"
-def wef_garrote(ctn = None):
-	dmg = ctn.slimes_damage * 15
-
-	aim = (random.randrange(100) + 1)
-	if aim <= (100 * ctn.miss_mod):
-		dmg = 0
-		ctn.miss = True 
-	elif aim == 1 - (100 * ctn.crit_mod):
-		dmg *= 10
+		user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+	elif aim >= (11 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
-
-	#Damage is delayed, user doesn't deal damage for now
-	ctn.slimes_damage = 0
-	if dmg > 0:
-		#Stop movement
-		ewutils.moves_active[ctn.user_data.id_user] = 0
-		#Stun player for 5 seconds
-		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
-		#Start strangling target
-		ctn.shootee_data.applyStatus(id_status=status_strangled_id, value=dmg, source=ctn.user_data.id_user)
+		ctn.slimes_damage = int(ctn.slimes_damage * 4)
+	else:
+		ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
 
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
@@ -1354,26 +1342,155 @@ def wef_brassknuckles(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 3
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
-	else:
 
+	else:
 		aim1 = (random.randrange(100) + 1)
 		aim2 = (random.randrange(100) + 1)
 		whiff1 = 1
 		whiff2 = 1
 
-		if aim1 <= (20 + (100 * ctn.miss_mod)):
+		if aim1 <= (20 + int(100 * ctn.miss_mod)):
 			whiff1 = 0
-		if aim2 <= (20 + (100 * ctn.miss_mod)):
+		if aim2 <= (20 + int(100 * ctn.miss_mod)):
 			whiff2 = 0
 
 		if whiff1 == 0 and whiff2 == 0:
 			ctn.miss = True
-			ctn.slimes_damage = 0
 		else:
 			strikes = whiff1 + whiff2
 			ctn.slimes_damage = (ctn.slimes_damage * whiff1) + (ctn.slimes_damage * whiff2)
 			if successful_timing:
 				ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props.get("consecutive_hits")) + 1 
+
+# weapon effect function for "katana"
+def wef_katana(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.3)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
+
+	# Decreased damage if attacking within less than four seconds after last attack
+	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+	dmg = ctn.slimes_damage / 10
+	if time_lastattack > 0:
+		ctn.slimes_damage = int(dmg * (min(time_lastattack, 4) * 2.5))
+
+	weapons_held = ewitem.inventory(
+		id_user = ctn.user_data.id_user,
+		id_server = ctn.user_data.id_server,
+		item_type_filter = it_weapon
+	)
+
+	#lucky lucy's lucky katana always crits
+	if ctn.user_data.life_state == life_state_lucky:
+		ctn.crit = True
+		ctn.slimes_damage *= 7.77
+
+	elif len(weapons_held) == 1:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+# weapon effect function for "broadsword"
+def wef_broadsword(ctn = None):
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	aim = (random.randrange(100) + 1)
+
+	ctn.slimes_damage += int( ctn.slimes_damage * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
+
+	if aim <= 10 + int(100 * ctn.miss_mod):
+		ctn.miss = True
+	elif aim <= 30:
+		ctn.backfire = True
+		ctn.user_data.change_slimes(n = -ctn.slimes_damage)
+	elif aim >= 80 - int(100 * ctn.crit_mod):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+# weapon effect function for "nun-chucks"
+def wef_nunchucks(ctn = None):
+	ctn.strikes = 0
+	dmg = ctn.slimes_damage 
+	ctn.slimes_damage = 0
+
+	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+	if time_lastattack > 0:
+		ctn.miss_mod += (2 - min(time_lastattack, 2)) / 10
+
+	for count in range(4):
+		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
+			ctn.strikes += 1
+			ctn.slimes_damage += int(dmg * 0.5)
+
+	if ctn.strikes == 4:
+		ctn.crit = True
+		# extra hit that deals 4* base damage
+		ctn.strikes = 5
+		ctn.slimes_damage += dmg * 4
+
+	elif ctn.strikes == 0:
+		ctn.backfire = True
+		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
+
+# weapon effect function for "scythe"
+def wef_scythe(ctn = None):
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.25)
+
+	target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
+	ctn.slimes_damage = ctn.slimes_damage * min(target_kills, 10)
+
+	# Decreased damage if attacking within less than two seconds after last attack
+	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+	ctn.slimes_damage = ctn.slimes_damage / 10
+	if time_lastattack > 0:
+		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 2) * 5))
+
+	aim = (random.randrange(100) + 1)
+
+	if aim <= 10 + (100 * ctn.miss_mod):
+		ctn.miss = True
+	elif ctn.shootee_data.life_state == life_state_corpse:
+		ctn.crit = True
+		ctn.slimes_damage *= 3
+		ctn.slimes_spent = 0
+
+# weapon effect function for "yo-yos"
+def wef_yoyo(ctn = None):
+	base_dmg = ctn.slimes_damage
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
+
+	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+
+	#Consecutive hits only valid for a minute
+	if time_lastattack < 60:
+		ctn.slimes_damage += (base_dmg * (int(ctn.weapon_item.item_props.get("consecutive_hits")) * 0.25))
+	else:
+		ctn.weapon_item.item_props["consecutive_hits"] = 0
+
+	ctn.slimes_damage = int(ctn.slimes_damage / 10)
+
+	if time_lastattack > 0:
+		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 1) * 10) )
+
+	ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props["consecutive_hits"]) + 1
+	aim = (random.uniform(0, 100))
+
+	if aim <= 18.75 + (100 * ctn.miss_mod):
+		ctn.miss = True
+	elif aim >= 90 - (100 * ctn.crit_mod):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+
+# weapon effect function for "knives"
+def wef_knives(ctn = None):
+	ctn.slimes_spent = int(ctn.slimes_spent * 0.25)
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
+	aim = (random.randrange(100) + 1)
+
+	if aim <= 10 + int(100 * ctn.miss_mod):
+		ctn.miss = True
+	elif aim >= 10 - int(100 * ctn.crit_mod):
+		ctn.crit = True
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 
 # weapon effect function for "molotov"
 def wef_molotov(ctn = None):
@@ -1389,66 +1506,12 @@ def wef_molotov(ctn = None):
 		ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
 	elif aim > 20 and aim <= 30 + (100 * ctn.miss_mod):
 		ctn.miss = True
-		ctn.slimes_damage = 0
 	else:
 		if aim >= 90 - (100 * ctn.crit_mod):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
-		
-# weapon effect function for "knives"
-def wef_knives(ctn = None): #TODO
-	ctn.slimes_spent -= int(ctn.slimes_spent * 0.33)
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.85)
-	aim = (random.randrange(10) + 1)
 
-	if aim <= 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim >= 10:
-		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 2)
-
-# weapon effect function for "scythe"
-def wef_scythe(ctn = None): #TODO
-	ctn.slimes_spent += int(ctn.slimes_spent * 0.33)
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
-	aim = (random.randrange(10) + 1)
-
-	if aim <= 2:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim >= 9:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# weapon effect function for "yo-yos"
-def wef_yoyo(ctn = None): #TODO
-	dmg = ctn.slime_damage
-	aim = (random.uniform(0, 100))
-
-	if aim <= 18.75:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim >= 90:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-def wef_shotgun(ctn = None):
-	ctn.slimes_damage *= 2
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-
-	aim = (random.randrange(100) + 1)
-
-	if aim <= (10 + (100 * ctn.miss_mod)):
-		ctn.miss = True
-	elif aim >= (90 - (100 * ctn.crit_mod)):
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-#def wef_smg(ctn = None):
-#def wef_minigun(ctn = None):
-#def wef_broadsword(ctn = None):
-
+# weapon effect function for "grenade"
 def wef_grenade(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
@@ -1469,11 +1532,28 @@ def wef_grenade(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
+# weapon effect function for "garrote"
+def wef_garrote(ctn = None):#TODO
+	ctn.slimes_damage *= 15
+
+	aim = (random.randrange(100) + 1)
+	if aim <= (100 * ctn.miss_mod):
+		ctn.miss = True 
+	elif aim == 1 - (100 * ctn.crit_mod):
+		ctn.slimes_damage *= 10
+		ctn.crit = True
+
+	if ctn.miss == False:
+		#Stop movement
+		ewutils.moves_active[ctn.user_data.id_user] = 0
+		#Stun player for 5 seconds
+		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
+		#Start strangling target
+		ctn.shootee_data.applyStatus(id_status=status_strangled_id, source=ctn.user_data.id_user)
 
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
-weapon_class_melee = "melee"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
 
@@ -1507,7 +1587,8 @@ weapon_list = [
 		id_weapon = "dualpistols",
 		alias = [
 			"pistols",
-			"guns"
+			"guns",
+			"dual"
 		],
 		str_crit = "**Critical Hit!** {name_player} has dealt {name_target} a serious wound!",
 		str_miss = "**You missed!** Your shot failed to land!",
@@ -1528,6 +1609,26 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo]
 	),
+	EwWeapon( # 4#TODO
+		id_weapon = "shotgun",
+		str_crit = "**Critical hit!!** {name_target} shotgun",
+		str_miss = "**MISS!!** {name_player} shotgun",
+		str_equip = "You equip the shotgun.",
+		str_weapon = "a shotgun",
+		str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
+		str_weaponmaster = "They are a rank {rank} master of the shotgun.",
+		str_trauma_self = "shotgun trauma self.",
+		str_trauma = "shotgun trauma.",
+		str_kill = "shotgun kill",
+		str_killdescriptor = "shotgun kill description",
+		str_damage = "shotgun dmg",
+		str_duel = "shotgun spar.",
+		fn_effect = wef_shotgun,
+		str_description = "A shotgun.",
+		clip_size = 2,
+		vendors = [vendor_dojo],
+		classes = [weapon_class_ammo]
+	),	
 	EwWeapon( # 3
 		id_weapon = "rifle",
 		alias = [
@@ -1554,37 +1655,103 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo]
 	),
-	EwWeapon( # 4
-		id_weapon = "nun-chucks",
+	EwWeapon( # 6#TODO
+		id_weapon = "smg",
 		alias = [
-			"nanchacku",
-			"nunchaku",
-			"chucks",
-			"numchucks",
-			"nunchucks"
+			"submachinegun"
 		],
-		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_miss = "**Whack!!** {name_player} fucks up his kung-fu routine and whacks himself in the head with his own nun-chucks!!",
-		str_equip = "You equip the nun-chucks.",
-		str_weapon = "nun-chucks",
-		str_weaponmaster_self = "You are a rank {rank} kung-fu master.",
-		str_weaponmaster = "They are a rank {rank} kung-fu master.",
-		str_trauma_self = "You are covered in deep bruises. You hate martial arts of all kinds.",
-		str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
-		str_kill = "**HIIII-YAA!!** With expert timing, {name_player} brutally batters {name_target} to death, then strikes a sweet kung-fu pose. {emote_skull}",
-		str_killdescriptor = "fatally bludgeoned",
-		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
-		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
-		fn_effect = wef_nunchucks,
-		str_description = "They're nunchucks",
+		str_crit = "**Critical hit!!** {name_player} smg",
+		str_jammed = "jammed",
+		str_miss = "**MISS!!** {name_player} smg",
+		str_equip = "smg equip.",
+		str_weaponmaster_self = "You are a rank {rank} master of the submachine gun.",
+		str_weaponmaster = "They are a rank {rank} master of the submachine gun.",
+		str_weapon = "a submachine gun",
+		str_trauma_self = "smg trauma self.",
+		str_trauma = "smg trauma.",
+		str_kill = "{name_player} smg kills {name_target} {emote_skull}",
+		str_killdescriptor = "smg killded",
+		str_damage = "{name_target} is hit by smg in {hitzone} with {strikes} bullets!!",
+		str_duel = "smg duel",
+		fn_effect = wef_smg,
+		str_description = "It's a submachine gun",
+		clip_size=4,
 		price = 1000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
+		classes = [weapon_class_ammo]
+	),	
+		EwWeapon( # 6#TODO
+		id_weapon = "minigun",
+		str_crit = "**Critical hit!!** {name_player} minigun",
+		str_miss = "**MISS!!** {name_player} minigun",
+		str_equip = "minigun equip.",
+		str_weaponmaster_self = "You are a rank {rank} master of the minigun.",
+		str_weaponmaster = "They are a rank {rank} master of the minigun.",
+		str_weapon = "a minigun",
+		str_trauma_self = "minigun trauma self.",
+		str_trauma = "minigun trauma.",
+		str_kill = "{name_player} minigun kills {name_target} {emote_skull}",
+		str_killdescriptor = "minigun killded",
+		str_damage = "{name_target} is hit by minigun in {hitzone} {strikes} times!!",
+		str_duel = "minigun duel",
+		fn_effect = wef_minigun,
+		str_description = "It's a minigun",
+		price = 10000000,
+		vendors = [vendor_dojo]
+	),	
+	EwWeapon( # 6
+		id_weapon = "bat",
+		alias = [
+			"club",
+			"batwithnails",
+			"nailbat",
+		],
+		str_crit = "**Critical hit!!** {name_player} has bashed {name_target} up real bad!",
+		str_miss = "**MISS!!** {name_player} swung wide and didn't even come close!",
+		str_equip = "You equip the bat with nails in it.",
+		str_weaponmaster_self = "You are a rank {rank} master of the nailbat.",
+		str_weaponmaster = "They are a rank {rank} master of the nailbat.",
+		str_weapon = "a bat full of nails",
+		str_trauma_self = "Your head appears to be slightly concave on one side.",
+		str_trauma = "Their head appears to be slightly concave on one side.",
+		str_kill = "{name_player} pulls back for a brutal swing! **CRUNCCHHH.** {name_target}'s brains splatter over the sidewalk. {emote_skull}",
+		str_killdescriptor = "nail bat battered",
+		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
+		str_backfire = "bat backfire",#TODO
+		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
+		fn_effect = wef_bat,
+		str_description = "It's a nailbat",
+		price = 1000,
+		vendors = [vendor_dojo]
+	),	
+	EwWeapon( # 8
+		id_weapon = "brassknuckles",
+		alias = [
+			"knuckles",
+			"knuckledusters",
+			"dusters"
+		],
+		str_crit = "sky uppercut",#TODO
+		str_miss = "**MISS!** {name_player} couldn't land a single blow!!",
+		str_equip = "You equip the brass knuckles.",
+		str_weapon = "brass knuckles",
+		str_weaponmaster_self = "You are a rank {rank} master pugilist.",
+		str_weaponmaster = "They are a rank {rank} master pugilist.",
+		str_trauma_self = "You've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		str_trauma = "They've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		str_kill = "{name_player} slugs {name_target} right between the eyes! *POW! THWACK!!* **CRUNCH.** Shit. May have gotten carried away there. Oh, well. {emote_skull}",
+		str_killdescriptor = "pummeled to death",
+		str_damage = "{name_target} is socked in the {hitzone}!!",
+		str_duel = "**POW! BIFF!!** {name_player} and {name_target} take turns punching each other in the abs. It hurts so good.",
+		fn_effect = wef_brassknuckles,
+		str_description = "They're brass knuckles",
+		price = 1000,
+		vendors = [vendor_dojo]
 	),
 	EwWeapon( # 5
 		id_weapon = "katana",
 		alias = [
-			"sword",
+			"weebsword",
 			"ninjasword",
 			"samuraisword",
 			"blade"
@@ -1604,111 +1771,105 @@ weapon_list = [
 		fn_effect = wef_katana,
 		str_description = "It's a katana",
 		price = 1000,
-		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
+		vendors = [vendor_dojo]
 	),
-	EwWeapon( # 6
-		id_weapon = "bat",
+	EwWeapon( # 5#TODO
+		id_weapon = "broadsword",
 		alias = [
-			"club",
-			"batwithnails",
-			"nailbat",
+			"sword",
+			"eyelander"
 		],
-		str_crit = "**Critical hit!!** {name_player} has bashed {name_target} up real bad!",
-		str_miss = "**MISS!!** {name_player} swung wide and didn't even come close!",
-		str_equip = "You equip the bat with nails in it.",
-		str_weaponmaster_self = "You are a rank {rank} master of the nailbat.",
-		str_weaponmaster = "They are a rank {rank} master of the nailbat.",
-		str_weapon = "a bat full of nails",
-		str_trauma_self = "Your head appears to be slightly concave on one side.",
-		str_trauma = "Their head appears to be slightly concave on one side.",
-		str_kill = "{name_player} pulls back for a brutal swing! **CRUNCCHHH.** {name_target}'s brains splatter over the sidewalk. {emote_skull}",
-		str_killdescriptor = "nail bat battered",
-		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
-		str_backfire = "bat backfire",
-		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
-		fn_effect = wef_bat,
-		str_description = "It's a nailbat",
+		str_crit = "**Critical hit!!** {name_target} broadsword",
+		str_miss = "broadsword miss",
+		str_backfire = "ouch dawg",
+		str_equip = "You equip the broadsword.",
+		str_weapon = "a broadsword",
+		str_weaponmaster_self = "You are a rank {rank} broadsword.",
+		str_weaponmaster = "They are a rank {rank} broadsword.",
+		str_trauma_self = "broadsword trauma self.",
+		str_trauma = "broadsword trauma.",
+		str_kill = "broadsword kill {emote_skull}",
+		str_killdescriptor = "decapitated",
+		str_damage = "{name_target} broadsworded {hitzone}!!",
+		str_duel = "broadsword spar",
+		fn_effect = wef_broadsword,
+		str_description = "It's a broadsword",
+		clip_size=1,
 		price = 1000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
+		classes = [weapon_class_ammo]
 	),
-	EwWeapon( # 7
-		id_weapon = "garrote",
+	EwWeapon( # 4
+		id_weapon = "nun-chucks",
 		alias = [
-			"wire",
-			"garrotewire",
-			"garrottewire"
+			"nanchacku",
+			"nunchaku",
+			"chucks",
+			"numchucks",
+			"nunchucks"
 		],
-		str_crit = "**CRITICAL HIT!!** {name_player} got lucky and caught {name_target} completely unaware!!",
-		str_miss = "**MISS!** {name_player}'s target got away in time!",
-		str_equip = "You equip the garrotte wire.",
-		str_weapon = "a garrotte wire",
-		str_weaponmaster_self = "You are a rank {rank} master of the garrotte.",
-		str_weaponmaster = "They are a rank {rank} master of the garrotte.",
-		str_trauma_self = "There is noticeable bruising and scarring around your neck.",
-		str_trauma = "There is noticeable bruising and scarring around their neck.",
-		str_kill = "{name_player} quietly moves behind {name_target} and... **!!!** After a brief struggle, only a cold body remains. {emote_skull}",
-		str_killdescriptor = "garrote wired",
-		str_damage = "{name_target} is ensnared by {name_player}'s wire!!",
-		str_duel = "{name_player} and {name_target} compare their dexterity by playing Cat's Cradle with deadly wire.",
-		fn_effect = wef_garrote,
-		str_description = "It's a garrote",
+		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
+		str_backfire = "**Whack!!** {name_player} fucks up his kung-fu routine and whacks himself in the head with his own nun-chucks!!",
+		str_equip = "You equip the nun-chucks.",
+		str_weapon = "nun-chucks",
+		str_weaponmaster_self = "You are a rank {rank} kung-fu master.",
+		str_weaponmaster = "They are a rank {rank} kung-fu master.",
+		str_trauma_self = "You are covered in deep bruises. You hate martial arts of all kinds.",
+		str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
+		str_kill = "**HIIII-YAA!!** With expert timing, {name_player} brutally batters {name_target} to death, then strikes a sweet kung-fu pose. {emote_skull}",
+		str_killdescriptor = "fatally bludgeoned",
+		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
+		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
+		fn_effect = wef_nunchucks,
+		str_description = "They're nunchucks",
 		price = 1000,
-		cooldown = 20,
-		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
+		vendors = [vendor_dojo]
 	),
-	EwWeapon( # 8
-		id_weapon = "brassknuckles",
+	EwWeapon( # 11
+		id_weapon = "scythe",
 		alias = [
-			"knuckles",
-			"knuckledusters",
-			"dusters"
+			"sickle"
 		],
-		str_crit = "",
-		str_miss = "**MISS!** {name_player} couldn't land a single blow!!",
-		str_equip = "You equip the brass knuckles.",
-		str_weapon = "brass knuckles",
-		str_weaponmaster_self = "You are a rank {rank} master pugilist.",
-		str_weaponmaster = "They are a rank {rank} master pugilist.",
-		str_trauma_self = "You've got two black eyes, missing teeth, and a profoundly crooked nose.",
-		str_trauma = "They've got two black eyes, missing teeth, and a profoundly crooked nose.",
-		str_kill = "{name_player} slugs {name_target} right between the eyes! *POW! THWACK!!* **CRUNCH.** Shit. May have gotten carried away there. Oh, well. {emote_skull}",
-		str_killdescriptor = "pummeled to death",
-		str_damage = "{name_target} is socked in the {hitzone}!!",
-		str_duel = "**POW! BIFF!!** {name_player} and {name_target} take turns punching each other in the abs. It hurts so good.",
-		fn_effect = wef_brassknuckles,
-		str_description = "They're brass knuckles",
+		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
+		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
+		str_equip = "You equip the scythe.",
+		str_weapon = "a scythe",
+		str_weaponmaster_self = "You are a rank {rank} master of the scythe.",
+		str_weaponmaster = "They are a rank {rank} master of the scythe.",
+		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
+		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
+		str_kill = "**SLASHH!!** {name_player}'s scythe cleaves the air, and {name_target} staggers. A moment later, {name_target}'s torso topples off their waist. {emote_skull}",
+		str_killdescriptor = "sliced in twain",
+		str_damage = "{name_target} is cleaved through the {hitzone}!!",
+		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
+		fn_effect = wef_scythe,
+		str_description = "It's a scythe",
+		price = 2000,
+		vendors = [vendor_dojo]
+	),
+	EwWeapon( # 12	
+		id_weapon = "yo-yos",
+		alias = [
+			"yo-yo",
+			"yoyo",
+			"yoyos"
+		],
+		str_crit = "**Critical hit!!** {name_target} yo-yos",
+		str_miss = "**MISS!!** {name_player} yo-yos",
+		str_equip = "You equip the yo-yos.",
+		str_weapon = "yo-yos",
+		str_weaponmaster_self = "You are a rank {rank} master of the yo-yos.",
+		str_weaponmaster = "They are a rank {rank} master of the yo-yos.",
+		str_trauma_self = "yo-yos trauma self.",
+		str_trauma = "yo-yos trauma.",
+		str_kill = "yo-yos kill",
+		str_killdescriptor = "yo-yos kill description",
+		str_damage = "yo-yos dmg",
+		str_duel = "yo-yos spar.",
+		fn_effect = wef_yoyo,#make yoyo function
+		str_description = "They're yo-yos",
 		price = 1000,
-		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
-	),
-	EwWeapon( # 9
-		id_weapon = "molotov",
-		alias = [
-			"firebomb",
-			"molotovcocktail",
-			"bomb",
-			"bombs"
-		],
-		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
-		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
-		str_equip = "You equip the molotov cocktail.",
-		str_weapon = "molotov cocktails",
-		str_weaponmaster_self = "You are a rank {rank} master arsonist.",
-		str_weaponmaster = "They are a rank {rank} master arsonist.",
-		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
-		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
-		str_kill = "**SMASH!** {name_target}'s front window shatters and suddenly flames are everywhere!! The next morning, police report that {name_player} is suspected of arson. {emote_skull}",
-		str_killdescriptor = "exploded",
-		str_damage = "{name_target} dodges a bottle, but is singed on the {hitzone} by the blast!!",
-		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
-		fn_effect = wef_molotov,
-		str_description = "They're molotov bottles",
-		price = 200,
-		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding]
+		vendors = [vendor_dojo]
 	),
 	EwWeapon( # 10
 		id_weapon = "knives",
@@ -1737,78 +1898,34 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown]
 	),
-	EwWeapon( # 11
-		id_weapon = "scythe",
+	EwWeapon( # 9
+		id_weapon = "molotov",
 		alias = [
-			"sickle"
+			"firebomb",
+			"molotovcocktail",
+			"bomb",
+			"bombs"
 		],
-		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
-		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
-		str_equip = "You equip the scythe.",
-		str_weapon = "a scythe",
-		str_weaponmaster_self = "You are a rank {rank} master of the scythe.",
-		str_weaponmaster = "They are a rank {rank} master of the scythe.",
-		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
-		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
-		str_kill = "**SLASHH!!** {name_player}'s scythe cleaves the air, and {name_target} staggers. A moment later, {name_target}'s torso topples off their waist. {emote_skull}",
-		str_killdescriptor = "sliced in twain",
-		str_damage = "{name_target} is cleaved through the {hitzone}!!",
-		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
-		fn_effect = wef_scythe,
-		str_description = "It's a scythe",
-		price = 2000,
+		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
+		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
+		str_crit = "",#TODO
+		str_equip = "You equip the molotov cocktail.",
+		str_weapon = "molotov cocktails",
+		str_weaponmaster_self = "You are a rank {rank} master arsonist.",
+		str_weaponmaster = "They are a rank {rank} master arsonist.",
+		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
+		str_kill = "**SMASH!** {name_target}'s front window shatters and suddenly flames are everywhere!! The next morning, police report that {name_player} is suspected of arson. {emote_skull}",
+		str_killdescriptor = "exploded",
+		str_damage = "{name_target} dodges a bottle, but is singed on the {hitzone} by the blast!!",
+		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
+		fn_effect = wef_molotov,
+		str_description = "They're molotov bottles",
+		price = 200,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
+		classes = [weapon_class_thrown, weapon_class_exploding]
 	),
-	EwWeapon( # 12	
-		id_weapon = "yo-yos",
-		alias = [
-			"yo-yo",
-			"yoyo",
-			"yoyos"
-		],
-		str_crit = "**Critical hit!!** {name_target} yo-yos",
-		str_miss = "**MISS!!** {name_player} yo-yos",
-		str_equip = "You equip the yo-yos.",
-		str_weapon = "yo-yos",
-		str_weaponmaster_self = "You are a rank {rank} master of the yo-yos.",
-		str_weaponmaster = "They are a rank {rank} master of the yo-yos.",
-		str_trauma_self = "yo-yos trauma self.",
-		str_trauma = "yo-yos trauma.",
-		str_kill = "yo-yos kill",
-		str_killdescriptor = "yo-yos kill description",
-		str_damage = "yo-yos dmg",
-		str_duel = "yo-yos spar.",
-		fn_effect = wef_gun,#make yoyo function
-		str_description = "They're yo-yos",
-		price = 1000,
-		vendors = [vendor_dojo],
-		classes = [weapon_class_melee]
-	),
-	EwWeapon( # 13
-		id_weapon = "shotgun",
-		#alias = [
-		#	"brap"
-		#],
-		str_crit = "**Critical hit!!** {name_target} shotgun",
-		str_miss = "**MISS!!** {name_player} shotgun",
-		str_equip = "You equip the shotgun.",
-		str_weapon = "a shotgun",
-		str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
-		str_weaponmaster = "They are a rank {rank} master of the shotgun.",
-		str_trauma_self = "shotgun trauma self.",
-		str_trauma = "shotgun trauma.",
-		str_kill = "shotgun kill",
-		str_killdescriptor = "shotgun kill description",
-		str_damage = "shotgun dmg",
-		str_duel = "shotgun spar.",
-		fn_effect = wef_shotgun,
-		str_description = "A shotgun.",
-		clip_size = 2,
-		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
-	),
-	EwWeapon( # 14	
+	EwWeapon( # 14	#TODO
 		id_weapon = "grenade",
 		alias = [
 			"nade"
@@ -1830,6 +1947,30 @@ weapon_list = [
 		str_description = "A grenade.",
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_exploding]
+	),
+	EwWeapon( # 7
+		id_weapon = "garrote",
+		alias = [
+			"wire",
+			"garrotewire",
+			"garrottewire"
+		],
+		str_crit = "**CRITICAL HIT!!** {name_player} got lucky and caught {name_target} completely unaware!!",
+		str_miss = "**MISS!** {name_player}'s target got away in time!",
+		str_equip = "You equip the garrotte wire.",
+		str_weapon = "a garrotte wire",
+		str_weaponmaster_self = "You are a rank {rank} master of the garrotte.",
+		str_weaponmaster = "They are a rank {rank} master of the garrotte.",
+		str_trauma_self = "There is noticeable bruising and scarring around your neck.",
+		str_trauma = "There is noticeable bruising and scarring around their neck.",
+		str_kill = "{name_player} quietly moves behind {name_target} and... **!!!** After a brief struggle, only a cold body remains. {emote_skull}",
+		str_killdescriptor = "garrote wired",
+		str_damage = "{name_target} is ensnared by {name_player}'s wire!!",
+		str_duel = "{name_player} and {name_target} compare their dexterity by playing Cat's Cradle with deadly wire.",
+		fn_effect = wef_garrote,
+		str_description = "It's a garrote",
+		price = 1000,
+		vendors = [vendor_dojo]
 	)
 ]
 
@@ -3539,9 +3680,9 @@ item_def_list = [
 			'ammo': 0,
 			'married': 'User Id',
 			'kills': 0,
-			# Successful consecutive hits
 			'consecutive_hits': 0,
 			'time_lastattack': 0,
+			'jammed': 0
 		}
 	),
 	EwItemDef(

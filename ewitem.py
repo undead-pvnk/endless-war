@@ -405,7 +405,6 @@ def item_lootrandom(id_server = None, id_user = None):
 	response = ""
 
 	try:
-
 		user_data = EwUser(id_server = id_server, id_user = id_user)
 
 		items_in_poi = ewutils.execute_sql_query("SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
@@ -457,9 +456,6 @@ def item_lootrandom(id_server = None, id_user = None):
 					)
 				give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
-
-
-
 		else:
 			response += "You found a... oh, nevermind, it's just a piece of trash."
 
@@ -468,6 +464,7 @@ def item_lootrandom(id_server = None, id_user = None):
 
 	finally:
 		return response
+
 """
 	Destroy all of a player's non-soulbound items.
 """
@@ -548,10 +545,6 @@ def item_loot(
 	except:
 		ewutils.logMsg("Failed to loot items from user {}".format(member.id))
 			
-
-
-
-
 
 def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 	if id_user is not None and id_server is not None and item_type is not None:
@@ -793,6 +786,14 @@ async def item_look(cmd):
 					response += ", so you decide to throw it away."
 					item_drop(id_item)
 
+		if item.item_type == ewcfg.it_weapon:
+			response += "\n\n"
+			weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+			if ewcfg.weapon_class_ammo in weapon.classes:
+				response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
+
+			response += "Kills: {}".format(item.item_props.get("kills"))
+
 		response = name + "\n\n" + response
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -864,6 +865,14 @@ def give_item(
 				id_item
 			)
 		)
+
+		item = EwItem(id_item = id_item)
+		# Reset the weapon's damage modifying stats
+		if item.item_type == ewcfg.it_weapon:
+			item.item_props["kills"] = 0
+			item.item_props["consecutive_hits"] = 0
+			item.item_props["time_lastattack"] = 0
+			item.persist()
 
 	return
 

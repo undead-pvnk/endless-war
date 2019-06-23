@@ -49,6 +49,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewmarket import EwStock
 from ewdistrict import EwDistrict
+from ewstatuseffects import EwStatusEffect
 
 ewutils.logMsg('Starting up...')
 
@@ -61,7 +62,6 @@ last_helped_times = {}
 # Map of server ID to a map of active users on that server.
 active_users_map = {}
 
-
 # Map of all command words in the game to their implementing function.
 cmd_map = {
 	"!dumpwef": ewwep.dumpwef,
@@ -72,11 +72,17 @@ cmd_map = {
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_shoot_alt2: ewwep.attack,
+	ewcfg.cmd_shoot_alt3: ewwep.attack,
+	ewcfg.cmd_shoot_alt4: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
-	#reload
-	ewcfg.cmd_reload : ewwep.reload,
+	# Reload
+	ewcfg.cmd_reload: ewwep.reload,
+	ewcfg.cmd_reload_alt1: ewwep.reload,
 	
+	# Fix your jammed gun
+	ewcfg.cmd_unjam: ewwep.unjam,
+
 	# Get a weapon into your inventory
 	ewcfg.cmd_arm: ewwep.arm,
 	ewcfg.cmd_arsenalize: ewwep.arm,
@@ -151,23 +157,23 @@ cmd_map = {
 	# Play slime baccarat!
 	ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
 
-        # Play slime skat!
-        ewcfg.cmd_slimeskat: ewcasino.skat,
-        ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
-        ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
-        ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
-        ewcfg.cmd_slimeskat_call: ewcasino.skat_call,
-        ewcfg.cmd_slimeskat_pass: ewcasino.skat_pass,
-        ewcfg.cmd_slimeskat_play: ewcasino.skat_play,
-        ewcfg.cmd_slimeskat_hearts: ewcasino.skat_hearts,
-        ewcfg.cmd_slimeskat_slugs: ewcasino.skat_slugs,
-        ewcfg.cmd_slimeskat_hats: ewcasino.skat_hats,
-        ewcfg.cmd_slimeskat_shields: ewcasino.skat_shields,
-        ewcfg.cmd_slimeskat_grand: ewcasino.skat_grand,
-        ewcfg.cmd_slimeskat_null: ewcasino.skat_null,
-        ewcfg.cmd_slimeskat_take: ewcasino.skat_take,
-        ewcfg.cmd_slimeskat_hand: ewcasino.skat_hand,
-        ewcfg.cmd_slimeskat_choose: ewcasino.skat_choose,
+	# Play slime skat!
+	ewcfg.cmd_slimeskat: ewcasino.skat,
+	ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
+	ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
+	ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
+	ewcfg.cmd_slimeskat_call: ewcasino.skat_call,
+	ewcfg.cmd_slimeskat_pass: ewcasino.skat_pass,
+	ewcfg.cmd_slimeskat_play: ewcasino.skat_play,
+	ewcfg.cmd_slimeskat_hearts: ewcasino.skat_hearts,
+	ewcfg.cmd_slimeskat_slugs: ewcasino.skat_slugs,
+	ewcfg.cmd_slimeskat_hats: ewcasino.skat_hats,
+	ewcfg.cmd_slimeskat_shields: ewcasino.skat_shields,
+	ewcfg.cmd_slimeskat_grand: ewcasino.skat_grand,
+	ewcfg.cmd_slimeskat_null: ewcasino.skat_null,
+	ewcfg.cmd_slimeskat_take: ewcasino.skat_take,
+	ewcfg.cmd_slimeskat_hand: ewcasino.skat_hand,
+	ewcfg.cmd_slimeskat_choose: ewcasino.skat_choose,
 
 
 	# Russian Roulette
@@ -755,6 +761,7 @@ async def on_message(message):
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
 	if message.server != None:
+
 		try:
 			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
 				time_last_action = ewcfg.col_time_last_action
@@ -765,21 +772,18 @@ async def on_message(message):
 			))
 		except:
 			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
+		
+		user_data = EwUser(member = message.author)
+		
+		statuses = user_data.getStatusEffects()
 
-		#remove strangling status for garrote attacks
-		try:
-			ewutils.execute_sql_query("DELETE from status_effects WHERE {id_status} = %s and {id_user} = %s and {id_server} = %s".format(
-				id_status = ewcfg.col_id_status,
-				id_user = ewcfg.col_id_user,
-				id_server = ewcfg.col_id_server
-			), (
-				ewcfg.status_strangled_id,
-				message.author.id,
-				message.server.id
-			))
-		except:
-			ewutils.logMsg('server {}: failed to remove strangled status for {}'.format(message.server.id, message.author.id))
-
+		if ewcfg.status_strangled_id in statuses:
+			strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=user_data)
+			source = message.server.get_member(strangle_effect.source)
+			response = "You manage to break {}'s garrote wire!".format(source.display_name)
+			user_data.clear_status(ewcfg.status_strangled_id)			
+			ewutils.logMsg("cleared strangled status for user {}".format(user_data.id_user))
+			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
 		"""
@@ -860,8 +864,6 @@ async def on_message(message):
 
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-
-		statuses = user_data.getStatusEffects()
 		# Ignore stunned players
 		if ewcfg.status_stunned_id in statuses:
 			ewutils.logMsg("this nibba tryna speak")
