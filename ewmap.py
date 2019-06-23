@@ -1057,7 +1057,7 @@ async def kick(id_server):
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
 			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
-				if user_data.life_state != ewcfg.life_state_kingpin and user_data.life_state != ewcfg.life_state_lucky:
+				if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
 					server = ewcfg.server_list[id_server]
 					member_object = server.get_member(id_user)
 

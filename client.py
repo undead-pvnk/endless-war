@@ -714,6 +714,10 @@ async def on_ready():
 async def on_member_join(member):
 	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
+	ewplayer.player_update(
+		member = member,
+		server = member.server
+	)
 
 @client.event
 async def on_message_delete(message):
