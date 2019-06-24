@@ -884,16 +884,28 @@ async def look(cmd):
 
 	# enemy data constructor is passed in as a variable to avoid circular importing in ewhunting
 	enemy_data = EwEnemy()
+
+	# gets exact number of enemies in district
 	enemies_in_district = district_data.get_enemies_in_district(enemy_data)
+
 	num_enemies = len(enemies_in_district)
 
 	enemies_resp = "\n\n"
-	if num_enemies == 1:
-		enemies_resp += "You notice 1 enemy in this location."
-	else:
-		enemies_resp += "You notice {} enemies in this location.".format(num_enemies)
+	numerator = 0
 
-	# enemies_resp = ""
+	if num_enemies == 0:
+		enemies_resp += "You don't find any enemies in this district."
+	elif num_enemies == 1:
+		found_enemy_data = EwEnemy(id_enemy = enemies_in_district[0])
+		enemies_resp += "You look around and find a **{}** in this location.".format(found_enemy_data.name)
+	else:
+		enemies_resp += "You notice several enemies in this district, such as "
+		while numerator < (len(enemies_in_district)-1):
+			found_enemy_data = EwEnemy(id_enemy = enemies_in_district[numerator])
+			enemies_resp += "**{}**, ".format(found_enemy_data.name)
+			numerator += 1
+		final_enemy_data = EwEnemy(id_enemy = enemies_in_district[num_enemies-1])
+		enemies_resp += "and **{}**.".format(final_enemy_data.name)
 
 	players_resp = ""
 
@@ -981,7 +993,7 @@ async def scout(cmd):
 
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
-		# don't show low level players
+		# don't show low level players or enemies
 		min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
 		life_states = [ewcfg.life_state_enlisted]
@@ -990,9 +1002,8 @@ async def scout(cmd):
 		if user_data.id_user in players_in_district:
 			players_in_district.remove(user_data.id_user)
 
-
 		num_players = 0
-		players_resp = ""
+		players_resp = "\n"
 		detailed_resp = "You pick up the scent of the following gangsters:"
 		for player in players_in_district:
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
@@ -1011,6 +1022,16 @@ async def scout(cmd):
 			detailed_resp += "\n" + scoutee_data.get_mention()
 			num_players += 1
 
+		# enemy data constructor is passed in as a variable to avoid circular importing in ewhunting
+		enemy_data = EwEnemy()
+		# filters out low level enemies
+		enemies_in_district = district_data.get_enemies_in_district(enemy_data, min_level=min_level)
+
+		num_enemies = 0
+		enemies_resp = ""
+
+		for enemy in enemies_in_district:
+			num_enemies += 1
 
 		if num_players == 0:
 			players_resp += "You don’t notice any activity from this district."
@@ -1026,12 +1047,30 @@ async def scout(cmd):
 		if ewcfg.mutation_id_keensmell in mutations:
 			players_resp += " " + detailed_resp
 
+		# to avoid visual clutter, no scouting message is sent out for 0 enemies
+		if num_enemies == 0:
+			enemies_resp = ""
+		elif num_enemies == 1:
+			enemies_resp += "You can faintly hear the bleating of an enemy coming from this district."
+		elif num_enemies <= 5:
+			enemies_resp += "You manage to pick up the sound of a few enemies howling amongst each other in this district."
+		elif num_enemies <= 10:
+			enemies_resp += "Your nerves tense due to the incredibly audible savagery coming from several enemies in this district."
+		else:
+			enemies_resp += "You feel shivers down your spine from the sheer amount of enemies ramping and raving within this district."
+
+		if num_players == 0 and num_enemies >= 1:
+			players_resp = ""
+		elif num_players >= 1 and num_enemies ==0:
+			enemies_resp = ""
+
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**: {}".format(
+			"**{}**:{}\n{}".format(
 				poi.str_name,
-				players_resp
+				players_resp,
+				enemies_resp
 			)
 		))
 

@@ -202,7 +202,17 @@ async def attack(cmd):
 				shootee_data=None
 			)
 
-			resp_cont = ewhunting.kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, market_data, ctn, cmd)
+			resp_cont = ewhunting.kill_enemy(
+				user_data,
+				slimeoid,
+				enemy_data,
+				resp_cont,
+				weapon,
+				time_now,
+				market_data,
+				ctn,
+				cmd
+			)
 
 		else:
 

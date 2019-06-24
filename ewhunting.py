@@ -208,14 +208,14 @@ async def summon_enemy(cmd):
         enemy = EwEnemy()
 
         enemy.id_server = user_data.id_server
-        enemy.slimes = 47000
+        enemy.slimes = 1000000
         enemy.totaldamage = 0
         enemy.ai = ""
         enemy.poi = user_data.poi
         enemy.level = level_byslime(enemy.slimes)
         enemy.type = enemytype
         enemy.attacktype = "unarmed-juvie"
-        enemy.name = "the lost juvie"
+        enemy.name = "lost juvie"
         enemy.bleed_storage = 0
         enemy.time_lastenter = 0
         enemy.initialslimes = enemy.slimes

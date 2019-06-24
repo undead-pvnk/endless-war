@@ -155,15 +155,22 @@ class EwDistrict:
 
 		return filtered_players
 
-	def get_enemies_in_district(self, enemy_data):
+	def get_enemies_in_district(self,
+			enemy_data,
+			min_level = 0,
+			max_level = math.inf,
+			min_slimes = -math.inf,
+			max_slimes = math.inf
+		):
+
 		client = ewutils.get_client()
 		server = client.get_server(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		enemies = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s AND {poi} = %s".format(
-			id_enemy = ewcfg.col_id_enemy,
+		enemies = ewutils.execute_sql_query("SELECT * FROM enemies WHERE id_server = %s AND {poi} = %s".format(
+			# id_enemy = ewcfg.col_id_enemy,
 			poi = ewcfg.col_enemy_poi
 		),(
 			self.id_server,
@@ -173,10 +180,16 @@ class EwDistrict:
 		filtered_enemies = []
 		for enemy in enemies:
 
-			enemy_data.id_enemy = enemy[0]
 			enemy_data.id_server = self.id_server
 
-			filtered_enemies.append(enemy_data.id_enemy)
+			# assigns enemy_data variables based on index
+			enemy_data.id_enemy = enemy[0]
+			enemy_data.slimes = enemy[2]
+			enemy_data.level = enemy[8]
+
+			if max_level >= enemy_data.level >= min_level \
+			and max_slimes >= enemy_data.slimes >= min_slimes:
+				filtered_enemies.append(enemy_data.id_enemy)
 
 		return filtered_enemies
 
