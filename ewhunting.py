@@ -616,6 +616,8 @@ def kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, mar
                         current=enemy_data.slimes,
                         total=enemy_data.initialslimes
                     )
+                    if enemy_data.type == 'juvie':
+                        response += '\nThe lost juvie cries out in pain! "Just wait until the Juvenile Enrichment Center hears about this!!"'
             else:
                 if miss:
                     response = "{target_name} dodges your strike.".format(target_name=member.display_name)
@@ -626,6 +628,8 @@ def kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, mar
                         current=enemy_data.slimes,
                         total=enemy_data.initialslimes
                     )
+                    if enemy_data.type == 'juvie':
+                        response += '\nThe lost juvie cries out in pain! "Just wait until the Juvenile Enrichment Center hears about this!!"'
 
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)
