@@ -621,7 +621,7 @@ fish_list = [
         str_name="Cardboard Crab",
         str_size="b",
         catch_time=None,
-        flavor="It originated when Shigeru Miyamoto decided to splice crab DNA with Nintendo Labo Piano."
+        flavor="It originated when Shigeru Miyamoto decided to splice crab DNA with a Nintendo Labo Piano."
     ),
     EwFish(
         id_fish="easysardines",
@@ -690,6 +690,11 @@ def gen_fish(x, cmd):
             if fish_map[fish].str_size == "c":
                 all_fish.append(fish)
     market_data = x
+    weather_data = ewcfg.weather_map.get(market_data.weather)
+    if weather_data.name != "rainy":
+        for fish in all_fish:
+            if fish_map[fish].catch_time == "r":
+                all_fish.remove(fish)
     if market_data.clock < 20 or market_data.clock > 5:
         for fish in all_fish:
             if fish_map[fish].catch_time == "n":
@@ -821,11 +826,20 @@ async def cast(cmd):
                             fisher.current_fish = "plebefish"
                     ewitem.item_delete(item_sought.get('id_item'))
             if fisher.bait == False:
-                await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                                  "You cast your fishing line into the vast Slime Sea."))
+                if cmd.message.channel.name in [ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
+                                                                                                      "You cast your fishing line into the vast Slime Sea."))
+                elif cmd.message.channel.name == ewcfg.channel_lc_pier:
+                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
+                                                                                                      "You cast your fishing line into the glowing Slime River."))
+                else:
+                    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
+                                                                                                      "You cast your fishing line into the opaque Slime Lake."))
             else:
                 await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
                                                                                                   "You attach your {} to the hook as bait and then cast your fishing line into the vast Slime Sea.".format(name)))
+            user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
+            user_data.persist()
             bite_text = gen_bite_text(fisher.current_fish)
             fun = 99
             if fisher.bait == True:
@@ -873,7 +887,6 @@ async def cast(cmd):
 
 """ Reels in the fishing line. """
 async def reel(cmd):
-    market_data = EwMarket(id_server=cmd.message.author.server.id)
     user_data = EwUser(member=cmd.message.author)
     if cmd.message.author.id not in fishers.keys():
         fishers[cmd.message.author.id] = EwFisher()
@@ -912,7 +925,6 @@ async def reel(cmd):
                 fisher.bite = False
                 fisher.current_fish = ""
                 fisher.pier = ""
-                user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
                 user_data.persist()
                 if poudrinamount == 1:
                     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
@@ -922,6 +934,7 @@ async def reel(cmd):
                                                                                                             "You reeled in two poudrins!"))
             size_class = fish_map[fisher.current_fish].str_size
             fish_gain = ewcfg.fish_gain
+            gang_bonus = False
             if size_class == "m":
                 slime_gain = fish_gain * 1
             elif size_class == "s":
@@ -934,11 +947,27 @@ async def reel(cmd):
                 slime_gain = fish_gain * 5
             else:
                 slime_gain = fish_gain * 6
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                                         "You caught a fish! It's a {fish}! {flavor} You absorb it into your slimestream for {slime} slime.".format(
-                                                                                                             fish=fish_map[fisher.current_fish].str_name, flavor=fish_map[fisher.current_fish].flavor, slime=str(slime_gain))))
-            user_data.change_slimes(n=slime_gain, source=ewcfg.source_fishing)
-            user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
+            if user_data.life_state == 2:
+                if fish_map[user_data.current_fish].catch_time == "d" and user_data.faction == ewcfg.faction_rowdys:
+                    gang_bonus = True
+                    slime_gain += fish_gain
+                if fish_map[user_data.current_fish].catch_time == "n" and user_data.faction == ewcfg.faction_killers:
+                    gang_bonus = True
+                    slime_gain += fish_gain
+            response = "You caught a fish! It's a {fish}! {flavor} You absorb it into your slimestream for {slime} slime. ".format(
+                                                                                                             fish=fish_map[fisher.current_fish].str_name, flavor=fish_map[fisher.current_fish].flavor, slime=str(slime_gain))
+            if gang_bonus == True:
+                if user_data.faction == ewcfg.faction_rowdys:
+                    response += "The Rowdy-pride this fish is showing gave you more slime than usual. "
+                elif user_data.faction == ewcfg.faction_killers:
+                    response += "The Killer-pride this fish is showing gave you more slime than usual. "
+            user_initial_level = user_data.slimelevel
+            levelup_response = user_data.change_slimes(n=slime_gain, source=ewcfg.source_farming)
+            was_levelup = True if user_initial_level < user_data.slimelevel else False
+            if was_levelup:
+                await ewutils.send_message(cmd.client, cmd.message.channel,
+                                           ewutils.formatMessage(cmd.message.author, levelup_response))
+            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
             fisher.fishing = False
             fisher.bite = False
             fisher.current_fish = ""
