@@ -41,7 +41,8 @@ import ewdistrict
 import ewmutation
 import ewquadrants
 import ewtransport
-import ewdebug
+import ewcrafting
+#import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -273,6 +274,9 @@ cmd_map = {
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
 
+	#crafting
+	ewcfg.cmd_craft: ewcrafting.craft,
+
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
 
@@ -362,8 +366,8 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	ewdebug.cmd_debug1: ewdebug.debug1,
-	ewdebug.cmd_debug2: ewdebug.debug2,
+	#ewdebug.cmd_debug1: ewdebug.debug1,
+	#ewdebug.cmd_debug2: ewdebug.debug2,
 }
 
 debug = False
@@ -718,7 +722,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		#await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):

@@ -45,12 +45,14 @@ class EwCosmeticItem:
 	Smelt command
 """
 async def smelt(cmd):
+	# Find poudrins in user's inventory
 	poudrins = ewitem.inventory(
 		id_user = cmd.message.author.id,
 		id_server = cmd.message.server.id,
 		item_type_filter = ewcfg.it_slimepoudrin
 	)
 
+	# Make sure they have enough
 	if len(poudrins) < 2:
 		response = "You don't have enough poudrins to smelt."
 	else:

@@ -1,6 +1,7 @@
 import random
 
 from ewcosmeticitem import EwCosmeticItem
+from ewcrafting import EwCraftingRecipe
 from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
@@ -12,7 +13,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.4a"
+version = "v3.4a&Crafting"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -461,6 +462,8 @@ cmd_restoreroles = cmd_prefix + 'restoreroles'
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
+
+cmd_craft = cmd_prefix + 'craft'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -5945,6 +5948,29 @@ cosmetic_items_list = [
 	),
 ]
 
+crafting_recipes_list = [
+	EwCraftingRecipe(
+		id_recipe = "doublestuffedsquared",
+		str_name = "Double Stuffed Crust^2",
+		ingredients = ['double Original Stuffed Crust® pizza','double Original Stuffed Crust® pizza'],
+		products = [
+			(
+				it_questitem,
+				{
+					'qitem_name': 'The First one',
+					'qitem_desc': 'Something important to somebody. The first'
+				}
+			),
+			(
+				it_questitem,
+				{
+					'qitem_name': 'The Second One',
+					'qitem_desc': 'Something important to somebody. The Second'
+				}
+			)
+		]
+	)
+]
 # Slimeoid attributes.
 
 # All body attributes in the game.
