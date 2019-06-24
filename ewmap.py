@@ -922,6 +922,11 @@ async def teleport(cmd):
         ewutils.moves_active[cmd.message.author.id] = 0
         user_data.poi = poi.id_poi
         user_data.persist()
+        if cmd.message.author.id in fishers.keys():
+            fishers[cmd.message.author.id].fishing = False
+            fishers[cmd.message.author.id].bite = False
+            fishers[cmd.message.author.id].current_fish = ""
+            fishers[cmd.message.author.id].pier = ""
         response = "WHOOO-"
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
