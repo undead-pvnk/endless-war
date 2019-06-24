@@ -139,6 +139,7 @@ async def craft(cmd):
         #TODO
         # Figure out how to handle response formatting in a better way, this is bullshit and kinda huge but
         # It may need to be able to handle quest items in the future
+        # Literally Fuck Names
 
         # Actually create the product
         ewitem.item_create(
