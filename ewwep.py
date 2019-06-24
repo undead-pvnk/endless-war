@@ -202,11 +202,7 @@ async def attack(cmd):
 				shootee_data=None
 			)
 
-			sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=cmd.message.server.id)
-
-			district_data = EwDistrict(district=user_data.poi, id_server=cmd.message.server.id)
-
-			resp_cont = ewhunting.kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, district_data, sewer_data, market_data, ctn, cmd)
+			resp_cont = ewhunting.kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, market_data, ctn, cmd)
 
 		else:
 

@@ -8,7 +8,7 @@ import ewcfg
 import ewstats
 import ewutils
 from ew import EwUser
-from ewhunting import EwEnemy
+# from ewhunting import EwEnemy
 from ewmarket import EwMarket
 
 """
@@ -155,7 +155,7 @@ class EwDistrict:
 
 		return filtered_players
 
-	def get_enemies_in_district(self):
+	def get_enemies_in_district(self, enemy_data):
 		client = ewutils.get_client()
 		server = client.get_server(self.id_server)
 		if server == None:
@@ -172,7 +172,10 @@ class EwDistrict:
 
 		filtered_enemies = []
 		for enemy in enemies:
-			enemy_data = EwEnemy(id_enemy = enemy[0], id_server = self.id_server)
+
+			enemy_data.id_enemy = enemy[0]
+			enemy_data.id_server = self.id_server
+
 			filtered_enemies.append(enemy_data.id_enemy)
 
 		return filtered_enemies

@@ -15,6 +15,7 @@ from ewtransport import EwTransport
 from ewmarket import EwMarket
 from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
+from ewhunting import EwEnemy
 
 move_counter = 0
 
@@ -881,7 +882,9 @@ async def look(cmd):
 	else:
 		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
-	enemies_in_district = district_data.get_enemies_in_district()
+	# enemy data constructor is passed in as a variable to avoid circular importing in ewhunting
+	enemy_data = EwEnemy()
+	enemies_in_district = district_data.get_enemies_in_district(enemy_data)
 	num_enemies = len(enemies_in_district)
 
 	enemies_resp = "\n\n"

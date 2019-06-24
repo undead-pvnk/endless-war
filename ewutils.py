@@ -18,7 +18,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import delete_enemy, EwEnemy, spawn_enemy
+from ewhunting import delete_enemy, EwEnemy, spawn_enemy, enemy_kill
 
 db_pool = {}
 db_pool_id = 0
@@ -934,5 +934,17 @@ async def spawn_enemies_tick_loop(id_server):
 	# causes the possibility of an enemy spawning every 10 seconds
 	while True:
 		await spawn_enemies(id_server = id_server)
+
+		await asyncio.sleep(interval)
+
+async def enemy_attack(id_server = None):
+	resp_cont = EwResponseContainer(id_server=id_server)
+	await enemy_kill(id_server)
+
+async def enemy_attack_tick_loop(id_server):
+	interval = ewcfg.enemy_attack_tick_length
+	# causes hostile enemies to attack every 2 seconds
+	while True:
+		await enemy_attack(id_server = id_server)
 
 		await asyncio.sleep(interval)
