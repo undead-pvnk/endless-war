@@ -620,7 +620,8 @@ def cmd_is_inventory(cmd):
 def inventory(
 	id_user = None,
 	id_server = None,
-	item_type_filter = None
+	item_type_filter = None,
+	item_name_filter = None
 ):
 	items = []
 
@@ -635,6 +636,8 @@ def inventory(
 			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
 		if item_type_filter != None:
 			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
+		if item_name_filter != None:
+			sql += " AND {} = '{}'".format(ewcfg.col_id_item, item_name_filter)
 
 		if id_server != None:
 			cursor.execute(sql.format(

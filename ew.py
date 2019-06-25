@@ -387,7 +387,6 @@ class EwUser:
 
 		return bans
 
-	
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):

@@ -41,7 +41,7 @@ import ewdistrict
 import ewmutation
 import ewquadrants
 import ewtransport
-import ewcrafting
+import ewsmelting
 #import ewdebug
 
 from ewitem import EwItem
@@ -270,12 +270,11 @@ cmd_map = {
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
-	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
 
-	#crafting
-	ewcfg.cmd_craft: ewcrafting.craft,
+	#smelting
+	ewcfg.cmd_smelt: ewsmelting.smelt,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
@@ -928,8 +927,6 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
-
-
 
 		# FIXME debug
 		# Test item deletion

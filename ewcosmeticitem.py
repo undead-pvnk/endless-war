@@ -41,64 +41,6 @@ class EwCosmeticItem:
 		self.rarity = rarity
 		self.ingredients = ingredients
 
-"""
-	Smelt command
-"""
-async def smelt(cmd):
-	# Find poudrins in user's inventory
-	poudrins = ewitem.inventory(
-		id_user = cmd.message.author.id,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_slimepoudrin
-	)
-
-	# Make sure they have enough
-	if len(poudrins) < 2:
-		response = "You don't have enough poudrins to smelt."
-	else:
-		for i in range(2):
-			ewitem.item_delete(id_item = poudrins[i].get('id_item'))
-
-		patrician_rarity = 20
-		patrician_smelted = random.randint(1, patrician_rarity)
-		patrician = False
-
-		if patrician_smelted == 1:
-			patrician = True
-
-		cosmetics_list = []
-
-		for result in ewcfg.cosmetic_items_list:
-			if result.ingredients == "":
-				cosmetics_list.append(result)
-			else:
-				pass
-
-		items = []
-
-		for cosmetic in cosmetics_list:
-			if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
-				items.append(cosmetic)
-			elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
-				items.append(cosmetic)
-
-		item = items[random.randint(0, len(items) - 1)]
-
-		ewitem.item_create(
-			item_type = ewcfg.it_cosmetic,
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_props = {
-				'id_cosmetic': item.id_cosmetic,
-				'cosmetic_name': item.str_name,
-				'cosmetic_desc': item.str_desc,
-				'rarity': item.rarity,
-				'adorned': 'false'
-			}
-		)
-		response = "You smelted a {item_name}!".format(item_name = item.str_name)
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 async def adorn(cmd):
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 

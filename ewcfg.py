@@ -1,7 +1,7 @@
 import random
 
 from ewcosmeticitem import EwCosmeticItem
-from ewcrafting import EwCraftingRecipe
+from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
@@ -13,7 +13,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 
 # Global configuration options.
-version = "v3.4a&Crafting"
+version = "v3.5"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -441,7 +441,6 @@ cmd_refuse = cmd_prefix + 'refuse'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_mill = cmd_prefix + 'mill'
-cmd_smelt = cmd_prefix + 'smelt'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
@@ -463,7 +462,7 @@ cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
 
-cmd_craft = cmd_prefix + 'craft'
+cmd_smelt = cmd_prefix + 'smelt'
 
 #slimeoid commands
 cmd_incubateslimeoid = cmd_prefix + 'incubateslimeoid'
@@ -1201,10 +1200,10 @@ item_list = [
 # A map of id_item to EwDefaultItem objects.
 item_map = {}
 
-# A list of food names
+# A list of item names
 item_names = []
 
-# Populate food map, including all aliases.
+# Populate item map, including all aliases.
 for item in item_list:
 	item_map[item.id_item] = item
 	item_names.append(item.id_item)
@@ -5948,29 +5947,48 @@ cosmetic_items_list = [
 	),
 ]
 
-crafting_recipe_list = [
-	EwCraftingRecipe(
-		id_recipe = "test",
-		str_name = "Test",
-		alias = "test",
-		ingredients = ['direapples','direapples'],
-		products = ['overalls', 'slimecorppin', 'blacklimes']
+# A map of id_cosmetic to EwCosmeticItem objects.
+cosmetic_map = {}
+
+# A list of cosmetic names.
+cosmetic_names = []
+
+# Populate cosmetic map.
+for cosmetic in cosmetic_items_list:
+	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
+	cosmetic_names.append(cosmetic.id_cosmetic)
+
+# A list of hats obtainable via smelting.
+smeltable_cosmetics = []
+
+for cosmetic in cosmetic_items_list:
+	if cosmetic.ingredients != None:
+		pass
+	else:
+		smeltable_cosmetics.append(cosmetic.id_cosmetic)
+
+smelting_recipe_list = [
+	EwSmeltingRecipe(
+		id_recipe = "cosmetic",
+		str_name = "Cosmetic",
+		alias = "hat",
+		ingredients = ['poudrin', 'poudrin'],
+		products = cosmetic_names
 	),
 ]
 
-# A map of id_recipe to EwCraftingRecipe objects.
-crafting_recipe_map = {}
+# A map of id_recipe to EwSmeltingRecipe objects.
+smelting_recipe_map = {}
 
-# A list of hue names
+# A list of recipe names
 recipe_names = []
 
-# Populate hue map, including all aliases.
-for recipe in crafting_recipe_list:
-	crafting_recipe_map[recipe.id_recipe] = recipe
+# Populate recipe map, including all aliases.
+for recipe in smelting_recipe_list:
+	smelting_recipe_map[recipe.id_recipe] = recipe
+	smelting_recipe_map[recipe.alias] = recipe
 	recipe_names.append(recipe.id_recipe)
 
-	for alias in recipe.alias:
-		crafting_recipe_map[alias] = recipe
 
 # Slimeoid attributes.
 
