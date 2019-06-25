@@ -912,8 +912,11 @@ async def reel(cmd):
         # On successful reel.
         else:
             if fisher.current_fish == "loot":
-                poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
-
+                mutations = user_data.get_mutations()
+                if ewcfg.mutation_id_lucky in mutations:
+                    poudrinamount = 2 if random.randint(1, 3) != 1 else 1  # 66% chance of extra drop if Lucky
+                else:
+                    poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
                 # Create and give slime poudrins
                 for pcreate in range(poudrinamount):
                     ewitem.item_create(
@@ -967,11 +970,11 @@ async def reel(cmd):
             if was_levelup:
                 await ewutils.send_message(cmd.client, cmd.message.channel,
                                            ewutils.formatMessage(cmd.message.author, levelup_response))
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
             fisher.fishing = False
             fisher.bite = False
             fisher.current_fish = ""
             fisher.pier = ""
+            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
             user_data.persist()
     else:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
