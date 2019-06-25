@@ -355,10 +355,11 @@ def drop_enemy_loot(enemy_data, district_data):
 
     return response
 
-def kill_enemy(user_data, slimeoid, enemy_data, resp_cont, weapon, time_now, market_data, ctn, cmd):
+def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
+    time_now = int(time.time())
+    response = ""
+    resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
     member = enemy_data
-
-    # copying code from normal kill procedure oh god oh fuck i hope this works
 
     # Get shooting player's info
     if user_data.slimelevel <= 0:

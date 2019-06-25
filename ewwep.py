@@ -182,8 +182,6 @@ async def attack(cmd):
 	elif cmd.mentions_count <= 0:
 		# user is going after enemies rather than players
 
-		response = None
-
 		# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
 
@@ -207,9 +205,7 @@ async def attack(cmd):
 				user_data,
 				slimeoid,
 				enemy_data,
-				resp_cont,
 				weapon,
-				time_now,
 				market_data,
 				ctn,
 				cmd
