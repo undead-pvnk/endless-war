@@ -17,6 +17,7 @@ from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
+from ewhunting import EwEnemy
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -745,7 +746,9 @@ def explode(damage = 0, district_data = None):
 
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
 	users = district_data.get_players_in_district(life_states = life_states)
+	enemies = district_data.get_enemies_in_district()
 
+	# damage players
 	for user in users:
 		user_data = EwUser(id_user = user, id_server = id_server)
 		mutations = user_data.get_mutations()
@@ -781,6 +784,36 @@ def explode(damage = 0, district_data = None):
 				user_data.bleed_storage += slimes_damage
 				user_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
 				user_data.persist()
+
+	# damage enemies
+	for enemy in enemies:
+		enemy_data = EwEnemy(id_enemy = enemy, id_server = id_server)
+
+		if True:
+			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data._name, damage)
+			resp_cont.add_channel_response(channel, response)
+			slimes_damage = damage
+			if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
+				# die in the explosion
+				district_data.change_slimes(n = enemy_data.slimes, source = ewcfg.source_killing)
+				district_data.persist()
+				# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
+
+				ewhunting.delete_enemy(enemy)
+
+				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
+				resp_cont.add_channel_response(channel, response)
+
+			else:
+				# survive
+				slime_splatter = 0.5 * slimes_damage
+				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+				district_data.persist()
+				slimes_damage -= slime_splatter
+				enemy_data.bleed_storage += slimes_damage
+				enemy_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
+				enemy_data.persist()
 	return resp_cont
 	
 
