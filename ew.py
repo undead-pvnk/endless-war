@@ -495,7 +495,9 @@ class EwUser:
 					self.time_joined = int(member.joined_at.timestamp())
 
 				# Get the skill for the user's current weapon.
-				if self.weapon != None and self.weapon >= 0:
+				# TODO - Uncomment the below line.
+				#if self.weapon != None and self.weapon >= 0:
+				if self.weapon != None:
 					skills = ewutils.weaponskills_get(
 						id_server = id_server,
 						id_user = id_user

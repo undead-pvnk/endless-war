@@ -5948,29 +5948,30 @@ cosmetic_items_list = [
 	),
 ]
 
-crafting_recipes_list = [
+crafting_recipe_list = [
 	EwCraftingRecipe(
-		id_recipe = "doublestuffedsquared",
-		str_name = "Double Stuffed Crust^2",
-		ingredients = ['double Original Stuffed Crust® pizza','double Original Stuffed Crust® pizza'],
-		products = [
-			(
-				it_questitem,
-				{
-					'qitem_name': 'The First one',
-					'qitem_desc': 'Something important to somebody. The first'
-				}
-			),
-			(
-				it_questitem,
-				{
-					'qitem_name': 'The Second One',
-					'qitem_desc': 'Something important to somebody. The Second'
-				}
-			)
-		]
-	)
+		id_recipe = "test",
+		str_name = "Test",
+		alias = "test",
+		ingredients = ['direapples','direapples'],
+		products = ['overalls', 'slimecorppin', 'blacklimes']
+	),
 ]
+
+# A map of id_recipe to EwCraftingRecipe objects.
+crafting_recipe_map = {}
+
+# A list of hue names
+recipe_names = []
+
+# Populate hue map, including all aliases.
+for recipe in crafting_recipe_list:
+	crafting_recipe_map[recipe.id_recipe] = recipe
+	recipe_names.append(recipe.id_recipe)
+
+	for alias in recipe.alias:
+		crafting_recipe_map[alias] = recipe
+
 # Slimeoid attributes.
 
 # All body attributes in the game.
@@ -7102,6 +7103,18 @@ hue_list = [
 ]
 
 # A map of id_hue to EwHue objects.
+hue_map = {}
+
+# A list of hue names
+hue_names = []
+
+# Populate hue map, including all aliases.
+for hue in hue_list:
+	hue_map[hue.id_hue] = hue
+	hue_names.append(hue.id_hue)
+
+	for alias in hue.alias:
+		hue_map[alias] = hue# A map of id_hue to EwHue objects.
 hue_map = {}
 
 # A list of hue names
