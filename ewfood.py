@@ -41,8 +41,11 @@ class EwFood:
 	# Expiration time (can be left blank for standard expiration time)
 	time_expir = 0
 
-	# The ingredients necessary to make this item via milling.
+	# The ingredients necessary to make this item via it's acquisition method
 	ingredients = ""
+
+	# The way that you can acquire this item. If blank, it's not relevant.
+	acquisition = ""
 
 	def __init__(
 		self,
@@ -56,7 +59,8 @@ class EwFood:
 		inebriation = 0,
 		str_desc = "",
 		time_expir = 0,
-		ingredients = ""
+		ingredients = "",
+		acquisition = "",
 	):
 		self.id_food = id_food
 		self.alias = alias
@@ -69,6 +73,7 @@ class EwFood:
 		self.str_desc = str_desc
 		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir
 		self.ingredients = ingredients
+		self.acquisition = acquisition
 
 
 """ show all available food items """

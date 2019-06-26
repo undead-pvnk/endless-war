@@ -191,32 +191,32 @@ class EwItem:
 """
 	These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
 """
-class EwDefaultItem:
+class EwGeneralItem:
 	id_item = " "
 	alias = []
 	context = ""
-	subcontext = ""
 	str_name = ""
 	str_desc = ""
 	ingredients = ""
+	acquisition = ""
 
 	def __init__(
 		self,
 		id_item = " ",
 		alias = [],
 		context = "",
-		subcontext = "",
 		str_name = "",
 		str_desc = "",
 		ingredients = "",
+		acquisition = "",
 	):
 		self.id_item = id_item
 		self.alias = alias
 		self.context = context
-		self.subcontext = subcontext
 		self.str_name = str_name
 		self.str_desc = str_desc
 		self.ingredients = ingredients
+		self.acquisition = acquisition
 
 
 """

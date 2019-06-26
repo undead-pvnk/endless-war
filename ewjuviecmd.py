@@ -122,23 +122,87 @@ async def mine(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
+
 		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
+
 		else:
-			# Determine if a poudrin is found.
-			poudrin = False
-			poudrinamount = 0
+			response = ""
 
-			# juvies get poudrins 4 times as often as enlisted players
-			poudrin_chance = 1 / ewcfg.poudrin_rarity
+			# Determine if an item is found.
+			unearthed_item = False
+			unearthed_item_amount = 0
+
+			# juvies get items 4 times as often as enlisted players
+			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
 			if user_data.life_state == ewcfg.life_state_juvenile:
-				poudrin_chance *= 2
+				unearthed_item_chance *= 2
 			if ewcfg.mutation_id_lucky in mutations:
-				poudrin_chance *= 1.33
+				unearthed_item_chance *= 1.33
 
-			if random.random() < poudrin_chance:
-				poudrin = True
-				poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+			if random.random() < unearthed_item_chance:
+				unearthed_item = True
+				unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+
+			if unearthed_item == True:
+				# If there are multiple possible products, randomly select one.
+				item = random.choice(ewcfg.mine_results)
+
+				if hasattr(item, 'id_item'):
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = ewcfg.it_item,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc,
+							}
+						),
+
+				elif hasattr(item, 'id_food'):
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = ewcfg.it_food,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_food': item.id_food,
+								'food_name': item.str_name,
+								'food_desc': item.str_desc,
+								'recover_hunger': item.recover_hunger,
+								'inebriation': item.inebriation,
+								'str_eat': item.str_eat,
+								'time_expir': time.time() + ewcfg.farm_food_expir
+							}
+						),
+
+				elif hasattr(item, 'id_cosmetic'):
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = ewcfg.it_cosmetic,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'rarity': item.rarity,
+								'adorned': 'false'
+							}
+						),
+
+				if unearthed_item_amount == 1:
+					response += "You unearthed a {}! ".format(item.str_name)
+				elif unearthed_item_amount == 2:
+					response += "You unearthed two (2) {}! ".format(item.str_name)
+
+
+				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
+
+				ewutils.logMsg('{} has found {} {}(s)!'.format(cmd.message.author.display_name, item.str_name, unearthed_item_amount))
 
 			user_initial_level = user_data.slimelevel
 
@@ -154,18 +218,6 @@ async def mine(cmd):
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
-			# Create and give slime poudrins
-			for pdx in range(poudrinamount):
-				item_id = ewitem.item_create(
-					item_type = ewcfg.it_slimepoudrin,
-					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
-				)
-				ewutils.logMsg('Created poudrin (item {}) for user (id {})'.format(
-					item_id,
-					cmd.message.author.id
-				))
-
 			# Fatigue the miner.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
@@ -178,20 +230,8 @@ async def mine(cmd):
 
 			user_data.persist()
 
-			# Tell the player their slime level increased and/or a poudrin was found.
-			if was_levelup or poudrin:
-				response = ""
-
-				if poudrin:
-					if poudrinamount == 1:
-						response += "You unearthed a slime poudrin! "
-					elif poudrinamount == 2:
-						response += "You unearthed two slime poudrins! "
-
-					ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = poudrinamount)
-
-					ewutils.logMsg('{} has found {} poudrin(s)!'.format(cmd.message.author.display_name, poudrinamount))
-
+			# Tell the player their slime level increased and/or they unearthed an item.
+			if was_levelup:
 				if was_levelup:
 					response += levelup_response
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

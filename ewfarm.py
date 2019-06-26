@@ -107,7 +107,7 @@ async def reap(cmd):
 				else:
 					# Determine if a slime poudrin is found.
 					poudrin = False
-					poudrinamount = 0
+					poudrin_amount = 0
 
 					poudrin_chance = 500 / ewcfg.poudrin_rarity  # 1 in 3 chance
 					
@@ -116,15 +116,25 @@ async def reap(cmd):
 
 					if random.random() < poudrin_chance:
 						poudrin = True
-						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+						poudrin_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
-					# Create and give slime poudrins
-					for pcreate in range(poudrinamount):
-						ewitem.item_create(
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_type = ewcfg.it_slimepoudrin,
-						)
+					# Create and give slime poudrins.
+					for item in ewcfg.item_list:
+						if item.context == "poudrin":
+							for creation in range(poudrin_amount):
+								ewitem.item_create(
+									item_type = ewcfg.it_item,
+									id_user = cmd.message.author.id,
+									id_server = cmd.message.server.id,
+									item_props = {
+										'id_item': item.id_item,
+										'context': item.context,
+										'item_name': item.str_name,
+										'item_desc': item.str_desc,
+									}
+								),
+						else:
+							pass
 
 					#  Determine what crop is grown.
 					vegetable = random.choice(ewcfg.vegetable_list)
@@ -197,11 +207,7 @@ async def sow(cmd):
 		if farm.time_lastsow > 0:
 			response = "You’ve already sown something here. Try planting in another farming location. If you’ve planted in all three farming locations, you’re shit out of luck. Just wait, asshole."
 		else:
-			poudrins = ewitem.inventory(
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_type_filter = ewcfg.it_slimepoudrin
-			)
+			poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 			if len(poudrins) < 1:
 				response = "You don't have anything to plant! Try collecting a poudrin."
@@ -210,7 +216,7 @@ async def sow(cmd):
 				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about 3 hours."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
+				ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
 

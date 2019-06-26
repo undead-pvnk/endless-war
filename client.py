@@ -874,17 +874,24 @@ async def on_message(message):
 
 		# Creates a poudrin
 		elif debug == True and cmd == '!createpoudrin':
-			item_id = ewitem.item_create(
-				item_type = ewcfg.it_slimepoudrin,
-				id_user = message.author.id,
-				id_server = message.server.id
-			)
-
-			ewutils.logMsg('Created item: {}'.format(item_id))
-			item = EwItem(id_item = item_id)
-			item.persist()
-
-			item = EwItem(id_item = item_id)
+			for item in ewcfg.item_list:
+				if item.context == "poudrin":
+					ewitem.item_create(
+						item_type = ewcfg.it_item,
+						id_user = message.author.id,
+						id_server = message.server.id,
+						item_props = {
+							'id_item': item.id_item,
+							'context': item.context,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					ewutils.logMsg('Created item: {}'.format(item.id_item))
+					item = EwItem(id_item = item.id_item)
+					item.persist()
+			else:
+				pass
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 

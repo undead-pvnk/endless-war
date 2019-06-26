@@ -24,7 +24,7 @@ class EwCosmeticItem:
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
 
-	# The ingredients necessary to make this item via milling.
+	# The ingredients necessary to make this item via it's acquisition method
 	ingredients = ""
 
 	def __init__(
@@ -33,13 +33,15 @@ class EwCosmeticItem:
 		str_name = "",
 		str_desc = "",
 		rarity = "",
-		ingredients = ""
+		ingredients = "",
+		acquisition = "",
 	):
 		self.id_cosmetic = id_cosmetic
 		self.str_name = str_name
 		self.str_desc = str_desc
 		self.rarity = rarity
 		self.ingredients = ingredients
+		self.acquisition = acquisition
 
 async def adorn(cmd):
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])

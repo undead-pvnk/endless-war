@@ -5,7 +5,7 @@ from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
 from ewweather import EwWeather
 from ewfood import EwFood
-from ewitem import EwItemDef, EwDefaultItem
+from ewitem import EwItemDef, EwGeneralItem
 from ewmap import EwPoi
 from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
@@ -551,6 +551,11 @@ max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player'
 max_adorn_mod = 4
 max_weapon_mod = 16
 
+# item acquisition methods
+acquisition_smelting = "smelting"
+acquisition_milling = "milling"
+acquisition_mining = "mining"
+
 # price multipliers
 togo_price_increase = 2
 
@@ -625,8 +630,8 @@ bleed_half_life = 60 * 5 #five minutes
 # how often to bleed
 bleed_tick_length = 10
 
-# Poudrin rarity (for enlisted players)
-poudrin_rarity = 1500
+# Unearthed Item rarity (for enlisted players)
+unearthed_item_rarity = 1500
 
 # Chance to loot an item while scavenging
 scavenge_item_rarity = 1000
@@ -1067,137 +1072,147 @@ context_slimeoidheart = 'slimeoidheart'
 
 # List of normal items.
 item_list = [
-	EwDefaultItem(
+	EwGeneralItem(
+		id_item = "slimepoudrin",
+		alias = [
+			"poudrin",
+		],
+		context = "poudrin",
+		str_name = "Slime Poudrin",
+		str_desc = "A dense, crystalized chunk of precious slime.",
+		acquisition = acquisition_mining
+	),
+	EwGeneralItem(
 		id_item = "whitedye",
 		context = "dye",
-		subcontext = "white",
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
+		acquisition = acquisition_milling,
 		ingredients = "poketuber",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "yellowdye",
 		context = "dye",
-		subcontext = "yellow",
 		str_name = "Yellow Dye",
 		str_desc = "A small vial of yellow dye.",
+		acquisition = acquisition_milling,
 		ingredients = "pulpgourds",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "orangedye",
 		context = "dye",
-		subcontext = "orange",
 		str_name = "Orange Dye",
 		str_desc = "A small vial of orange dye.",
+		acquisition = acquisition_milling,
 		ingredients = "sourpotatoes",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "reddye",
 		context = "dye",
-		subcontext = "red",
 		str_name = "Red Dye",
 		str_desc = "A small vial of red dye.",
+		acquisition = acquisition_milling,
 		ingredients = "bloodcabbages",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "magentadye",
 		context = "dye",
-		subcontext = "magenta",
 		str_name = "Magenta Dye",
 		str_desc = "A small vial of magenta dye.",
+		acquisition = acquisition_milling,
 		ingredients = "joybeans",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "purpledye",
 		context = "dye",
-		subcontext = "purple",
 		str_name = "Purple Dye",
 		str_desc = "A small vial of purple dye.",
+		acquisition = acquisition_milling,
 		ingredients = "purplekilliflower",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "bluedye",
 		context = "dye",
-		subcontext = "blue",
 		str_name = "Blue Dye",
 		str_desc = "A small vial of blue dye.",
+		acquisition = acquisition_milling,
 		ingredients = "razornuts",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "greendye",
 		context = "dye",
-		subcontext = "green",
 		str_name = "Green Dye",
 		str_desc = "A small vial of green dye.",
+		acquisition = acquisition_milling,
 		ingredients = "pawpaw",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "tealdye",
 		context = "dye",
-		subcontext = "teal",
 		str_name = "Teal Dye",
 		str_desc = "A small vial of teal dye.",
+		acquisition = acquisition_milling,
 		ingredients = "sludgeberries",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "rainbowdye",
 		context = "dye",
-		subcontext = "rainbow",
 		str_name = "***Rainbow Dye!!***",
 		str_desc = "***A small vial of Rainbow dye!!***",
+		acquisition = acquisition_milling,
 		ingredients = "suganmanuts",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "pinkdye",
 		context = "dye",
-		subcontext = "pink",
 		str_name = "Pink Dye",
 		str_desc = "A small vial of pink dye.",
+		acquisition = acquisition_milling,
 		ingredients = "pinkrowddishes",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "greydye",
 		context = "dye",
-		subcontext = "grey",
 		str_name = "Grey Dye",
 		str_desc = "A small vial of grey dye.",
+		acquisition = acquisition_milling,
 		ingredients = "dankwheat",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "cobaltdye",
 		context = "dye",
-		subcontext = "cobalt",
 		str_name = "Cobalt Dye",
 		str_desc = "A small vial of cobalt dye.",
+		acquisition = acquisition_milling,
 		ingredients = "brightshade",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "blackdye",
 		context = "dye",
-		subcontext = "black",
 		str_name = "Black Dye",
 		str_desc = "A small vial of black dye.",
+		acquisition = acquisition_milling,
 		ingredients = "blacklimes",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "limedye",
 		context = "dye",
-		subcontext = "lime",
 		str_name = "Lime Dye",
 		str_desc = "A small vial of lime dye.",
+		acquisition = acquisition_milling,
 		ingredients = "phosphorpoppies",
 	),
-	EwDefaultItem(
+	EwGeneralItem(
 		id_item = "cyandye",
 		context = "dye",
-		subcontext = "cyan",
 		str_name = "Cyan Dye",
 		str_desc = "A small vial of cyan dye.",
+		acquisition = acquisition_milling,
 		ingredients = "direapples",
 	),
 ]
 
-# A map of id_item to EwDefaultItem objects.
+# A map of id_item to EwGeneralItem objects.
 item_map = {}
 
 # A list of item names
@@ -1709,7 +1724,6 @@ food_list = [
 		vendors = [vendor_bar, vendor_countryclub],
 		str_eat = "You stir your slime n' tonic with a thin straw before chugging it lustily.",
 		str_desc = "The drink that has saved more juveniles’ lives than any trip to the nurse’s office could.",
-		ingredients = "purplekilliflower",
 	),
 	EwFood(
 		id_food = "slimacolada",
@@ -2936,6 +2950,7 @@ food_list = [
 		id_food = "pinkrowdatouille",
 		recover_hunger = 1200,
 		str_name = 'Pink Rowdatouille',
+		acquisition = acquisition_milling,
 		ingredients = "pinkrowddishes",
 		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
 		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
@@ -2945,6 +2960,7 @@ food_list = [
 		id_food = "sludgeberrypancakes",
 		recover_hunger = 800,
 		str_name = 'Sludgeberry Pancakes',
+		acquisition = acquisition_milling,
 		ingredients = "sludgeberries",
 		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
 		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
@@ -2954,6 +2970,7 @@ food_list = [
 		id_food = "pulpgourdpie",
 		recover_hunger = 800,
 		str_name = 'Pulp Gourd Pie',
+		acquisition = acquisition_milling,
 		ingredients = "pulpgourds",
 		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
 		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
@@ -2963,6 +2980,7 @@ food_list = [
 		id_food = "joybeanpastemochi",
 		recover_hunger = 800,
 		str_name = 'Joybean Paste Mochi',
+		acquisition = acquisition_milling,
 		ingredients = "joybeans",
 		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
 		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
@@ -2972,6 +2990,7 @@ food_list = [
 		id_food = "brightshadeseeds",
 		recover_hunger = 800,
 		str_name = 'Brightshade Seeds',
+		acquisition = acquisition_milling,
 		ingredients = "brightshade",
 		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
 		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
@@ -2981,6 +3000,7 @@ food_list = [
 		id_food = "direapplejuice",
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
+		acquisition = acquisition_milling,
 		ingredients = "direapple",
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
@@ -2990,6 +3010,7 @@ food_list = [
 		id_food = "purplekilliflowercrustpizza",
 		recover_hunger = 1200,
 		str_name = 'Purple Killiflower Crust Pizza',
+		acquisition = acquisition_milling,
 		ingredients = "purplekilliflower",
 		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
 		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
@@ -2999,6 +3020,7 @@ food_list = [
 		id_food = "razornutbutter",
 		recover_hunger = 800,
 		str_name = 'Razornut Butter',
+		acquisition = acquisition_milling,
 		ingredients = "razornuts",
 		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
 		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
@@ -3008,6 +3030,7 @@ food_list = [
 		id_food = "jellyfilleddoughnut",
 		recover_hunger = 800,
 		str_name = 'Jelly-Filled Doughnut',
+		acquisition = acquisition_milling,
 		ingredients = "poketubers",
 		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
 		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
@@ -3017,6 +3040,7 @@ food_list = [
 		id_food = "yourfavoritefood",
 		recover_hunger = 800,
 		str_name = '***Your Favorite Food***',
+		acquisition = acquisition_milling,
 		ingredients = "suganmanuts",
 		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
 		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
@@ -3026,6 +3050,7 @@ food_list = [
 		id_food = "dankwheattoast",
 		recover_hunger = 800,
 		str_name = 'Dankwheat Toast',
+		acquisition = acquisition_milling,
 		ingredients = "dankwheat",
 		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
 		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
@@ -3035,6 +3060,7 @@ food_list = [
 		id_food = "blacklimesour",
 		recover_hunger = 800,
 		str_name = 'Black Lime Sour',
+		acquisition = acquisition_milling,
 		ingredients = "blacklimes",
 		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
 		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
@@ -3044,6 +3070,7 @@ food_list = [
 		id_food = "phosphorpoppiesmuffin",
 		recover_hunger = 800,
 		str_name = 'Phosphorpoppies Muffin',
+		acquisition = acquisition_milling,
 		ingredients = "phosphorpoppies",
 		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
 		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
@@ -3053,6 +3080,7 @@ food_list = [
 		id_food = "sourpotatofrenchfries",
 		recover_hunger = 800,
 		str_name = 'Sour Potato French Fries',
+		acquisition = acquisition_milling,
 		ingredients = "sourpotatoes",
 		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
 		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
@@ -3062,6 +3090,7 @@ food_list = [
 		id_food = "bloodcabbagecoleslaw",
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
+		acquisition = acquisition_milling,
 		ingredients = "bloodcabbage",
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
@@ -3071,6 +3100,7 @@ food_list = [
 		id_food = "pawpawfood",
 		recover_hunger = 800,
 		str_name = 'Pawpaw Food',
+		acquisition = acquisition_milling,
 		ingredients = "pawpaw",
 		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
@@ -3126,7 +3156,13 @@ food_list = [
 		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
-
+	EwFood(
+		id_food = "diamondpickaxe",
+		recover_hunger = 1,
+		str_name = "Diamond Pickaxe",
+		str_eat = "You, uh, eat it. Sorry making new weapons scares me.",
+		str_desc = "Hehe, die Connor.",
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -5590,359 +5626,420 @@ cosmetic_items_list = [
 		str_name = "propeller hat",
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
 		str_name = "mining helmet",
 		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pickelhaube",
 		str_name = "pickelhaube",
 		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fedora",
 		str_name = "fedora",
 		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "baseballcap",
 		str_name = "baseball cap",
 		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "backwardsbaseballcap",
 		str_name = "backwards baseball cap",
 		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
 		str_name = "pirate hat",
 		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
 		str_name = "eyepatch",
 		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cigarette",
 		str_name = "cigarette",
 		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "headband",
 		str_name = "headband",
 		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "handkerchief",
 		str_name = "handkerchief",
 		str_desc = "A bandanna tied on your head, creating a simple cap.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bandanna",
 		str_name = "bandanna",
 		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofsunglasses",
 		str_name = "pair of sunglasses",
 		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofglasses",
 		str_name = "pair of glasses",
 		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "birthdayhat",
 		str_name = "birthday hat",
 		str_desc = "A striped, multi-color birthday hat. ",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "scarf",
 		str_name = "scarf",
 		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		str_name = "witch hat",
 		id_cosmetic = "witchhat",
 		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bomberhat",
 		str_name = "bomber hat",
 		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tuxedo",
 		str_name = "tuxedo",
 		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "beanie",
 		str_name = "beanie",
 		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "jestershat",
 		str_name = "jester's hat",
 		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairof3dglasses",
 		str_name = "pair of 3D glasses",
 		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "necktie",
 		str_name = "necktie",
 		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "vikinghelmet",
 		str_name = "viking helmet",
 		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofflipflops",
 		str_name = "pair of flip flops",
 		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fez",
 		str_name = "fez",
 		str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowtie",
 		str_name = "bowtie",
 		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cowboyhat",
 		str_name = "cowboy hat",
 		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "kepi",
 		str_name = "kepi",
 		str_desc = "A short kepi with a sunken top and an insignia on the front.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tamoshanter",
 		str_name = "tam o' shanter",
 		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "ushanka",
 		str_name = "ushanka",
 		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "karategi",
 		str_name = "karategi",
 		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "turban",
 		str_name = "turban",
 		str_desc = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nemes",
 		str_name = "nemes",
 		str_desc = "The traditional ancient Egyptian pharaoh's striped head cloth.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "varsityjacket",
 		str_name = "varsity jacket",
 		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "sombrero",
 		str_name = "sombrero",
 		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hawaiianshirt",
 		str_name = "hawaiian shirt",
 		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fursuit",
 		str_name = "fursuit",
 		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
-		rarity = rarity_patrician
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "diadem",
 		str_name = "diadem",
 		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
-		rarity = rarity_patrician
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "billshat",
 		str_name = "Bill's Hat",
 		str_desc = "A military beret with a shield insignia on the front.",
-		rarity = rarity_patrician
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "weddingring",
 		str_name = "wedding ring",
 		str_desc = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
-		rarity = rarity_patrician
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "earbuds",
 		str_name = "earbuds",
 		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
-		rarity = rarity_patrician
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nursesoutfit",
 		str_name = "nurse's outfit",
 		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
-		rarity = rarity_plebeian
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+
 	),
 	EwCosmeticItem(
 		id_cosmetic = "heartboxers",
 		str_name = "heart boxers",
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
+		acquisition = acquisition_milling,
 		ingredients = "poketuber",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "juveolantern",
 		str_name = "Juve-O'-Lantern",
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
+		acquisition = acquisition_milling,
 		ingredients = "pulpgourds",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowlerhat",
 		str_name = "Bowler Hat",
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
+		acquisition = acquisition_milling,
 		ingredients = "sourpotatoes",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cabbagetreehat",
 		str_name = "Cabbage Tree Hat",
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
+		acquisition = acquisition_milling,
 		ingredients = "bloodcabbages",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "braces",
 		str_name = "Braces",
 		str_desc = "An old fashioned orthodontic headgear. Elaborate metal wires and braces hold your nearly eroded, crooked teeth together in what can genously be called a mouth. You are in agony, and so is everyone that looks at you.",
+		acquisition = acquisition_milling,
 		ingredients = "joybeans",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hoodie",
 		str_name = "Hoodie",
 		str_desc = "Perfect for keeping warm in the middle of the blisteringly hot Arizonian desert! Heatstroke or bust!",
+		acquisition = acquisition_milling,
 		ingredients = "purplekilliflower",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
 		str_name = "Cop Badge",
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
+		acquisition = acquisition_milling,
 		ingredients = "razornuts",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "strawhat",
 		str_name = "Straw Hat",
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
+		acquisition = acquisition_milling,
 		ingredients = "pawpaw",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cosplayhorns",
 		str_name = "Cosplay Horns",
 		str_desc = "You’re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them… perhaps you understood their importance in a past life.",
+		acquisition = acquisition_milling,
 		ingredients = "sludgeberries",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "youfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
+		acquisition = acquisition_milling,
 		ingredients = "suganmanuts",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pajamaonesie",
 		str_name = "Pajama Onesie",
 		str_desc = "A soft jumpsuit with an audacious, repeating design printed over the entire cosmetic. You feel like getting a little bit fucking rowdy wearing this outrageous onesie. ",
+		acquisition = acquisition_milling,
 		ingredients = "pinkrowddishes",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofcircularsunglasses",
 		str_name = "Pair of Circular Sunglasses",
 		str_desc = "Sunglasses, but in a circle! Genius! You can't wait to show the world your hot takes on television shows for girls.",
+		acquisition = acquisition_milling,
 		ingredients = "dankwheat",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
 		str_name = "Flower Crown",
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
+		acquisition = acquisition_milling,
 		ingredients = "brightshade",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "spikedbracelets",
 		str_name = "Spiked Bracelets",
 		str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You’re hyper aware of these fashion disasters whenever you’re walking, making sure to swing them as far away from your body as possible.",
+		acquisition = acquisition_milling,
 		ingredients = "blacklimes",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
 		str_name = "SlimeCorp Pin",
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
+		acquisition = acquisition_milling,
 		ingredients = "phosphorpoppies",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "overalls",
 		str_name = "Overalls",
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
+		acquisition = acquisition_milling,
 		ingredients = "direapples",
 	),
 ]
@@ -5958,22 +6055,28 @@ for cosmetic in cosmetic_items_list:
 	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
 	cosmetic_names.append(cosmetic.id_cosmetic)
 
-# A list of hats obtainable via smelting.
-smeltable_cosmetics = []
-
-for cosmetic in cosmetic_items_list:
-	if cosmetic.ingredients != None:
-		pass
-	else:
-		smeltable_cosmetics.append(cosmetic.id_cosmetic)
-
 smelting_recipe_list = [
 	EwSmeltingRecipe(
 		id_recipe = "cosmetic",
-		str_name = "Cosmetic",
-		alias = "hat",
+		str_name = "a cosmetic",
+		alias = [
+			"hat",
+		],
 		ingredients = ['poudrin', 'poudrin'],
 		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "quadruplestuffedcrust",
+		str_name = "a Quadruple Stuffed Crust",
+		alias = [
+			"qsc",
+			"quad",
+			"quadruple",
+			"quadstuffed",
+			"quadruplestuffed",
+		],
+		ingredients = ['doublestuffedcrust', 'doublestuffedcrust', 'poudrin'],
+		products = ['quadruplestuffedcrust'],
 	),
 ]
 
@@ -5986,8 +6089,10 @@ recipe_names = []
 # Populate recipe map, including all aliases.
 for recipe in smelting_recipe_list:
 	smelting_recipe_map[recipe.id_recipe] = recipe
-	smelting_recipe_map[recipe.alias] = recipe
 	recipe_names.append(recipe.id_recipe)
+
+	for alias in recipe.alias:
+		smelting_recipe_map[alias] = recipe
 
 
 # Slimeoid attributes.
@@ -7536,22 +7641,66 @@ stock_emotes = {
 # List of items you can obtain via milling.
 mill_results = []
 
-# gather all items that can be the result of milling.
+# Gather all items that can be the result of milling.
 for m in item_list:
-	if m.ingredients != None:
+	if m.acquisition == acquisition_milling:
 		mill_results.append(m)
 	else:
 		pass
 
 for m in food_list:
-	if m.ingredients != None:
+	if m.acquisition == acquisition_milling:
 		mill_results.append(m)
 	else:
 		pass
 
 for m in cosmetic_items_list:
-	if m.ingredients != None:
+	if m.acquisition == acquisition_milling:
 		mill_results.append(m)
+	else:
+		pass
+
+# List of items you can obtain via smelting.
+smelt_results = []
+
+# Gather all items that can be the result of smelting.
+for s in item_list:
+	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	else:
+		pass
+
+for s in food_list:
+	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	else:
+		pass
+
+for s in cosmetic_items_list:
+	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	else:
+		pass
+
+# List of items you can obtain via mining.
+mine_results = []
+
+# Gather all items that can be the result of mining.
+for m in item_list:
+	if m.acquisition == acquisition_mining:
+		mine_results.append(m)
+	else:
+		pass
+
+for m in food_list:
+	if m.acquisition == acquisition_mining:
+		mine_results.append(m)
+	else:
+		pass
+
+for m in cosmetic_items_list:
+	if m.acquisition == acquisition_mining:
+		mine_results.append(m)
 	else:
 		pass
 
