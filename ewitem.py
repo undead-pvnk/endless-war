@@ -561,7 +561,7 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 				item_type_filter = ewcfg.it_food
 			)
 
-			if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+			if len(food_items) >= user_data.get_food_capacity():
 				return False
 			else:
 				return True
@@ -572,7 +572,7 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+			if len(weapons_held) > user_data.get_weapon_capacity():
 				return False
 			else:
 				return True
