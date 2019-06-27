@@ -1225,6 +1225,14 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = "tradingcardpack",
+		alias = [
+			"tcp",
+			"tradingcard",
+			"trading",
+			"card",
+			"cardpack",
+			"pack"
+		],
 		str_name = "Trading Cards",
 		str_desc = "A pack of trading cards",
 		price = 50,
@@ -1414,6 +1422,20 @@ def wef_scythe(ctn = None):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 	elif aim >= 9:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+# weapon effect function for "pickaxe"
+def wef_pickaxe(ctn = None):
+	ctn.slimes_damage *= 0.25
+
+	aim = (random.randrange(10) + 1)
+
+	if aim <= 50:
+		ctn.miss = True
+		ctn.slimes_damage = 0
+
+	elif aim == 100:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1642,6 +1664,28 @@ weapon_list = [
 		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
 		fn_effect = wef_scythe,
 		str_description = "It's a scythe"
+	),
+	EwWeapon(  # 11
+		id_weapon = "pickaxe",
+		alias = [
+			"pick",
+			"poudrinpickaxe",
+			"poudrinpick"
+		],
+		str_crit = "**Critical hit!!** {name_target} is hit with a pitiful pickaxe swing.",
+		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
+		str_equip = "You equip the pickaxe.",
+		str_weapon = "a pickaxe",
+		str_weaponmaster_self = "You are a rank {rank} master of the pickaxe.",
+		str_weaponmaster = "They are a rank {rank} master of the pickaxe.",
+		str_trauma_self = "There is a large dent in the top of your head.",
+		str_trauma = "There is a large dent in the top of their head.",
+		str_kill = "**THWACK!!** {name_player}'s pickaxe slams into the crown of {name_target} with a large overhead swing. Ooh, some slime splatters out!! {emote_skull}",
+		str_killdescriptor = "!mined",
+		str_damage = "{name_target} is !mined in the {hitzone}!!",
+		str_duel = "**THWACK, THWACK** {name_player} and {name_target} begin mining the ground underneath them, completely unaware of the other party.",
+		fn_effect = wef_pickaxe,
+		str_description = "It's a pickaxe"
 	)
 ]
 
