@@ -42,7 +42,7 @@ import ewmutation
 import ewquadrants
 import ewtransport
 import ewsmelting
-#import ewdebug
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -911,6 +911,14 @@ async def on_message(message):
 
 			user_data.persist()
 
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+		# Deletes all items in your inventory.
+		elif debug == True and cmd == '!clearinv':
+			user_data = EwUser(member = message.author)
+			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
+			response = "You destroy every single item in your inventory."
+			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == '!createapple':

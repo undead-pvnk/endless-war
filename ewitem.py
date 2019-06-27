@@ -7,6 +7,7 @@ import ewutils
 import ewcfg
 import ewstats
 import ewrolemgr
+import ewsmelting
 from ew import EwUser
 from ewplayer import EwPlayer
 
@@ -199,6 +200,8 @@ class EwGeneralItem:
 	str_desc = ""
 	ingredients = ""
 	acquisition = ""
+	price = 0
+	vendors = []
 
 	def __init__(
 		self,
@@ -209,6 +212,8 @@ class EwGeneralItem:
 		str_desc = "",
 		ingredients = "",
 		acquisition = "",
+		price = 0,
+		vendors = [],
 	):
 		self.id_item = id_item
 		self.alias = alias
@@ -217,6 +222,8 @@ class EwGeneralItem:
 		self.str_desc = str_desc
 		self.ingredients = ingredients
 		self.acquisition = acquisition
+		self.price = price
+		self.vendors = vendors
 
 
 """
@@ -446,7 +453,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 			else:
-				if item_sought.get('item_type') == ewcfg.it_slimepoudrin:
+				if item_sought.get('name') == "Slime Poudrin":
 					ewstats.change_stat(
 						id_server = user_data.id_server,
 						id_user = user_data.id_user,
@@ -621,7 +628,6 @@ def inventory(
 	id_user = None,
 	id_server = None,
 	item_type_filter = None,
-	item_name_filter = None
 ):
 	items = []
 
@@ -636,8 +642,6 @@ def inventory(
 			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
 		if item_type_filter != None:
 			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
-		if item_name_filter != None:
-			sql += " AND {} = '{}'".format(ewcfg.col_id_item, item_name_filter)
 
 		if id_server != None:
 			cursor.execute(sql.format(
@@ -830,6 +834,14 @@ async def item_use(cmd):
 		if item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)
 			user_data.persist()
+
+		if item.item_type == ewcfg.it_item:
+			name = item_sought.get('name')
+			if name == "Trading Cards":
+				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
+			else:
+				return
+
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

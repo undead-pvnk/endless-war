@@ -976,11 +976,7 @@ async def annoint(cmd):
 		else:
 			user_data = EwUser(member = cmd.message.author)
 
-			poudrins = ewitem.inventory(
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_type_filter = ewcfg.it_slimepoudrin
-			)
+			poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 			all_weapons = ewitem.inventory(
 				id_server = cmd.message.server.id,
@@ -1010,7 +1006,7 @@ async def annoint(cmd):
 					user_data.add_weaponskill(n = 1, weapon_type = weapon_item.item_props.get("weapon_type"))
 
 				# delete a slime poudrin from the player's inventory
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))
+				ewitem.item_delete(id_item = poudrins.get('id_item'))
 
 				user_data.persist()
 

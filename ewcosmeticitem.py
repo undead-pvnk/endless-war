@@ -27,6 +27,12 @@ class EwCosmeticItem:
 	# The ingredients necessary to make this item via it's acquisition method
 	ingredients = ""
 
+	# Cost in SlimeCoin to buy this item.
+	price = 0
+
+	# Names of the vendors selling this item.
+	vendors = []
+
 	def __init__(
 		self,
 		id_cosmetic = "",
@@ -35,6 +41,9 @@ class EwCosmeticItem:
 		rarity = "",
 		ingredients = "",
 		acquisition = "",
+		price = 0,
+		vendors = [],
+
 	):
 		self.id_cosmetic = id_cosmetic
 		self.str_name = str_name
@@ -42,6 +51,8 @@ class EwCosmeticItem:
 		self.rarity = rarity
 		self.ingredients = ingredients
 		self.acquisition = acquisition
+		self.price = price
+		self.vendors = vendors
 
 async def adorn(cmd):
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])

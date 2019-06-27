@@ -75,17 +75,27 @@ def gen_score_text(
 	id_server = None,
 	display_name = None
 ):
-	response = ""
 
 	user_data = EwUser(
 		id_user = id_user,
 		id_server = id_server
 	)
-	poudrins = ewitem.inventory(
+
+	items = ewitem.inventory(
 		id_user = id_user,
 		id_server = id_server,
-		item_type_filter = ewcfg.it_slimepoudrin
+		item_type_filter = ewcfg.it_item
 	)
+
+	poudrins = []
+
+	for poudrin in items:
+		name = poudrin.get('name')
+		if name != "Slime Poudrin":
+			pass
+		else:
+			poudrins.append(poudrin)
+
 	poudrins_count = len(poudrins)
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
@@ -99,17 +109,27 @@ def gen_score_text(
 
 """ show player's slime score """
 async def score(cmd):
-	response = ""
 	user_data = None
 	member = None
 
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
-		poudrins = ewitem.inventory(
+
+		items = ewitem.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_slimepoudrin
+			item_type_filter = ewcfg.it_item
 		)
+
+		poudrins = []
+
+		for poudrin in items:
+			name = poudrin.get('name')
+			if name != "Slime Poudrin":
+				pass
+			else:
+				poudrins.append(poudrin)
+
 		poudrins_count = len(poudrins)
 
 		# return my score

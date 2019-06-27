@@ -11,6 +11,7 @@ from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+import ewdebug
 
 # Global configuration options.
 version = "v3.5"
@@ -643,7 +644,7 @@ invuln_onrevive = 0
 weapon_fee = 100
 
 # farming
-crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
+crops_time_to_grow = 1  # in minutes; 180 minutes are 3 hours
 reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
@@ -733,7 +734,6 @@ str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
 str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " to {action} your {currency}."
 str_exchange_busy = "You can't {action} right now. Your slimebroker is busy."
-str_food_channelreq = "There's no food here. Go to the Food Court, the Smoker's Cough, the Red Mobster, or the Speakeasy to {action}."
 str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
@@ -898,7 +898,6 @@ col_quadrants_target2 = 'id_target2'
 # Item type names
 it_item = "item"
 it_medal = "medal"
-it_slimepoudrin = "slimepoudrin"
 it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
@@ -1070,6 +1069,20 @@ stats_clear_on_death = [
 
 context_slimeoidheart = 'slimeoidheart'
 
+# Item vendor names.
+vendor_bar = 'bar'	#rate of non-mtn dew drinks are 1 slimecoin to 9 hunger
+vendor_pizzahut = 'Pizza Hut'	#rate of fc vendors are 1 slimecoin to 10 hunger
+vendor_tacobell = 'Taco Bell'
+vendor_kfc = 'KFC'
+vendor_mtndew = 'Mtn Dew Fountain'
+vendor_vendingmachine = 'vending machine'
+vendor_seafood = 'Red Mobster Seafood'	#rate of seafood is 1 slimecoin to 9 hunger
+vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
+vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and Red Mobster
+vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
+vendor_farm = "Farm" #contains all the vegetables you can !reap
+vendor_bazaar = "bazaar"
+
 # List of normal items.
 item_list = [
 	EwGeneralItem(
@@ -1210,6 +1223,49 @@ item_list = [
 		acquisition = acquisition_milling,
 		ingredients = "direapples",
 	),
+	EwGeneralItem(
+		id_item = "tradingcardpack",
+		str_name = "Trading Cards",
+		str_desc = "A pack of trading cards",
+		price = 50,
+		vendors = [vendor_bazaar],
+	),
+	EwGeneralItem(
+		id_item = "rightleg",
+		context = 'slimexodia',
+		str_name = "Right Leg of Slimexodia",
+		str_desc = "The Right Leg of Slimexodia",
+	),
+	EwGeneralItem(
+		id_item = "leftleg",
+		context = 'slimexodia',
+		str_name = "Left Leg of Slimexodia",
+		str_desc = "The Left Leg of Slimexodia",
+	),
+	EwGeneralItem(
+		id_item = "slimexoida",
+		context = 'slimexodia',
+		str_name = "Slimexodia the Forbidden One",
+		str_desc = "Slimexodia the Forbidden One",
+	),
+	EwGeneralItem(
+		id_item = "rightarm",
+		context = 'slimexodia',
+		str_name = "Right Arm of Slimexodia",
+		str_desc = "The Right Arm of Slimexodia",
+	),
+	EwGeneralItem(
+		id_item = "leftarm",
+		context = 'slimexodia',
+		str_name = "Left Arm of Slimexodia",
+		str_desc = "The Left Arm of Slimexodia",
+	),
+	EwGeneralItem(
+		id_item = "theforbiddenone",
+		str_name = "Slimexodia",
+		str_desc = "Slimexodia",
+		acquisition = acquisition_smelting
+	),
 ]
 
 # A map of id_item to EwGeneralItem objects.
@@ -1217,14 +1273,6 @@ item_map = {}
 
 # A list of item names
 item_names = []
-
-# Populate item map, including all aliases.
-for item in item_list:
-	item_map[item.id_item] = item
-	item_names.append(item.id_item)
-
-	for alias in item.alias:
-		item_map[alias] = item
 
 # list of dyes you're able to saturate your Slimeoid with
 dye_list = []
@@ -1664,19 +1712,6 @@ weather_list = [
 	)
 ]
 
-# Food vendor names
-vendor_bar = 'bar'	#rate of non-mtn dew drinks are 1 slimecoin to 9 hunger
-vendor_pizzahut = 'Pizza Hut'	#rate of fc vendors are 1 slimecoin to 10 hunger
-vendor_tacobell = 'Taco Bell'
-vendor_kfc = 'KFC'
-vendor_mtndew = 'Mtn Dew Fountain'
-vendor_vendingmachine = 'vending machine'
-vendor_seafood = 'Red Mobster Seafood'	#rate of seafood is 1 slimecoin to 9 hunger
-vendor_diner = "Smoker's Cough"	#rate of drinks are 1 slimecoin to 15 hunger
-vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and Red Mobster
-vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
-vendor_farm = "Farm" #contains all the vegetables you can !reap
-vendor_none = "None" #Currently used for millable items so that they can't be bought from any vendor
 # stock ids
 stock_kfc = "kfc"
 stock_pizzahut = "pizzahut"
@@ -3157,11 +3192,12 @@ food_list = [
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
 	EwFood(
-		id_food = "diamondpickaxe",
-		recover_hunger = 1,
-		str_name = "Diamond Pickaxe",
-		str_eat = "You, uh, eat it. Sorry making new weapons scares me.",
-		str_desc = "Hehe, die Connor.",
+		id_food = "theforbiddenstuffedcrust",
+		recover_hunger = 340282366920938463463374607431768211455,
+		str_name = "The Forbidden Stuffed Crust Pizza",
+		str_eat = ewdebug.forbiddenstuffedcrust_eat,
+		str_desc = ewdebug.forbiddenstuffedcrust_desc,
+		acquisition = acquisition_smelting
 	),
 ]
 
@@ -3170,27 +3206,6 @@ food_map = {}
 
 # A list of food names
 food_names = []
-
-# A map of vendor names to their foods.
-food_vendor_inv = {}
-
-# Populate food map, including all aliases.
-for food in food_list:
-	food_map[food.id_food] = food
-	food_names.append(food.id_food)
-
-	# Add food to its vendors' lists.
-	for vendor in food.vendors:
-		vendor_list = food_vendor_inv.get(vendor)
-
-		if vendor_list == None:
-			vendor_list = []
-			food_vendor_inv[vendor] = vendor_list
-
-		vendor_list.append(food.id_food)
-
-	for alias in food.alias:
-		food_map[alias] = food
 
 # list of crops you're able to !reap
 vegetable_list = []
@@ -3261,12 +3276,6 @@ item_def_list = [
 			'medal_name': 'Blank Medal',
 			'medal_desc': 'An uninscribed medal with no remarkable features.'
 		}
-	),
-
-	EwItemDef(
-		item_type = it_slimepoudrin,
-		str_name = "Slime Poudrin",
-		str_desc = "A dense, crystalized chunk of precious slime."
 	),
 
 	EwItemDef(
@@ -4010,6 +4019,9 @@ poi_list = [
 		role = "Bazaar",
 		coord = (21, 11),
 		pvp = False,
+		vendors = [
+			vendor_bazaar
+		],
 		is_subzone = True,
 		mother_district = poi_id_smogsburg
 	),
@@ -4062,7 +4074,7 @@ poi_list = [
 			vendor_pizzahut,
 			vendor_tacobell,
 			vendor_kfc,
-			vendor_mtndew
+			vendor_mtndew,
 		],
 		is_subzone = True,
 		mother_district = poi_id_krakbay
@@ -5627,6 +5639,8 @@ cosmetic_items_list = [
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50,
+		vendors = [vendor_bazaar]
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -6050,11 +6064,6 @@ cosmetic_map = {}
 # A list of cosmetic names.
 cosmetic_names = []
 
-# Populate cosmetic map.
-for cosmetic in cosmetic_items_list:
-	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
-	cosmetic_names.append(cosmetic.id_cosmetic)
-
 smelting_recipe_list = [
 	EwSmeltingRecipe(
 		id_recipe = "cosmetic",
@@ -6062,7 +6071,7 @@ smelting_recipe_list = [
 		alias = [
 			"hat",
 		],
-		ingredients = ['poudrin', 'poudrin'],
+		ingredients = ['slimepoudrin', 'slimepoudrin'],
 		products = cosmetic_names
 	),
 	EwSmeltingRecipe(
@@ -6070,13 +6079,89 @@ smelting_recipe_list = [
 		str_name = "a Quadruple Stuffed Crust",
 		alias = [
 			"qsc",
-			"quad",
 			"quadruple",
-			"quadstuffed",
 			"quadruplestuffed",
 		],
-		ingredients = ['doublestuffedcrust', 'doublestuffedcrust', 'poudrin'],
+		ingredients = ['doublestuffedcrust', 'doublestuffedcrust'],
 		products = ['quadruplestuffedcrust'],
+	),
+	EwSmeltingRecipe(
+		id_recipe = "octuplestuffedcrust",
+		str_name = "a Octuple Stuffed Crust",
+		alias = [
+			"osc",
+			"octuple",
+			"octuplestuffed",
+		],
+		ingredients = ['quadruplestuffedcrust', 'quadruplestuffedcrust'],
+		products = ['octuplestuffedcrust'],
+	),
+	EwSmeltingRecipe(
+		id_recipe = "sexdecuplestuffedcrust",
+		str_name = "a Sexdecuple Stuffed Crust",
+		alias = [
+			"sdsc",
+			"sexdecuple",
+			"sexdecuplstuffed",
+		],
+		ingredients = ['octuplestuffedcrust', 'octuplestuffedcrust'],
+		products = ['sexdecuple'],
+	),
+	EwSmeltingRecipe(
+		id_recipe = "duotrigintuplestuffedcrust",
+		str_name = "a Duotrigintuple Stuffed Crust",
+		alias = [
+			"dtsc",
+			"duotrigintuple",
+			"duotrigintuplestuffed",
+		],
+		ingredients = ['sexdecuplestuffedcrust', 'sexdecuplestuffedcrust'],
+		products = ['duotrigintuplestuffedcrust'],
+	),
+	EwSmeltingRecipe(
+		id_recipe = "quattuorsexagintuplestuffedcrust",
+		str_name = "a quattuorsexagintuple Stuffed Crust",
+		alias = [
+			"qssc",
+			"quattuorsexagintuple",
+			"quattuorsexagintuplestuffed",
+		],
+		ingredients = ['duotrigintuplestuffedcrust', 'duotrigintuplestuffedcrust'],
+		products = ['quattuorsexagintuplestuffedcrust'],
+	),
+	EwSmeltingRecipe(
+		id_recipe = "theforbiddenstuffedcrust",
+		str_name = "a Forbidden Stuffed Crust",
+		alias = [
+			"fsc",
+			"forbiddenstuffedcrust",
+		],
+		ingredients = ['slimepoudrin', 'theforbiddenone'],
+		products = ['theforbiddenstuffedcrust'],
+	),
+	EwSmeltingRecipe(
+		id_recipe = "theforbiddenone",
+		str_name = "The Forbidden One",
+		alias = [
+			"forbiddenone",
+			"forbidden",
+			"sealed",
+			"exodia"
+		],
+		ingredients = ['leftleg', 'rightleg', 'slimeexodia', 'rightarm', 'leftarm'],
+		products = ['theforbiddenone']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "poudrinpickaxe",
+		str_name = "a Poudrin Pickaxe",
+		alias = [
+			"pp", # LOL
+			"poudrinpick",
+			"pickaxe",
+			"pick"
+		],
+		ingredients = ['poudrin', 'poudrin', 'poudrin', 'stick', 'stick'],
+		products = ['poudrinpickaxe']
 	),
 ]
 
@@ -7638,6 +7723,64 @@ stock_emotes = {
     stock_tacobell : emote_tacobell
 }
 
+# A map of vendor names to their items.
+vendor_inv = {}
+
+
+# Populate item map, including all aliases.
+for item in item_list:
+	item_map[item.id_item] = item
+	item_names.append(item.id_item)
+
+	# Add item to its vendors' lists.
+	for vendor in item.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(item.id_item)
+
+	for alias in item.alias:
+		item_map[alias] = item
+
+
+# Populate food map, including all aliases.
+for food in food_list:
+	food_map[food.id_food] = food
+	food_names.append(food.id_food)
+
+	# Add food to its vendors' lists.
+	for vendor in food.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(food.id_food)
+
+	for alias in food.alias:
+		food_map[alias] = food
+
+
+# Populate cosmetic map.
+for cosmetic in cosmetic_items_list:
+	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
+	cosmetic_names.append(cosmetic.id_cosmetic)
+
+	# Add food to its vendors' lists.
+	for vendor in cosmetic.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(cosmetic.id_cosmetic)
+
+
 # List of items you can obtain via milling.
 mill_results = []
 
@@ -7704,6 +7847,14 @@ for m in cosmetic_items_list:
 	else:
 		pass
 
+slimexodia_parts = []
+
+# Gather all items that can be the result of mining.
+for slimexodia in item_list:
+	if slimexodia.context == 'slimexodia':
+		slimexodia_parts.append(slimexodia)
+	else:
+		pass
 
 
 # Dict of all help responses linked to their associated topics
