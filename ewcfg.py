@@ -2806,7 +2806,7 @@ food_list = [
 		recover_hunger = 500,
 		price = 50,
 		inebriation = 0,
-		str_name = 'double Original Stuffed Crust® pizza',
+		str_name = 'Original Double Stuffed Crust® pizza',
 		vendors = [vendor_pizzahut],
 		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you imprudently ordered. Tepidly, you bring the first crud slice to your tongue, "
 				  "letting the melted cheese drizzle unto your awaiting tongue. And, just as a beast would be reduced to a state of pure carnal hunger and lust after acquiring it’s first taste of flesh and blood, "
@@ -3192,11 +3192,80 @@ food_list = [
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
 	EwFood(
+		id_food = "quadruplestuffedcrust",
+		alias = [
+			"qsc",
+			"quadruple",
+			"quadruplestuffed"
+		],
+		recover_hunger = 1000,
+		str_name = "Original Quadruple Stuffed Crust® Pizza",
+		str_eat = "test",
+		str_desc = "test",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food = "octuplestuffedcrust",
+		alias = [
+			"osc",
+			"octuple",
+			"octuplestuffed"
+		],
+		recover_hunger = 2000,
+		str_name = "Original Octuple Stuffed Crust® Pizza",
+		str_eat = "test",
+		str_desc = "test",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food = "sexdecuplestuffedcrust",
+		alias = [
+			"sdsc",
+			"sexdecuple",
+			"sexdecuplestuffed"
+		],
+		recover_hunger = 4000,
+		str_name = "Original Sexdecuple Stuffed Crust® Pizza",
+		str_eat = "test",
+		str_desc = "test",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food = "duotrigintuplestuffedcrust",
+		alias = [
+			"dtsc",
+			"duotrigintuple",
+			"duotrigintuplestuffed"
+		],
+		recover_hunger = 8000,
+		str_name = "Original Duotrigintuple Stuffed Crust® Pizza",
+		str_eat = "test",
+		str_desc = "test",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food = "quattuorsexagintuplestuffedcrust",
+		alias = [
+			"qssc",
+			"quattuorsexagintuple",
+			"quattuorsexagintuplestuffed"
+		],
+		recover_hunger = 16000,
+		str_name = "Original Quattuorsexagintuple Stuffed Crust® Pizza",
+		str_eat = "test",
+		str_desc = "test",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
 		id_food = "theforbiddenstuffedcrust",
+		alias = [
+			"fsc",
+			"forbiddenstuffedcrust",
+		],
 		recover_hunger = 340282366920938463463374607431768211455,
 		str_name = "The Forbidden Stuffed Crust Pizza",
-		str_eat = ewdebug.forbiddenstuffedcrust_eat,
-		str_desc = ewdebug.forbiddenstuffedcrust_desc,
+		str_eat = "test",
+		str_desc = "test",
 		acquisition = acquisition_smelting
 	),
 ]
@@ -6152,7 +6221,7 @@ smelting_recipe_list = [
 		products = ['theforbiddenone']
 	),
 	EwSmeltingRecipe(
-		id_recipe = "poudrinpickaxe",
+		id_recipe = "poudrinpickaxe", #todo make this a weapon that once equiped allows you to get double slime and extra poudrins from mining. also, flavor text for all the new items
 		str_name = "a Poudrin Pickaxe",
 		alias = [
 			"pp", # LOL
