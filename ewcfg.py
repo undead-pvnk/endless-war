@@ -2,6 +2,7 @@ import random
 
 from ewcosmeticitem import EwCosmeticItem
 from ewwep import EwWeapon
+from ewhunting import EwAttackType
 from ewweather import EwWeather
 from ewfood import EwFood
 from ewitem import EwItemDef, EwDefaultItem
@@ -1387,7 +1388,7 @@ weapon_list = [
 			"pistols",
 			"dualpistols"
 		],
-		str_crit = "**Critical Hit!** {name_player} has put dealt {name_target} a serious wound!",
+		str_crit = "**Critical Hit!** {name_player} has dealt {name_target} a serious wound!",
 		str_miss = "**You missed!** Your shot failed to land!",
 		str_equip = "You equip the dual pistols.",
 		str_weapon = "dual pistols",
@@ -1457,7 +1458,7 @@ weapon_list = [
 			"blade"
 		],
 		str_crit = "**Critical hit!!** {name_target} is cut deep!!",
-		str_miss = "",
+		str_miss = "**MISS!!** {name_player}'s katana didn't even leave a scratch!",
 		str_equip = "You equip the katana.",
 		str_weapon = "a katana",
 		str_weaponmaster_self = "You are a rank {rank} blademaster.",
@@ -1590,7 +1591,7 @@ weapon_list = [
 			"sickle"
 		],
 		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
-		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
+		str_miss = "**MISS!!** {name_player}'s swings miss wide of the target!",
 		str_equip = "You equip the scythe.",
 		str_weapon = "a scythe",
 		str_weaponmaster_self = "You are a rank {rank} master of the scythe.",
@@ -1619,6 +1620,82 @@ for weapon in weapon_list:
 
 	for alias in weapon.alias:
 		weapon_map[alias] = weapon
+
+# Attacking type effects
+def atf_fangs(ctn = None):
+	aim = (random.randrange(10) + 1)
+
+	if aim == 1:
+		ctn.miss = True
+		ctn.slimes_damage = 0
+	elif aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+# weapon effect function for "katana"
+def atf_talons(ctn = None):
+	ctn.miss = False
+	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
+
+	if (random.randrange(10) + 1) == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2.1
+
+def atf_raiderscythe(ctn = None):
+	ctn.enemy_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
+	aim = (random.randrange(10) + 1)
+
+	if aim <= 2:
+		ctn.miss = True
+		ctn.slimes_damage = 0
+	elif aim >= 9:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+# All enemy attacking types in the game.
+enemy_attack_type_list = [
+	EwAttackType( # 1
+		id_type = "fangs",
+		str_crit = "**Critical Hit!** {name_enemy} sinks their teeth deep into {name_target}!",
+		str_miss = "**{name_enemy} missed!** Their maw snaps shut!",
+		str_trauma_self = "You have bite marks littered throughout your body.",
+		str_trauma = "They have bite marks littered throughout their body.",
+		str_kill = "{name_enemy} opens their jaw for one last bite right on {name_target}'s juicy neck. **CHOMP**. Blood gushes out of their arteries and onto the ground. {emote_skull}",
+		str_killdescriptor = "mangled",
+		str_damage = "{name_target} is bitten on the {hitzone}!!",
+		fn_effect = atf_fangs
+	),
+	EwAttackType( # 2
+		id_type = "talons",
+		str_crit = "**Critical hit!!** {name_target} is slashed across the chest!!",
+		str_miss = "**{name_enemy} missed!** Their wings flap in the air as they prepare for another strike!",
+		str_trauma_self = "A large section of scars litter your abdomen.",
+		str_trauma = "A large section of scars litter their abdomen.",
+		str_kill = "In a fantastic display of avian savagery, {name_enemy}'s talons grip {name_target}'s stomach, rip open their flesh and tear their intestines to pieces. {emote_skull}",
+		str_killdescriptor = "disembowled",
+		str_damage = "{name_target} has their {hitzone} clawed at!!",
+		fn_effect = atf_talons
+	),
+	EwAttackType( # 3
+		id_type = "raiderscythe",
+		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
+		str_miss = "**MISS!!** {name_enemy}'s swings miss wide of the target!",
+		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
+		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
+		str_kill = "**SLASHH!!** {name_enemy}'s scythe cleaves the air, and {name_target} staggers. A moment later, {name_target}'s torso topples off their waist. {emote_skull}",
+		str_killdescriptor = "sliced in twain",
+		str_damage = "{name_target} is cleaved through the {hitzone}!!",
+		fn_effect = atf_raiderscythe
+	)
+]
+
+# A map of id_type to EwAttackType objects.
+attack_type_map = {}
+
+# Populate attack type map.
+for type in enemy_attack_type_list:
+	attack_type_map[type.id_type] = type
 
 # All weather effects in the game.
 weather_list = [

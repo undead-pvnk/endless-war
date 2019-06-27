@@ -191,7 +191,6 @@ async def attack(cmd):
 			# enemy found, redirect variables to code in ewhunting
 
 			# some variables are declared beforehand to prevent circular importing in ewhunting
-
 			ctn = EwEffectContainer(
 				miss=None,
 				crit=None,
