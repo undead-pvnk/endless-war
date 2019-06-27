@@ -41,7 +41,7 @@ class EwEnemy:
 
     """ Load the enemy data from the database. """
 
-    def __init__(self,  id_enemy=None, id_server=None):
+    def __init__(self, id_enemy=None, id_server=None):
         query_suffix = ""
 
         if id_enemy != None:
@@ -201,10 +201,15 @@ class EwEnemy:
                 # print(target_data.id_server)
                 channel = discord.utils.get(server.channels, name=ch_name)
 
-                print(channel)
                 # print(server)
 
-                member = discord.utils.get(channel.server.members, name=target_player.display_name)
+                # member = discord.utils.get(channel.server.members, name=target_player.display_name)
+
+                for m in channel.server.members:
+                    if m.id == target_data.id_user:
+                        member = m
+
+                print(target_player.display_name)
 
                 # member = server.get_member(target_data.id_user)
 
@@ -803,7 +808,7 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             user_data.id_killer = ""
 
         user_data.persist()
-        enemy_data = EwEnemy(member=member)
+        # enemy_data = EwEnemy(member = member)
 
         if slimes_damage >= enemy_data.slimes - enemy_data.bleed_storage:
             was_killed = True
@@ -1062,7 +1067,10 @@ def explode(damage=0, district_data=None):
 
     life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
     users = district_data.get_players_in_district(life_states=life_states)
-    enemies = district_data.get_enemies_in_district()
+
+    enemy_data = EwEnemy()
+
+    enemies = district_data.get_enemies_in_district(enemy_data)
 
     # damage players
     for user in users:
@@ -1108,8 +1116,7 @@ def explode(damage=0, district_data=None):
         enemy_data = EwEnemy(id_enemy=enemy, id_server=id_server)
 
         if True:
-            response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data._name,
-                                                                                                      damage)
+            response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
             resp_cont.add_channel_response(channel, response)
             slimes_damage = damage
             if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
@@ -1119,7 +1126,7 @@ def explode(damage=0, district_data=None):
                 # slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
                 # explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
-                delete_enemy(enemy)
+                delete_enemy(enemy_data)
 
                 response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(
                     enemy_data.display_name)

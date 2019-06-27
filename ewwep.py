@@ -741,7 +741,10 @@ def explode(damage = 0, district_data = None):
 
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
 	users = district_data.get_players_in_district(life_states = life_states)
-	enemies = district_data.get_enemies_in_district()
+
+	enemy_data = EwEnemy()
+
+	enemies = district_data.get_enemies_in_district(enemy_data)
 
 	# damage players
 	for user in users:
@@ -795,7 +798,7 @@ def explode(damage = 0, district_data = None):
 				# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
 				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
-				ewhunting.delete_enemy(enemy)
+				ewhunting.delete_enemy(enemy_data)
 
 				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
 				resp_cont.add_channel_response(channel, response)
