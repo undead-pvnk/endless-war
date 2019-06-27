@@ -199,20 +199,19 @@ class EwEnemy:
                 server = client.get_server(target_data.id_server)
                 # server = discord.Server(id=target_data.id_server)
                 # print(target_data.id_server)
-                channel = discord.utils.get(server.channels, name=ch_name)
+                # channel = discord.utils.get(server.channels, name=ch_name)
 
                 # print(server)
 
                 # member = discord.utils.get(channel.server.members, name=target_player.display_name)
 
-                for m in channel.server.members:
-                    if m.id == target_data.id_user:
-                        member = m
+                # for m in channel.server.members:
+                #     if m.id == target_data.id_user:
+                #         member = m
 
-                print(target_player.display_name)
 
-                # member = server.get_member(target_data.id_user)
-
+                member = server.get_member(target_data.id_user)
+                print(member)
 
                 #for m in members:
                 #    if m.id == target_data.id_user:
