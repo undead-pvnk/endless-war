@@ -201,12 +201,12 @@ class EwEnemy:
                     else:
                         target_num += 1
             else:
-                print(enemy_data.ai)
+                 print(enemy_data.ai)
 
 
         if target_data != None:
 
-                # print('no targets!')
+            # print('no targets!')
             # target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
             target_player = EwPlayer(id_user=target_data.id_user)
             target_slimeoid = EwSlimeoid(id_user=target_data.id_user)
@@ -226,7 +226,8 @@ class EwEnemy:
 
 
             member = server.get_member(target_data.id_user)
-            print(member)
+            # print(member)
+
 
             #for m in members:
             #    if m.id == target_data.id_user:
@@ -281,7 +282,7 @@ class EwEnemy:
             elif (target_iskillers or target_isrowdys or target_isjuvie) and (target_isnotdead):
                 was_juvenile = False
                 was_killed = False
-                was_shot = False
+                was_hurt = False
 
                 if target_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile,
                                               ewcfg.life_state_lucky,
@@ -332,6 +333,7 @@ class EwEnemy:
                         slimes_damage = max(target_data.slimes - target_data.bleed_storage, 0)
 
                     sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
+
                     # move around slime as a result of the shot
                     if was_juvenile:
                         slimes_drained = int(3 * slimes_damage / 4)  # 3/4
@@ -422,9 +424,10 @@ class EwEnemy:
                             resp_cont.add_response_container(explosion)
 
                         # don't recreate enemy data if enemy was killed in explosion
+                        # print("DELETE GATE 2")
+
                         if check_death(enemy_data) == False:
                             enemy_data = EwEnemy(id_enemy=self.id_enemy)
-                        print(enemy_data.life_state)
 
                         target_data = EwUser(member = member)
                     else:
@@ -467,7 +470,7 @@ class EwEnemy:
                     resp_cont.add_channel_response(ch_name, response)
 
                 # Persist user and enemy data.
-                if enemy_data != None:
+                if enemy_data.life_state == 1:
                     enemy_data.persist()
                 target_data.persist()
 
@@ -580,9 +583,13 @@ async def enemy_kill(id_server):
     enemydata = ewutils.execute_sql_query("SELECT * FROM enemies")
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
-        resp_cont = await enemy.kill()
-        if resp_cont != None:
-            await resp_cont.post()
+        if enemy.life_state == 0:
+            print("DELETE GATE 1")
+            delete_enemy(enemy)
+        else:
+            resp_cont = await enemy.kill()
+            if resp_cont != None:
+                await resp_cont.post()
 
 
 async def spawn_enemy(id_server):
@@ -888,7 +895,7 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
 
             # Enemy was killed.
             delete_enemy(enemy_data)
-            print("DEBUG - ENEMY DELETED")
+            print("DEBUG - ENEMY DELETED BY PLAYER KILLING")
 
             kill_descriptor = "beaten to death"
             if weapon != None:
@@ -1167,7 +1174,7 @@ def explode(damage=0, district_data=None):
 
 def check_death(enemy_data):
     if enemy_data.slimes <= 0 or enemy_data.life_state == 0:
-        delete_enemy(enemy_data)
+        # delete_enemy(enemy_data)
         return True
     else:
         return False

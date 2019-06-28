@@ -788,7 +788,7 @@ def explode(damage = 0, district_data = None):
 		enemy_data = EwEnemy(id_enemy = enemy, id_server = id_server)
 
 		if True:
-			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data._name, damage)
+			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
 			resp_cont.add_channel_response(channel, response)
 			slimes_damage = damage
 			if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
