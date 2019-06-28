@@ -1,8 +1,6 @@
-import asyncio
 import time
 import random
 import math
-import discord
 
 import ewcfg
 import ewutils
@@ -280,7 +278,6 @@ class EwEnemy:
             # enemies dont fuck with ghosts, ghosts dont fuck with enemies.
 
             elif (target_iskillers or target_isrowdys or target_isjuvie) and (target_isnotdead):
-                was_juvenile = False
                 was_killed = False
                 was_hurt = False
 
@@ -288,8 +285,6 @@ class EwEnemy:
                                               ewcfg.life_state_lucky,
                                               ewcfg.life_state_executive]:
                     # Target can be shot.
-                    if target_data.life_state == ewcfg.life_state_juvenile:
-                        was_juvenile = True
 
                     was_hurt = True
 
@@ -335,7 +330,7 @@ class EwEnemy:
                     sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=enemy_data.id_server)
 
                     # move around slime as a result of the shot
-                    if was_juvenile:
+                    if target_isjuvie:
                         slimes_drained = int(3 * slimes_damage / 4)  # 3/4
                     else:
                         slimes_drained = 0
@@ -523,7 +518,7 @@ async def summon_enemy(cmd):
         enemy.level = level_byslime(enemy.slimes)
         enemy.type = enemytype
         enemy.attacktype = "unarmed-juvie"
-        enemy.display_name = "lost juvie"
+        enemy.display_name = "Lost Juvie"
         enemy.bleed_storage = 0
         enemy.time_lastenter = 0
         enemy.initialslimes = enemy.slimes
@@ -545,7 +540,7 @@ async def summon_enemy(cmd):
         enemy.level = level_byslime(enemy.slimes)
         enemy.type = enemytype
         enemy.attacktype = "fangs"
-        enemy.display_name = "slimeasaur"
+        enemy.display_name = "Slimeasaur"
         enemy.bleed_storage = 0
         enemy.time_lastenter = 0
         enemy.initialslimes = enemy.slimes
@@ -600,13 +595,14 @@ async def spawn_enemy(id_server):
         enemy = EwEnemy()
 
         enemy.id_server = id_server
-        enemy.slimes = 47000
+        enemy.slimes = 50000
         enemy.totaldamage = 0
         enemy.ai = ""
         enemy.poi = 'greenlightdistrict'
+        enemy.life_state = 1
         enemy.level = level_byslime(enemy.slimes)
         enemy.type = enemytype
-        enemy.display_name = "the lost juvie"
+        enemy.display_name = "Lost Juvie"
         enemy.bleed_storage = 0
         enemy.time_lastenter = 0
         enemy.initialslimes = enemy.slimes

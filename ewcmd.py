@@ -13,6 +13,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
+from ewhunting import EwEnemy
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -206,6 +207,11 @@ async def data(cmd):
 	response = ""
 	user_data = None
 	member = None
+
+	# if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
+	# 	soughtenemy = " ".join(cmd.tokens[1:]).lower()
+	# 	response = "{} is a level {} enemy. They spawn with {} slime, and attack with their {}"
+	# elif cmd.mentions_count == 0:
 
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
