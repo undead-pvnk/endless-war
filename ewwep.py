@@ -798,10 +798,10 @@ def explode(damage = 0, district_data = None):
 				# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
 				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
-				ewhunting.delete_enemy(enemy_data)
-
 				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
 				resp_cont.add_channel_response(channel, response)
+
+				ewhunting.delete_enemy(enemy_data)
 
 			else:
 				# survive

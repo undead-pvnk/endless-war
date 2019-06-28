@@ -472,12 +472,13 @@ async def enemyBleedSlimes(id_server = None):
 				if slimes_to_bleed >= 1:
 					enemy_data.bleed_storage -= slimes_to_bleed
 					enemy_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
-					if enemy_data.slimes < 0:
-						delete_enemy(enemy_data)
 					enemy_data.persist()
 					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
 					district_data.persist()
 					total_bled += slimes_to_bleed
+
+					if enemy_data.slimes < 0:
+						delete_enemy(enemy_data)
 
 			await resp_cont.post()
 			conn.commit()

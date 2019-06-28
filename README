@@ -197,6 +197,7 @@ CREATE TABLE enemies (
     name varchar(32) NOT NULL DEFAULT '',
     level int NOT NULL DEFAULT '0',
     poi varchar(64) NOT NULL DEFAULT '',
+    life_state int NOT NULL DEFAULT '0',
     bleed_storage bigint NOT NULL DEFAULT '0',
     time_lastenter int NOT NULL DEFAULT '0',
     initialslimes bigint NOT NULL DEFAULT '0',

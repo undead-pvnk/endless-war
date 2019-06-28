@@ -30,6 +30,7 @@ class EwEnemy:
     display_name = ""
     level = 0
     poi = ""
+    life_state = 0
     type = ""
     attacktype = ""
     bleed_storage = 0
@@ -61,7 +62,7 @@ class EwEnemy:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
                         ewcfg.col_id_enemy,
                         ewcfg.col_id_server,
                         ewcfg.col_enemy_slimes,
@@ -72,6 +73,7 @@ class EwEnemy:
                         ewcfg.col_enemy_name,
                         ewcfg.col_enemy_level,
                         ewcfg.col_enemy_poi,
+                        ewcfg.col_enemy_life_state,
                         ewcfg.col_enemy_bleed_storage,
                         ewcfg.col_enemy_time_lastenter,
                         ewcfg.col_enemy_initialslimes,
@@ -91,9 +93,10 @@ class EwEnemy:
                     self.display_name = result[7]
                     self.level = result[8]
                     self.poi = result[9]
-                    self.bleed_storage = result[10]
-                    self.time_lastenter = result[11]
-                    self.initialslimes = result[12]
+                    self.life_state = result[10]
+                    self.bleed_storage = result[11]
+                    self.time_lastenter = result[12]
+                    self.initialslimes = result[13]
 
             finally:
                 # Clean up the database handles.
@@ -110,7 +113,7 @@ class EwEnemy:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_enemy,
                     ewcfg.col_id_server,
                     ewcfg.col_enemy_slimes,
@@ -121,6 +124,7 @@ class EwEnemy:
                     ewcfg.col_enemy_name,
                     ewcfg.col_enemy_level,
                     ewcfg.col_enemy_poi,
+                    ewcfg.col_enemy_life_state,
                     ewcfg.col_enemy_bleed_storage,
                     ewcfg.col_enemy_time_lastenter,
                     ewcfg.col_enemy_initialslimes,
@@ -135,6 +139,7 @@ class EwEnemy:
                     self.display_name,
                     self.level,
                     self.poi,
+                    self.life_state,
                     self.bleed_storage,
                     self.time_lastenter,
                     self.initialslimes,
@@ -150,14 +155,21 @@ class EwEnemy:
 
         client = ewutils.get_client()
 
-        time_now = int(time.time())
-        resp_cont = ewutils.EwResponseContainer(id_server=self.id_server)
-        district_data = EwDistrict(district=self.poi, id_server=self.id_server)
-        market_data = EwMarket(id_server=self.id_server)
-        ch_name = ewcfg.id_to_poi.get(self.poi).channel
-        number_of_players = district_data.get_players_in_district()
 
         enemy_data = self
+
+        time_now = int(time.time())
+        resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
+        district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
+        market_data = EwMarket(id_server=enemy_data.id_server)
+        ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
+        number_of_players = district_data.get_players_in_district()
+
+
+        target_data = None
+        target_player = None
+        target_slimeoid = None
+        target_num = 0
 
         if enemy_data.attacktype != None:
             attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
@@ -167,8 +179,9 @@ class EwEnemy:
         if len(number_of_players) >= 1:
 
             users = ewutils.execute_sql_query(
-                "SELECT {id_user} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
+                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
                     id_user=ewcfg.col_id_user,
+                    life_state=ewcfg.col_life_state,
                     poi=ewcfg.col_poi,
                     id_server=ewcfg.col_id_server
                 ), (
@@ -176,53 +189,54 @@ class EwEnemy:
                     enemy_data.id_server
                 ))
 
-            # Get killing enemy's info
-            if enemy_data.level <= 0:
-                enemy_data.level = 1
-                enemy_data.persist()
-
-            # Get target's info.
-            target_data = None
-            target_player = None
-            target_slimeoid = None
-
-
-            # debugger
+            # Get target's info based on its AI.
             if enemy_data.ai == "Attacker-A":
+                # print(len(users))
 
-
-
-                target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
-                target_player = EwPlayer(id_user=users[0][0])
-                target_slimeoid = EwSlimeoid(id_user=users[0][0])
-
-                server = client.get_server(target_data.id_server)
-                # server = discord.Server(id=target_data.id_server)
-                # print(target_data.id_server)
-                # channel = discord.utils.get(server.channels, name=ch_name)
-
-                # print(server)
-
-                # member = discord.utils.get(channel.server.members, name=target_player.display_name)
-
-                # for m in channel.server.members:
-                #     if m.id == target_data.id_user:
-                #         member = m
-
-
-                member = server.get_member(target_data.id_user)
-                print(member)
-
-                #for m in members:
-                #    if m.id == target_data.id_user:
-                #        member = m
-
-
-                # print(member)
-                # member.id = target_data.id_user
-                # member.server.id = target_data.id_server
+                while target_num < len(users):
+                    # checks if target is alive
+                    if users[target_num][1] != 0:
+                        target_data = EwUser(id_user=users[target_num][0], id_server=enemy_data.id_server)
+                        target_num = len(users)
+                    else:
+                        target_num += 1
             else:
                 print(enemy_data.ai)
+
+
+        if target_data != None:
+
+                # print('no targets!')
+            # target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+            target_player = EwPlayer(id_user=target_data.id_user)
+            target_slimeoid = EwSlimeoid(id_user=target_data.id_user)
+
+            server = client.get_server(target_data.id_server)
+            # server = discord.Server(id=target_data.id_server)
+            # print(target_data.id_server)
+            # channel = discord.utils.get(server.channels, name=ch_name)
+
+            # print(server)
+
+            # member = discord.utils.get(channel.server.members, name=target_player.display_name)
+
+            # for m in channel.server.members:
+            #     if m.id == target_data.id_user:
+            #         member = m
+
+
+            member = server.get_member(target_data.id_user)
+            print(member)
+
+            #for m in members:
+            #    if m.id == target_data.id_user:
+            #        member = m
+
+
+            # print(member)
+            # member.id = target_data.id_user
+            # member.server.id = target_data.id_server
+
 
             target_mutations = target_data.get_mutations()
 
@@ -249,6 +263,7 @@ class EwEnemy:
             target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
             target_isslimecorp = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
             target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
+            target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
 
             if target_data.life_state == ewcfg.life_state_kingpin:
                 # Disallow killing generals.
@@ -263,8 +278,7 @@ class EwEnemy:
 
             # enemies dont fuck with ghosts, ghosts dont fuck with enemies.
 
-            elif target_iskillers or target_isrowdys or target_isjuvie:
-
+            elif (target_iskillers or target_isrowdys or target_isjuvie) and (target_isnotdead):
                 was_juvenile = False
                 was_killed = False
                 was_shot = False
@@ -406,7 +420,12 @@ class EwEnemy:
                             resp_cont.add_channel_response(ch_name, explode_resp)
                             explosion = explode(damage=explode_damage, district_data=district_data)
                             resp_cont.add_response_container(explosion)
-                        enemy_data = EwEnemy(id_enemy=self.id_enemy)
+
+                        # don't recreate enemy data if enemy was killed in explosion
+                        if check_death(enemy_data) == False:
+                            enemy_data = EwEnemy(id_enemy=self.id_enemy)
+                        print(enemy_data.life_state)
+
                         target_data = EwUser(member = member)
                     else:
                         # A non-lethal blow!
@@ -448,7 +467,8 @@ class EwEnemy:
                     resp_cont.add_channel_response(ch_name, response)
 
                 # Persist user and enemy data.
-                enemy_data.persist()
+                if enemy_data != None:
+                    enemy_data.persist()
                 target_data.persist()
 
                 district_data.persist()
@@ -496,6 +516,7 @@ async def summon_enemy(cmd):
         enemy.totaldamage = 0
         enemy.ai = "Attacker-A"
         enemy.poi = user_data.poi
+        enemy.life_state = 1
         enemy.level = level_byslime(enemy.slimes)
         enemy.type = enemytype
         enemy.attacktype = "unarmed-juvie"
@@ -517,6 +538,7 @@ async def summon_enemy(cmd):
         enemy.totaldamage = 0
         enemy.ai = "Attacker-A"
         enemy.poi = user_data.poi
+        enemy.life_state = 1
         enemy.level = level_byslime(enemy.slimes)
         enemy.type = enemytype
         enemy.attacktype = "fangs"
@@ -611,12 +633,12 @@ def find_enemy(enemy_search=None, user_data=None):
     return enemy_sought
 
 
-def delete_enemy(enemy):
-    print("DEBUG - {}".format(enemy.id_enemy))
+def delete_enemy(enemy_data):
+    print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
     ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
         id_enemy=ewcfg.col_id_enemy
     ), (
-        enemy.id_enemy,
+        enemy_data.id_enemy,
     ))
 
 
@@ -1125,11 +1147,12 @@ def explode(damage=0, district_data=None):
                 # slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
                 # explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
-                delete_enemy(enemy_data)
-
                 response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(
                     enemy_data.display_name)
                 resp_cont.add_channel_response(channel, response)
+
+                enemy_data.life_state = 0
+                enemy_data.persist()
 
             else:
                 # survive
@@ -1141,3 +1164,10 @@ def explode(damage=0, district_data=None):
                 enemy_data.change_slimes(n=-slime_splatter, source=ewcfg.source_killing)
                 enemy_data.persist()
     return resp_cont
+
+def check_death(enemy_data):
+    if enemy_data.slimes <= 0 or enemy_data.life_state == 0:
+        delete_enemy(enemy_data)
+        return True
+    else:
+        return False
