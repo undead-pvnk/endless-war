@@ -930,6 +930,13 @@ async def arm(cmd):
 			value = value.lower()
 
 		weapon = ewcfg.weapon_map.get(value)
+
+		if weapon != None:
+			if weapon.id_weapon == 'pickaxe':
+				weapon = None
+			else:
+				weapon = weapon
+
 		if weapon != None:
 			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecoin:
 				response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecoin)
@@ -957,7 +964,15 @@ async def arm(cmd):
 
 				response += "take {}.".format(weapon.str_weapon)
 		else:
-			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
+			weapon_names = []
+
+			for weapon in ewcfg.weapon_names:
+				if weapon == 'pickaxe':
+					pass
+				else:
+					weapon_names.append(weapon)
+
+			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = weapon_names, conjunction = "or"))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

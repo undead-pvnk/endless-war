@@ -188,11 +188,12 @@ async def order(cmd):
 				if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
 					value = 0
 
-				if value > user_data.slimecoin:
+				if value > user_data.slimes:
 					# Not enough money.
-					response = "A {food} is {cost:,} SlimeCoin (and you only have {coins:,}).".format(food = item.str_name, cost = value, coins = user_data.slimecoin)
+					response = "A {} costs {:,} slime, and you only have {:,}.".format(item.str_name, value, user_data.slimes)
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:
-					user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_spending)
+					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 
 				if company_data is not None:
 					company_data.recent_profits += value
@@ -221,6 +222,7 @@ async def order(cmd):
 					if len(food_items) >= user_data.get_food_capacity():
 						# user_data never got persisted so the player won't lose money unnecessarily
 						response = "You can't carry any more food than that."
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					else:
 						ewitem.item_create(
@@ -252,7 +254,8 @@ async def order(cmd):
 						}
 					),
 
-				response = "You slam an encrypted thumbdrive into the cash register down at {vendor} and transfer {cost:,} SlimeCoin for a {food}".format(cost = value, vendor = current_vendor, food = item.str_name)
+				response = "You slam down {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
+				user_data.persist()
 
 		else:
 			response = "What food do you want?"

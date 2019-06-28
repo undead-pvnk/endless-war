@@ -15,6 +15,7 @@ import ewstats
 from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
+from ewitem import EwItem
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
 # exceeds 3 in 5 seconds, you die.
@@ -129,6 +130,14 @@ async def mine(cmd):
 		else:
 			response = ""
 
+			has_pickaxe = False
+
+			if user_data.weapon != "-1": #todo
+				weapon_item = EwItem(id_item = user_data.weapon)
+				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+				if weapon.id_weapon == "pickaxe":
+					has_pickaxe = True
+
 			# Determine if an item is found.
 			unearthed_item = False
 			unearthed_item_amount = 0
@@ -139,6 +148,9 @@ async def mine(cmd):
 				unearthed_item_chance *= 2
 			if ewcfg.mutation_id_lucky in mutations:
 				unearthed_item_chance *= 1.33
+			if has_pickaxe == True:
+				unearthed_item_chance *= 1.33
+
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -213,6 +225,9 @@ async def mine(cmd):
 			alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
 			mining_yield = min(mining_yield, alternate_yield)
+
+			if has_pickaxe == True:
+				mining_yield *= 2
 
 			levelup_response = user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
 
