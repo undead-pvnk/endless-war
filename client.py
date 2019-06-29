@@ -64,9 +64,6 @@ active_users_map = {}
 
 # Map of all command words in the game to their implementing function.
 cmd_map = {
-	"!dumpwef": ewwep.dumpwef,
-	"!acquirestatus": ewcmd.acquireStatus,
-	"!statusinfo": ewcmd.statusInfo,
 	# Attack another player
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
@@ -366,9 +363,9 @@ cmd_map = {
 	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
-        # mutations
-        ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
-        ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+	# mutations
+	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
 	ewcfg.cmd_teleport: ewmap.teleport,
 	# restores poi roles to their proper names, only usable by admins

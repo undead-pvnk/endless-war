@@ -1499,7 +1499,7 @@ def wef_molotov(ctn = None):
 	ctn.slimes_spent *= 2
 	aim = (random.randrange(100) + 1)
 
-	ctn.bystander_damage = 0
+	ctn.bystander_damage = dmg * 0.5
 
 	if aim <= 20:
 		ctn.backfire = True
@@ -1661,7 +1661,7 @@ weapon_list = [
 			"submachinegun"
 		],
 		str_crit = "**Critical hit!!** {name_player} smg",
-		str_jammed = "jammed",
+		str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
 		str_miss = "**MISS!!** {name_player} smg",
 		str_equip = "smg equip.",
 		str_weaponmaster_self = "You are a rank {rank} master of the submachine gun.",
@@ -1781,7 +1781,7 @@ weapon_list = [
 		],
 		str_crit = "**Critical hit!!** {name_target} broadsword",
 		str_miss = "broadsword miss",
-		str_backfire = "ouch dawg",
+		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
 		str_weapon = "a broadsword",
 		str_weaponmaster_self = "You are a rank {rank} broadsword.",
