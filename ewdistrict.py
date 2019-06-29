@@ -170,12 +170,12 @@ class EwDistrict:
 			nega_present = len(slimeoids) > 0
                         
 			if nega_present:
-				decay *= 5
+				decay *= 1.5
 
 
 			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-				responses = self.change_capture_points(decay, ewcfg.actor_decay)
+				responses = self.change_capture_points(int(decay), ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
 		if self.capture_points < 0:

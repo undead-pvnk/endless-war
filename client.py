@@ -341,7 +341,7 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-	
+        ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
 	# Negaslimeoids
 
 	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
@@ -723,6 +723,10 @@ async def on_ready():
 async def on_member_join(member):
 	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
+	ewplayer.player_update(
+		member = member,
+		server = member.server
+	)
 
 @client.event
 async def on_message_delete(message):

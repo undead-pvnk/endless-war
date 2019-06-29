@@ -16,7 +16,7 @@ from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
 
 # Global configuration options.
-version = "v3.4"
+version = "v3.4a"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -50,6 +50,7 @@ slimeoid_state_none = 0
 slimeoid_state_forming = 1
 slimeoid_state_active = 2
 slimeoid_state_stored = 3
+slimeoid_state_dead = 4
 
 # slimeoid types
 sltype_lab = 'Lab'
@@ -496,6 +497,7 @@ cmd_walkslimeoid = cmd_prefix + 'walkslimeoid'
 cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
+cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -1071,6 +1073,8 @@ stats_clear_on_death = [
     stat_slimesfarmed,
      stat_slimesscavenged
 ]
+
+context_slimeoidheart = 'slimeoidheart'
 
 # List of normal items.
 item_list = [
