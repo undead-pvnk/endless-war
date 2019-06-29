@@ -142,13 +142,14 @@ async def order(cmd):
 			value = value.lower()
 
 		# Finds the item if it's an EwGeneralItem.
+
 		item = ewcfg.item_map.get(value)
 		item_type = ewcfg.it_item
 
 		# Finds the item if it's an EwFood item.
 		if item == None:
 			item = ewcfg.food_map.get(value)
-			item_type = ewcfg.food
+			item_type = ewcfg.it_food
 
 		# Finds the item if it's an EwCosmeticItem.
 		if item == None:
@@ -166,6 +167,7 @@ async def order(cmd):
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
 			else:
+				response = ""
 				market_data = EwMarket(id_server = cmd.message.server.id)
 
 				value = item.price
@@ -191,74 +193,75 @@ async def order(cmd):
 				if value > user_data.slimes:
 					# Not enough money.
 					response = "A {} costs {:,} slime, and you only have {:,}.".format(item.str_name, value, user_data.slimes)
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				else:
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 
-				if company_data is not None:
-					company_data.recent_profits += value
-					company_data.persist()
+					if company_data is not None:
+						company_data.recent_profits += value
+						company_data.persist()
 
-				if item_type == ewcfg.it_item:
-					ewitem.item_create(
-						item_type = ewcfg.it_item,
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
-						item_props = {
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-
-				if item_type == ewcfg.it_food:
-					food_items = ewitem.inventory(
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
-						item_type_filter = ewcfg.it_food
-					)
-
-					if len(food_items) >= user_data.get_food_capacity():
-						# user_data never got persisted so the player won't lose money unnecessarily
-						response = "You can't carry any more food than that."
-						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-					else:
+					if item_type == ewcfg.it_item:
 						ewitem.item_create(
-							item_type = ewcfg.it_food,
+							item_type = ewcfg.it_item,
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
 							item_props = {
-								'id_food': item.id_food,
-								'food_name': item.str_name,
-								'food_desc': item.str_desc,
-								'recover_hunger': item.recover_hunger,
-								'inebriation': item.inebriation,
-								'str_eat': item.str_eat,
-								'time_expir': time.time() + ewcfg.farm_food_expir
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc,
 							}
 						),
+						response = "You slam down {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_name)
+						user_data.persist()
 
-				if item_type == ewcfg.it_cosmetic:
-					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
-						item_props = {
-							'id_cosmetic': item.id_cosmetic,
-							'cosmetic_name': item.str_name,
-							'cosmetic_desc': item.str_desc,
-							'rarity': item.rarity,
-							'adorned': 'false'
-						}
-					),
+					if item_type == ewcfg.it_food:
+						food_items = ewitem.inventory(
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_type_filter = ewcfg.it_food
+						)
 
-				response = "You slam down {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
-				user_data.persist()
+						if len(food_items) >= user_data.get_food_capacity():
+							# user_data never got persisted so the player won't lose money unnecessarily
+							response = "You can't carry any more food than that."
+
+						else:
+							ewitem.item_create(
+								item_type = ewcfg.it_food,
+								id_user = cmd.message.author.id,
+								id_server = cmd.message.server.id,
+								item_props = {
+									'id_food': item.id_food,
+									'food_name': item.str_name,
+									'food_desc': item.str_desc,
+									'recover_hunger': item.recover_hunger,
+									'inebriation': item.inebriation,
+									'str_eat': item.str_eat,
+									'time_expir': time.time() + ewcfg.farm_food_expir
+								}
+							),
+							response = "You slam down {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
+							user_data.persist()
+
+					if item_type == ewcfg.it_cosmetic:
+						ewitem.item_create(
+							item_type = ewcfg.it_cosmetic,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'rarity': item.rarity,
+								'adorned': 'false'
+							}
+						),
+						response = "You slam down {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
+						user_data.persist()
 
 		else:
-			response = "What food do you want?"
+			response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

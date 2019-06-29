@@ -399,6 +399,8 @@ cmd_howl_alt1 = cmd_prefix + '56709'
 cmd_transfer = cmd_prefix + 'transfer'
 cmd_transfer_alt1 = cmd_prefix + 'xfer'
 cmd_menu = cmd_prefix + 'menu'
+cmd_menu_alt1 = cmd_prefix + 'catalog'
+cmd_menu_alt2 = cmd_prefix + 'catalogue'
 cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
@@ -1223,7 +1225,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = "tradingcardpack",
 		alias = [
-			"tcp",
+			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
 			"tradingcard",
 			"trading",
 			"card",
@@ -1238,50 +1240,60 @@ item_list = [
 	EwGeneralItem(
 		id_item = "rightleg",
 		context = 'slimexodia',
-		str_name = "Right Leg of Slimexodia",
-		str_desc = "The Right Leg of Slimexodia",
+		str_name = "The Right Leg of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
 		id_item = "leftleg",
 		context = 'slimexodia',
-		str_name = "Left Leg of Slimexodia",
-		str_desc = "The Left Leg of Slimexodia",
+		str_name = "Left Leg of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
 		id_item = "slimexoida",
 		context = 'slimexodia',
-		str_name = "Slimexodia the Forbidden One",
-		str_desc = "Slimexodia the Forbidden One",
+		str_name = "Slimexodia The Forbidden {}".format(emote_111),
+		str_desc = "The centerpiece of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
 		id_item = "rightarm",
 		context = 'slimexodia',
-		str_name = "Right Arm of Slimexodia",
-		str_desc = "The Right Arm of Slimexodia",
+		str_name = "Right Arm of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
 		id_item = "leftarm",
 		context = 'slimexodia',
-		str_name = "Left Arm of Slimexodia",
-		str_desc = "The Left Arm of Slimexodia",
+		str_name = "Left Arm of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
-		id_item = "theforbiddenone",
-		str_name = "Slimexodia",
-		str_desc = "Slimexodia",
+		id_item = "theforbiddenoneoneone",
+		str_name = "The Forbidden {}".format(emote_111),
+		str_desc = ewdebug.theforbiddenoneoneone_desc,
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
 		id_item = "stick",
-		str_name = "Stick",
-		str_desc = "Just a dumb stick.",
+		str_name = "stick",
+		str_desc = "It’s just some useless, dumb stick.",
 		acquisition = acquisition_milling,
 		ingredients = "direapples",
 	),
 	EwGeneralItem(
 		id_item = "faggot",
 		str_name = "faggot",
-		str_desc = "A bundle of dumb sticks.",
+		str_desc = "Wow, incredible! We’ve evolved from one dumb stick to several, all tied together for the sake of a retarded puesdo-pun! Truly, ENDLESS WAR has reached its peak. It’s all downhill from here, folks.",
 		acquisition = acquisition_smelting
 	),
 ]
@@ -1437,15 +1449,15 @@ def wef_scythe(ctn = None):
 
 # weapon effect function for "pickaxe"
 def wef_pickaxe(ctn = None):
-	ctn.slimes_damage *= 0.25
+	ctn.slimes_damage *= 0.2
 
 	aim = (random.randrange(10) + 1)
 
-	if aim <= 50:
+	if aim == 1:
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
-	elif aim == 100:
+	elif aim == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1682,18 +1694,18 @@ weapon_list = [
 			"poudrinpickaxe",
 			"poudrinpick"
 		],
-		str_crit = "**Critical hit!!** {name_target} is hit with a pitiful pickaxe swing.",
-		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
+		str_crit = "**Critical hit!!** By sheer dumb luck, {name_player} manages to get a good hit off on {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} is too weak to lift their pickaxe!",
 		str_equip = "You equip the pickaxe.",
 		str_weapon = "a pickaxe",
-		str_weaponmaster_self = "You are a rank {rank} master of the pickaxe.",
-		str_weaponmaster = "They are a rank {rank} master of the pickaxe.",
-		str_trauma_self = "There is a large dent in the top of your head.",
-		str_trauma = "There is a large dent in the top of their head.",
-		str_kill = "**THWACK!!** {name_player}'s pickaxe slams into the crown of {name_target} with a large overhead swing. Ooh, some slime splatters out!! {emote_skull}",
+		str_weaponmaster_self = "You are a rank {rank} coward of the pickaxe.",
+		str_weaponmaster = "They are a rank {rank} coward of the pickaxe.",
+		str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
+		str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
+		str_kill = "**THWACK!!** {name_player} summons what little courage they possess to lift the pickaxe above their head and !mine {name_target} to death. How embarrassing! {emote_skull}",
 		str_killdescriptor = "!mined",
-		str_damage = "{name_target} is !mined in the {hitzone}!!",
-		str_duel = "**THWACK, THWACK** {name_player} and {name_target} begin mining the ground underneath them, completely unaware of the other party.",
+		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
+		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
 		fn_effect = wef_pickaxe,
 		str_description = "It's a pickaxe"
 	)
@@ -2530,7 +2542,7 @@ food_list = [
 		price = 300,
 		inebriation = 0,
 		str_name = 'two sunny side up eggs',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You isolate the yolks from your two fried eggs with surgical precision, leaving a clump of egg whites scraps and two perfectly contained yellow bubbles waiting to burst. "
 				  "You salt and pepper them both thoroughly before eating one after another, first chewing on the slightly discolored egg whites and then bursting each egg yolk whole in your "
 				  "mouth and letting the runny, golden goo to coat your insides.",
@@ -2863,7 +2875,7 @@ food_list = [
 		inebriation = 0,
 		str_name = 'Original Double Stuffed Crust® pizza',
 		vendors = [vendor_pizzahut],
-		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you imprudently ordered. Tepidly, you bring the first crud slice to your tongue, "
+		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you imprudently ordered. Tepidly, you bring the first slice to your tongue, "
 				  "letting the melted cheese drizzle unto your awaiting tongue. And, just as a beast would be reduced to a state of pure carnal hunger and lust after acquiring it’s first taste of flesh and blood, "
 				  "you enter a state of sheer wilderness, stuffing each stuffed crust into your teeth and gums and tongue and throat. You scream at the top of your lungs. Sicknasty, dude!!",
 		str_desc = "Nothing can articulate the sheer awesomeness of this pizza. Always thought to be theoretically possible and discussed in hushed tones in obscure circles on the fringe of acceptable dialogue, "
@@ -3199,7 +3211,7 @@ food_list = [
 	EwFood(
 		id_food = "khaotickilliflowerfuckenergy",
 		recover_hunger = 1200,
-		price = 120,
+		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Khaotic Killiflower FUCK ENERGY',
@@ -3209,7 +3221,7 @@ food_list = [
 	EwFood(
 		id_food = "rampagingrowddishfuckenergy",
 		recover_hunger = 1200,
-		price = 120,
+		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Rampaging Rowddish FUCK ENERGY',
@@ -3219,7 +3231,7 @@ food_list = [
 	EwFood(
 		id_food = "direappleciderfuckenergy",
 		recover_hunger = 1200,
-		price = 120,
+		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Dire Apple Cider FUCK ENERGY',
@@ -3229,7 +3241,7 @@ food_list = [
 	EwFood(
 		id_food = "ultimateurinefuckenergy",
 		recover_hunger = 1200,
-		price = 120,
+		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Ultimate Urine FUCK ENERGY',
@@ -3239,7 +3251,7 @@ food_list = [
 	EwFood(
 		id_food = "superwaterfuckenergy",
 		recover_hunger = 1200,
-		price = 120,
+		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
 		str_name = 'Super Water FUCK ENERGY',
@@ -3255,8 +3267,27 @@ food_list = [
 		],
 		recover_hunger = 1000,
 		str_name = "Original Quadruple Stuffed Crust® Pizza",
-		str_eat = "test",
-		str_desc = "test",
+		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you "
+				  "imprudently smelted. Tepidly, you bring the first slice to your tongue, letting the melted "
+				  "cheese drizzle unto your awaiting tongue. And, just as a beast would be reduced to a state of pure "
+				  "carnal hunger and lust after acquiring it’s first taste of flesh and blood, you enter a state of "
+				  "sheer wilderness, stuffing each stuffed crust into your teeth and gums and tongue and throat. You "
+				  "scream at the top of your lungs. Sicknasty, dude!!",
+		str_desc = "Nothing can articulate the sheer awesomeness of this pizza. Always thought to be theoretically "
+				   "possible and discussed in hushed tones in obscure circles on the fringe of acceptable dialogue, but "
+				   "never achieved in practice, this heap of diary and dough can only truly be comprehended through "
+				   "several layers of abstraction. It is too big, too thick, too heavy and too deep. To put it simply, "
+				   "however, it is a pizza. Specifically, an Original Stuffed Crust® pizza. But, everything is quadrupled. "
+				   "Every ingredient is quadrupled. The toppings are quadrupled, the cheese is quadrupled, the pepperoni "
+				   "is quadrupled, the grease is quadrupled, the yeast is quadrupled and you fucking bet you could fit "
+				   "your whole forearm into the caverns they dare call a crust, if it weren’t overflowing with quadruple "
+				   "the molten, stretchy string cheese. And it doesn’t stop there, quadruple the size, quadruple the weight, "
+				   "quadruple the budget required to ward off lawsuits for quadruple the colohestral, quadruple the heart "
+				   "attacks. People die because of this pizza, someone you know has or will die because of this item in your "
+				   "inventory right now. It’s made to order, piping hot and ready to be devoured by whatever foolish egomaniac "
+				   "with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the "
+				   "life of the ones you love. Chant it’s name, praise the harbinger of death you just acquired from Pizza "
+				   "Hut. Quadruple Stuffed Crust. Quadruple Stuffed Crust. QUADRUPLE STUFFED CRUST!! AAAAAAAAAAAAAAAAAAH!!",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -3268,8 +3299,27 @@ food_list = [
 		],
 		recover_hunger = 2000,
 		str_name = "Original Octuple Stuffed Crust® Pizza",
-		str_eat = "test",
-		str_desc = "test",
+		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you "
+				  "imprudently smelted. Tepidly, you bring the first slice to your tongue, letting the melted "
+				  "cheese drizzle unto your awaiting tongue. And, just as a beast would be reduced to a state of pure "
+				  "carnal hunger and lust after acquiring it’s first taste of flesh and blood, you enter a state of "
+				  "sheer wilderness, stuffing each stuffed crust into your teeth and gums and tongue and throat. You "
+				  "scream at the top of your lungs. Sicknasty, dude!!",
+		str_desc = "Nothing can articulate the sheer awesomeness of this pizza. Always thought to be theoretically "
+				   "possible and discussed in hushed tones in obscure circles on the fringe of acceptable dialogue, but "
+				   "never achieved in practice, this heap of diary and dough can only truly be comprehended through "
+				   "several layers of abstraction. It is too big, too thick, too heavy and too deep. To put it simply, "
+				   "however, it is a pizza. Specifically, an Original Stuffed Crust® pizza. But, everything is octupled. "
+				   "Every ingredient is octupled. The toppings are octupled, the cheese is octupled, the pepperoni "
+				   "is octupled, the grease is octupled, the yeast is octupled and you fucking bet you could fit "
+				   "your whole forearm into the caverns they dare call a crust, if it weren’t overflowing with octuple "
+				   "the molten, stretchy string cheese. And it doesn’t stop there, octuple the size, octuple the weight, "
+				   "octuple the budget required to ward off lawsuits for octuple the colohestral, octuple the heart "
+				   "attacks. People die because of this pizza, someone you know has or will die because of this item in your "
+				   "inventory right now. It’s made to order, piping hot and ready to be devoured by whatever foolish egomaniac "
+				   "with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the "
+				   "life of the ones you love. Chant it’s name, praise the harbinger of death you just acquired from Pizza "
+				   "Hut. Octuple Stuffed Crust. Octuple Stuffed Crust. OCTUPLE STUFFED CRUST!! *AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH!!*",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -3281,8 +3331,29 @@ food_list = [
 		],
 		recover_hunger = 4000,
 		str_name = "Original Sexdecuple Stuffed Crust® Pizza",
-		str_eat = "test",
-		str_desc = "test",
+		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you "
+				  "imprudently smelted. Something is… wrong. You can’t really put your finger on it, but you start feeling a strange sensation starting into this pizza. "
+				  "Tepidly, you bring the first slice to your tongue, letting the melted "
+				  "cheese drizzle unto your awaiting tongue. And, just as a beast would be reduced to a state of pure "
+				  "carnal hunger and lust after acquiring it’s first taste of flesh and blood, you enter a state of "
+				  "sheer wilderness, stuffing each stuffed crust into your teeth and gums and tongue and throat. You "
+				  "scream at the top of your lungs. Sicknasty, dude!!",
+		str_desc = "Nothing can articulate the sheer frightening presence of this pizza. Something is… wrong. You can’t really put your finger on it, "
+				   "but you start feeling a strange sensation starting into this pizza. Always thought to be theoretically "
+				   "possible and discussed in hushed tones in obscure circles on the fringe of acceptable dialogue, but "
+				   "never achieved in practice, this heap of diary and dough can only truly be comprehended through "
+				   "several layers of abstraction. It is too big, too thick, too heavy and too deep. To put it simply, "
+				   "however, it is a pizza. Specifically, an Original Stuffed Crust® pizza. But, everything is sexdecupled. "
+				   "Every ingredient is sexdecupled. The toppings are sexdecupled, the cheese is sexdecupled, the pepperoni "
+				   "is sexdecupled, the grease is sexdecupled, the yeast is sexdecupled and you fucking bet you could fit "
+				   "your whole forearm into the caverns they dare call a crust, if it weren’t overflowing with sexdecuple "
+				   "the molten, stretchy string cheese. And it doesn’t stop there, sexdecuple the size, sexdecuple the weight, "
+				   "sexdecuple the budget required to ward off lawsuits for sexdecuple the colohestral, sexdecuple the heart "
+				   "attacks. People die because of this pizza, someone you know has or will die because of this item in your "
+				   "inventory right now. It’s made to order, piping hot and ready to be devoured by whatever foolish egomaniac "
+				   "with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the "
+				   "life of the ones you love. Chant it’s name, praise the harbinger of death you just acquired from Pizza "
+				   "Hut. sexdecuple Stuffed Crust. sexdecuple Stuffed Crust. SEXDECUPLE STUFFED CRUST!! **AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH!!**",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -3294,8 +3365,28 @@ food_list = [
 		],
 		recover_hunger = 8000,
 		str_name = "Original Duotrigintuple Stuffed Crust® Pizza",
-		str_eat = "test",
-		str_desc = "test",
+		str_eat = "You gaze upon the unholy, excessive pile of dough, pepperoni, grease, marinara and cheese you "
+				  "imprudently smelted. It was funny at first, but now this pizza is seriously starting to creep you out. Looking at it for too long gives you a headache, "
+				  "and you can feel a cold shiver run up your spine. But, you smelted it. You might as well eat it. Tepidly, you bring the first slice to your tongue, letting the melted "
+				  "cheese drizzle unto your awaiting tongue. And… the taste is surprisingly mild. In fact, it doesn’t really taste like anything. "
+				  "For all the bottled oregano, store-bought marinara, and grease this thing is soaked in, it just sort of tastes like… nothing. This is concerning. You are concerned.",
+		str_desc = "Nothing can articulate the sheer frightening presence of this pizza. It was funny at first, but now this pizza "
+				   "is seriously starting to creep you out. Looking at it for too long gives you a headache, and you can feel a cold shiver run up your spine. You can’t really put your finger on it, "
+				   "but you start feeling a strange sensation starting into this pizza. Always thought to be theoretically "
+				   "possible and discussed in hushed tones in obscure circles on the fringe of acceptable dialogue, but "
+				   "never achieved in practice, this heap of diary and dough can only truly be comprehended through "
+				   "several layers of abstraction. It is too big, too thick, too heavy and too deep. To put it simply, "
+				   "however, it is a pizza. Specifically, an Original Stuffed Crust® pizza. But, everything is duotrigintupled. "
+				   "Every ingredient is duotrigintupled. The toppings are duotrigintupled, the cheese is duotrigintupled, the pepperoni "
+				   "is duotrigintupled, the grease is duotrigintupled, the yeast is duotrigintupled and you fucking bet you could fit "
+				   "your whole forearm into the caverns they dare call a crust, if it weren’t overflowing with duotrigintuple "
+				   "the molten, stretchy string cheese. And it doesn’t stop there, duotrigintuple the size, duotrigintuple the weight, "
+				   "duotrigintuple the budget required to ward off lawsuits for duotrigintuple the colohestral, duotrigintuple the heart "
+				   "attacks. People die because of this pizza, someone you know has or will die because of this item in your "
+				   "inventory right now. It’s made to order, piping hot and ready to be devoured by whatever foolish egomaniac "
+				   "with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the "
+				   "life of the ones you love. Chant it’s name, praise the harbinger of death you just acquired from Pizza "
+				   "Hut. Duotrigintuple Stuffed Crust. Duotrigintuple Stuffed Crust. DUOTRIGINTUPLE STUFFED CRUST!! ***AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAH!!***",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -3307,8 +3398,18 @@ food_list = [
 		],
 		recover_hunger = 16000,
 		str_name = "Original Quattuorsexagintuple Stuffed Crust® Pizza",
-		str_eat = "test",
-		str_desc = "test",
+		str_eat = "You gaze upon the unholy mountain of red, white, and yellow that vaguely forms the shape of a pizza. "
+				  "Rather, you try to. It is hard to look at directly. Like a mirage obscured by heatwaves, it subtly "
+				  "changes shape, as if its true dimensions are imperceivable to the naked eye. It radiates a menacing aura. "
+				  "You don’t even really want to eat it, but you feel compelled by forces you can’t really articulate. "
+				  "You take a bite and… it’s disgusting. You want to spit it out, but, you can’t. It tastes like death. "
+				  "You eat and eat, your body refusing to stop as you  devour the entire pizza. You cry the entire time.",
+		str_desc = "Nothing can articulate the truly terrifying nature of this pizza. And so, you won’t even try to. "
+				   "All that you can describe is the feeling you get being in its presence, which to say the very least "
+				   "is not good. You feel cold and sweaty, like you’re perpetually falling. You know you should drop "
+				   "this thing and run away as fast as possible, but… you’ve worked so hard for this. You’re in the end game. "
+				   "Your thoughts of absconding are quickly overwhelmed by its name echoing in your mind. Duotrigintuple "
+				   "Stuffed Crust. Duotrigintuple Stuffed Crust. DUOTRIGINTUPLE STUFFED CRUST.",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -3319,8 +3420,8 @@ food_list = [
 		],
 		recover_hunger = 340282366920938463463374607431768211455,
 		str_name = "The Forbidden Stuffed Crust Pizza",
-		str_eat = "test",
-		str_desc = "test",
+		str_eat = ewdebug.forbiddenstuffedcrust_eat,
+		str_desc = ewdebug.forbiddenstuffedcrust_desc,
 		acquisition = acquisition_smelting
 	),
 ]
@@ -6266,23 +6367,26 @@ smelting_recipe_list = [
 			"fsc",
 			"forbiddenstuffedcrust",
 		],
-		ingredients = ['slimepoudrin', 'theforbiddenone'],
+		ingredients = ['slimepoudrin', 'theforbiddenoneoneone'],
 		products = ['theforbiddenstuffedcrust'],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "theforbiddenone",
-		str_name = "The Forbidden One",
+		id_recipe = "theforbiddenoneoneone",
+		str_name = "The Forbidden {}".format(emote_111),
 		alias = [
 			"forbiddenone",
 			"forbidden",
 			"sealed",
-			"exodia"
+			"exodia",
+			"oneoneone",
+			"forbidden111",
+			":111:",
 		],
 		ingredients = ['leftleg', 'rightleg', 'slimeexodia', 'rightarm', 'leftarm'],
-		products = ['theforbiddenone']
+		products = ['theforbiddenoneoneone']
 	),
 	EwSmeltingRecipe(
-		id_recipe = "poudrinpickaxe", #todo make this a weapon that once equiped allows you to get double slime and extra poudrins from mining. also, flavor text for all the new items
+		id_recipe = "poudrinpickaxe",
 		str_name = "a Poudrin Pickaxe",
 		alias = [
 			"pp", # LOL

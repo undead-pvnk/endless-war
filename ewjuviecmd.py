@@ -132,7 +132,7 @@ async def mine(cmd):
 
 			has_pickaxe = False
 
-			if user_data.weapon != "-1": #todo
+			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
 				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 				if weapon.id_weapon == "pickaxe":

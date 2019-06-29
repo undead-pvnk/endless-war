@@ -172,6 +172,8 @@ cmd_map = {
 
 	# See what's for sale in the Food Court.
 	ewcfg.cmd_menu: ewfood.menu,
+	ewcfg.cmd_menu_alt1: ewfood.menu,
+	ewcfg.cmd_menu_alt2: ewfood.menu,
 
 	# Order refreshing food and drinks!
 	ewcfg.cmd_order: ewfood.order,
