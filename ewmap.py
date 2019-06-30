@@ -883,11 +883,10 @@ async def look(cmd):
 	else:
 		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
-	# enemy data constructor is passed in as a variable to avoid circular importing in ewhunting
-	enemy_data = EwEnemy()
+	enemy_data_constructor = EwEnemy()
 
 	# gets exact number of enemies in district
-	enemies_in_district = district_data.get_enemies_in_district(enemy_data)
+	enemies_in_district = district_data.get_enemies_in_district(enemy_data_constructor)
 
 	num_enemies = len(enemies_in_district)
 
@@ -1029,10 +1028,9 @@ async def scout(cmd):
 			detailed_resp += "\n" + scoutee_data.get_mention()
 			num_players += 1
 
-		# enemy data constructor is passed in as a variable to avoid circular importing in ewhunting
-		enemy_data = EwEnemy()
+		enemy_data_constructor = EwEnemy()
 		# filters out low level enemies
-		enemies_in_district = district_data.get_enemies_in_district(enemy_data, min_level=min_level)
+		enemies_in_district = district_data.get_enemies_in_district(enemy_data_constructor, min_level=min_level)
 
 		num_enemies = 0
 		enemies_resp = ""

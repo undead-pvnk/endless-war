@@ -188,7 +188,7 @@ class EwEnemy:
             # Get target's info based on its AI.
 
             if enemy_data.ai == "Coward":
-                if random.randrange(100) > 80:
+                if random.randrange(100) > 92:
                     response = random.choice(ewcfg.coward_responses)
                     response = response.format(enemy_data.display_name, enemy_data.display_name)
                     resp_cont.add_channel_response(ch_name, response)
@@ -561,6 +561,10 @@ async def enemy_kill(id_server):
 async def spawn_enemy(id_server):
     response = ""
     ch_name = ""
+    chosen_poi = ""
+
+    enemies_count = ewcfg.max_enemies
+    try_count = 0
 
     rarity_choice = random.randrange(10000)
 
@@ -580,15 +584,34 @@ async def spawn_enemy(id_server):
     # debug manual reassignment
     enemytype = random.choice(common_enemies)
 
-    if enemytype != None:
+    # TODO: Make enemies spawn in outskirts
+
+    while enemies_count >= ewcfg.max_enemies and try_count < 5:
+
+        # potential_chosen_poi = random.choice(outskirts_districts)
+        potential_chosen_poi = 'greenlightdistrict'
+        potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
+        enemy_constructor = EwEnemy()
+        enemies_count_list = potential_chosen_district.get_enemies_in_district(enemy_constructor)
+        enemies_count = len(enemies_count_list)
+
+        if enemies_count < ewcfg.max_enemies:
+            chosen_poi = potential_chosen_poi
+            try_count = 5
+        else:
+            # try again
+            try_count += 1
+
+
+    if enemytype != None and chosen_poi != "":
         enemy = get_enemy(enemytype)
 
         enemy.id_server = id_server
         enemy.level = level_byslime(enemy.slimes)
+
         enemy.initialslimes = enemy.slimes
 
-        # TODO: Make enemies spawn in outskirts
-        enemy.poi = 'greenlightdistrict'
+        enemy.poi = chosen_poi
 
         enemy.persist()
 
@@ -600,7 +623,7 @@ async def spawn_enemy(id_server):
 
 
 def find_enemy(enemy_search=None, user_data=None):
-    enemy_sought = None
+    enemy_found = None
     if enemy_search != None:
 
         enemy_search_tokens = enemy_search.split(' ')
@@ -621,7 +644,7 @@ def find_enemy(enemy_search=None, user_data=None):
 
             for row in enemydata:
                 enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-                enemy_sought = enemy
+                enemy_found = enemy
                 break
         else:
 
@@ -636,10 +659,10 @@ def find_enemy(enemy_search=None, user_data=None):
             for row in enemydata:
                 enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
                 if enemy.display_name.lower() == enemy_search:
-                    enemy_sought = enemy
+                    enemy_found = enemy
                     break
 
-    return enemy_sought
+    return enemy_found
 
 
 def delete_enemy(enemy_data):
@@ -959,7 +982,9 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
                         total=enemy_data.initialslimes
                     )
                     if enemy_data.ai == 'Coward':
-                        response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
+                        coward_response = random.choice(ewcfg.coward_responses_hurt)
+                        coward_response = coward_response.format(enemy_data.display_name)
+                        response += coward_response
             else:
                 if miss:
                     response = "{target_name} dodges your strike.".format(target_name=member.display_name)
@@ -971,7 +996,9 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
                         total=enemy_data.initialslimes
                     )
                     if enemy_data.ai == 'Coward':
-                        response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
+                        coward_response = random.choice(ewcfg.coward_responses_hurt)
+                        coward_response = coward_response.format(enemy_data.display_name)
+                        response += coward_response
 
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)

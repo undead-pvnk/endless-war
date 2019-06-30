@@ -7635,10 +7635,13 @@ coward_responses = [
 ]
 
 coward_responses_hurt = [
-	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*"
-	"\nThe {} cries out in pain!: *You MONSTER!*"
-	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*"
+	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
+	"\nThe {} cries out in pain!: *You MONSTER!*",
+	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
 ]
+
+# maximum amount of enemies a district can hold before it stops spawning them
+max_enemies = 5
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

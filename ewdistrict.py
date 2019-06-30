@@ -169,7 +169,6 @@ class EwDistrict:
 			return []
 
 		enemies = ewutils.execute_sql_query("SELECT * FROM enemies WHERE id_server = %s AND {poi} = %s".format(
-			# id_enemy = ewcfg.col_id_enemy,
 			poi = ewcfg.col_enemy_poi
 		),(
 			self.id_server,

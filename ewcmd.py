@@ -180,6 +180,10 @@ def gen_data_text(
 				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
+		# if trauma is not gathered from weapon_map, get it from attack_type_map
+		if trauma == None:
+			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
@@ -259,6 +263,10 @@ async def data(cmd):
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank = (user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
+		# if trauma is not gathered from weapon_map, get it from attack_type_map
+		if trauma == None:
+			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 

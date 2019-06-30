@@ -928,9 +928,9 @@ async def spawn_enemies(id_server = None):
 		resp_cont = EwResponseContainer(id_server=id_server)
 		response, channel = await spawn_enemy(id_server)
 
-		resp_cont.add_channel_response(channel, response)
-
-		await resp_cont.post()
+		if response != "":
+			resp_cont.add_channel_response(channel, response)
+			await resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
