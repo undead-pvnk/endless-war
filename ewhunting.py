@@ -188,7 +188,13 @@ class EwEnemy:
                 ))
 
             # Get target's info based on its AI.
-            if enemy_data.ai == "Attacker-A":
+
+            if enemy_data.ai == "Coward":
+                if random.randrange(100) > 95:
+                    response = 'The {} calls out to you: *H-Hello. Are you one of those Gangsters everyone seems to be talking about?*'.format(enemy_data.display_name)
+                    resp_cont.add_channel_response(ch_name, response)
+
+            elif enemy_data.ai == "Attacker-A":
                 # print(len(users))
 
                 while target_num < len(users):
@@ -251,9 +257,9 @@ class EwEnemy:
 
             slimes_damage = int(slimes_spent * 4)
 
-            if attacktype is None:
+            if attacktype is 'unarmed':
                 slimes_damage /= 2  # specific to juvies
-            elif attacktype is None and enemy_data.type == "microslime":
+            elif attacktype is 'unarmed' and enemy_data.type == "microslime":
                 slimes_damage *= 200  # specific to microslime
 
             slimes_dropped = target_data.totaldamage + target_data.slimes
@@ -428,7 +434,7 @@ class EwEnemy:
                     else:
                         # A non-lethal blow!
 
-                        if attacktype != None:
+                        if attacktype != 'unarmed':
                             if miss:
                                 response = "{}".format(attacktype.str_miss.format(
                                     name_enemy=enemy_data.display_name,
@@ -506,50 +512,21 @@ async def summon_enemy(cmd):
 
     if len(cmd.tokens) > 1:
         enemytype = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    if enemytype == 'juvie':
-        enemy = EwEnemy()
 
+    if enemytype != None:
+
+        enemy = get_enemy(enemytype)
         enemy.id_server = user_data.id_server
-        enemy.slimes = 100000
-        enemy.totaldamage = 0
-        enemy.ai = "Attacker-A"
         enemy.poi = user_data.poi
-        enemy.life_state = 1
         enemy.level = level_byslime(enemy.slimes)
-        enemy.type = enemytype
-        enemy.attacktype = "unarmed-juvie"
-        enemy.display_name = "Lost Juvie"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
         enemy.initialslimes = enemy.slimes
 
         enemy.persist()
 
-        response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
-                                                                                                enemy.level,
-                                                                                                enemy.slimes)
-    elif enemytype == 'slimeasaur':
-        enemy = EwEnemy()
-
-        enemy.id_server = user_data.id_server
-        enemy.slimes = 500000
-        enemy.totaldamage = 0
-        enemy.ai = "Attacker-A"
-        enemy.poi = user_data.poi
-        enemy.life_state = 1
-        enemy.level = level_byslime(enemy.slimes)
-        enemy.type = enemytype
-        enemy.attacktype = "fangs"
-        enemy.display_name = "Slimeasaur"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = enemy.slimes
-
-        enemy.persist()
-
-        response = "**DEBUG**: You have summoned **{}**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
-                                                                                                enemy.level,
-                                                                                                enemy.slimes)
+        response = "**DEBUG**: You have summoned **{} ({})**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
+                                                                                                     enemy.id_enemy,
+                                                                                                     enemy.level,
+                                                                                                     enemy.slimes)
     else:
         response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING"
 
@@ -592,24 +569,21 @@ async def spawn_enemy(id_server):
 
     enemytype = 'juvie'
     if enemytype != None:
-        enemy = EwEnemy()
+        enemy = get_enemy(enemytype)
 
         enemy.id_server = id_server
-        enemy.slimes = 50000
-        enemy.totaldamage = 0
-        enemy.ai = ""
-        enemy.poi = 'greenlightdistrict'
-        enemy.life_state = 1
         enemy.level = level_byslime(enemy.slimes)
-        enemy.type = enemytype
-        enemy.display_name = "Lost Juvie"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
         enemy.initialslimes = enemy.slimes
+
+        #TODO: Make enemies spawn in outskirts
+        enemy.poi = 'downtown'
 
         enemy.persist()
 
-        response = "**DEBUG**: Enemy spawned! It's **{}**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
+        print(enemy.id_enemy)
+
+        response = "**DEBUG**: Enemy spawned! It's **{} ({})**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
+                                                                                                  enemy.id_enemy,
                                                                                                   enemy.level,
                                                                                                   enemy.slimes)
 
@@ -619,19 +593,42 @@ async def spawn_enemy(id_server):
 def find_enemy(enemy_search=None, user_data=None):
     enemy_sought = None
     if enemy_search != None:
-        enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
-            id_enemy=ewcfg.col_id_enemy,
-            poi=ewcfg.col_enemy_poi,
-        ), (
-            user_data.poi,
-        ))
 
-        # find the first (i.e. the oldest) item that matches the search
-        for row in enemydata:
-            enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-            if enemy.display_name == enemy_search:
+        enemy_search_tokens = enemy_search.split(' ')
+
+        if enemy_search_tokens[len(enemy_search_tokens)-1].isdigit():
+            # user passed in a positive integer, identify enemy by number
+
+            searched_id = enemy_search_tokens[len(enemy_search_tokens)-1]
+
+            enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_enemy} = %s".format(
+                id_enemy=ewcfg.col_id_enemy,
+                poi=ewcfg.col_enemy_poi,
+            ), (
+                user_data.poi,
+                searched_id,
+            ))
+
+            for row in enemydata:
+                enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
                 enemy_sought = enemy
                 break
+        else:
+
+            enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
+                id_enemy=ewcfg.col_id_enemy,
+                poi=ewcfg.col_enemy_poi,
+            ), (
+                user_data.poi,
+            ))
+
+            # find the first (i.e. the oldest) item that matches the search
+            for row in enemydata:
+                enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
+                if enemy.display_name.lower() == enemy_search:
+                    enemy_sought = enemy
+                    break
+
 
     return enemy_sought
 
@@ -973,6 +970,16 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)
 
+        if was_killed and enemy_data.type == 'juvie':
+            # announce death in kill feed channel
+            # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
+            killfeed_resp = resp_cont.channel_responses[cmd.message.channel.name]
+            for r in killfeed_resp:
+                resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
+            resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
+            resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
+            # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
+
         # Add level up text to response if appropriate
         if user_inital_level < user_data.slimelevel:
             resp_cont.add_channel_response(cmd.message.channel.name, "\n" + levelup_response)
@@ -1174,3 +1181,50 @@ def check_death(enemy_data):
         return True
     else:
         return False
+
+def get_enemy(enemy_type):
+
+    enemy = EwEnemy()
+
+    if enemy_type == 'juvie':
+
+        enemy.id_server = ""
+        enemy.slimes = get_enemy_slime('juvie')
+        enemy.totaldamage = 0
+        enemy.ai = "Coward"
+        enemy.display_name = "Lost Juvie"
+        enemy.level = 0
+        # enemy.poi = 'greenlightdistrict'
+        enemy.life_state = 1
+        enemy.type = enemy_type
+        enemy.attacktype = 'unarmed'
+        enemy.bleed_storage = 0
+        enemy.time_lastenter = 0
+        enemy.initialslimes = 0
+
+    elif enemy_type == 'slimeasaur':
+
+        enemy.id_server = ""
+        enemy.slimes = get_enemy_slime('slimeasaur')
+        enemy.totaldamage = 0
+        enemy.ai = "Attacker-A"
+        enemy.display_name = "Slimeasaur"
+        enemy.level = 0
+        # enemy.poi = 'greenlightdistrict',
+        enemy.life_state = 1
+        enemy.type = enemy_type
+        enemy.attacktype = "fangs"
+        enemy.bleed_storage = 0
+        enemy.time_lastenter = 0
+        enemy.initialslimes = 0
+
+    return enemy
+
+def get_enemy_slime(enemy_type):
+    slime = 0
+    if enemy_type == 'juvie':
+        slime = (random.randrange(40000) + 10000)
+    elif enemy_type == 'slimeasaur':
+        slime = (random.randrange(250000) + 250000)
+
+    return slime

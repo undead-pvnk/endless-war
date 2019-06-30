@@ -499,6 +499,7 @@ async def attack(cmd):
 				shootee_data.bleed_storage += slimes_tobleed
 				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
 				sewer_data.change_slimes(n = slimes_drained)
+				sewer_data.persist()
 
 				if was_killed:
 					#adjust statistics

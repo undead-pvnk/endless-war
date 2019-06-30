@@ -827,6 +827,7 @@ async def teleport(cmd):
 		mutation_data.persist()
 		ewutils.moves_active[cmd.message.author.id] = 0
 		user_data.poi = poi.id_poi
+		user_data.time_lastenter = int(time.time())
 		user_data.persist()
 		response = "WHOOO-"
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -850,7 +851,7 @@ async def look(cmd):
 
 	# get information about slime levels in the district
 	slimes = district_data.slimes
-	slimes_resp = "\n\n"
+	slimes_resp = ""
 	if slimes < 10000:
 		slimes_resp += "There are a few specks of slime splattered across the city streets."
 	elif slimes < 100000:
@@ -897,15 +898,15 @@ async def look(cmd):
 		enemies_resp += "You don't find any enemies in this district."
 	elif num_enemies == 1:
 		found_enemy_data = EwEnemy(id_enemy = enemies_in_district[0])
-		enemies_resp += "You look around and find a **{}** in this location.".format(found_enemy_data.name)
+		enemies_resp += "You look around and find a **{} ({})** in this location.".format(found_enemy_data.display_name, found_enemy_data.id_enemy)
 	else:
 		enemies_resp += "You notice several enemies in this district, such as "
 		while numerator < (len(enemies_in_district)-1):
 			found_enemy_data = EwEnemy(id_enemy = enemies_in_district[numerator])
-			enemies_resp += "**{}**, ".format(found_enemy_data.name)
+			enemies_resp += "**{} ({})**, ".format(found_enemy_data.display_name, found_enemy_data.id_enemy)
 			numerator += 1
 		final_enemy_data = EwEnemy(id_enemy = enemies_in_district[num_enemies-1])
-		enemies_resp += "and **{}**.".format(final_enemy_data.name)
+		enemies_resp += "and **{} ({})**.".format(final_enemy_data.display_name, final_enemy_data.id_enemy)
 
 	players_resp = ""
 
@@ -926,10 +927,16 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}{}{}{}{}{}".format(
+			"You stand {} {}.\n\n{}\n\n...".format(
 				poi.str_in,
 				poi.str_name,
-				poi.str_desc,
+				poi.str_desc
+			)
+		))
+		await asyncio.sleep(0.1)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"{}{}{}{}{}".format(
 				slimes_resp,
 				players_resp,
 				slimeoids_resp,

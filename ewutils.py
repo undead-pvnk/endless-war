@@ -927,7 +927,9 @@ async def spawn_enemies(id_server = None):
 	if random.randint(1, 2) == 1:
 		resp_cont = EwResponseContainer(id_server=id_server)
 		response = await spawn_enemy(id_server)
-		resp_cont.add_channel_response("green-light-district", response)
+
+		resp_cont.add_channel_response("downtown", response)
+
 		await resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):

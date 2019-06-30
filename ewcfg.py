@@ -632,7 +632,7 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 10
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 2
+enemy_attack_tick_length = 5
 
 # Poudrin rarity (for enlisted players)
 poudrin_rarity = 1500

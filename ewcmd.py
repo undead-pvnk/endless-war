@@ -13,7 +13,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
-from ewhunting import EwEnemy
+from ewhunting import find_enemy
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -208,12 +208,21 @@ async def data(cmd):
 	user_data = None
 	member = None
 
-	# if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
-	# 	soughtenemy = " ".join(cmd.tokens[1:]).lower()
-	# 	response = "{} is a level {} enemy. They spawn with {} slime, and attack with their {}"
-	# elif cmd.mentions_count == 0:
+	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
+		user_data = EwUser(member = cmd.message.author)
 
-	if cmd.mentions_count == 0:
+		soughtenemy = " ".join(cmd.tokens[1:]).lower()
+		enemy = find_enemy(soughtenemy, user_data)
+		if enemy != None:
+			if enemy.attacktype != 'unarmed':
+				response = "{} is a level {} enemy. They have {} slime, and attack with their {}".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
+			else:
+				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level, enemy.slimes)
+		else:
+			response = "ENDLESS WAR didn't understand that name."
+
+	elif cmd.mentions_count == 0:
+
 		user_data = EwUser(member = cmd.message.author)
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 		mutations = user_data.get_mutations()

@@ -59,14 +59,14 @@ async def revive(cmd):
 			market_data.persist()
 
 			# Shower every district in the city with slime from the sewers.
+			sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
+			# the amount of slime showered is divided equally amongst the districts
+			districts_amount = len(ewcfg.capturable_districts)
+			geyser_amount = int(0.5 * sewer_data.slimes / districts_amount)
 			# Get a list of all the districts
 			for poi in ewcfg.capturable_districts:
 				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
-				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 
-				# the amount of slime showered is divided equally amongst the districts
-				districts_amount = len(ewcfg.capturable_districts)
-				geyser_amount = int(district_data.slimes / districts_amount)
 
 				district_data.change_slimes(n = geyser_amount)
 				sewer_data.change_slimes(n = -1 * geyser_amount)
