@@ -675,6 +675,12 @@ time_kickout = 60 * 60  # 1 hour
 # time after coming online before you can act
 time_offline = 10
 
+# time for an enemy to despawn
+time_despawn = 60 * 180 # 3 hours
+
+# maximum amount of enemies a district can hold before it stops spawning them
+max_enemies = 5
+
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
 emote_pizzahut = "<:pizzahut:431273890355085323>"
@@ -855,6 +861,7 @@ col_enemy_life_state = 'life_state'
 col_enemy_bleed_storage = 'bleed_storage'
 col_enemy_time_lastenter = 'time_lastenter'
 col_enemy_initialslimes = 'initialslimes'
+col_enemy_lifetime = 'lifetime'
 
 
 # Database columns for user statistics
@@ -7639,9 +7646,6 @@ coward_responses_hurt = [
 	"\nThe {} cries out in pain!: *You MONSTER!*",
 	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
 ]
-
-# maximum amount of enemies a district can hold before it stops spawning them
-max_enemies = 5
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

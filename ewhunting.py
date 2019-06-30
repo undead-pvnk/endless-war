@@ -34,6 +34,7 @@ class EwEnemy:
     bleed_storage = 0
     time_lastenter = 0
     initialslimes = 0
+    lifetime = 0
 
     # slimeoid = EwSlimeoid(member = cmd.message.author, )
     # slimeoid = EwSlimeoid(id_slimeoid = 12)
@@ -60,7 +61,7 @@ class EwEnemy:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
                         ewcfg.col_id_enemy,
                         ewcfg.col_id_server,
                         ewcfg.col_enemy_slimes,
@@ -75,6 +76,7 @@ class EwEnemy:
                         ewcfg.col_enemy_bleed_storage,
                         ewcfg.col_enemy_time_lastenter,
                         ewcfg.col_enemy_initialslimes,
+                        ewcfg.col_enemy_lifetime,
                         query_suffix
                     ))
                 result = cursor.fetchone();
@@ -95,6 +97,7 @@ class EwEnemy:
                     self.bleed_storage = result[11]
                     self.time_lastenter = result[12]
                     self.initialslimes = result[13]
+                    self.lifetime = result[14]
 
             finally:
                 # Clean up the database handles.
@@ -111,7 +114,7 @@ class EwEnemy:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_enemy,
                     ewcfg.col_id_server,
                     ewcfg.col_enemy_slimes,
@@ -126,6 +129,7 @@ class EwEnemy:
                     ewcfg.col_enemy_bleed_storage,
                     ewcfg.col_enemy_time_lastenter,
                     ewcfg.col_enemy_initialslimes,
+                    ewcfg.col_enemy_lifetime,
                 ), (
                     self.id_enemy,
                     self.id_server,
@@ -141,6 +145,7 @@ class EwEnemy:
                     self.bleed_storage,
                     self.time_lastenter,
                     self.initialslimes,
+                    self.lifetime,
                 ))
 
             conn.commit()
@@ -154,6 +159,8 @@ class EwEnemy:
         client = ewutils.get_client()
 
         enemy_data = self
+
+
 
         time_now = int(time.time())
         resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
@@ -495,6 +502,7 @@ class EwEnemy:
 
 async def summon_enemy(cmd):
     # debug command, though could be kept around for events
+    time_now = int(time.time())
     response = ""
     user_data = EwUser(member=cmd.message.author)
 
@@ -515,6 +523,7 @@ async def summon_enemy(cmd):
         enemy.poi = user_data.poi
         enemy.level = level_byslime(enemy.slimes)
         enemy.initialslimes = enemy.slimes
+        enemy.lifetime = time_now
 
         enemy.persist()
 
@@ -549,7 +558,7 @@ async def enemy_kill(id_server):
     enemydata = ewutils.execute_sql_query("SELECT * FROM enemies")
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
-        if enemy.life_state == 0:
+        if enemy.life_state == 0 or (enemy.lifetime < (int(time.time()) - ewcfg.time_despawn)):
             print("DELETE GATE 1")
             delete_enemy(enemy)
         else:
@@ -559,6 +568,7 @@ async def enemy_kill(id_server):
 
 
 async def spawn_enemy(id_server):
+    time_now = int(time.time())
     response = ""
     ch_name = ""
     chosen_poi = ""
@@ -608,6 +618,8 @@ async def spawn_enemy(id_server):
 
         enemy.id_server = id_server
         enemy.level = level_byslime(enemy.slimes)
+
+        enemy.lifetime = time_now
 
         enemy.initialslimes = enemy.slimes
 

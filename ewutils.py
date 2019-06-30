@@ -946,7 +946,7 @@ async def enemy_attack(id_server = None):
 
 async def enemy_attack_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
-	# causes hostile enemies to attack every 2 seconds
+	# causes hostile enemies to attack every tick
 	while True:
 		await enemy_attack(id_server = id_server)
 
