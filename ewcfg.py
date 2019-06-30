@@ -7626,6 +7626,14 @@ help_responses = {
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
 }
 
+coward_responses = [
+	"The {} calls out to you: *H-Hello. Are you one of those Gangsters everyone seems to be talking about?*",
+	"The {} calls out to you: *You wouldn't hurt a {}, would you?*",
+	"The {} calls out to you: *Why.. uh.. hello there? What brings you to these parts, stranger?*",
+	"The {} calls out to you: *L-look at how much slime I have! I'm not even worth it for you to kill me!*",
+	"The {} calls out to you: *I'm just a good little {}... never hurt nobody anywhere...*",
+]
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 

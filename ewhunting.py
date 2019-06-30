@@ -153,7 +153,6 @@ class EwEnemy:
 
         client = ewutils.get_client()
 
-
         enemy_data = self
 
         time_now = int(time.time())
@@ -162,7 +161,6 @@ class EwEnemy:
         market_data = EwMarket(id_server=enemy_data.id_server)
         ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
         number_of_players = district_data.get_players_in_district()
-
 
         target_data = None
         target_player = None
@@ -190,8 +188,9 @@ class EwEnemy:
             # Get target's info based on its AI.
 
             if enemy_data.ai == "Coward":
-                if random.randrange(100) > 95:
-                    response = 'The {} calls out to you: *H-Hello. Are you one of those Gangsters everyone seems to be talking about?*'.format(enemy_data.display_name)
+                if random.randrange(100) > 80:
+                    response = random.choice(ewcfg.coward_responses)
+                    response = response.format(enemy_data.display_name, enemy_data.display_name)
                     resp_cont.add_channel_response(ch_name, response)
 
             elif enemy_data.ai == "Attacker-A":
@@ -205,8 +204,7 @@ class EwEnemy:
                     else:
                         target_num += 1
             else:
-                 print(enemy_data.ai)
-
+                print(enemy_data.ai)
 
         if target_data != None:
 
@@ -228,20 +226,16 @@ class EwEnemy:
             #     if m.id == target_data.id_user:
             #         member = m
 
-
             member = server.get_member(target_data.id_user)
             # print(member)
 
-
-            #for m in members:
+            # for m in members:
             #    if m.id == target_data.id_user:
             #        member = m
-
 
             # print(member)
             # member.id = target_data.id_user
             # member.server.id = target_data.id_server
-
 
             target_mutations = target_data.get_mutations()
 
@@ -317,7 +311,7 @@ class EwEnemy:
                         crit = ctn.crit
                         slimes_damage = ctn.slimes_damage
                         strikes = ctn.strikes
-                        # enemy_data and target_data should be passed by reference, so there's no need to assign them back from the effect container.
+                    # enemy_data and target_data should be passed by reference, so there's no need to assign them back from the effect container.
 
                     # can't hit lucky lucy
                     if target_data.life_state == ewcfg.life_state_lucky:
@@ -327,7 +321,7 @@ class EwEnemy:
                         slimes_damage = 0
 
                     enemy_data.persist()
-                    target_data = EwUser(member = member)
+                    target_data = EwUser(member=member)
 
                     if slimes_damage >= target_data.slimes - target_data.bleed_storage:
                         was_killed = True
@@ -430,7 +424,7 @@ class EwEnemy:
                         if check_death(enemy_data) == False:
                             enemy_data = EwEnemy(id_enemy=self.id_enemy)
 
-                        target_data = EwUser(member = member)
+                        target_data = EwUser(member=member)
                     else:
                         # A non-lethal blow!
 
@@ -487,7 +481,7 @@ class EwEnemy:
                         resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
                     resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
                     resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-                    # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
+                # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
 
         # Send the response to the player.
         resp_cont.format_channel_response(ch_name, enemy_data)
@@ -523,10 +517,9 @@ async def summon_enemy(cmd):
 
         enemy.persist()
 
-        response = "**DEBUG**: You have summoned **{} ({})**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
-                                                                                                     enemy.id_enemy,
-                                                                                                     enemy.level,
-                                                                                                     enemy.slimes)
+        response = "**DEBUG**: You have summoned **{}**, a level {} enemy. It has {} slime.".format(enemy.display_name,
+                                                                                                    enemy.level,
+                                                                                                    enemy.slimes)
     else:
         response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING"
 
@@ -566,8 +559,26 @@ async def enemy_kill(id_server):
 
 async def spawn_enemy(id_server):
     response = ""
+    ch_name = ""
 
-    enemytype = 'juvie'
+    rarity_choice = random.randrange(10000)
+
+    if rarity_choice <= 7000:
+        # common enemies
+        enemytype = random.choice(common_enemies)
+    elif rarity_choice <= 9000:
+        # uncommon enemies
+        enemytype = random.choice(uncommon_enemies)
+    elif rarity_choice <= 9990:
+        # rare enemies
+        enemytype = random.choice(rare_enemies)
+    else:
+        # raid bosses
+        enemytype = random.choice(raid_bosses)
+
+    # debug manual reassignment
+    enemytype = random.choice(common_enemies)
+
     if enemytype != None:
         enemy = get_enemy(enemytype)
 
@@ -575,19 +586,16 @@ async def spawn_enemy(id_server):
         enemy.level = level_byslime(enemy.slimes)
         enemy.initialslimes = enemy.slimes
 
-        #TODO: Make enemies spawn in outskirts
-        enemy.poi = 'downtown'
+        # TODO: Make enemies spawn in outskirts
+        enemy.poi = 'greenlightdistrict'
 
         enemy.persist()
 
-        print(enemy.id_enemy)
+        response = "**An enemy spawned!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name,
+                                                                                        enemy.slimes)
+        ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
-        response = "**DEBUG**: Enemy spawned! It's **{} ({})**, a level {} enemy. Slime =  {}.".format(enemy.display_name,
-                                                                                                  enemy.id_enemy,
-                                                                                                  enemy.level,
-                                                                                                  enemy.slimes)
-
-    return response
+    return response, ch_name
 
 
 def find_enemy(enemy_search=None, user_data=None):
@@ -596,18 +604,19 @@ def find_enemy(enemy_search=None, user_data=None):
 
         enemy_search_tokens = enemy_search.split(' ')
 
-        if enemy_search_tokens[len(enemy_search_tokens)-1].isdigit():
+        if enemy_search_tokens[len(enemy_search_tokens) - 1].isdigit():
             # user passed in a positive integer, identify enemy by number
 
-            searched_id = enemy_search_tokens[len(enemy_search_tokens)-1]
+            searched_id = enemy_search_tokens[len(enemy_search_tokens) - 1]
 
-            enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_enemy} = %s".format(
-                id_enemy=ewcfg.col_id_enemy,
-                poi=ewcfg.col_enemy_poi,
-            ), (
-                user_data.poi,
-                searched_id,
-            ))
+            enemydata = ewutils.execute_sql_query(
+                "SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_enemy} = %s".format(
+                    id_enemy=ewcfg.col_id_enemy,
+                    poi=ewcfg.col_enemy_poi,
+                ), (
+                    user_data.poi,
+                    searched_id,
+                ))
 
             for row in enemydata:
                 enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
@@ -628,7 +637,6 @@ def find_enemy(enemy_search=None, user_data=None):
                 if enemy.display_name.lower() == enemy_search:
                     enemy_sought = enemy
                     break
-
 
     return enemy_sought
 
@@ -978,7 +986,7 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
                 resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
             resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
             resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-            # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
+        # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
 
         # Add level up text to response if appropriate
         if user_inital_level < user_data.slimelevel:
@@ -1147,7 +1155,8 @@ def explode(damage=0, district_data=None):
         enemy_data = EwEnemy(id_enemy=enemy, id_server=id_server)
 
         if True:
-            response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
+            response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(
+                enemy_data.display_name, damage)
             resp_cont.add_channel_response(channel, response)
             slimes_damage = damage
             if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
@@ -1175,6 +1184,7 @@ def explode(damage=0, district_data=None):
                 enemy_data.persist()
     return resp_cont
 
+
 def check_death(enemy_data):
     if enemy_data.slimes <= 0 or enemy_data.life_state == 0:
         # delete_enemy(enemy_data)
@@ -1182,8 +1192,8 @@ def check_death(enemy_data):
     else:
         return False
 
-def get_enemy(enemy_type):
 
+def get_enemy(enemy_type):
     enemy = EwEnemy()
 
     if enemy_type == 'juvie':
@@ -1220,6 +1230,7 @@ def get_enemy(enemy_type):
 
     return enemy
 
+
 def get_enemy_slime(enemy_type):
     slime = 0
     if enemy_type == 'juvie':
@@ -1228,3 +1239,11 @@ def get_enemy_slime(enemy_type):
         slime = (random.randrange(250000) + 250000)
 
     return slime
+
+common_enemies = ['juvie', 'slimeasaur']
+
+uncommon_enemies = ['slimeadactyl', 'desertraider']
+
+rare_enemies = ['microslime']
+
+raid_bosses = ['megaslime']

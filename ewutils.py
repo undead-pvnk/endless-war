@@ -924,11 +924,11 @@ async def decrease_food_multiplier(id_user):
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
-	if random.randint(1, 2) == 1:
+	if random.randrange(3) == 2:
 		resp_cont = EwResponseContainer(id_server=id_server)
-		response = await spawn_enemy(id_server)
+		response, channel = await spawn_enemy(id_server)
 
-		resp_cont.add_channel_response("downtown", response)
+		resp_cont.add_channel_response(channel, response)
 
 		await resp_cont.post()
 
