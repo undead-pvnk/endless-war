@@ -367,11 +367,11 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	#ewdebug.cmd_debug1: ewdebug.debug1,
-	#ewdebug.cmd_debug2: ewdebug.debug2,
+	ewdebug.cmd_debug1: ewdebug.debug1,
+	ewdebug.cmd_debug2: ewdebug.debug2,
 }
 
-debug = True
+debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True

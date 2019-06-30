@@ -105,6 +105,8 @@ async def reap(cmd):
 				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
+					user_initial_level = user_data.slimelevel
+
 					slime_gain = ewcfg.reap_gain
 					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(slime_gain)
 
@@ -168,10 +170,15 @@ async def reap(cmd):
 					response += "and a bushel of {}!".format(vegetable.str_name)
 
 					levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
+
+					was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+					# Tell the player their slime level increased.
+					if was_levelup:
+						response += levelup_response
+
 					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
-
-
 
 					response += "and a bushel of {}!".format(vegetable.str_name)
 					if levelup_response != "":
@@ -179,6 +186,7 @@ async def reap(cmd):
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()
+
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 

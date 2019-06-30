@@ -87,23 +87,14 @@ def gen_score_text(
 		item_type_filter = ewcfg.it_item
 	)
 
-	poudrins = []
-
-	for poudrin in items:
-		name = poudrin.get('name')
-		if name != "Slime Poudrin":
-			pass
-		else:
-			poudrins.append(poudrin)
-
-	poudrins_count = len(poudrins)
+	poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
 		response = "{}'s power is beyond your understanding.".format(display_name)
 	else:
 		# return somebody's score
-		response = "{} currently has {:,} slime{}.".format(display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrins_count, ("" if poudrins_count == 1 else "s")) if poudrins_count > 0 else ""))
+		response = "{} currently has {:,} slime{}.".format(display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
 	return response
 
@@ -115,25 +106,10 @@ async def score(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 
-		items = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_item
-		)
-
-		poudrins = []
-
-		for poudrin in items:
-			name = poudrin.get('name')
-			if name != "Slime Poudrin":
-				pass
-			else:
-				poudrins.append(poudrin)
-
-		poudrins_count = len(poudrins)
+		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
 
 		# return my score
-		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrins_count, ("" if poudrins_count == 1 else "s")) if poudrins_count > 0 else ""))
+		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
 	else:
 		member = cmd.mentions[0]

@@ -643,7 +643,7 @@ invuln_onrevive = 0
 weapon_fee = 100
 
 # farming
-crops_time_to_grow = 1  # in minutes; 180 minutes are 3 hours
+crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
 
 # Cooldowns
@@ -1254,7 +1254,7 @@ item_list = [
 				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
-		id_item = "slimexoida",
+		id_item = "slimexodia",
 		context = 'slimexodia',
 		str_name = "Slimexodia The Forbidden {}".format(emote_111),
 		str_desc = "The centerpiece of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
@@ -6382,7 +6382,7 @@ smelting_recipe_list = [
 			"forbidden111",
 			":111:",
 		],
-		ingredients = ['leftleg', 'rightleg', 'slimeexodia', 'rightarm', 'leftarm'],
+		ingredients = ['leftleg', 'rightleg', 'slimexodia', 'rightarm', 'leftarm'],
 		products = ['theforbiddenoneoneone']
 	),
 	EwSmeltingRecipe(
@@ -7567,18 +7567,6 @@ for hue in hue_list:
 
 	for alias in hue.alias:
 		hue_map[alias] = hue# A map of id_hue to EwHue objects.
-hue_map = {}
-
-# A list of hue names
-hue_names = []
-
-# Populate hue map, including all aliases.
-for hue in hue_list:
-	hue_map[hue.id_hue] = hue
-	hue_names.append(hue.id_hue)
-
-	for alias in hue.alias:
-		hue_map[alias] = hue
 
 # Things a slimeoid might throw
 thrownobjects_list = [

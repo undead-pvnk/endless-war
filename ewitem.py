@@ -911,6 +911,29 @@ def find_item(item_search = None, id_user = None, id_server = None):
 
 	return item_sought
 
+"""
+	Finds the amount of Slime Poudrins inside your inventory.
+"""
+def find_poudrin(id_user = None, id_server = None):
+
+	items = inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_item
+	)
+
+	poudrins = []
+
+	for poudrin in items:
+		name = poudrin.get('name')
+		if name != "Slime Poudrin":
+			pass
+		else:
+			poudrins.append(poudrin)
+
+	poudrins_amount = len(poudrins)
+
+	return poudrins_amount
 
 """
 	Command that lets players !give others items

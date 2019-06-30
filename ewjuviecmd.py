@@ -128,8 +128,6 @@ async def mine(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 
 		else:
-			response = ""
-
 			has_pickaxe = False
 
 			if user_data.weapon >= 0:
@@ -146,11 +144,10 @@ async def mine(cmd):
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				unearthed_item_chance *= 2
+			if has_pickaxe == True:
+				unearthed_item_chance *= 1.5
 			if ewcfg.mutation_id_lucky in mutations:
 				unearthed_item_chance *= 1.33
-			if has_pickaxe == True:
-				unearthed_item_chance *= 1.33
-
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -207,9 +204,9 @@ async def mine(cmd):
 						),
 
 				if unearthed_item_amount == 1:
-					response += "You unearthed a {}! ".format(item.str_name)
+					response = "You unearthed a {}! ".format(item.str_name)
 				elif unearthed_item_amount == 2:
-					response += "You unearthed two (2) {}! ".format(item.str_name)
+					response = "You unearthed two (2) {}! ".format(item.str_name)
 
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
@@ -229,10 +226,6 @@ async def mine(cmd):
 			if has_pickaxe == True:
 				mining_yield *= 2
 
-			levelup_response = user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
-
-			was_levelup = True if user_initial_level < user_data.slimelevel else False
-
 			# Fatigue the miner.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
@@ -243,15 +236,20 @@ async def mine(cmd):
 				if random.randint(1, 100) <= extra * 100:
 					user_data.hunger += ewcfg.hunger_permine
 
-			user_data.persist()
+			levelup_response = user_data.change_slimes(n = mining_yield, source = ewcfg.source_mining)
+
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
 			# Tell the player their slime level increased and/or they unearthed an item.
 			if was_levelup:
-				if was_levelup:
-					response += levelup_response
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				response += levelup_response
+
+			user_data.persist()
+
 	else:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't mine here. Go to the mines."))
+		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """
 	Mining in the wrong channel or while exhausted. This is deprecated anyway but let's sorta keep it around in case we need it.
