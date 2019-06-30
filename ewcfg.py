@@ -7634,6 +7634,12 @@ coward_responses = [
 	"The {} calls out to you: *I'm just a good little {}... never hurt nobody anywhere...*",
 ]
 
+coward_responses_hurt = [
+	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*"
+	"\nThe {} cries out in pain!: *You MONSTER!*"
+	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*"
+]
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 

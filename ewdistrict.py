@@ -8,7 +8,6 @@ import ewcfg
 import ewstats
 import ewutils
 from ew import EwUser
-# from ewhunting import EwEnemy
 from ewmarket import EwMarket
 
 """

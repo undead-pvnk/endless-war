@@ -18,7 +18,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import delete_enemy, EwEnemy, spawn_enemy, enemy_kill
+from ewhunting import EwEnemy, delete_enemy, spawn_enemy, enemy_kill
 
 db_pool = {}
 db_pool_id = 0

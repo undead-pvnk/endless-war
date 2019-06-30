@@ -958,8 +958,8 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
                         current=enemy_data.slimes,
                         total=enemy_data.initialslimes
                     )
-                    if enemy_data.type == 'juvie':
-                        response += '\nThe lost juvie cries out in pain! "Just wait until the Juvenile Enrichment Center hears about this!!"'
+                    if enemy_data.ai == 'Coward':
+                        response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
             else:
                 if miss:
                     response = "{target_name} dodges your strike.".format(target_name=member.display_name)
@@ -970,8 +970,8 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
                         current=enemy_data.slimes,
                         total=enemy_data.initialslimes
                     )
-                    if enemy_data.type == 'juvie':
-                        response += '\nThe lost juvie cries out in pain! "Just wait until the Juvenile Enrichment Center hears about this!!"'
+                    if enemy_data.ai == 'Coward':
+                        response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
 
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)
@@ -999,12 +999,9 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
     return resp_cont
 
 
-# copied over from ewutils to prevent circular importing
 def level_byslime(slime):
     return int(abs(slime) ** 0.25)
 
-
-# copied over from ewwep to prevent circular importing, also slightly modified to work with enemies
 class EwAttackType:
     # A name used to identify the attacking type
     id_type = ""

@@ -191,6 +191,7 @@ async def attack(cmd):
 			# enemy found, redirect variables to code in ewhunting
 
 			# some variables are declared beforehand to prevent circular importing in ewhunting
+			# shootee_data goes unused in ctn?
 			ctn = EwEffectContainer(
 				miss=None,
 				crit=None,
