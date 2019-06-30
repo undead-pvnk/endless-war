@@ -412,10 +412,11 @@ class EwEnemy:
                         resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
                         resp_cont.add_channel_response(ch_name, response)
                         if ewcfg.mutation_id_spontaneouscombustion in target_mutations:
+                            import ewwep
                             explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
                                 member.display_name)
                             resp_cont.add_channel_response(ch_name, explode_resp)
-                            explosion = explode(damage=explode_damage, district_data=district_data)
+                            explosion = ewwep.explode(damage=explode_damage, district_data=district_data)
                             resp_cont.add_response_container(explosion)
 
                         # don't recreate enemy data if enemy was killed in explosion
@@ -879,9 +880,6 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             if enemy_data.level >= user_data.slimelevel and weapon is not None:
                 user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
 
-            explode_damage = ewutils.slime_bylevel(enemy_data.level) / 5
-            # explode, damaging everyone in the district
-
             # release bleed storage
             if ewcfg.mutation_id_thickerthanblood in user_mutations:
                 slimes_todistrict = 0
@@ -1094,95 +1092,6 @@ class EwEnemyEffectContainer:
         self.slimes_spent = slimes_spent
         self.enemy_data = enemy_data
         self.target_data = target_data
-
-
-def explode(damage=0, district_data=None):
-    id_server = district_data.id_server
-    poi = district_data.name
-
-    resp_cont = ewutils.EwResponseContainer(id_server=id_server)
-    response = ""
-    channel = ewcfg.id_to_poi.get(poi).channel
-
-    life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
-    users = district_data.get_players_in_district(life_states=life_states)
-
-    enemy_data = EwEnemy()
-
-    enemies = district_data.get_enemies_in_district(enemy_data)
-
-    # damage players
-    for user in users:
-        user_data = EwUser(id_user=user, id_server=id_server)
-        mutations = user_data.get_mutations()
-
-        if True:
-            player_data = EwPlayer(id_user=user_data.id_user)
-            response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(
-                player_data.display_name, damage)
-            resp_cont.add_channel_response(channel, response)
-            slimes_damage = damage
-            if user_data.slimes < slimes_damage + user_data.bleed_storage:
-                # die in the explosion
-                district_data.change_slimes(n=user_data.slimes, source=ewcfg.source_killing)
-                district_data.persist()
-                slimes_dropped = user_data.totaldamage + user_data.slimes
-                explode_damage = ewutils.slime_bylevel(user_data.slimelevel)
-
-                user_data.die(cause=ewcfg.cause_killing)
-                user_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
-                user_data.persist()
-
-                response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(
-                    player_data.display_name)
-                resp_cont.add_channel_response(channel, response)
-
-                if ewcfg.mutation_id_spontaneouscombustion in mutations:
-                    sub_explosion = explode(explode_damage, district_data)
-                    resp_cont.add_response_container(sub_explosion)
-            else:
-                # survive
-                slime_splatter = 0.5 * slimes_damage
-                district_data.change_slimes(n=slime_splatter, source=ewcfg.source_killing)
-                district_data.persist()
-                slimes_damage -= slime_splatter
-                user_data.bleed_storage += slimes_damage
-                user_data.change_slimes(n=-slime_splatter, source=ewcfg.source_killing)
-                user_data.persist()
-
-    # damage enemies
-    for enemy in enemies:
-        enemy_data = EwEnemy(id_enemy=enemy, id_server=id_server)
-
-        if True:
-            response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(
-                enemy_data.display_name, damage)
-            resp_cont.add_channel_response(channel, response)
-            slimes_damage = damage
-            if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
-                # die in the explosion
-                district_data.change_slimes(n=enemy_data.slimes, source=ewcfg.source_killing)
-                district_data.persist()
-                # slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
-                # explode_damage = ewutils.slime_bylevel(enemy_data.level)
-
-                response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(
-                    enemy_data.display_name)
-                resp_cont.add_channel_response(channel, response)
-
-                enemy_data.life_state = 0
-                enemy_data.persist()
-
-            else:
-                # survive
-                slime_splatter = 0.5 * slimes_damage
-                district_data.change_slimes(n=slime_splatter, source=ewcfg.source_killing)
-                district_data.persist()
-                slimes_damage -= slime_splatter
-                enemy_data.bleed_storage += slimes_damage
-                enemy_data.change_slimes(n=-slime_splatter, source=ewcfg.source_killing)
-                enemy_data.persist()
-    return resp_cont
 
 
 def check_death(enemy_data):

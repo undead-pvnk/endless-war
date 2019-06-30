@@ -802,7 +802,8 @@ def explode(damage = 0, district_data = None):
 				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
 				resp_cont.add_channel_response(channel, response)
 
-				ewhunting.delete_enemy(enemy_data)
+				enemy_data.life_state = 0
+				enemy_data.persist()
 
 			else:
 				# survive
