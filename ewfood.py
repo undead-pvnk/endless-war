@@ -238,10 +238,10 @@ async def order(cmd):
 									'recover_hunger': item.recover_hunger,
 									'inebriation': item.inebriation,
 									'str_eat': item.str_eat,
-									'time_expir': time.time()
+									'time_expir': time.time() + ewcfg.std_food_expir
 								}
 							),
-							response = "You slam down {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
+							response = "You slam {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
 							user_data.persist()
 
 					if item_type == ewcfg.it_cosmetic:
@@ -257,7 +257,7 @@ async def order(cmd):
 								'adorned': 'false'
 							}
 						),
-						response = "You slam down {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
+						response = "You slam {:,} slime down on the counter at {} for a {}.".format(value, current_vendor, item.str_name)
 						user_data.persist()
 
 		else:

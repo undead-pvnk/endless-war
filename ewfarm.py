@@ -180,10 +180,6 @@ async def reap(cmd):
 					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
 
-					response += "and a bushel of {}!".format(vegetable.str_name)
-					if levelup_response != "":
-						response += "\n\n" + levelup_response
-
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()
 
