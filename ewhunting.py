@@ -195,7 +195,7 @@ class EwEnemy:
             # Get target's info based on its AI.
 
             if enemy_data.ai == "Coward":
-                if random.randrange(100) > 92:
+                if random.randrange(100) > 95:
                     response = random.choice(ewcfg.coward_responses)
                     response = response.format(enemy_data.display_name, enemy_data.display_name)
                     resp_cont.add_channel_response(ch_name, response)
@@ -689,15 +689,136 @@ def delete_enemy(enemy_data):
 def drop_enemy_loot(enemy_data, district_data):
     response = ""
 
+    item_counter = 0
+
+    poudrin_dropped = False
+    poudrin_range = 0
+    poudrin_amount = 0
+
+    pleb_dropped = False
+    pleb_range = 0
+    pleb_amount = 0
+
+    patr_dropped = False
+    patr_range = 0
+    patr_amount = 0
+
+    crop_dropped = False
+    crop_range = 0
+    crop_amount = 0
+
     if enemy_data.type == 'juvie':
 
-        patrician_rarity = 20
-        patrician_dropped = random.randint(1, patrician_rarity)
-        patrician = False
+        poudrin_dropped = random.randrange(2) == 0
+        pleb_dropped = random.randrange(10) == 0
+        crop_dropped = random.randrange(10) <= 2
 
-        if patrician_dropped == 1:
-            patrician = True
+        if poudrin_dropped:
+            poudrin_range = random.randrange(2)
+            if poudrin_range == 0:
+                poudrin_amount = 1
+            else:
+                poudrin_amount = 2
+        if pleb_dropped:
+            pleb_amount = 1
+        if crop_dropped:
+            crop_amount = 1
 
+    elif enemy_data.type == 'microslime':
+        patr_dropped = True
+        patr_amount = 1
+
+    elif enemy_data.type == 'slimeasaur':
+
+        poudrin_dropped = True
+        pleb_dropped = random.randrange(10) <= 3
+        # meat_dropped = True
+
+        poudrin_range = random.randrange(2)
+
+        if poudrin_range == 0:
+            poudrin_amount = 3
+        else:
+            poudrin_amount = 4
+
+        if pleb_dropped:
+            pleb_range = random.randrange(2)
+            if pleb_range == 0:
+                pleb_amount = 1
+            else:
+                pleb_amount = 2
+
+    elif enemy_data.type == 'slimeadactyl':
+
+        poudrin_dropped = True
+        pleb_dropped = random.randrange(10) <= 3
+
+        poudrin_range = random.randrange(2)
+
+        if poudrin_range == 0:
+            poudrin_amount = 3
+        else:
+            poudrin_amount = 4
+
+        if pleb_dropped:
+            pleb_range = random.randrange(2)
+            if pleb_range == 0:
+                pleb_amount = 1
+            else:
+                pleb_amount = 2
+
+    elif enemy_data.type == 'desertraider':
+
+        poudrin_dropped = True
+        pleb_dropped = True
+        pleb_amount = 1
+        crop_dropped = random.randrange(2) == 0
+
+        poudrin_range = random.randrange(2) == 0
+
+        if poudrin_range == 0:
+            poudrin_amount = 1
+        else:
+            poudrin_amount = 2
+
+        if crop_dropped:
+            crop_range = random.randrange(4)
+            if crop_range == 0:
+                crop_amount = 3
+            elif crop_range == 1:
+                crop_amount = 4
+            elif crop_range == 2:
+                crop_amount = 5
+            else:
+                crop_amount = 6
+
+    elif enemy_data.type == 'megaslime':
+
+        poudrin_dropped = True
+        pleb_dropped = True
+        patr_dropped = random.randrange(3) == 0
+
+        poudrin_range = random.randrange(3)
+        if poudrin_range == 0:
+            poudrin_amount = 8
+        elif poudrin_range == 1:
+            poudrin_amount = 9
+        else:
+            poudrin_amount = 10
+
+        pleb_range = random.randrange(3)
+        if pleb_range == 0:
+            pleb_amount = 2
+        elif pleb_range == 1:
+            pleb_amount = 3
+        else:
+            pleb_amount = 4
+
+        if patr_dropped:
+            patr_amount = 1
+
+
+    if pleb_dropped or patr_dropped:
         cosmetics_list = []
 
         for result in ewcfg.cosmetic_items_list:
@@ -706,31 +827,100 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 pass
 
-        items = []
+    if poudrin_dropped:
+        item_counter = 0
 
-        for cosmetic in cosmetics_list:
-            if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
-                items.append(cosmetic)
-            elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
-                items.append(cosmetic)
+        while item_counter < poudrin_amount:
+            ewitem.item_create(
+                item_type=ewcfg.it_slimepoudrin,
+                id_user=district_data.name,
+                id_server=district_data.id_server,
+            )
+            response += "They dropped a slime poudrin!\n"
 
-        item = items[random.randint(0, len(items) - 1)]
+            item_counter += 1
 
-        ewitem.item_create(
-            item_type=ewcfg.it_cosmetic,
-            id_user=district_data.name,
-            id_server=district_data.id_server,
-            item_props={
-                'id_cosmetic': item.id_cosmetic,
-                'cosmetic_name': item.str_name,
-                'cosmetic_desc': item.str_desc,
-                'rarity': item.rarity,
-                'adorned': 'false'
-            }
-        )
-        response = "They dropped a {item_name}!".format(item_name=item.str_name)
+    if pleb_dropped:
+        item_counter = 0
 
-    else:
+        while item_counter < pleb_amount:
+            items = []
+
+            for cosmetic in cosmetics_list:
+                if cosmetic.rarity == ewcfg.rarity_plebeian:
+                    items.append(cosmetic)
+
+            item = items[random.randint(0, len(items) - 1)]
+
+            ewitem.item_create(
+                item_type=ewcfg.it_cosmetic,
+                id_user=district_data.name,
+                id_server=district_data.id_server,
+                item_props={
+                    'id_cosmetic': item.id_cosmetic,
+                    'cosmetic_name': item.str_name,
+                    'cosmetic_desc': item.str_desc,
+                    'rarity': item.rarity,
+                    'adorned': 'false'
+                }
+            )
+            response += "They dropped a {item_name}!\n".format(item_name=item.str_name)
+
+            item_counter += 1
+
+    if patr_dropped:
+        item_counter = 0
+
+        while item_counter < patr_amount:
+            items = []
+
+            for cosmetic in cosmetics_list:
+                if cosmetic.rarity == ewcfg.rarity_patrician:
+                    items.append(cosmetic)
+
+            item = items[random.randint(0, len(items) - 1)]
+
+            ewitem.item_create(
+                item_type=ewcfg.it_cosmetic,
+                id_user=district_data.name,
+                id_server=district_data.id_server,
+                item_props={
+                    'id_cosmetic': item.id_cosmetic,
+                    'cosmetic_name': item.str_name,
+                    'cosmetic_desc': item.str_desc,
+                    'rarity': item.rarity,
+                    'adorned': 'false'
+                }
+            )
+            response += "They dropped a {item_name}!\n".format(item_name=item.str_name)
+
+            item_counter += 1
+
+    if crop_dropped:
+        item_counter = 0
+
+        while item_counter < crop_amount:
+
+            vegetable = random.choice(ewcfg.vegetable_list)
+
+            ewitem.item_create(
+                id_user=district_data.name,
+                id_server=district_data.id_server,
+                item_type=ewcfg.it_food,
+                item_props={
+                    'id_food': vegetable.id_food,
+                    'food_name': vegetable.str_name,
+                    'food_desc': vegetable.str_desc,
+                    'recover_hunger': vegetable.recover_hunger,
+                    'str_eat': vegetable.str_eat,
+                    'time_expir': time.time() + ewcfg.farm_food_expir
+                }
+            )
+            response += "They dropped a {vegetable_name}!\n".format(vegetable_name=vegetable.str_name)
+
+            item_counter += 1
+
+    if not poudrin_dropped and not pleb_dropped and not patr_dropped and not crop_dropped:
         response = "They didn't drop anything..."
 
     return response
