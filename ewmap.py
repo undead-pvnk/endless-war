@@ -22,6 +22,10 @@ def get_move_speed(user_data):
 	mutations = user_data.get_mutations()
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
+        
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 0.5
+
 	if ewcfg.mutation_id_organicfursuit in mutations and (
 		(market_data.day % 31 == 0 and market_data.clock >= 20)
 		or (market_data.day % 31 == 1 and market_data.clock < 6)
@@ -518,19 +522,6 @@ def inaccessible(user_data = None, poi = None):
 		set(poi.factions).issubset(set(bans))
 	):
 		return True
-	elif user_data.life_state == ewcfg.life_state_corpse:
-		ghost_range = int(user_data.slimelevel / 10)
-		pois_in_range = set([ewcfg.poi_id_thesewers, user_data.poi_death])
-		for i in range(ghost_range):
-			new_pois_in_range = set()
-			for in_range in pois_in_range:
-				in_range_neighbors = ewcfg.poi_neighbors.get(in_range)
-				if in_range_neighbors is None:
-					continue
-				new_pois_in_range.update(in_range_neighbors)
-			pois_in_range.update(new_pois_in_range)
-
-		return poi.id_poi not in pois_in_range
 	else:
 		return False
 
@@ -560,17 +551,12 @@ async def move(cmd):
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
-	if user_data.life_state == ewcfg.life_state_corpse and user_data.busted:
-		if user_data.poi == ewcfg.poi_id_thesewers:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're busted, bitch. You can't leave the sewers until your !revive."))
-		else:  # sometimes busted ghosts get stuck outside the sewers
-			user_data.poi = ewcfg.poi_id_thesewers
-			user_data.persist()
-			await ewrolemgr.updateRoles(cmd.client, cmd.message.author)
-			return
+	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
+		
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
-		if user_data.life_state == ewcfg.life_state_corpse and not inaccessible(user_data = user_data, poi = poi):
+		if user_data.life_state == ewcfg.life_state_corpse and poi.id_poi == ewcfg.poi_id_thesewers:
 			path = EwPath(cost = 60)
 		else:
 			path = None

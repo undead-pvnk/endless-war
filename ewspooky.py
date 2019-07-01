@@ -6,6 +6,7 @@ from ewdistrict import EwDistrict
 import time
 import random
 import re
+import asyncio
 
 import ewcmd
 import ewcfg
@@ -279,3 +280,53 @@ def generate_negaslimeoid_name():
 	name = name.capitalize()
 	full_name = "{}, {}".format(name, title)
 	return full_name
+
+
+"""
+	allows ghosts to leave the sewers
+"""
+async def manifest(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse and user_data.busted:
+		if user_data.poi == ewcfg.poi_id_thesewers:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're busted, bitch. You can't leave the sewers until your restore your power by !haunting one of the living."))
+		else:  # sometimes busted ghosts get stuck outside the sewers
+			user_data.poi = ewcfg.poi_id_thesewers
+			user_data.persist()
+			await ewrolemgr.updateRoles(cmd.client, cmd.message.author)
+			return
+
+	if user_data.life_state != ewcfg.life_state_corpse:
+		response = "You don't even know what that MEANS."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if user_data.poi != ewcfg.poi_id_thesewers:
+		response = "You've already manifested in the city."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	poi = ewcfg.id_to_poi.get(user_data.poi_death)
+
+	response = "{}ing in {}.".format(cmd.tokens[0][1:].capitalize(), poi.str_name)
+
+	# schedule tasks for concurrent execution
+	message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
+	wait_task = asyncio.ensure_future(asyncio.sleep(5))
+
+	# Take control of the move for this player.
+	ewmap.move_counter += 1
+	move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+	await message_task
+	await wait_task
+
+		
+	# check if the user entered another movement command while waiting for the current one to be completed
+	if move_current != ewutils.moves_active[cmd.message.author.id]:
+		return
+
+	user_data = EwUser(member = cmd.message.author)
+	user_data.poi = poi.id_poi
+	user_data.persist()
+
+	await ewrolemgr.updateRoles(cmd.client, cmd.message.author)
