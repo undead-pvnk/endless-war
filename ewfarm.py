@@ -216,16 +216,16 @@ async def sow(cmd):
 		if farm.time_lastsow > 0:
 			response = "You’ve already sown something here. Try planting in another farming location. If you’ve planted in all three farming locations, you’re shit out of luck. Just wait, asshole."
 		else:
-			poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-			if poudrins == None:
+			if poudrin == None:
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
 				# Sowing
 				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about 3 hours."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
-				ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
+				ewitem.item_delete(id_item = poudrin.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
 
