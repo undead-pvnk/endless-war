@@ -663,6 +663,23 @@ def inventory(
 				stack_max = row[3]
 				stack_size = row[4]
 
+				if item_type == 'slimepoudrin':
+					item_data = EwItem(id_item = id_item)
+					item_type = ewcfg.it_item
+					item_data.item_type = item_type
+					for item in ewcfg.item_list:
+						if item.context == "poudrin":
+							item_props = {
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc
+							}
+					item_data.item_props.update(item_props)
+					item_data.persist()
+
+					ewutils.logMsg('Updated poudrin to new format: {}'.format(id_item))
+					    
 				item_def = ewcfg.item_def_map.get(item_type)
 
 				if(item_def != None):
