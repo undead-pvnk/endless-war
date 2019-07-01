@@ -919,7 +919,7 @@ def drop_enemy_loot(enemy_data, district_data):
                     'time_expir': time.time() + ewcfg.farm_food_expir
                 }
             )
-            response += "They dropped a {vegetable_name}!\n".format(vegetable_name=vegetable.str_name)
+            response += "They dropped a bushel of {vegetable_name}!\n".format(vegetable_name=vegetable.str_name)
 
             item_counter += 1
 
