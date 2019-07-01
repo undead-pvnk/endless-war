@@ -130,6 +130,9 @@ cmd_map = {
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
 
+	# how ghosts leave the sewers
+	ewcfg.cmd_manifest: ewspooky.manifest,
+
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
 
