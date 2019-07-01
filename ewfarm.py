@@ -105,32 +105,54 @@ async def reap(cmd):
 				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
 				else:
-					# Determine if a slime poudrin is found.
-					poudrin = False
-					poudrinamount = 0
+					user_initial_level = user_data.slimelevel
 
-					poudrin_chance = 500 / ewcfg.poudrin_rarity  # 1 in 3 chance
+					slime_gain = ewcfg.reap_gain
+					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(slime_gain)
+
+					# Determine if an item is found.
+					unearthed_item = False
+					unearthed_item_amount = 0
+
+					unearthed_item_chance = 500 / ewcfg.unearthed_item_rarity  # 1 in 3 chance
 					
 					if ewcfg.mutation_id_lucky in mutations:
-						poudrin_chance *= 1.33
+						unearthed_item_chance *= 1.33
 
-					if random.random() < poudrin_chance:
-						poudrin = True
-						poudrinamount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+					if random.random() < unearthed_item_chance:
+						unearthed_item = True
+						unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
-					# Create and give slime poudrins
-					for pcreate in range(poudrinamount):
-						ewitem.item_create(
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_type = ewcfg.it_slimepoudrin,
-						)
+					if unearthed_item == True:
+						# If there are multiple possible products, randomly select one.
+						item = random.choice(ewcfg.mine_results)
+
+						if hasattr(item, 'id_item'):
+							for creation in range(unearthed_item_amount):
+								ewitem.item_create(
+									item_type = ewcfg.it_item,
+									id_user = cmd.message.author.id,
+									id_server = cmd.message.server.id,
+									item_props = {
+										'id_item': item.id_item,
+										'context': item.context,
+										'item_name': item.str_name,
+										'item_desc': item.str_desc,
+									}
+								),
+						else:
+							pass
+
+						if unearthed_item_amount == 1:
+							response += "a {}, ".format(item.str_name)
+						elif unearthed_item_amount == 2:
+							response += "two {}s, ".format(item.str_name)
 
 					#  Determine what crop is grown.
 					vegetable = random.choice(ewcfg.vegetable_list)
 
 					#  Create and give a bushel of whatever crop was grown.
-					for vcreate in range(4):
+					for vcreate in range(3):
 						ewitem.item_create(
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
@@ -145,25 +167,22 @@ async def reap(cmd):
 							}
 						)
 
-					slime_gain = ewcfg.reap_gain
+					response += "and a bushel of {}!".format(vegetable.str_name)
+
 					levelup_response = user_data.change_slimes(n = slime_gain, source = ewcfg.source_farming)
+
+					was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+					# Tell the player their slime level increased.
+					if was_levelup:
+						response += levelup_response
+
 					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()
 
-					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(slime_gain)
-
-					if poudrin == True:
-						if poudrinamount == 1:
-							response += "a slime poudrin, "
-						elif poudrinamount == 2:
-							response += "two slime poudrins, "
-
-					response += "and a bushel of {}!".format(vegetable.str_name)
-					if levelup_response != "":
-						response += "\n\n" + levelup_response
-
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()
+
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -197,20 +216,16 @@ async def sow(cmd):
 		if farm.time_lastsow > 0:
 			response = "You’ve already sown something here. Try planting in another farming location. If you’ve planted in all three farming locations, you’re shit out of luck. Just wait, asshole."
 		else:
-			poudrins = ewitem.inventory(
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_type_filter = ewcfg.it_slimepoudrin
-			)
+			poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-			if len(poudrins) < 1:
+			if poudrins == None:
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
 				# Sowing
 				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about 3 hours."
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
+				ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
 

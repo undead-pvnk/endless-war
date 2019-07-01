@@ -7,6 +7,7 @@ import ewutils
 import ewcfg
 import ewstats
 import ewrolemgr
+import ewsmelting
 from ew import EwUser
 from ewplayer import EwPlayer
 
@@ -191,32 +192,38 @@ class EwItem:
 """
 	These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
 """
-class EwDefaultItem:
+class EwGeneralItem:
 	id_item = " "
 	alias = []
 	context = ""
-	subcontext = ""
 	str_name = ""
 	str_desc = ""
 	ingredients = ""
+	acquisition = ""
+	price = 0
+	vendors = []
 
 	def __init__(
 		self,
 		id_item = " ",
 		alias = [],
 		context = "",
-		subcontext = "",
 		str_name = "",
 		str_desc = "",
 		ingredients = "",
+		acquisition = "",
+		price = 0,
+		vendors = [],
 	):
 		self.id_item = id_item
 		self.alias = alias
 		self.context = context
-		self.subcontext = subcontext
 		self.str_name = str_name
 		self.str_desc = str_desc
 		self.ingredients = ingredients
+		self.acquisition = acquisition
+		self.price = price
+		self.vendors = vendors
 
 
 """
@@ -446,7 +453,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 			else:
-				if item_sought.get('item_type') == ewcfg.it_slimepoudrin:
+				if item_sought.get('name') == "Slime Poudrin":
 					ewstats.change_stat(
 						id_server = user_data.id_server,
 						id_user = user_data.id_user,
@@ -620,7 +627,7 @@ def cmd_is_inventory(cmd):
 def inventory(
 	id_user = None,
 	id_server = None,
-	item_type_filter = None
+	item_type_filter = None,
 ):
 	items = []
 
@@ -828,6 +835,14 @@ async def item_use(cmd):
 			response = user_data.equip(item)
 			user_data.persist()
 
+		if item.item_type == ewcfg.it_item:
+			name = item_sought.get('name')
+			if name == "Trading Cards":
+				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
+			else:
+				return
+
+
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -896,6 +911,29 @@ def find_item(item_search = None, id_user = None, id_server = None):
 
 	return item_sought
 
+"""
+	Finds the amount of Slime Poudrins inside your inventory.
+"""
+def find_poudrin(id_user = None, id_server = None):
+
+	items = inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_item
+	)
+
+	poudrins = []
+
+	for poudrin in items:
+		name = poudrin.get('name')
+		if name != "Slime Poudrin":
+			pass
+		else:
+			poudrins.append(poudrin)
+
+	poudrins_amount = len(poudrins)
+
+	return poudrins_amount
 
 """
 	Command that lets players !give others items
