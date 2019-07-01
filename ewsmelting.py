@@ -47,33 +47,42 @@ async def smelt(cmd):
 
 	# Find sought recipe.
 	if cmd.tokens_count > 1:
-		sought_result = cmd.tokens[1].lower()
+		sought_result = ewutils.flattenTokenListToString(cmd.tokens[1:])
 		found_recipe = ewcfg.smelting_recipe_map.get(sought_result)
 
 		if found_recipe != None:
 			# Checks what ingredients are needed to smelt the recipe.
 			necessary_ingredients = found_recipe.ingredients
+			necessary_ingredients_list = []
 
 			owned_ingredients = []
 
 			# Seeks out the necessary ingredients in your inventory.
+			missing_ingredients = []
 			for matched_item in necessary_ingredients:
-				sought_item = ewitem.find_item(item_search = matched_item, id_user = user_data.id_user, id_server = user_data.id_server)
-				if sought_item != None:
-					ewitem.item_drop(sought_item.get('id_item'))
-					owned_ingredients.append(matched_item)
+				necessary_items = necessary_ingredients.get(matched_item)
+				necessary_str = "{} {}".format(necessary_items, matched_item)
+				if necessary_items > 1:
+					necessary_str += "s"
+				necessary_ingredients_list.append(necessary_str)
+				
+				sought_items = ewitem.find_item_all(item_search = matched_item, id_user = user_data.id_user, id_server = user_data.id_server)
+				missing_items = necessary_items - len(sought_items)
+				if missing_items > 0:
+					missing_str = "{} {}".format(missing_items, matched_item)
+					if missing_items > 1:
+						missing_str += "s"
+					missing_ingredients.append(missing_str)
 				else:
-					pass
-
-			for dropped_ingredients in owned_ingredients:
-				ewitem.item_lootspecific(item_search = dropped_ingredients, id_user = user_data.id_user, id_server = user_data.id_server)  # Returns items.
+					for i in range(necessary_ingredients.get(matched_item)):
+						sought_item = sought_items.pop()
+						owned_ingredients.append(sought_item.get('id_item'))
 
 			# If you don't have all the necessary ingredients.
-			if len(necessary_ingredients) > len(owned_ingredients):
-				response = "You’ve never done this before, have you? To smelt {}, you’ll need to combine a *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients, conjunction = "and"))
+			if len(missing_ingredients) > 0:
+				response = "You’ve never done this before, have you? To smelt {}, you’ll need to combine *{}*.".format(found_recipe.str_name, ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"))
 
-				if len(owned_ingredients) != 0:
-					response += " You only have a *{}*.".format(ewutils.formatNiceList(names = owned_ingredients, conjunction = "and"))
+				response += " You are missing *{}*.".format(ewutils.formatNiceList(names = missing_ingredients, conjunction = "and"))
 
 			else:
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
@@ -184,13 +193,10 @@ async def smelt(cmd):
 							}
 						),
 
-				while len(owned_ingredients) > 0:
-					for matched_item in owned_ingredients:
-							sought_item = ewitem.find_item(item_search = matched_item, id_user = user_data.id_user, id_server = user_data.id_server)
-							ewitem.item_delete(id_item = sought_item.get('id_item'))
-							owned_ingredients.remove(matched_item)
+				for id_item in owned_ingredients:
+					ewitem.item_delete(id_item = id_item)
 
-				response = "You sacrifice your {} to smelt a {}!!".format(ewutils.formatNiceList(names = necessary_ingredients, conjunction = "and"), item.str_name)
+				response = "You sacrifice your {} to smelt a {}!!".format(ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"), item.str_name)
 
 				user_data.persist()
 

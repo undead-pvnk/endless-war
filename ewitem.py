@@ -839,8 +839,6 @@ async def item_use(cmd):
 			name = item_sought.get('name')
 			if name == "Trading Cards":
 				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
-			else:
-				return
 
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -910,6 +908,34 @@ def find_item(item_search = None, id_user = None, id_server = None):
 				break
 
 	return item_sought
+
+
+"""
+	Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
+"""
+def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None):
+	items_sought = []
+	props_to_search = [
+		'weapon_type',
+		'id_item',
+		'id_food',
+		'id_cosmetic'
+	]
+
+
+	if item_search:
+		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+
+		# find the first (i.e. the oldest) item that matches the search
+		for item in items:
+			item_data = EwItem(id_item = item.get('id_item'))
+			for prop in props_to_search:
+				if prop in item_data.item_props and \
+				ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search:
+					items_sought.append(item)
+					break
+
+	return items_sought
 
 """
 	Finds the amount of Slime Poudrins inside your inventory.

@@ -461,6 +461,8 @@ cmd_teleport = cmd_prefix + 'tp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
+cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
+cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -1280,7 +1282,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = "theforbiddenoneoneone",
 		str_name = "The Forbidden {}".format(emote_111),
-		str_desc = ewdebug.theforbiddenoneoneone_desc,
+		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
@@ -3484,7 +3486,7 @@ item_def_list = [
 		item_props = {
 			'id_name': 'normalitem',
 			'context': 'context',
-			'subcontext': 'subocontext',
+			'subcontext': 'subcontext',
 			'item_name': 'Normal Item.',
 			'item_desc': 'This is a normal item.',
 			'ingredients': 'vegetable'
@@ -6302,7 +6304,9 @@ smelting_recipe_list = [
 		alias = [
 			"hat",
 		],
-		ingredients = ['slimepoudrin', 'slimepoudrin'],
+		ingredients = {
+			'slimepoudrin' : 2
+		},
 		products = cosmetic_names
 	),
 	EwSmeltingRecipe(
@@ -6313,7 +6317,9 @@ smelting_recipe_list = [
 			"quadruple",
 			"quadruplestuffed",
 		],
-		ingredients = ['doublestuffedcrust', 'doublestuffedcrust'],
+		ingredients = {
+			'doublestuffedcrust' : 2
+		},
 		products = ['quadruplestuffedcrust'],
 	),
 	EwSmeltingRecipe(
@@ -6324,7 +6330,9 @@ smelting_recipe_list = [
 			"octuple",
 			"octuplestuffed",
 		],
-		ingredients = ['quadruplestuffedcrust', 'quadruplestuffedcrust'],
+		ingredients = {
+			'quadruplestuffedcrust' : 2
+		},
 		products = ['octuplestuffedcrust'],
 	),
 	EwSmeltingRecipe(
@@ -6335,8 +6343,10 @@ smelting_recipe_list = [
 			"sexdecuple",
 			"sexdecuplstuffed",
 		],
-		ingredients = ['octuplestuffedcrust', 'octuplestuffedcrust'],
-		products = ['sexdecuple'],
+		ingredients = {
+			'octoplestuffedcrust' : 2
+		},
+		products = ['sexdecuplestuffedcrust'],
 	),
 	EwSmeltingRecipe(
 		id_recipe = "duotrigintuplestuffedcrust",
@@ -6346,7 +6356,9 @@ smelting_recipe_list = [
 			"duotrigintuple",
 			"duotrigintuplestuffed",
 		],
-		ingredients = ['sexdecuplestuffedcrust', 'sexdecuplestuffedcrust'],
+		ingredients = {
+			'sexdecuplestuffedcrust' : 2
+		},
 		products = ['duotrigintuplestuffedcrust'],
 	),
 	EwSmeltingRecipe(
@@ -6357,7 +6369,9 @@ smelting_recipe_list = [
 			"quattuorsexagintuple",
 			"quattuorsexagintuplestuffed",
 		],
-		ingredients = ['duotrigintuplestuffedcrust', 'duotrigintuplestuffedcrust'],
+		ingredients = {
+			'duotrigintuplestuffedcrust' : 2
+		},
 		products = ['quattuorsexagintuplestuffedcrust'],
 	),
 	EwSmeltingRecipe(
@@ -6367,7 +6381,10 @@ smelting_recipe_list = [
 			"fsc",
 			"forbiddenstuffedcrust",
 		],
-		ingredients = ['slimepoudrin', 'theforbiddenoneoneone'],
+		ingredients = {
+			'slimepoudrin' : 1,
+			'theforbiddenoneoneone' : 1
+		},
 		products = ['theforbiddenstuffedcrust'],
 	),
 	EwSmeltingRecipe(
@@ -6382,7 +6399,12 @@ smelting_recipe_list = [
 			"forbidden111",
 			":111:",
 		],
-		ingredients = ['leftleg', 'rightleg', 'slimexodia', 'rightarm', 'leftarm'],
+		ingredients = {'leftleg' : 1,
+			'rightleg' : 1,
+			'slimexodia' : 1,
+			'rightarm' : 1,
+			'leftarm' : 1
+		},
 		products = ['theforbiddenoneoneone']
 	),
 	EwSmeltingRecipe(
@@ -6394,7 +6416,10 @@ smelting_recipe_list = [
 			"pickaxe",
 			"pick"
 		],
-		ingredients = ['poudrin', 'poudrin', 'poudrin', 'stick', 'stick'],
+		ingredients = {
+			'slimepoudrin' : 3,
+			'stick' : 2
+		},
 		products = ['poudrinpickaxe']
 	),
 	EwSmeltingRecipe(
@@ -6404,7 +6429,9 @@ smelting_recipe_list = [
 			"f",
 			"fag",
 		],
-		ingredients = ['stick', 'stick', 'stick', 'stick', 'stick', 'stick', ],
+		ingredients = {
+		    'stick' : 6
+		},
 		products = ['faggot']
 	),
 ]
