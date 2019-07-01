@@ -675,6 +675,8 @@ def inventory(
 								'item_name': item.str_name,
 								'item_desc': item.str_desc
 							}
+				        item_def = ewcfg.item_def_map.get(item_type)
+					item_data.item_props.update(item_def.item_props)
 					item_data.item_props.update(item_props)
 					item_data.persist()
 
