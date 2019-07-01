@@ -172,7 +172,6 @@ class EwEnemy:
         target_data = None
         target_player = None
         target_slimeoid = None
-        target_num = 0
 
         if enemy_data.attacktype != None:
             attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
@@ -180,18 +179,6 @@ class EwEnemy:
         enemy_data.persist()
 
         if len(number_of_players) >= 1:
-
-            users = ewutils.execute_sql_query(
-                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s".format(
-                    id_user=ewcfg.col_id_user,
-                    life_state=ewcfg.col_life_state,
-                    poi=ewcfg.col_poi,
-                    id_server=ewcfg.col_id_server
-                ), (
-                    enemy_data.poi,
-                    enemy_data.id_server
-                ))
-
             # Get target's info based on its AI.
 
             if enemy_data.ai == "Coward":
@@ -202,14 +189,20 @@ class EwEnemy:
 
             elif enemy_data.ai == "Attacker-A":
                 # print(len(users))
+                users = ewutils.execute_sql_query(
+                    "SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0' ORDER BY {time_lastenter} DESC".format(
+                        id_user=ewcfg.col_id_user,
+                        life_state=ewcfg.col_life_state,
+                        time_lastenter=ewcfg.col_time_lastenter,
+                        poi=ewcfg.col_poi,
+                        id_server=ewcfg.col_id_server
+                    ), (
+                        enemy_data.poi,
+                        enemy_data.id_server
+                    ))
+                if len(users) > 0:
+                    target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
 
-                while target_num < len(users):
-                    # checks if target is alive
-                    if users[target_num][1] != 0:
-                        target_data = EwUser(id_user=users[target_num][0], id_server=enemy_data.id_server)
-                        target_num = len(users)
-                    else:
-                        target_num += 1
             else:
                 print(enemy_data.ai)
 
