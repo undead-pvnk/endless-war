@@ -638,6 +638,9 @@ def find_enemy(enemy_search=None, user_data=None):
     enemy_found = None
     if enemy_search != None:
 
+        if enemy_search in enemy_aliases:
+            enemy_search_alias = enemy_aliases[enemy_search]
+
         enemy_search_tokens = enemy_search.split(' ')
 
         if enemy_search_tokens[len(enemy_search_tokens) - 1].isdigit():
@@ -670,7 +673,7 @@ def find_enemy(enemy_search=None, user_data=None):
             # find the first (i.e. the oldest) item that matches the search
             for row in enemydata:
                 enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-                if enemy.display_name.lower() == enemy_search:
+                if (enemy.display_name.lower() == enemy_search) or (enemy.display_name.lower() == enemy_search_alias):
                     enemy_found = enemy
                     break
 
@@ -1382,3 +1385,12 @@ uncommon_enemies = ['slimeadactyl', 'desertraider']
 rare_enemies = ['microslime']
 
 raid_bosses = ['megaslime']
+
+enemy_aliases = {
+    "juvie":"lost juvie",
+    "dino":"slimeasaur",
+    "bird":"slimeadactyl",
+    "micro":"microslime",
+    "raider":"desertraider",
+    "mega":"megaslime",
+}
