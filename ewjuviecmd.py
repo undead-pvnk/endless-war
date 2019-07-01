@@ -105,6 +105,7 @@ async def mine(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 
+	response = ""
 	# Kingpins can't mine.
 	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
 		return
@@ -249,7 +250,8 @@ async def mine(cmd):
 	else:
 		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if len(response) > 0:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """
 	Mining in the wrong channel or while exhausted. This is deprecated anyway but let's sorta keep it around in case we need it.

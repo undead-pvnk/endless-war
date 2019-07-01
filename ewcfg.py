@@ -1085,10 +1085,20 @@ vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and
 vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
 
+item_id_slimepoudrin = 'slimepoudrin'
+item_id_doublestuffedcrust = 'doublestuffedcrust'
+item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'
+item_id_octuplestuffedcrust = "octuplestuffedcrust"
+item_id_sexdecuplestuffedcrust = "sexdecuplestuffedcrust"
+item_id_duotrigintuplestuffedcrust = "duotrigintuplestuffedcrust"
+item_id_quattuorsexagintuplestuffedcrust = "quattuorsexagintuplestuffedcrust"
+item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
+item_id_forbidden111 = "theforbiddenoneoneone"
+
 # List of normal items.
 item_list = [
 	EwGeneralItem(
-		id_item = "slimepoudrin",
+		id_item = item_id_slimepoudrin,
 		alias = [
 			"poudrin",
 		],
@@ -1281,7 +1291,7 @@ item_list = [
 				   "It’s just too beautiful not to.".format(emote_111),
 	),
 	EwGeneralItem(
-		id_item = "theforbiddenoneoneone",
+		id_item = item_id_forbidden111,
 		str_name = "The Forbidden {}".format(emote_111),
 		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
 		acquisition = acquisition_smelting
@@ -2864,7 +2874,7 @@ food_list = [
 				   "processed cheese maxed out on preservatives, weeks-old diced tomatoes, and a mysterious dark red, viscous liquid referred to only as “Mexican Pizza Sauce.” Oh joy!"
 	),
 	EwFood(
-		id_food = "doublestuffedcrust",
+		id_food = item_id_doublestuffedcrust,
 		alias = [
 			"dsc",
 			"stuffed",
@@ -3262,7 +3272,7 @@ food_list = [
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
 	EwFood(
-		id_food = "quadruplestuffedcrust",
+		id_food = item_id_quadruplestuffedcrust,
 		alias = [
 			"qsc",
 			"quadruple",
@@ -3294,7 +3304,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = "octuplestuffedcrust",
+		id_food = item_id_octuplestuffedcrust,
 		alias = [
 			"osc",
 			"octuple",
@@ -3326,7 +3336,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = "sexdecuplestuffedcrust",
+		id_food = item_id_sexdecuplestuffedcrust,
 		alias = [
 			"sdsc",
 			"sexdecuple",
@@ -3360,7 +3370,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = "duotrigintuplestuffedcrust",
+		id_food = item_id_duotrigintuplestuffedcrust,
 		alias = [
 			"dtsc",
 			"duotrigintuple",
@@ -3393,7 +3403,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = "quattuorsexagintuplestuffedcrust",
+		id_food = item_id_quattuorsexagintuplestuffedcrust,
 		alias = [
 			"qssc",
 			"quattuorsexagintuple",
@@ -3416,7 +3426,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = "theforbiddenstuffedcrust",
+		id_food = item_id_forbiddenstuffedcrust,
 		alias = [
 			"fsc",
 			"forbiddenstuffedcrust",
@@ -3487,7 +3497,6 @@ item_def_list = [
 		item_props = {
 			'id_name': 'normalitem',
 			'context': 'context',
-			'subcontext': 'subcontext',
 			'item_name': 'Normal Item.',
 			'item_desc': 'This is a normal item.',
 			'ingredients': 'vegetable'
@@ -6306,12 +6315,12 @@ smelting_recipe_list = [
 			"hat",
 		],
 		ingredients = {
-			'slimepoudrin' : 2
+			item_id_slimepoudrin : 2
 		},
 		products = cosmetic_names
 	),
 	EwSmeltingRecipe(
-		id_recipe = "quadruplestuffedcrust",
+		id_recipe = item_id_quadruplestuffedcrust,
 		str_name = "a Quadruple Stuffed Crust",
 		alias = [
 			"qsc",
@@ -6319,38 +6328,38 @@ smelting_recipe_list = [
 			"quadruplestuffed",
 		],
 		ingredients = {
-			'doublestuffedcrust' : 2
+			item_id_doublestuffedcrust : 2
 		},
-		products = ['quadruplestuffedcrust'],
+		products = [item_id_quadruplestuffedcrust],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "octuplestuffedcrust",
-		str_name = "a Octuple Stuffed Crust",
+		id_recipe = item_id_octuplestuffedcrust,
+		str_name = "an Octuple Stuffed Crust",
 		alias = [
 			"osc",
 			"octuple",
 			"octuplestuffed",
 		],
 		ingredients = {
-			'quadruplestuffedcrust' : 2
+			item_id_quadruplestuffedcrust : 2
 		},
-		products = ['octuplestuffedcrust'],
+		products = [item_id_octuplestuffedcrust],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "sexdecuplestuffedcrust",
+		id_recipe = item_id_sexdecuplestuffedcrust,
 		str_name = "a Sexdecuple Stuffed Crust",
 		alias = [
 			"sdsc",
 			"sexdecuple",
-			"sexdecuplstuffed",
+			"sexdecuplestuffed",
 		],
 		ingredients = {
-			'octoplestuffedcrust' : 2
+			item_id_octuplestuffedcrust : 2
 		},
-		products = ['sexdecuplestuffedcrust'],
+		products = [item_id_sexdecuplestuffedcrust],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "duotrigintuplestuffedcrust",
+		id_recipe = item_id_duotrigintuplestuffedcrust,
 		str_name = "a Duotrigintuple Stuffed Crust",
 		alias = [
 			"dtsc",
@@ -6358,38 +6367,38 @@ smelting_recipe_list = [
 			"duotrigintuplestuffed",
 		],
 		ingredients = {
-			'sexdecuplestuffedcrust' : 2
+			item_id_sexdecuplestuffedcrust : 2
 		},
-		products = ['duotrigintuplestuffedcrust'],
+		products = [item_id_duotrigintuplestuffedcrust],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "quattuorsexagintuplestuffedcrust",
-		str_name = "a quattuorsexagintuple Stuffed Crust",
+		id_recipe = item_id_quattuorsexagintuplestuffedcrust,
+		str_name = "a Quattuorsexagintuple Stuffed Crust",
 		alias = [
 			"qssc",
 			"quattuorsexagintuple",
 			"quattuorsexagintuplestuffed",
 		],
 		ingredients = {
-			'duotrigintuplestuffedcrust' : 2
+			item_id_duotrigintuplestuffedcrust : 2
 		},
-		products = ['quattuorsexagintuplestuffedcrust'],
+		products = [item_id_quattuorsexagintuplestuffedcrust],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "theforbiddenstuffedcrust",
+		id_recipe = item_id_forbiddenstuffedcrust,
 		str_name = "a Forbidden Stuffed Crust",
 		alias = [
 			"fsc",
 			"forbiddenstuffedcrust",
 		],
 		ingredients = {
-			'slimepoudrin' : 1,
-			'theforbiddenoneoneone' : 1
+			item_id_quattuorsexagintuplestuffedcrust : 2,
+			item_id_forbidden111 : 1
 		},
-		products = ['theforbiddenstuffedcrust'],
+		products = [item_id_forbiddenstuffedcrust],
 	),
 	EwSmeltingRecipe(
-		id_recipe = "theforbiddenoneoneone",
+		id_recipe = item_id_forbidden111,
 		str_name = "The Forbidden {}".format(emote_111),
 		alias = [
 			"forbiddenone",
@@ -6406,7 +6415,7 @@ smelting_recipe_list = [
 			'rightarm' : 1,
 			'leftarm' : 1
 		},
-		products = ['theforbiddenoneoneone']
+		products = [item_id_forbidden111]
 	),
 	EwSmeltingRecipe(
 		id_recipe = "poudrinpickaxe",
@@ -6418,7 +6427,7 @@ smelting_recipe_list = [
 			"pick"
 		],
 		ingredients = {
-			'slimepoudrin' : 3,
+			item_id_slimepoudrin : 3,
 			'stick' : 2
 		},
 		products = ['poudrinpickaxe']

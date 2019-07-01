@@ -267,7 +267,6 @@ async def mill(cmd):
 					item_props = {
 						'id_item': item.id_item,
 						'context': item.context,
-						'subcontext': item.subcontext,
 						'item_name': item.str_name,
 						'item_desc': item.str_desc,
 						'ingredients': item.ingredients,

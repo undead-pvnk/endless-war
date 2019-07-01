@@ -87,7 +87,7 @@ def gen_score_text(
 		item_type_filter = ewcfg.it_item
 	)
 
-	poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+	poudrin_amount = ewitem.find_poudrin(id_user = id_user, id_server = id_server)
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
