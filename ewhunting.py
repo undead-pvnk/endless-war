@@ -1208,7 +1208,7 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-        if was_killed and enemy_data.type == 'juvie':
+        if was_killed and enemy_data.type in raid_bosses:
             # announce death in kill feed channel
             # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
             killfeed_resp = resp_cont.channel_responses[cmd.message.channel.name]
