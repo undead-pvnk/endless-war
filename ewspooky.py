@@ -203,24 +203,26 @@ async def summon_negaslimeoid(cmd):
 
 
 
-	value = None
+	name = None
 	if cmd.tokens_count > 1:
-		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
-	if value != None:
+		#value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True, negate = True)
 		slimeoid = EwSlimeoid(member = cmd.message.author, sltype = ewcfg.sltype_nega)
 		if slimeoid.life_state != ewcfg.slimeoid_state_none:
 			response = "You already have an active negaslimeoid."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		market_data = EwMarket(id_server = cmd.message.author.server.id)
-		if value < 0:
-			value = -user_data.slimes * 10
-		if -value / 10 < user_data.slimes:
-			response = "You do not have enough negative slime to use in the ritual."
-		elif -value < market_data.negaslime:
-			response = "The dead have not gathered enough negative slime."
+		negaslimeoid_name = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
+		if len(negaslimeoid_name) > 32:
+			response = "That name is too long. ({:,}/32)".format(len(negaslimeoid_name))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		market_data = EwMarket(id_server = cmd.message.author.server.id)
+
+		if market_data.negaslime >= 0:
+			response = "The dead haven't amassed any negaslime yet."
 		else:
-			level = len(str(value))
+			max_level = min(len(str(user_data.slimes)), len(str(market_data.negaslime)) - 1)
+			level = random.randint(1, max_level)
+			value = 10 ** (level - 1)
 			user_data.change_slimes(n = int(value/10))
 			market_data.negaslime += value
 			slimeoid.sltype = ewcfg.sltype_nega
@@ -229,7 +231,7 @@ async def summon_negaslimeoid(cmd):
 			slimeoid.id_user = user_data.id_user
 			slimeoid.id_server = user_data.id_server
 			slimeoid.poi = user_data.poi
-			slimeoid.name = generate_negaslimeoid_name()
+			slimeoid.name = negaslimeoid_name
 			slimeoid.body = random.choice(ewcfg.body_names)
 			slimeoid.head = random.choice(ewcfg.head_names)
 			slimeoid.legs = random.choice(ewcfg.mobility_names)
@@ -257,7 +259,7 @@ async def summon_negaslimeoid(cmd):
 			response += desc
 
 	else:
-		response = "Specify how much negative slime you will sacrifice."
+		response = "To summon a negaslimeoid you must first know its name."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def generate_negaslimeoid_name():
