@@ -214,7 +214,13 @@ async def smelt(cmd):
 				for id_item in owned_ingredients:
 					ewitem.item_delete(id_item = id_item)
 
-				response = "You sacrifice your {} to smelt a {}!!".format(ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"), item.str_name)
+				name = ""
+				if hasattr(item, 'str_name'):
+					name = item.str_name
+				elif hasattr(item, 'id_weapon'):
+					name = item.id_weapon
+
+				response = "You sacrifice your {} to smelt a {}!!".format(ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"), name)
 
 				user_data.persist()
 
