@@ -1219,19 +1219,20 @@ async def arm(cmd):
 			except:
 				current_vendor = None
 
+		# Amount to buy for stackable weapons
+		amount = 1					
+		for token in cmd.tokens[1:]:
+			if token != value:
+				amount = ewutils.getIntToken(cmd.tokens)
+				amount = min(amount, 12)
+		if amount is None:
+			amount = 1
+
 		if weapon != None and current_vendor != None:
 			has_weapon = False
 
-			# Amount to buy for stackable weapons
-			n = 1					
-			for token in cmd.tokens[1:]:
-				if token != value:
-					n = ewutils.getIntToken(cmd.tokens)
-			if n is None:
-				n = 1
-
 			# Player doesn't have enough money
-			if weapon.price > 0 and (weapon.price * n) > user_data.slimecoin:
+			if weapon.price > 0 and (weapon.price * amount) > user_data.slimecoin:
 				response = "The fee for taking the {weapon} is {price} slimecoin and you only have {coin}.".format(weapon=weapon.str_weapon, price=weapon.price, coin=user_data.slimecoin)
 
 			else:
@@ -1245,15 +1246,18 @@ async def arm(cmd):
 
 				# Thrown weapons are stackable
 				if ewcfg.weapon_class_thrown in weapon.classes:
-					# Check the player's inventory for the weapon and add n to stack size
+					# Check the player's inventory for the weapon and add amount to stack size
 					for wep in weapons_held:
 						wep = EwItem(id_item=wep.get("id_item"))
-						if wep.item_props.get("weapon_type") == weapon.id_weapon:
+						if wep.item_props.get("weapon_type") == weapon.id_weapon and wep.stack_size < wep.stack_max:
+							if wep.stack_size + amount > wep.stack_max:
+								amount = wep.stack_max - wep.stack_size
+
 							has_weapon = True
-							wep.stack_size += n
+							wep.stack_size += amount
 							wep.persist()
-							user_data.change_slimecoin(n = -(weapon.price * n), coinsource = ewcfg.coinsource_spending)
-							response = "You pay {price} slimecoin and take a set of {weapon}.".format(price=(weapon.price * n), weapon=weapon.str_weapon)
+							user_data.change_slimecoin(n = -(weapon.price * amount), coinsource = ewcfg.coinsource_spending)
+							response = "You pay {price} slimecoin and take {amount}{weapon}.".format(amount=amount, price=(weapon.price * amount), weapon=weapon.str_weapon)
 							break
 					
 				if has_weapon is False:
@@ -1264,18 +1268,18 @@ async def arm(cmd):
 							item_type = ewcfg.it_weapon,
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
-							stack_max = 1 if ewcfg.weapon_class_thrown in weapon.classes else -1,
-							stack_size = n if ewcfg.weapon_class_thrown in weapon.classes else 1,
+							stack_max = 20 if ewcfg.weapon_class_thrown in weapon.classes else -1,
+							stack_size = amount if ewcfg.weapon_class_thrown in weapon.classes else 1,
 							item_props = item_props
 						)
 
 						response = "You "
 						if weapon.id_weapon != 'gun':
-							user_data.change_slimecoin(n = -(weapon.price * n), coinsource=ewcfg.source_spending)
+							user_data.change_slimecoin(n = -(weapon.price * amount), coinsource=ewcfg.source_spending)
 							user_data.persist()
 							response += "pay {} slimecoin and ".format(weapon.price)
 
-						response += "take {}.".format(weapon.str_weapon)
+						response += "take {}{}.".format("" if amount == 1 else (str(amount) + " "), weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = available_weapons, conjunction = "or"))
 
