@@ -612,11 +612,7 @@ async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrins = ewitem.inventory(
-		id_user = cmd.message.author.id,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_slimepoudrin
-	)
+	poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 	poudrins_count = len(poudrins)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -2134,36 +2130,10 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	s1hue = ewcfg.hue_map.get(challengee_slimeoid.hue)
 	s2hue = ewcfg.hue_map.get(challenger_slimeoid.hue)
 
-	color_matchup = 0
-	if s1hue is None:
-		if challenger_slimeoid.hue == 'rainbow':
-			color_matchup = ewcfg.hue_full_complementary
-	else:
+	color_matchup = ewcfg.hue_neutral
+	# get color matchups
+	if s1hue is not None:
 		color_matchup = s1hue.effectiveness.get(challenger_slimeoid.hue)
-
-	if color_matchup is None:
-		color_matchup = ewcfg.hue_neutral
-
-	if color_matchup < 0:
-		s1grit += 2
-		challengee_analogous = "It's not very effective against {}...".format(challengee_slimeoid.name)
-			
-	elif color_matchup > 0:
-		if color_matchup == ewcfg.hue_atk_complementary:
-			s2moxie += 2
-		elif color_matchup == ewcfg.hue_special_complementary:
-			s2chutzpah += 2
-		elif color_matchup == ewcfg.hue_full_complementary:
-			s2moxie += 2
-			s2chutzpah += 2
-		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
-			
-	color_matchup = 0
-	if s2hue is None:
-		if challengee_slimeoid.hue == 'rainbow':
-			color_matchup = ewcfg.hue_full_complementary
-	else:
-		color_matchup = s2hue.effectiveness.get(challengee_slimeoid.hue)
 
 	if color_matchup is None:
 		color_matchup = ewcfg.hue_neutral
@@ -2182,6 +2152,29 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			s1chutzpah += 2
 		challenger_splitcomplementary = "It's Super Effective against {}!".format(challenger_slimeoid.name)
 
+
+	color_matchup = ewcfg.hue_neutral
+
+	if s2hue is not None:
+		color_matchup = s2hue.effectiveness.get(challengee_slimeoid.hue)
+
+	if color_matchup is None:
+		color_matchup = ewcfg.hue_neutral
+
+	if color_matchup < 0:
+		s1grit += 2
+		challengee_analogous = "It's not very effective against {}...".format(challengee_slimeoid.name)
+			
+	elif color_matchup > 0:
+		if color_matchup == ewcfg.hue_atk_complementary:
+			s2moxie += 2
+		elif color_matchup == ewcfg.hue_special_complementary:
+			s2chutzpah += 2
+		elif color_matchup == ewcfg.hue_full_complementary:
+			s2moxie += 2
+			s2chutzpah += 2
+		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			
 
 	s1_active = False
 	in_range = False

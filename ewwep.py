@@ -91,6 +91,8 @@ class EwWeapon:
 	# Classes the weapon belongs to
 	classes = []
 
+	acquisition = "dojo"
+	
 	def __init__(
 		self,
 		id_weapon = "",
@@ -116,7 +118,8 @@ class EwWeapon:
 		price = 0,
 		cooldown = 0,
 		vendors = [],
-		classes = []
+		classes = [],
+		acquisition = "dojo"
 	):
 		self.id_weapon = id_weapon
 		self.alias = alias
@@ -142,6 +145,7 @@ class EwWeapon:
 		self.cooldown = cooldown
 		self.vendors = vendors
 		self.classes = classes
+		self.acquisition = acquisition
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -1059,7 +1063,7 @@ async def spar(cmd):
 
 				#Determine if the !spar is a duel:
 				weapon = None
-				if user_data.weapon != "" and sparred_data.weapon != "" and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
+				if user_data.weapon >= 0 and sparred_data.weapon >= 0 and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
 					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 					duel = True
 
@@ -1212,6 +1216,11 @@ async def arm(cmd):
 			value = value.lower()	
 
 		weapon = ewcfg.weapon_map.get(value)
+
+		if weapon != None:
+			if weapon.acquisition != ewcfg.acquisition_dojo:
+				weapon = None
+
 		if weapon != None:
 			# Gets the vendor that the item is available and the player currently located in
 			try:
@@ -1300,11 +1309,7 @@ async def annoint(cmd):
 		else:
 			user_data = EwUser(member = cmd.message.author)
 
-			poudrins = ewitem.inventory(
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_type_filter = ewcfg.it_slimepoudrin
-			)
+			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 			all_weapons = ewitem.inventory(
 				id_server = cmd.message.server.id,
@@ -1315,9 +1320,8 @@ async def annoint(cmd):
 					response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			poudrins_count = len(poudrins)
 
-			if poudrins_count < 1:
+			if poudrin is None:
 				response = "You need a slime poudrin."
 			elif user_data.slimes < 100:
 				response = "You need more slime."
@@ -1334,7 +1338,7 @@ async def annoint(cmd):
 					user_data.add_weaponskill(n = 1, weapon_type = weapon_item.item_props.get("weapon_type"))
 
 				# delete a slime poudrin from the player's inventory
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))
+				ewitem.item_delete(id_item = poudrin.get('id_item'))
 
 				user_data.persist()
 

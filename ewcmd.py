@@ -77,45 +77,41 @@ def gen_score_text(
 	id_server = None,
 	display_name = None
 ):
-	response = ""
 
 	user_data = EwUser(
 		id_user = id_user,
 		id_server = id_server
 	)
-	poudrins = ewitem.inventory(
+
+	items = ewitem.inventory(
 		id_user = id_user,
 		id_server = id_server,
-		item_type_filter = ewcfg.it_slimepoudrin
+		item_type_filter = ewcfg.it_item
 	)
-	poudrins_count = len(poudrins)
+
+	poudrin_amount = ewitem.find_poudrin(id_user = id_user, id_server = id_server)
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		# Can't see a raid boss's slime score.
 		response = "{}'s power is beyond your understanding.".format(display_name)
 	else:
 		# return somebody's score
-		response = "{} currently has {:,} slime{}.".format(display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrins_count, ("" if poudrins_count == 1 else "s")) if poudrins_count > 0 else ""))
+		response = "{} currently has {:,} slime{}.".format(display_name, user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
 	return response
 
 """ show player's slime score """
 async def score(cmd):
-	response = ""
 	user_data = None
 	member = None
 
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
-		poudrins = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_slimepoudrin
-		)
-		poudrins_count = len(poudrins)
+
+		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
 
 		# return my score
-		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrins_count, ("" if poudrins_count == 1 else "s")) if poudrins_count > 0 else ""))
+		response = "You currently have {:,} slime{}.".format(user_data.slimes, (" and {} slime poudrin{}".format(poudrin_amount, ("" if poudrin_amount == 1 else "s")) if poudrin_amount > 0 else ""))
 
 	else:
 		member = cmd.mentions[0]
@@ -184,19 +180,24 @@ def gen_data_text(
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
+		response_block = ""
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
-			response += " {}".format(mutation_flavor.str_describe_other)
+			response_block += "{} ".format(mutation_flavor.str_describe_other)
 
+		if len(response_block) > 0:
+			response += "\n\n" + response_block
+
+		response_block = ""
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:
-			response += " They have {:,} confirmed kills.".format(user_kills)
+			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 
 		if coinbounty != 0:
-			response += " SlimeCorp offers a bounty of {:,} SlimeCoin for their death.".format(coinbounty)
+			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
 
 		if len(adorned_cosmetics) > 0:
-			response += " They have a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 		statuses = user_data.getStatusEffects()
 		
@@ -208,7 +209,9 @@ def gen_data_text(
 					response += " " + status_flavor.str_describe
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response += " They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+		if len(response_block) > 0:
+			response += "\n\n" + response_block
 
 	return response
 
@@ -258,30 +261,36 @@ async def data(cmd):
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 		
+		response_block = ""
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
-			response += " {}".format(mutation_flavor.str_describe_self)
+			response_block += "{} ".format(mutation_flavor.str_describe_self)
+
+		if len(response_block) > 0:
+			response += "\n\n" + response_block
+
+		response_block = ""
 
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 		if user_kills > 0:
-			response += " You have {:,} confirmed kills.".format(user_kills)
+			response_block += "You have {:,} confirmed kills. ".format(user_kills)
 
 		if coinbounty != 0:
-			response += " SlimeCorp offers a bounty of {:,} SlimeCoin for your death.".format(coinbounty)
+			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
 
 		if len(adorned_cosmetics) > 0:
-			response += " You have a {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 		if user_data.hunger > 0:
-			response += " You are {}% hungry.".format(
+			response_block += "You are {}% hungry. ".format(
 				round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
 			)
 
 		if user_data.ghostbust:
-			response += " The coleslaw in your stomach enables you to bust ghosts."
+			response_block += "The coleslaw in your stomach enables you to bust ghosts. "
 
 		if user_data.busted and user_data.life_state == ewcfg.life_state_corpse:
-			response += " You are busted and therefore cannot leave the sewers without reviving."
+			response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
 
 		statuses = user_data.getStatusEffects()
 		
@@ -293,7 +302,11 @@ async def data(cmd):
 					response += " " + status_flavor.str_describe_self	
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response += " You are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+
+		if len(response_block) > 0:
+			response += "\n\n" + response_block
+
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
 
