@@ -6420,19 +6420,19 @@ smelting_recipe_list = [
 		products = [item_id_forbidden111]
 	),
 	EwSmeltingRecipe(
-		id_recipe = "poudrinpickaxe",
+		id_recipe = "pickaxe",
 		str_name = "a Poudrin Pickaxe",
 		alias = [
 			"pp", # LOL
 			"poudrinpick",
-			"pickaxe",
+			"poudrinpickaxe",
 			"pick"
 		],
 		ingredients = {
 			item_id_slimepoudrin : 3,
 			'stick' : 2
 		},
-		products = ['poudrinpickaxe']
+		products = ['pickaxe']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "faggot",
