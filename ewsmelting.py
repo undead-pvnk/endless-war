@@ -200,15 +200,14 @@ async def smelt(cmd):
 
 					elif hasattr(item, 'id_weapon'):
 						ewitem.item_create(
-							item_type = ewcfg.it_cosmetic,
+							item_type = ewcfg.it_weapon,
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
 							item_props = {
-								'id_cosmetic': item.id_cosmetic,
-								'cosmetic_name': item.str_name,
-								'cosmetic_desc': item.str_desc,
-								'rarity': item.rarity,
-								'adorned': 'false'
+								"weapon_type": item.id_weapon,
+								"weapon_name": "",
+								"weapon_desc": item.str_description,
+								"married": ""
 							}
 						),
 
