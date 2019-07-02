@@ -146,6 +146,11 @@ async def smelt(cmd):
 								pass
 							else:
 								possible_results.append(result)
+						if hasattr(result, 'id_weapon'):
+							if result.id_weapon not in found_recipe.products:
+								pass
+							else:
+								possible_results.append(result)
 
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
@@ -180,6 +185,20 @@ async def smelt(cmd):
 						),
 
 					elif hasattr(item, 'id_cosmetic'):
+						ewitem.item_create(
+							item_type = ewcfg.it_cosmetic,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'rarity': item.rarity,
+								'adorned': 'false'
+							}
+						),
+
+					elif hasattr(item, 'id_weapon'):
 						ewitem.item_create(
 							item_type = ewcfg.it_cosmetic,
 							id_user = cmd.message.author.id,

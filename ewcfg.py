@@ -561,6 +561,7 @@ max_weapon_mod = 16
 acquisition_smelting = "smelting"
 acquisition_milling = "milling"
 acquisition_mining = "mining"
+acquisition_dojo = "dojo"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1720,7 +1721,8 @@ weapon_list = [
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
 		fn_effect = wef_pickaxe,
-		str_description = "It's a pickaxe"
+		str_description = "It's a pickaxe",
+		acquisition = acquisition_smelting
 	)
 ]
 
@@ -8089,6 +8091,12 @@ for s in food_list:
 		pass
 
 for s in cosmetic_items_list:
+	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	else:
+		pass
+
+for s in weapon_list:
 	if s.acquisition == acquisition_smelting:
 		smelt_results.append(s)
 	else:
