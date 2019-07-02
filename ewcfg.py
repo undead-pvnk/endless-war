@@ -15,7 +15,7 @@ from ewtransport import EwTransportLine
 # import ewdebug
 
 # Global configuration options.
-version = "v3.5"
+version = "v3.5 - Hunting"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -352,7 +352,6 @@ cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
 
 cmd_summonenemy = cmd_prefix + 'summonenemy'
-cmd_hurtmesoftly = cmd_prefix + 'hurtmesoftly'
 
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
@@ -871,7 +870,8 @@ col_enemy_bleed_storage = 'bleed_storage'
 col_enemy_time_lastenter = 'time_lastenter'
 col_enemy_initialslimes = 'initialslimes'
 col_enemy_lifetime = 'lifetime'
-
+col_enemy_id_target = 'id_target'
+col_enemy_raidtimer = 'raidtimer'
 
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'

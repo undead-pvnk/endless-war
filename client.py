@@ -351,7 +351,6 @@ cmd_map = {
 
 	# Enemies
 	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
-	ewcfg.cmd_hurtmesoftly: ewhunting.hurtmesoftly,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,

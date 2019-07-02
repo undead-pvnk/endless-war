@@ -202,6 +202,8 @@ CREATE TABLE enemies (
     time_lastenter int NOT NULL DEFAULT '0',
     initialslimes bigint NOT NULL DEFAULT '0',
     lifetime bigint NOT NULL DEFAULT '0',
+    id_target varchar(128) NOT NULL DEFAULT '',
+    raidtimer bigint NOT NULL DEFAULT '0',
 
     PRIMARY KEY (id_enemy)
 );
