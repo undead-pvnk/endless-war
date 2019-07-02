@@ -797,7 +797,7 @@ async def spar(cmd):
 
 				#Determine if the !spar is a duel:
 				weapon = None
-				if user_data.weapon != "" and sparred_data.weapon != "" and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
+				if user_data.weapon >= 0 and sparred_data.weapon >= 0 and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
 					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 					duel = True
 
