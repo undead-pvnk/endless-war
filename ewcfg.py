@@ -12,6 +12,7 @@ from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+# import ewdebug
 
 # Global configuration options.
 version = "v3.5"

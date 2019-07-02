@@ -995,6 +995,7 @@ async def scout(cmd):
 		if user_data.id_user in players_in_district:
 			players_in_district.remove(user_data.id_user)
 
+
 		num_players = 0
 		players_resp = "\n"
 		detailed_resp = "You pick up the scent of the following gangsters:"
