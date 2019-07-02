@@ -41,7 +41,7 @@ import ewdistrict
 import ewmutation
 import ewquadrants
 import ewtransport
-# import ewdebug
+import ewsmelting
 import ewhunting
 
 from ewitem import EwItem
@@ -130,6 +130,9 @@ cmd_map = {
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
 
+	# how ghosts leave the sewers
+	ewcfg.cmd_manifest: ewspooky.manifest,
+
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
 
@@ -172,6 +175,8 @@ cmd_map = {
 
 	# See what's for sale in the Food Court.
 	ewcfg.cmd_menu: ewfood.menu,
+	ewcfg.cmd_menu_alt1: ewfood.menu,
+	ewcfg.cmd_menu_alt2: ewfood.menu,
 
 	# Order refreshing food and drinks!
 	ewcfg.cmd_order: ewfood.order,
@@ -270,9 +275,11 @@ cmd_map = {
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
-	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
+
+	#smelting
+	ewcfg.cmd_smelt: ewsmelting.smelt,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
@@ -725,7 +732,7 @@ async def on_member_join(member):
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		#await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):
@@ -878,17 +885,24 @@ async def on_message(message):
 
 		# Creates a poudrin
 		elif debug == True and cmd == '!createpoudrin':
-			item_id = ewitem.item_create(
-				item_type = ewcfg.it_slimepoudrin,
-				id_user = message.author.id,
-				id_server = message.server.id
-			)
-
-			ewutils.logMsg('Created item: {}'.format(item_id))
-			item = EwItem(id_item = item_id)
-			item.persist()
-
-			item = EwItem(id_item = item_id)
+			for item in ewcfg.item_list:
+				if item.context == "poudrin":
+					ewitem.item_create(
+						item_type = ewcfg.it_item,
+						id_user = message.author.id,
+						id_server = message.server.id,
+						item_props = {
+							'id_item': item.id_item,
+							'context': item.context,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					ewutils.logMsg('Created item: {}'.format(item.id_item))
+					item = EwItem(id_item = item.id_item)
+					item.persist()
+			else:
+				pass
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
@@ -908,6 +922,14 @@ async def on_message(message):
 
 			user_data.persist()
 
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+		# Deletes all items in your inventory.
+		elif debug == True and cmd == '!clearinv':
+			user_data = EwUser(member = message.author)
+			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
+			response = "You destroy every single item in your inventory."
+			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == '!createapple':
@@ -931,8 +953,6 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
-
-
 
 		# FIXME debug
 		# Test item deletion

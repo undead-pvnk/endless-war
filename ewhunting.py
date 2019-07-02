@@ -188,12 +188,26 @@ class EwEnemy:
                     resp_cont.add_channel_response(ch_name, response)
 
             elif enemy_data.ai == "Attacker-A":
-                # print(len(users))
                 users = ewutils.execute_sql_query(
-                    "SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0' ORDER BY {time_lastenter} DESC".format(
+                    "SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0' ORDER BY {time_lastenter} ASC".format(
                         id_user=ewcfg.col_id_user,
                         life_state=ewcfg.col_life_state,
                         time_lastenter=ewcfg.col_time_lastenter,
+                        poi=ewcfg.col_poi,
+                        id_server=ewcfg.col_id_server
+                    ), (
+                        enemy_data.poi,
+                        enemy_data.id_server
+                    ))
+                if len(users) > 0:
+                    target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+
+            elif enemy_data.ai == "Attacker-B":
+                users = ewutils.execute_sql_query(
+                    "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0' ORDER BY {slimes} DESC".format(
+                        id_user=ewcfg.col_id_user,
+                        life_state=ewcfg.col_life_state,
+                        slimes=ewcfg.col_slimes,
                         poi=ewcfg.col_poi,
                         id_server=ewcfg.col_id_server
                     ), (

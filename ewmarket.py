@@ -479,16 +479,13 @@ async def donate(cmd):
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
 	elif user_data.poi == ewcfg.poi_id_slimeoidlab:
-		poudrins = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_slimepoudrin
-		)
+		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-		if len(poudrins) < 1:
+		if poudrins == None:
 			response = "You have to own a poudrin in order to donate a poudrin. Duh."
+
 		else:
-			ewitem.item_delete(id_item = poudrins[0].get('id_item'))  # Remove Poudrins
+			ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
 			market_data.donated_poudrins += 1
 			market_data.persist()
 			user_data.poudrin_donations += 1

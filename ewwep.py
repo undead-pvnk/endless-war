@@ -1007,6 +1007,13 @@ async def arm(cmd):
 			value = value.lower()
 
 		weapon = ewcfg.weapon_map.get(value)
+
+		if weapon != None:
+			if weapon.id_weapon == 'pickaxe':
+				weapon = None
+			else:
+				weapon = weapon
+
 		if weapon != None:
 			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecoin:
 				response = "The fee for taking a weapon is {} slimecoin and you only have {}.".format(ewcfg.weapon_fee, user_data.slimecoin)
@@ -1034,7 +1041,15 @@ async def arm(cmd):
 
 				response += "take {}.".format(weapon.str_weapon)
 		else:
-			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = ewcfg.weapon_names, conjunction = "or"))
+			weapon_names = []
+
+			for weapon in ewcfg.weapon_names:
+				if weapon == 'pickaxe':
+					pass
+				else:
+					weapon_names.append(weapon)
+
+			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = weapon_names, conjunction = "or"))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1053,11 +1068,7 @@ async def annoint(cmd):
 		else:
 			user_data = EwUser(member = cmd.message.author)
 
-			poudrins = ewitem.inventory(
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
-				item_type_filter = ewcfg.it_slimepoudrin
-			)
+			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 			all_weapons = ewitem.inventory(
 				id_server = cmd.message.server.id,
@@ -1068,9 +1079,8 @@ async def annoint(cmd):
 					response = "**ORIGINAL WEAPON NAME DO NOT STEAL.**"
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			poudrins_count = len(poudrins)
 
-			if poudrins_count < 1:
+			if poudrin is None:
 				response = "You need a slime poudrin."
 			elif user_data.slimes < 100:
 				response = "You need more slime."
@@ -1087,7 +1097,7 @@ async def annoint(cmd):
 					user_data.add_weaponskill(n = 1, weapon_type = weapon_item.item_props.get("weapon_type"))
 
 				# delete a slime poudrin from the player's inventory
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))
+				ewitem.item_delete(id_item = poudrin.get('id_item'))
 
 				user_data.persist()
 
