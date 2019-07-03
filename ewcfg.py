@@ -1784,7 +1784,6 @@ def atf_fangs(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "katana"
 def atf_talons(ctn = None):
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
@@ -8258,6 +8257,7 @@ help_responses = {
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
 }
 
+# Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [
 	"The {} calls out to you: *H-Hello. Are you one of those Gangsters everyone seems to be talking about?*",
 	"The {} calls out to you: *You wouldn't hurt a {}, would you?*",
@@ -8266,6 +8266,7 @@ coward_responses = [
 	"The {} calls out to you: *I'm just a good little {}... never hurt nobody anywhere...*",
 ]
 
+# Responses given by cowardly enemies when hurt.
 coward_responses_hurt = [
 	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
 	"\nThe {} cries out in pain!: *You MONSTER!*",

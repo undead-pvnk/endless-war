@@ -37,9 +37,6 @@ class EwEnemy:
     id_target = ""
     raidtimer = 0
 
-    # slimeoid = EwSlimeoid(member = cmd.message.author, )
-    # slimeoid = EwSlimeoid(id_slimeoid = 12)
-
     """ Load the enemy data from the database. """
 
     def __init__(self, id_enemy=None, id_server=None):
@@ -163,20 +160,18 @@ class EwEnemy:
             cursor.close()
             ewutils.databaseClose(conn_info)
 
+    # Function that enemies use to attack or otherwise interact with players.
     async def kill(self):
 
         client = ewutils.get_client()
 
         enemy_data = self
 
-
-
         time_now = int(time.time())
         resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
         district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
         market_data = EwMarket(id_server=enemy_data.id_server)
         ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
-        # number_of_players = district_data.get_players_in_district()
 
         target_data = None
         target_player = None
@@ -189,7 +184,6 @@ class EwEnemy:
 
         enemy_data.persist()
 
-        #if len(number_of_players) >= 1:
         # Get target's info based on its AI.
 
         if enemy_data.ai == "Coward":
@@ -281,7 +275,6 @@ class EwEnemy:
                 resp_cont.add_channel_response(ch_name, response)
 
             # enemies dont fuck with ghosts, ghosts dont fuck with enemies.
-
             elif (target_iskillers or target_isrowdys or target_isjuvie) and (target_isnotdead):
                 was_killed = False
                 was_hurt = False
@@ -316,7 +309,6 @@ class EwEnemy:
                         crit = ctn.crit
                         slimes_damage = ctn.slimes_damage
                         strikes = ctn.strikes
-                    # enemy_data and target_data should be passed by reference, so there's no need to assign them back from the effect container.
 
                     # can't hit lucky lucy
                     if target_data.life_state == ewcfg.life_state_lucky:
@@ -425,8 +417,6 @@ class EwEnemy:
                             resp_cont.add_response_container(explosion)
 
                         # don't recreate enemy data if enemy was killed in explosion
-                        # print("DELETE GATE 2")
-
                         if check_death(enemy_data) == False:
                             enemy_data = EwEnemy(id_enemy=self.id_enemy)
 
@@ -497,9 +487,8 @@ class EwEnemy:
         change = int(n)
         self.slimes += change
 
-
+# Debug command. Later on, it could instead be used for a summoner weapon, perhaps?
 async def summon_enemy(cmd):
-    # debug command, though could be kept around for events
     time_now = int(time.time())
     response = ""
     user_data = EwUser(member=cmd.message.author)
@@ -522,6 +511,8 @@ async def summon_enemy(cmd):
     if enemytype != None and poi != None:
 
         enemy = get_enemy_data(enemytype)
+
+        # Assign enemy attributes that weren't assigned in get_enemy_data
         enemy.id_server = user_data.id_server
         enemy.poi = poi.id_poi
         enemy.level = level_byslime(enemy.slimes)
@@ -541,6 +532,7 @@ async def summon_enemy(cmd):
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+# Gathers all enemies from the database and has them perform an action
 async def enemy_perform_action(id_server):
     enemydata = ewutils.execute_sql_query("SELECT * FROM enemies")
     for row in enemydata:
@@ -553,7 +545,7 @@ async def enemy_perform_action(id_server):
             if resp_cont != None:
                 await resp_cont.post()
 
-
+# Spawns an enemy in a randomized district. If a district is full, it will try again, up to 5 times.
 async def spawn_enemy(id_server):
     time_now = int(time.time())
     response = ""
@@ -596,19 +588,17 @@ async def spawn_enemy(id_server):
             chosen_poi = potential_chosen_poi
             try_count = 5
         else:
-            # try again
+            # Enemy couldn't spawn in that district, try again
             try_count += 1
 
     if enemytype != None and chosen_poi != "":
         enemy = get_enemy_data(enemytype)
 
+        # Assign enemy attributes that weren't assigned in get_enemy_data
         enemy.id_server = id_server
         enemy.level = level_byslime(enemy.slimes)
-
         enemy.lifetime = time_now
-
         enemy.initialslimes = enemy.slimes
-
         enemy.poi = chosen_poi
 
         enemy.persist()
@@ -619,7 +609,7 @@ async def spawn_enemy(id_server):
 
     return response, ch_name
 
-
+# Finds an enemy based on its regular/shorthand name, or its ID.
 def find_enemy(enemy_search=None, user_data=None):
     enemy_found = None
     if enemy_search != None:
@@ -648,6 +638,7 @@ def find_enemy(enemy_search=None, user_data=None):
                 enemy_found = enemy
                 break
         else:
+            # last token was a string, identify enemy by name
 
             enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
                 id_enemy=ewcfg.col_id_enemy,
@@ -665,7 +656,7 @@ def find_enemy(enemy_search=None, user_data=None):
 
     return enemy_found
 
-
+# Deletes an enemy the database.
 def delete_enemy(enemy_data):
     print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
     ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
@@ -674,7 +665,7 @@ def delete_enemy(enemy_data):
         enemy_data.id_enemy,
     ))
 
-
+# Drops items into the district when an enemy dies.
 def drop_enemy_loot(enemy_data, district_data):
     response = ""
 
@@ -696,6 +687,7 @@ def drop_enemy_loot(enemy_data, district_data):
     crop_range = 0
     crop_amount = 0
 
+    # Determines what items should be dropped based on enemy type.
     if enemy_data.type == 'juvie':
 
         poudrin_dropped = random.randrange(2) == 0
@@ -806,7 +798,7 @@ def drop_enemy_loot(enemy_data, district_data):
         if patr_dropped:
             patr_amount = 1
 
-
+    # Drops items one-by-one
     if pleb_dropped or patr_dropped:
         cosmetics_list = []
 
@@ -924,7 +916,7 @@ def drop_enemy_loot(enemy_data, district_data):
 
     return response
 
-
+# Attacking function for when a player uses !kill on an enemy.
 def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
     time_now = int(time.time())
     response = ""
@@ -1005,7 +997,6 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             slimes_damage = ctn.slimes_damage
             slimes_spent = ctn.slimes_spent
             strikes = ctn.strikes
-        # user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
         if ewcfg.mutation_id_sharptoother in user_mutations:
             if random.random() < 0.5:
@@ -1100,6 +1091,7 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             elif user_data.slimelevel < enemy_data.level:
                 ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_takedowns)
 
+            # TODO: Ask munchy if enemies should give weapon skill
             # Give a bonus to the player's weapon skill for killing a stronger player.
             if enemy_data.level >= user_data.slimelevel and weapon is not None:
                 user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
@@ -1230,9 +1222,11 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
 
     return resp_cont
 
+# Determines what level an enemy is based on their slime count.
 def level_byslime(slime):
     return int(abs(slime) ** 0.25)
 
+# Reskinned version of weapon class from ewwep.
 class EwAttackType:
     # A name used to identify the attacking type
     id_type = ""
@@ -1283,6 +1277,7 @@ class EwAttackType:
         self.str_crit = str_crit
         self.str_miss = str_miss
 
+# Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:
     miss = False
     crit = False
@@ -1320,6 +1315,7 @@ class EwEnemyEffectContainer:
         self.enemy_data = enemy_data
         self.target_data = target_data
 
+# Check if an enemy is dead. Implemented to prevent enemy data from being recreated when not necessary.
 def check_death(enemy_data):
     if enemy_data.slimes <= 0 or enemy_data.life_state == 0:
         # delete_enemy(enemy_data)
@@ -1327,6 +1323,7 @@ def check_death(enemy_data):
     else:
         return False
 
+# Assigns enemies most of their necessary attributes based on their type.
 def get_enemy_data(enemy_type):
     enemy = EwEnemy()
 
@@ -1435,6 +1432,7 @@ def get_enemy_data(enemy_type):
 
     return enemy
 
+# Returns a randomized amount of slime based on enemy type
 def get_enemy_slime(enemy_type):
     slime = 0
     if enemy_type == 'juvie':
@@ -1451,6 +1449,7 @@ def get_enemy_slime(enemy_type):
         slime = 1000000
     return slime
 
+# Selects which non-ghost user to attack based on certain parameters.
 def get_target_by_ai(enemy_data):
 
     target_data = None
@@ -1493,14 +1492,13 @@ def get_target_by_ai(enemy_data):
 
     return target_data
 
+# List of enemies sorted by their spawn rarity.
 common_enemies = ['juvie', 'slimeasaur']
-
 uncommon_enemies = ['slimeadactyl', 'desertraider']
-
 rare_enemies = ['microslime']
-
 raid_bosses = ['megaslime']
 
+# Shorthand names the player can refer to enemies as.
 enemy_aliases = {
     "juvie":"lost juvie",
     "dino":"slimeasaur",

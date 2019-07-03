@@ -934,7 +934,7 @@ async def spawn_enemies(id_server = None):
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
-	# causes the possibility of an enemy spawning every 10 seconds
+	# Causes the possibility of an enemy spawning every 10 seconds
 	while True:
 		await spawn_enemies(id_server = id_server)
 
@@ -946,7 +946,7 @@ async def spawn_enemies_tick_loop(id_server):
 
 async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
-	# causes hostile enemies to attack every tick
+	# Causes hostile enemies to attack every tick
 	while True:
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		await enemy_perform_action(id_server)
