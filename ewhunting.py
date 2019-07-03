@@ -17,7 +17,6 @@ from ewslimeoid import EwSlimeoid
 
 """ Enemy data model for database persistence """
 
-
 class EwEnemy:
     id_enemy = 0
     id_server = ""
@@ -177,7 +176,7 @@ class EwEnemy:
         district_data = EwDistrict(district=enemy_data.poi, id_server=enemy_data.id_server)
         market_data = EwMarket(id_server=enemy_data.id_server)
         ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel
-        number_of_players = district_data.get_players_in_district()
+        # number_of_players = district_data.get_players_in_district()
 
         target_data = None
         target_player = None
@@ -190,27 +189,27 @@ class EwEnemy:
 
         enemy_data.persist()
 
-        if len(number_of_players) >= 1:
-            # Get target's info based on its AI.
+        #if len(number_of_players) >= 1:
+        # Get target's info based on its AI.
 
-            if enemy_data.ai == "Coward":
-                users = ewutils.execute_sql_query(
-                    "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0'".format(
-                        id_user=ewcfg.col_id_user,
-                        life_state=ewcfg.col_life_state,
-                        poi=ewcfg.col_poi,
-                        id_server=ewcfg.col_id_server
-                    ), (
-                        enemy_data.poi,
-                        enemy_data.id_server
-                    ))
-                if len(users) > 0:
-                    if random.randrange(100) > 95:
-                        response = random.choice(ewcfg.coward_responses)
-                        response = response.format(enemy_data.display_name, enemy_data.display_name)
-                        resp_cont.add_channel_response(ch_name, response)
-            else:
-                target_data = get_target_by_ai(enemy_data)
+        if enemy_data.ai == "Coward":
+            users = ewutils.execute_sql_query(
+                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0'".format(
+                    id_user=ewcfg.col_id_user,
+                    life_state=ewcfg.col_life_state,
+                    poi=ewcfg.col_poi,
+                    id_server=ewcfg.col_id_server
+                ), (
+                    enemy_data.poi,
+                    enemy_data.id_server
+                ))
+            if len(users) > 0:
+                if random.randrange(100) > 92:
+                    response = random.choice(ewcfg.coward_responses)
+                    response = response.format(enemy_data.display_name, enemy_data.display_name)
+                    resp_cont.add_channel_response(ch_name, response)
+        else:
+            target_data = get_target_by_ai(enemy_data)
 
         if target_data != None:
 
@@ -522,7 +521,7 @@ async def summon_enemy(cmd):
 
     if enemytype != None and poi != None:
 
-        enemy = get_enemy(enemytype)
+        enemy = get_enemy_data(enemytype)
         enemy.id_server = user_data.id_server
         enemy.poi = poi.id_poi
         enemy.level = level_byslime(enemy.slimes)
@@ -542,7 +541,7 @@ async def summon_enemy(cmd):
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def enemy_kill(id_server):
+async def enemy_perform_action(id_server):
     enemydata = ewutils.execute_sql_query("SELECT * FROM enemies")
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
@@ -600,9 +599,8 @@ async def spawn_enemy(id_server):
             # try again
             try_count += 1
 
-
     if enemytype != None and chosen_poi != "":
-        enemy = get_enemy(enemytype)
+        enemy = get_enemy_data(enemytype)
 
         enemy.id_server = id_server
         enemy.level = level_byslime(enemy.slimes)
@@ -822,11 +820,21 @@ def drop_enemy_loot(enemy_data, district_data):
         item_counter = 0
 
         while item_counter < poudrin_amount:
-            ewitem.item_create(
-                item_type=ewcfg.item_id_slimepoudrin,
-                id_user=district_data.name,
-                id_server=district_data.id_server,
-            )
+            for item in ewcfg.item_list:
+                if item.context == "poudrin":
+                    ewitem.item_create(
+                        item_type=ewcfg.it_item,
+                        id_user=district_data.name,
+                        id_server=district_data.id_server,
+                        item_props={
+                            'id_item': item.id_item,
+                            'context': item.context,
+                            'item_name': item.str_name,
+                            'item_desc': item.str_desc,
+                        }
+                    ),
+                    item = EwItem(id_item=item.id_item)
+                    item.persist()
             response += "They dropped a slime poudrin!\n"
 
             item_counter += 1
@@ -1319,7 +1327,7 @@ def check_death(enemy_data):
     else:
         return False
 
-def get_enemy(enemy_type):
+def get_enemy_data(enemy_type):
     enemy = EwEnemy()
 
     if enemy_type == 'juvie':

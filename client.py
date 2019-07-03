@@ -514,7 +514,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.enemy_attack_tick_loop(id_server=server.id))
+		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
 		# asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -910,9 +910,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 100,000 slime!"
+			response = "You get 10,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 100000)
+			levelup_response = user_data.change_slimes(n = 10000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
