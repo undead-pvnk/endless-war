@@ -201,7 +201,7 @@ async def attack(cmd):
 				shootee_data=None
 			)
 
-			resp_cont = ewhunting.kill_enemy(
+			resp_cont = await ewhunting.kill_enemy(
 				user_data,
 				slimeoid,
 				enemy_data,
@@ -211,8 +211,12 @@ async def attack(cmd):
 				cmd
 			)
 
-		else:
+		elif enemy_data == None and (user_data.life_state == ewcfg.life_state_corpse):
+			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
+			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
+		else:
 			# debugger
 			print(huntedenemy)
 

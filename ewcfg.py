@@ -687,6 +687,9 @@ time_offline = 10
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
 
+# time for a raidboss to activate
+time_raidcountdown = 20
+
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
 
@@ -1804,6 +1807,16 @@ def atf_raiderscythe(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
+def atf_gunkshot(ctn = None):
+	aim = (random.randrange(10) + 1)
+
+	if aim == 1:
+		ctn.miss = True
+		ctn.slimes_damage = 0
+	elif aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
 	EwAttackType( # 1
@@ -1829,7 +1842,7 @@ enemy_attack_type_list = [
 		fn_effect = atf_talons
 	),
 	EwAttackType( # 3
-		id_type = "raiderscythe",
+		id_type = "scythe",
 		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
 		str_miss = "**MISS!!** {name_enemy}'s swings miss wide of the target!",
 		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
@@ -1838,6 +1851,17 @@ enemy_attack_type_list = [
 		str_killdescriptor = "sliced in twain",
 		str_damage = "{name_target} is cleaved through the {hitzone}!!",
 		fn_effect = atf_raiderscythe
+	),
+	EwAttackType( # 4
+		id_type = "gunk shot",
+		str_crit = "**Critical hit!!** {name_target} is covered in a thick, gelatenous ooze!",
+		str_miss = "**MISS!!** {name_enemy}'s gunk shot just barely missed the target!",
+		str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
+		str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
+		str_kill = "**SPLOOSH!!** {name_enemy}'s gunk shot completely envolops {name_target}, boiling their flesh alive in a radiation that rivals the Elephant's Foot. Nothing but a charred husk remains. {emote_skull}",
+		str_killdescriptor = "slimed on",
+		str_damage = "{name_target} is coated in searing, acidic radiation on their {hitzone}!!",
+		fn_effect = atf_gunkshot
 	)
 ]
 
@@ -8256,6 +8280,25 @@ help_responses = {
 	"casino":"**The Casino** is a sub-zone in Green Light District where players may bet their slime coin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
 }
+
+# List of enemies sorted by their spawn rarity.
+common_enemies = ['juvie', 'slimeasaur']
+uncommon_enemies = ['slimeadactyl', 'desertraider']
+rare_enemies = ['microslime']
+raid_bosses = ['megaslime']
+
+# Shorthand names the player can refer to enemies as.
+enemy_aliases = {
+    "juvie":"lost juvie",
+    "dino":"slimeasaur",
+    "bird":"slimeadactyl",
+    "micro":"microslime",
+    "raider":"desert raider",
+    "mega":"megaslime",
+}
+
+# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
+raid_boss_names = ['Megaslime']
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

@@ -872,7 +872,7 @@ async def look(cmd):
 
 	enemy_data_constructor = EwEnemy()
 
-	# gets exact number of enemies in district
+	# lists off enemies in district
 	enemies_in_district = district_data.get_enemies_in_district(enemy_data_constructor)
 
 	num_enemies = len(enemies_in_district)

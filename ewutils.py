@@ -297,7 +297,11 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
+	# If the display name belongs to a raid boss, hide it.
+	if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == 2:
+		return "{}".format(message)
+	else:
+		return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):

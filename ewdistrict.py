@@ -168,8 +168,9 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		enemies = ewutils.execute_sql_query("SELECT * FROM enemies WHERE id_server = %s AND {poi} = %s".format(
-			poi = ewcfg.col_enemy_poi
+		enemies = ewutils.execute_sql_query("SELECT * FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
+			poi = ewcfg.col_enemy_poi,
+			life_state = ewcfg.col_enemy_life_state
 		),(
 			self.id_server,
 			self.name
@@ -185,6 +186,7 @@ class EwDistrict:
 			enemy_data.slimes = enemy[2]
 			enemy_data.level = enemy[8]
 
+			# Append the enemy to the list if it meets the requirements
 			if max_level >= enemy_data.level >= min_level \
 			and max_slimes >= enemy_data.slimes >= min_slimes:
 				filtered_enemies.append(enemy_data.id_enemy)

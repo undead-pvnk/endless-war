@@ -37,6 +37,10 @@ class EwEnemy:
     id_target = ""
     raidtimer = 0
 
+    # Life state 0 = Dead, pending for deletion when it tries its next attack
+    # Life state 1 = Alive / Activated raid boss
+    # Life state 2 = Raid boss pending activation
+
     """ Load the enemy data from the database. """
 
     def __init__(self, id_enemy=None, id_server=None):
@@ -205,10 +209,37 @@ class EwEnemy:
         else:
             target_data = get_target_by_ai(enemy_data)
 
+        if check_raidboss_countdown(enemy_data) and enemy_data.life_state == 2:
+            # Raid boss has activated!
+            response = "{} has arrvied! It's level {} and has {} slime!\n".format(
+                enemy_data.display_name,
+                enemy_data.level,
+                enemy_data.slimes
+            )
+            print("PASSED PHASE 2")
+            print("RESPONSE SENT OUT?")
+            resp_cont.add_channel_response(ch_name, response)
+
+            enemy_data.life_state = 1
+            enemy_data.persist()
+
+            target_data = None
+
+        elif check_raidboss_countdown(enemy_data) and enemy_data.life_state == 1:
+            # Raid boss attacks.
+            pass
+
+        elif check_raidboss_countdown(enemy_data) == False:
+            timer = (enemy_data.raidtimer - time_now + ewcfg.time_raidcountdown)
+            if timer < 5:
+                timer = 5
+            response = "You feel a sinister presence lurking. Time remaining: {} seconds...".format(timer)
+            resp_cont.add_channel_response(ch_name, response)
+            target_data = None
+
+
         if target_data != None:
 
-            # print('no targets!')
-            # target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
             target_player = EwPlayer(id_user=target_data.id_user)
             target_slimeoid = EwSlimeoid(id_user=target_data.id_user)
 
@@ -220,21 +251,8 @@ class EwEnemy:
             # print(server)
 
             # member = discord.utils.get(channel.server.members, name=target_player.display_name)
-
-            # for m in channel.server.members:
-            #     if m.id == target_data.id_user:
-            #         member = m
-
             member = server.get_member(target_data.id_user)
             # print(member)
-
-            # for m in members:
-            #    if m.id == target_data.id_user:
-            #        member = m
-
-            # print(member)
-            # member.id = target_data.id_user
-            # member.server.id = target_data.id_server
 
             target_mutations = target_data.get_mutations()
 
@@ -265,12 +283,13 @@ class EwEnemy:
 
             if target_data.life_state == ewcfg.life_state_kingpin:
                 # Disallow killing generals.
-                response = "The enemy tries to attack the kingpin, but is taken aback by the sheer girth of their slime."
+                response = "The {} tries to attack the kingpin, but is taken aback by the sheer girth of their slime.".format(enemy_data.display_name)
                 resp_cont.add_channel_response(ch_name, response)
 
             elif (time_now - target_data.time_lastrevive) < ewcfg.invuln_onrevive:
                 # User is currently invulnerable.
-                response = "The enemy tries to attack {}, but they have died too recently and are immune.".format(
+                response = "The {} tries to attack {}, but they have died too recently and are immune.".format(
+                    enemy_data.display_name,
                     target_player.display_name)
                 resp_cont.add_channel_response(ch_name, response)
 
@@ -461,7 +480,7 @@ class EwEnemy:
                     resp_cont.add_channel_response(ch_name, response)
 
                 # Persist user and enemy data.
-                if enemy_data.life_state == 1:
+                if enemy_data.life_state == 1 or enemy_data.life_state == 2:
                     enemy_data.persist()
                 target_data.persist()
 
@@ -472,12 +491,14 @@ class EwEnemy:
                     await ewrolemgr.updateRoles(client=client, member=member)
                     # announce death in kill feed channel
                     # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
-                    killfeed_resp = resp_cont.channel_responses[ch_name]
-                    for r in killfeed_resp:
-                        resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
-                    resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
-                    resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
+                    # killfeed_resp = resp_cont.channel_responses[ch_name]
+                    # for r in killfeed_resp:
+                    #     resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
+                    # resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
+                    # resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
                 # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
+
+
 
         # Send the response to the player.
         resp_cont.format_channel_response(ch_name, enemy_data)
@@ -537,6 +558,8 @@ async def enemy_perform_action(id_server):
     enemydata = ewutils.execute_sql_query("SELECT * FROM enemies")
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
+
+        # If an enemy is marked for death or has been alive too long, delete it
         if enemy.life_state == 0 or (enemy.lifetime < (int(time.time()) - ewcfg.time_despawn)):
             print("DELETE GATE 1")
             delete_enemy(enemy)
@@ -559,19 +582,19 @@ async def spawn_enemy(id_server):
 
     if rarity_choice <= 7000:
         # common enemies
-        enemytype = random.choice(common_enemies)
+        enemytype = random.choice(ewcfg.common_enemies)
     elif rarity_choice <= 9000:
         # uncommon enemies
-        enemytype = random.choice(uncommon_enemies)
-    elif rarity_choice <= 9990:
+        enemytype = random.choice(ewcfg.uncommon_enemies)
+    elif rarity_choice <= 9900:
         # rare enemies
-        enemytype = random.choice(rare_enemies)
+        enemytype = random.choice(ewcfg.rare_enemies)
     else:
         # raid bosses
-        enemytype = random.choice(raid_bosses)
+        enemytype = random.choice(ewcfg.raid_bosses)
 
     # debug manual reassignment
-    enemytype = random.choice(common_enemies)
+    enemytype = random.choice(ewcfg.common_enemies)
 
     # TODO: Make enemies spawn in outskirts
 
@@ -612,10 +635,12 @@ async def spawn_enemy(id_server):
 # Finds an enemy based on its regular/shorthand name, or its ID.
 def find_enemy(enemy_search=None, user_data=None):
     enemy_found = None
+    enemy_search_alias = None
+
     if enemy_search != None:
 
-        if enemy_search in enemy_aliases:
-            enemy_search_alias = enemy_aliases[enemy_search]
+        if enemy_search in ewcfg.enemy_aliases:
+            enemy_search_alias = ewcfg.enemy_aliases[enemy_search]
 
         enemy_search_tokens = enemy_search.split(' ')
 
@@ -625,9 +650,10 @@ def find_enemy(enemy_search=None, user_data=None):
             searched_id = enemy_search_tokens[len(enemy_search_tokens) - 1]
 
             enemydata = ewutils.execute_sql_query(
-                "SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_enemy} = %s".format(
+                "SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_enemy} = %s AND {life_state} = 1".format(
                     id_enemy=ewcfg.col_id_enemy,
                     poi=ewcfg.col_enemy_poi,
+                    life_state=ewcfg.col_enemy_life_state
                 ), (
                     user_data.poi,
                     searched_id,
@@ -640,9 +666,10 @@ def find_enemy(enemy_search=None, user_data=None):
         else:
             # last token was a string, identify enemy by name
 
-            enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s".format(
+            enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {life_state} = 1".format(
                 id_enemy=ewcfg.col_id_enemy,
                 poi=ewcfg.col_enemy_poi,
+                life_state=ewcfg.col_enemy_life_state
             ), (
                 user_data.poi,
             ))
@@ -917,9 +944,10 @@ def drop_enemy_loot(enemy_data, district_data):
     return response
 
 # Attacking function for when a player uses !kill on an enemy.
-def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
+async def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
     time_now = int(time.time())
     response = ""
+    old_response = ""
     resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
     member = enemy_data
 
@@ -1137,6 +1165,9 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
                 response = "{name_target} is hit!!\n\n{name_target} has died.".format(
                     name_target=member.display_name)
 
+            # When a raid boss dies, use this response instead so its drops aren't shown in the killfeed
+            old_response = response
+
             # give player item for defeating enemy
             response += "\n\n" + drop_enemy_loot(enemy_data, district_data)
 
@@ -1200,15 +1231,15 @@ def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, cmd):
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-        if was_killed and enemy_data.type in raid_bosses:
-            # announce death in kill feed channel
-            # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
-            killfeed_resp = resp_cont.channel_responses[cmd.message.channel.name]
-            for r in killfeed_resp:
-                resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
-            resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
-            resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-        # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
+        if was_killed and enemy_data.type in ewcfg.raid_bosses:
+            # announce raid boss kill in kill feed channel
+
+            killfeed_resp = "*{}*: {}\n\n".format(cmd.message.author.display_name, old_response)
+            killfeed_resp +="`-------------------------`"
+
+            killfeed_resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
+            killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, killfeed_resp)
+            await killfeed_resp_cont.post()
 
         # Add level up text to response if appropriate
         if user_inital_level < user_data.slimelevel:
@@ -1228,7 +1259,8 @@ def level_byslime(slime):
 
 # Reskinned version of weapon class from ewwep.
 class EwAttackType:
-    # A name used to identify the attacking type
+
+    # An name used to identify the attacking type
     id_type = ""
 
     # Displayed when this weapon is used for a !kill
@@ -1405,7 +1437,7 @@ def get_enemy_data(enemy_type):
         enemy.level = 0
         enemy.life_state = 1
         enemy.type = enemy_type
-        enemy.attacktype = "raiderscythe"
+        enemy.attacktype = "scythe"
         enemy.bleed_storage = 0
         enemy.time_lastenter = 0
         enemy.initialslimes = 0
@@ -1420,15 +1452,14 @@ def get_enemy_data(enemy_type):
         enemy.ai = "Attacker-A"
         enemy.display_name = "Megaslime"
         enemy.level = 0
-        enemy.life_state = 1
+        enemy.life_state = 2
         enemy.type = enemy_type
-        enemy.attacktype = "unarmed"
+        enemy.attacktype = "gunk shot"
         enemy.bleed_storage = 0
         enemy.time_lastenter = 0
         enemy.initialslimes = 0
         enemy.id_target = ""
-        #TODO: Make raidbosses do something with raidtimer
-        enemy.raidtimer = 0
+        enemy.raidtimer = int(time.time())
 
     return enemy
 
@@ -1492,18 +1523,16 @@ def get_target_by_ai(enemy_data):
 
     return target_data
 
-# List of enemies sorted by their spawn rarity.
-common_enemies = ['juvie', 'slimeasaur']
-uncommon_enemies = ['slimeadactyl', 'desertraider']
-rare_enemies = ['microslime']
-raid_bosses = ['megaslime']
+# Check if raidboss is ready to attack / be attacked
+def check_raidboss_countdown(enemy_data):
+    time_now = int(time.time())
 
-# Shorthand names the player can refer to enemies as.
-enemy_aliases = {
-    "juvie":"lost juvie",
-    "dino":"slimeasaur",
-    "bird":"slimeadactyl",
-    "micro":"microslime",
-    "raider":"desertraider",
-    "mega":"megaslime",
-}
+    # Wait for raid bosses
+    if enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer < time_now - ewcfg.time_raidcountdown:
+        # Raid boss has activated!
+        return True
+    elif enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer > time_now - ewcfg.time_raidcountdown:
+        # Raid boss hasn't activated.
+        return False
+
+
