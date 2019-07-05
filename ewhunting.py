@@ -211,7 +211,8 @@ class EwEnemy:
 
         if check_raidboss_countdown(enemy_data) and enemy_data.life_state == 2:
             # Raid boss has activated!
-            response = "{} has arrvied! It's level {} and has {} slime!\n".format(
+            response = "The ground shakes beneath your feet as slime begins to pool into one hulking, solidified mass..." \
+                       "\n{} has arrvied! It's level {} and has {} slime!\n".format(
                 enemy_data.display_name,
                 enemy_data.level,
                 enemy_data.slimes
@@ -504,6 +505,41 @@ class EwEnemy:
         resp_cont.format_channel_response(ch_name, enemy_data)
         await resp_cont.post()
 
+    def move(self):
+        resp_cont = ewutils.EwResponseContainer(id_server=self.id_server)
+
+        old_district_response = "debug"
+        new_district_response = "debug"
+        gang_base_response = "debug"
+
+        try:
+            destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
+            if len(destinations) > 0:
+                old_poi = self.poi
+                new_poi = random.choice(list(destinations))
+                self.poi = new_poi
+                self.time_lastenter = int(time.time())
+
+                print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
+
+                new_poi_def = ewcfg.id_to_poi.get(new_poi)
+                new_ch_name = new_poi_def.channel
+                new_district_response = "A low roar booms throughout the district, as slime on the ground begins to slosh all around. {} has arrived!".format(
+                    self.display_name)
+                resp_cont.add_channel_response(new_ch_name, new_district_response)
+
+                old_district_response = "{} has moved to {}!".format(self.display_name, new_poi_def.str_name)
+                old_poi_def = ewcfg.id_to_poi.get(old_poi)
+                old_ch_name = old_poi_def.channel
+                resp_cont.add_channel_response(old_ch_name, old_district_response)
+
+                gang_base_response = "There are reports of a powerful enemy roaming around {}.".format(new_poi_def.str_name)
+                resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, gang_base_response)
+                resp_cont.add_channel_response(ewcfg.channel_copkilltown, gang_base_response)
+        finally:
+            self.persist()
+            return resp_cont
+
     def change_slimes(self, n=0, source=None):
         change = int(n)
         self.slimes += change
@@ -571,6 +607,14 @@ async def enemy_perform_action(id_server):
             print("DELETE GATE 1")
             delete_enemy(enemy)
         else:
+            # If an enemy is an activated raid boss, it has a 1/10 chance to move between districts.
+            if enemy.type in ewcfg.raid_bosses and enemy.life_state == 1 and check_raidboss_movecooldown(enemy):
+                if random.randrange(20) == 0:
+                    resp_cont = enemy.move()
+                    if resp_cont != None:
+                        await resp_cont.post()
+
+            # If an enemy is alive, make it peform the kill function.
             resp_cont = await enemy.kill()
             if resp_cont != None:
                 await resp_cont.post()
@@ -1126,10 +1170,10 @@ async def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, 
             elif user_data.slimelevel < enemy_data.level:
                 ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_takedowns)
 
-            # TODO: Ask munchy if enemies should give weapon skill
+            # TODO: Ask munchy if enemies should give weapon skill / confirmed kills
             # Give a bonus to the player's weapon skill for killing a stronger player.
-            if enemy_data.level >= user_data.slimelevel and weapon is not None:
-                user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
+            # if enemy_data.level >= user_data.slimelevel and weapon is not None:
+            #    user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
 
             # release bleed storage
             if ewcfg.mutation_id_thickerthanblood in user_mutations:
@@ -1540,6 +1584,16 @@ def check_raidboss_countdown(enemy_data):
         return True
     elif enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer > time_now - ewcfg.time_raidcountdown:
         # Raid boss hasn't activated.
+        return False
+
+def check_raidboss_movecooldown(enemy_data):
+    time_now = int(time.time())
+
+    if enemy_data.type in ewcfg.raid_bosses and enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
+        # Raid boss can move
+        return True
+    elif enemy_data.type in ewcfg.raid_bosses and enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
+        # Raid boss can't move yet
         return False
 
 

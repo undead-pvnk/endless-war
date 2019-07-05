@@ -687,8 +687,11 @@ time_offline = 10
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
 
-# time for a raidboss to activate
+# time for a raid boss to activate
 time_raidcountdown = 20
+
+# time for a raid boss to stay in a district before it can move again
+time_raidboss_movecooldown = 30
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
@@ -1858,7 +1861,7 @@ enemy_attack_type_list = [
 		str_miss = "**MISS!!** {name_enemy}'s gunk shot just barely missed the target!",
 		str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
 		str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
-		str_kill = "**SPLOOSH!!** {name_enemy}'s gunk shot completely envolops {name_target}, boiling their flesh alive in a radiation that rivals the Elephant's Foot. Nothing but a charred husk remains. {emote_skull}",
+		str_kill = "**SPLOOSH!!** {name_enemy}'s gunk shot completely envelops {name_target}, boiling their flesh alive in a radiation that rivals the Elephant's Foot. Nothing but a charred husk remains. {emote_skull}",
 		str_killdescriptor = "slimed on",
 		str_damage = "{name_target} is coated in searing, acidic radiation on their {hitzone}!!",
 		fn_effect = atf_gunkshot
