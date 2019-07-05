@@ -211,6 +211,7 @@ class EwEnemy:
 
         if check_raidboss_countdown(enemy_data) and enemy_data.life_state == 2:
             # Raid boss has activated!
+            #TODO: Add megaslime emotes to these kinds of responses.
             response = "The ground shakes beneath your feet as slime begins to pool into one hulking, solidified mass..." \
                        "\n{} has arrvied! It's level {} and has {} slime!\n".format(
                 enemy_data.display_name,
