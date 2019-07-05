@@ -188,8 +188,14 @@ def gen_data_text(
 			response += " {}".format(mutation_flavor.str_describe_other)
 
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-		if user_kills > 0:
+		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
+
+		if user_kills > 0 and enemy_kills > 0:
+			response += " They have {:,} confirmed kills, and {:,} confirmed hunts.".format(user_kills, enemy_kills)
+		elif user_kills > 0:
 			response += " They have {:,} confirmed kills.".format(user_kills)
+		elif enemy_kills > 0:
+			response += " They have {:,} confirmed hunts.".format(enemy_kills)
 
 		if coinbounty != 0:
 			response += " SlimeCorp offers a bounty of {:,} SlimeCoin for their death.".format(coinbounty)
@@ -270,9 +276,15 @@ async def data(cmd):
 			mutation_flavor = ewcfg.mutations_map[mutation]
 			response += " {}".format(mutation_flavor.str_describe_self)
 
-		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-		if user_kills > 0:
+		user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
+		enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
+
+		if user_kills > 0 and enemy_kills > 0:
+			response += " You have {:,} confirmed kills, and {:,} confirmed hunts.".format(user_kills, enemy_kills)
+		elif user_kills > 0:
 			response += " You have {:,} confirmed kills.".format(user_kills)
+		elif enemy_kills > 0:
+			response += " You have {:,} confirmed hunts.".format(enemy_kills)
 
 		if coinbounty != 0:
 			response += " SlimeCorp offers a bounty of {:,} SlimeCoin for your death.".format(coinbounty)

@@ -211,15 +211,14 @@ class EwEnemy:
 
         if check_raidboss_countdown(enemy_data) and enemy_data.life_state == 2:
             # Raid boss has activated!
-            #TODO: Add megaslime emotes to these kinds of responses.
-            response = "The ground shakes beneath your feet as slime begins to pool into one hulking, solidified mass..." \
-                       "\n{} has arrvied! It's level {} and has {} slime!\n".format(
+            response = "*The ground shakes beneath your feet as slime begins to pool into one hulking, solidified mass...*" \
+                       "\n{} **{} has arrvied! It's level {} and has {} slime!** {}\n".format(
+                ewcfg.emote_megaslime,
                 enemy_data.display_name,
                 enemy_data.level,
-                enemy_data.slimes
+                enemy_data.slimes,
+                ewcfg.emote_megaslime
             )
-            print("PASSED PHASE 2")
-            print("RESPONSE SENT OUT?")
             resp_cont.add_channel_response(ch_name, response)
 
             enemy_data.life_state = 1
@@ -233,8 +232,8 @@ class EwEnemy:
 
         elif check_raidboss_countdown(enemy_data) == False:
             timer = (enemy_data.raidtimer - time_now + ewcfg.time_raidcountdown)
-            if timer < 5 and timer != 0:
-                timer = 5
+            if timer < ewcfg.enemy_attack_tick_length and timer != 0:
+                timer = ewcfg.enemy_attack_tick_length
             response = "You feel a sinister presence lurking. Time remaining: {} seconds...".format(timer)
             resp_cont.add_channel_response(ch_name, response)
             target_data = None
@@ -386,7 +385,7 @@ class EwEnemy:
 
                         # Player was killed.
                         target_data.id_killer = enemy_data.id_enemy
-                        target_data.die(cause=ewcfg.cause_killing)
+                        target_data.die(cause=ewcfg.cause_enemy_killing)
                         target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
 
                         kill_descriptor = "beaten to death"
@@ -509,9 +508,9 @@ class EwEnemy:
     def move(self):
         resp_cont = ewutils.EwResponseContainer(id_server=self.id_server)
 
-        old_district_response = "debug"
-        new_district_response = "debug"
-        gang_base_response = "debug"
+        old_district_response = ""
+        new_district_response = ""
+        gang_base_response = ""
 
         try:
             destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
@@ -525,8 +524,11 @@ class EwEnemy:
 
                 new_poi_def = ewcfg.id_to_poi.get(new_poi)
                 new_ch_name = new_poi_def.channel
-                new_district_response = "A low roar booms throughout the district, as slime on the ground begins to slosh all around. {} has arrived!".format(
-                    self.display_name)
+                new_district_response = "*A low roar booms throughout the district, as slime on the ground begins to slosh all around.*\n {} **{} has arrived!** {}".format(
+                    ewcfg.emote_megaslime,
+                    self.display_name,
+                    ewcfg.emote_megaslime
+                )
                 resp_cont.add_channel_response(new_ch_name, new_district_response)
 
                 old_district_response = "{} has moved to {}!".format(self.display_name, new_poi_def.str_name)
@@ -1163,15 +1165,14 @@ async def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, 
 
         if was_killed:
             # adjust statistics
-            # TODO: change these to enemy kill stats
-            ewstats.increment_stat(user=user_data, metric=ewcfg.stat_kills)
+            ewstats.increment_stat(user=user_data, metric=ewcfg.stat_pve_kills)
             ewstats.track_maximum(user=user_data, metric=ewcfg.stat_biggest_kill, value=int(slimes_dropped))
             if user_data.slimelevel > enemy_data.level:
-                ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_ganks)
+                ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_pve_ganks)
             elif user_data.slimelevel < enemy_data.level:
-                ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_takedowns)
+                ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_pve_takedowns)
 
-            # TODO: Ask munchy if enemies should give weapon skill / confirmed kills
+            # TODO: Ask people if enemies should give weapon skill / confirmed kills
             # Give a bonus to the player's weapon skill for killing a stronger player.
             # if enemy_data.level >= user_data.slimelevel and weapon is not None:
             #    user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)

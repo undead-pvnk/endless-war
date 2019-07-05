@@ -37,6 +37,9 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
 		move_speed *= 2
 
+	#TODO: Remove this after debugging
+	move_speed = 12
+
 	return move_speed
 
 

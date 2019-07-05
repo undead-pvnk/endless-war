@@ -641,7 +641,7 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 10
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 5
+enemy_attack_tick_length = 3
 
 # Unearthed Item rarity (for enlisted players)
 unearthed_item_rarity = 1500
@@ -732,6 +732,7 @@ emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
 emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
+emote_megaslime = "<:megaslime:436877747240042508>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1056,11 +1057,16 @@ stat_lifetime_poudrins = 'lifetime_poudrins'
 stat_lifetime_damagedealt = 'lifetime_damage_dealt'
 stat_lifetime_selfdamage = 'lifetime_self_damage'
 stat_lifetime_deaths = 'lifetime_deaths'
-stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 #Track revolver trigger pulls survived?
 stat_lifetime_spins_survived = 'lifetime_spins_survived'
 stat_max_spins_survived = 'max_spins_survived'
 stat_capture_points_contributed = 'capture_points_contributed'
+stat_pve_kills = 'pve_kills'
+stat_max_pve_kills = 'max_pve_kills'
+stat_lifetime_pve_kills = 'lifetime_pve_kills'
+stat_lifetime_pve_takedowns = 'lifetime_pve_takedowns'
+stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
+stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1076,7 +1082,6 @@ source_ghostification = 9
 source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
-source_enemydamage = 13
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1099,6 +1104,7 @@ cause_leftserver = 6
 cause_drowning = 7
 cause_falling = 8
 cause_bleeding = 9
+cause_enemy_killing = 10
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
