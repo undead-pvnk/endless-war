@@ -231,7 +231,7 @@ class EwEnemy:
 
         elif check_raidboss_countdown(enemy_data) == False:
             timer = (enemy_data.raidtimer - time_now + ewcfg.time_raidcountdown)
-            if timer < 5:
+            if timer < 5 and timer != 0:
                 timer = 5
             response = "You feel a sinister presence lurking. Time remaining: {} seconds...".format(timer)
             resp_cont.add_channel_response(ch_name, response)
@@ -507,6 +507,13 @@ class EwEnemy:
     def change_slimes(self, n=0, source=None):
         change = int(n)
         self.slimes += change
+
+        if n < 0:
+            change *= -1  # convert to positive number
+            if source == ewcfg.source_damage or source == ewcfg.source_bleeding or source == ewcfg.source_self_damage:
+                self.totaldamage += change
+
+        self.persist()
 
 # Debug command. Later on, it could instead be used for a summoner weapon, perhaps?
 async def summon_enemy(cmd):
@@ -1528,7 +1535,7 @@ def check_raidboss_countdown(enemy_data):
     time_now = int(time.time())
 
     # Wait for raid bosses
-    if enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer < time_now - ewcfg.time_raidcountdown:
+    if enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer <= time_now - ewcfg.time_raidcountdown:
         # Raid boss has activated!
         return True
     elif enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer > time_now - ewcfg.time_raidcountdown:
