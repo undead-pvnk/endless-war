@@ -1331,10 +1331,16 @@ for c in dye_list:
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
 	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim == 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 	elif aim == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -1342,10 +1348,16 @@ def wef_gun(ctn = None):
 # weapon effect function for "rifle"
 def wef_rifle(ctn = None):
 	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim <= 2:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 	elif aim >= 9:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -1355,22 +1367,28 @@ def wef_nunchucks(ctn = None):
 	ctn.strikes = 0
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = 0
+	user_mutations = ctn.user_data.get_mutations()
 
 	for count in range(5):
 		if random.randint(1, 3) == 1:
 			ctn.strikes += 1
 			ctn.slimes_damage += int((dmg * 3) / 5)
+		elif mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.strikes += 1
+				ctn.slimes_damage += int((dmg * 3) / 5)
 
 	if ctn.strikes == 5:
 		ctn.crit = True
 	elif ctn.strikes == 0:
 		ctn.miss = True
-		ctn.user_data.change_slimes(n = (-ctn.slimes_damage / 2), source = source_self_damage)
+		ctn.user_data.change_slimes(n = (-dmg / 2), source = source_self_damage)
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
+	user_mutations = ctn.user_data.get_mutations()
 
 	#lucky lucy's lucky katana always crits
 	if ctn.user_data.life_state == life_state_lucky:
@@ -1384,9 +1402,15 @@ def wef_katana(ctn = None):
 # weapon effect function for "bat"
 def wef_bat(ctn = None):
 	aim = (random.randrange(21) - 10)
+	user_mutations = ctn.user_data.get_mutations()
 	if aim <= -9:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 
 	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
 
@@ -1398,9 +1422,15 @@ def wef_bat(ctn = None):
 def wef_garrote(ctn = None):
 	ctn.slimes_damage *= 0.5
 	aim = (random.randrange(100) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 	if aim <= 50:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 	elif aim == 100:
 		ctn.slimes_damage *= 100
 		ctn.crit = True
@@ -1411,11 +1441,20 @@ def wef_brassknuckles(ctn = None):
 	aim2 = (random.randrange(21) - 10)
 	whiff1 = 1
 	whiff2 = 1
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim1 == -9:
-		whiff1 = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				whiff1 = 0
+		else:
+			whiff1 = 0
 	if aim2 == -9:
-		whiff2 = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				whiff2 = 0
+		else:
+			whiff2 = 0
 
 	if whiff1 == 0 and whiff2 == 0:
 		ctn.miss = True
@@ -1427,23 +1466,35 @@ def wef_brassknuckles(ctn = None):
 def wef_molotov(ctn = None):
 	ctn.slimes_damage += int(ctn.slimes_damage / 2)
 	aim = (random.randrange(100) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim <= 10:
 		ctn.crit = True
 		ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 	elif aim > 10 and aim <= 20:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 
 # weapon effect function for "knives"
 def wef_knives(ctn = None):
 	ctn.user_data.slimes += int(ctn.slimes_spent * 0.33)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.85)
 	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim <= 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 	elif aim >= 10:
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
@@ -1453,10 +1504,16 @@ def wef_scythe(ctn = None):
 	ctn.user_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim <= 2:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 	elif aim >= 9:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -1466,10 +1523,16 @@ def wef_pickaxe(ctn = None):
 	ctn.slimes_damage *= 0.2
 
 	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim == 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 
 	elif aim == 10:
 		ctn.crit = True

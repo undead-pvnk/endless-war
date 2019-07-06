@@ -369,10 +369,6 @@ async def attack(cmd):
 					strikes = ctn.strikes
 					# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
-				if ewcfg.mutation_id_sharptoother in user_mutations:
-					if random.random() < 0.5:
-						miss = False
-
 				# can't hit lucky lucy
 				if shootee_data.life_state == ewcfg.life_state_lucky:
 					miss = True
