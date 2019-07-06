@@ -531,3 +531,24 @@ async def refuse(cmd):
 			challenger.rr_challenger = ""
 			challenger.persist()
 
+"""
+	Ban a player from participating in the game
+"""
+async def arrest(cmd):
+
+	author = cmd.message.author
+	
+	if not author.server_permissions.administrator:
+		return
+	
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member)
+		user_data.arrested = True
+		user_data.poi = ewcfg.poi_id_juviesrow
+		user_data.change_slimes(n = - user_data.slimes)
+		user_data.persist()
+
+		response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement cells.".format(member.display_name)
+		await ewrolemgr.updateRoles(client = cmd.client, member = member)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

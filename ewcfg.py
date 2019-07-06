@@ -461,6 +461,7 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 
+cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
@@ -820,6 +821,7 @@ col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
+col_arrested = 'arrested'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
