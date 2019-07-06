@@ -1017,6 +1017,7 @@ async def scout(cmd):
 				num_players += math.floor(scoutee_data.slimelevel / 5)
 
 			detailed_resp += "\n" + scoutee_data.get_mention()
+			print(scoutee_data.slimes)
 			num_players += 1
 
 		enemy_data_constructor = EwEnemy()
@@ -1057,7 +1058,7 @@ async def scout(cmd):
 
 		if num_players == 0 and num_enemies >= 1:
 			players_resp = ""
-		elif num_players >= 1 and num_enemies ==0:
+		elif num_players >= 1 and num_enemies == 0:
 			enemies_resp = ""
 
 		# post result to channel
