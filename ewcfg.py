@@ -12,7 +12,7 @@ from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
-# import ewdebug
+import ewdebug
 
 # Global configuration options.
 version = "v3.5 - Hunting"
@@ -466,8 +466,8 @@ cmd_teleport = cmd_prefix + 'tp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 
 cmd_restoreroles = cmd_prefix + 'restoreroles'
-# cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-# cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
+cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
+cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -565,6 +565,7 @@ max_weapon_mod = 16
 acquisition_smelting = "smelting"
 acquisition_milling = "milling"
 acquisition_mining = "mining"
+acquisition_dojo = "dojo"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1337,12 +1338,12 @@ item_list = [
 				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
 				   "It’s just too beautiful not to.".format(emote_111),
 	),
-	#EwGeneralItem(
-	#	id_item = item_id_forbidden111,
-	#	str_name = "The Forbidden {}".format(emote_111),
-	#	str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
-	#	acquisition = acquisition_smelting
-	#),
+	EwGeneralItem(
+		id_item = item_id_forbidden111,
+		str_name = "The Forbidden {}".format(emote_111),
+		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
+		acquisition = acquisition_smelting
+	),
 	EwGeneralItem(
 		id_item = "stick",
 		str_name = "stick",
@@ -1767,7 +1768,8 @@ weapon_list = [
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
 		fn_effect = wef_pickaxe,
-		str_description = "It's a pickaxe"
+		str_description = "It's a pickaxe",
+		acquisition = acquisition_smelting
 	)
 ]
 
@@ -3567,18 +3569,18 @@ food_list = [
 				   "Stuffed Crust. Duotrigintuple Stuffed Crust. DUOTRIGINTUPLE STUFFED CRUST.",
 		acquisition = acquisition_smelting
 	),
-	#EwFood(
-	#	id_food = item_id_forbiddenstuffedcrust,
-	#	alias = [
-	#		"fsc",
-	#		"forbiddenstuffedcrust",
-	#	],
-	#	recover_hunger = 340282366920938463463374607431768211455,
-	#	str_name = "The Forbidden Stuffed Crust Pizza",
-	#	str_eat = ewdebug.forbiddenstuffedcrust_eat,
-	#	str_desc = ewdebug.forbiddenstuffedcrust_desc,
-	#	acquisition = acquisition_smelting
-	#),
+	EwFood(
+		id_food = item_id_forbiddenstuffedcrust,
+		alias = [
+			"fsc",
+			"forbiddenstuffedcrust",
+		],
+		recover_hunger = 340282366920938463463374607431768211455,
+		str_name = "The Forbidden Stuffed Crust Pizza",
+		str_eat = ewdebug.forbiddenstuffedcrust_eat,
+		str_desc = ewdebug.forbiddenstuffedcrust_desc,
+		acquisition = acquisition_smelting
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -6560,19 +6562,19 @@ smelting_recipe_list = [
 		products = [item_id_forbidden111]
 	),
 	EwSmeltingRecipe(
-		id_recipe = "poudrinpickaxe",
+		id_recipe = "pickaxe",
 		str_name = "a Poudrin Pickaxe",
 		alias = [
 			"pp", # LOL
 			"poudrinpick",
-			"pickaxe",
+			"poudrinpickaxe",
 			"pick"
 		],
 		ingredients = {
 			item_id_slimepoudrin : 3,
 			'stick' : 2
 		},
-		products = ['poudrinpickaxe']
+		products = ['pickaxe']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "faggot",
@@ -8231,6 +8233,12 @@ for s in food_list:
 		pass
 
 for s in cosmetic_items_list:
+	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	else:
+		pass
+
+for s in weapon_list:
 	if s.acquisition == acquisition_smelting:
 		smelt_results.append(s)
 	else:

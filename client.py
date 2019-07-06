@@ -43,6 +43,7 @@ import ewquadrants
 import ewtransport
 import ewsmelting
 import ewhunting
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -373,8 +374,8 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	# ewdebug.cmd_debug1: ewdebug.debug1,
-	# ewdebug.cmd_debug2: ewdebug.debug2,
+	ewcfg.cmd_debug1: ewdebug.debug1,
+	ewcfg.cmd_debug2: ewdebug.debug2,
 }
 
 debug = True

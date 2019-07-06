@@ -71,6 +71,7 @@ class EwWeapon:
 	# Displayed when !inspect-ing
 	str_description = ""
 
+	acquisition = "dojo"
 	def __init__(
 		self,
 		id_weapon = "",
@@ -89,7 +90,8 @@ class EwWeapon:
 		fn_effect = None,
 		str_crit = "",
 		str_miss = "",
-		str_description = ""
+		str_description = "",
+		acquisition = "dojo"
 	):
 		self.id_weapon = id_weapon
 		self.alias = alias
@@ -108,6 +110,7 @@ class EwWeapon:
 		self.str_crit = str_crit
 		self.str_miss = str_miss
 		self.str_description = str_description
+		self.acquisition = acquisition
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -874,7 +877,7 @@ async def spar(cmd):
 
 				#Determine if the !spar is a duel:
 				weapon = None
-				if user_data.weapon != "" and sparred_data.weapon != "" and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
+				if user_data.weapon >= 0 and sparred_data.weapon >= 0 and weapon_item.item_props.get("weapon_type") == sparred_weapon_item.item_props.get("weapon_type"):
 					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 					duel = True
 
@@ -1013,10 +1016,8 @@ async def arm(cmd):
 		weapon = ewcfg.weapon_map.get(value)
 
 		if weapon != None:
-			if weapon.id_weapon == 'pickaxe':
+			if weapon.acquisition != ewcfg.acquisition_dojo:
 				weapon = None
-			else:
-				weapon = weapon
 
 		if weapon != None:
 			if weapon.id_weapon != 'gun' and ewcfg.weapon_fee > user_data.slimecoin:
@@ -1047,11 +1048,9 @@ async def arm(cmd):
 		else:
 			weapon_names = []
 
-			for weapon in ewcfg.weapon_names:
-				if weapon == 'pickaxe':
-					pass
-				else:
-					weapon_names.append(weapon)
+			for weapon in ewcfg.weapon_list:
+				if weapon.acquisition == ewcfg.acquisition_dojo:
+					weapon_names.append(weapon.id_weapon)
 
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = weapon_names, conjunction = "or"))
 

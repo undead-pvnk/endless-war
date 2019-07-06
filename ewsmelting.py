@@ -146,6 +146,11 @@ async def smelt(cmd):
 								pass
 							else:
 								possible_results.append(result)
+						if hasattr(result, 'id_weapon'):
+							if result.id_weapon not in found_recipe.products:
+								pass
+							else:
+								possible_results.append(result)
 
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
@@ -193,10 +198,29 @@ async def smelt(cmd):
 							}
 						),
 
+					elif hasattr(item, 'id_weapon'):
+						ewitem.item_create(
+							item_type = ewcfg.it_weapon,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								"weapon_type": item.id_weapon,
+								"weapon_name": "",
+								"weapon_desc": item.str_description,
+								"married": ""
+							}
+						),
+
 				for id_item in owned_ingredients:
 					ewitem.item_delete(id_item = id_item)
 
-				response = "You sacrifice your {} to smelt a {}!!".format(ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"), item.str_name)
+				name = ""
+				if hasattr(item, 'str_name'):
+					name = item.str_name
+				elif hasattr(item, 'id_weapon'):
+					name = item.id_weapon
+
+				response = "You sacrifice your {} to smelt a {}!!".format(ewutils.formatNiceList(names = necessary_ingredients_list, conjunction = "and"), name)
 
 				user_data.persist()
 
