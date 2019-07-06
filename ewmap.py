@@ -1001,7 +1001,7 @@ async def scout(cmd):
 
 		num_players = 0
 		players_resp = "\n"
-		detailed_resp = "You pick up the scent of the following gangsters:"
+		detailed_players_resp = "You pick up the scent of the following gangsters:"
 		for player in players_in_district:
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
 			scoutee_mutations = scoutee_data.get_mutations()
@@ -1016,8 +1016,7 @@ async def scout(cmd):
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
 
-			detailed_resp += "\n" + scoutee_data.get_mention()
-			print(scoutee_data.slimes)
+			detailed_players_resp += "\n" + scoutee_data.get_mention()
 			num_players += 1
 
 		enemy_data_constructor = EwEnemy()
@@ -1027,7 +1026,10 @@ async def scout(cmd):
 		num_enemies = 0
 		enemies_resp = ""
 
+		detailed_enemies_resp = "You pick up the scent of the following enemies:"
 		for enemy in enemies_in_district:
+			enemy_data = EwEnemy(id_enemy=enemy)
+			detailed_enemies_resp += "\n**{}**".format(enemy_data.display_name)
 			num_enemies += 1
 
 		if num_players == 0:
@@ -1041,8 +1043,8 @@ async def scout(cmd):
 		else:
 			players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
-		if ewcfg.mutation_id_keensmell in mutations:
-			players_resp += " " + detailed_resp
+		if ewcfg.mutation_id_keensmell in mutations and num_players >= 1:
+			players_resp += " " + detailed_players_resp
 
 		# to avoid visual clutter, no scouting message is sent out for 0 enemies
 		if num_enemies == 0:
@@ -1055,6 +1057,9 @@ async def scout(cmd):
 			enemies_resp += "Your nerves tense due to the incredibly audible savagery coming from several enemies in this district."
 		else:
 			enemies_resp += "You feel shivers down your spine from the sheer amount of enemies ramping and raving within this district."
+
+		if ewcfg.mutation_id_keensmell in mutations and num_enemies >= 1:
+			enemies_resp += " " + detailed_enemies_resp
 
 		if num_players == 0 and num_enemies >= 1:
 			players_resp = ""
