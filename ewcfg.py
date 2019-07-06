@@ -3972,7 +3972,8 @@ item_def_list = [
 			'kills': 0,
 			'consecutive_hits': 0,
 			'time_lastattack': 0,
-			'jammed': 0
+			'jammed': 0,
+			'totalkills': 0
 		}
 	),
 	EwItemDef(

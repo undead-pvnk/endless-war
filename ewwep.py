@@ -615,7 +615,8 @@ async def attack(cmd):
 						ewstats.increment_stat(user = user_data, metric = ewcfg.stat_lifetime_takedowns)
 					if weapon != None:
 						weapon_item.item_props["kills"] = int(weapon_item.item_props.get("kills")) + 1
-
+						weapon_item.item_props["totalkills"] = int(weapon_item.item_props.get("totalkills")) + 1
+						
 					# Collect bounty
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
 					
@@ -1282,13 +1283,10 @@ async def arm(cmd):
 							item_props = item_props
 						)
 
-						response = "You "
-						if weapon.id_weapon != 'gun':
-							user_data.change_slimecoin(n = -(weapon.price * amount), coinsource=ewcfg.source_spending)
-							user_data.persist()
-							response += "pay {} slimecoin and ".format(weapon.price)
+						user_data.change_slimecoin(n = -(weapon.price * amount), coinsource=ewcfg.source_spending)
+						user_data.persist()
 
-						response += "take {}{}.".format("" if amount == 1 else (str(amount) + " "), weapon.str_weapon)
+						response += "You pay {price} slimecoin and take {amount}{weapon}.".format(price=weapon.price, amount=("" if amount == 1 else (str(amount) + " ")), weapon=weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = available_weapons, conjunction = "or"))
 
