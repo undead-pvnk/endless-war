@@ -3655,7 +3655,7 @@ poi_list = [
 		str_enter = "arrive at",
 		str_name = "ENDLESS WAR",
 		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
-		coord = (27, 16),
+		coord = (38, 30),
 		channel = channel_endlesswar,
 		role = "Endless War"
 	),
@@ -3669,7 +3669,7 @@ poi_list = [
 		str_in = "in the lobby of",
 		str_name = "SlimeCorp HQ",
 		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
-		coord = (27, 18),
+		coord = (40, 28),
 		channel = channel_slimecorphq,
 		role = "SlimeCorp HQ",
 		pvp = False,
@@ -3684,14 +3684,19 @@ poi_list = [
 		],
 		str_name = "Downtown NLACakaNM",
 		str_desc = "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren’t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
-		coord = (23, 16),
+		coord = (40, 30),
 		coord_alias = [
-			(24, 16),
-			(25, 16),
-			(25, 17),
-			(25, 18),
-			(23, 17),
-			(23, 18)
+			(41, 30),
+			(42, 29),
+			(42, 30),
+			(42, 31),
+			(42, 32),
+			(43, 29),
+			(44, 27),
+			(44, 28),
+			(44, 29),
+			(44, 30),
+			(44, 31)
 		],
 		channel = "downtown",
 		role = "Downtown",
@@ -3707,10 +3712,10 @@ poi_list = [
 		],
 		str_name = "Smogsburg",
 		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
-		coord = (23, 11),
+		coord = (42, 20),
 		coord_alias = [
-			(24, 11),
-			(25, 11)
+			(42, 21),
+			(42, 22)
 		],
 		channel = "smogsburg",
 		role = "Smogsburg",
@@ -3733,7 +3738,14 @@ poi_list = [
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Edifices of various sinister architectural styles rise above the pavement. Gothic cathedrals, Victorian buildings, and New England brownstone apartments all dyed cool, dark colors. This district even hosts a miniature Japantown, featuring stores and restaurants that clutter your vision with densely packed fluorescent signage and other visual noise. Often cloaked in shadow from the height of these imposing buildings, the narrow, cobblestone streets of this district are perfect to brood and foster your angst in.\nCop Killtown is the gang base of the hardboiled, and calculating Killers. St. Ben’s Cathedral looms menacing on the horizon.\nhttps://discord.gg/xSQQD2M\n\nThis area contains the Cop Killtown Subway Station. To the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the Northwest is Gatlingsdale.",
-		coord = (17, 13),
+		coord = (32, 23),
+		coord_alias = [
+			(33, 23),
+			(34, 23),
+			(35, 23),
+			(36, 23),
+			(37, 23)
+		],
 		channel = channel_copkilltown,
 		role = "Cop Killtown",
 		factions = [
@@ -3750,10 +3762,13 @@ poi_list = [
 		],
 		str_name = "Krak Bay",
 		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
-		coord = (16, 19),
+		coord = (29, 32),
 		coord_alias = [
-			(17, 19),
-			(18, 19)
+			(29, 30),
+			(29, 31),
+			(30, 30),
+			(31, 30),
+			(32, 30)
 		],
 		channel = "krak-bay",
 		role = "Krak Bay",
@@ -3768,7 +3783,13 @@ poi_list = [
 		],
 		str_name = "Poudrin Alley",
 		str_desc = "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren’t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay.",
-		coord = (19, 23),
+		coord = (34, 36),
+		coord_alias = [
+			(35, 36),
+			(36, 36),
+			(37, 36),
+			(38, 36),
+		],
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
@@ -3787,10 +3808,10 @@ poi_list = [
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Cheap townhouses and abandoned warehouses host graffiti art on basically every surface. An almost completely overrun slum, many of the deteriorated buildings have been painted a bright pink by the gangsters that seized them. Overpopulated and underhoused, the majority of the residents have constructed shanty houses for themselves and gather around trash can bonfires. Loud music blasts from bass-heavy speakers all hours of the night, fueling the seemingly constant parties this district is known for.\nRowdy Roughhouse is the gang base of the hot blooded, and reckless Rowdys. In the heart of the district stands the Rowdy Roughhouse, for which the district is named. Yes, it’s confusing, we know.\nhttps://discord.gg/D6jwpU3\n\nThis area contains the Rowdy Roughhouse Subway Station. To the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
-		coord = (25, 21),
+		coord = (44, 34),
 		coord_alias = [
-			(26, 21),
-			(27, 21)
+			(45, 34),
+			(46, 34)
 		],
 		channel = channel_rowdyroughhouse,
 		role = "Rowdy Roughhouse",
@@ -3808,10 +3829,14 @@ poi_list = [
 		],
 		str_name = "Green Light District",
 		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
-		coord = (28, 13),
+		coord = (52, 27),
 		coord_alias = [
-			(29, 13),
-			(30, 13)
+			(52, 28),
+			(52, 29),
+			(53, 29),
+			(54, 29),
+			(55, 29),
+			(56, 29)
 		],
 		channel = "green-light-district",
 		role = "Green Light District",
@@ -3825,7 +3850,15 @@ poi_list = [
 		],
 		str_name = "Old New Yonkers",
 		str_desc = "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district’s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee’s and fucking IHOP.\n\nTo the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
-		coord = (32, 9),
+		coord = (54, 23),
+		coord_alias = [
+			(55, 23),
+			(56, 22),
+			(56, 23),
+			(57, 23),
+			(58, 22),
+			(58, 23)
+		],
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
@@ -3841,7 +3874,16 @@ poi_list = [
 		],
 		str_name = "Little Chernobyl",
 		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nTo the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
-		coord = (25, 7),
+		coord = (50, 17),
+		coord_alias = [
+			(51, 17),
+			(52, 17),
+			(52, 18),
+			(53, 18),
+			(54, 18),
+			(55, 18),
+			(56, 18)
+		],
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
@@ -3855,10 +3897,11 @@ poi_list = [
 		],
 		str_name = "Arsonbrook",
 		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights.",
-		coord = (21, 3),
+		coord = (42, 16),
 		coord_alias = [
-			(22, 3),
-			(23, 3)
+			(42, 15),
+			(43, 15),
+			(44, 15)
 		],
 		channel = "arsonbrook",
 		role = "Arsonbrook",
@@ -3874,11 +3917,15 @@ poi_list = [
 		],
 		str_name = "Astatine Heights",
 		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington.",
-		coord = (17, 6),
+		coord = (37, 18),
 		coord_alias = [
-			(17, 5),
-			(17, 4),
-			(17, 3)
+			(34, 14),
+			(34, 15),
+			(34, 16),
+			(34, 17),
+			(34, 18),
+			(35, 18),
+			(36, 18)
 		],
 		channel = "astatine-heights",
 		role = "Astatine Heights",
@@ -3894,10 +3941,18 @@ poi_list = [
 		],
 		str_name = "Gatlingsdale",
 		str_desc = "Hundreds of small “nerdy” retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington.",
-		coord = (13, 9),
+		coord = (26, 16),
 		coord_alias = [
-			(13, 10),
-			(13, 11)
+			(26, 17),
+			(26, 18),
+			(26, 19),
+			(27, 17),
+			(28, 17),
+			(28, 18),
+			(28, 19),
+			(29, 19),
+			(30, 19),
+			(31, 19)
 		],
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
@@ -3913,7 +3968,13 @@ poi_list = [
 		],
 		str_name = "Vandal Park",
 		str_desc = "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district’s famous Battle Arena.\nVandal Park’s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you’ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill.",
-		coord = (10, 12),
+		coord = (21, 19),
+		coord_alias = [
+			(17, 19),
+			(18, 19),
+			(19, 19),
+			(20, 19)
+		],
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
@@ -3928,10 +3989,13 @@ poi_list = [
 		],
 		str_name = "Glocksbury",
 		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury.",
-		coord = (8, 16),
+		coord = (17, 27),
 		coord_alias = [
-			(7, 16),
-			(6, 16)
+			(18, 27),
+			(19, 27),
+			(19, 28),
+			(20, 28),
+			(21, 28)
 		],
 		channel = "glocksbury",
 		role = "Glocksbury",
@@ -3951,10 +4015,14 @@ poi_list = [
 		],
 		str_name = "North Sleezeborough",
 		str_desc = "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn’t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough.",
-		coord = (10, 19),
+		coord = (21, 33),
 		coord_alias = [
-			(10, 20),
-			(10, 21)
+			(22, 33),
+			(23, 33),
+			(24, 33),
+			(25, 33),
+			(26, 33),
+			(27, 33)
 		],
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
@@ -3974,13 +4042,17 @@ poi_list = [
 		],
 		str_name = "South Sleezeborough",
 		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline.",
-		coord = (12, 22),
+		coord = (27, 38),
 		coord_alias = [
-			(12, 23),
-			(12, 24),
-			(12, 25),
-			(12, 26),
-			(12, 27)
+			(25, 38),
+			(25, 39),
+			(25, 40),
+			(25, 41),
+			(25, 42),
+			(25, 43),
+			(26, 38),
+			(26, 42),
+			(27, 42)
 		],
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
@@ -3996,7 +4068,13 @@ poi_list = [
 		],
 		str_name = "Ooze Gardens",
 		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough.",
-		coord = (14, 25),
+		coord = (29, 40),
+		coord_alias = [
+			(30, 40),
+			(31, 40),
+			(31, 41),
+			(31, 42)
+		],
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
@@ -4011,10 +4089,14 @@ poi_list = [
 		],
 		str_name = "Cratersville",
 		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens.",
-		coord = (19, 28),
+		coord = (41, 43),
 		coord_alias = [
-			(20, 28),
-			(21, 28)
+			(35, 43),
+			(36, 43),
+			(37, 43),
+			(38, 43),
+			(39, 43),
+			(40, 43)
 		],
 		channel = "cratersville",
 		role = "Cratersville",
@@ -4031,10 +4113,12 @@ poi_list = [
 		],
 		str_name = "Wreckington",
 		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville.",
-		coord = (27, 24),
+		coord = (46, 37),
 		coord_alias = [
-			(27, 25),
-			(27, 26)
+			(46, 38),
+			(46, 39),
+			(46, 40),
+			(46, 41)
 		],
 		channel = "wreckington",
 		role = "Wreckington",
@@ -4050,7 +4134,13 @@ poi_list = [
 		],
 		str_name = "Juvie's Row",
 		str_desc = "The landscape of this district is completely defined by it containing the city’s largest mineshafts. Almost the entire district is has been dug up, the earth overturned by a crazed populace trying to soak up every drop of slime it can get its hands on. There are few permanent structures here, and even less infrastructure. Swathes of juveniles have constructed shanty houses out of discarded building materials, suffering from the intense pollution and poor living conditions just to be closer to the mine shaft entrances that jut out of the otherwise useless, rugged terrain. Makeshift bazaars and other rudimentary amenities have popped up in the horribly overcrowded tent cities.\nJuvie’s Row might just be the most populous district of the city, with every ambitious juvenile spending at least some of their formative days toiling underground to eke out a pitiful existence. Seeing all the gang unaligned juvies here fills you with pity, as well as disgust.\n\nThis area contains the Juvie's Row Mines, the Juvie's Row Farms and the Juvie's Row Subway Station. To the Northeast is Vagrant's Corner. To the Northwest is the Green Light District.",
-		coord = (32, 18),
+		coord = (62, 32),
+		coord_alias = [
+			(62, 33),
+			(62, 34),
+			(62, 35),
+			(62, 36)
+		],
 		channel = "juvies-row",
 		role = "Juvie's Row",
 		pvp = False,
@@ -4066,7 +4156,7 @@ poi_list = [
 		],
 		str_name = "Slime's End",
 		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\n To the North is Vagrant's Corner.",
-		coord = (40, 16),
+		coord = (66, 33),
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
@@ -4081,12 +4171,19 @@ poi_list = [
 		],
 		str_name = "Vagrant's Corner",
 		str_desc = "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant’s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you’re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
-		coord = (37, 11),
+		coord = (62, 22),
 		coord_alias = [
-			(38, 11),
-			(39, 11),
-			(39, 10),
-			(39, 9)
+			(62, 23),
+			(62, 24),
+			(62, 25),
+			(62, 26),
+			(62, 27),
+			(62, 28),
+			(63, 23),
+			(63, 27),
+			(64, 23),
+			(64, 27),
+			(65, 23)
 		],
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
@@ -4105,10 +4202,14 @@ poi_list = [
 		],
 		str_name = "Assault Flats Beach",
 		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers.",
-		coord = (40, 6),
+		coord = (68, 16),
 		coord_alias = [
-			(40, 5),
-			(40, 4)
+			(68, 12),
+			(68, 13),
+			(68, 14),
+			(68, 15),
+			(69, 16),
+			(70, 16)
 		],
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
@@ -4124,7 +4225,12 @@ poi_list = [
 		],
 		str_name = "New New Yonkers",
 		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden.",
-		coord = (36, 4),
+		coord = (61, 16),
+		coord_alias = [
+			(62, 16),
+			(63, 16),
+			(64, 16)
+		],
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
@@ -4138,7 +4244,13 @@ poi_list = [
 		],
 		str_name = "Brawlden",
 		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook.",
-		coord = (28, 3),
+		coord = (50, 13),
+		coord_alias = [
+			(51, 13),
+			(52, 13),
+			(53, 13),
+			(54, 13)
+		],
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
@@ -4155,7 +4267,14 @@ poi_list = [
 		],
 		str_name = "Toxington",
 		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park.",
-		coord = (9, 4),
+		coord = (21, 11),
+		coord_alias = [
+			(16, 11),
+			(17, 11),
+			(18, 11),
+			(19, 11),
+			(20, 11)
+		],
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
@@ -4173,7 +4292,11 @@ poi_list = [
 		],
 		str_name = "Charcoal Park",
 		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill.",
-		coord = (3, 3),
+		coord = (10, 11),
+		coord_alias = [
+			(11, 11),
+			(12, 11)
+		],
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
@@ -4189,7 +4312,15 @@ poi_list = [
 		],
 		str_name = "Polonium Hill",
 		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury.",
-		coord = (5, 9),
+		coord = (8, 19),
+		coord_alias = [
+			(9, 19),
+			(10, 19),
+			(11, 19),
+			(12, 19),
+			(13, 19),
+			(14, 19)
+		],
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
@@ -4207,7 +4338,13 @@ poi_list = [
 		],
 		str_name = "West Glocksbury",
 		str_desc = "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city’s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury’s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
-		coord = (4, 14),
+		coord = (10, 27),
+		coord_alias = [
+			(11, 27),
+			(12, 27),
+			(13, 27),
+			(14, 27)
+		],
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
@@ -4224,10 +4361,14 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain",
 		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford.",
-		coord = (4, 19),
+		coord = (10, 33),
 		coord_alias = [
-			(5, 19),
-			(5, 20)
+			(11, 33),
+			(12, 33),
+			(13, 33),
+			(14, 33),
+			(15, 33),
+			(16, 33)
 		],
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
@@ -4243,7 +4384,13 @@ poi_list = [
 		],
 		str_name = "Crookline",
 		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford.",
-		coord = (8, 23),
+		coord = (19, 37),
+		coord_alias = [
+			(19, 38),
+			(19, 39),
+			(19, 40),
+			(19, 41)
+		],
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
@@ -4258,7 +4405,13 @@ poi_list = [
 		],
 		str_name = "Dreadford",
 		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline.",
-		coord = (3, 23),
+		coord = (13, 41),
+		coord_alias = [
+			(9, 41),
+			(10, 41),
+			(11, 41),
+			(12, 41),
+		],
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
