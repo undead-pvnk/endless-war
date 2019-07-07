@@ -154,44 +154,6 @@ class EwDistrict:
 
 		return filtered_players
 
-	def get_enemies_in_district(self,
-			enemy_data,
-			min_level = 0,
-			max_level = math.inf,
-			min_slimes = -math.inf,
-			max_slimes = math.inf
-		):
-
-		client = ewutils.get_client()
-		server = client.get_server(self.id_server)
-		if server == None:
-			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
-			return []
-
-		enemies = ewutils.execute_sql_query("SELECT * FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
-			poi = ewcfg.col_enemy_poi,
-			life_state = ewcfg.col_enemy_life_state
-		),(
-			self.id_server,
-			self.name
-		))
-
-		filtered_enemies = []
-		for enemy in enemies:
-
-			enemy_data.id_server = self.id_server
-
-			# assigns enemy_data variables based on index
-			enemy_data.id_enemy = enemy[0]
-			enemy_data.slimes = enemy[2]
-			enemy_data.level = enemy[8]
-
-			# Append the enemy to the list if it meets the requirements
-			if max_level >= enemy_data.level >= min_level \
-			and max_slimes >= enemy_data.slimes >= min_slimes:
-				filtered_enemies.append(enemy_data.id_enemy)
-
-		return filtered_enemies
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
@@ -475,7 +437,7 @@ async def capture_tick(id_server):
 			controlling_faction = dist.controlling_faction
 
 			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
-
+					
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
 			
@@ -521,7 +483,7 @@ async def capture_tick(id_server):
 							player_capture_speed *= 2
 						if ewcfg.mutation_id_patriot in mutations and dist.controlling_faction == player_faction:
 							player_capture_speed *= 2
-
+							
 
 						capture_speed += player_capture_speed
 						dc_stat_increase_list.append(player_id)

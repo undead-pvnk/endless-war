@@ -42,7 +42,6 @@ import ewmutation
 import ewquadrants
 import ewtransport
 import ewsmelting
-import ewhunting
 import ewdebug
 
 from ewitem import EwItem
@@ -350,9 +349,6 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
-	# Enemies
-	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
-
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
@@ -381,7 +377,7 @@ cmd_map = {
 	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
-debug = True
+debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
@@ -518,8 +514,6 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
-		# asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
@@ -847,7 +841,7 @@ async def on_message(message):
 			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
 				response = "You cannot participate in the ENDLESS WAR while offline."
-
+    
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 
@@ -917,9 +911,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 100,000 slime!"
+			response = "You get 10,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 100000)
+			levelup_response = user_data.change_slimes(n = 10000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 

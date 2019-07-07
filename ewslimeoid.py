@@ -2174,7 +2174,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			s2moxie += 2
 			s2chutzpah += 2
 		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
-
+			
 
 	s1_active = False
 	in_range = False

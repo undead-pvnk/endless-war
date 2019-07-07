@@ -3,7 +3,6 @@ import random
 from ewcosmeticitem import EwCosmeticItem
 from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
-from ewhunting import EwAttackType
 from ewweather import EwWeather
 from ewfood import EwFood
 from ewitem import EwItemDef, EwGeneralItem
@@ -15,7 +14,7 @@ from ewtransport import EwTransportLine
 import ewdebug
 
 # Global configuration options.
-version = "v3.5 - Hunting"
+version = "v3.5"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -350,9 +349,6 @@ cmd_manifest = cmd_prefix + 'manifest'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
-
-cmd_summonenemy = cmd_prefix + 'summonenemy'
-
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
@@ -530,7 +526,7 @@ offline_cmds = [
 	cmd_scout,
 	cmd_scout_alt1
 ]
-
+		
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -639,12 +635,6 @@ bleed_half_life = 60 * 5 #five minutes
 # how often to bleed
 bleed_tick_length = 10
 
-# how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 10
-
-# how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 3
-
 # Unearthed Item rarity (for enlisted players)
 unearthed_item_rarity = 1500
 
@@ -686,18 +676,6 @@ time_kickout = 60 * 60  # 1 hour
 # time after coming online before you can act
 time_offline = 10
 
-# time for an enemy to despawn
-time_despawn = 60 * 180 # 3 hours
-
-# time for a raid boss to activate
-time_raidcountdown = 20
-
-# time for a raid boss to stay in a district before it can move again
-time_raidboss_movecooldown = 30
-
-# maximum amount of enemies a district can hold before it stops spawning them
-max_enemies = 5
-
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
 emote_pizzahut = "<:pizzahut:431273890355085323>"
@@ -734,7 +712,6 @@ emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
 emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
-emote_megaslime = "<:megaslime:436877747240042508>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -864,24 +841,6 @@ col_level = 'level'
 col_time_defeated = 'time_defeated'
 col_clout = 'clout'
 col_hue = 'hue'
-
-#Database columns for enemies
-col_id_enemy = 'id_enemy'
-col_enemy_slimes = 'slimes'
-col_enemy_totaldamage = 'totaldamage'
-col_enemy_ai = 'ai'
-col_enemy_type = 'type'
-col_enemy_attacktype = 'attacktype'
-col_enemy_name = 'name'
-col_enemy_level = 'level'
-col_enemy_poi = 'poi'
-col_enemy_life_state = 'life_state'
-col_enemy_bleed_storage = 'bleed_storage'
-col_enemy_time_lastenter = 'time_lastenter'
-col_enemy_initialslimes = 'initialslimes'
-col_enemy_lifetime = 'lifetime'
-col_enemy_id_target = 'id_target'
-col_enemy_raidtimer = 'raidtimer'
 
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'
@@ -1060,16 +1019,11 @@ stat_lifetime_poudrins = 'lifetime_poudrins'
 stat_lifetime_damagedealt = 'lifetime_damage_dealt'
 stat_lifetime_selfdamage = 'lifetime_self_damage'
 stat_lifetime_deaths = 'lifetime_deaths'
+stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 #Track revolver trigger pulls survived?
 stat_lifetime_spins_survived = 'lifetime_spins_survived'
 stat_max_spins_survived = 'max_spins_survived'
 stat_capture_points_contributed = 'capture_points_contributed'
-stat_pve_kills = 'pve_kills'
-stat_max_pve_kills = 'max_pve_kills'
-stat_lifetime_pve_kills = 'lifetime_pve_kills'
-stat_lifetime_pve_takedowns = 'lifetime_pve_takedowns'
-stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
-stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1107,7 +1061,6 @@ cause_leftserver = 6
 cause_drowning = 7
 cause_falling = 8
 cause_bleeding = 9
-cause_enemy_killing = 10
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -1596,7 +1549,7 @@ weapon_list = [
 			"pistols",
 			"dualpistols"
 		],
-		str_crit = "**Critical Hit!** {name_player} has dealt {name_target} a serious wound!",
+		str_crit = "**Critical Hit!** {name_player} has put dealt {name_target} a serious wound!",
 		str_miss = "**You missed!** Your shot failed to land!",
 		str_equip = "You equip the dual pistols.",
 		str_weapon = "dual pistols",
@@ -1666,7 +1619,7 @@ weapon_list = [
 			"blade"
 		],
 		str_crit = "**Critical hit!!** {name_target} is cut deep!!",
-		str_miss = "**MISS!!** {name_player}'s katana didn't even leave a scratch!",
+		str_miss = "",
 		str_equip = "You equip the katana.",
 		str_weapon = "a katana",
 		str_weaponmaster_self = "You are a rank {rank} blademaster.",
@@ -1799,7 +1752,7 @@ weapon_list = [
 			"sickle"
 		],
 		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
-		str_miss = "**MISS!!** {name_player}'s swings miss wide of the target!",
+		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
 		str_equip = "You equip the scythe.",
 		str_weapon = "a scythe",
 		str_weaponmaster_self = "You are a rank {rank} master of the scythe.",
@@ -1852,101 +1805,6 @@ for weapon in weapon_list:
 	for alias in weapon.alias:
 		weapon_map[alias] = weapon
 
-# Attacking type effects
-def atf_fangs(ctn = None):
-	aim = (random.randrange(10) + 1)
-
-	if aim == 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim == 10:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-def atf_talons(ctn = None):
-	ctn.miss = False
-	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
-
-	if (random.randrange(10) + 1) == 10:
-		ctn.crit = True
-		ctn.slimes_damage *= 2.1
-
-def atf_raiderscythe(ctn = None):
-	ctn.enemy_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
-	aim = (random.randrange(10) + 1)
-
-	if aim <= 2:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim >= 9:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-def atf_gunkshot(ctn = None):
-	aim = (random.randrange(10) + 1)
-
-	if aim == 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
-	elif aim == 10:
-		ctn.crit = True
-		ctn.slimes_damage *= 2
-
-# All enemy attacking types in the game.
-enemy_attack_type_list = [
-	EwAttackType( # 1
-		id_type = "fangs",
-		str_crit = "**Critical Hit!** {name_enemy} sinks their teeth deep into {name_target}!",
-		str_miss = "**{name_enemy} missed!** Their maw snaps shut!",
-		str_trauma_self = "You have bite marks littered throughout your body.",
-		str_trauma = "They have bite marks littered throughout their body.",
-		str_kill = "{name_enemy} opens their jaw for one last bite right on {name_target}'s juicy neck. **CHOMP**. Blood gushes out of their arteries and onto the ground. {emote_skull}",
-		str_killdescriptor = "mangled",
-		str_damage = "{name_target} is bitten on the {hitzone}!!",
-		fn_effect = atf_fangs
-	),
-	EwAttackType( # 2
-		id_type = "talons",
-		str_crit = "**Critical hit!!** {name_target} is slashed across the chest!!",
-		str_miss = "**{name_enemy} missed!** Their wings flap in the air as they prepare for another strike!",
-		str_trauma_self = "A large section of scars litter your abdomen.",
-		str_trauma = "A large section of scars litter their abdomen.",
-		str_kill = "In a fantastic display of avian savagery, {name_enemy}'s talons grip {name_target}'s stomach, rip open their flesh and tear their intestines to pieces. {emote_skull}",
-		str_killdescriptor = "disembowled",
-		str_damage = "{name_target} has their {hitzone} clawed at!!",
-		fn_effect = atf_talons
-	),
-	EwAttackType( # 3
-		id_type = "scythe",
-		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
-		str_miss = "**MISS!!** {name_enemy}'s swings miss wide of the target!",
-		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
-		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
-		str_kill = "**SLASHH!!** {name_enemy}'s scythe cleaves the air, and {name_target} staggers. A moment later, {name_target}'s torso topples off their waist. {emote_skull}",
-		str_killdescriptor = "sliced in twain",
-		str_damage = "{name_target} is cleaved through the {hitzone}!!",
-		fn_effect = atf_raiderscythe
-	),
-	EwAttackType( # 4
-		id_type = "gunk shot",
-		str_crit = "**Critical hit!!** {name_target} is covered in a thick, gelatenous ooze!",
-		str_miss = "**MISS!!** {name_enemy}'s gunk shot just barely missed the target!",
-		str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
-		str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
-		str_kill = "**SPLOOSH!!** {name_enemy}'s gunk shot completely envelops {name_target}, boiling their flesh alive in a radiation that rivals the Elephant's Foot. Nothing but a charred husk remains. {emote_skull}",
-		str_killdescriptor = "slimed on",
-		str_damage = "{name_target} is coated in searing, acidic radiation on their {hitzone}!!",
-		fn_effect = atf_gunkshot
-	)
-]
-
-# A map of id_type to EwAttackType objects.
-attack_type_map = {}
-
-# Populate attack type map.
-for type in enemy_attack_type_list:
-	attack_type_map[type.id_type] = type
 
 # All weather effects in the game.
 weather_list = [
@@ -7840,11 +7698,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion"
+mutation_id_spontaneouscombustion = "spontaneouscombustion" 
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother"
+mutation_id_sharptoother = "sharptoother" 
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -7872,7 +7730,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill"
+mutation_id_dressedtokill = "dressedtokill" 
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"
@@ -8362,41 +8220,6 @@ help_responses = {
 	"casino":"**The Casino** is a sub-zone in Green Light District where players may bet their slime coin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
 }
-
-# List of enemies sorted by their spawn rarity.
-common_enemies = ['juvie', 'slimeasaur']
-uncommon_enemies = ['slimeadactyl', 'desertraider']
-rare_enemies = ['microslime']
-raid_bosses = ['megaslime']
-
-# Shorthand names the player can refer to enemies as.
-enemy_aliases = {
-    "juvie":"lost juvie",
-    "dino":"slimeasaur",
-    "bird":"slimeadactyl",
-    "micro":"microslime",
-    "raider":"desert raider",
-    "mega":"megaslime",
-}
-
-# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = ['Megaslime']
-
-# Responses given by cowardly enemies when a non-ghost user is in their district.
-coward_responses = [
-	"The {} calls out to you: *H-Hello. Are you one of those Gangsters everyone seems to be talking about?*",
-	"The {} calls out to you: *You wouldn't hurt a {}, would you?*",
-	"The {} calls out to you: *Why.. uh.. hello there? What brings you to these parts, stranger?*",
-	"The {} calls out to you: *L-look at how much slime I have! I'm not even worth it for you to kill me!*",
-	"The {} calls out to you: *I'm just a good little {}... never hurt nobody anywhere...*",
-]
-
-# Responses given by cowardly enemies when hurt.
-coward_responses_hurt = [
-	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
-	"\nThe {} cries out in pain!: *You MONSTER!*",
-	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
-]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

@@ -18,7 +18,6 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy, delete_enemy, spawn_enemy, enemy_perform_action
 
 db_pool = {}
 db_pool_id = 0
@@ -297,11 +296,7 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	# If the display name belongs to a raid boss, hide it.
-	if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == 2:
-		return "{}".format(message)
-	else:
-		return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
+	return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
@@ -380,7 +375,6 @@ async def bleed_tick_loop(id_server):
 	while True:
 		await bleedSlimes(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
-		await enemyBleedSlimes(id_server = id_server)
 
 		await asyncio.sleep(interval)
 
@@ -440,56 +434,7 @@ async def bleedSlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
-
-""" Bleed slime for all enemies """
-async def enemyBleedSlimes(id_server = None):
-	if id_server != None:
-		try:
-			conn_info = databaseConnect()
-			conn = conn_info.get('conn')
-			cursor = conn.cursor();
-
-			cursor.execute("SELECT id_enemy FROM enemies WHERE id_server = %s AND {bleed_storage} > 1".format(
-				bleed_storage = ewcfg.col_enemy_bleed_storage
-			), (
-				id_server,
-			))
-
-			enemies = cursor.fetchall()
-			total_bled = 0
-			resp_cont = EwResponseContainer(id_server = id_server)
-			for enemy in enemies:
-				enemy_data = EwEnemy(id_enemy = enemy[0], id_server = id_server)
-				slimes_to_bleed = enemy_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
-				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-				slimes_to_bleed = min(slimes_to_bleed, enemy_data.bleed_storage)
-
-				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
-
-				#round up or down, randomly weighted
-				remainder = slimes_to_bleed - int(slimes_to_bleed)
-				if random.random() < remainder:
-					slimes_to_bleed += 1
-				slimes_to_bleed = int(slimes_to_bleed)
-
-				if slimes_to_bleed >= 1:
-					enemy_data.bleed_storage -= slimes_to_bleed
-					enemy_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
-					enemy_data.persist()
-					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
-					district_data.persist()
-					total_bled += slimes_to_bleed
-
-					if enemy_data.slimes < 0:
-						delete_enemy(enemy_data)
-
-			await resp_cont.post()
-			conn.commit()
-		finally:
-			# Clean up the database handles.
-			cursor.close()
-			databaseClose(conn_info)
+			databaseClose(conn_info)		
 
 """ Increase hunger for every player in the server. """
 def pushupServerHunger(id_server = None):
@@ -828,7 +773,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-
+        
 """
 	Calculate how many weapons the player can carry
 """
@@ -926,33 +871,3 @@ async def decrease_food_multiplier(id_user):
 	await asyncio.sleep(5)
 	if id_user in food_multiplier:
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
-
-async def spawn_enemies(id_server = None):
-	if random.randrange(3) == 2:
-		resp_cont = EwResponseContainer(id_server=id_server)
-		response, channel = await spawn_enemy(id_server)
-
-		if response != "":
-			resp_cont.add_channel_response(channel, response)
-			await resp_cont.post()
-
-async def spawn_enemies_tick_loop(id_server):
-	interval = ewcfg.enemy_spawn_tick_length
-	# Causes the possibility of an enemy spawning every 10 seconds
-	while True:
-		await spawn_enemies(id_server = id_server)
-
-		await asyncio.sleep(interval)
-
-#async def enemy_attack(id_server = None):
-#	resp_cont = EwResponseContainer(id_server=id_server)
-#	await enemy_perform_kill(id_server)
-
-async def enemy_action_tick_loop(id_server):
-	interval = ewcfg.enemy_attack_tick_length
-	# Causes hostile enemies to attack every tick
-	while True:
-		# resp_cont = EwResponseContainer(id_server=id_server)
-		await enemy_perform_action(id_server)
-
-		await asyncio.sleep(interval)

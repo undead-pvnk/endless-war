@@ -9,7 +9,6 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
-import ewhunting
 
 from ew import EwUser
 from ewitem import EwItem
@@ -17,7 +16,6 @@ from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -179,54 +177,12 @@ async def attack(cmd):
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
+	elif cmd.mentions_count <= 0:
+		response = "Your bloodlust is appreciated, but ENDLESS WAR didn't understand that name."
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
-	elif cmd.mentions_count <= 0:
-		# user is going after enemies rather than players
-
-		# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
-		huntedenemy = " ".join(cmd.tokens[1:]).lower()
-
-		enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
-
-		if enemy_data != None:
-			# enemy found, redirect variables to code in ewhunting
-
-			# some variables are declared beforehand to prevent circular importing in ewhunting
-			# shootee_data goes unused in ctn?
-			ctn = EwEffectContainer(
-				miss=None,
-				crit=None,
-				slimes_damage=None,
-				slimes_spent=None,
-				user_data=user_data,
-				shootee_data=None
-			)
-
-			resp_cont = await ewhunting.kill_enemy(
-				user_data,
-				slimeoid,
-				enemy_data,
-				weapon,
-				market_data,
-				ctn,
-				cmd
-			)
-
-		elif enemy_data == None and (user_data.life_state == ewcfg.life_state_corpse):
-			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
-			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
-			resp_cont.add_channel_response(cmd.message.channel.name, response)
-
-		else:
-			# debugger
-			print(huntedenemy)
-
-			# no enemy is found within that district
-			response = "Your bloodlust is appreciated, but ENDLESS WAR couldn't find what you were trying to kill."
-			resp_cont.add_channel_response(cmd.message.channel.name, response)
-
 	elif cmd.mentions_count == 1:
 		# Get shooting player's info
 		if user_data.slimelevel <= 0: 
@@ -551,7 +507,7 @@ async def attack(cmd):
 					shootee_data.die(cause = ewcfg.cause_killing)
 					shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
-
+					
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -747,11 +703,6 @@ def explode(damage = 0, district_data = None):
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
 	users = district_data.get_players_in_district(life_states = life_states)
 
-	enemy_data = EwEnemy()
-
-	enemies = district_data.get_enemies_in_district(enemy_data)
-
-	# damage players
 	for user in users:
 		user_data = EwUser(id_user = user, id_server = id_server)
 		mutations = user_data.get_mutations()
@@ -787,37 +738,6 @@ def explode(damage = 0, district_data = None):
 				user_data.bleed_storage += slimes_damage
 				user_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
 				user_data.persist()
-
-	# damage enemies
-	for enemy in enemies:
-		enemy_data = EwEnemy(id_enemy = enemy, id_server = id_server)
-
-		if True:
-			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
-			resp_cont.add_channel_response(channel, response)
-			slimes_damage = damage
-			if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
-				# die in the explosion
-				district_data.change_slimes(n = enemy_data.slimes, source = ewcfg.source_killing)
-				district_data.persist()
-				# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
-				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
-
-				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
-				resp_cont.add_channel_response(channel, response)
-
-				enemy_data.life_state = 0
-				enemy_data.persist()
-
-			else:
-				# survive
-				slime_splatter = 0.5 * slimes_damage
-				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
-				district_data.persist()
-				slimes_damage -= slime_splatter
-				enemy_data.bleed_storage += slimes_damage
-				enemy_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
-				enemy_data.persist()
 	return resp_cont
 	
 

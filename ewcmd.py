@@ -13,7 +13,6 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
-from ewhunting import find_enemy
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -137,7 +136,7 @@ def gen_data_text(
 		id_server = id_server
 	)
 	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
-
+	
 	mutations = user_data.get_mutations()
 
 	cosmetics = ewitem.inventory(
@@ -176,10 +175,6 @@ def gen_data_text(
 				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
-		# if trauma is not gathered from weapon_map, get it from attack_type_map
-		if trauma == None:
-			trauma = ewcfg.attack_type_map.get(user_data.trauma)
-
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
@@ -193,14 +188,8 @@ def gen_data_text(
 
 		response_block = ""
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
-
-		if user_kills > 0 and enemy_kills > 0:
-			response_block += " They have {:,} confirmed kills, and {:,} confirmed hunts.".format(user_kills, enemy_kills)
-		elif user_kills > 0:
-			response_block += " They have {:,} confirmed kills.".format(user_kills)
-		elif enemy_kills > 0:
-			response_block += " They have {:,} confirmed hunts.".format(enemy_kills)
+		if user_kills > 0:
+			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
@@ -221,21 +210,7 @@ async def data(cmd):
 	user_data = None
 	member = None
 
-	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
-		user_data = EwUser(member = cmd.message.author)
-
-		soughtenemy = " ".join(cmd.tokens[1:]).lower()
-		enemy = find_enemy(soughtenemy, user_data)
-		if enemy != None:
-			if enemy.attacktype != 'unarmed':
-				response = "{} is a level {} enemy. They have {} slime, and attack with their {}.".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
-			else:
-				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level, enemy.slimes)
-		else:
-			response = "ENDLESS WAR didn't understand that name."
-
-	elif cmd.mentions_count == 0:
-
+	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 		mutations = user_data.get_mutations()
@@ -272,13 +247,9 @@ async def data(cmd):
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank = (user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
-		# if trauma is not gathered from weapon_map, get it from attack_type_map
-		if trauma == None:
-			trauma = ewcfg.attack_type_map.get(user_data.trauma)
-
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
-
+		
 		response_block = ""
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
@@ -289,15 +260,9 @@ async def data(cmd):
 
 		response_block = ""
 
-		user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
-		enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
-
-		if user_kills > 0 and enemy_kills > 0:
-			response_block += " You have {:,} confirmed kills, and {:,} confirmed hunts.".format(user_kills, enemy_kills)
-		elif user_kills > 0:
-			response_block += " You have {:,} confirmed kills.".format(user_kills)
-		elif enemy_kills > 0:
-			response_block += " You have {:,} confirmed hunts.".format(enemy_kills)
+		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
+		if user_kills > 0:
+			response_block += "You have {:,} confirmed kills. ".format(user_kills)
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
@@ -572,10 +537,10 @@ async def refuse(cmd):
 async def arrest(cmd):
 
 	author = cmd.message.author
-
+	
 	if not author.server_permissions.administrator:
 		return
-
+	
 	if cmd.mentions_count == 1:
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)

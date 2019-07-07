@@ -15,7 +15,6 @@ from ewtransport import EwTransport
 from ewmarket import EwMarket
 from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
-from ewhunting import EwEnemy
 
 move_counter = 0
 
@@ -36,9 +35,6 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
 		move_speed *= 2
-
-	#TODO: Remove this after debugging
-	move_speed = 12
 
 	return move_speed
 
@@ -803,7 +799,7 @@ async def teleport(cmd):
 		if time_lastuse + 30*60 > time_now:
 			response = "You can't do that again yet."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+			
 		valid_destinations = set()
 		neighbors = ewcfg.poi_neighbors.get(user_data.poi)
 		for neigh in neighbors:
@@ -817,7 +813,6 @@ async def teleport(cmd):
 		mutation_data.persist()
 		ewutils.moves_active[cmd.message.author.id] = 0
 		user_data.poi = poi.id_poi
-		user_data.time_lastenter = int(time.time())
 		user_data.persist()
 		response = "WHOOO-"
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -829,7 +824,7 @@ async def teleport(cmd):
 		response = "You don't have any toilet paper."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
+	
 
 """
 	Dump out the visual description of the area you're in.
@@ -841,7 +836,7 @@ async def look(cmd):
 
 	# get information about slime levels in the district
 	slimes = district_data.slimes
-	slimes_resp = ""
+	slimes_resp = "\n\n"
 	if slimes < 10000:
 		slimes_resp += "There are a few specks of slime splattered across the city streets."
 	elif slimes < 100000:
@@ -873,32 +868,8 @@ async def look(cmd):
 	else:
 		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
-	enemy_data_constructor = EwEnemy()
-
-	# lists off enemies in district
-	enemies_in_district = district_data.get_enemies_in_district(enemy_data_constructor)
-
-	num_enemies = len(enemies_in_district)
-
-	enemies_resp = "\n\n"
-	numerator = 0
-
-	if num_enemies == 0:
-		enemies_resp += "You don't find any enemies in this district."
-	elif num_enemies == 1:
-		found_enemy_data = EwEnemy(id_enemy = enemies_in_district[0])
-		enemies_resp += "You look around and find a **{} ({})** in this location.".format(found_enemy_data.display_name, found_enemy_data.id_enemy)
-	else:
-		enemies_resp += "You notice several enemies in this district, such as "
-		while numerator < (len(enemies_in_district)-1):
-			found_enemy_data = EwEnemy(id_enemy = enemies_in_district[numerator])
-			enemies_resp += "**{} ({})**, ".format(found_enemy_data.display_name, found_enemy_data.id_enemy)
-			numerator += 1
-		final_enemy_data = EwEnemy(id_enemy = enemies_in_district[num_enemies-1])
-		enemies_resp += "and **{} ({})**.".format(final_enemy_data.display_name, final_enemy_data.id_enemy)
-
 	players_resp = ""
-
+	
 	slimeoids_resp = ""
 
 	slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = poi.id_poi)
@@ -916,20 +887,13 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n...".format(
+			"You stand {} {}.\n\n{}{}{}{}{}".format(
 				poi.str_in,
 				poi.str_name,
-				poi.str_desc
-			)
-		))
-		await asyncio.sleep(0.1)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			"{}{}{}{}{}".format(
+				poi.str_desc,
 				slimes_resp,
 				players_resp,
 				slimeoids_resp,
-				enemies_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
@@ -989,7 +953,7 @@ async def scout(cmd):
 
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
-		# don't show low level players or enemies
+		# don't show low level players
 		min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
 
 		life_states = [ewcfg.life_state_enlisted]
@@ -1000,8 +964,8 @@ async def scout(cmd):
 
 
 		num_players = 0
-		players_resp = "\n"
-		detailed_players_resp = "You pick up the scent of the following gangsters:"
+		players_resp = ""
+		detailed_resp = "You pick up the scent of the following gangsters:"
 		for player in players_in_district:
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
 			scoutee_mutations = scoutee_data.get_mutations()
@@ -1016,21 +980,9 @@ async def scout(cmd):
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
 
-			detailed_players_resp += "\n" + scoutee_data.get_mention()
+			detailed_resp += "\n" + scoutee_data.get_mention()
 			num_players += 1
-
-		enemy_data_constructor = EwEnemy()
-		# filters out low level enemies
-		enemies_in_district = district_data.get_enemies_in_district(enemy_data_constructor, min_level=min_level)
-
-		num_enemies = 0
-		enemies_resp = ""
-
-		detailed_enemies_resp = "You pick up the scent of the following enemies:"
-		for enemy in enemies_in_district:
-			enemy_data = EwEnemy(id_enemy=enemy)
-			detailed_enemies_resp += "\n**{}**".format(enemy_data.display_name)
-			num_enemies += 1
+	
 
 		if num_players == 0:
 			players_resp += "You don’t notice any activity from this district."
@@ -1043,36 +995,15 @@ async def scout(cmd):
 		else:
 			players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
 
-		if ewcfg.mutation_id_keensmell in mutations and num_players >= 1:
-			players_resp += " " + detailed_players_resp
-
-		# to avoid visual clutter, no scouting message is sent out for 0 enemies
-		if num_enemies == 0:
-			enemies_resp = ""
-		elif num_enemies == 1:
-			enemies_resp += "You can faintly hear the bleating of an enemy coming from this district."
-		elif num_enemies <= 5:
-			enemies_resp += "You manage to pick up the sound of a few enemies howling amongst each other in this district."
-		elif num_enemies <= 10:
-			enemies_resp += "Your nerves tense due to the incredibly audible savagery coming from several enemies in this district."
-		else:
-			enemies_resp += "You feel shivers down your spine from the sheer amount of enemies ramping and raving within this district."
-
-		if ewcfg.mutation_id_keensmell in mutations and num_enemies >= 1:
-			enemies_resp += " " + detailed_enemies_resp
-
-		if num_players == 0 and num_enemies >= 1:
-			players_resp = ""
-		elif num_players >= 1 and num_enemies == 0:
-			enemies_resp = ""
+		if ewcfg.mutation_id_keensmell in mutations:
+			players_resp += " " + detailed_resp
 
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**:{}\n{}".format(
+			"**{}**: {}".format(
 				poi.str_name,
-				players_resp,
-				enemies_resp
+				players_resp
 			)
 		))
 

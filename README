@@ -187,28 +187,6 @@ CREATE TABLE slimeoids (
 	PRIMARY KEY (id_slimeoid)
 );
 
-CREATE TABLE enemies (
-    id_enemy int NOT NULL AUTO_INCREMENT,
-    id_server varchar(128) NOT NULL,
-    slimes bigint NOT NULL DEFAULT '0',
-    totaldamage bigint NOT NULL DEFAULT '0',
-    ai varchar(32) NOT NULL DEFAULT '',
-    type varchar(32) NOT NULL DEFAULT '',
-    attacktype varchar(32) NOT NULL DEFAULT '',
-    name varchar(32) NOT NULL DEFAULT '',
-    level int NOT NULL DEFAULT '0',
-    poi varchar(64) NOT NULL DEFAULT '',
-    life_state int NOT NULL DEFAULT '0',
-    bleed_storage bigint NOT NULL DEFAULT '0',
-    time_lastenter int NOT NULL DEFAULT '0',
-    initialslimes bigint NOT NULL DEFAULT '0',
-    lifetime bigint NOT NULL DEFAULT '0',
-    id_target varchar(128) NOT NULL DEFAULT '',
-    raidtimer bigint NOT NULL DEFAULT '0',
-
-    PRIMARY KEY (id_enemy)
-);
-
 CREATE TABLE districts (
 	id_server varchar(128) NOT NULL,
 	district varchar(32) NOT NULL,
