@@ -376,6 +376,9 @@ cmd_map = {
 	# debug commands
 	ewcfg.cmd_debug1: ewdebug.debug1,
 	ewcfg.cmd_debug2: ewdebug.debug2,
+
+	# ban a player from using commands
+	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
 debug = True
@@ -834,6 +837,9 @@ async def on_message(message):
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)
+		if user_data.arrested:
+			return
+
 		mutations = user_data.get_mutations()
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:

@@ -42,6 +42,7 @@ CREATE TABLE users (
 	poi_death varchar(64) NOT NULL default '',
 	donated_slimes bigint NOT NULL DEFAULT '0',
 	donated_poudrins bigint NOT NULL DEFAULT '0',
+	arrested int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );

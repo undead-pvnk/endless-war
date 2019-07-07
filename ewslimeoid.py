@@ -612,8 +612,7 @@ async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
-	poudrins_count = len(poudrins)
+	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
@@ -621,7 +620,7 @@ async def incubateslimeoid(cmd):
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif poudrins_count < 1:
+	elif poudrin is None:
 		response = "You need a slime poudrin."
 
 
@@ -647,7 +646,7 @@ async def incubateslimeoid(cmd):
 
 			else:
 				# delete a slime poudrin from the player's inventory
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))
+				ewitem.item_delete(id_item = poudrin.get('id_item'))
 
 				level = len(str(value))
 				user_data.change_slimes(n = -value)
@@ -706,6 +705,7 @@ async def dissolveslimeoid(cmd):
 		slimeoid.defense = 0
 		slimeoid.intel = 0
 		slimeoid.level = 0
+		slimeoid.clout = 0
 
 		user_data.persist()
 		slimeoid.persist()
