@@ -31,23 +31,6 @@ mines_map = {
 	ewcfg.poi_id_cv_mines: cratersville_mines
 }
 
-cell_mine = 1
-cell_mine_marked = 2
-cell_mine_open = 3
-
-cell_empty = -1
-cell_empty_marked = -2
-cell_empty_open = -3
-
-symbol_map = {
-	-1 : "/",
-	1 : "/",
-	-2 : "?",
-	2 : "?",
-	3 : "X"
-}
-
-alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 class EwMineGrid:
 	grid = []
@@ -200,8 +183,8 @@ async def mine(cmd):
 			row = -1
 			col = -1
 			for char in coords:
-				if char in alphabet:
-					col = alphabet.index(char)
+				if char in ewcfg.alphabet:
+					col = ewcfg.alphabet.index(char)
 					coords = coords.replace(char, "")
 
 
@@ -221,25 +204,22 @@ async def mine(cmd):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
-			if grid[row][col] == cell_empty_open:
+			if grid[row][col] == ewcfg.cell_empty_open:
 				response = "This vein has already been mined dry."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
-			if grid[row][col] == cell_mine:
+			if grid[row][col] == ewcfg.cell_mine:
 				user_data.change_slimes(n = -(user_data.slimes / 5))
 				user_data.persist()
 
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
-				grid[row][col] = cell_mine_open
+				grid[row][col] = ewcfg.cell_mine_open
 				await print_grid(cmd)
 				init_grid(user_data.poi, user_data.id_server)
 				return await print_grid(cmd)
 				
-			grid[row][col] = cell_empty_open
-
-
-
+			grid[row][col] = ewcfg.cell_empty_open
 
 			has_pickaxe = False
 
@@ -550,7 +530,7 @@ async def print_grid(cmd):
 
 		grid_str += "   "
 		for j in range(len(grid[0])):
-			grid_str += "{} ".format(alphabet[j])
+			grid_str += "{} ".format(ewcfg.alphabet[j])
 		grid_str += "\n"
 		for i in range(len(grid)):
 			row = grid[i]
@@ -561,7 +541,7 @@ async def print_grid(cmd):
 			for j in range(len(row)):
 				cell = row[j]
 				cell_str = ""
-				if cell == cell_empty_open:
+				if cell == ewcfg.cell_empty_open:
 					neighbor_mines = 0
 					for ci in range(max(0, i-1), min(len(grid), i+2)):
 						for cj in range(max(0, j-1), min(len(row), j+2)):
@@ -570,13 +550,13 @@ async def print_grid(cmd):
 					cell_str = str(neighbor_mines)
 
 				else:
-					cell_str = symbol_map.get(cell)
+					cell_str = ewcfg.symbol_map.get(cell)
 				grid_str += cell_str + " "
 			grid_str += "\n"
 
 
 		grid_edit = "\n```\n{}\n```".format(grid_str)
-		if time_now > grid_cont.time_last_posted + 60 or grid_cont.times_edited > 8 or grid_cont.message == "":
+		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 8 or grid_cont.message == "":
 			grid_cont.message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, grid_edit))
 			grid_cont.time_last_posted = time_now
 			grid_cont.times_edited = 0

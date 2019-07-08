@@ -676,6 +676,25 @@ time_kickout = 60 * 60  # 1 hour
 # time after coming online before you can act
 time_offline = 10
 
+# mining sweeper
+cell_mine = 1
+cell_mine_marked = 2
+cell_mine_open = 3
+
+cell_empty = -1
+cell_empty_marked = -2
+cell_empty_open = -3
+
+symbol_map = {
+	-1 : "/",
+	1 : "/",
+	-2 : "?",
+	2 : "?",
+	3 : "X"
+}
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
 emote_pizzahut = "<:pizzahut:431273890355085323>"
