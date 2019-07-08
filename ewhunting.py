@@ -21,25 +21,55 @@ class EwEnemy:
     id_enemy = 0
     id_server = ""
 
+    # The amount of slime an enemy has
     slimes = 0
-    totaldamage = 0
-    ai = ""
-    display_name = ""
-    level = 0
-    poi = ""
-    life_state = 0
-    type = ""
-    attacktype = ""
-    bleed_storage = 0
-    time_lastenter = 0
-    initialslimes = 0
-    lifetime = 0
-    id_target = ""
-    raidtimer = 0
 
-    # Life state 0 = Dead, pending for deletion when it tries its next attack
+    # The total amount of damage an enemy has sustained throughout its lifetime
+    totaldamage = 0
+
+    # The type of AI the enemy uses to select which players to attack
+    ai = ""
+
+    # The name of enemy shown in responses
+    display_name = ""
+
+    # Used to help identify enemies of the same type in a district
+    identifier = ""
+
+    # An enemy's level, which determines how much damage it does
+    level = 0
+
+    # An enemy's location
+    poi = ""
+
+    # Life state 0 = Dead, pending for deletion when it tries its next attack / action
     # Life state 1 = Alive / Activated raid boss
     # Life state 2 = Raid boss pending activation
+    life_state = 0
+
+    # Used to determine how much slime an enemy gets, what AI it uses, as well as what weapon it uses.
+    type = ""
+
+    # The 'weapon' of an enemy
+    attacktype = ""
+
+    # An enemy's bleed storage
+    bleed_storage = 0
+
+    # Used for determining when a raid boss should be able to move between districts
+    time_lastenter = 0
+
+    # Used to determine how much slime an enemy started out with to create a 'health bar' ( current slime / initial slime )
+    initialslimes = 0
+
+    # Enemies despawn when this number reaches 10800 (3 hours)
+    lifetime = 0
+
+    # Used by the 'defender' AI to determine who it should retaliate against
+    id_target = ""
+
+    # Used by raid bosses to determine when they should activate
+    raidtimer = 0
 
     """ Load the enemy data from the database. """
 
@@ -63,7 +93,7 @@ class EwEnemy:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
                         ewcfg.col_id_enemy,
                         ewcfg.col_id_server,
                         ewcfg.col_enemy_slimes,
@@ -71,7 +101,8 @@ class EwEnemy:
                         ewcfg.col_enemy_ai,
                         ewcfg.col_enemy_type,
                         ewcfg.col_enemy_attacktype,
-                        ewcfg.col_enemy_name,
+                        ewcfg.col_enemy_display_name,
+                        ewcfg.col_enemy_identifier,
                         ewcfg.col_enemy_level,
                         ewcfg.col_enemy_poi,
                         ewcfg.col_enemy_life_state,
@@ -95,15 +126,16 @@ class EwEnemy:
                     self.type = result[5]
                     self.attacktype = result[6]
                     self.display_name = result[7]
-                    self.level = result[8]
-                    self.poi = result[9]
-                    self.life_state = result[10]
-                    self.bleed_storage = result[11]
-                    self.time_lastenter = result[12]
-                    self.initialslimes = result[13]
-                    self.lifetime = result[14]
-                    self.id_target = result[15]
-                    self.raidtimer = result[16]
+                    self.identifier = result[8]
+                    self.level = result[9]
+                    self.poi = result[10]
+                    self.life_state = result[11]
+                    self.bleed_storage = result[12]
+                    self.time_lastenter = result[13]
+                    self.initialslimes = result[14]
+                    self.lifetime = result[15]
+                    self.id_target = result[16]
+                    self.raidtimer = result[17]
 
             finally:
                 # Clean up the database handles.
@@ -120,7 +152,7 @@ class EwEnemy:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_enemy,
                     ewcfg.col_id_server,
                     ewcfg.col_enemy_slimes,
@@ -128,7 +160,8 @@ class EwEnemy:
                     ewcfg.col_enemy_ai,
                     ewcfg.col_enemy_type,
                     ewcfg.col_enemy_attacktype,
-                    ewcfg.col_enemy_name,
+                    ewcfg.col_enemy_display_name,
+                    ewcfg.col_enemy_identifier,
                     ewcfg.col_enemy_level,
                     ewcfg.col_enemy_poi,
                     ewcfg.col_enemy_life_state,
@@ -147,6 +180,7 @@ class EwEnemy:
                     self.type,
                     self.attacktype,
                     self.display_name,
+                    self.identifier,
                     self.level,
                     self.poi,
                     self.life_state,
@@ -622,7 +656,7 @@ async def enemy_perform_action(id_server):
             if resp_cont != None:
                 await resp_cont.post()
 
-# Spawns an enemy in a randomized district. If a district is full, it will try again, up to 5 times.
+# Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
 async def spawn_enemy(id_server):
     time_now = int(time.time())
     response = ""
@@ -648,16 +682,16 @@ async def spawn_enemy(id_server):
         enemytype = random.choice(ewcfg.raid_bosses)
 
     # debug manual reassignment
-    # enemytype = random.choice(ewcfg.common_enemies)
+    enemytype = 'juvie'
 
     while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-        potential_chosen_poi = random.choice(outskirts_districts)
-        # potential_chosen_poi = 'greenlightdistrict'
+        # potential_chosen_poi = random.choice(outskirts_districts)
+        potential_chosen_poi = 'cratersvilleoutskirts'
         potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
         enemy_constructor = EwEnemy()
-        enemies_count_list = potential_chosen_district.get_enemies_in_district(enemy_constructor)
-        enemies_count = len(enemies_count_list)
+        enemies_list = potential_chosen_district.get_enemies_in_district(enemy_constructor)
+        enemies_count = len(enemies_list)
 
         if enemies_count < ewcfg.max_enemies:
             chosen_poi = potential_chosen_poi
@@ -675,12 +709,12 @@ async def spawn_enemy(id_server):
         enemy.lifetime = time_now
         enemy.initialslimes = enemy.slimes
         enemy.poi = chosen_poi
+        enemy.identifier = set_identifier(enemy, chosen_poi, id_server)
 
         enemy.persist()
 
         if enemytype not in ewcfg.raid_bosses:
-            response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name,
-                                                                                        enemy.slimes)
+            response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
         ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
     return response, ch_name
@@ -697,19 +731,20 @@ def find_enemy(enemy_search=None, user_data=None):
 
         enemy_search_tokens = enemy_search.split(' ')
 
-        if enemy_search_tokens[len(enemy_search_tokens) - 1].isdigit():
-            # user passed in a positive integer, identify enemy by number
+        if enemy_search_tokens[len(enemy_search_tokens) - 1].upper() in identifier_letters:
+            # user passed in an identifier for a distirct specific enemy
 
-            searched_id = enemy_search_tokens[len(enemy_search_tokens) - 1]
+            searched_identifier = enemy_search_tokens[len(enemy_search_tokens) - 1]
 
             enemydata = ewutils.execute_sql_query(
-                "SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {id_enemy} = %s AND {life_state} = 1".format(
+                "SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {identifier} = %s AND {life_state} = 1".format(
                     id_enemy=ewcfg.col_id_enemy,
                     poi=ewcfg.col_enemy_poi,
+                    identifier=ewcfg.col_enemy_identifier,
                     life_state=ewcfg.col_enemy_life_state
                 ), (
                     user_data.poi,
-                    searched_id,
+                    searched_identifier,
                 ))
 
             for row in enemydata:
@@ -1550,6 +1585,37 @@ def check_raidboss_movecooldown(enemy_data):
         # Raid boss can't move yet
         return False
 
+# Gives enemy an identifier so it's easier to pick out in a crowd of enemies
+def set_identifier(enemy_data, poi, id_server):
+    enemy_constructor = EwEnemy()
+    district = EwDistrict(district=poi, id_server=id_server)
+    enemies_list = district.get_enemies_in_district(enemy_constructor)
+
+    # A list of identifiers from enemies in a district
+    enemy_identifiers = []
+
+    new_identifier = identifier_letters[0]
+
+    if len(enemies_list) > 0:
+        for enemy_id in enemies_list:
+            enemy = EwEnemy(id_enemy=enemy_id)
+            enemy_identifiers.append(enemy.identifier)
+
+        # Sort the list of identifiers alphabetically
+        enemy_identifiers.sort()
+
+        for checked_enemy_identifier in enemy_identifiers:
+            # If the new identifier matches one from the list of enemy identifiers, give it the next applicable letter
+            # Repeat until a unique identifier is given
+            if new_identifier == checked_enemy_identifier:
+                next_letter = (identifier_letters.index(checked_enemy_identifier) + 1)
+                new_identifier = identifier_letters[next_letter]
+            else:
+                continue
+
+    return new_identifier
+
+# List of outskirt districts for spawning purposes
 outskirts_districts = [
     "wreckingtonoutskirts",
     "cratersvilleoutskirts",
@@ -1568,3 +1634,5 @@ outskirts_districts = [
     "newnewyonkersoutskirts",
     "assaultflatsbeachoutskirts"
 ]
+
+identifier_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J']

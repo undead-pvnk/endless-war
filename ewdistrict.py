@@ -184,7 +184,7 @@ class EwDistrict:
 			# assigns enemy_data variables based on index
 			enemy_data.id_enemy = enemy[0]
 			enemy_data.slimes = enemy[2]
-			enemy_data.level = enemy[8]
+			enemy_data.level = enemy[9]
 
 			# Append the enemy to the list if it meets the requirements
 			if max_level >= enemy_data.level >= min_level \

@@ -910,15 +910,15 @@ async def look(cmd):
 		enemies_resp += "You don't find any enemies in this district."
 	elif num_enemies == 1:
 		found_enemy_data = EwEnemy(id_enemy = enemies_in_district[0])
-		enemies_resp += "You look around and find a **{} ({})** in this location.".format(found_enemy_data.display_name, found_enemy_data.id_enemy)
+		enemies_resp += "You look around and find a **{} ({})** in this location.".format(found_enemy_data.display_name, found_enemy_data.identifier)
 	else:
 		enemies_resp += "You notice several enemies in this district, such as "
 		while numerator < (len(enemies_in_district)-1):
 			found_enemy_data = EwEnemy(id_enemy = enemies_in_district[numerator])
-			enemies_resp += "**{} ({})**, ".format(found_enemy_data.display_name, found_enemy_data.id_enemy)
+			enemies_resp += "**{} ({})**, ".format(found_enemy_data.display_name, found_enemy_data.identifier)
 			numerator += 1
 		final_enemy_data = EwEnemy(id_enemy = enemies_in_district[num_enemies-1])
-		enemies_resp += "and **{} ({})**.".format(final_enemy_data.display_name, final_enemy_data.id_enemy)
+		enemies_resp += "and **{} ({})**.".format(final_enemy_data.display_name, final_enemy_data.identifier)
 
 	players_resp = ""
 

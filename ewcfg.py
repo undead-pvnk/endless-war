@@ -658,7 +658,7 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 20
+enemy_spawn_tick_length = 5
 
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 3
@@ -893,7 +893,8 @@ col_enemy_totaldamage = 'totaldamage'
 col_enemy_ai = 'ai'
 col_enemy_type = 'type'
 col_enemy_attacktype = 'attacktype'
-col_enemy_name = 'name'
+col_enemy_display_name = 'display_name'
+col_enemy_identifier = 'identifier'
 col_enemy_level = 'level'
 col_enemy_poi = 'poi'
 col_enemy_life_state = 'life_state'
