@@ -14,7 +14,7 @@ from ewtransport import EwTransportLine
 import ewdebug
 
 # Global configuration options.
-version = "v3.5"
+version = "v3.5a"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
