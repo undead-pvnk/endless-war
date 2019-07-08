@@ -556,6 +556,13 @@ class EwEnemy:
 
                 print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
 
+                #new_district = EwDistrict(district=new_poi, id_server=self.id_server)
+                #enemy_data_constructor = EwEnemy()
+                #if len(new_district.get_enemies_in_district(enemy_data_constructor)) > 0:
+
+                # When a raid boss enters a new district, give it a new identifier
+                self.identifier = set_identifier(new_poi, self.id_server)
+
                 new_poi_def = ewcfg.id_to_poi.get(new_poi)
                 new_ch_name = new_poi_def.channel
                 new_district_response = "*A low roar booms throughout the district, as slime on the ground begins to slosh all around.*\n {} **{} has arrived!** {}".format(
@@ -619,6 +626,7 @@ async def summon_enemy(cmd):
         enemy.level = level_byslime(enemy.slimes)
         enemy.initialslimes = enemy.slimes
         enemy.lifetime = time_now
+        enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
 
         enemy.persist()
 
@@ -709,7 +717,7 @@ async def spawn_enemy(id_server):
         enemy.lifetime = time_now
         enemy.initialslimes = enemy.slimes
         enemy.poi = chosen_poi
-        enemy.identifier = set_identifier(enemy, chosen_poi, id_server)
+        enemy.identifier = set_identifier(chosen_poi, id_server)
 
         enemy.persist()
 
@@ -1586,7 +1594,7 @@ def check_raidboss_movecooldown(enemy_data):
         return False
 
 # Gives enemy an identifier so it's easier to pick out in a crowd of enemies
-def set_identifier(enemy_data, poi, id_server):
+def set_identifier(poi, id_server):
     enemy_constructor = EwEnemy()
     district = EwDistrict(district=poi, id_server=id_server)
     enemies_list = district.get_enemies_in_district(enemy_constructor)

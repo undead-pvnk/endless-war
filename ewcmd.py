@@ -196,11 +196,11 @@ def gen_data_text(
 		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
 
 		if user_kills > 0 and enemy_kills > 0:
-			response_block += " They have {:,} confirmed kills, and {:,} confirmed hunts.".format(user_kills, enemy_kills)
+			response_block += "They have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills, enemy_kills)
 		elif user_kills > 0:
-			response_block += " They have {:,} confirmed kills.".format(user_kills)
+			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
-			response_block += " They have {:,} confirmed hunts.".format(enemy_kills)
+			response_block += "They have {:,} confirmed hunts. ".format(enemy_kills)
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
@@ -293,11 +293,11 @@ async def data(cmd):
 		enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
 
 		if user_kills > 0 and enemy_kills > 0:
-			response_block += " You have {:,} confirmed kills, and {:,} confirmed hunts.".format(user_kills, enemy_kills)
+			response_block += "You have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills, enemy_kills)
 		elif user_kills > 0:
-			response_block += " You have {:,} confirmed kills.".format(user_kills)
+			response_block += "You have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
-			response_block += " You have {:,} confirmed hunts.".format(enemy_kills)
+			response_block += "You have {:,} confirmed hunts. ".format(enemy_kills)
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
