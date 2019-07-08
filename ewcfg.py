@@ -8781,7 +8781,7 @@ help_responses = {
 common_enemies = ['juvie', 'slimeasaur']
 uncommon_enemies = ['slimeadactyl', 'desertraider']
 rare_enemies = ['microslime']
-raid_bosses = ['megaslime', 'mindbrokenbigcrocs']
+raid_bosses = ['megaslime', 'slimeasaurusrex']
 
 # Shorthand names the player can refer to enemies as.
 enemy_aliases = {
@@ -8791,11 +8791,11 @@ enemy_aliases = {
     "micro":"microslime",
     "raider":"desert raider",
     "mega":"megaslime",
-	"crocs":"mindbrokenbigcrocs",
+	"rex":"slimeasaurusrex",
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = ['Megaslime', "MINDBROKEN, BIG PARADOX CROCS"]
+raid_boss_names = ['Megaslime', "Slimeasaurus Rex"]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

@@ -853,7 +853,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 crop_amount = 6
 
-    elif enemy_data.type == 'megaslime' or enemy_data.type == 'mindbrokenbigcrocs':
+    elif enemy_data.type == 'megaslime' or enemy_data.type == 'slimeasaurusrex':
 
         poudrin_dropped = True
         pleb_dropped = True
@@ -1411,123 +1411,57 @@ def check_death(enemy_data):
 def get_enemy_data(enemy_type):
     enemy = EwEnemy()
 
-    if enemy_type == 'juvie':
+    enemy.id_server = ""
+    enemy.slimes = get_enemy_slime(enemy_type)
+    enemy.totaldamage = 0
+    enemy.level = 0
+    enemy.life_state = 1
+    enemy.type = enemy_type
+    enemy.bleed_storage = 0
+    enemy.time_lastenter = 0
+    enemy.initialslimes = 0
+    enemy.id_target = ""
+    enemy.raidtimer = 0
 
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('juvie')
-        enemy.totaldamage = 0
+    # Normal enemies
+    if enemy_type == 'juvie':
         enemy.ai = "Coward"
         enemy.display_name = "Lost Juvie"
-        enemy.level = 0
-        enemy.life_state = 1
-        enemy.type = enemy_type
         enemy.attacktype = 'unarmed'
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
-        enemy.raidtimer = 0
 
     elif enemy_type == 'microslime':
-
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('microslime')
-        enemy.totaldamage = 0
         enemy.ai = "Defender"
         enemy.display_name = "Microslime"
-        enemy.level = 0
-        enemy.life_state = 1
-        enemy.type = enemy_type
         enemy.attacktype = 'unarmed'
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
-        enemy.raidtimer = 0
 
     elif enemy_type == 'slimeasaur':
-
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('slimeasaur')
-        enemy.totaldamage = 0
         enemy.ai = "Attacker-A"
         enemy.display_name = "Slimeasaur"
-        enemy.level = 0
-        enemy.life_state = 1
-        enemy.type = enemy_type
         enemy.attacktype = "fangs"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
-        enemy.raidtimer = 0
 
     elif enemy_type == 'slimeadactyl':
-
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('slimeadactyl')
-        enemy.totaldamage = 0
         enemy.ai = "Attacker-B"
         enemy.display_name = "Slimeadactyl"
-        enemy.level = 0
-        enemy.life_state = 1
-        enemy.type = enemy_type
         enemy.attacktype = "talons"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
-        enemy.raidtimer = 0
 
     elif enemy_type == 'desertraider':
-
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('desertraider')
-        enemy.totaldamage = 0
         enemy.ai = "Attacker-B"
         enemy.display_name = "Desert Raider"
-        enemy.level = 0
-        enemy.life_state = 1
-        enemy.type = enemy_type
         enemy.attacktype = "scythe"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
-        enemy.raidtimer = 0
 
+    # Raid bosses
     elif enemy_type == 'megaslime':
-
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('megaslime')
-        enemy.totaldamage = 0
         enemy.ai = "Attacker-A"
         enemy.display_name = "Megaslime"
-        enemy.level = 0
         enemy.life_state = 2
-        enemy.type = enemy_type
         enemy.attacktype = "gunk shot"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
         enemy.raidtimer = int(time.time())
 
-    elif enemy_type == 'mindbrokenbigcrocs':
-
-        enemy.id_server = ""
-        enemy.slimes = get_enemy_slime('mindbrokenbigcrocs')
-        enemy.totaldamage = 0
-        enemy.ai = "Attacker-A"
-        enemy.display_name = "MINDBROKEN, BIG PARADOX CROCS"
-        enemy.level = 0
+    elif enemy_type == 'slimeasaurusrex':
+        enemy.ai = "Attacker-B"
+        enemy.display_name = "Slimeasaurus Rex"
         enemy.life_state = 2
-        enemy.type = enemy_type
-        enemy.attacktype = "gunk shot"
-        enemy.bleed_storage = 0
-        enemy.time_lastenter = 0
-        enemy.initialslimes = 0
-        enemy.id_target = ""
+        enemy.attacktype = "fangs"
         enemy.raidtimer = int(time.time())
 
     return enemy
@@ -1547,8 +1481,8 @@ def get_enemy_slime(enemy_type):
         slime = ((random.randrange(500000) + 250000) + 1)
     elif enemy_type == 'megaslime':
         slime = 1000000
-    elif enemy_type == 'mindbrokenbigcrocs':
-        slime = 5000000
+    elif enemy_type == 'slimeasaurusrex':
+        slime = 1500000
     return slime
 
 # Selects which non-ghost user to attack based on certain parameters.
