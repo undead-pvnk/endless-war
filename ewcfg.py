@@ -165,6 +165,24 @@ poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
 
+# Outskirts
+poi_id_wreckington_outskirts = "wreckingtonoutskirts"
+poi_id_cratersville_outskirts = "cratersvilleoutskirts"
+poi_id_oozegardens_outskirts = "oozegardensoutskirts"
+poi_id_southsleezeborough_outskirts = "southsleezeboroughoutskirts"
+poi_id_crookline_outskirts = "crooklineoutskirts"
+poi_id_dreadford_outskirts = "dreadfordoutskirts"
+poi_id_jaywalkerplain_outskirts = "jaywalkerplainoutskirts"
+poi_id_westglocksbury_outskirts = "westglocksburyoutskirts"
+poi_id_poloniumhill_outskirts = "poloniumhilloutskirts"
+poi_id_charcoalpark_outskirts = "charcoalparkoutskirts"
+poi_id_toxington_outskirts = "toxingtonoutskirts"
+poi_id_astatineheights_outskirts = "astatineheightsoutskirts"
+poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
+poi_id_brawlden_outskirts = "brawldenoutskirts"
+poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
+poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
 # Transport types
 transport_type_ferry = "ferry"
 transport_type_subway = "subway"
@@ -759,6 +777,8 @@ str_blue_subway_station_description = "It is clean and well-kempt, just like the
 str_yellow_subway_description = "If there's one word to describe the Yellow Line, it's \"confusing\". It's by far the filthiest subway line in the city, which is exponentially worsened by it's bizarre, unexplainable faux wood paneling that lines every train. You can only imagine that this design decision was made to make the subway feel less sterile and more homely, but the constant stench of piss and homeless people puking sort of ruins that idea. Riding the Yellow Line makes you feel like you're at your grandma's house every single time you ride it, if your grandma's house was in Jaywalker Plain."
 str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
+
+str_generic_outskirts_description = "It's a wasteland, devoid of all life except for slime beasts."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -3896,7 +3916,7 @@ poi_list = [
 			"ab"
 		],
 		str_name = "Arsonbrook",
-		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights.",
+		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
 		coord = (42, 16),
 		coord_alias = [
 			(42, 15),
@@ -3916,7 +3936,7 @@ poi_list = [
 			"ah"
 		],
 		str_name = "Astatine Heights",
-		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington.",
+		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts.",
 		coord = (37, 18),
 		coord_alias = [
 			(34, 14),
@@ -3988,7 +4008,7 @@ poi_list = [
 			"gb"
 		],
 		str_name = "Glocksbury",
-		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury.",
+		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts.",
 		coord = (17, 27),
 		coord_alias = [
 			(18, 27),
@@ -4041,7 +4061,7 @@ poi_list = [
 			"ss"
 		],
 		str_name = "South Sleezeborough",
-		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline.",
+		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
 		coord = (27, 38),
 		coord_alias = [
 			(25, 38),
@@ -4067,7 +4087,7 @@ poi_list = [
 			"og"
 		],
 		str_name = "Ooze Gardens",
-		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough.",
+		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
 		coord = (29, 40),
 		coord_alias = [
 			(30, 40),
@@ -4088,7 +4108,7 @@ poi_list = [
 			"cv"
 		],
 		str_name = "Cratersville",
-		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens.",
+		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
 		coord = (41, 43),
 		coord_alias = [
 			(35, 43),
@@ -4112,7 +4132,7 @@ poi_list = [
 			"wt"
 		],
 		str_name = "Wreckington",
-		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville.",
+		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
 		coord = (46, 37),
 		coord_alias = [
 			(46, 38),
@@ -4201,7 +4221,7 @@ poi_list = [
 			"afb"
 		],
 		str_name = "Assault Flats Beach",
-		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers.",
+		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
 		coord = (68, 16),
 		coord_alias = [
 			(68, 12),
@@ -4224,7 +4244,7 @@ poi_list = [
 			"nny"
 		],
 		str_name = "New New Yonkers",
-		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden.",
+		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
 		coord = (61, 16),
 		coord_alias = [
 			(62, 16),
@@ -4243,7 +4263,7 @@ poi_list = [
 			"bd"
 		],
 		str_name = "Brawlden",
-		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook.",
+		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
 		coord = (50, 13),
 		coord_alias = [
 			(51, 13),
@@ -4266,7 +4286,7 @@ poi_list = [
 			"tx"
 		],
 		str_name = "Toxington",
-		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park.",
+		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park. To the North is Toxington Outskirts.",
 		coord = (21, 11),
 		coord_alias = [
 			(16, 11),
@@ -4291,7 +4311,7 @@ poi_list = [
 			"ch"
 		],
 		str_name = "Charcoal Park",
-		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill.",
+		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
 		coord = (10, 11),
 		coord_alias = [
 			(11, 11),
@@ -4311,7 +4331,7 @@ poi_list = [
 			"ph"
 		],
 		str_name = "Polonium Hill",
-		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury.",
+		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
 		coord = (8, 19),
 		coord_alias = [
 			(9, 19),
@@ -4360,7 +4380,7 @@ poi_list = [
 			"jp",
 		],
 		str_name = "Jaywalker Plain",
-		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford.",
+		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
 		coord = (10, 33),
 		coord_alias = [
 			(11, 33),
@@ -4383,7 +4403,7 @@ poi_list = [
 			"cl",
 		],
 		str_name = "Crookline",
-		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford.",
+		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
 		coord = (19, 37),
 		coord_alias = [
 			(19, 38),
@@ -4404,7 +4424,7 @@ poi_list = [
 			"df",
 		],
 		str_name = "Dreadford",
-		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline.",
+		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
 		coord = (13, 41),
 		coord_alias = [
 			(9, 41),
@@ -5723,6 +5743,246 @@ poi_list = [
 		transport_type = transport_type_blimp,
 		default_line = transport_line_blimp_df_to_afb,
 		default_stop = poi_id_df_blimp_tower
+	),
+	EwPoi(  # Outskirts - 1
+		id_poi=poi_id_wreckington_outskirts,
+		alias=[
+			"wreckingtonoutskirts",
+			"wtoutskirts",
+			"wto",
+		],
+		str_name="Wreckington Outskirts",
+		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
+		coord=(46, 46),
+		channel="wreckington-outskirts",
+		role="Wreckington Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 2
+		id_poi=poi_id_cratersville_outskirts,
+		alias=[
+			"cratersvilleoutskirts",
+			"cvoutskirts",
+			"cvo",
+		],
+		str_name="Cratersville Outskirts",
+		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
+		coord=(41, 48),
+		channel="cratersville-outskirts",
+		role="Cratersville Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 3
+		id_poi=poi_id_oozegardens_outskirts,
+		alias=[
+			"oozegardensoutskirts",
+			"ogoutskirts",
+			"ogo",
+		],
+		str_name="Ooze Gardens Outskirts",
+		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
+		coord=(31, 47),
+		channel="ooze-gardens-outskirts",
+		role="Ooze Gardens Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 4
+		id_poi=poi_id_southsleezeborough_outskirts,
+		alias=[
+			"southsleezeboroughoutskirts",
+			"ssboutskirts",
+			"ssbo",
+		],
+		str_name="South Sleezeborough Outskirts",
+		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
+		coord=(27, 47),
+		channel="south-sleezeborough-outskirts",
+		role="South Sleezeborough Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 5
+		id_poi=poi_id_crookline_outskirts,
+		alias=[
+			"crooklineoutskirts",
+			"cloutskirts",
+			"clo",
+		],
+		str_name="Crookline Outskirts",
+		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
+		coord=(19, 45),
+		channel="crookline-outskirts",
+		role="Crookline Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 6
+		id_poi=poi_id_dreadford_outskirts,
+		alias=[
+			"dreadfordoutskirts",
+			"dfoutskirts",
+			"dfo",
+		],
+		str_name="Dreadford Outskirts",
+		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
+		coord=(4, 41),
+		channel="dreadford-outskirts",
+		role="Dreadford Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 7
+		id_poi=poi_id_jaywalkerplain_outskirts,
+		alias=[
+			"jaywalkerplainoutskirts",
+			"jpoutskirts",
+			"jpo",
+		],
+		str_name="Jaywalker Plain Outskirts",
+		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
+		coord=(5, 33),
+		channel="jaywalker-plain-outskirts",
+		role="Jaywalker Plain Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 8
+		id_poi=poi_id_westglocksbury_outskirts,
+		alias=[
+			"westglocksburyoutskirts",
+			"wgboutskirts",
+			"wgbo"
+		],
+		str_name="West Glocksbury Outskirts",
+		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
+		coord=(5, 27),
+		channel="west-glocksbury-outskirts",
+		role="West Glocksbury Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 9
+		id_poi=poi_id_poloniumhill_outskirts,
+		alias=[
+			"poloniumhilloutskirts",
+			"phoutskirts",
+			"pho",
+		],
+		str_name="Polonium Hill Outskirts",
+		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
+		coord=(3, 19),
+		channel="polonium-hill-outskirts",
+		role="Polonium Hill Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 10
+		id_poi=poi_id_charcoalpark_outskirts,
+		alias=[
+			"charcoalparkoutskirts",
+			"cpoutskirts",
+			"cpo",
+		],
+		str_name="Charcoal Park Outskirts",
+		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
+		coord=(5, 11),
+		channel="charcoal-park-outskirts",
+		role="Charcoal Park Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 11
+		id_poi=poi_id_toxington_outskirts,
+		alias=[
+			"toxingtonoutskirts",
+			"ttoutskirts",
+			"tto",
+		],
+		str_name="Toxington Outskirts",
+		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
+		coord=(17, 6),
+		channel="toxington-outskirts",
+		role="Toxington Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 12
+		id_poi=poi_id_astatineheights_outskirts,
+		alias=[
+			"astatineheightsoutskirts",
+			"ahoutskirts",
+			"aho",
+		],
+		str_name="Astatine Heights Outskirts",
+		str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
+		coord=(34, 9),
+		channel="astatine-heights-outskirts",
+		role="Astatine Heights Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 13
+		id_poi=poi_id_arsonbrook_outskirts,
+		alias=[
+			"arsonbrookoutskirts",
+			"aboutskirts",
+			"abo",
+		],
+		str_name="Arsonbrook Outskirts",
+		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
+		coord=(42, 10),
+		channel="arsonbrook-outskirts",
+		role="Arsonbrook Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 14
+		id_poi=poi_id_brawlden_outskirts,
+		alias=[
+			"brawldenoutskirts",
+			"bdoutskirts",
+			"bdo",
+		],
+		str_name="Brawlden Outskirts",
+		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+		coord=(50, 8),
+		channel="brawlden-outskirts",
+		role="Brawlden Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 15
+		id_poi=poi_id_newnewyonkers_outskirts,
+		alias=[
+			"newnewyonkersoutskirts",
+			"nnyoutskirts",
+			"nnyo",
+		],
+		str_name="New New Yonkers Outskirts",
+		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
+		coord=(61, 11),
+		channel="new-new-yonkers-outskirts",
+		role="New New Yonkers Outskirts",
+		pvp=True,
+		is_capturable=False
+	),
+	EwPoi(  # Outskirts - 16
+		id_poi=poi_id_assaultflatsbeach_outskirts,
+		alias=[
+			"assaultflatsbeachoutskirts",
+			"afboutskirts",
+			"afbo",
+		],
+		str_name="Assault Flats Beach Outskirts",
+		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+		coord=(68, 7),
+		channel="assault-flats-beach-outskirts",
+		role="Assault Flats Beach Outskirts",
+		pvp=True,
+		is_capturable=False
 	)
 ]
 
