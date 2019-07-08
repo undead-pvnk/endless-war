@@ -654,8 +654,8 @@ async def spawn_enemy(id_server):
 
     while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-        # potential_chosen_poi = random.choice(outskirts_districts)
-        potential_chosen_poi = 'greenlightdistrict'
+        potential_chosen_poi = random.choice(outskirts_districts)
+        # potential_chosen_poi = 'greenlightdistrict'
         potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
         enemy_constructor = EwEnemy()
         enemies_count_list = potential_chosen_district.get_enemies_in_district(enemy_constructor)
@@ -680,7 +680,7 @@ async def spawn_enemy(id_server):
 
         enemy.persist()
 
-        response = "**An enemy spawned!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name,
+        response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name,
                                                                                         enemy.slimes)
         ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
@@ -1598,4 +1598,21 @@ def check_raidboss_movecooldown(enemy_data):
         # Raid boss can't move yet
         return False
 
-
+outskirts_districts = [
+    "wreckingtonoutskirts",
+    "cratersvilleoutskirts",
+    "oozegardensoutskirts",
+    "southsleezeboroughoutskirts",
+    "crooklineoutskirts",
+    "dreadfordoutskirts",
+    "jaywalkerplainoutskirts",
+    "westglocksburyoutskirts",
+    "poloniumhilloutskirts",
+    "charcoalpark-outskirts",
+    "toxingtonoutskirts",
+    "astatineheightsoutskirts",
+    "arsonbrookoutskirts",
+    "brawldenoutskirts",
+    "newnewyonkersoutskirts",
+    "assaultflatsbeachoutskirts"
+]
