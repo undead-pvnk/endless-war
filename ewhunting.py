@@ -547,6 +547,7 @@ class EwEnemy:
         gang_base_response = ""
 
         try:
+            # Raid bosses can only move into the city (capturable districts), never back into the outskirts.
             destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
             if len(destinations) > 0:
                 old_poi = self.poi
