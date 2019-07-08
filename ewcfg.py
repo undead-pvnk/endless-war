@@ -658,7 +658,7 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 10
+enemy_spawn_tick_length = 20
 
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 3
@@ -708,7 +708,7 @@ time_offline = 10
 time_despawn = 60 * 180 # 3 hours
 
 # time for a raid boss to activate
-time_raidcountdown = 20
+time_raidcountdown = 60
 
 # time for a raid boss to stay in a district before it can move again
 time_raidboss_movecooldown = 30
@@ -801,6 +801,7 @@ str_yellow_subway_description = "If there's one word to describe the Yellow Line
 str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
+# TODO: Add descriptions for each outskirts district.
 str_generic_outskirts_description = "It's a wasteland, devoid of all life except for slime beasts."
 
 # Common database columns
@@ -8780,7 +8781,7 @@ help_responses = {
 common_enemies = ['juvie', 'slimeasaur']
 uncommon_enemies = ['slimeadactyl', 'desertraider']
 rare_enemies = ['microslime']
-raid_bosses = ['megaslime']
+raid_bosses = ['megaslime', 'mindbrokenbigcrocs']
 
 # Shorthand names the player can refer to enemies as.
 enemy_aliases = {
@@ -8790,10 +8791,11 @@ enemy_aliases = {
     "micro":"microslime",
     "raider":"desert raider",
     "mega":"megaslime",
+	"crocs":"mindbrokenbigcrocs",
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = ['Megaslime']
+raid_boss_names = ['Megaslime', "MINDBROKEN, BIG PARADOX CROCS"]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

@@ -634,13 +634,13 @@ async def spawn_enemy(id_server):
 
     rarity_choice = random.randrange(10000)
 
-    if rarity_choice <= 7000:
+    if rarity_choice <= 5000:
         # common enemies
         enemytype = random.choice(ewcfg.common_enemies)
-    elif rarity_choice <= 9000:
+    elif rarity_choice <= 7500:
         # uncommon enemies
         enemytype = random.choice(ewcfg.uncommon_enemies)
-    elif rarity_choice <= 9900:
+    elif rarity_choice <= 9500:
         # rare enemies
         enemytype = random.choice(ewcfg.rare_enemies)
     else:
@@ -648,9 +648,7 @@ async def spawn_enemy(id_server):
         enemytype = random.choice(ewcfg.raid_bosses)
 
     # debug manual reassignment
-    enemytype = random.choice(ewcfg.common_enemies)
-
-    # TODO: Make enemies spawn in outskirts
+    # enemytype = random.choice(ewcfg.common_enemies)
 
     while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
@@ -680,7 +678,8 @@ async def spawn_enemy(id_server):
 
         enemy.persist()
 
-        response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name,
+        if enemytype not in ewcfg.raid_bosses:
+            response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name,
                                                                                         enemy.slimes)
         ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
@@ -854,7 +853,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 crop_amount = 6
 
-    elif enemy_data.type == 'megaslime':
+    elif enemy_data.type == 'megaslime' or enemy_data.type == 'mindbrokenbigcrocs':
 
         poudrin_dropped = True
         pleb_dropped = True
@@ -1514,6 +1513,23 @@ def get_enemy_data(enemy_type):
         enemy.id_target = ""
         enemy.raidtimer = int(time.time())
 
+    elif enemy_type == 'mindbrokenbigcrocs':
+
+        enemy.id_server = ""
+        enemy.slimes = get_enemy_slime('mindbrokenbigcrocs')
+        enemy.totaldamage = 0
+        enemy.ai = "Attacker-A"
+        enemy.display_name = "MINDBROKEN, BIG PARADOX CROCS"
+        enemy.level = 0
+        enemy.life_state = 2
+        enemy.type = enemy_type
+        enemy.attacktype = "gunk shot"
+        enemy.bleed_storage = 0
+        enemy.time_lastenter = 0
+        enemy.initialslimes = 0
+        enemy.id_target = ""
+        enemy.raidtimer = int(time.time())
+
     return enemy
 
 # Returns a randomized amount of slime based on enemy type
@@ -1531,6 +1547,8 @@ def get_enemy_slime(enemy_type):
         slime = ((random.randrange(500000) + 250000) + 1)
     elif enemy_type == 'megaslime':
         slime = 1000000
+    elif enemy_type == 'mindbrokenbigcrocs':
+        slime = 5000000
     return slime
 
 # Selects which non-ghost user to attack based on certain parameters.
@@ -1608,7 +1626,7 @@ outskirts_districts = [
     "jaywalkerplainoutskirts",
     "westglocksburyoutskirts",
     "poloniumhilloutskirts",
-    "charcoalpark-outskirts",
+    "charcoalparkoutskirts",
     "toxingtonoutskirts",
     "astatineheightsoutskirts",
     "arsonbrookoutskirts",
