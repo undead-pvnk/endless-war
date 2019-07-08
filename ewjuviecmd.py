@@ -21,6 +21,50 @@ from ewitem import EwItem
 # exceeds 3 in 5 seconds, you die.
 last_mismined_times = {}
 
+juviesrow_mines = {}
+toxington_mines = {}
+cratersville_mines = {}
+
+mines_map = {
+	ewcfg.poi_id_mine: juviesrow_mines,
+	ewcfg.poi_id_tt_mines: toxington_mines,
+	ewcfg.poi_id_cv_mines: cratersville_mines
+}
+
+cel_mine = 1
+cel_mine_marked = 2
+cel_mine_open = 3
+
+cel_empty = -1
+cel_empty_marked = -2
+cel_empty_open = -3
+
+symbol_map = {
+	-1 : "/",
+	1 : "/",
+	-2 : "?",
+	2 : "?",
+	3 : "X"
+}
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+class EwMineGrid:
+	grid = []
+
+	message = ""
+
+	times_edited = 0
+
+	time_last_posted = 0
+
+	def __init__(self, grid):
+		self.grid = grid
+		self.message = ""
+		self.times_edited = 0
+		self.time_last_posted = 0
+
+
 """ player enlists in a faction/gang """
 async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -246,6 +290,10 @@ async def mine(cmd):
 				response += levelup_response
 
 			user_data.persist()
+			
+			grid_resp = print_grid(user_data.poi, user_data.id_server)
+
+			response += "\n```\n{}\n```".format(grid_resp)
 
 	else:
 		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -391,3 +439,66 @@ async def scavenge(cmd):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
+
+def init_grid(poi, id_server):
+	grid = []
+	num_rows = 20
+	num_cols = 26
+	for i in range(num_rows):
+		row = []
+		for j in range(num_cols):
+			row.append(-1)
+		grid.append(row)
+
+	num_mines = 80
+
+	row = random.randrange(num_rows)
+	col = random.randrange(num_cols)
+	for mine in range(num_mines):
+		while grid[row][col] == 1:
+			row = random.randrange(num_rows)
+			col = random.randrange(num_cols)
+		grid[row][col] = 1
+			
+	if poi in mines_map:
+		grid_cont = EwMineGrid(grid = grid)
+		mines_map.get(poi)[id_server] = grid_cont
+
+def print_grid(poi, id_server):
+	grid_str = ""
+	if poi in mines_map:
+		grid_map = mines_map.get(poi)
+		if id_server not in grid_map:
+			init_grid(poi, id_server)
+		grid_cont = grid_map.get(id_server)
+
+		grid = grid_cont.grid
+
+		grid_str += "   "
+		for j in range(len(grid[0])):
+			grid_str += "{} ".format(alphabet[j])
+		grid_str += "\n"
+		for i in range(len(grid)):
+			row = grid[i]
+			if i+1 < 10:
+				grid_str += " "
+
+			grid_str += "{} ".format(i+1)
+			for j in range(len(row)):
+				cel = row[j]
+				cel_str = ""
+				if cel == cel_empty_open:
+					neighbor_mines = 0
+					for ci in range(max(0, i-1), min(len(grid), i+2)):
+						for cj in range(max(0, j-1), min(len(row), j+2)):
+							if grid[ci][cj] > 0:
+								neighbor_mines += 1
+					cel_str = str(neighbor_mines)
+
+				else:
+					cel_str = symbol_map.get(cel)
+				grid_str += cel_str + " "
+			grid_str += "\n"
+
+
+	return grid_str
