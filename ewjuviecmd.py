@@ -122,6 +122,7 @@ async def renounce(cmd):
 	else:
 		faction = user_data.faction
 		user_data.life_state = ewcfg.life_state_juvenile
+		user_data.weapon = -1
 		user_data.persist()
 		response = "You are no longer enlisted in the {}, but you are not free of association with them.".format(faction)
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
