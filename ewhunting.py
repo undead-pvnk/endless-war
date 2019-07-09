@@ -1,6 +1,7 @@
 import time
 import random
 import math
+import asyncio
 
 import ewcfg
 import ewutils
@@ -202,6 +203,7 @@ class EwEnemy:
     async def kill(self):
 
         client = ewutils.get_client()
+        last_messages = []
 
         enemy_data = self
 
@@ -256,6 +258,7 @@ class EwEnemy:
             resp_cont.add_channel_response(ch_name, response)
 
             enemy_data.life_state = 1
+            enemy_data.time_lastenter = time_now
             enemy_data.persist()
 
             target_data = None
@@ -264,13 +267,34 @@ class EwEnemy:
             # Raid boss attacks.
             pass
 
+        # If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
         elif check_raidboss_countdown(enemy_data) == False:
-            timer = (enemy_data.raidtimer - time_now + ewcfg.time_raidcountdown)
-            if timer < ewcfg.enemy_attack_tick_length and timer != 0:
-                timer = ewcfg.enemy_attack_tick_length
-            response = "You feel a sinister presence lurking. Time remaining: {} seconds...".format(timer)
-            resp_cont.add_channel_response(ch_name, response)
+
             target_data = None
+
+            while check_raidboss_countdown(enemy_data) == False:
+                timer = (enemy_data.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
+
+                if timer < ewcfg.enemy_attack_tick_length and timer != 0:
+                    timer = ewcfg.enemy_attack_tick_length
+
+                countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
+                resp_cont.add_channel_response(ch_name, countdown_response)
+
+                try:
+                    await asyncio.sleep(ewcfg.enemy_attack_tick_length)
+                    await client.delete_message(last_messages[len(last_messages)-1])
+                except:
+                    pass
+
+                last_messages = await resp_cont.post()
+            # Once it exits the loop, delete the final countdown message
+            try:
+                await asyncio.sleep(ewcfg.enemy_attack_tick_length)
+                await client.delete_message(last_messages[len(last_messages) - 1])
+            except:
+                pass
+
 
 
         if target_data != None:
@@ -532,8 +556,6 @@ class EwEnemy:
                     # resp_cont.format_channel_response(ewcfg.channel_killfeed, enemy_data)
                     # resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
                 # await ewutils.send_message(client, killfeed_channel, ewutils.formatMessage(enemy_data.display_name, killfeed_resp))
-
-
 
         # Send the response to the player.
         resp_cont.format_channel_response(ch_name, enemy_data)
