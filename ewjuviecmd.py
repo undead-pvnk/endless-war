@@ -237,8 +237,10 @@ async def mine(cmd):
 
 					if grid_multiplier > 0:
 						response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+					else:
+						response = "You have barely avoided getting caught in a mining accident."
 
-						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					grid[row][col] = ewcfg.cell_mine_open
 					await print_grid(cmd)
 					init_grid(user_data.poi, user_data.id_server)
