@@ -15,7 +15,7 @@ from ewtransport import EwTransportLine
 import ewdebug
 
 # Global configuration options.
-version = "v3.5 - Hunting"
+version = "v3.5a - Hunting"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -703,6 +703,25 @@ time_kickout = 60 * 60  # 1 hour
 
 # time after coming online before you can act
 time_offline = 10
+
+# mining sweeper
+cell_mine = 1
+cell_mine_marked = 2
+cell_mine_open = 3
+
+cell_empty = -1
+cell_empty_marked = -2
+cell_empty_open = -3
+
+symbol_map = {
+	-1 : "/",
+	1 : "/",
+	-2 : "?",
+	2 : "?",
+	3 : "X"
+}
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
