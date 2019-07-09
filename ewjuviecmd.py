@@ -173,25 +173,33 @@ async def mine(cmd):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
-			coords = cmd.tokens[1].lower()
 
-			if coords == "reset":
-				init_grid(user_data.poi, user_data.id_server)
-				return await print_grid(cmd)
-
-
+			flag = False
 			row = -1
 			col = -1
-			for char in coords:
-				if char in ewcfg.alphabet:
-					col = ewcfg.alphabet.index(char)
-					coords = coords.replace(char, "")
+			for token in cmd.tokens[1:]:
+
+				if token.lower() == "reset":
+					init_grid(user_data.poi, user_data.id_server)
+					return await print_grid(cmd)
+
+				if token.lower() == "flag":
+					flag = True
 
 
-			try:
-				row = int(coords)
-			except:
-				row = -1
+				if row < 1 or col < 1:
+					coords = token.lower()
+
+					for char in coords:
+						if char in ewcfg.alphabet:
+							col = ewcfg.alphabet.index(char)
+							coords = coords.replace(char, "")
+
+
+					try:
+						row = int(coords)
+					except:
+						row = -1
 
 			row -= 1
 
@@ -204,23 +212,41 @@ async def mine(cmd):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
+			if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
+				if flag:
+					if grid[row][col] == ewcfg.cell_empty_marked:
+						grid[row][col] = ewcfg.cell_empty
+					elif grid[row][col] == ewcfg.cell_mine_marked:
+						grid[row][col] = ewcfg.cell_mine
+				else:
+					response = "This vein has been flagged as dangerous. Remove the flag to mine here."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await print_grid(cmd)
 			if grid[row][col] == ewcfg.cell_empty_open:
 				response = "This vein has already been mined dry."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
 			if grid[row][col] == ewcfg.cell_mine:
-				user_data.change_slimes(n = -(user_data.slimes / 5))
-				user_data.persist()
+				if flag:
+					grid[row][col] = ewcfg.cell_mine_marked
+				else:
+					user_data.change_slimes(n = -(user_data.slimes / 10))
+					user_data.persist()
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
-				grid[row][col] = ewcfg.cell_mine_open
-				await print_grid(cmd)
-				init_grid(user_data.poi, user_data.id_server)
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
+					grid[row][col] = ewcfg.cell_mine_open
+					await print_grid(cmd)
+					init_grid(user_data.poi, user_data.id_server)
 				return await print_grid(cmd)
 
-			grid[row][col] = ewcfg.cell_empty_open
+			if flag:
+				grid[row][col] = ewcfg.cell_empty_marked
+				return await print_grid(cmd)
+			else:
+				grid[row][col] = ewcfg.cell_empty_open
 
+			grid_multiplier = grid_cont.cells_mined ** 0.4
 			has_pickaxe = False
 
 			if user_data.weapon >= 0:
@@ -241,6 +267,8 @@ async def mine(cmd):
 				unearthed_item_chance *= 1.5
 			if ewcfg.mutation_id_lucky in mutations:
 				unearthed_item_chance *= 1.33
+
+			unearthed_item_chance *= grid_multiplier
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -315,7 +343,7 @@ async def mine(cmd):
 			alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
 			mining_yield = min(mining_yield, alternate_yield)
-			mining_yield *= grid_cont.cells_mined ** 0.4
+			mining_yield *= grid_multiplier
 
 			if has_pickaxe == True:
 				mining_yield *= 2
@@ -492,15 +520,15 @@ async def scavenge(cmd):
 
 def init_grid(poi, id_server):
 	grid = []
-	num_rows = 20
-	num_cols = 26
+	num_rows = 15
+	num_cols = 15
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
 			row.append(-1)
 		grid.append(row)
 
-	num_mines = 80
+	num_mines = 30
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
@@ -552,8 +580,13 @@ async def print_grid(cmd):
 				else:
 					cell_str = ewcfg.symbol_map.get(cell)
 				grid_str += cell_str + " "
+			grid_str += "{}".format(i+1)
 			grid_str += "\n"
 
+
+		grid_str += "   "
+		for j in range(len(grid[0])):
+			grid_str += "{} ".format(ewcfg.alphabet[j])
 
 		grid_edit = "\n```\n{}\n```".format(grid_str)
 		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 8 or grid_cont.message == "":
