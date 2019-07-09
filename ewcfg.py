@@ -658,7 +658,7 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 5
+enemy_spawn_tick_length = 20
 
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 3
@@ -3687,6 +3687,31 @@ food_list = [
 		str_desc = ewdebug.forbiddenstuffedcrust_desc,
 		acquisition = acquisition_smelting
 	),
+	EwFood(
+		id_food = "slimeasaurmeat",
+		alias = [
+			"meat",
+			"mutton",
+			"monstermeat",
+			"ssm"
+		],
+		recover_hunger = 500,
+		str_name = 'Slimeasaur Meat',
+		str_eat = "You bite into the raw meat of dead Slimeasaur. At certain points of your feast, it feels like you're biting into a fucking fan belt, but hey, food is food.",
+		str_desc = "The meat of a slimeasaur. It's best to probably cook it before consumption, if only you knew how.",
+	),
+	EwFood(
+		id_food = "slimeasaursteak",
+		alias = [
+			"cookedmeat",
+			"sss"
+		],
+		recover_hunger = 2000,
+		str_name = 'Slimeasaur Steak',
+		str_eat = "You savour every last bite of your meal, and all the doubt you might have had about sacrificing your sticks washes away.",
+		str_desc = "Through a stroke of genius, a faggot was sacrificed, and fire was made. This is the logical conclusion of such a sacrifice.",
+		acquisition = acquisition_smelting
+	)
 ]
 
 # A map of id_food to EwFood objects.
@@ -7087,6 +7112,19 @@ smelting_recipe_list = [
 		},
 		products = ['faggot']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "slimeasaursteak",
+		str_name = "a cooked piece of Slimeasaur meat",
+		alias = [
+			"cookedmeat",
+			"sss"
+		],
+		ingredients = {
+			'faggot' : 1,
+			'slimeasaurmeat' : 1
+		},
+		products = ['slimeasaursteak']
+	)
 ]
 
 # A map of id_recipe to EwSmeltingRecipe objects.

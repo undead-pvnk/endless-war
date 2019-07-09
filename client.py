@@ -912,6 +912,28 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
+		# Creates a faggot
+		elif debug == True and cmd == '!createfaggot':
+			for item in ewcfg.item_list:
+				if item.id_item == "faggot":
+					ewitem.item_create(
+						item_type=ewcfg.it_item,
+						id_user=message.author.id,
+						id_server=message.server.id,
+						item_props={
+							'id_item': item.id_item,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					ewutils.logMsg('Created item: {}'.format(item.id_item))
+					item = EwItem(id_item=item.id_item)
+					item.persist()
+			else:
+				pass
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Faggot created."))
+
 		# Gives the user some slime
 		elif debug == True and cmd == '!getslime':
 			user_data = EwUser(member = message.author)

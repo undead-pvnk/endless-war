@@ -683,7 +683,7 @@ async def spawn_enemy(id_server):
     elif rarity_choice <= 7500:
         # uncommon enemies
         enemytype = random.choice(ewcfg.uncommon_enemies)
-    elif rarity_choice <= 9500:
+    elif rarity_choice <= 9000:
         # rare enemies
         enemytype = random.choice(ewcfg.rare_enemies)
     else:
@@ -691,12 +691,12 @@ async def spawn_enemy(id_server):
         enemytype = random.choice(ewcfg.raid_bosses)
 
     # debug manual reassignment
-    enemytype = 'juvie'
+    # enemytype = 'juvie'
 
     while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-        # potential_chosen_poi = random.choice(outskirts_districts)
-        potential_chosen_poi = 'cratersvilleoutskirts'
+        potential_chosen_poi = random.choice(outskirts_districts)
+        # potential_chosen_poi = 'cratersvilleoutskirts'
         potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
         enemy_constructor = EwEnemy()
         enemies_list = potential_chosen_district.get_enemies_in_district(enemy_constructor)
@@ -811,6 +811,8 @@ def drop_enemy_loot(enemy_data, district_data):
     crop_range = 0
     crop_amount = 0
 
+    meat_dropped = False
+
     # Determines what items should be dropped based on enemy type.
     if enemy_data.type == 'juvie':
 
@@ -837,7 +839,7 @@ def drop_enemy_loot(enemy_data, district_data):
 
         poudrin_dropped = True
         pleb_dropped = random.randrange(10) <= 3
-        # meat_dropped = True
+        meat_dropped = random.randrange(3) != 0
 
         poudrin_range = random.randrange(2)
 
@@ -1034,6 +1036,28 @@ def drop_enemy_loot(enemy_data, district_data):
             response += "They dropped a bushel of {vegetable_name}!\n".format(vegetable_name=vegetable.str_name)
 
             item_counter += 1
+
+    # Drop slimeasaur meat
+    if meat_dropped:
+        meat = None
+
+        for food in ewcfg.food_list:
+            if food.id_food == 'slimeasaurmeat':
+                meat = food
+        ewitem.item_create(
+            id_user=district_data.name,
+            id_server=district_data.id_server,
+            item_type=ewcfg.it_food,
+            item_props={
+                'id_food': meat.id_food,
+                'food_name': meat.str_name,
+                'food_desc': meat.str_desc,
+                'recover_hunger': meat.recover_hunger,
+                'str_eat': meat.str_eat,
+                'time_expir': time.time() + ewcfg.std_food_expir
+            }
+        )
+        response += "They dropped a piece of meat!\n"
 
     if not poudrin_dropped and not pleb_dropped and not patr_dropped and not crop_dropped:
         response = "They didn't drop anything..."
