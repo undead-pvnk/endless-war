@@ -175,6 +175,7 @@ async def mine(cmd):
 				return await print_grid(cmd)
 
 
+			grid_multiplier = grid_cont.cells_mined ** 0.4
 			flag = False
 			row = -1
 			col = -1
@@ -232,10 +233,15 @@ async def mine(cmd):
 				if flag:
 					grid[row][col] = ewcfg.cell_mine_marked
 				else:
-					user_data.change_slimes(n = -(user_data.slimes / 10))
+					user_data.change_slimes(n = -(user_data.slimes * 0.01 * grid_multiplier))
 					user_data.persist()
 
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
+					if grid_multiplier > 0:
+						response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+					else:
+						response = "You have barely avoided getting caught in a mining accident."
+
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					grid[row][col] = ewcfg.cell_mine_open
 					await print_grid(cmd)
 					init_grid(user_data.poi, user_data.id_server)
@@ -247,7 +253,6 @@ async def mine(cmd):
 			else:
 				grid[row][col] = ewcfg.cell_empty_open
 
-			grid_multiplier = grid_cont.cells_mined ** 0.4
 			has_pickaxe = False
 
 			if user_data.weapon >= 0:
@@ -373,6 +378,106 @@ async def mine(cmd):
 			
 
 			await print_grid(cmd)
+
+	else:
+		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
+
+	if len(response) > 0:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" flag or unflag a slime vein as dangerous """
+async def flag(cmd):
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
+	time_now = int(time.time())
+
+	response = ""
+	# Kingpins can't mine.
+	if user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe:
+		return
+
+	# ghosts cant mine (anymore)
+	if user_data.life_state == ewcfg.life_state_corpse:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't mine while you're dead. Try {}.".format(ewcfg.cmd_revive)))
+
+	# Enlisted players only mine at certain times.
+	if user_data.life_state == ewcfg.life_state_enlisted:
+		if user_data.faction == ewcfg.faction_rowdys and (market_data.clock < 8 or market_data.clock > 17):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Rowdies only mine in the daytime. Wait for full daylight at 8am.".format(ewcfg.cmd_revive)))
+
+		if user_data.faction == ewcfg.faction_killers and (market_data.clock < 20 and market_data.clock > 5):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Killers only mine under cover of darkness. Wait for nightfall at 8pm.".format(ewcfg.cmd_revive)))
+
+	# Mine only in the mines.
+	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
+
+		if user_data.hunger >= user_data.get_hunger_max():
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
+
+		else:
+			if user_data.poi not in mines_map:
+				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif user_data.id_server not in mines_map.get(user_data.poi):
+				init_grid(user_data.poi, user_data.id_server)
+			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+			grid = grid_cont.grid
+
+			if cmd.tokens_count < 2:
+				response = "Please specify which vein to mine."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await print_grid(cmd)
+
+
+			grid_multiplier = grid_cont.cells_mined ** 0.4
+			row = -1
+			col = -1
+			for token in cmd.tokens[1:]:
+				
+				if row < 1 or col < 1:
+					coords = token.lower()
+					
+					for char in coords:
+						if char in ewcfg.alphabet:
+							col = ewcfg.alphabet.index(char)
+							coords = coords.replace(char, "")
+
+
+					try:
+						row = int(coords)
+					except:
+						row = -1
+
+			row -= 1
+			
+			if row not in range(len(grid)):
+				response = "Invalid vein."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await print_grid(cmd)
+			if col not in range(len(grid[row])):
+				response = "Invalid vein."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await print_grid(cmd)
+
+			if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
+				if grid[row][col] == ewcfg.cell_empty_marked:
+					grid[row][col] = ewcfg.cell_empty
+				elif grid[row][col] == ewcfg.cell_mine_marked:
+					grid[row][col] = ewcfg.cell_mine
+				return await print_grid(cmd)
+			if grid[row][col] == ewcfg.cell_empty_open:
+				response = "This vein has already been mined dry."
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await print_grid(cmd)
+
+			if grid[row][col] == ewcfg.cell_mine:
+				grid[row][col] = ewcfg.cell_mine_marked
+				return await print_grid(cmd)
+
+			grid[row][col] = ewcfg.cell_empty_marked
+			return await print_grid(cmd)
+
 
 	else:
 		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
