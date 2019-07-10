@@ -203,7 +203,9 @@ class EwEnemy:
     async def kill(self):
 
         client = ewutils.get_client()
+
         last_messages = []
+        should_post_resp_cont = True
 
         enemy_data = self
 
@@ -288,13 +290,16 @@ class EwEnemy:
                     pass
 
                 last_messages = await resp_cont.post()
-            # Once it exits the loop, delete the final countdown message
+
+            #Once it exits the loop, delete the final countdown message
             try:
                 await asyncio.sleep(ewcfg.enemy_attack_tick_length)
                 await client.delete_message(last_messages[len(last_messages) - 1])
             except:
                 pass
 
+            # Don't make an attempt post resp_cont, since it should be emptied out after the loop exit
+            should_post_resp_cont = False
 
 
         if target_data != None:
@@ -559,7 +564,8 @@ class EwEnemy:
 
         # Send the response to the player.
         resp_cont.format_channel_response(ch_name, enemy_data)
-        await resp_cont.post()
+        if should_post_resp_cont:
+            await resp_cont.post()
 
     def move(self):
         resp_cont = ewutils.EwResponseContainer(id_server=self.id_server)
