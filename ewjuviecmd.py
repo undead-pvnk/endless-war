@@ -36,6 +36,7 @@ class EwMineGrid:
 	grid = []
 
 	message = ""
+	wall_message = ""
 
 	times_edited = 0
 
@@ -46,6 +47,7 @@ class EwMineGrid:
 	def __init__(self, grid):
 		self.grid = grid
 		self.message = ""
+		self.wall_message = ""
 		self.times_edited = 0
 		self.time_last_posted = 0
 		self.cells_mined = 0
@@ -626,8 +628,8 @@ async def scavenge(cmd):
 
 def init_grid(poi, id_server):
 	grid = []
-	num_rows = 15
-	num_cols = 15
+	num_rows = 13
+	num_cols = 13
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
@@ -682,6 +684,7 @@ async def print_grid(cmd):
 							if grid[ci][cj] > 0:
 								neighbor_mines += 1
 					cell_str = str(neighbor_mines)
+					#cell_str = ewcfg.number_emote_map.get(neighbor_mines)
 
 				else:
 					cell_str = ewcfg.symbol_map.get(cell)
@@ -695,6 +698,7 @@ async def print_grid(cmd):
 			grid_str += "{} ".format(ewcfg.alphabet[j])
 
 		grid_edit = "\n```\n{}\n```".format(grid_str)
+		#grid_edit = grid_str
 		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 8 or grid_cont.message == "":
 			grid_cont.message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, grid_edit))
 			grid_cont.time_last_posted = time_now
@@ -702,3 +706,12 @@ async def print_grid(cmd):
 		else:
 			await ewutils.edit_message(cmd.client, grid_cont.message, ewutils.formatMessage(cmd.message.author, grid_edit))
 			grid_cont.times_edited += 1
+
+		if grid_cont.wall_message == "":
+			wall_channel = ewcfg.mines_wall_map.get(poi)
+			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+			resp_cont.add_channel_response(wall_channel, grid_edit)
+			msg_handles = await resp_cont.post()
+			grid_cont.wall_message = msg_handles[0]
+		else:
+			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
