@@ -1267,10 +1267,9 @@ async def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, 
             elif user_data.slimelevel < enemy_data.level:
                 ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_pve_takedowns)
 
-            # TODO: Ask people if enemies should give weapon skill / confirmed kills
-            # Give a bonus to the player's weapon skill for killing a stronger player.
-            # if enemy_data.level >= user_data.slimelevel and weapon is not None:
-            #    user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
+            # Give a bonus to the player's weapon skill for killing a stronger enemy.
+            if enemy_data.level >= user_data.slimelevel and weapon is not None:
+               user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
 
             # release bleed storage
             if ewcfg.mutation_id_thickerthanblood in user_mutations:
