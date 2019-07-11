@@ -628,8 +628,8 @@ async def scavenge(cmd):
 
 def init_grid(poi, id_server):
 	grid = []
-	num_rows = 13
-	num_cols = 13
+	num_rows = 15
+	num_cols = 15
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
