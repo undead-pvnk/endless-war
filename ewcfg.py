@@ -731,7 +731,7 @@ time_despawn = 60 * 180 # 3 hours
 time_raidcountdown = 60
 
 # time for a raid boss to stay in a district before it can move again
-time_raidboss_movecooldown = 100
+time_raidboss_movecooldown = 120
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
