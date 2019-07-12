@@ -8843,6 +8843,7 @@ rare_enemies = ['microslime']
 raid_bosses = ['megaslime', 'slimeasaurusrex']
 
 # Shorthand names the player can refer to enemies as.
+# Left side is shorthand, right side is display name
 enemy_aliases = {
     "juvie":"lost juvie",
     "dino":"slimeasaur",
@@ -8850,7 +8851,7 @@ enemy_aliases = {
     "micro":"microslime",
     "raider":"desert raider",
     "mega":"megaslime",
-	"rex":"slimeasaurusrex",
+	"rex":"slimeasaurus rex",
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage

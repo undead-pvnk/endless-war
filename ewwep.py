@@ -804,6 +804,7 @@ def explode(damage = 0, district_data = None):
 				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
 				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
+				response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
 				resp_cont.add_channel_response(channel, response)
 
 				enemy_data.life_state = 0
