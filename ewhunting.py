@@ -334,8 +334,8 @@ class EwEnemy:
 
             if attacktype == 'unarmed':
                 slimes_damage /= 2  # specific to juvies
-            elif attacktype == 'unarmed' and enemy_data.type == "microslime":
-                slimes_damage *= 400  # specific to microslime
+            if enemy_data.type == "microslime":
+                slimes_damage *= 20  # specific to microslime
 
             slimes_dropped = target_data.totaldamage + target_data.slimes
 
