@@ -659,7 +659,7 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 20
+enemy_spawn_tick_length = 60 * 5 # Five minutes
 
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 3
@@ -731,7 +731,7 @@ time_despawn = 60 * 180 # 3 hours
 time_raidcountdown = 60
 
 # time for a raid boss to stay in a district before it can move again
-time_raidboss_movecooldown = 50
+time_raidboss_movecooldown = 100
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
