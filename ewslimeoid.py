@@ -2956,6 +2956,8 @@ async def feedslimeoid(cmd):
 			if item_data.item_type == ewcfg.it_item and item_data.item_props.get('context') == ewcfg.context_slimeoidfood:
 				feed_success = slimeoid.eat(item_data)
 				if feed_success:
+					slimeoid.persist()
+					ewitem.item_delete(id_item = item_data.id_item)
 					response = "{} eats the {}.".format(slimeoid.name, item_sought.get('name'))
 				else:
 					response = "{} refuses to eat the {}.".format(slimeoid.name, item_sought.get('name'))

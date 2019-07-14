@@ -59,6 +59,11 @@ sltype_wild = 'Wild'
 battle_type_arena = 0
 battle_type_nega = 1
 
+# slimeoid stats
+slimeoid_stat_moxie = 'moxie'
+slimeoid_stat_grit = 'grit'
+slimeoid_stat_chutzpah = 'chutzpah'
+
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
