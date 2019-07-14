@@ -505,6 +505,7 @@ cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
 cmd_bottleslimeoid = cmd_prefix + 'bottleslimeoid'
 cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
+cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -1133,6 +1134,7 @@ stats_clear_on_death = [
 
 context_slimeoidheart = 'slimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
+context_slimeoidfood = 'slimeoidfood'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger

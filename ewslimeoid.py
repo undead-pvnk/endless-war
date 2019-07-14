@@ -261,6 +261,37 @@ class EwSlimeoid:
 		finally:
 			return resp_cont
 
+	def eat(self, food_item):
+		if food_item.item_props.get('context') != ewcfg.context_slimeoidfood:
+			return False
+		
+		if food_item.item_props.get('decrease') == ewcfg.slimeoid_stat_moxie:
+			if self.atk < 1:
+				return False
+			
+			self.atk -= 1
+		elif food_item.item_props.get('decrease') == ewcfg.slimeoid_stat_grit:
+			if self.defense < 1:
+				return False
+			
+			self.defense -= 1
+		elif food_item.item_props.get('decrease') == ewcfg.slimeoid_stat_chutzpah:
+			if self.intel < 1:
+				return False
+			
+			self.intel -= 1
+		if food_item.item_props.get('increase') == ewcfg.slimeoid_stat_moxie:
+			self.atk += 1
+		elif food_item.item_props.get('increase') == ewcfg.slimeoid_stat_grit:
+			self.defense += 1
+		elif food_item.item_props.get('increase') == ewcfg.slimeoid_stat_chutzpah:
+			self.intel += 1
+
+		return True
+
+		
+
+
 
 """ slimeoid model object """
 class EwBody:
@@ -2895,5 +2926,44 @@ async def unbottleslimeoid(cmd):
 	ewitem.item_delete(id_item = bottle_data.id_item)
 
 	response += "You crack open a fresh bottle of Slimeoid. After a bit of shaking {} sits beside you again, fully formed.".format(slimeoid.name)
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def feedslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+	time_now = int(time.time())
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "You do not have a Slimeoid to feed."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	elif cmd.tokens_count < 2:
+		response = "Specify which item you want to feed to your slimeoid."
+	else:
+		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
+
+		if item_sought:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			if item_data.item_type == ewcfg.it_item and item_data.item_props.get('context') == ewcfg.context_slimeoidfood:
+				feed_success = slimeoid.eat(item_data)
+				if feed_success:
+					response = "{} eats the {}.".format(slimeoid.name, item_sought.get('name'))
+				else:
+					response = "{} refuses to eat the {}.".format(slimeoid.name, item_sought.get('name'))
+			else:
+				response = "That item is not suitable for slimeoid consumption."
+			
+		else:
+			response = "You don't have an item like that."
+
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
