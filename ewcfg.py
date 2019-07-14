@@ -503,6 +503,8 @@ cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
+cmd_bottleslimeoid = cmd_prefix + 'bottleslimeoid'
+cmd_unbottleslimeoid = cmd_prefix + 'unbotteslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -878,6 +880,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
+col_active_slimeoid = 'active_slimeoid'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -1129,6 +1132,7 @@ stats_clear_on_death = [
 ]
 
 context_slimeoidheart = 'slimeoidheart'
+context_slimeoidbottle = 'slimeoidbottle'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger

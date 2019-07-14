@@ -38,6 +38,7 @@ class EwUser:
 	time_last_action = 0
 	weaponmarried = False
 	arrested = False
+	active_slimeoid = -1
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -407,7 +408,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -440,6 +441,7 @@ class EwUser:
 					ewcfg.col_slime_donations,
 					ewcfg.col_poudrin_donations,
 					ewcfg.col_arrested,
+					ewcfg.col_active_slimeoid,
 				), (
 					id_user,
 					id_server
@@ -480,6 +482,7 @@ class EwUser:
 					self.slime_donations = result[29]
 					self.poudrin_donations = result[30]
 					self.arrested = (result[31] == 1)
+					self.active_slimeoid = result[32]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -534,7 +537,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -570,6 +573,7 @@ class EwUser:
 				ewcfg.col_slime_donations,
 				ewcfg.col_poudrin_donations,
 				ewcfg.col_arrested,
+				ewcfg.col_active_slimeoid,
 			), (
 				self.id_user,
 				self.id_server,
@@ -606,6 +610,7 @@ class EwUser:
 				self.slime_donations,
 				self.poudrin_donations,
 				(1 if self.arrested else 0),
+				self.active_slimeoid,
 			))
 
 			conn.commit()

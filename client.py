@@ -343,6 +343,8 @@ cmd_map = {
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
         ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+        ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+        ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
 	# Negaslimeoids
 
 	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
