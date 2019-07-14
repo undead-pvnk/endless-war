@@ -504,7 +504,7 @@ cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
 cmd_bottleslimeoid = cmd_prefix + 'bottleslimeoid'
-cmd_unbottleslimeoid = cmd_prefix + 'unbotteslimeoid'
+cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"

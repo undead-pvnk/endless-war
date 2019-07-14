@@ -13,12 +13,13 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
+from ewitem import EwItem
 
 active_slimeoidbattles = {}
 
 """ Slimeoid data model for database persistence """
 class EwSlimeoid:
-	id_slimeoid = -1
+	id_slimeoid = 0
 	id_user = ""
 	id_server = ""
 
@@ -2787,8 +2788,9 @@ async def bottleslimeoid(cmd):
 
 		bottles = []
 		for item in items:
-			if item.item_props.get('context') == ewcfg.context_slimeoidbottle:
-				bottles.append(item)
+			item_data = EwItem(id_item = item.get('id_item'))
+			if item_data.item_props.get('context') == ewcfg.context_slimeoidbottle:
+				bottles.append(item_data)
 
 		if len(bottles) >= 2:
 			response = "You can't carry any more slimeoid bottles."
@@ -2839,8 +2841,9 @@ async def unbottleslimeoid(cmd):
 
 	bottles = []
 	for item in items:
-		if item.item_props.get('context') == ewcfg.context_slimeoidbottle:
-			bottles.append(item)
+		item_data = EwItem(id_item = item.get('id_item'))
+		if item_data.item_props.get('context') == ewcfg.context_slimeoidbottle:
+			bottles.append(item_data)
 
 	slimeoid = None
 	bottle_data = None
