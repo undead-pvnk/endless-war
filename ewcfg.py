@@ -760,12 +760,25 @@ cell_empty = -1
 cell_empty_marked = -2
 cell_empty_open = -3
 
-symbol_map = {
+cell_slime = 0
+
+
+symbol_map_ms = {
 	-1 : "/",
 	1 : "/",
 	-2 : "+",
 	2 : "+",
 	3 : "X"
+}
+
+symbol_map_pokemine = {
+	-1 : "_",
+	0 : "~",
+	1 : "X",
+	11 : ";",
+	12 : "/",
+	13 : "#"
+	
 }
 
 number_emote_map = {
