@@ -171,89 +171,93 @@ async def mine(cmd):
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
+			minesweeper = False
 			if cmd.tokens_count < 2:
-				response = "Please specify which vein to mine."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+			#	response = "Please specify which vein to mine."
+			#	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			#	return await print_grid(cmd)
+				grid_multiplier = 1
 
-
-			grid_multiplier = grid_cont.cells_mined ** 0.4
-			flag = False
-			row = -1
-			col = -1
-			for token in cmd.tokens[1:]:
+			else:
+				minesweeper = True
+				grid_multiplier = grid_cont.cells_mined ** 0.4
+				flag = False
+				row = -1
+				col = -1
+				for token in cmd.tokens[1:]:
 				
-				if token.lower() == "reset":
-					init_grid(user_data.poi, user_data.id_server)
+					if token.lower() == "reset":
+						init_grid(user_data.poi, user_data.id_server)
+						return await print_grid(cmd)
+
+					if token.lower() == "flag":
+						flag = True
+				
+	
+					if row < 1 or col < 1:
+						coords = token.lower()
+					
+						for char in coords:
+							if char in ewcfg.alphabet:
+								col = ewcfg.alphabet.index(char)
+								coords = coords.replace(char, "")
+
+
+						try:
+							row = int(coords)
+						except:
+							row = -1
+
+				row -= 1
+			
+				if row not in range(len(grid)):
+					response = "Invalid vein."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await print_grid(cmd)
+				if col not in range(len(grid[row])):
+					response = "Invalid vein."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
 
-				if token.lower() == "flag":
-					flag = True
-				
-
-				if row < 1 or col < 1:
-					coords = token.lower()
-					
-					for char in coords:
-						if char in ewcfg.alphabet:
-							col = ewcfg.alphabet.index(char)
-							coords = coords.replace(char, "")
-
-
-					try:
-						row = int(coords)
-					except:
-						row = -1
-
-			row -= 1
-			
-			if row not in range(len(grid)):
-				response = "Invalid vein."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-			if col not in range(len(grid[row])):
-				response = "Invalid vein."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-
-			if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
-				if flag:
-					if grid[row][col] == ewcfg.cell_empty_marked:
-						grid[row][col] = ewcfg.cell_empty
-					elif grid[row][col] == ewcfg.cell_mine_marked:
-						grid[row][col] = ewcfg.cell_mine
-				else:
-					response = "This vein has been flagged as dangerous. Remove the flag to mine here."
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-			if grid[row][col] == ewcfg.cell_empty_open:
-				response = "This vein has already been mined dry."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-
-			if grid[row][col] == ewcfg.cell_mine:
-				if flag:
-					grid[row][col] = ewcfg.cell_mine_marked
-				else:
-					user_data.change_slimes(n = -(user_data.slimes * 0.01 * grid_multiplier))
-					user_data.persist()
-
-					if grid_multiplier > 0:
-						response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+				if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
+					if flag:
+						if grid[row][col] == ewcfg.cell_empty_marked:
+							grid[row][col] = ewcfg.cell_empty
+						elif grid[row][col] == ewcfg.cell_mine_marked:
+							grid[row][col] = ewcfg.cell_mine
 					else:
-						response = "You have barely avoided getting caught in a mining accident."
-
+						response = "This vein has been flagged as dangerous. Remove the flag to mine here."
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await print_grid(cmd)
+				if grid[row][col] == ewcfg.cell_empty_open:
+					response = "This vein has already been mined dry."
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					grid[row][col] = ewcfg.cell_mine_open
-					await print_grid(cmd)
-					init_grid(user_data.poi, user_data.id_server)
-				return await print_grid(cmd)
+					return await print_grid(cmd)
 
-			if flag:
-				grid[row][col] = ewcfg.cell_empty_marked
-				return await print_grid(cmd)
-			else:
-				grid[row][col] = ewcfg.cell_empty_open
+				if grid[row][col] == ewcfg.cell_mine:
+					if flag:
+						grid[row][col] = ewcfg.cell_mine_marked
+					else:
+						user_data.change_slimes(n = -(user_data.slimes * 0.01 * grid_multiplier))
+						user_data.persist()
+
+						if grid_multiplier > 0:
+							response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+						else:
+							response = "You have barely avoided getting caught in a mining accident."
+
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						grid[row][col] = ewcfg.cell_mine_open
+						await print_grid(cmd)
+						init_grid(user_data.poi, user_data.id_server)
+					return await print_grid(cmd)
+
+				if flag:
+					grid[row][col] = ewcfg.cell_empty_marked
+					return await print_grid(cmd)
+				else:
+					grid[row][col] = ewcfg.cell_empty_open
+					grid_cont.cells_mined += 1
 
 			has_pickaxe = False
 
@@ -376,10 +380,8 @@ async def mine(cmd):
 
 			user_data.persist()
 
-			grid_cont.cells_mined += 1
-			
-
-			await print_grid(cmd)
+			if minesweeper:
+				await print_grid(cmd)
 
 	else:
 		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
