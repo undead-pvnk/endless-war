@@ -450,6 +450,10 @@ cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_mill = cmd_prefix + 'mill'
 cmd_adorn = cmd_prefix + 'adorn'
+cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
+cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
+cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
+cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -503,6 +507,8 @@ cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
+cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
+cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -531,7 +537,6 @@ offline_cmds = [
 	cmd_scout_alt1
 ]
 		
-
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -1153,6 +1158,7 @@ item_id_duotrigintuplestuffedcrust = "duotrigintuplestuffedcrust"
 item_id_quattuorsexagintuplestuffedcrust = "quattuorsexagintuplestuffedcrust"
 item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
+item_id_tradingcardpack = "tradingcardpack"
 
 # List of normal items.
 item_list = [
@@ -1172,7 +1178,7 @@ item_list = [
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
 		acquisition = acquisition_milling,
-		ingredients = "poketuber",
+		ingredients = "poketubers",
 	),
 	EwGeneralItem(
 		id_item = "yellowdye",
@@ -1295,7 +1301,7 @@ item_list = [
 		ingredients = "direapples",
 	),
 	EwGeneralItem(
-		id_item = "tradingcardpack",
+		id_item = item_id_tradingcardpack,
 		alias = [
 			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
 			"tradingcard",
@@ -2102,7 +2108,7 @@ food_list = [
 		price = 0,
 		inebriation = 0,
 		str_name = 'glass of water',
-		vendors = [vendor_bar],
+		vendors = [vendor_bar, vendor_bazaar],
 		str_eat = "The bartender sighs as he hands you a glass of water. You drink it. You're not sure why you bothered, though.",
 		str_desc = "It’s a room temperature glass of tap water. Abstaining from drinking calories has never tasted this adequate!"
 	),
@@ -2451,7 +2457,7 @@ food_list = [
 		price = 3000,
 		inebriation = 0,
 		str_name = 'a grilled halibut',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You scarf down some delicious grilled halibut for the helluvit and it’s accompanying sides for the sidesuvit.",
 		str_desc = "A grilled hunk of halibut, served with chipotle dirty rice and corn."
 	),
@@ -2464,7 +2470,7 @@ food_list = [
 		price = 5200,
 		inebriation = 0,
 		str_name = 'a wood fired salmon',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You swallow the wood fired salmon without saving any of its smoky aftertaste! Aww man, so much for the extra 2 SlimeCoin…",
 		str_desc = "A wood fired slice of salmon, served with a Dijon glaze and scalloped potatoes and broccoli on the side."
 	),
@@ -2477,7 +2483,7 @@ food_list = [
 		price = 4000,
 		inebriation = 0,
 		str_name = 'a sauteed mahi mahi',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You gobble up the sauteed mahi mahi with lighting speed, reducing the proud fish into liquid in a matter of seconds.",
 		str_desc = "A sauteed measurement of mahi mahi, with a lemon pepper crust and served with scalloped potatoes and spinach."
 	),
@@ -2492,7 +2498,7 @@ food_list = [
 		price = 6000,
 		inebriation = 0,
 		str_name = 'pan-seared scallops',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You lean your head back, grab a few scallops, and try throwing them up into air and landing them in your mouth. This goes extremely poorly.",
 		str_desc = "Some pan-seared scallops, served with goat cheese grits, sweet corn, and asparagus."
 	),
@@ -2506,7 +2512,7 @@ food_list = [
 		price = 1000,
 		inebriation = 0,
 		str_name = 'a cup of clam chowder',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You scoop out a glob of the hearty chowder and clench your fist above your head, letting it drizzle down all over your face and into your eager mouth. You’re a fucking freak.",
 		str_desc = "A bowl of New England clam chowder, served to you cold and runny in Arizona."
 	),
@@ -2522,7 +2528,7 @@ food_list = [
 		price = 8000,
 		inebriation = 0,
 		str_name = 'a rock lobster tail and a sirloin steak',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You discard the napkin immediately, along with the silverware trapped inside of it, opting to instead to eat the meal with your hands. "
 				  "You pry the lobster from its shell first, ramming it into your mouth and taking a shot of melted butter to soften it up while you chew. "
 				  "You continue onto the steak, carefully sliced against the grain, and smother it in half a bottle of A1 sauce and just start to suck on the two inch pieces "
@@ -2546,7 +2552,7 @@ food_list = [
 		price = 7000,
 		inebriation = 0,
 		str_name = 'an Arizonian Kingpin Crab',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You’re too weak to properly crack the mighty crabs’ carapaces, even with the proper crab carapace cracking crackers. After about 10 minutes of desperately trying to, "
 				  "you just whip out whatever weapon you currently have quiped and start to viciously strike the crustaceans in a vain attempt to release their inner, delectable meat. "
 				  "You just end up destroying the entire table you’re eating at.",
@@ -2589,7 +2595,7 @@ food_list = [
 		price = 99999,
 		inebriation = 0,
 		str_name = 'a bowl of decadent Juvie’s Roe',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You don’t really know how to eat caviar, so you just scoop some of the disgusting slop out of the tin with your bare hands and get crushed fish eggs all over your mouth "
 				  "as you shovel it into your uncultured maw. It tastes, uh… high class? This was a waste of money.",
 		str_desc = "A small tin of wild, matured Juvie’s roe. A highly sought after delicacy by the upper crust of the critical improshived juveniles of the city. "
@@ -2606,7 +2612,7 @@ food_list = [
 		price = 100,
 		inebriation = 0,
 		str_name = 'home fries',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You cram as many overcooked cubes of potato into your oversized maw as possible.You choke painfully on some of the tiny bits that that bypass your poor attempts at chewing. You hunger for more.",
 		str_desc = "A greasy, over salted, crispy pile of miniature potato chunks, ranging from the average cubes to smaller irregularly shaped, condensed bits of pure fried potato skin. "
 				   "With a calorie count well above your recommended daily consumption in just a handful, you could subsist on these preservative riddled species of spud for well over a week and still gain weight. "
@@ -2621,7 +2627,7 @@ food_list = [
 		price = 700,
 		inebriation = 0,
 		str_name = 'stack of three pancakes',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You drench your three flapjacks in a generous helping of maple syrup and slap a stick of butter on top for good measure. It’s a good thing you’ve drowned your pancakes in all this excess shit, "
 				  "or you might have actually tasted them! The soggy, limp fried dough is so much more appetizing when all it’s innate flavor is overrun by pure sugary excess.",
 		str_desc = "Pancakes are usually a pretty safe bet, no matter where you are. You can’t really mess up a pancake unless you’re specifically trying to burn it. Luckily, "
@@ -2637,7 +2643,7 @@ food_list = [
 		price = 900,
 		inebriation = 0,
 		str_name = 'two chicken strips and a waffle',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You promptly seperate the two chicken strips and waffle on to separate plates, quarantining them off completely from one another. "
 				  "You dip the chicken strips into some ketchup and drizzle some syrup onto the waffles, making sure to NEVER combine the two bitter rivals and to cleanse your palette before switching between them. "
 				  "Ah, the life of a picky eater, it’s hard and no one understands.",
@@ -2657,7 +2663,7 @@ food_list = [
 		price = 600,
 		inebriation = 0,
 		str_name = 'four slices of french toast',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You brace untold misery, for your hopes and dreams to be smashed utterly and irreparably, and most importantly to have wasted 12 SlimeCoin on the worst meal of your life. "
 				  "Every hair on your body stands upright, as if preparing for a betrayal fueled stroke. You bite into the toast, and "
 				  "as soon as the sweet pastry touches your tongue you feel as though you finally resonate with the ending of critically acclaimed children’s movie Ratatouille. "
@@ -2694,7 +2700,7 @@ food_list = [
 		price = 500,
 		inebriation = 0,
 		str_name = 'an eggs benedict',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "Even though you’re pretty sure you know what an eggs benedict is, you aren’t sure you know how to eat it. You pick up the muffin and just take a bite out of it directly, "
 				  "hollandaise sauce and egg yolk coat your nostrils and generally splatters all over your face. Who would eat something like this????",
 		str_desc = "An English muffin topped off with some ham, a poached egg, and hollandaise sauce. It seems like the sort of food that’d you would enjoy, it’s customizable and leans itself "
@@ -2710,7 +2716,7 @@ food_list = [
 		price = 400,
 		inebriation = 0,
 		str_name = 'two scrambled eggs',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You attempt to strangle your ketchup bottle for the state mandated dollop of ketchup to be adequately mixed into your scrambled egg when tragedy strikes! The bottle is empty! "
 				  "It blasts out specs of ketchup and a funny noise a few times before you throw it against the wall in ballistic anger. You are forced to eat the eggs… plain. DEAR GOD!!!!",
 		str_desc = "Some scrambled eggs. Come on, you know what scrambled eggs are, right? Do I have to spell out everything for you? Do you want me to stay awake all night and come up with immature "
@@ -2725,7 +2731,7 @@ food_list = [
 		price = 800,
 		inebriation = 0,
 		str_name = 'a western omelette',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You pour plenty of hot sauce all over your omelette and shove bite after bite into your slobbering mouth. The heat from the sauce and the bell peppers builds to a breaking point, "
 				  "causing you to blackout. You wake up an indeterminate amount of time later, covered in dried tears and sweat and your abdomen feeling as though you’re pregnant with Satan. You love pain.",
 		str_desc = "A delicious Denver omelette, stuffed with diced ham, onions, and green peppers. Looks great! Hm? Excuse me? What the fuck is a ‘western omelette’? Do people on the east coast "
@@ -2744,7 +2750,7 @@ food_list = [
 		price = 100,
 		inebriation = 0,
 		str_name = 'a glass of orange juice',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You swish around the decadent, pulpy orange juice in your mouth. This exacerbates your already poor dental hygiene, sending shockwaves of pain through your mouth as the "
 				  "sugary liquid washes up against dozens of cavities all throughout your mouth. But, you don’t care. You’re in heaven.",
 		str_desc = "A cavity creating, dental decaying, and enamel eroding glass of delicious orange juice. This vibrant citrus drink hits the spot any day of the week, any minute of the day, "
@@ -2759,7 +2765,7 @@ food_list = [
 		price = 100,
 		inebriation = 0,
 		str_name = 'a glass of milk',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You take a swig of a nice, cold glass of whole milk and your palette is instantly clear of any sugary or syrupy foods you may have been eating. You are left in total cow induced euphoria.",
 		str_desc = "A simple glass of milk. No more, no less. "
 	),
@@ -2773,7 +2779,7 @@ food_list = [
 		price = 1500,
 		inebriation = 0,
 		str_name = "two steak tips and two sunny side up eggs",
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You break the yolk of your two fried eggs immediately, letting the yolk run and pool around the steak tips, acting as a dipping sauce. With each mouthwatering bite of juicy, "
 				  "medium rare steak coated in delicious, runny yolk, you reach a higher level of christ consciousness. How does no one else but you do this?",
 		str_desc = "The only actually filling meal they serve at the diner. Between the two medium rare steak tips and the perfectly cooked sunny side up eggs, you’ve got enough protein in this one "
@@ -3239,7 +3245,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
 		acquisition = acquisition_milling,
-		ingredients = "direapple",
+		ingredients = "direapples",
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
 		time_expir = milled_food_expir,
@@ -3329,7 +3335,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbage",
+		ingredients = "bloodcabbages",
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
 		time_expir = milled_food_expir,
@@ -3687,7 +3693,8 @@ item_def_list = [
 		item_props = {
 			'cosmetic_name': 'Cosmetic Item',
 			'cosmetic_desc': 'Cosmetic Item.',
-			'rarity': rarity_plebeian
+			'rarity': rarity_plebeian,
+			'hue': "",
 		}
 	),
 ]
@@ -5999,6 +6006,8 @@ cosmetic_items_list = [
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -6006,6 +6015,8 @@ cosmetic_items_list = [
 		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pickelhaube",
@@ -6013,6 +6024,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fedora",
@@ -6020,6 +6033,8 @@ cosmetic_items_list = [
 		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "baseballcap",
@@ -6027,6 +6042,8 @@ cosmetic_items_list = [
 		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "backwardsbaseballcap",
@@ -6034,6 +6051,8 @@ cosmetic_items_list = [
 		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -6041,6 +6060,8 @@ cosmetic_items_list = [
 		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -6048,6 +6069,8 @@ cosmetic_items_list = [
 		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cigarette",
@@ -6055,6 +6078,8 @@ cosmetic_items_list = [
 		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "headband",
@@ -6062,6 +6087,8 @@ cosmetic_items_list = [
 		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "handkerchief",
@@ -6069,6 +6096,8 @@ cosmetic_items_list = [
 		str_desc = "A bandanna tied on your head, creating a simple cap.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bandanna",
@@ -6076,6 +6105,8 @@ cosmetic_items_list = [
 		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofsunglasses",
@@ -6083,6 +6114,8 @@ cosmetic_items_list = [
 		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofglasses",
@@ -6090,6 +6123,8 @@ cosmetic_items_list = [
 		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "birthdayhat",
@@ -6097,6 +6132,8 @@ cosmetic_items_list = [
 		str_desc = "A striped, multi-color birthday hat. ",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "scarf",
@@ -6104,6 +6141,8 @@ cosmetic_items_list = [
 		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		str_name = "witch hat",
@@ -6111,6 +6150,8 @@ cosmetic_items_list = [
 		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bomberhat",
@@ -6118,6 +6159,8 @@ cosmetic_items_list = [
 		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tuxedo",
@@ -6125,6 +6168,8 @@ cosmetic_items_list = [
 		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "beanie",
@@ -6132,6 +6177,8 @@ cosmetic_items_list = [
 		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "jestershat",
@@ -6139,6 +6186,8 @@ cosmetic_items_list = [
 		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairof3dglasses",
@@ -6146,6 +6195,8 @@ cosmetic_items_list = [
 		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "necktie",
@@ -6153,6 +6204,8 @@ cosmetic_items_list = [
 		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "vikinghelmet",
@@ -6160,6 +6213,8 @@ cosmetic_items_list = [
 		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofflipflops",
@@ -6167,6 +6222,8 @@ cosmetic_items_list = [
 		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fez",
@@ -6183,6 +6240,8 @@ cosmetic_items_list = [
 		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cowboyhat",
@@ -6190,6 +6249,8 @@ cosmetic_items_list = [
 		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "kepi",
@@ -6197,6 +6258,8 @@ cosmetic_items_list = [
 		str_desc = "A short kepi with a sunken top and an insignia on the front.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tamoshanter",
@@ -6204,6 +6267,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "ushanka",
@@ -6211,6 +6276,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "karategi",
@@ -6218,6 +6285,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "turban",
@@ -6243,6 +6312,8 @@ cosmetic_items_list = [
 		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "sombrero",
@@ -6250,6 +6321,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hawaiianshirt",
@@ -6257,6 +6330,8 @@ cosmetic_items_list = [
 		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fursuit",
@@ -6264,6 +6339,8 @@ cosmetic_items_list = [
 		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "diadem",
@@ -6271,6 +6348,8 @@ cosmetic_items_list = [
 		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "billshat",
@@ -6278,6 +6357,8 @@ cosmetic_items_list = [
 		str_desc = "A military beret with a shield insignia on the front.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "weddingring",
@@ -6294,6 +6375,8 @@ cosmetic_items_list = [
 		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nursesoutfit",
@@ -6301,7 +6384,8 @@ cosmetic_items_list = [
 		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
-
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "heartboxers",
@@ -6309,13 +6393,15 @@ cosmetic_items_list = [
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
 		acquisition = acquisition_milling,
-		ingredients = "poketuber",
+		ingredients = "poketubers",
 	),
 	EwCosmeticItem(
 		id_cosmetic = "juveolantern",
@@ -7464,10 +7550,10 @@ hue_list = [
 		id_hue = "white",
 		alias = [
 			"whitedye",
-			"poketuber"
+			"poketubers"
 		],
 		str_saturate = "It begins to glow a ghostly white!",
-		str_name = "White",
+		str_name = "white",
 		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
 	),
 	EwHue(
@@ -7477,7 +7563,7 @@ hue_list = [
 			"pulpgourds"
 		],
 		str_saturate = "It begins to shine a bright yellow!",
-		str_name = "Yellow",
+		str_name = "yellow",
 		str_desc = "Its bright yellow hue is delightfully radiant.",
 		effectiveness = {
 			"orange": hue_analogous,
@@ -7494,7 +7580,7 @@ hue_list = [
 			"sourpotatoes"
 		],
 		str_saturate = "It turns a warm orange!",
-		str_name= "Orange",
+		str_name= "orange",
 		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book.",
 		effectiveness = {
 			"red": hue_analogous,
@@ -7511,7 +7597,7 @@ hue_list = [
 			"cabbage"
 		],
 		str_saturate = "It darkens a deep shade of crimson red!",
-		str_name = "Red",
+		str_name = "red",
 		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin.",
 		effectiveness = {
 			"pink": hue_analogous,
@@ -7528,7 +7614,7 @@ hue_list = [
 			"joybeans"
 		],
 		str_saturate = "It turns a vivid magenta!",
-		str_name = "Magenta",
+		str_name = "magenta",
 		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it.",
 		effectiveness = {
 			"pink": hue_analogous,
@@ -7546,7 +7632,7 @@ hue_list = [
 			"killer"
 		],
 		str_saturate = "It turns a dark purple!",
-		str_name = "Purple",
+		str_name = "purple",
 		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible.",
 		effectiveness = {
 			"blue": hue_analogous,
@@ -7563,7 +7649,7 @@ hue_list = [
 			"razornuts"
 		],
 		str_saturate = "It turns a deep blue!",
-		str_name = "Blue",
+		str_name = "blue",
 		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea.",
 		effectiveness = {
 			"cobalt": hue_analogous,
@@ -7581,7 +7667,7 @@ hue_list = [
 			"juvie"
 		],
 		str_saturate = "It turns a shade of green that barely distinguishes itself from a Slimeoid’s standard hue.",
-		str_name = "Green",
+		str_name = "green",
 		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class.",
 		effectiveness = {
 			"lime": hue_analogous,
@@ -7599,7 +7685,7 @@ hue_list = [
 			"sludgeberries"
 		],
 		str_saturate = "It looks so purdy now!",
-		str_name = "Teal",
+		str_name = "teal",
 		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here.",
 		effectiveness = {
 			"green": hue_analogous,
@@ -7627,7 +7713,7 @@ hue_list = [
 			"pinkrowddishes"
 		],
 		str_saturate = "It turns a vibrant shade of  pink!",
-		str_name = "Pink",
+		str_name = "pink",
 		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin.",
 		effectiveness = {
 			"magenta": hue_analogous,
@@ -7645,7 +7731,7 @@ hue_list = [
 			"dankwheat"
 		],
 		str_saturate = "It turns a dull, somber grey.",
-		str_name = "Grey",
+		str_name = "grey",
 		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
 	),
 	EwHue(
@@ -7655,7 +7741,7 @@ hue_list = [
 			"brightshade"
 		],
 		str_saturate = "It turns a shimmering cobalt!",
-		str_name = "Cobalt",
+		str_name = "cobalt",
 		str_desc = "Its shimmering cobalt hue can reflect images if properly polished.",
 		effectiveness = {
 			"cyan": hue_analogous,
@@ -7673,7 +7759,7 @@ hue_list = [
 			"blacklimes"
 		],
 		str_saturate = "It turns pitch black!",
-		str_name = "Black",
+		str_name = "black",
 		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
 	),
 	EwHue(
@@ -7683,7 +7769,7 @@ hue_list = [
 			"phosphorpoppies"
 		],
 		str_saturate = "It turns a heavily saturated lime!",
-		str_name = "Lime",
+		str_name = "lime",
 		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully.",
 		effectiveness = {
 			"yellow": hue_analogous,
@@ -7701,7 +7787,7 @@ hue_list = [
 			"direapples"
 		],
 		str_saturate = "It turned a light cyan!",
-		str_name = "Cyan",
+		str_name = "cyan",
 		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street.",
 		effectiveness = {
 			"teal": hue_analogous,

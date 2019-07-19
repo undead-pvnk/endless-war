@@ -224,7 +224,8 @@ async def data(cmd):
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item = cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
-				adorned_cosmetics.append(cosmetic.get('name'))
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
@@ -251,9 +252,9 @@ async def data(cmd):
 			response += " {}".format(trauma.str_trauma_self)
 		
 		response_block = ""
-		for mutation in mutations:
-			mutation_flavor = ewcfg.mutations_map[mutation]
-			response_block += "{} ".format(mutation_flavor.str_describe_self)
+		#for mutation in mutations:
+		#	mutation_flavor = ewcfg.mutations_map[mutation]
+		#	response_block += "{} ".format(mutation_flavor.str_describe_self)
 
 		if len(response_block) > 0:
 			response += "\n\n" + response_block

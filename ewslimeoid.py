@@ -13,6 +13,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
+from ewitem import EwItem
 
 active_slimeoidbattles = {}
 
@@ -252,7 +253,6 @@ class EwSlimeoid:
 				resp_cont.add_channel_response(ewcfg.channel_copkilltown, response)
 		finally:
 			return resp_cont
-
 
 """ slimeoid model object """
 class EwBody:
@@ -1543,6 +1543,23 @@ async def slimeoid(cmd):
 
 		response += slimeoid_describe(slimeoid)
 
+		cosmetics = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		# get the cosmetics worn by the slimeoid
+		adorned_cosmetics = []
+		for item in cosmetics:
+			cos = EwItem(id_item = item.get('id_item'))
+			if cos.item_props.get('slimeoid') == 'true':
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
+
+		if len(adorned_cosmetics) > 0:
+			response += "\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
+
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1884,7 +1901,7 @@ async def saturateslimeoid(cmd):
 		hue = ewcfg.hue_map.get(value)
 
 		if hue != None:
-			response = "You saturate your {} with the {} Dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
+			response = "You saturate your {} with the {} dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
 			slimeoid.hue = hue.id_hue
 			slimeoid.persist()
 
@@ -2761,3 +2778,60 @@ async def slimeoid_tick(id_server):
 
 	await resp_cont.post()
 
+async def dress_slimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "Wow, great idea! Too bad you don’t even have a slimeoid with which to saturate! You’d think you’d remember really obvious stuff like that, but no. What a dumbass."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	else:
+		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+		cosmetics = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		# get the cosmetics worn by the slimeoid
+		adorned_cosmetics = []
+		for item in cosmetics:
+			cos = EwItem(id_item = item.get('id_item'))
+			if cos.item_props.get('slimeoid') == 'true':
+				adorned_cosmetics.append(cos)
+
+		if len(adorned_cosmetics) < slimeoid.level:
+			if item_sought != None and item_sought.get('item_type') == ewcfg.it_cosmetic:
+				cosmetic = EwItem(id_item = item_sought.get('id_item'))
+				response = "You "
+
+				# Remove hat
+				if cosmetic.item_props.get('slimeoid') == 'true':
+					response += "take the {} back from {}".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
+					cosmetic.item_props['slimeoid'] = 'false'
+				# Give hat
+				else:
+					# Remove hat from player if adorned
+					if cosmetic.item_props.get('adorned') == 'true':
+						cosmetic.item_props['adorned'] = 'false'
+						response += "take off your {} and give it to {}.".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
+					else:
+						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
+					
+					cosmetic.item_props['slimeoid'] = 'true'
+
+				cosmetic.persist()
+			else:
+				response = 'Adorn which cosmetic? Check your **!inventory**.'
+		else:
+			response = 'Your slimeoid is too small to wear any more clothes.'
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
