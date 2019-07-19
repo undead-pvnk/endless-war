@@ -1798,7 +1798,7 @@ async def negaslimeoidbattle(cmd):
 			challenger_slimeoid.persist()
 			response = "{} feasts on {}'s slime. All that remains is a small chunk of crystallized slime.".format(challengee_slimeoid.name, challenger_slimeoid.name)
 			response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
-			if challenger_slimeoid.level >= challengee_slimeoid.level:
+			if challenger_slimeoid.level > challengee_slimeoid.level:
 				challengee_slimeoid.level += 1
 				rand = random.randrange(3)
 				if rand == 0:

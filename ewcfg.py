@@ -328,6 +328,9 @@ channel_subway_blue02 = "subway-train-b-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
+channel_jrmineswall = "the-mines-wall"
+channel_ttmineswall = "toxington-mines-wall"
+channel_cvmineswall = "cratersville-mines-wall"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -705,25 +708,6 @@ time_kickout = 60 * 60  # 1 hour
 # time after coming online before you can act
 time_offline = 10
 
-# mining sweeper
-cell_mine = 1
-cell_mine_marked = 2
-cell_mine_open = 3
-
-cell_empty = -1
-cell_empty_marked = -2
-cell_empty_open = -3
-
-symbol_map = {
-	-1 : "/",
-	1 : "/",
-	-2 : "+",
-	2 : "+",
-	3 : "X"
-}
-
-alphabet = "abcdefghijklmnopqrstuvwxyz"
-
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
 
@@ -792,6 +776,57 @@ emote_diamonds = ":diamonds:"
 emote_spades = ":spades:"
 emote_clubs = ":clubs:"
 emote_broken_heart = ":broken_heart:"
+
+# Emotes for minesweeper
+emote_ms_hidden = ":pick:"
+emote_ms_mine = ":x:"
+emote_ms_flagged = ":triangular_flag_on_post:"
+emote_ms_0 = ":zero:"
+emote_ms_1 = ":one:"
+emote_ms_2 = ":two:"
+emote_ms_3 = ":three:"
+emote_ms_4 = ":four:"
+emote_ms_5 = ":five:"
+emote_ms_6 = ":six:"
+emote_ms_7 = ":seven:"
+emote_ms_8 = ":eight:"
+
+# mining sweeper
+cell_mine = 1
+cell_mine_marked = 2
+cell_mine_open = 3
+
+cell_empty = -1
+cell_empty_marked = -2
+cell_empty_open = -3
+
+symbol_map = {
+	-1 : "/",
+	1 : "/",
+	-2 : "+",
+	2 : "+",
+	3 : "X"
+}
+
+number_emote_map = {
+	0 : emote_ms_0,
+	1 : emote_ms_1,
+	2 : emote_ms_2,
+	3 : emote_ms_3,
+	4 : emote_ms_4,
+	5 : emote_ms_5,
+	6 : emote_ms_6,
+	7 : emote_ms_7,
+	8 : emote_ms_8
+}
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+mines_wall_map = {
+	poi_id_mine : channel_jrmineswall,
+	poi_id_tt_mines : channel_ttmineswall,
+	poi_id_cv_mines : channel_cvmineswall
+}
 
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
