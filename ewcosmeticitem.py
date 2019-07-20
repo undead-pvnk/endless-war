@@ -100,7 +100,13 @@ async def adorn(cmd):
 					response = "You can't adorn anymore cosmetics."
 				else:
 					item.item_props['adorned'] = 'true'
-					response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
+
+					if item.item_props.get('slimeoid') == 'true':
+						item.item_props['slimeoid'] = 'false'
+						response = "You take your {} from your slimeoid and successfully adorn it.".format(item.item_props.get('cosmetic_name'))
+
+					else:
+						response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
 
 			item.persist()
 
@@ -119,7 +125,7 @@ async def dye(cmd):
 		first_id_int = None
 		second_id_int = None
 
-	if first_id != None and len(first_id) > 0 or second_id != None and len(second_id) > 0:
+	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
 		response = "You don't have one."
 
 		items = ewitem.inventory(
@@ -134,7 +140,7 @@ async def dye(cmd):
 				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
 					cosmetic = item
 
-				if item.get('item_type') == ewcfg.it_item and dye is None:
+				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
 					dye = item	
 
 				if cosmetic != None and dye != None:
@@ -153,7 +159,7 @@ async def dye(cmd):
 				cosmetic_item.item_props['hue'] = hue.id_hue
 
 				cosmetic_item.persist()
-				#ewitem.item_delete(id_item=dye.id_item)
+				ewitem.item_delete(id_item=dye.get('id_item'))
 			else:
 				response = 'Use which dye? Check your **!inventory**.'
 		else:

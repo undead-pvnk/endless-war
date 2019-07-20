@@ -1384,13 +1384,14 @@ item_names = []
 
 # list of dyes you're able to saturate your Slimeoid with
 dye_list = []
-
+dye_map = {}
 # seperate the dyes from the other normal items
-for c in dye_list:
+for c in item_list:
 	if c.context != "dye":
 		pass
 	else:
 		dye_list.append(c)
+		dye_map[c.str_name] = c.id_item
 
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):

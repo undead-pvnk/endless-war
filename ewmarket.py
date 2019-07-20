@@ -136,7 +136,7 @@ class EwMarket:
 
 			# Write out all current item rows.
 			for name in self.bazaar_wares:
-				cursor.execute("INSERT INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
+				cursor.execute("REPLACE INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
 					ewcfg.col_id_server,
 					ewcfg.col_name,
 					ewcfg.col_value,

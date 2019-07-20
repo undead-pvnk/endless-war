@@ -691,6 +691,19 @@ async def dissolveslimeoid(cmd):
 			)
 			response += "{}".format(ewcfg.emote_slimeskull)
 
+			cosmetics = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+
+			# get the cosmetics worn by the slimeoid
+			for item in cosmetics:
+				cos = EwItem(id_item = item.get('id_item'))
+				if cos.item_props.get('slimeoid') == 'true':
+					cos.item_props['slimeoid'] = 'false'
+					cos.persist()
+
 		slimeoid.life_state = ewcfg.slimeoid_state_none
 		slimeoid.body = ""
 		slimeoid.head = ""
@@ -1798,6 +1811,18 @@ async def negaslimeoidbattle(cmd):
 			response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 		elif result == 1:
+			# Dedorn all items
+			cosmetics = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+			# get the cosmetics worn by the slimeoid
+			for item in cosmetics:
+				cos = EwItem(id_item = item.get('id_item'))
+				if cos.item_props.get('slimeoid') == 'true':
+					cos.item_props['slimeoid'] = 'false'
+					cos.persist()
 			# Losing in a nega battle means death
 			item_props = {
 				'context': ewcfg.context_slimeoidheart,
@@ -2786,7 +2811,7 @@ async def dress_slimeoid(cmd):
 		response = "Slimeoids don't fuck with ghosts."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-		response = "Wow, great idea! Too bad you don’t even have a slimeoid with which to saturate! You’d think you’d remember really obvious stuff like that, but no. What a dumbass."
+		response = "You'll have to create a slimeoid if you want to play dress up."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
@@ -2808,17 +2833,17 @@ async def dress_slimeoid(cmd):
 			if cos.item_props.get('slimeoid') == 'true':
 				adorned_cosmetics.append(cos)
 
-		if len(adorned_cosmetics) < slimeoid.level:
-			if item_sought != None and item_sought.get('item_type') == ewcfg.it_cosmetic:
-				cosmetic = EwItem(id_item = item_sought.get('id_item'))
-				response = "You "
+		if item_sought != None and item_sought.get('item_type') == ewcfg.it_cosmetic:
+			cosmetic = EwItem(id_item = item_sought.get('id_item'))
+			response = "You "
 
-				# Remove hat
-				if cosmetic.item_props.get('slimeoid') == 'true':
-					response += "take the {} back from {}".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
-					cosmetic.item_props['slimeoid'] = 'false'
-				# Give hat
-				else:
+			# Remove hat
+			if cosmetic.item_props.get('slimeoid') == 'true':
+				response += "take the {} back from {}".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
+				cosmetic.item_props['slimeoid'] = 'false'
+			# Give hat
+			else:
+				if len(adorned_cosmetics) < slimeoid.level:
 					# Remove hat from player if adorned
 					if cosmetic.item_props.get('adorned') == 'true':
 						cosmetic.item_props['adorned'] = 'false'
@@ -2827,11 +2852,12 @@ async def dress_slimeoid(cmd):
 						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
 					
 					cosmetic.item_props['slimeoid'] = 'true'
-
-				cosmetic.persist()
-			else:
-				response = 'Adorn which cosmetic? Check your **!inventory**.'
+				else:
+					response = 'Your slimeoid is too small to wear any more clothes.'
+					
+			cosmetic.persist()
 		else:
-			response = 'Your slimeoid is too small to wear any more clothes.'
+			response = 'Adorn which cosmetic? Check your **!inventory**.'
+		
 	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
