@@ -87,7 +87,7 @@ class EwTransport:
 		response = ""
 		poi_data = ewcfg.id_to_poi.get(self.poi)
 		last_messages = []
-		while True:
+		while not ewutils.TERMINATE:
 			transport_line = ewcfg.id_to_transport_line[self.current_line]
 			client = ewutils.get_client()
 			resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)

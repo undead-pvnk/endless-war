@@ -541,7 +541,7 @@ async def capture_tick(id_server):
 async def capture_tick_loop(id_server):
 	interval = ewcfg.capture_tick_length
 	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-	while True:
+	while not ewutils.TERMINATE:
 		await capture_tick(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
 
