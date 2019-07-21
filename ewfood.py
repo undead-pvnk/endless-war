@@ -80,6 +80,7 @@ class EwFood:
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	market_data = EwMarket(id_server = cmd.message.server.id)
 
 	if poi == None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
@@ -89,7 +90,9 @@ async def menu(cmd):
 
 		for vendor in poi.vendors:
 			items = []
-			for item_name in ewcfg.vendor_inv[vendor]:
+			# If the vendor is the bazaar get the current rotation of items from the market_data
+			vendor_inv = ewcfg.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
+			for item_name in vendor_inv:
 				item_item = ewcfg.item_map.get(item_name)
 				food_item = ewcfg.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
@@ -130,6 +133,7 @@ async def menu(cmd):
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	market_data = EwMarket(id_server = cmd.message.server.id)
 
 	if len(poi.vendors) == 0:
 		# Only allowed in locations with a vendor.
@@ -145,16 +149,22 @@ async def order(cmd):
 
 		item = ewcfg.item_map.get(value)
 		item_type = ewcfg.it_item
+		if item != None:
+			item_id = item.id_item
 
 		# Finds the item if it's an EwFood item.
 		if item == None:
 			item = ewcfg.food_map.get(value)
 			item_type = ewcfg.it_food
+			if item != None:
+				item_id = item.id_food
 
 		# Finds the item if it's an EwCosmeticItem.
 		if item == None:
 			item = ewcfg.cosmetic_map.get(value)
 			item_type = ewcfg.it_cosmetic
+			if item != None:
+				item_id = item.id_cosmetic
 
 		if item != None:
 			# Gets a vendor that the item is available and the player currently located in
@@ -163,12 +173,16 @@ async def order(cmd):
 			except:
 				current_vendor = None
 
+			# Check if the item is available in the current bazaar item rotation
+			if current_vendor == ewcfg.vendor_bazaar:
+				if item_id not in market_data.bazaar_wares.values():
+					current_vendor = None
+
 			if current_vendor is None or len(current_vendor) < 1:
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
 			else:
 				response = ""
-				market_data = EwMarket(id_server = cmd.message.server.id)
 
 				value = item.price
 
