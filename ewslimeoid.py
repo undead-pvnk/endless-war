@@ -1571,7 +1571,7 @@ async def slimeoid(cmd):
 				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
 
 		if len(adorned_cosmetics) > 0:
-			response += "\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
+			response += "\n\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

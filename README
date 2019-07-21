@@ -250,5 +250,7 @@ CREATE TABLE bans (
 CREATE TABLE bazaar_wares (
 	id_server varchar(128) NOT NULL,
 	name varchar(64) NOT NULL,
-	value varchar(128) NOT NULL
-)
+	value varchar(128) NOT NULL,
+	
+	PRIMARY KEY (id_server, name)
+);

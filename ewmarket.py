@@ -127,13 +127,6 @@ class EwMarket:
 				self.donated_poudrins,
 			))
 
-			# Remove all existing bazaar items
-			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
-				ewcfg.col_id_server
-			), (
-				self.id_server,
-			))
-
 			# Write out all current item rows.
 			for name in self.bazaar_wares:
 				cursor.execute("REPLACE INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
