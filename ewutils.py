@@ -296,7 +296,7 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
+	return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
