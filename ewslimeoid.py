@@ -2777,7 +2777,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	return result
 
 async def slimeoid_tick_loop(id_server):
-	while True:
+	while not ewutils.TERMINATE:
 		await slimeoid_tick(id_server)
 		await asyncio.sleep(ewcfg.slimeoid_tick_length)
 

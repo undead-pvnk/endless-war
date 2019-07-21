@@ -550,7 +550,7 @@ async def on_ready():
 	stream_live = None
 
 	ewutils.logMsg('Beginning periodic hook loop.')
-	while True:
+	while not ewutils.TERMINATE:
 		time_now = int(time.time())
 
 		# Periodic message to log that this stuff is still running.
@@ -1074,4 +1074,9 @@ if token == None or len(token) == 0:
 	sys.exit(0)
 
 # connect to discord and run indefinitely
-client.run(token)
+try:
+	client.run(token)
+finally:
+	ewutils.TERMINATE = True
+	ewutils.logMsg("main thread terminated.")
+

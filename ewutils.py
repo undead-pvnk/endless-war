@@ -19,6 +19,8 @@ from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
 
+TERMINATE = False
+
 db_pool = {}
 db_pool_id = 0
 
@@ -372,7 +374,7 @@ def decaySlimes(id_server = None):
 async def bleed_tick_loop(id_server):
 	interval = ewcfg.bleed_tick_length
 	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-	while True:
+	while not TERMINATE:
 		await bleedSlimes(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
 
