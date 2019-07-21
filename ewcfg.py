@@ -14,7 +14,7 @@ from ewtransport import EwTransportLine
 import ewdebug
 
 # Global configuration options.
-version = "v3.5a"
+version = "v3.5b"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -1159,6 +1159,25 @@ item_id_quattuorsexagintuplestuffedcrust = "quattuorsexagintuplestuffedcrust"
 item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
+item_id_stick = "stick"
+
+#vegetable ids
+item_id_poketubers = "poketubers"
+item_id_pulpgourds = "pulpgourds"
+item_id_sourpotatoes = "sourpotatoes"
+item_id_bloodcabbages = "bloodcabbages"
+item_id_joybeans = "joybeans"
+item_id_purplekilliflower = "purplekilliflower"
+item_id_razornuts = "razornuts"
+item_id_pawpaw = "pawpaw"
+item_id_sludgeberries = "sludgeberries"
+item_id_suganmanuts = "suganmanuts"
+item_id_pinkrowddishes = "pinkrowddishes"
+item_id_dankwheat = "dankwheat"
+item_id_brightshade = "brightshade"
+item_id_blacklimes = "blacklimes"
+item_id_phosphorpoppies = "phosphorpoppies"
+item_id_direapples = "direapples"
 
 # List of normal items.
 item_list = [
@@ -1178,7 +1197,7 @@ item_list = [
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
 		acquisition = acquisition_milling,
-		ingredients = "poketubers",
+		ingredients = item_id_poketubers,
 	),
 	EwGeneralItem(
 		id_item = "yellowdye",
@@ -1186,7 +1205,7 @@ item_list = [
 		str_name = "Yellow Dye",
 		str_desc = "A small vial of yellow dye.",
 		acquisition = acquisition_milling,
-		ingredients = "pulpgourds",
+		ingredients = item_id_pulpgourds,
 	),
 	EwGeneralItem(
 		id_item = "orangedye",
@@ -1194,7 +1213,7 @@ item_list = [
 		str_name = "Orange Dye",
 		str_desc = "A small vial of orange dye.",
 		acquisition = acquisition_milling,
-		ingredients = "sourpotatoes",
+		ingredients = item_id_sourpotatoes,
 	),
 	EwGeneralItem(
 		id_item = "reddye",
@@ -1202,7 +1221,7 @@ item_list = [
 		str_name = "Red Dye",
 		str_desc = "A small vial of red dye.",
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbages",
+		ingredients = item_id_bloodcabbages,
 	),
 	EwGeneralItem(
 		id_item = "magentadye",
@@ -1210,7 +1229,7 @@ item_list = [
 		str_name = "Magenta Dye",
 		str_desc = "A small vial of magenta dye.",
 		acquisition = acquisition_milling,
-		ingredients = "joybeans",
+		ingredients = item_id_joybeans,
 	),
 	EwGeneralItem(
 		id_item = "purpledye",
@@ -1218,7 +1237,7 @@ item_list = [
 		str_name = "Purple Dye",
 		str_desc = "A small vial of purple dye.",
 		acquisition = acquisition_milling,
-		ingredients = "purplekilliflower",
+		ingredients = item_id_purplekilliflower,
 	),
 	EwGeneralItem(
 		id_item = "bluedye",
@@ -1226,7 +1245,7 @@ item_list = [
 		str_name = "Blue Dye",
 		str_desc = "A small vial of blue dye.",
 		acquisition = acquisition_milling,
-		ingredients = "razornuts",
+		ingredients = item_id_razornuts,
 	),
 	EwGeneralItem(
 		id_item = "greendye",
@@ -1234,7 +1253,7 @@ item_list = [
 		str_name = "Green Dye",
 		str_desc = "A small vial of green dye.",
 		acquisition = acquisition_milling,
-		ingredients = "pawpaw",
+		ingredients = item_id_pawpaw,
 	),
 	EwGeneralItem(
 		id_item = "tealdye",
@@ -1242,7 +1261,7 @@ item_list = [
 		str_name = "Teal Dye",
 		str_desc = "A small vial of teal dye.",
 		acquisition = acquisition_milling,
-		ingredients = "sludgeberries",
+		ingredients = item_id_sludgeberries,
 	),
 	EwGeneralItem(
 		id_item = "rainbowdye",
@@ -1250,7 +1269,7 @@ item_list = [
 		str_name = "***Rainbow Dye!!***",
 		str_desc = "***A small vial of Rainbow dye!!***",
 		acquisition = acquisition_milling,
-		ingredients = "suganmanuts",
+		ingredients = item_id_suganmanuts,
 	),
 	EwGeneralItem(
 		id_item = "pinkdye",
@@ -1258,7 +1277,7 @@ item_list = [
 		str_name = "Pink Dye",
 		str_desc = "A small vial of pink dye.",
 		acquisition = acquisition_milling,
-		ingredients = "pinkrowddishes",
+		ingredients = item_id_pinkrowddishes,
 	),
 	EwGeneralItem(
 		id_item = "greydye",
@@ -1266,7 +1285,7 @@ item_list = [
 		str_name = "Grey Dye",
 		str_desc = "A small vial of grey dye.",
 		acquisition = acquisition_milling,
-		ingredients = "dankwheat",
+		ingredients = item_id_dankwheat,
 	),
 	EwGeneralItem(
 		id_item = "cobaltdye",
@@ -1274,7 +1293,7 @@ item_list = [
 		str_name = "Cobalt Dye",
 		str_desc = "A small vial of cobalt dye.",
 		acquisition = acquisition_milling,
-		ingredients = "brightshade",
+		ingredients = item_id_brightshade,
 	),
 	EwGeneralItem(
 		id_item = "blackdye",
@@ -1282,7 +1301,7 @@ item_list = [
 		str_name = "Black Dye",
 		str_desc = "A small vial of black dye.",
 		acquisition = acquisition_milling,
-		ingredients = "blacklimes",
+		ingredients = item_id_blacklimes,
 	),
 	EwGeneralItem(
 		id_item = "limedye",
@@ -1290,7 +1309,7 @@ item_list = [
 		str_name = "Lime Dye",
 		str_desc = "A small vial of lime dye.",
 		acquisition = acquisition_milling,
-		ingredients = "phosphorpoppies",
+		ingredients = item_id_phosphorpoppies,
 	),
 	EwGeneralItem(
 		id_item = "cyandye",
@@ -1298,7 +1317,7 @@ item_list = [
 		str_name = "Cyan Dye",
 		str_desc = "A small vial of cyan dye.",
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
@@ -1362,11 +1381,11 @@ item_list = [
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "stick",
+		id_item = item_id_stick,
 		str_name = "stick",
 		str_desc = "It’s just some useless, dumb stick.",
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
 		id_item = "faggot",
@@ -3048,7 +3067,7 @@ food_list = [
 		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
 	),
 	EwFood(
-		id_food = "pinkrowddishes",
+		id_food = item_id_pinkrowddishes,
 		recover_hunger = 60,
 		str_name = 'Pink Rowddishes',
 		vendors = [vendor_farm],
@@ -3057,7 +3076,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "sludgeberries",
+		id_food = item_id_sludgeberries,
 		recover_hunger = 60,
 		str_name = 'Sludgeberries',
 		vendors = [vendor_farm],
@@ -3066,7 +3085,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "pulpgourds",
+		id_food = item_id_pulpgourds,
 		recover_hunger = 60,
 		str_name = 'Pulp Gourds',
 		vendors = [vendor_farm],
@@ -3075,7 +3094,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "joybeans",
+		id_food = item_id_joybeans,
 		recover_hunger = 60,
 		str_name = 'Joybeans',
 		vendors = [vendor_farm],
@@ -3084,7 +3103,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "brightshade",
+		id_food = item_id_brightshade,
 		recover_hunger = 60,
 		str_name = 'Brightshade',
 		vendors = [vendor_farm],
@@ -3093,7 +3112,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "direapples",
+		id_food = item_id_direapples,
 		recover_hunger = 60,
 		str_name = 'Dire Apples',
 		vendors = [vendor_farm],
@@ -3102,7 +3121,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "purplekilliflower",
+		id_food = item_id_purplekilliflower,
 		recover_hunger = 60,
 		str_name = 'Purple Killiflower',
 		vendors = [vendor_farm],
@@ -3111,7 +3130,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "razornuts",
+		id_food = item_id_razornuts,
 		recover_hunger = 60,
 		str_name = 'Razornuts',
 		vendors = [vendor_farm],
@@ -3120,7 +3139,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "poketubers",
+		id_food = item_id_poketubers,
 		recover_hunger = 60,
 		str_name = 'Poke-tubers',
 		vendors = [vendor_farm],
@@ -3129,7 +3148,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "suganmanuts",
+		id_food = item_id_suganmanuts,
 		recover_hunger = 60,
 		str_name = 'Suganma Nuts',
 		vendors = [vendor_farm],
@@ -3138,7 +3157,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "dankwheat",
+		id_food = item_id_dankwheat,
 		recover_hunger = 60,
 		str_name = 'Dankwheat',
 		vendors = [vendor_farm],
@@ -3147,7 +3166,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "blacklimes",
+		id_food = item_id_blacklimes,
 		recover_hunger = 60,
 		str_name = 'Black Limes',
 		vendors = [vendor_farm],
@@ -3156,7 +3175,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "phosphorpoppies",
+		id_food = item_id_phosphorpoppies,
 		recover_hunger = 60,
 		str_name = 'Phosphorpoppies',
 		vendors = [vendor_farm],
@@ -3165,7 +3184,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "sourpotatoes",
+		id_food = item_id_sourpotatoes,
 		recover_hunger = 60,
 		str_name = 'Sour Potatoes',
 		vendors = [vendor_farm],
@@ -3174,7 +3193,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "bloodcabbages",
+		id_food = item_id_bloodcabbages,
 		recover_hunger = 60,
 		str_name = 'Blood Cabbages',
 		vendors = [vendor_farm],
@@ -3183,7 +3202,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "pawpaw",
+		id_food = item_id_pawpaw,
 		recover_hunger = 60,
 		str_name = 'Pawpaw',
 		vendors = [vendor_farm],
@@ -3196,7 +3215,7 @@ food_list = [
 		recover_hunger = 1200,
 		str_name = 'Pink Rowdatouille',
 		acquisition = acquisition_milling,
-		ingredients = "pinkrowddishes",
+		ingredients = item_id_pinkrowddishes,
 		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
 		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
 		time_expir = milled_food_expir,
@@ -3206,7 +3225,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Sludgeberry Pancakes',
 		acquisition = acquisition_milling,
-		ingredients = "sludgeberries",
+		ingredients = item_id_sludgeberries,
 		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
 		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
 		time_expir = milled_food_expir,
@@ -3216,7 +3235,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Pulp Gourd Pie',
 		acquisition = acquisition_milling,
-		ingredients = "pulpgourds",
+		ingredients = item_id_pulpgourds,
 		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
 		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
 		time_expir = milled_food_expir,
@@ -3226,7 +3245,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Joybean Paste Mochi',
 		acquisition = acquisition_milling,
-		ingredients = "joybeans",
+		ingredients = item_id_joybeans,
 		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
 		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
 		time_expir = milled_food_expir,
@@ -3236,7 +3255,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Brightshade Seeds',
 		acquisition = acquisition_milling,
-		ingredients = "brightshade",
+		ingredients = item_id_brightshade,
 		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
 		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
 		time_expir = milled_food_expir,
@@ -3246,7 +3265,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
 		time_expir = milled_food_expir,
@@ -3256,7 +3275,7 @@ food_list = [
 		recover_hunger = 1200,
 		str_name = 'Purple Killiflower Crust Pizza',
 		acquisition = acquisition_milling,
-		ingredients = "purplekilliflower",
+		ingredients = item_id_purplekilliflower,
 		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
 		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
 		time_expir = milled_food_expir,
@@ -3266,7 +3285,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Razornut Butter',
 		acquisition = acquisition_milling,
-		ingredients = "razornuts",
+		ingredients = item_id_razornuts,
 		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
 		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
 		time_expir = milled_food_expir,
@@ -3276,7 +3295,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Jelly-Filled Doughnut',
 		acquisition = acquisition_milling,
-		ingredients = "poketubers",
+		ingredients = item_id_poketubers,
 		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
 		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
 		time_expir = milled_food_expir,
@@ -3286,7 +3305,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = '***Your Favorite Food***',
 		acquisition = acquisition_milling,
-		ingredients = "suganmanuts",
+		ingredients = item_id_suganmanuts,
 		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
 		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
 		time_expir = milled_food_expir,
@@ -3296,7 +3315,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Dankwheat Toast',
 		acquisition = acquisition_milling,
-		ingredients = "dankwheat",
+		ingredients = item_id_dankwheat,
 		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
 		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
 		time_expir = milled_food_expir,
@@ -3306,7 +3325,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Black Lime Sour',
 		acquisition = acquisition_milling,
-		ingredients = "blacklimes",
+		ingredients = item_id_blacklimes,
 		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
 		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
 		time_expir = milled_food_expir,
@@ -3316,7 +3335,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Phosphorpoppies Muffin',
 		acquisition = acquisition_milling,
-		ingredients = "phosphorpoppies",
+		ingredients = item_id_phosphorpoppies,
 		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
 		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
 		time_expir = milled_food_expir,
@@ -3326,7 +3345,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Sour Potato French Fries',
 		acquisition = acquisition_milling,
-		ingredients = "sourpotatoes",
+		ingredients = item_id_sourpotatoes,
 		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
 		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
 		time_expir = milled_food_expir,
@@ -3336,7 +3355,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbages",
+		ingredients = item_id_bloodcabbages,
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
 		time_expir = milled_food_expir,
@@ -3346,7 +3365,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Pawpaw Food',
 		acquisition = acquisition_milling,
-		ingredients = "pawpaw",
+		ingredients = item_id_pawpaw,
 		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
 		time_expir = milled_food_expir,
@@ -6402,112 +6421,112 @@ cosmetic_items_list = [
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
 		acquisition = acquisition_milling,
-		ingredients = "poketubers",
+		ingredients = item_id_poketubers,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "juveolantern",
 		str_name = "Juve-O'-Lantern",
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
 		acquisition = acquisition_milling,
-		ingredients = "pulpgourds",
+		ingredients = item_id_pulpgourds,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowlerhat",
 		str_name = "Bowler Hat",
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
 		acquisition = acquisition_milling,
-		ingredients = "sourpotatoes",
+		ingredients = item_id_sourpotatoes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cabbagetreehat",
 		str_name = "Cabbage Tree Hat",
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbages",
+		ingredients = item_id_bloodcabbages,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "braces",
 		str_name = "Braces",
 		str_desc = "An old fashioned orthodontic headgear. Elaborate metal wires and braces hold your nearly eroded, crooked teeth together in what can genously be called a mouth. You are in agony, and so is everyone that looks at you.",
 		acquisition = acquisition_milling,
-		ingredients = "joybeans",
+		ingredients = item_id_joybeans,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hoodie",
 		str_name = "Hoodie",
 		str_desc = "Perfect for keeping warm in the middle of the blisteringly hot Arizonian desert! Heatstroke or bust!",
 		acquisition = acquisition_milling,
-		ingredients = "purplekilliflower",
+		ingredients = item_id_purplekilliflower,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
 		str_name = "Cop Badge",
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
 		acquisition = acquisition_milling,
-		ingredients = "razornuts",
+		ingredients = item_id_razornuts,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "strawhat",
 		str_name = "Straw Hat",
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
 		acquisition = acquisition_milling,
-		ingredients = "pawpaw",
+		ingredients = item_id_pawpaw,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cosplayhorns",
 		str_name = "Cosplay Horns",
 		str_desc = "You’re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them… perhaps you understood their importance in a past life.",
 		acquisition = acquisition_milling,
-		ingredients = "sludgeberries",
+		ingredients = item_id_sludgeberries,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "youfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		acquisition = acquisition_milling,
-		ingredients = "suganmanuts",
+		ingredients = item_id_suganmanuts,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pajamaonesie",
 		str_name = "Pajama Onesie",
 		str_desc = "A soft jumpsuit with an audacious, repeating design printed over the entire cosmetic. You feel like getting a little bit fucking rowdy wearing this outrageous onesie. ",
 		acquisition = acquisition_milling,
-		ingredients = "pinkrowddishes",
+		ingredients = item_id_pinkrowddishes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofcircularsunglasses",
 		str_name = "Pair of Circular Sunglasses",
 		str_desc = "Sunglasses, but in a circle! Genius! You can't wait to show the world your hot takes on television shows for girls.",
 		acquisition = acquisition_milling,
-		ingredients = "dankwheat",
+		ingredients = item_id_dankwheat,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
 		str_name = "Flower Crown",
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
 		acquisition = acquisition_milling,
-		ingredients = "brightshade",
+		ingredients = item_id_brightshade,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "spikedbracelets",
 		str_name = "Spiked Bracelets",
 		str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You’re hyper aware of these fashion disasters whenever you’re walking, making sure to swing them as far away from your body as possible.",
 		acquisition = acquisition_milling,
-		ingredients = "blacklimes",
+		ingredients = item_id_blacklimes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
 		str_name = "SlimeCorp Pin",
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
 		acquisition = acquisition_milling,
-		ingredients = "phosphorpoppies",
+		ingredients = item_id_phosphorpoppies,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "overalls",
 		str_name = "Overalls",
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 	),
 ]
 
@@ -6638,7 +6657,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			item_id_slimepoudrin : 3,
-			'stick' : 2
+			item_id_stick : 2
 		},
 		products = ['pickaxe']
 	),
@@ -6650,7 +6669,7 @@ smelting_recipe_list = [
 			"fag",
 		],
 		ingredients = {
-		    'stick' : 6
+		    item_id_stick : 6
 		},
 		products = ['faggot']
 	),
@@ -7545,10 +7564,29 @@ hue_atk_complementary = 1
 hue_special_complementary = 2
 hue_full_complementary = 3
 
+hue_id_yellow = "yellow"
+hue_id_orange = "orange"
+hue_id_red = "red"
+hue_id_pink = "pink"
+hue_id_magenta = "magenta"
+hue_id_purple = "purple"
+hue_id_blue = "blue"
+hue_id_cobalt = "cobalt"
+hue_id_cyan = "cyan"
+hue_id_teal = "teal"
+hue_id_green = "green"
+hue_id_lime = "lime"
+hue_id_rainbow = "rainbow"
+hue_id_white = "white"
+hue_id_grey = "grey"
+hue_id_black = "black"
+
+
+
 # All color attributes in the game.
 hue_list = [
 	EwHue(
-		id_hue = "white",
+		id_hue = hue_id_white,
 		alias = [
 			"whitedye",
 			"poketubers"
@@ -7558,7 +7596,7 @@ hue_list = [
 		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
 	),
 	EwHue(
-		id_hue = "yellow",
+		id_hue = hue_id_yellow,
 		alias = [
 			"yellowdye",
 			"pulpgourds"
@@ -7567,15 +7605,15 @@ hue_list = [
 		str_name = "yellow",
 		str_desc = "Its bright yellow hue is delightfully radiant.",
 		effectiveness = {
-			"orange": hue_analogous,
-			"lime": hue_analogous,
-			"purple": hue_atk_complementary,
-			"cobalt": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_orange: hue_analogous,
+			hue_id_lime: hue_analogous,
+			hue_id_purple: hue_atk_complementary,
+			hue_id_cobalt: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "orange",
+		id_hue = hue_id_orange,
 		alias = [
 			"orangedye",
 			"sourpotatoes"
@@ -7584,32 +7622,33 @@ hue_list = [
 		str_name= "orange",
 		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book.",
 		effectiveness = {
-			"red": hue_analogous,
-			"yellow": hue_analogous,
-			"blue": hue_atk_complementary,
-			"cyan": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_red: hue_analogous,
+			hue_id_yellow: hue_analogous,
+			hue_id_blue: hue_atk_complementary,
+			hue_id_cyan: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "red",
+		id_hue = hue_id_red,
 		alias = [
-			"blood"
+			"reddye",
+			"blood",
 			"cabbage"
 		],
 		str_saturate = "It darkens a deep shade of crimson red!",
 		str_name = "red",
 		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin.",
 		effectiveness = {
-			"pink": hue_analogous,
-			"orange": hue_analogous,
-			"cobalt": hue_atk_complementary,
-			"teal": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_pink: hue_analogous,
+			hue_id_orange: hue_analogous,
+			hue_id_cobalt: hue_atk_complementary,
+			hue_id_teal: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "magenta",
+		id_hue = hue_id_magenta,
 		alias = [
 			"magentadye",
 			"joybeans"
@@ -7618,15 +7657,15 @@ hue_list = [
 		str_name = "magenta",
 		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it.",
 		effectiveness = {
-			"pink": hue_analogous,
-			"purple": hue_analogous,
-			"teal": hue_atk_complementary,
-			"lime": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_pink: hue_analogous,
+			hue_id_purple: hue_analogous,
+			hue_id_teal: hue_atk_complementary,
+			hue_id_lime: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "purple",
+		id_hue = hue_id_purple,
 		alias = [
 			"purpledye",
 			"purplekilliflower",
@@ -7636,15 +7675,15 @@ hue_list = [
 		str_name = "purple",
 		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible.",
 		effectiveness = {
-			"blue": hue_analogous,
-			"magenta": hue_analogous,
-			"green": hue_atk_complementary,
-			"yellow": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_blue: hue_analogous,
+			hue_id_magenta: hue_analogous,
+			hue_id_green: hue_atk_complementary,
+			hue_id_yellow: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "blue",
+		id_hue = hue_id_blue,
 		alias = [
 			"bluedye",
 			"razornuts"
@@ -7653,15 +7692,15 @@ hue_list = [
 		str_name = "blue",
 		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea.",
 		effectiveness = {
-			"cobalt": hue_analogous,
-			"purple": hue_analogous,
-			"lime": hue_atk_complementary,
-			"orange": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_cobalt: hue_analogous,
+			hue_id_purple: hue_analogous,
+			hue_id_lime: hue_atk_complementary,
+			hue_id_orange: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "green",
+		id_hue = hue_id_green,
 		alias = [
 			"greendye",
 			"pawpaw",
@@ -7671,16 +7710,16 @@ hue_list = [
 		str_name = "green",
 		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class.",
 		effectiveness = {
-			"lime": hue_analogous,
-			"teal": hue_analogous,
-			"pink": hue_atk_complementary,
-			"purple": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_lime: hue_analogous,
+			hue_id_teal: hue_analogous,
+			hue_id_pink: hue_atk_complementary,
+			hue_id_purple: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "teal",
+		id_hue = hue_id_teal,
 		alias = [
 			"tealdye",
 			"sludgeberries"
@@ -7689,16 +7728,16 @@ hue_list = [
 		str_name = "teal",
 		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here.",
 		effectiveness = {
-			"green": hue_analogous,
-			"cyan": hue_analogous,
-			"red": hue_atk_complementary,
-			"magenta": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_green: hue_analogous,
+			hue_id_cyan: hue_analogous,
+			hue_id_red: hue_atk_complementary,
+			hue_id_magenta: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "rainbow",
+		id_hue = hue_id_rainbow,
 		alias = [
 			"rainbowdye",
 			"suganmanuts"
@@ -7708,7 +7747,7 @@ hue_list = [
 		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!"
 	),
 	EwHue(
-		id_hue = "pink",
+		id_hue = hue_id_pink,
 		alias = [
 			"pinkdye",
 			"pinkrowddishes"
@@ -7717,16 +7756,16 @@ hue_list = [
 		str_name = "pink",
 		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin.",
 		effectiveness = {
-			"magenta": hue_analogous,
-			"red": hue_analogous,
-			"cyan": hue_atk_complementary,
-			"green": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_magenta: hue_analogous,
+			hue_id_red: hue_analogous,
+			hue_id_cyan: hue_atk_complementary,
+			hue_id_green: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "grey",
+		id_hue = hue_id_grey,
 		alias = [
 			"greydye",
 			"dankwheat"
@@ -7736,7 +7775,7 @@ hue_list = [
 		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
 	),
 	EwHue(
-		id_hue = "cobalt",
+		id_hue = hue_id_cobalt,
 		alias = [
 			"cobaltdye",
 			"brightshade"
@@ -7745,16 +7784,16 @@ hue_list = [
 		str_name = "cobalt",
 		str_desc = "Its shimmering cobalt hue can reflect images if properly polished.",
 		effectiveness = {
-			"cyan": hue_analogous,
-			"blue": hue_analogous,
-			"yellow": hue_atk_complementary,
-			"red": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_cyan: hue_analogous,
+			hue_id_blue: hue_analogous,
+			hue_id_yellow: hue_atk_complementary,
+			hue_id_red: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "black",
+		id_hue = hue_id_black,
 		alias = [
 			"blackdye",
 			"blacklimes"
@@ -7764,7 +7803,7 @@ hue_list = [
 		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
 	),
 	EwHue(
-		id_hue = "lime",
+		id_hue = hue_id_lime,
 		alias = [
 			"limedye",
 			"phosphorpoppies"
@@ -7773,16 +7812,16 @@ hue_list = [
 		str_name = "lime",
 		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully.",
 		effectiveness = {
-			"yellow": hue_analogous,
-			"green": hue_analogous,
-			"magenta": hue_atk_complementary,
-			"blue": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_yellow: hue_analogous,
+			hue_id_green: hue_analogous,
+			hue_id_magenta: hue_atk_complementary,
+			hue_id_blue: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "cyan",
+		id_hue = hue_id_cyan,
 		alias = [
 			"cyandye",
 			"direapples"
@@ -7791,11 +7830,11 @@ hue_list = [
 		str_name = "cyan",
 		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street.",
 		effectiveness = {
-			"teal": hue_analogous,
-			"cobalt": hue_analogous,
-			"orange": hue_atk_complementary,
-			"pink": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_teal: hue_analogous,
+			hue_id_cobalt: hue_analogous,
+			hue_id_orange: hue_atk_complementary,
+			hue_id_pink: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
