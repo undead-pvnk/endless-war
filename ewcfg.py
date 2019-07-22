@@ -717,6 +717,9 @@ time_offline = 10
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
 
+# time for a player to be targeted by an enemy after entering a district
+time_enemyaggro = 5
+
 # time for a raid boss to activate
 time_raidcountdown = 60
 
@@ -1232,8 +1235,8 @@ item_id_stick = "stick"
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
 
-item_id_slimeasaurmeat = "slimeasaurmeat"
-item_id_slimeasaursteak = "slimeasaursteak"
+item_id_dinoslimemeat = "dinoslimemeat"
+item_id_dinoslimesteak = "dinoslimesteak"
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -1969,6 +1972,8 @@ for weapon in weapon_list:
 
 # Attacking type effects
 def atf_fangs(ctn = None):
+	# Reskin of dual pistols
+
 	aim = (random.randrange(10) + 1)
 
 	if aim == 1:
@@ -1979,6 +1984,8 @@ def atf_fangs(ctn = None):
 		ctn.slimes_damage *= 2
 
 def atf_talons(ctn = None):
+	# Reskin of katana
+
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
 
@@ -1987,6 +1994,8 @@ def atf_talons(ctn = None):
 		ctn.slimes_damage *= 2.1
 
 def atf_raiderscythe(ctn = None):
+	# Reskin of scythe
+
 	ctn.enemy_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	aim = (random.randrange(10) + 1)
@@ -1999,14 +2008,30 @@ def atf_raiderscythe(ctn = None):
 		ctn.slimes_damage *= 2
 
 def atf_gunkshot(ctn = None):
+	# Reskin of rifle
+
 	aim = (random.randrange(10) + 1)
 
-	if aim == 1:
+	if aim <= 2:
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim == 10:
+	elif aim >= 9:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+
+def atf_tusks(ctn = None):
+	# Reskin of bat
+
+	aim = (random.randrange(21) - 10)
+	if aim <= -9:
+		ctn.miss = True
+		ctn.slimes_damage = 0
+
+	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
+
+	if aim >= 9:
+		ctn.crit = True
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -2053,6 +2078,17 @@ enemy_attack_type_list = [
 		str_killdescriptor = "slimed on",
 		str_damage = "{name_target} is coated in searing, acidic radiation on their {hitzone}!!",
 		fn_effect = atf_gunkshot
+	),
+	EwAttackType( # 5
+		id_type = "tusks",
+		str_crit = "**Critical hit!!** {name_target} is smashed hard by {name_enemy}'s tusks!",
+		str_miss = "**{name_enemy} missed!** Their tusks strike the ground, causing it to quake underneath!",
+		str_trauma_self = "You have two large scarred-over holes on your upper body.",
+		str_trauma = "They have two large scarred-over holes on their upper body.",
+		str_kill = "**SHINK!!** {name_enemy}'s tusks ram right into your chest, impaling you right through your back! Moments later, you're thrusted out on to the ground, left to bleed profusely. {emote_skull}",
+		str_killdescriptor = "bashed",
+		str_damage = "{name_target} has tusks slammed into their {hitzone}!!",
+		fn_effect = atf_tusks
 	)
 ]
 
@@ -3762,7 +3798,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = item_id_slimeasaurmeat,
+		id_food = item_id_dinoslimemeat,
 		alias = [
 			"meat",
 			"mutton",
@@ -3770,18 +3806,18 @@ food_list = [
 			"ssm"
 		],
 		recover_hunger = 500,
-		str_name = 'Slimeasaur Meat',
-		str_eat = "You bite into the raw meat of dead Slimeasaur. At certain points of your feast, it feels like you're biting into a fucking fan belt, but hey, food is food.",
-		str_desc = "The meat of a slimeasaur. It's best to probably cook it before consumption, if only you knew how.",
+		str_name = 'Dinoslime Meat',
+		str_eat = "You bite into the raw meat of dead Dinoslime. At certain points of your feast, it feels like you're biting into a fucking fan belt, but hey, food is food.",
+		str_desc = "The meat of a Dinoslime. It's best to probably cook it before consumption, if only you knew how.",
 	),
 	EwFood(
-		id_food = item_id_slimeasaursteak,
+		id_food = item_id_dinoslimesteak,
 		alias = [
 			"cookedmeat",
 			"sss"
 		],
-		recover_hunger = 2000,
-		str_name = 'Slimeasaur Steak',
+		recover_hunger = 2500,
+		str_name = 'Dinoslime Steak',
 		str_eat = "You savour every last bite of your meal, and all the doubt you might have had about sacrificing your sticks washes away.",
 		str_desc = "Through a stroke of genius, a faggot was sacrificed, and fire was made. The result is the meat of a savage beast, seared to perfection.",
 		acquisition = acquisition_smelting
@@ -7760,17 +7796,17 @@ smelting_recipe_list = [
 		products = ['doublefaggot']
 	),
 	EwSmeltingRecipe(
-		id_recipe = "slimeasaursteak",
-		str_name = "a cooked piece of Slimeasaur meat",
+		id_recipe = "dinoslimesteak",
+		str_name = "a cooked piece of Dinoslime meat",
 		alias = [
 			"cookedmeat",
 			"sss"
 		],
 		ingredients = {
 			item_id_faggot : 1,
-			item_id_slimeasaurmeat : 1
+			item_id_dinoslimemeat : 1
 		},
-		products = ['slimeasaursteak']
+		products = ['dinoslimesteak']
 	)
 ]
 
@@ -9503,8 +9539,8 @@ help_responses = {
 }
 
 # List of enemies sorted by their spawn rarity.
-common_enemies = ['juvie', 'slimeasaur']
-uncommon_enemies = ['slimeadactyl', 'desertraider']
+common_enemies = ['juvie', 'dinoslime']
+uncommon_enemies = ['slimeadactyl', 'desertraider', 'mammoslime']
 rare_enemies = ['microslime']
 raid_bosses = ['megaslime', 'slimeasaurusrex']
 
@@ -9512,10 +9548,11 @@ raid_bosses = ['megaslime', 'slimeasaurusrex']
 # Left side is shorthand, right side is display name
 enemy_aliases = {
     "juvie":"lost juvie",
-    "dino":"slimeasaur",
+    "dino":"dinoslime",
     "bird":"slimeadactyl",
     "micro":"microslime",
     "raider":"desert raider",
+	"mammoth":"mammoslime",
     "mega":"megaslime",
 	"rex":"slimeasaurus rex",
 }

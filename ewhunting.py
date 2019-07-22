@@ -866,7 +866,7 @@ def drop_enemy_loot(enemy_data, district_data):
         patr_dropped = True
         patr_amount = 1
 
-    elif enemy_data.type == 'slimeasaur':
+    elif enemy_data.type == 'dinoslime':
 
         poudrin_dropped = True
         pleb_dropped = random.randrange(10) <= 3
@@ -929,6 +929,23 @@ def drop_enemy_loot(enemy_data, district_data):
                 crop_amount = 5
             else:
                 crop_amount = 6
+
+    elif enemy_data.type == 'mammoslime':
+        patr_dropped = random.randrange(3) == 0
+        poudrin_dropped = random.randrange(10) <= 6
+
+        if poudrin_dropped:
+            poudrin_range = random.randrange(2)
+            if poudrin_range == 0:
+                poudrin_amount = 1
+            else:
+                poudrin_amount = 2
+        if patr_dropped:
+            patr_range = random.randrange(2)
+            if patr_range == 0:
+                patr_amount = 1
+            else:
+                patr_amount = 2
 
     elif enemy_data.type == 'megaslime' or enemy_data.type == 'slimeasaurusrex':
 
@@ -1068,12 +1085,12 @@ def drop_enemy_loot(enemy_data, district_data):
 
             item_counter += 1
 
-    # Drop slimeasaur meat
+    # Drop dinoslime meat
     if meat_dropped:
         meat = None
 
         for food in ewcfg.food_list:
-            if food.id_food == ewcfg.item_id_slimeasaurmeat:
+            if food.id_food == ewcfg.item_id_dinoslimemeat:
                 meat = food
         ewitem.item_create(
             id_user=district_data.name,
@@ -1554,9 +1571,9 @@ def get_enemy_data(enemy_type):
         enemy.display_name = "Microslime"
         enemy.attacktype = 'unarmed'
 
-    elif enemy_type == 'slimeasaur':
+    elif enemy_type == 'dinoslime':
         enemy.ai = "Attacker-A"
-        enemy.display_name = "Slimeasaur"
+        enemy.display_name = "Dinoslime"
         enemy.attacktype = "fangs"
 
     elif enemy_type == 'slimeadactyl':
@@ -1568,6 +1585,11 @@ def get_enemy_data(enemy_type):
         enemy.ai = "Attacker-B"
         enemy.display_name = "Desert Raider"
         enemy.attacktype = "scythe"
+
+    elif enemy_type == 'mammoslime':
+        enemy.ai == "Defender"
+        enemy.display_name = "Mammoslime"
+        enemy.attacktype = "tusks"
 
     # Raid bosses
     elif enemy_type == 'megaslime':
@@ -1593,12 +1615,14 @@ def get_enemy_slime(enemy_type):
         slime = ((random.randrange(40000) + 10000) + 1)
     elif enemy_type == 'microslime':
         slime = 10000
-    elif enemy_type == 'slimeasaur':
+    elif enemy_type == 'dinoslime':
         slime = ((random.randrange(250000) + 250000) + 1)
     elif enemy_type == 'slimeadactyl':
         slime = ((random.randrange(250000) + 500000) + 1)
     elif enemy_type == 'desertraider':
         slime = ((random.randrange(500000) + 250000) + 1)
+    elif enemy_type == 'mammoslime':
+        slime = ((random.randrange(300000) + 600000) + 1)
     elif enemy_type == 'megaslime':
         slime = 1000000
     elif enemy_type == 'slimeasaurusrex':
@@ -1610,6 +1634,11 @@ def get_target_by_ai(enemy_data):
 
     target_data = None
 
+    time_now = int(time.time())
+
+    # If a player's time_lastenter is greater than this, it can be attacked.
+    targettimer = time_now - ewcfg.time_enemyaggro
+
     if enemy_data.ai == "Defender":
         if enemy_data.id_target != "":
             target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
@@ -1618,12 +1647,13 @@ def get_target_by_ai(enemy_data):
 
     elif enemy_data.ai == "Attacker-A":
         users = ewutils.execute_sql_query(
-            "SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0' ORDER BY {time_lastenter} ASC".format(
+            "SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT {life_state} = '0' ORDER BY {time_lastenter} ASC".format(
                 id_user=ewcfg.col_id_user,
                 life_state=ewcfg.col_life_state,
                 time_lastenter=ewcfg.col_time_lastenter,
                 poi=ewcfg.col_poi,
-                id_server=ewcfg.col_id_server
+                id_server=ewcfg.col_id_server,
+                targettimer=targettimer
             ), (
                 enemy_data.poi,
                 enemy_data.id_server
@@ -1633,12 +1663,14 @@ def get_target_by_ai(enemy_data):
 
     elif enemy_data.ai == "Attacker-B":
         users = ewutils.execute_sql_query(
-            "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = '0' ORDER BY {slimes} DESC".format(
+            "SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT {life_state} = '0' ORDER BY {slimes} DESC".format(
                 id_user=ewcfg.col_id_user,
                 life_state=ewcfg.col_life_state,
                 slimes=ewcfg.col_slimes,
                 poi=ewcfg.col_poi,
-                id_server=ewcfg.col_id_server
+                id_server=ewcfg.col_id_server,
+                time_lastenter=ewcfg.col_time_lastenter,
+                targettimer=targettimer
             ), (
                 enemy_data.poi,
                 enemy_data.id_server
