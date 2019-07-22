@@ -1229,6 +1229,11 @@ item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
+item_id_faggot = "faggot"
+item_id_doublefaggot = "doublefaggot"
+
+item_id_slimeasaurmeat = "slimeasaurmeat"
+item_id_slimeasaursteak = "slimeasaursteak"
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -1457,11 +1462,17 @@ item_list = [
 		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
-		id_item = "faggot",
+		id_item = item_id_faggot,
 		str_name = "faggot",
 		str_desc = "Wow, incredible! We’ve evolved from one dumb stick to several, all tied together for the sake of a retarded puesdo-pun! Truly, ENDLESS WAR has reached its peak. It’s all downhill from here, folks.",
 		acquisition = acquisition_smelting
 	),
+	EwGeneralItem(
+		id_item = item_id_doublefaggot,
+		str_name = "double faggot",
+		str_desc = "It's just a bundle of sticks, twice as long and hard as the two combined to form it. Hey, what are you chucklin' at?.",
+		acquisition = acquisition_smelting
+	)
 ]
 
 # A map of id_item to EwGeneralItem objects.
@@ -3751,7 +3762,7 @@ food_list = [
 		acquisition = acquisition_smelting
 	),
 	EwFood(
-		id_food = "slimeasaurmeat",
+		id_food = item_id_slimeasaurmeat,
 		alias = [
 			"meat",
 			"mutton",
@@ -3764,7 +3775,7 @@ food_list = [
 		str_desc = "The meat of a slimeasaur. It's best to probably cook it before consumption, if only you knew how.",
 	),
 	EwFood(
-		id_food = "slimeasaursteak",
+		id_food = item_id_slimeasaursteak,
 		alias = [
 			"cookedmeat",
 			"sss"
@@ -3772,7 +3783,7 @@ food_list = [
 		recover_hunger = 2000,
 		str_name = 'Slimeasaur Steak',
 		str_eat = "You savour every last bite of your meal, and all the doubt you might have had about sacrificing your sticks washes away.",
-		str_desc = "Through a stroke of genius, a faggot was sacrificed, and fire was made. This is the logical conclusion of such a sacrifice.",
+		str_desc = "Through a stroke of genius, a faggot was sacrificed, and fire was made. The result is the meat of a savage beast, seared to perfection.",
 		acquisition = acquisition_smelting
 	)
 ]
@@ -7732,9 +7743,21 @@ smelting_recipe_list = [
 			"fag",
 		],
 		ingredients = {
-		    item_id_stick : 6
+		    item_id_stick : 3
 		},
 		products = ['faggot']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "doublefaggot",
+		str_name = "a Double Faggot",
+		alias = [
+			"df",
+			"dfag",
+		],
+		ingredients = {
+		    item_id_faggot : 2
+		},
+		products = ['doublefaggot']
 	),
 	EwSmeltingRecipe(
 		id_recipe = "slimeasaursteak",
@@ -7744,8 +7767,8 @@ smelting_recipe_list = [
 			"sss"
 		],
 		ingredients = {
-			item_id_stick : 2,
-			'slimeasaurmeat' : 1
+			item_id_faggot : 1,
+			item_id_slimeasaurmeat : 1
 		},
 		products = ['slimeasaursteak']
 	)

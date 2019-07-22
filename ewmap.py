@@ -928,7 +928,8 @@ async def look(cmd):
 	numerator = 0
 
 	if num_enemies == 0:
-		enemies_resp += "You don't find any enemies in this district."
+		enemies_resp = ""
+		# enemies_resp += "You don't find any enemies in this district."
 	elif num_enemies == 1:
 		found_enemy_data = EwEnemy(id_enemy = enemies_in_district[0])
 		enemies_resp += "You look around and find a **{} ({})** in this location.".format(found_enemy_data.display_name, found_enemy_data.identifier)

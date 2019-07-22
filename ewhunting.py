@@ -841,12 +841,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
     meat_dropped = False
 
+    cards_dropped = False
+
     # Determines what items should be dropped based on enemy type.
     if enemy_data.type == 'juvie':
 
         poudrin_dropped = random.randrange(2) == 0
         pleb_dropped = random.randrange(10) == 0
         crop_dropped = random.randrange(10) <= 2
+        cards_dropped = random.randrange(10) <= 1
 
         if poudrin_dropped:
             poudrin_range = random.randrange(2)
@@ -1070,7 +1073,7 @@ def drop_enemy_loot(enemy_data, district_data):
         meat = None
 
         for food in ewcfg.food_list:
-            if food.id_food == 'slimeasaurmeat':
+            if food.id_food == ewcfg.item_id_slimeasaurmeat:
                 meat = food
         ewitem.item_create(
             id_user=district_data.name,
@@ -1087,7 +1090,29 @@ def drop_enemy_loot(enemy_data, district_data):
         )
         response += "They dropped a piece of meat!\n"
 
-    if not poudrin_dropped and not pleb_dropped and not patr_dropped and not crop_dropped:
+    if cards_dropped:
+        cards = None
+
+        for item in ewcfg.item_list:
+            if item.id_item == ewcfg.item_id_tradingcardpack:
+                cards = item
+
+        print(cards)
+
+        ewitem.item_create(
+            id_user=district_data.name,
+            id_server=district_data.id_server,
+            item_type=ewcfg.it_item,
+            item_props={
+                'id_item': cards.id_item,
+                'context': cards.context,
+                'item_name': cards.str_name,
+                'item_desc': cards.str_desc,
+            }
+        )
+        response += "They dropped a pack of trading cards!\n"
+
+    if not poudrin_dropped and not pleb_dropped and not patr_dropped and not crop_dropped and not meat_dropped and not cards_dropped:
         response = "They didn't drop anything..."
 
     return response
