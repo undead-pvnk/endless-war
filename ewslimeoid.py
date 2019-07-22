@@ -1557,7 +1557,7 @@ async def slimeoid(cmd):
 		response += slimeoid_describe(slimeoid)
 
 		cosmetics = ewitem.inventory(
-			id_user = cmd.message.author.id,
+			id_user = user_data.id_user,
 			id_server = cmd.message.server.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
