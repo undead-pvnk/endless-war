@@ -150,7 +150,8 @@ def gen_data_text(
 	for cosmetic in cosmetics:
 		cos = EwItem(id_item = cosmetic.get('id_item'))
 		if cos.item_props['adorned'] == 'true':
-			adorned_cosmetics.append(cosmetic.get('name'))
+			hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+			adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -235,7 +236,8 @@ async def data(cmd):
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item = cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
-				adorned_cosmetics.append(cosmetic.get('name'))
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
@@ -551,44 +553,24 @@ async def refuse(cmd):
 			challenger.rr_challenger = ""
 			challenger.persist()
 
-async def acquireStatus(cmd):
-	user_data = EwUser(member=cmd.message.author)
-	response = ""
+"""
+	Ban a player from participating in the game
+"""
+async def arrest(cmd):
 
-	value = None
-	status = None
-	if cmd.tokens_count > 0:
-		value = cmd.tokens[1]
-		value = value.lower()
-
-	if value != None:
-		status = ewcfg.status_effects_map.get(value)
+	author = cmd.message.author
 	
-	if status != None:
-		response = user_data.applyStatus(id_status=status.id_status)
-
-	else:
-		response = "Not a valid status"
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def statusInfo(cmd):
-	value = None
-	status = None
-	if cmd.tokens_count > 0:
-		value = cmd.tokens[1]
-		value = value.lower()
-
-	if value != None:
-		status = ewcfg.status_effects_map.get(value)
+	if not author.server_permissions.administrator:
+		return
 	
-	if status != None:
-		response = ""
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member)
+		user_data.arrested = True
+		user_data.poi = ewcfg.poi_id_juviesrow
+		user_data.change_slimes(n = - user_data.slimes)
+		user_data.persist()
 
-		for type in status.types:
-			response += "Value for {type} is {value}".format(type = type, value = status.values[status.types.index(type)])
-
-	else:
-		response = "Not a valid status"
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement cells.".format(member.display_name)
+		await ewrolemgr.updateRoles(client = cmd.client, member = member)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

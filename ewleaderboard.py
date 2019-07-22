@@ -56,8 +56,8 @@ def make_slimeoids_top_board(server = None):
 				board += "{} `{:_>3} | {}'s {}`\n".format(
 					ewcfg.emote_blank,
 					row[2],
-					row[0],
-					row[1]
+					row[0].replace("`",""),
+					row[1].replace("`","")
 				)
 	finally:
 		# Clean up the database handles.
@@ -218,7 +218,7 @@ def board_entry(entry, entry_type, divide_by):
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
 			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
-			entry[0]
+			entry[0].replace("`","")
 		)
 
 	elif entry_type == ewcfg.entry_type_districts:

@@ -42,6 +42,7 @@ CREATE TABLE users (
 	poi_death varchar(64) NOT NULL default '',
 	donated_slimes bigint NOT NULL DEFAULT '0',
 	donated_poudrins bigint NOT NULL DEFAULT '0',
+	arrested int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -256,4 +257,12 @@ CREATE TABLE bans (
 	faction varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, faction)
+);
+
+CREATE TABLE bazaar_wares (
+	id_server varchar(128) NOT NULL,
+	name varchar(64) NOT NULL,
+	value varchar(128) NOT NULL,
+	
+	PRIMARY KEY (id_server, name)
 );

@@ -366,7 +366,7 @@ def item_dedorn_cosmetics(
 	try:
 		
 		ewutils.execute_sql_query(
-			"UPDATE items_prop SET value = 'false' WHERE name = 'adorned' AND {id_item} IN (\
+			"UPDATE items_prop SET value = 'false' WHERE (name = 'adorned' or name = 'slimeoid') AND {id_item} IN (\
 				SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
 			)".format(
 				id_item = ewcfg.col_id_item,
@@ -574,7 +574,7 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if len(weapons_held) > user_data.get_weapon_capacity():
+			if len(weapons_held) >= user_data.get_weapon_capacity():
 				return False
 			else:
 				return True
@@ -811,6 +811,11 @@ async def item_look(cmd):
 				else:
 					response += ", so you decide to throw it away."
 					item_drop(id_item)
+		
+		if item.item_type == ewcfg.it_cosmetic:
+			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+			if hue != None:
+				response += " It's been dyed in {} paint.".format(hue.str_name)
 
 		if item.item_type == ewcfg.it_weapon:
 			response += "\n\n"

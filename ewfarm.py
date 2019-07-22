@@ -175,7 +175,7 @@ async def reap(cmd):
 
 					# Tell the player their slime level increased.
 					if was_levelup:
-						response += levelup_response
+						response += "\n\n" + levelup_response
 
 					user_data.hunger += ewcfg.hunger_perfarm
 					user_data.persist()

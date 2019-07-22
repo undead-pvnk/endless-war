@@ -461,10 +461,6 @@ async def attack(cmd):
 						resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now)
 						resp_cont.add_response_container(resp)
 
-		if ewcfg.mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				miss = False
-
 		# can't hit lucky lucy
 		if shootee_data.life_state == ewcfg.life_state_lucky:
 			miss = True

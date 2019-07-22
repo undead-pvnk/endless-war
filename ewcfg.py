@@ -18,7 +18,7 @@ from ewstatuseffects import EwStatusEffectDef
 import ewdebug
 
 # Global configuration options.
-version = "v3.5"
+version = "v3.5b"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -312,6 +312,9 @@ channel_subway_blue02 = "subway-train-b-02"
 channel_blimp = "blimp"
 
 channel_killfeed = "kill-feed"
+channel_jrmineswall = "the-mines-wall"
+channel_ttmineswall = "toxington-mines-wall"
+channel_cvmineswall = "cratersville-mines-wall"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -336,6 +339,7 @@ cmd_reload_alt1 = cmd_prefix + 'loadthegun'
 cmd_unjam = cmd_prefix + 'unjam'
 cmd_devour = cmd_prefix + 'devour'
 cmd_mine = cmd_prefix + 'mine'
+cmd_flag = cmd_prefix + 'flag'
 cmd_score = cmd_prefix + 'slimes'
 cmd_score_alt1 = cmd_prefix + 'slime'
 cmd_giveslime = cmd_prefix + 'giveslime'
@@ -454,6 +458,10 @@ cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_mill = cmd_prefix + 'mill'
 cmd_adorn = cmd_prefix + 'adorn'
+cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
+cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
+cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
+cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -469,6 +477,7 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 
+cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
@@ -506,6 +515,8 @@ cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
+cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
+cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -534,7 +545,6 @@ offline_cmds = [
 	cmd_scout_alt1
 ]
 		
-
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -683,6 +693,7 @@ time_kickout = 60 * 60  # 1 hour
 # time after coming online before you can act
 time_offline = 10
 
+
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
 emote_pizzahut = "<:pizzahut:431273890355085323>"
@@ -738,6 +749,57 @@ emote_diamonds = ":diamonds:"
 emote_spades = ":spades:"
 emote_clubs = ":clubs:"
 emote_broken_heart = ":broken_heart:"
+
+# Emotes for minesweeper
+emote_ms_hidden = ":pick:"
+emote_ms_mine = ":x:"
+emote_ms_flagged = ":triangular_flag_on_post:"
+emote_ms_0 = ":zero:"
+emote_ms_1 = ":one:"
+emote_ms_2 = ":two:"
+emote_ms_3 = ":three:"
+emote_ms_4 = ":four:"
+emote_ms_5 = ":five:"
+emote_ms_6 = ":six:"
+emote_ms_7 = ":seven:"
+emote_ms_8 = ":eight:"
+
+# mining sweeper
+cell_mine = 1
+cell_mine_marked = 2
+cell_mine_open = 3
+
+cell_empty = -1
+cell_empty_marked = -2
+cell_empty_open = -3
+
+symbol_map = {
+	-1 : "/",
+	1 : "/",
+	-2 : "+",
+	2 : "+",
+	3 : "X"
+}
+
+number_emote_map = {
+	0 : emote_ms_0,
+	1 : emote_ms_1,
+	2 : emote_ms_2,
+	3 : emote_ms_3,
+	4 : emote_ms_4,
+	5 : emote_ms_5,
+	6 : emote_ms_6,
+	7 : emote_ms_7,
+	8 : emote_ms_8
+}
+
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+
+mines_wall_map = {
+	poi_id_mine : channel_jrmineswall,
+	poi_id_tt_mines : channel_ttmineswall,
+	poi_id_cv_mines : channel_cvmineswall
+}
 
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
@@ -828,6 +890,7 @@ col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
+col_arrested = 'arrested'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -1108,6 +1171,26 @@ item_id_duotrigintuplestuffedcrust = "duotrigintuplestuffedcrust"
 item_id_quattuorsexagintuplestuffedcrust = "quattuorsexagintuplestuffedcrust"
 item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
+item_id_tradingcardpack = "tradingcardpack"
+item_id_stick = "stick"
+
+#vegetable ids
+item_id_poketubers = "poketubers"
+item_id_pulpgourds = "pulpgourds"
+item_id_sourpotatoes = "sourpotatoes"
+item_id_bloodcabbages = "bloodcabbages"
+item_id_joybeans = "joybeans"
+item_id_purplekilliflower = "purplekilliflower"
+item_id_razornuts = "razornuts"
+item_id_pawpaw = "pawpaw"
+item_id_sludgeberries = "sludgeberries"
+item_id_suganmanuts = "suganmanuts"
+item_id_pinkrowddishes = "pinkrowddishes"
+item_id_dankwheat = "dankwheat"
+item_id_brightshade = "brightshade"
+item_id_blacklimes = "blacklimes"
+item_id_phosphorpoppies = "phosphorpoppies"
+item_id_direapples = "direapples"
 
 # List of normal items.
 item_list = [
@@ -1127,7 +1210,7 @@ item_list = [
 		str_name = "White Dye",
 		str_desc = "A small vial of white dye.",
 		acquisition = acquisition_milling,
-		ingredients = "poketuber",
+		ingredients = item_id_poketubers,
 	),
 	EwGeneralItem(
 		id_item = "yellowdye",
@@ -1135,7 +1218,7 @@ item_list = [
 		str_name = "Yellow Dye",
 		str_desc = "A small vial of yellow dye.",
 		acquisition = acquisition_milling,
-		ingredients = "pulpgourds",
+		ingredients = item_id_pulpgourds,
 	),
 	EwGeneralItem(
 		id_item = "orangedye",
@@ -1143,7 +1226,7 @@ item_list = [
 		str_name = "Orange Dye",
 		str_desc = "A small vial of orange dye.",
 		acquisition = acquisition_milling,
-		ingredients = "sourpotatoes",
+		ingredients = item_id_sourpotatoes,
 	),
 	EwGeneralItem(
 		id_item = "reddye",
@@ -1151,7 +1234,7 @@ item_list = [
 		str_name = "Red Dye",
 		str_desc = "A small vial of red dye.",
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbages",
+		ingredients = item_id_bloodcabbages,
 	),
 	EwGeneralItem(
 		id_item = "magentadye",
@@ -1159,7 +1242,7 @@ item_list = [
 		str_name = "Magenta Dye",
 		str_desc = "A small vial of magenta dye.",
 		acquisition = acquisition_milling,
-		ingredients = "joybeans",
+		ingredients = item_id_joybeans,
 	),
 	EwGeneralItem(
 		id_item = "purpledye",
@@ -1167,7 +1250,7 @@ item_list = [
 		str_name = "Purple Dye",
 		str_desc = "A small vial of purple dye.",
 		acquisition = acquisition_milling,
-		ingredients = "purplekilliflower",
+		ingredients = item_id_purplekilliflower,
 	),
 	EwGeneralItem(
 		id_item = "bluedye",
@@ -1175,7 +1258,7 @@ item_list = [
 		str_name = "Blue Dye",
 		str_desc = "A small vial of blue dye.",
 		acquisition = acquisition_milling,
-		ingredients = "razornuts",
+		ingredients = item_id_razornuts,
 	),
 	EwGeneralItem(
 		id_item = "greendye",
@@ -1183,7 +1266,7 @@ item_list = [
 		str_name = "Green Dye",
 		str_desc = "A small vial of green dye.",
 		acquisition = acquisition_milling,
-		ingredients = "pawpaw",
+		ingredients = item_id_pawpaw,
 	),
 	EwGeneralItem(
 		id_item = "tealdye",
@@ -1191,7 +1274,7 @@ item_list = [
 		str_name = "Teal Dye",
 		str_desc = "A small vial of teal dye.",
 		acquisition = acquisition_milling,
-		ingredients = "sludgeberries",
+		ingredients = item_id_sludgeberries,
 	),
 	EwGeneralItem(
 		id_item = "rainbowdye",
@@ -1199,7 +1282,7 @@ item_list = [
 		str_name = "***Rainbow Dye!!***",
 		str_desc = "***A small vial of Rainbow dye!!***",
 		acquisition = acquisition_milling,
-		ingredients = "suganmanuts",
+		ingredients = item_id_suganmanuts,
 	),
 	EwGeneralItem(
 		id_item = "pinkdye",
@@ -1207,7 +1290,7 @@ item_list = [
 		str_name = "Pink Dye",
 		str_desc = "A small vial of pink dye.",
 		acquisition = acquisition_milling,
-		ingredients = "pinkrowddishes",
+		ingredients = item_id_pinkrowddishes,
 	),
 	EwGeneralItem(
 		id_item = "greydye",
@@ -1215,7 +1298,7 @@ item_list = [
 		str_name = "Grey Dye",
 		str_desc = "A small vial of grey dye.",
 		acquisition = acquisition_milling,
-		ingredients = "dankwheat",
+		ingredients = item_id_dankwheat,
 	),
 	EwGeneralItem(
 		id_item = "cobaltdye",
@@ -1223,7 +1306,7 @@ item_list = [
 		str_name = "Cobalt Dye",
 		str_desc = "A small vial of cobalt dye.",
 		acquisition = acquisition_milling,
-		ingredients = "brightshade",
+		ingredients = item_id_brightshade,
 	),
 	EwGeneralItem(
 		id_item = "blackdye",
@@ -1231,7 +1314,7 @@ item_list = [
 		str_name = "Black Dye",
 		str_desc = "A small vial of black dye.",
 		acquisition = acquisition_milling,
-		ingredients = "blacklimes",
+		ingredients = item_id_blacklimes,
 	),
 	EwGeneralItem(
 		id_item = "limedye",
@@ -1239,7 +1322,7 @@ item_list = [
 		str_name = "Lime Dye",
 		str_desc = "A small vial of lime dye.",
 		acquisition = acquisition_milling,
-		ingredients = "phosphorpoppies",
+		ingredients = item_id_phosphorpoppies,
 	),
 	EwGeneralItem(
 		id_item = "cyandye",
@@ -1247,10 +1330,10 @@ item_list = [
 		str_name = "Cyan Dye",
 		str_desc = "A small vial of cyan dye.",
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
-		id_item = "tradingcardpack",
+		id_item = item_id_tradingcardpack,
 		alias = [
 			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
 			"tradingcard",
@@ -1311,11 +1394,11 @@ item_list = [
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
-		id_item = "stick",
+		id_item = item_id_stick,
 		str_name = "stick",
 		str_desc = "It’s just some useless, dumb stick.",
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
 		id_item = "faggot",
@@ -1333,32 +1416,45 @@ item_names = []
 
 # list of dyes you're able to saturate your Slimeoid with
 dye_list = []
-
+dye_map = {}
 # seperate the dyes from the other normal items
-for c in dye_list:
+for c in item_list:
 	if c.context != "dye":
 		pass
 	else:
 		dye_list.append(c)
+		dye_map[c.str_name] = c.id_item
 
 # A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
 def wef_gun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
-	if aim <= 10 + int(100 * ctn.miss_mod):
-		ctn.miss = True
-	elif aim >= 90 - int(100 * ctn.crit_mod):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+			
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "dualpistols"
 def wef_dualpistols(ctn = None):
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
-	if aim <= 40 + int(100 * ctn.miss_mod):
-		ctn.miss = True
-	elif aim >= 80 - int(100 * ctn.crit_mod):
+	if aim <= (4 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
@@ -1367,11 +1463,17 @@ def wef_shotgun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.65)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
 
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
-	if aim <= 10 + int(100 * ctn.miss_mod):
-		ctn.miss = True
-	elif aim >= 90 - int(100 * ctn.crit_mod):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1379,18 +1481,18 @@ def wef_shotgun(ctn = None):
 def wef_rifle(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)	
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5) 
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
 
-	if aim <= 0 + (100 * ctn.miss_mod):
-		ctn.miss = True
-	if aim >= 80 - int(100 * ctn.crit_mod):
+	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
+# weapon effect function for "smg"
 def wef_smg(ctn = None):
 	dmg = int(ctn.slimes_damage * 0.5)
 	ctn.slimes_damage = 0
 	jam = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if jam <= 2:
 		ctn.weapon_item.item_props["jammed"] = True
@@ -1398,58 +1500,90 @@ def wef_smg(ctn = None):
 	else:
 		for count in range(6):
 			aim = (random.randrange(100) + 1)
-			if aim > 25 + int(100 * ctn.miss_mod):
+			if aim <= (25 + int(100 * ctn.miss_mod)):
 				ctn.strikes += 1
 
-				if aim >= 95 - int(100 * ctn.crit_mod):
+				if aim >= (95 - int(100 * ctn.crit_mod)):
 					ctn.slimes_damage += int(dmg * 1.5)
 				else:
 					ctn.slimes_damage += int(dmg * 0.5)
-		
+			elif mutation_id_sharptoother in user_mutations:
+				if random.random() < 0.5:
+					ctn.strikes += 1
+
+					if aim >= (95 - int(100 * ctn.crit_mod)):
+						ctn.slimes_damage += int(dmg * 1.5)
+					else:
+						ctn.slimes_damage += int(dmg * 0.5)
+
 		if ctn.strikes == 0:
 			ctn.miss = True
 
+# weapon effect function for "minigun"
 def wef_minigun(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = 0
+	user_mutations = ctn.user_data.get_mutations()
 
 	for count in range(10):
-		aim = (random.randrange(100) + 1)
-		if aim > 10 + int(100 * ctn.miss_mod):
+		aim = (random.randrange(10) + 1)
+		if aim <= (1 + int(10 * ctn.miss_mod)):
 			ctn.strikes += 1
 
-			if aim >= 90 - int(100 * ctn.crit_mod):
+			if aim >= (10 - int(10 * ctn.crit_mod)):
 				ctn.slimes_damage += dmg * 2
 			else:
 				ctn.slimes_damage += dmg
-	
+		elif mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.strikes += 1
+
+				if aim >= 10 - int(10 * ctn.crit_mod):
+					ctn.slimes_damage += dmg * 2
+				else:
+					ctn.slimes_damage += dmg
+
 	if ctn.strikes == 0:
 		ctn.miss = True
 
 # weapon effect function for "bat"
 def wef_bat(ctn = None): 
 	aim = (random.randrange(0, 13) - 2)
-
+	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
+	
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
 	if time_lastattack > 0:
 		ctn.miss_mod += (2 - min(time_lastattack, 2)) / 10
 
+	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
+
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
-		ctn.miss = True
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
 	elif aim == -1:
-		ctn.backfire = True
-		user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+		else:
+			ctn.backfire = True
+			user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+
 	elif aim >= (11 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 4)
-	else:
-		ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
-
+		ctn.slimes_damage = int(dmg * 4)
+		
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
 	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
 	successful_timing = True if (ctn.time_now - last_attack) == 2 else False
+	user_mutations = ctn.user_data.get_mutations()
 
 	if int(ctn.weapon_item.item_props.get("consecutive_hits")) == 2 and successful_timing:
 		ctn.crit = True
@@ -1457,15 +1591,23 @@ def wef_brassknuckles(ctn = None):
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
 	else:
-		aim1 = (random.randrange(100) + 1)
-		aim2 = (random.randrange(100) + 1)
+		aim1 = (random.randrange(10) + 1)
+		aim2 = (random.randrange(10) + 1)
 		whiff1 = 1
 		whiff2 = 1
 
-		if aim1 <= (20 + int(100 * ctn.miss_mod)):
-			whiff1 = 0
-		if aim2 <= (20 + int(100 * ctn.miss_mod)):
-			whiff2 = 0
+		if aim1 <= (2 + int(10 * ctn.miss_mod)):
+			if mutation_id_sharptoother in user_mutations:
+				if random.random() < 0.5:
+					whiff1 = 0
+			else:
+				whiff1 = 0
+		if aim2 <= (2 + int(10 * ctn.miss_mod)):
+			if mutation_id_sharptoother in user_mutations:
+				if random.random() < 0.5:
+					whiff2 = 0
+			else:
+				whiff2 = 0
 
 		if whiff1 == 0 and whiff2 == 0:
 			ctn.miss = True
@@ -1504,16 +1646,28 @@ def wef_katana(ctn = None):
 # weapon effect function for "broadsword"
 def wef_broadsword(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	ctn.slimes_damage += int( ctn.slimes_damage * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
-	if aim <= 10 + int(100 * ctn.miss_mod):
-		ctn.miss = True
-	elif aim <= 30:
-		ctn.backfire = True
-		ctn.user_data.change_slimes(n = -ctn.slimes_damage)
-	elif aim >= 80 - int(100 * ctn.crit_mod):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim <= 3:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				ctn.user_data.change_slimes(n = -ctn.slimes_damage)
+		else:
+			ctn.backfire = True
+			ctn.user_data.change_slimes(n = -ctn.slimes_damage)
+
+	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1522,6 +1676,7 @@ def wef_nunchucks(ctn = None):
 	ctn.strikes = 0
 	dmg = ctn.slimes_damage 
 	ctn.slimes_damage = 0
+	user_mutations = ctn.user_data.get_mutations()
 
 	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
 	if time_lastattack > 0:
@@ -1531,6 +1686,10 @@ def wef_nunchucks(ctn = None):
 		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
 			ctn.strikes += 1
 			ctn.slimes_damage += int(dmg * 0.5)
+		elif mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.strikes += 1
+				ctn.slimes_damage += int(dmg * 0.5)
 
 	if ctn.strikes == 4:
 		ctn.crit = True
@@ -1546,6 +1705,7 @@ def wef_nunchucks(ctn = None):
 def wef_scythe(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.25)
+	user_mutations = ctn.user_data.get_mutations()
 
 	target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
 	ctn.slimes_damage = ctn.slimes_damage * min(target_kills, 10)
@@ -1556,10 +1716,15 @@ def wef_scythe(ctn = None):
 	if time_lastattack > 0:
 		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 2) * 5))
 
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
 
-	if aim <= 10 + (100 * ctn.miss_mod):
-		ctn.miss = True
+	if aim <= (1 + (10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations():
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
 	elif ctn.shootee_data.life_state == life_state_corpse:
 		ctn.crit = True
 		ctn.slimes_damage *= 3
@@ -1569,6 +1734,7 @@ def wef_scythe(ctn = None):
 def wef_yoyo(ctn = None):
 	base_dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
+	user_mutations = ctn.user_data.get_mutations()
 
 	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
 
@@ -1586,9 +1752,14 @@ def wef_yoyo(ctn = None):
 	ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props["consecutive_hits"]) + 1
 	aim = (random.uniform(0, 100))
 
-	if aim <= 18.75 + (100 * ctn.miss_mod):
-		ctn.miss = True
-	elif aim >= 90 - (100 * ctn.crit_mod):
+	if aim <= (18.75 + (100 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (90 - (100 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -1597,11 +1768,18 @@ def wef_yoyo(ctn = None):
 def wef_knives(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 0.25)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
-	aim = (random.randrange(100) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
-	if aim <= 10 + int(100 * ctn.miss_mod):
-		ctn.miss = True
-	elif aim >= 10 - int(100 * ctn.crit_mod):
+	aim = (random.randrange(10) + 1)
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutations_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 
@@ -1610,17 +1788,30 @@ def wef_molotov(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.slimes_spent *= 2
-	aim = (random.randrange(100) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	aim = (random.randrange(10) + 1)
 
 	ctn.bystander_damage = dmg * 0.5
 
-	if aim <= 20:
-		ctn.backfire = True
-		ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
-	elif aim > 20 and aim <= 30 + (100 * ctn.miss_mod):
-		ctn.miss = True
+	if aim <= 2:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
+		else:
+			ctn.backfire = True
+			ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
+
+	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
 	else:
-		if aim >= 90 - (100 * ctn.crit_mod):
+		if aim >= (10 - (10 * ctn.crit_mod)):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 
@@ -1630,18 +1821,29 @@ def wef_grenade(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.slimes_spent *= 2
 	ctn.bystander_damage = int(dmg * 0.3)
+	user_mutations = ctn.user_data.get_mutations()
 
-	aim = (random.randrange(100) + 1)
+	aim = (random.randrange(10) + 1)
 
-	if aim <= (10 + (100 * ctn.miss_mod)):
-		ctn.miss = True
-		ctn.bystander_damage = 0
+	if aim <= (1 + (10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.bystander_damage = 0
+		else:
+			ctn.miss = True
+			ctn.bystander_damage = 0
 
-	elif aim > 10 and aim <= 20:
-		ctn.backfire = True
-		ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+	elif aim > 1 and aim <= 2:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+		else:
+			ctn.backfire = True
+			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
-	elif aim >= (90 - (100 * ctn.crit_mod)):
+	elif aim >= (10 - (10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
@@ -1651,8 +1853,13 @@ def wef_garrote(ctn = None):#TODO
 
 	aim = (random.randrange(100) + 1)
 	if aim <= (100 * ctn.miss_mod):
-		ctn.miss = True 
-	elif aim == 1 - (100 * ctn.crit_mod):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True 
+
+	elif aim <= (1 - (100 * ctn.crit_mod)):
 		ctn.slimes_damage *= 10
 		ctn.crit = True
 
@@ -1669,10 +1876,16 @@ def wef_pickaxe(ctn = None):
 	ctn.slimes_damage *= 0.2
 
 	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
 
 	if aim == 1:
-		ctn.miss = True
-		ctn.slimes_damage = 0
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
 
 	elif aim == 10:
 		ctn.crit = True
@@ -2394,7 +2607,7 @@ food_list = [
 		price = 0,
 		inebriation = 0,
 		str_name = 'glass of water',
-		vendors = [vendor_bar],
+		vendors = [vendor_bar, vendor_bazaar],
 		str_eat = "The bartender sighs as he hands you a glass of water. You drink it. You're not sure why you bothered, though.",
 		str_desc = "It’s a room temperature glass of tap water. Abstaining from drinking calories has never tasted this adequate!"
 	),
@@ -2743,7 +2956,7 @@ food_list = [
 		price = 3000,
 		inebriation = 0,
 		str_name = 'a grilled halibut',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You scarf down some delicious grilled halibut for the helluvit and it’s accompanying sides for the sidesuvit.",
 		str_desc = "A grilled hunk of halibut, served with chipotle dirty rice and corn."
 	),
@@ -2756,7 +2969,7 @@ food_list = [
 		price = 5200,
 		inebriation = 0,
 		str_name = 'a wood fired salmon',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You swallow the wood fired salmon without saving any of its smoky aftertaste! Aww man, so much for the extra 2 SlimeCoin…",
 		str_desc = "A wood fired slice of salmon, served with a Dijon glaze and scalloped potatoes and broccoli on the side."
 	),
@@ -2769,7 +2982,7 @@ food_list = [
 		price = 4000,
 		inebriation = 0,
 		str_name = 'a sauteed mahi mahi',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You gobble up the sauteed mahi mahi with lighting speed, reducing the proud fish into liquid in a matter of seconds.",
 		str_desc = "A sauteed measurement of mahi mahi, with a lemon pepper crust and served with scalloped potatoes and spinach."
 	),
@@ -2784,7 +2997,7 @@ food_list = [
 		price = 6000,
 		inebriation = 0,
 		str_name = 'pan-seared scallops',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You lean your head back, grab a few scallops, and try throwing them up into air and landing them in your mouth. This goes extremely poorly.",
 		str_desc = "Some pan-seared scallops, served with goat cheese grits, sweet corn, and asparagus."
 	),
@@ -2798,7 +3011,7 @@ food_list = [
 		price = 1000,
 		inebriation = 0,
 		str_name = 'a cup of clam chowder',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You scoop out a glob of the hearty chowder and clench your fist above your head, letting it drizzle down all over your face and into your eager mouth. You’re a fucking freak.",
 		str_desc = "A bowl of New England clam chowder, served to you cold and runny in Arizona."
 	),
@@ -2814,7 +3027,7 @@ food_list = [
 		price = 8000,
 		inebriation = 0,
 		str_name = 'a rock lobster tail and a sirloin steak',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You discard the napkin immediately, along with the silverware trapped inside of it, opting to instead to eat the meal with your hands. "
 				  "You pry the lobster from its shell first, ramming it into your mouth and taking a shot of melted butter to soften it up while you chew. "
 				  "You continue onto the steak, carefully sliced against the grain, and smother it in half a bottle of A1 sauce and just start to suck on the two inch pieces "
@@ -2838,7 +3051,7 @@ food_list = [
 		price = 7000,
 		inebriation = 0,
 		str_name = 'an Arizonian Kingpin Crab',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You’re too weak to properly crack the mighty crabs’ carapaces, even with the proper crab carapace cracking crackers. After about 10 minutes of desperately trying to, "
 				  "you just whip out whatever weapon you currently have quiped and start to viciously strike the crustaceans in a vain attempt to release their inner, delectable meat. "
 				  "You just end up destroying the entire table you’re eating at.",
@@ -2881,7 +3094,7 @@ food_list = [
 		price = 99999,
 		inebriation = 0,
 		str_name = 'a bowl of decadent Juvie’s Roe',
-		vendors = [vendor_seafood],
+		vendors = [vendor_seafood, vendor_bazaar],
 		str_eat = "You don’t really know how to eat caviar, so you just scoop some of the disgusting slop out of the tin with your bare hands and get crushed fish eggs all over your mouth "
 				  "as you shovel it into your uncultured maw. It tastes, uh… high class? This was a waste of money.",
 		str_desc = "A small tin of wild, matured Juvie’s roe. A highly sought after delicacy by the upper crust of the critical improshived juveniles of the city. "
@@ -2898,7 +3111,7 @@ food_list = [
 		price = 100,
 		inebriation = 0,
 		str_name = 'home fries',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You cram as many overcooked cubes of potato into your oversized maw as possible.You choke painfully on some of the tiny bits that that bypass your poor attempts at chewing. You hunger for more.",
 		str_desc = "A greasy, over salted, crispy pile of miniature potato chunks, ranging from the average cubes to smaller irregularly shaped, condensed bits of pure fried potato skin. "
 				   "With a calorie count well above your recommended daily consumption in just a handful, you could subsist on these preservative riddled species of spud for well over a week and still gain weight. "
@@ -2913,7 +3126,7 @@ food_list = [
 		price = 700,
 		inebriation = 0,
 		str_name = 'stack of three pancakes',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You drench your three flapjacks in a generous helping of maple syrup and slap a stick of butter on top for good measure. It’s a good thing you’ve drowned your pancakes in all this excess shit, "
 				  "or you might have actually tasted them! The soggy, limp fried dough is so much more appetizing when all it’s innate flavor is overrun by pure sugary excess.",
 		str_desc = "Pancakes are usually a pretty safe bet, no matter where you are. You can’t really mess up a pancake unless you’re specifically trying to burn it. Luckily, "
@@ -2929,7 +3142,7 @@ food_list = [
 		price = 900,
 		inebriation = 0,
 		str_name = 'two chicken strips and a waffle',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You promptly seperate the two chicken strips and waffle on to separate plates, quarantining them off completely from one another. "
 				  "You dip the chicken strips into some ketchup and drizzle some syrup onto the waffles, making sure to NEVER combine the two bitter rivals and to cleanse your palette before switching between them. "
 				  "Ah, the life of a picky eater, it’s hard and no one understands.",
@@ -2949,7 +3162,7 @@ food_list = [
 		price = 600,
 		inebriation = 0,
 		str_name = 'four slices of french toast',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You brace untold misery, for your hopes and dreams to be smashed utterly and irreparably, and most importantly to have wasted 12 SlimeCoin on the worst meal of your life. "
 				  "Every hair on your body stands upright, as if preparing for a betrayal fueled stroke. You bite into the toast, and "
 				  "as soon as the sweet pastry touches your tongue you feel as though you finally resonate with the ending of critically acclaimed children’s movie Ratatouille. "
@@ -2986,7 +3199,7 @@ food_list = [
 		price = 500,
 		inebriation = 0,
 		str_name = 'an eggs benedict',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "Even though you’re pretty sure you know what an eggs benedict is, you aren’t sure you know how to eat it. You pick up the muffin and just take a bite out of it directly, "
 				  "hollandaise sauce and egg yolk coat your nostrils and generally splatters all over your face. Who would eat something like this????",
 		str_desc = "An English muffin topped off with some ham, a poached egg, and hollandaise sauce. It seems like the sort of food that’d you would enjoy, it’s customizable and leans itself "
@@ -3002,7 +3215,7 @@ food_list = [
 		price = 400,
 		inebriation = 0,
 		str_name = 'two scrambled eggs',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You attempt to strangle your ketchup bottle for the state mandated dollop of ketchup to be adequately mixed into your scrambled egg when tragedy strikes! The bottle is empty! "
 				  "It blasts out specs of ketchup and a funny noise a few times before you throw it against the wall in ballistic anger. You are forced to eat the eggs… plain. DEAR GOD!!!!",
 		str_desc = "Some scrambled eggs. Come on, you know what scrambled eggs are, right? Do I have to spell out everything for you? Do you want me to stay awake all night and come up with immature "
@@ -3017,7 +3230,7 @@ food_list = [
 		price = 800,
 		inebriation = 0,
 		str_name = 'a western omelette',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You pour plenty of hot sauce all over your omelette and shove bite after bite into your slobbering mouth. The heat from the sauce and the bell peppers builds to a breaking point, "
 				  "causing you to blackout. You wake up an indeterminate amount of time later, covered in dried tears and sweat and your abdomen feeling as though you’re pregnant with Satan. You love pain.",
 		str_desc = "A delicious Denver omelette, stuffed with diced ham, onions, and green peppers. Looks great! Hm? Excuse me? What the fuck is a ‘western omelette’? Do people on the east coast "
@@ -3036,7 +3249,7 @@ food_list = [
 		price = 100,
 		inebriation = 0,
 		str_name = 'a glass of orange juice',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You swish around the decadent, pulpy orange juice in your mouth. This exacerbates your already poor dental hygiene, sending shockwaves of pain through your mouth as the "
 				  "sugary liquid washes up against dozens of cavities all throughout your mouth. But, you don’t care. You’re in heaven.",
 		str_desc = "A cavity creating, dental decaying, and enamel eroding glass of delicious orange juice. This vibrant citrus drink hits the spot any day of the week, any minute of the day, "
@@ -3051,7 +3264,7 @@ food_list = [
 		price = 100,
 		inebriation = 0,
 		str_name = 'a glass of milk',
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You take a swig of a nice, cold glass of whole milk and your palette is instantly clear of any sugary or syrupy foods you may have been eating. You are left in total cow induced euphoria.",
 		str_desc = "A simple glass of milk. No more, no less. "
 	),
@@ -3065,7 +3278,7 @@ food_list = [
 		price = 1500,
 		inebriation = 0,
 		str_name = "two steak tips and two sunny side up eggs",
-		vendors = [vendor_diner],
+		vendors = [vendor_diner, vendor_bazaar],
 		str_eat = "You break the yolk of your two fried eggs immediately, letting the yolk run and pool around the steak tips, acting as a dipping sauce. With each mouthwatering bite of juicy, "
 				  "medium rare steak coated in delicious, runny yolk, you reach a higher level of christ consciousness. How does no one else but you do this?",
 		str_desc = "The only actually filling meal they serve at the diner. Between the two medium rare steak tips and the perfectly cooked sunny side up eggs, you’ve got enough protein in this one "
@@ -3333,7 +3546,7 @@ food_list = [
 		str_desc = "A huge heart-shaped box of assorted, partially melted chocolates and other sweet hors d'oeuvres. Sickeningly sweet literally and metaphorically.",
 	),
 	EwFood(
-		id_food = "pinkrowddishes",
+		id_food = item_id_pinkrowddishes,
 		recover_hunger = 60,
 		str_name = 'Pink Rowddishes',
 		vendors = [vendor_farm],
@@ -3342,7 +3555,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "sludgeberries",
+		id_food = item_id_sludgeberries,
 		recover_hunger = 60,
 		str_name = 'Sludgeberries',
 		vendors = [vendor_farm],
@@ -3351,7 +3564,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "pulpgourds",
+		id_food = item_id_pulpgourds,
 		recover_hunger = 60,
 		str_name = 'Pulp Gourds',
 		vendors = [vendor_farm],
@@ -3360,7 +3573,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "joybeans",
+		id_food = item_id_joybeans,
 		recover_hunger = 60,
 		str_name = 'Joybeans',
 		vendors = [vendor_farm],
@@ -3369,7 +3582,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "brightshade",
+		id_food = item_id_brightshade,
 		recover_hunger = 60,
 		str_name = 'Brightshade',
 		vendors = [vendor_farm],
@@ -3378,7 +3591,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "direapples",
+		id_food = item_id_direapples,
 		recover_hunger = 60,
 		str_name = 'Dire Apples',
 		vendors = [vendor_farm],
@@ -3387,7 +3600,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "purplekilliflower",
+		id_food = item_id_purplekilliflower,
 		recover_hunger = 60,
 		str_name = 'Purple Killiflower',
 		vendors = [vendor_farm],
@@ -3396,7 +3609,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "razornuts",
+		id_food = item_id_razornuts,
 		recover_hunger = 60,
 		str_name = 'Razornuts',
 		vendors = [vendor_farm],
@@ -3405,7 +3618,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "poketubers",
+		id_food = item_id_poketubers,
 		recover_hunger = 60,
 		str_name = 'Poke-tubers',
 		vendors = [vendor_farm],
@@ -3414,7 +3627,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "suganmanuts",
+		id_food = item_id_suganmanuts,
 		recover_hunger = 60,
 		str_name = 'Suganma Nuts',
 		vendors = [vendor_farm],
@@ -3423,7 +3636,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "dankwheat",
+		id_food = item_id_dankwheat,
 		recover_hunger = 60,
 		str_name = 'Dankwheat',
 		vendors = [vendor_farm],
@@ -3432,7 +3645,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "blacklimes",
+		id_food = item_id_blacklimes,
 		recover_hunger = 60,
 		str_name = 'Black Limes',
 		vendors = [vendor_farm],
@@ -3441,7 +3654,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "phosphorpoppies",
+		id_food = item_id_phosphorpoppies,
 		recover_hunger = 60,
 		str_name = 'Phosphorpoppies',
 		vendors = [vendor_farm],
@@ -3450,7 +3663,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "sourpotatoes",
+		id_food = item_id_sourpotatoes,
 		recover_hunger = 60,
 		str_name = 'Sour Potatoes',
 		vendors = [vendor_farm],
@@ -3459,7 +3672,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "bloodcabbages",
+		id_food = item_id_bloodcabbages,
 		recover_hunger = 60,
 		str_name = 'Blood Cabbages',
 		vendors = [vendor_farm],
@@ -3468,7 +3681,7 @@ food_list = [
 		time_expir = farm_food_expir,
 	),
 	EwFood(
-		id_food = "pawpaw",
+		id_food = item_id_pawpaw,
 		recover_hunger = 60,
 		str_name = 'Pawpaw',
 		vendors = [vendor_farm],
@@ -3481,7 +3694,7 @@ food_list = [
 		recover_hunger = 1200,
 		str_name = 'Pink Rowdatouille',
 		acquisition = acquisition_milling,
-		ingredients = "pinkrowddishes",
+		ingredients = item_id_pinkrowddishes,
 		str_eat = "You gingerly nibble on the fancy vegetables. It’s nostalgic taste sends you right back to your childhood, and your first encounter with the law. You had to get sent to the New Los Angeles City aka Neo Milwaukee Juvenile Detention Center somehow, after all. It feels like it happened so long ago, and yet, you can remember it like it was yesterday.",
 		str_desc = "Thinly sliced rounds of Pink Rowddish and other colorful vegetables are slow roasted and drizzled with special sauce. It seems simple enough, it can’t taste THAT good, can it?",
 		time_expir = milled_food_expir,
@@ -3491,7 +3704,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Sludgeberry Pancakes',
 		acquisition = acquisition_milling,
-		ingredients = "sludgeberries",
+		ingredients = item_id_sludgeberries,
 		str_eat = "You pick up the stack of pancakes with your hands, holding and biting into them as if they were a hamburger. Thick syrup coats your hands and mouth, ready to be licked off after the main meal has concluded.",
 		str_desc = "Fluffy flapjacks filled with assorted Sludgeberries and topped with a heaping helping of viscous syrup. You’ve died and washed up in the sewers. But, like, a nice part of the sewers. This express doesn’t really translate well into the setting.",
 		time_expir = milled_food_expir,
@@ -3501,7 +3714,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Pulp Gourd Pie',
 		acquisition = acquisition_milling,
-		ingredients = "pulpgourds",
+		ingredients = item_id_pulpgourds,
 		str_eat = "You pick up a piece like it's a goddamn slice of pizza, demolishing it in a few barbaric bites. Eventually you get your fill of the crust and just start scraping out the delicious Pulp Gourd filling goop and slathering it all over your mouth and tongue like you're a fucking mindless pig at his trough.",
 		str_desc = "A warm, freshly baked pie. It's still molten, still solidifying Pulp Gourd filling beckons you like a siren lures a sailor. So many holidays have been ruined because of your addiction to this cinnamon imbued delicacy, and so many more will be in the future.",
 		time_expir = milled_food_expir,
@@ -3511,7 +3724,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Joybean Paste Mochi',
 		acquisition = acquisition_milling,
-		ingredients = "joybeans",
+		ingredients = item_id_joybeans,
 		str_eat = "You pop the delicate confectionary into your mouth and start ravenously shredding it into barely digestible chewy chunks. Sweet paste is slathered across your mouth. Your teeth enamel is decimated, execution style.",
 		str_desc = "A sickeningly sweet  Joy Bean paste filling encased in a small, round mochi covered in powdered sugar. It’s *proper* name is “Daifucku.”",
 		time_expir = milled_food_expir,
@@ -3521,7 +3734,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Brightshade Seeds',
 		acquisition = acquisition_milling,
-		ingredients = "brightshade",
+		ingredients = item_id_brightshade,
 		str_eat = "You pop a few seeds into your mouth at a time, grinding them into dust with your molars and digesting their sweet, sweet single digit calories.",
 		str_desc = "A bag of Brightshade seeds, unsalted and ready for ill-advised consumption.",
 		time_expir = milled_food_expir,
@@ -3531,7 +3744,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Dire Apple Juice',
 		acquisition = acquisition_milling,
-		ingredients = "direapple",
+		ingredients = item_id_direapples,
 		str_eat = "You slurp down the delicious sugary juice! Hell yeah!",
 		str_desc = "A 99% juice-like substance that tastes vaguely like Dire Apples! It’s so ubiquitous that you guarantee that if you rummaged through every school kid’s lunch in the city, you’d be sent to jail.",
 		time_expir = milled_food_expir,
@@ -3541,7 +3754,7 @@ food_list = [
 		recover_hunger = 1200,
 		str_name = 'Purple Killiflower Crust Pizza',
 		acquisition = acquisition_milling,
-		ingredients = "purplekilliflower",
+		ingredients = item_id_purplekilliflower,
 		str_eat = "You take a hesitant nibble of the famously keto pizza slice before coming to the reality that sometimes healthy things CAN taste good! You shove the rest of the slice in your mouth, nearly choking. Deep inside of your body, you can feel your kidney begin to churn and convulse. That’s probably fine.",
 		str_desc = "A deliciously dietary-accordant slice of Killiflower crusted pizza. Made by milling down Killiflower into fine crumbs, combining with various irradiated cheeses, and baking until even notorious ENDLSS WAR critic Arlo is impressed. Now THIS is how you lose weight!",
 		time_expir = milled_food_expir,
@@ -3551,7 +3764,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Razornut Butter',
 		acquisition = acquisition_milling,
-		ingredients = "razornuts",
+		ingredients = item_id_razornuts,
 		str_eat = "You take a hefty spoonful of the thick mucilage, coating your mouth completely. It’ll take weeks to swallow the last of it.",
 		str_desc = "A tub of chunky, creamy Razonut Butter. Co-star of countless childhood classics. You know it was invented by a Juvie, right?",
 		time_expir = milled_food_expir,
@@ -3561,7 +3774,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Jelly-Filled Doughnut',
 		acquisition = acquisition_milling,
-		ingredients = "poketubers",
+		ingredients = item_id_poketubers,
 		str_eat = "You chomp into the delicious jelly-filled doughnuOH GOD WHY THE FUCK DOES IT TASTE LIKE A TRADITIONAL JAPANESE ONIGIRI WITH A PICKLE PLUM FILLING WHO COULD HAVE PREDICTED THIS?!?!",
 		str_desc = "These jelly-filled doughnuts seem appetizing enough, but you're no expert. You never really cared much for jelly-filled doughnuts. In fact, in most scenarios you'd pass them up in favor of another pastry or sugary snack.",
 		time_expir = milled_food_expir,
@@ -3571,7 +3784,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = '***Your Favorite Food***',
 		acquisition = acquisition_milling,
-		ingredients = "suganmanuts",
+		ingredients = item_id_suganmanuts,
 		str_eat = "***You bite into your favorite meal!! It’s taste is literally indescribable!! You feel like you’re going retarded, your mind is clearly breaking!! Uwahhh!!***",
 		str_desc = "***Your favorite meal!! You could go on for hours about how great this food is!! But, you won’t, because no one appreciates it as much as you do.***",
 		time_expir = milled_food_expir,
@@ -3581,7 +3794,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Dankwheat Toast',
 		acquisition = acquisition_milling,
-		ingredients = "dankwheat",
+		ingredients = item_id_dankwheat,
 		str_eat = "You take a bite out of the Dank Wheat Toast, and immediately you begin to start staggering around, clearly lost in some sort of unearned pleasure.",
 		str_desc = "A burnt, slightly soggy slice of Dank Wheat Toast. What more do you want out of me?",
 		time_expir = milled_food_expir,
@@ -3591,7 +3804,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Black Lime Sour',
 		acquisition = acquisition_milling,
-		ingredients = "blacklimes",
+		ingredients = item_id_blacklimes,
 		str_eat = "You take a swig of the obscure southern delicacy. Its overwhelming acidity tricks your mouth into generating quarts of saliva, refreshing your mouth and destroying your taste buds. Nifty!",
 		str_desc = "A small paper cup with nothing but crushed ice, the juice of a Black Lime, a little salt, and about a pound of cocaine.",
 		time_expir = milled_food_expir,
@@ -3601,7 +3814,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Phosphorpoppies Muffin',
 		acquisition = acquisition_milling,
-		ingredients = "phosphorpoppies",
+		ingredients = item_id_phosphorpoppies,
 		str_eat = "You remove the muffin head from the stump, before devouring the former and throwing the later as far away from you as humanly possible. Good riddance.",
 		str_desc = "Oooh, muffins! Remember that? Gimme a thumbs up with you get this joke.",
 		time_expir = milled_food_expir,
@@ -3611,7 +3824,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Sour Potato French Fries',
 		acquisition = acquisition_milling,
-		ingredients = "sourpotatoes",
+		ingredients = item_id_sourpotatoes,
 		str_eat = "You bite into the fluffy, acidic french fries, occasionally dipping in into a selection of various dipping sauces such as hot slime and sweet slime. You divorce the actual flavor of the crispy exterior from it’s sour innards with a technique not unlike the one used to get the last drop of toothpaste out of it’s tube. Your face convulses in pain.",
 		str_desc = "Some gloriously thick cut Sour Potato french fries accompanied by an embarrassment of tasty slime-based dipping sauces. What else could a juvenile asked for?? Maybe some sugar and baking soda, this shit is unbelievably acidic.",
 		time_expir = milled_food_expir,
@@ -3621,7 +3834,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Blood Cabbage Coleslaw',
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbage",
+		ingredients = item_id_bloodcabbages,
 		str_eat = "You drop the semi-solidified puck of red coleslaw into your eager maw, upon which the faux gelletain instantly loses it’s form and start to crumble into drop down your face. You manage to digest a cabbage shred.",
 		str_desc = "A congealed dark crimson slab of myoglobin encasing sparse strands of Blood Cabbage. It jiggles when you shake the cup it’s stored in. Why the fuck would you mill this?",
 		time_expir = milled_food_expir,
@@ -3631,7 +3844,7 @@ food_list = [
 		recover_hunger = 800,
 		str_name = 'Pawpaw Food',
 		acquisition = acquisition_milling,
-		ingredients = "pawpaw",
+		ingredients = item_id_pawpaw,
 		str_eat = "You slowly drink the bitter, flavorless mush. Its… uh… food?",
 		str_desc = "An unappetizing pile of Pawpaw Gruel. It’s just Pawpaw milled into something halfway between puke and diarrhea. The staple of a traditional Juvenile diet. ",
 		time_expir = milled_food_expir,
@@ -3984,7 +4197,8 @@ item_def_list = [
 		item_props = {
 			'cosmetic_name': 'Cosmetic Item',
 			'cosmetic_desc': 'Cosmetic Item.',
-			'rarity': rarity_plebeian
+			'rarity': rarity_plebeian,
+			'hue': "",
 		}
 	),
 ]
@@ -6299,6 +6513,8 @@ cosmetic_items_list = [
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -6306,6 +6522,8 @@ cosmetic_items_list = [
 		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pickelhaube",
@@ -6313,6 +6531,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fedora",
@@ -6320,6 +6540,8 @@ cosmetic_items_list = [
 		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "baseballcap",
@@ -6327,6 +6549,8 @@ cosmetic_items_list = [
 		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "backwardsbaseballcap",
@@ -6334,6 +6558,8 @@ cosmetic_items_list = [
 		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -6341,6 +6567,8 @@ cosmetic_items_list = [
 		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -6348,6 +6576,8 @@ cosmetic_items_list = [
 		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cigarette",
@@ -6355,6 +6585,8 @@ cosmetic_items_list = [
 		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "headband",
@@ -6362,6 +6594,8 @@ cosmetic_items_list = [
 		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "handkerchief",
@@ -6369,6 +6603,8 @@ cosmetic_items_list = [
 		str_desc = "A bandanna tied on your head, creating a simple cap.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bandanna",
@@ -6376,6 +6612,8 @@ cosmetic_items_list = [
 		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofsunglasses",
@@ -6383,6 +6621,8 @@ cosmetic_items_list = [
 		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofglasses",
@@ -6390,6 +6630,8 @@ cosmetic_items_list = [
 		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "birthdayhat",
@@ -6397,6 +6639,8 @@ cosmetic_items_list = [
 		str_desc = "A striped, multi-color birthday hat. ",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "scarf",
@@ -6404,6 +6648,8 @@ cosmetic_items_list = [
 		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		str_name = "witch hat",
@@ -6411,6 +6657,8 @@ cosmetic_items_list = [
 		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bomberhat",
@@ -6418,6 +6666,8 @@ cosmetic_items_list = [
 		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tuxedo",
@@ -6425,6 +6675,8 @@ cosmetic_items_list = [
 		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "beanie",
@@ -6432,6 +6684,8 @@ cosmetic_items_list = [
 		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "jestershat",
@@ -6439,6 +6693,8 @@ cosmetic_items_list = [
 		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairof3dglasses",
@@ -6446,6 +6702,8 @@ cosmetic_items_list = [
 		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "necktie",
@@ -6453,6 +6711,8 @@ cosmetic_items_list = [
 		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "vikinghelmet",
@@ -6460,6 +6720,8 @@ cosmetic_items_list = [
 		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofflipflops",
@@ -6467,6 +6729,8 @@ cosmetic_items_list = [
 		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fez",
@@ -6483,6 +6747,8 @@ cosmetic_items_list = [
 		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cowboyhat",
@@ -6490,6 +6756,8 @@ cosmetic_items_list = [
 		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "kepi",
@@ -6497,6 +6765,8 @@ cosmetic_items_list = [
 		str_desc = "A short kepi with a sunken top and an insignia on the front.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tamoshanter",
@@ -6504,6 +6774,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "ushanka",
@@ -6511,6 +6783,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "karategi",
@@ -6518,6 +6792,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "turban",
@@ -6543,6 +6819,8 @@ cosmetic_items_list = [
 		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "sombrero",
@@ -6550,6 +6828,8 @@ cosmetic_items_list = [
 		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hawaiianshirt",
@@ -6557,6 +6837,8 @@ cosmetic_items_list = [
 		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fursuit",
@@ -6564,6 +6846,8 @@ cosmetic_items_list = [
 		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "diadem",
@@ -6571,6 +6855,8 @@ cosmetic_items_list = [
 		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "billshat",
@@ -6578,6 +6864,8 @@ cosmetic_items_list = [
 		str_desc = "A military beret with a shield insignia on the front.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "weddingring",
@@ -6594,6 +6882,8 @@ cosmetic_items_list = [
 		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician,
 		acquisition = acquisition_smelting,
+		price = 1000000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nursesoutfit",
@@ -6601,7 +6891,8 @@ cosmetic_items_list = [
 		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
-
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "heartboxers",
@@ -6609,118 +6900,120 @@ cosmetic_items_list = [
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
 		acquisition = acquisition_milling,
-		ingredients = "poketuber",
+		ingredients = item_id_poketubers,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "juveolantern",
 		str_name = "Juve-O'-Lantern",
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
 		acquisition = acquisition_milling,
-		ingredients = "pulpgourds",
+		ingredients = item_id_pulpgourds,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowlerhat",
 		str_name = "Bowler Hat",
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
 		acquisition = acquisition_milling,
-		ingredients = "sourpotatoes",
+		ingredients = item_id_sourpotatoes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cabbagetreehat",
 		str_name = "Cabbage Tree Hat",
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
 		acquisition = acquisition_milling,
-		ingredients = "bloodcabbages",
+		ingredients = item_id_bloodcabbages,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "braces",
 		str_name = "Braces",
 		str_desc = "An old fashioned orthodontic headgear. Elaborate metal wires and braces hold your nearly eroded, crooked teeth together in what can genously be called a mouth. You are in agony, and so is everyone that looks at you.",
 		acquisition = acquisition_milling,
-		ingredients = "joybeans",
+		ingredients = item_id_joybeans,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hoodie",
 		str_name = "Hoodie",
 		str_desc = "Perfect for keeping warm in the middle of the blisteringly hot Arizonian desert! Heatstroke or bust!",
 		acquisition = acquisition_milling,
-		ingredients = "purplekilliflower",
+		ingredients = item_id_purplekilliflower,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
 		str_name = "Cop Badge",
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
 		acquisition = acquisition_milling,
-		ingredients = "razornuts",
+		ingredients = item_id_razornuts,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "strawhat",
 		str_name = "Straw Hat",
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
 		acquisition = acquisition_milling,
-		ingredients = "pawpaw",
+		ingredients = item_id_pawpaw,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cosplayhorns",
 		str_name = "Cosplay Horns",
 		str_desc = "You’re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them… perhaps you understood their importance in a past life.",
 		acquisition = acquisition_milling,
-		ingredients = "sludgeberries",
+		ingredients = item_id_sludgeberries,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "youfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		acquisition = acquisition_milling,
-		ingredients = "suganmanuts",
+		ingredients = item_id_suganmanuts,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pajamaonesie",
 		str_name = "Pajama Onesie",
 		str_desc = "A soft jumpsuit with an audacious, repeating design printed over the entire cosmetic. You feel like getting a little bit fucking rowdy wearing this outrageous onesie. ",
 		acquisition = acquisition_milling,
-		ingredients = "pinkrowddishes",
+		ingredients = item_id_pinkrowddishes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofcircularsunglasses",
 		str_name = "Pair of Circular Sunglasses",
 		str_desc = "Sunglasses, but in a circle! Genius! You can't wait to show the world your hot takes on television shows for girls.",
 		acquisition = acquisition_milling,
-		ingredients = "dankwheat",
+		ingredients = item_id_dankwheat,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
 		str_name = "Flower Crown",
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
 		acquisition = acquisition_milling,
-		ingredients = "brightshade",
+		ingredients = item_id_brightshade,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "spikedbracelets",
 		str_name = "Spiked Bracelets",
 		str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You’re hyper aware of these fashion disasters whenever you’re walking, making sure to swing them as far away from your body as possible.",
 		acquisition = acquisition_milling,
-		ingredients = "blacklimes",
+		ingredients = item_id_blacklimes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
 		str_name = "SlimeCorp Pin",
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
 		acquisition = acquisition_milling,
-		ingredients = "phosphorpoppies",
+		ingredients = item_id_phosphorpoppies,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "overalls",
 		str_name = "Overalls",
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
 		acquisition = acquisition_milling,
-		ingredients = "direapples",
+		ingredients = item_id_direapples,
 	),
 ]
 
@@ -6851,7 +7144,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			item_id_slimepoudrin : 3,
-			'stick' : 2
+			item_id_stick : 2
 		},
 		products = ['pickaxe']
 	),
@@ -6863,7 +7156,7 @@ smelting_recipe_list = [
 			"fag",
 		],
 		ingredients = {
-		    'stick' : 6
+		    item_id_stick : 6
 		},
 		products = ['faggot']
 	),
@@ -7758,160 +8051,180 @@ hue_atk_complementary = 1
 hue_special_complementary = 2
 hue_full_complementary = 3
 
+hue_id_yellow = "yellow"
+hue_id_orange = "orange"
+hue_id_red = "red"
+hue_id_pink = "pink"
+hue_id_magenta = "magenta"
+hue_id_purple = "purple"
+hue_id_blue = "blue"
+hue_id_cobalt = "cobalt"
+hue_id_cyan = "cyan"
+hue_id_teal = "teal"
+hue_id_green = "green"
+hue_id_lime = "lime"
+hue_id_rainbow = "rainbow"
+hue_id_white = "white"
+hue_id_grey = "grey"
+hue_id_black = "black"
+
+
+
 # All color attributes in the game.
 hue_list = [
 	EwHue(
-		id_hue = "white",
+		id_hue = hue_id_white,
 		alias = [
 			"whitedye",
-			"poketuber"
+			"poketubers"
 		],
 		str_saturate = "It begins to glow a ghostly white!",
-		str_name = "White",
+		str_name = "white",
 		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
 	),
 	EwHue(
-		id_hue = "yellow",
+		id_hue = hue_id_yellow,
 		alias = [
 			"yellowdye",
 			"pulpgourds"
 		],
 		str_saturate = "It begins to shine a bright yellow!",
-		str_name = "Yellow",
+		str_name = "yellow",
 		str_desc = "Its bright yellow hue is delightfully radiant.",
 		effectiveness = {
-			"orange": hue_analogous,
-			"lime": hue_analogous,
-			"purple": hue_atk_complementary,
-			"cobalt": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_orange: hue_analogous,
+			hue_id_lime: hue_analogous,
+			hue_id_purple: hue_atk_complementary,
+			hue_id_cobalt: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "orange",
+		id_hue = hue_id_orange,
 		alias = [
 			"orangedye",
 			"sourpotatoes"
 		],
 		str_saturate = "It turns a warm orange!",
-		str_name= "Orange",
+		str_name= "orange",
 		str_desc = "Its warm orange hue makes you want to cuddle up beside it with a nice book.",
 		effectiveness = {
-			"red": hue_analogous,
-			"yellow": hue_analogous,
-			"blue": hue_atk_complementary,
-			"cyan": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_red: hue_analogous,
+			hue_id_yellow: hue_analogous,
+			hue_id_blue: hue_atk_complementary,
+			hue_id_cyan: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "red",
+		id_hue = hue_id_red,
 		alias = [
-			"blood"
+			"reddye",
+			"blood",
 			"cabbage"
 		],
 		str_saturate = "It darkens a deep shade of crimson red!",
-		str_name = "Red",
+		str_name = "red",
 		str_desc = "Its deep burgundy hue reminds you of a rare steak’s leaked myoglobin.",
 		effectiveness = {
-			"pink": hue_analogous,
-			"orange": hue_analogous,
-			"cobalt": hue_atk_complementary,
-			"teal": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_pink: hue_analogous,
+			hue_id_orange: hue_analogous,
+			hue_id_cobalt: hue_atk_complementary,
+			hue_id_teal: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "magenta",
+		id_hue = hue_id_magenta,
 		alias = [
 			"magentadye",
 			"joybeans"
 		],
 		str_saturate = "It turns a vivid magenta!",
-		str_name = "Magenta",
+		str_name = "magenta",
 		str_desc = "It’s vivid magenta that fills you with energy and excitement every time you see it.",
 		effectiveness = {
-			"pink": hue_analogous,
-			"purple": hue_analogous,
-			"teal": hue_atk_complementary,
-			"lime": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_pink: hue_analogous,
+			hue_id_purple: hue_analogous,
+			hue_id_teal: hue_atk_complementary,
+			hue_id_lime: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "purple",
+		id_hue = hue_id_purple,
 		alias = [
 			"purpledye",
 			"purplekilliflower",
 			"killer"
 		],
 		str_saturate = "It turns a dark purple!",
-		str_name = "Purple",
+		str_name = "purple",
 		str_desc = "Its dark purple hue gives it a brooding, edgy appearance. It will huff and groan when given orders, like a teenage rebelling against his mom in the most flaccid way possible.",
 		effectiveness = {
-			"blue": hue_analogous,
-			"magenta": hue_analogous,
-			"green": hue_atk_complementary,
-			"yellow": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_blue: hue_analogous,
+			hue_id_magenta: hue_analogous,
+			hue_id_green: hue_atk_complementary,
+			hue_id_yellow: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "blue",
+		id_hue = hue_id_blue,
 		alias = [
 			"bluedye",
 			"razornuts"
 		],
 		str_saturate = "It turns a deep blue!",
-		str_name = "Blue",
+		str_name = "blue",
 		str_desc = "Its deep blue hue reminds you of those “ocean” things you’ve heard so much of in the movies and video games that have washed ashore the coast of the Slime Sea.",
 		effectiveness = {
-			"cobalt": hue_analogous,
-			"purple": hue_analogous,
-			"lime": hue_atk_complementary,
-			"orange": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_cobalt: hue_analogous,
+			hue_id_purple: hue_analogous,
+			hue_id_lime: hue_atk_complementary,
+			hue_id_orange: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 	),
 	EwHue(
-		id_hue = "green",
+		id_hue = hue_id_green,
 		alias = [
 			"greendye",
 			"pawpaw",
 			"juvie"
 		],
 		str_saturate = "It turns a shade of green that barely distinguishes itself from a Slimeoid’s standard hue.",
-		str_name = "Green",
+		str_name = "green",
 		str_desc = "Its unimpressive green hue does nothing to separate itself from the swathes of the undyed Slimeoids of the working class.",
 		effectiveness = {
-			"lime": hue_analogous,
-			"teal": hue_analogous,
-			"pink": hue_atk_complementary,
-			"purple": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_lime: hue_analogous,
+			hue_id_teal: hue_analogous,
+			hue_id_pink: hue_atk_complementary,
+			hue_id_purple: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "teal",
+		id_hue = hue_id_teal,
 		alias = [
 			"tealdye",
 			"sludgeberries"
 		],
 		str_saturate = "It looks so purdy now!",
-		str_name = "Teal",
+		str_name = "teal",
 		str_desc = "Its caliginous teal hue gives you a sudden lust for prosecuting criminals in the legal system, before coming to your senses and realizing there is no legal system here.",
 		effectiveness = {
-			"green": hue_analogous,
-			"cyan": hue_analogous,
-			"red": hue_atk_complementary,
-			"magenta": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_green: hue_analogous,
+			hue_id_cyan: hue_analogous,
+			hue_id_red: hue_atk_complementary,
+			hue_id_magenta: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "rainbow",
+		id_hue = hue_id_rainbow,
 		alias = [
 			"rainbowdye",
 			"suganmanuts"
@@ -7921,94 +8234,94 @@ hue_list = [
 		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!"
 	),
 	EwHue(
-		id_hue = "pink",
+		id_hue = hue_id_pink,
 		alias = [
 			"pinkdye",
 			"pinkrowddishes"
 		],
 		str_saturate = "It turns a vibrant shade of  pink!",
-		str_name = "Pink",
+		str_name = "pink",
 		str_desc = "Its vibrant pink hue imbues the Slimeoid with an uncontrollable lust for destruction. You will often see it flailing about happily, before knocking down a mailbox or kicking some adult in the shin.",
 		effectiveness = {
-			"magenta": hue_analogous,
-			"red": hue_analogous,
-			"cyan": hue_atk_complementary,
-			"green": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_magenta: hue_analogous,
+			hue_id_red: hue_analogous,
+			hue_id_cyan: hue_atk_complementary,
+			hue_id_green: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "grey",
+		id_hue = hue_id_grey,
 		alias = [
 			"greydye",
 			"dankwheat"
 		],
 		str_saturate = "It turns a dull, somber grey.",
-		str_name = "Grey",
+		str_name = "grey",
 		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
 	),
 	EwHue(
-		id_hue = "cobalt",
+		id_hue = hue_id_cobalt,
 		alias = [
 			"cobaltdye",
 			"brightshade"
 		],
 		str_saturate = "It turns a shimmering cobalt!",
-		str_name = "Cobalt",
+		str_name = "cobalt",
 		str_desc = "Its shimmering cobalt hue can reflect images if properly polished.",
 		effectiveness = {
-			"cyan": hue_analogous,
-			"blue": hue_analogous,
-			"yellow": hue_atk_complementary,
-			"red": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_cyan: hue_analogous,
+			hue_id_blue: hue_analogous,
+			hue_id_yellow: hue_atk_complementary,
+			hue_id_red: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "black",
+		id_hue = hue_id_black,
 		alias = [
 			"blackdye",
 			"blacklimes"
 		],
 		str_saturate = "It turns pitch black!",
-		str_name = "Black",
+		str_name = "black",
 		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
 	),
 	EwHue(
-		id_hue = "lime",
+		id_hue = hue_id_lime,
 		alias = [
 			"limedye",
 			"phosphorpoppies"
 		],
 		str_saturate = "It turns a heavily saturated lime!",
-		str_name = "Lime",
+		str_name = "lime",
 		str_desc = "Its heavily saturated lime hue assaults your eyes in a way not unlike the Slime Sea. That is to say, painfully.",
 		effectiveness = {
-			"yellow": hue_analogous,
-			"green": hue_analogous,
-			"magenta": hue_atk_complementary,
-			"blue": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_yellow: hue_analogous,
+			hue_id_green: hue_analogous,
+			hue_id_magenta: hue_atk_complementary,
+			hue_id_blue: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),
 	EwHue(
-		id_hue = "cyan",
+		id_hue = hue_id_cyan,
 		alias = [
 			"cyandye",
 			"direapples"
 		],
 		str_saturate = "It turned a light cyan!",
-		str_name = "Cyan",
+		str_name = "cyan",
 		str_desc = "Its light cyan hue imbues it with a slightly anxious demeanor, it is sure to avoid sewer manholes when walking down the street.",
 		effectiveness = {
-			"teal": hue_analogous,
-			"cobalt": hue_analogous,
-			"orange": hue_atk_complementary,
-			"pink": hue_special_complementary,
-			"rainbow": hue_full_complementary
+			hue_id_teal: hue_analogous,
+			hue_id_cobalt: hue_analogous,
+			hue_id_orange: hue_atk_complementary,
+			hue_id_pink: hue_special_complementary,
+			hue_id_rainbow: hue_full_complementary
 		}
 
 	),

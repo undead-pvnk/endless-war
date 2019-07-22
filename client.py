@@ -111,6 +111,9 @@ cmd_map = {
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
+	# flags a vein as dangerous
+	ewcfg.cmd_flag: ewjuviecmd.flag,
+
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
 	ewcfg.cmd_score_alt1: ewcmd.score,
@@ -287,6 +290,10 @@ cmd_map = {
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
 
 	#smelting
 	ewcfg.cmd_smelt: ewsmelting.smelt,
@@ -349,7 +356,10 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-        ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+
 	# Negaslimeoids
 
 	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
@@ -382,6 +392,9 @@ cmd_map = {
 	# debug commands
 	ewcfg.cmd_debug1: ewdebug.debug1,
 	ewcfg.cmd_debug2: ewdebug.debug2,
+
+	# ban a player from using commands
+	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
 debug = False
@@ -550,7 +563,7 @@ async def on_ready():
 	stream_live = None
 
 	ewutils.logMsg('Beginning periodic hook loop.')
-	while True:
+	while not ewutils.TERMINATE:
 		time_now = int(time.time())
 
 		# Periodic message to log that this stuff is still running.
@@ -633,6 +646,38 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+
+					if market_data.clock == 6:
+						# Update the list of available bazaar items by clearing the current list and adding the new items
+						market_data.bazaar_wares.clear()
+
+						bazaar_foods = []
+						bazaar_cosmetics = []
+						bazaar_general_items = []
+
+						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
+							if item in ewcfg.item_names:
+								bazaar_general_items.append(item)
+
+							elif item in ewcfg.food_names:
+								bazaar_foods.append(item)
+
+							elif item in ewcfg.cosmetic_names:
+								bazaar_cosmetics.append(item)
+
+						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
+
+						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
+						# Don't add repeated foods
+						while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == market_data.bazaar_wares['food1']:
+							market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+
+						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
+						# Don't add repeated cosmetics
+						while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == market_data.bazaar_wares['cosmetic1']:
+							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
+						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
+							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
 
 					market_data.persist()
 
@@ -855,6 +900,9 @@ async def on_message(message):
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)
+		if user_data.arrested:
+			return
+
 		mutations = user_data.get_mutations()
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
@@ -1057,4 +1105,9 @@ if token == None or len(token) == 0:
 	sys.exit(0)
 
 # connect to discord and run indefinitely
-client.run(token)
+try:
+	client.run(token)
+finally:
+	ewutils.TERMINATE = True
+	ewutils.logMsg("main thread terminated.")
+
