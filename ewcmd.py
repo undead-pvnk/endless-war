@@ -149,7 +149,8 @@ def gen_data_text(
 	for cosmetic in cosmetics:
 		cos = EwItem(id_item = cosmetic.get('id_item'))
 		if cos.item_props['adorned'] == 'true':
-			adorned_cosmetics.append(cosmetic.get('name'))
+			hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+			adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -249,7 +250,8 @@ async def data(cmd):
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item = cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
-				adorned_cosmetics.append(cosmetic.get('name'))
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:

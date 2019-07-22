@@ -20,6 +20,8 @@ from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
 from ewhunting import EwEnemy, delete_enemy, spawn_enemy, enemy_perform_action
 
+TERMINATE = False
+
 db_pool = {}
 db_pool_id = 0
 
@@ -301,7 +303,7 @@ def formatMessage(user_target, message):
 	if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == 2:
 		return "{}".format(message)
 	else:
-		return "*{}*: {}".format(user_target.display_name, message)#.replace("@", "\{at\}")
+		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
@@ -377,10 +379,9 @@ def decaySlimes(id_server = None):
 async def bleed_tick_loop(id_server):
 	interval = ewcfg.bleed_tick_length
 	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-	while True:
+	while not TERMINATE:
 		await bleedSlimes(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
-		await enemyBleedSlimes(id_server = id_server)
 
 		await asyncio.sleep(interval)
 
@@ -939,7 +940,7 @@ async def spawn_enemies(id_server = None):
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
-	while True:
+	while not TERMINATE:
 		await spawn_enemies(id_server = id_server)
 
 		await asyncio.sleep(interval)
@@ -951,7 +952,7 @@ async def spawn_enemies_tick_loop(id_server):
 async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
 	# Causes hostile enemies to attack every tick
-	while True:
+	while not TERMINATE:
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		await enemy_perform_action(id_server)
 

@@ -15,6 +15,7 @@ from ewtransport import EwTransport
 from ewmarket import EwMarket
 from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
+from ewplayer import EwPlayer
 from ewhunting import EwEnemy
 
 move_counter = 0
@@ -1047,6 +1048,7 @@ async def scout(cmd):
 		detailed_players_resp = "You pick up the scent of the following gangsters:"
 		for player in players_in_district:
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
+			scoutee_player = EwPlayer(id_user = player)
 			scoutee_mutations = scoutee_data.get_mutations()
 			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
 				continue
@@ -1059,7 +1061,7 @@ async def scout(cmd):
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
 
-			detailed_players_resp += "\n" + scoutee_data.get_mention()
+			detailed_players_resp += "\n" + scoutee_player.display_name
 			num_players += 1
 
 		enemy_data_constructor = EwEnemy()
