@@ -624,8 +624,13 @@ class EwEnemy:
 
         self.persist()
 
-# Debug command. Later on, it could instead be used for a summoner weapon, perhaps?
+# Debug command. Could be used for events, perhaps?
 async def summon_enemy(cmd):
+    author = cmd.message.author
+
+    if not author.server_permissions.administrator:
+        return
+
     time_now = int(time.time())
     response = ""
     user_data = EwUser(member=cmd.message.author)

@@ -372,9 +372,7 @@ cmd_manifest = cmd_prefix + 'manifest'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
-
 cmd_summonenemy = cmd_prefix + 'summonenemy'
-
 cmd_negaslimeoid = cmd_prefix + 'negaslimeoid'
 cmd_battlenegaslimeoid = cmd_prefix + 'battlenegaslimeoid'
 cmd_battlenegaslimeoid_alt1 = cmd_prefix + 'negaslimeoidbattle'
@@ -559,7 +557,6 @@ offline_cmds = [
 	cmd_scout_alt1
 ]
 
-
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -718,7 +715,7 @@ time_offline = 10
 time_despawn = 60 * 180 # 3 hours
 
 # time for a player to be targeted by an enemy after entering a district
-time_enemyaggro = 5
+time_enemyaggro = 3
 
 # time for a raid boss to activate
 time_raidcountdown = 60

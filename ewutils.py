@@ -299,7 +299,7 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	# If the display name belongs to a raid boss, hide it.
+	# If the display name belongs to a raid boss, hide it while it's counting down.
 	if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == 2:
 		return "{}".format(message)
 	else:
@@ -944,10 +944,6 @@ async def spawn_enemies_tick_loop(id_server):
 		await spawn_enemies(id_server = id_server)
 
 		await asyncio.sleep(interval)
-
-#async def enemy_attack(id_server = None):
-#	resp_cont = EwResponseContainer(id_server=id_server)
-#	await enemy_perform_kill(id_server)
 
 async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
