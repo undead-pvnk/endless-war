@@ -497,7 +497,7 @@ def pushdownServerInebriation(id_server = None):
 """
 async def burn_tick_loop(id_server):
 	interval = 1#ewcfg.burn_tick_length
-	while True:
+	while not TERMINATE:
 		await burnSlimes(id_server = id_server)
 		await asyncio.sleep(interval)
 
@@ -599,7 +599,7 @@ async def burnSlimes(id_server = None):
 
 async def remove_status_loop(id_server):
 	interval = 5
-	while True:
+	while not TERMINATE:
 		await removeExpiredStatuses(id_server = id_server)
 		await asyncio.sleep(interval)
 
@@ -632,12 +632,7 @@ async def removeExpiredStatuses(id_server = None):
 
 				# Status that expire under special conditions
 				else:
-					if status == ewcfg.status_drunk_id:
-						if user_data.inebriation < 10:
-							user_data.clear_status(id_status=status)
-							logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
-
-					elif status == ewcfg.status_stunned_id:
+					if status == ewcfg.status_stunned_id:
 						if int(status_effect.value) < time_now:
 							user_data.clear_status(id_status=status)
 							logMsg("Cleared status {} for user {}".format(status, user_data.id_user))

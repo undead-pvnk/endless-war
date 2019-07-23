@@ -92,6 +92,9 @@ class EwWeapon:
 	classes = []
 
 	acquisition = "dojo"
+
+	# Statistics metric
+	stat = ""
 	
 	def __init__(
 		self,
@@ -119,7 +122,8 @@ class EwWeapon:
 		cooldown = 0,
 		vendors = [],
 		classes = [],
-		acquisition = "dojo"
+		acquisition = "dojo",
+		stat = ""
 	):
 		self.id_weapon = id_weapon
 		self.alias = alias
@@ -146,6 +150,7 @@ class EwWeapon:
 		self.vendors = vendors
 		self.classes = classes
 		self.acquisition = acquisition
+		self.stat = stat
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -234,9 +239,9 @@ def canAttack(cmd):
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
 		response = "You're out of {}! Go buy more at the {}".format(weapon.str_weapon, ewutils.formatNiceList(names = weapon.vendors, conjunction="or" ))
-	elif weapon != None and weapon.cooldown + int(weapon_item.item_props.get("time_lastattack")) > time_now:
+	elif weapon != None and weapon.cooldown + (int(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now:
 		response = "Weapon cooldown" #TODO weapon specific cooldown strings
-	elif weapon != None and weapon_item.item_props.get("jammed") == "1":
+	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Jammed gun" #TODO aaaaaaaaaaa
 	elif cmd.mentions_count == 1:
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
@@ -396,6 +401,7 @@ async def attack(cmd):
 			# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
 			weapon_item.item_props['time_lastattack'] = time_now
+			weapon_item.persist()
 
 			if weapon.id_weapon == "garrote":
 				user_data.persist()
@@ -409,15 +415,17 @@ async def attack(cmd):
 				user_data = EwUser(member = cmd.message.author)
 				shootee_data = EwUser(member = member)
 
+				# One of the players died in the meantime
 				if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
 					return
+				# A user left the district or strangling was broken
 				elif msg != None or user_data.poi != shootee_data.poi:
 					# Spend slimes, to a minimum of zero
 					user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 					return
 				else:
 					shootee_data.clear_status(ewcfg.status_strangled_id)
-					shootee_data.persist()
+					#shootee_data.persist()
 				
 			if weapon.id_weapon == "minigun":
 				user_data.persist()
@@ -429,9 +437,11 @@ async def attack(cmd):
 				await asyncio.sleep(5)
 				user_data = EwUser(member = cmd.message.author)
 				shootee_data = EwUser(member = member)
-
+				
+				# One of the players died in the meantime
 				if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
 					return
+				# A user left the district
 				if user_data.poi != shootee_data.poi:
 					# Spend slimes, to a minimum of zero
 					user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
@@ -612,6 +622,7 @@ async def attack(cmd):
 					if weapon != None:
 						weapon_item.item_props["kills"] = int(weapon_item.item_props.get("kills")) + 1
 						weapon_item.item_props["totalkills"] = int(weapon_item.item_props.get("totalkills")) + 1
+						ewstats.increment_stat(user = user_data, metric = weapon.stat)
 						
 					# Collect bounty
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
@@ -770,7 +781,7 @@ async def attack(cmd):
 			shootee_data.persist()
 			if shootee_data.weapon > 0:
 				shootee_weapon = EwItem(id_item = shootee_data.weapon)
-				shootee_weapon.item.item_props["consecutive_hits"] = 0
+				shootee_weapon.item_props["consecutive_hits"] = 0
 				shootee_weapon.persist()
 
 			district_data.persist()
@@ -1230,7 +1241,7 @@ async def arm(cmd):
 		for token in cmd.tokens[1:]:
 			if token != value:
 				amount = ewutils.getIntToken(cmd.tokens)
-				amount = min(amount, 12)
+				amount = min(amount, 20)
 		if amount is None:
 			amount = 1
 
@@ -1263,7 +1274,7 @@ async def arm(cmd):
 							wep.stack_size += amount
 							wep.persist()
 							user_data.change_slimecoin(n = -(weapon.price * amount), coinsource = ewcfg.coinsource_spending)
-							response = "You pay {price} slimecoin and take {amount}{weapon}.".format(amount=amount, price=(weapon.price * amount), weapon=weapon.str_weapon)
+							response = "You pay {price} slimecoin and take {amount}{weapon}.".format(amount=str(amount) + ("" if amount == 1 else " "), price=(weapon.price * amount), weapon=weapon.str_weapon)
 							break
 					
 				if has_weapon is False:
@@ -1282,7 +1293,7 @@ async def arm(cmd):
 						user_data.change_slimecoin(n = -(weapon.price * amount), coinsource=ewcfg.source_spending)
 						user_data.persist()
 
-						response += "You pay {price} slimecoin and take {amount}{weapon}.".format(price=weapon.price, amount=("" if amount == 1 else (str(amount) + " ")), weapon=weapon.str_weapon)
+						response += "You pay {price} slimecoin and take {amount} {weapon}.".format(price=weapon.price, amount=str(amount) + ("" if amount == 1 else " "), weapon=weapon.str_weapon)
 		else:
 			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = available_weapons, conjunction = "or"))
 
@@ -1444,35 +1455,35 @@ async def divorce(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	weapon_item = EwItem(id_item = user_data.weapon)
 	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-	weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
-
-	# Checks to make sure you're in the dojo.
 	if weapon != None:
-		if user_data.poi != ewcfg.poi_id_dojo:
-			response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
-		#Makes sure you have a partner to divorce.
-		elif user_data.weaponmarried == False:
-			response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
-		else:
-			#Unpreform the ceremony
-			response = "You decide it’s finally time to end the frankly obviously retarded farce that is your marriage with your {}. Things were good at first, you both wanted the same things out of life. But, that was then and this is now. You reflect briefly on your myriad of woes; the constant bickering, the mundanity of your everyday routine, the total lack of communication. You’re a slave. But, a slave you will be no longer! You know what you must do." \
-					   "\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partner to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
-					   "So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, weapon_name)
+		weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
-			#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
-			user_data.weaponmarried = False
-			user_data.weapon = -1
-			ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
+	#Makes sure you have a partner to divorce.
+	if user_data.weaponmarried == False:
+		response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
+	# Checks to make sure you're in the dojo.
+	elif user_data.poi != ewcfg.poi_id_dojo:
+		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
+	else:
+		#Unpreform the ceremony
+		response = "You decide it’s finally time to end the frankly obviously retarded farce that is your marriage with your {}. Things were good at first, you both wanted the same things out of life. But, that was then and this is now. You reflect briefly on your myriad of woes; the constant bickering, the mundanity of your everyday routine, the total lack of communication. You’re a slave. But, a slave you will be no longer! You know what you must do." \
+				"\nYou approach the Dojo Master yet again, and explain to him your troubles. He solemnly nods along to every beat of your explanation. Luckily, he has a quick solution. He rips apart the marriage paperwork he forged last flavor text, and just like that you’re divorced from {}. It receives half of your SlimeCoin in the settlement, a small price to pay for your freedom. You hand over what used to be your most beloved possession and partner to the old man, probably to be pawned off to whatever bumfuck juvie waddles into the Dojo next. You don’t care, you just don’t want it in your data. " \
+				"So, yeah. You’re divorced. Damn, that sucks.".format(weapon.str_weapon, weapon_name)
 
-			fee = (user_data.slimecoin / 2)
-			user_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
+		#You divorce your weapon, discard it, lose it's rank, and loose half your SlimeCoin in the aftermath.
+		user_data.weaponmarried = False
+		user_data.weapon = -1
+		ewutils.weaponskills_set(member = cmd.message.author, weapon = weapon_item.item_props.get("weapon_type"), weaponskill = 0)
 
-			user_data.persist()
+		fee = (user_data.slimecoin / 2)
+		user_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
 
-			#delete weapon item
-			ewitem.item_delete(id_item = weapon_item.id_item)
+		user_data.persist()
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		#delete weapon item
+		ewitem.item_delete(id_item = weapon_item.id_item)
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def reload(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -1485,7 +1496,7 @@ async def reload(cmd):
 			weapon_item.persist()
 			response = "U did it! :)"#Fixme could be weapon specific?
 		else:
-			response = "What do you think you're going to be reloading with that?"
+			response = "What do you think you're going to be reloading with that?"#FIXME
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
@@ -1498,62 +1509,17 @@ async def unjam(cmd):
 	if user_data.weapon > 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-		if int(weapon_item.item_props.get("jammed")) == 1:
-			weapon_item.item_props["jammed"] = False
+		if weapon_item.item_props.get("jammed") == "True":
+			weapon_item.item_props["jammed"] = "False"
 			weapon_item.persist()
-			response = "You quickly take apart your gun and reassemble it. It ends up with a few less parts than it had before, but at least it's working now."
+			response = "You totally know how to fix a jammed weapon, but you decide to keep this flavor text very vague anyways." #FIXME
 		else:
-			response = "Your weapon wasn't jammed, but you had already started messing with it before you noticed. God, that's embarrassing. You'd look real stupid if you stopped now though, so you just keep going."
+			response = "Your weapon wasn't jammed, but you had already started messing with it before you noticed. God, that's embarrassing. You'd look real stupid if you stopped now though, so you just keep fiddling with it."#FIXME
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		response = "What are you expecting to fix, dumbass? {} a weapon first!".format(ewcfg.cmd_equip)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def dumpwef(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	weapon_item = EwItem(id_item = user_data.weapon)
-	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-	miss = False
-	backfire = False
-	crit = False
-	time_now = int(time.time())
-	strikes = 0
-	slimes_spent = math.ceil(ewutils.slime_bylevel(user_data.slimelevel) / 40)
-	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
-	miss_mod = 0
-	crit_mod = 0
-	dmg_mod = 0
-
-	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other), 2)
-	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other), 2)
-	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other), 2)
-
-	print("Miss mod {}".format(miss_mod))
-	print("Crit mod {}".format(crit_mod))
-	print("Dmg mod {}".format(dmg_mod))
-	slimes_damage += int(slimes_damage * dmg_mod)
-		
-	ctn = EwEffectContainer(
-		miss = miss,
-		crit = crit,
-		backfire = backfire,
-		slimes_damage = slimes_damage,
-		slimes_spent = slimes_spent,
-		user_data = user_data,
-		shootee_data = user_data,
-		weapon_item = weapon_item,
-		time_now = time_now,
-		miss_mod = miss_mod,
-		crit_mod = crit_mod
-	)
-
-	# Make adjustments
-	weapon.fn_effect(ctn)
-
-	ctn.dump()
-
-	weapon_item.persist()
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
 def apply_combat_mods(user_data = None, desired_type = None, target = None):

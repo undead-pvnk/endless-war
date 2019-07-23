@@ -1093,10 +1093,26 @@ stat_lifetime_damagedealt = 'lifetime_damage_dealt'
 stat_lifetime_selfdamage = 'lifetime_self_damage'
 stat_lifetime_deaths = 'lifetime_deaths'
 stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
-#Track revolver trigger pulls survived?
-stat_lifetime_spins_survived = 'lifetime_spins_survived'
-stat_max_spins_survived = 'max_spins_survived'
 stat_capture_points_contributed = 'capture_points_contributed'
+
+stat_revolver_kills = 'revolver_kills'
+stat_dual_pistols_kills 'dual_pistols_kills'
+stat_shotgun_kills = 'shotgun_kills'
+stat_rifle_kills = 'rifle_kills'
+stat_smg_kills = 'smg_kills'
+stat_minigun_kills = 'miningun_kills'
+stat_bat_kills = 'bat_kills'
+stat_brassknuckles_kills = 'brassknuckles_kills'
+stat_katana_kills = 'katana_kills'
+stat_broadsword_kills = 'broadsword_kills'
+stat_nunchucks_kills = 'nunchucks_kills'
+stat_scythe_kills = 'scythe_kills'
+stat_yoyo_kills = 'yoyo_kills'
+stat_knives_kills = 'knives_kills'
+stat_molotov_kills = 'molotov_kills'
+stat_grenade_kills = 'grenade_kills'
+stat_garrote_kills = 'garrote_kills'
+stat_pickaxe_kills = 'pickaxe_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1495,7 +1511,7 @@ def wef_smg(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 
 	if jam <= 2:
-		ctn.weapon_item.item_props["jammed"] = True
+		ctn.weapon_item.item_props["jammed"] = "True"
 		ctn.jammed = True
 	else:
 		for count in range(6):
@@ -1527,7 +1543,8 @@ def wef_minigun(ctn = None):
 
 	for count in range(10):
 		aim = (random.randrange(10) + 1)
-		if aim <= (1 + int(10 * ctn.miss_mod)):
+
+		if aim > (1 + int(10 * ctn.miss_mod)):
 			ctn.strikes += 1
 
 			if aim >= (10 - int(10 * ctn.crit_mod)):
@@ -1553,9 +1570,8 @@ def wef_bat(ctn = None):
 	dmg = ctn.slimes_damage
 	
 	# Increased miss chance if attacking within less than two seconds after last attack
-	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
-	if time_lastattack > 0:
-		ctn.miss_mod += (2 - min(time_lastattack, 2)) / 10
+	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 5
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
 
@@ -1581,11 +1597,12 @@ def wef_bat(ctn = None):
 		
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
-	last_attack = int(ctn.weapon_item.item_props.get("time_lastattack"))
+	last_attack = (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
 	successful_timing = True if (ctn.time_now - last_attack) == 2 else False
 	user_mutations = ctn.user_data.get_mutations()
 
-	if int(ctn.weapon_item.item_props.get("consecutive_hits")) == 2 and successful_timing:
+	consecutive_hits = (int(ctn.weapon_item.item_props.get("consecutive_hits")) if ctn.weapon_item.item_props.get("consecutive_hits") != None else 0)
+	if consecutive_hits == 2 and successful_timing:
 		ctn.crit = True
 		ctn.slimes_damage *= 3
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
@@ -1615,7 +1632,7 @@ def wef_brassknuckles(ctn = None):
 			strikes = whiff1 + whiff2
 			ctn.slimes_damage = (ctn.slimes_damage * whiff1) + (ctn.slimes_damage * whiff2)
 			if successful_timing:
-				ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props.get("consecutive_hits")) + 1 
+				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1 
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
@@ -1623,10 +1640,11 @@ def wef_katana(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
 
 	# Decreased damage if attacking within less than four seconds after last attack
-	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
-	dmg = ctn.slimes_damage / 10
+	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+
+	ctn.slimes_damage = ctn.slimes_damage / 10
 	if time_lastattack > 0:
-		ctn.slimes_damage = int(dmg * (min(time_lastattack, 4) * 2.5))
+		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 4) * 2.5))
 
 	weapons_held = ewitem.inventory(
 		id_user = ctn.user_data.id_user,
@@ -1678,9 +1696,8 @@ def wef_nunchucks(ctn = None):
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
-	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
-	if time_lastattack > 0:
-		ctn.miss_mod += (2 - min(time_lastattack, 2)) / 10
+	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 5
 
 	for count in range(4):
 		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
@@ -1708,10 +1725,10 @@ def wef_scythe(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 
 	target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
-	ctn.slimes_damage = ctn.slimes_damage * min(target_kills, 10)
+	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
 
 	# Decreased damage if attacking within less than two seconds after last attack
-	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.slimes_damage = ctn.slimes_damage / 10
 	if time_lastattack > 0:
 		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 2) * 5))
@@ -1725,10 +1742,9 @@ def wef_scythe(ctn = None):
 		else:
 			ctn.miss = True
 
-	elif ctn.shootee_data.life_state == life_state_corpse:
+	elif aim >= (10 + (10 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage *= 3
-		ctn.slimes_spent = 0
+		ctn.slimes_damage *= 2
 
 # weapon effect function for "yo-yos"
 def wef_yoyo(ctn = None):
@@ -1736,7 +1752,7 @@ def wef_yoyo(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
 
-	time_lastattack = ctn.time_now - int(ctn.weapon_item.item_props.get("time_lastattack"))
+	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	#Consecutive hits only valid for a minute
 	if time_lastattack < 60:
@@ -1848,7 +1864,7 @@ def wef_grenade(ctn = None):
 		ctn.slimes_damage = dmg * 4
 
 # weapon effect function for "garrote"
-def wef_garrote(ctn = None):#TODO
+def wef_garrote(ctn = None):
 	ctn.slimes_damage *= 15
 
 	aim = (random.randrange(100) + 1)
@@ -1921,7 +1937,8 @@ weapon_list = [
 		str_description = "It's a revolver",
 		clip_size = 6,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
+		classes = [weapon_class_ammo],
+		stat = stat_revolver_kills
 	),
 	EwWeapon( # 2
 		id_weapon = "dualpistols",
@@ -1947,7 +1964,8 @@ weapon_list = [
 		clip_size = 12,
 		price = 1000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
+		classes = [weapon_class_ammo],
+		stat = stat_dual_pistols_kills
 	),
 	EwWeapon( # 4#TODO
 		id_weapon = "shotgun",
@@ -1967,7 +1985,8 @@ weapon_list = [
 		str_description = "A shotgun.",
 		clip_size = 2,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
+		classes = [weapon_class_ammo],
+		stat = stat_shotgun_kills
 	),	
 	EwWeapon( # 3
 		id_weapon = "rifle",
@@ -1993,7 +2012,8 @@ weapon_list = [
 		clip_size = 4,
 		price = 1500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
+		classes = [weapon_class_ammo],
+		stat = stat_rifle_kills
 	),
 	EwWeapon( # 6#TODO
 		id_weapon = "smg",
@@ -2018,7 +2038,8 @@ weapon_list = [
 		clip_size=4,
 		price = 1000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
+		classes = [weapon_class_ammo],
+		stat = stat_smg_kills
 	),	
 		EwWeapon( # 6#TODO
 		id_weapon = "minigun",
@@ -2037,7 +2058,8 @@ weapon_list = [
 		fn_effect = wef_minigun,
 		str_description = "It's a minigun",
 		price = 10000000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_minigun_kills
 	),	
 	EwWeapon( # 6
 		id_weapon = "bat",
@@ -2062,7 +2084,8 @@ weapon_list = [
 		fn_effect = wef_bat,
 		str_description = "It's a nailbat",
 		price = 1000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_bat_kills
 	),	
 	EwWeapon( # 8
 		id_weapon = "brassknuckles",
@@ -2086,7 +2109,8 @@ weapon_list = [
 		fn_effect = wef_brassknuckles,
 		str_description = "They're brass knuckles",
 		price = 1000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_brassknuckles_kills
 	),
 	EwWeapon( # 5
 		id_weapon = "katana",
@@ -2111,7 +2135,8 @@ weapon_list = [
 		fn_effect = wef_katana,
 		str_description = "It's a katana",
 		price = 1000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_katana_kills
 	),
 	EwWeapon( # 5#TODO
 		id_weapon = "broadsword",
@@ -2137,7 +2162,8 @@ weapon_list = [
 		clip_size=1,
 		price = 1000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo]
+		classes = [weapon_class_ammo],
+		stat = stat_broadsword_kills
 	),
 	EwWeapon( # 4
 		id_weapon = "nun-chucks",
@@ -2163,7 +2189,8 @@ weapon_list = [
 		fn_effect = wef_nunchucks,
 		str_description = "They're nunchucks",
 		price = 1000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_nunchucks_kills
 	),
 	EwWeapon( # 11
 		id_weapon = "scythe",
@@ -2185,7 +2212,8 @@ weapon_list = [
 		fn_effect = wef_scythe,
 		str_description = "It's a scythe",
 		price = 2000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_scythe_kills
 	),
 	EwWeapon( # 12	
 		id_weapon = "yo-yos",
@@ -2209,7 +2237,8 @@ weapon_list = [
 		fn_effect = wef_yoyo,#make yoyo function
 		str_description = "They're yo-yos",
 		price = 1000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_yoyo_kills
 	),
 	EwWeapon( # 10
 		id_weapon = "knives",
@@ -2236,7 +2265,8 @@ weapon_list = [
 		str_description = "They're throwing knives",
 		price = 100,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown]
+		classes = [weapon_class_thrown],
+		stat = stat_knives_kills
 	),
 	EwWeapon( # 9
 		id_weapon = "molotov",
@@ -2263,7 +2293,8 @@ weapon_list = [
 		str_description = "They're molotov bottles",
 		price = 200,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding]
+		classes = [weapon_class_thrown, weapon_class_exploding],
+		stat = stat_molotov_kills
 	),
 	EwWeapon( # 14	#TODO
 		id_weapon = "grenade",
@@ -2286,7 +2317,8 @@ weapon_list = [
 		fn_effect = wef_grenade,
 		str_description = "A grenade.",
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding]
+		classes = [weapon_class_thrown, weapon_class_exploding],
+		stat = stat_grenade_kills
 	),
 	EwWeapon( # 7
 		id_weapon = "garrote",
@@ -2310,7 +2342,8 @@ weapon_list = [
 		fn_effect = wef_garrote,
 		str_description = "It's a garrote",
 		price = 1000,
-		vendors = [vendor_dojo]
+		vendors = [vendor_dojo],
+		stat = stat_garrote_kills
 	),
 	EwWeapon(  # 11
 		id_weapon = "pickaxe",
@@ -2333,7 +2366,8 @@ weapon_list = [
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
 		fn_effect = wef_pickaxe,
 		str_description = "It's a pickaxe",
-		acquisition = acquisition_smelting
+		acquisition = acquisition_smelting,
+		stat = stat_pickaxe_kills
 	)
 ]
 
@@ -8881,14 +8915,6 @@ status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 
 status_effect_list = [
-	EwStatusEffectDef(
-		id_status = status_drunk_id,
-		str_acquire = 'You\'re drunk.',
-		str_describe = 'They are drunk.',
-		str_describe_self = 'You are drunk.',
-		dmg_mod_self = 0.5,
-		miss_mod_self= 0.2
-	),
 	EwStatusEffectDef(
 		id_status = status_burning_id,
 		time_expire = 10,

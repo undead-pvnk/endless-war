@@ -832,7 +832,7 @@ async def item_look(cmd):
 			if ewcfg.weapon_class_ammo in weapon.classes:
 				response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
 
-			totalkills = int(item.item_props.get("totalkills"))
+			totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
 
 			if totalkills < 10:
 				response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed people {} times.\n".format(totalkills))
@@ -841,7 +841,7 @@ async def item_look(cmd):
 			else:
 				response += "A true legend in the battlefield, it has killed people {} times.\n".format(totalkills)
 			
-			response += "You have killed {} people with it.".format(item.item_props.get("kills"))			
+			response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)			
 
 		response = name + "\n\n" + response
 

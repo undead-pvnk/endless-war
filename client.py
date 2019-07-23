@@ -923,7 +923,6 @@ async def on_message(message):
 
 		# Ignore stunned players
 		if ewcfg.status_stunned_id in statuses:
-			ewutils.logMsg("this nibba tryna speak")
 			return
 
 		# Check the main command map for the requested command.

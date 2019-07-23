@@ -241,8 +241,6 @@ class EwUser:
 			self.inebriation += int(item_props['inebriation'])
 			if self.inebriation > 20:
 				self.inebriation = 20
-			if self.inebriation >= 10:
-				resp_status = "\n" + self.applyStatus(id_status=ewcfg.status_drunk_id)
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
