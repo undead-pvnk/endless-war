@@ -381,6 +381,7 @@ async def bleed_tick_loop(id_server):
 	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
 	while not TERMINATE:
 		await bleedSlimes(id_server = id_server)
+		await enemyBleedSlimes(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
 
 		await asyncio.sleep(interval)
@@ -837,7 +838,7 @@ def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
 def max_adorn_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
+		return math.ceil(slimelevel / ewcfg.max_adorn_mod)
 """
 	Returns an EwUser object of the selected kingpin
 """

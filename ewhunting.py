@@ -451,6 +451,9 @@ class EwEnemy:
                         target_data.die(cause=ewcfg.cause_enemy_killing)
                         target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
 
+                        # If a player is killed, remove that player's ID from the enemy's designated target ID.
+                        enemy_data.id_target = ""
+
                         kill_descriptor = "beaten to death"
                         if attacktype != 'unarmed':
                             response = attacktype.str_damage.format(
@@ -1592,7 +1595,7 @@ def get_enemy_data(enemy_type):
         enemy.attacktype = "scythe"
 
     elif enemy_type == 'mammoslime':
-        enemy.ai == "Defender"
+        enemy.ai = "Defender"
         enemy.display_name = "Mammoslime"
         enemy.attacktype = "tusks"
 
@@ -1647,8 +1650,6 @@ def get_target_by_ai(enemy_data):
     if enemy_data.ai == "Defender":
         if enemy_data.id_target != "":
             target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
-            if (target_data.poi != enemy_data.poi) or (target_data.life_state == 0):
-                enemy_data.id_target = ""
 
     elif enemy_data.ai == "Attacker-A":
         users = ewutils.execute_sql_query(
