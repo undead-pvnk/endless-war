@@ -228,7 +228,7 @@ async def data(cmd):
 		soughtenemy = " ".join(cmd.tokens[1:]).lower()
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
-			if enemy.attacktype != 'unarmed':
+			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
 				response = "{} is a level {} enemy. They have {} slime, and attack with their {}.".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
 			else:
 				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level, enemy.slimes)

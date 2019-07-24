@@ -9535,27 +9535,70 @@ help_responses = {
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline."
 }
 
+# Enemy life states
+enemy_lifestate_dead = 0
+enemy_lifestate_alive = 1
+enemy_lifestate_unactivated = 2
+
+# Enemy attacking types (aka 'weapons')
+enemy_attacktype_unarmed = 'unarmed'
+enemy_attacktype_fangs = 'fangs'
+enemy_attacktype_talons = 'talons'
+enemy_attacktype_tusks = 'tusks'
+enemy_attacktype_raiderscythe = 'scythe'
+enemy_attacktype_gunkshot = 'gunk shot'
+
+# Enemy types
+# Common enemies
+enemy_type_juvie = 'juvie'
+enemy_type_dinoslime = 'dinoslime'
+# Uncommon enemies
+enemy_type_slimeadactyl = 'slimeadactyl'
+enemy_type_desertraider = 'desertraider'
+enemy_type_mammoslime = 'mammoslime'
+# Rare enemies
+enemy_type_microslime = 'microslime'
+# Raid bosses
+enemy_type_megaslime = 'megaslime'
+enemy_type_slimeasaurusrex = 'slimeasaurusrex'
+
+# Enemy ai types
+enemy_ai_coward = 'Coward'
+enemy_ai_attacker_a = 'Attacker-A'
+enemy_ai_attacker_b = 'Attacker-B'
+enemy_ai_defender = 'Defender'
+
+# Enemy display names
+enemy_displayname_juvie = "Lost Juvie"
+enemy_displayname_dinoslime = "Dinoslime"
+enemy_displayname_slimeadactyl = "Slimeadactyl"
+enemy_displayname_desertraider = "Desert Raider"
+enemy_displayname_mammoslime = "Mammoslime"
+enemy_displayname_microslime = "Microslime"
+enemy_displayname_megaslime = "Megaslime"
+enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
+
 # List of enemies sorted by their spawn rarity.
-common_enemies = ['juvie', 'dinoslime']
-uncommon_enemies = ['slimeadactyl', 'desertraider', 'mammoslime']
-rare_enemies = ['microslime']
-raid_bosses = ['megaslime', 'slimeasaurusrex']
+common_enemies = [enemy_type_juvie, enemy_type_dinoslime]
+uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
+rare_enemies = [enemy_type_microslime]
+raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex]
 
 # Shorthand names the player can refer to enemies as.
-# Left side is shorthand, right side is display name
+# Left side is shorthand, right side is display name, in lowercase
 enemy_aliases = {
-    "juvie":"lost juvie",
-    "dino":"dinoslime",
-    "bird":"slimeadactyl",
-    "micro":"microslime",
-    "raider":"desert raider",
-	"mammoth":"mammoslime",
-    "mega":"megaslime",
-	"rex":"slimeasaurus rex",
+    "juvie":enemy_displayname_juvie.lower(),
+    "dino":enemy_displayname_dinoslime.lower(),
+    "bird":enemy_displayname_slimeadactyl.lower(),
+    "micro":enemy_displayname_microslime.lower(),
+    "raider":enemy_displayname_desertraider.lower(),
+	"mammoth":enemy_displayname_mammoslime.lower(),
+    "mega":enemy_displayname_megaslime.lower(),
+	"rex":enemy_displayname_slimeasaurusrex.lower(),
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = ['Megaslime', "Slimeasaurus Rex"]
+raid_boss_names = [enemy_displayname_megaslime, enemy_displayname_slimeasaurusrex]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

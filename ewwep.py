@@ -803,7 +803,7 @@ def explode(damage = 0, district_data = None):
 				response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
 				resp_cont.add_channel_response(channel, response)
 
-				enemy_data.life_state = 0
+				enemy_data.life_state = ewcfg.enemy_lifestate_dead
 				enemy_data.persist()
 
 			else:
