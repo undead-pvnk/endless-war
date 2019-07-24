@@ -665,7 +665,7 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 60 * 3 # Five minutes
+enemy_spawn_tick_length = 60 * 5 # Five minutes
 
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 3
@@ -952,7 +952,7 @@ col_id_enemy = 'id_enemy'
 col_enemy_slimes = 'slimes'
 col_enemy_totaldamage = 'totaldamage'
 col_enemy_ai = 'ai'
-col_enemy_type = 'type'
+col_enemy_type = 'enemytype'
 col_enemy_attacktype = 'attacktype'
 col_enemy_display_name = 'display_name'
 col_enemy_identifier = 'identifier'
@@ -2093,8 +2093,8 @@ enemy_attack_type_list = [
 attack_type_map = {}
 
 # Populate attack type map.
-for type in enemy_attack_type_list:
-	attack_type_map[type.id_type] = type
+for attack_type in enemy_attack_type_list:
+	attack_type_map[attack_type.id_type] = attack_type
 
 # All weather effects in the game.
 weather_list = [

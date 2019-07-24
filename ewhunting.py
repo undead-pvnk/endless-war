@@ -49,7 +49,7 @@ class EwEnemy:
     life_state = 0
 
     # Used to determine how much slime an enemy gets, what AI it uses, as well as what weapon it uses.
-    type = ""
+    enemytype = ""
 
     # The 'weapon' of an enemy
     attacktype = ""
@@ -74,7 +74,7 @@ class EwEnemy:
 
     """ Load the enemy data from the database. """
 
-    def __init__(self, id_enemy=None, id_server=None):
+    def __init__(self, id_enemy=None, id_server=None, enemytype=None):
         query_suffix = ""
 
         if id_enemy != None:
@@ -83,8 +83,8 @@ class EwEnemy:
 
             if id_server != None:
                 query_suffix = " WHERE id_server = '{}'".format(id_server)
-                if type != None:
-                    query_suffix += " AND type = '{}'".format(type)
+                if enemytype != None:
+                    query_suffix += " AND enemytype = '{}'".format(enemytype)
 
         if query_suffix != "":
             try:
@@ -124,7 +124,7 @@ class EwEnemy:
                     self.slimes = result[2]
                     self.totaldamage = result[3]
                     self.ai = result[4]
-                    self.type = result[5]
+                    self.enemytype = result[5]
                     self.attacktype = result[6]
                     self.display_name = result[7]
                     self.identifier = result[8]
@@ -178,7 +178,7 @@ class EwEnemy:
                     self.slimes,
                     self.totaldamage,
                     self.ai,
-                    self.type,
+                    self.enemytype,
                     self.attacktype,
                     self.display_name,
                     self.identifier,
@@ -219,12 +219,12 @@ class EwEnemy:
         target_player = None
         target_slimeoid = None
 
-        attacktype = 'unarmed'
+        used_attacktype = None
 
         if enemy_data.attacktype != 'unarmed':
-            attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
-
-        enemy_data.persist()
+            used_attacktype = ewcfg.attack_type_map.get(enemy_data.attacktype)
+        else:
+            used_attacktype = 'unarmed'
 
         # Get target's info based on its AI.
 
@@ -332,9 +332,9 @@ class EwEnemy:
 
             slimes_damage = int(slimes_spent * 4)
 
-            if attacktype == 'unarmed':
+            if used_attacktype == 'unarmed':
                 slimes_damage /= 2  # specific to juvies
-            if enemy_data.type == "microslime":
+            if enemy_data.enemytype == "microslime":
                 slimes_damage *= 20  # specific to microslime
 
             slimes_dropped = target_data.totaldamage + target_data.slimes
@@ -374,7 +374,7 @@ class EwEnemy:
                     randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
                     # Attacking-type-specific adjustments
-                    if attacktype != 'unarmed' and attacktype.fn_effect != None:
+                    if used_attacktype != 'unarmed' and used_attacktype.fn_effect != None:
                         # Build effect container
                         ctn = EwEnemyEffectContainer(
                             miss=miss,
@@ -385,7 +385,7 @@ class EwEnemy:
                         )
 
                         # Make adjustments
-                        attacktype.fn_effect(ctn)
+                        used_attacktype.fn_effect(ctn)
 
                         # Apply effects for non-reference values
                         miss = ctn.miss
@@ -455,26 +455,26 @@ class EwEnemy:
                         enemy_data.id_target = ""
 
                         kill_descriptor = "beaten to death"
-                        if attacktype != 'unarmed':
-                            response = attacktype.str_damage.format(
+                        if used_attacktype != 'unarmed':
+                            response = used_attacktype.str_damage.format(
                                 name_enemy=enemy_data.display_name,
                                 name_target=member.display_name,
                                 hitzone=randombodypart,
                                 strikes=strikes
                             )
-                            kill_descriptor = attacktype.str_killdescriptor
+                            kill_descriptor = used_attacktype.str_killdescriptor
                             if crit:
-                                response += " {}".format(attacktype.str_crit.format(
+                                response += " {}".format(used_attacktype.str_crit.format(
                                     name_enemy=enemy_data.display_name,
                                     name_target=member.display_name
                                 ))
 
-                            response += "\n\n{}".format(attacktype.str_kill.format(
+                            response += "\n\n{}".format(used_attacktype.str_kill.format(
                                 name_enemy=enemy_data.display_name,
                                 name_target=member.display_name,
                                 emote_skull=ewcfg.emote_slimeskull
                             ))
-                            target_data.trauma = attacktype.id_type
+                            target_data.trauma = used_attacktype.id_type
 
                         else:
                             response = "{name_target} is hit!!\n\n{name_target} has died.".format(
@@ -510,21 +510,21 @@ class EwEnemy:
                     else:
                         # A non-lethal blow!
 
-                        if attacktype != 'unarmed':
+                        if used_attacktype != 'unarmed':
                             if miss:
-                                response = "{}".format(attacktype.str_miss.format(
+                                response = "{}".format(used_attacktype.str_miss.format(
                                     name_enemy=enemy_data.display_name,
                                     name_target=member.display_name
                                 ))
                             else:
-                                response = attacktype.str_damage.format(
+                                response = used_attacktype.str_damage.format(
                                     name_enemy=enemy_data.display_name,
                                     name_target=member.display_name,
                                     hitzone=randombodypart,
                                     strikes=strikes
                                 )
                                 if crit:
-                                    response += " {}".format(attacktype.str_crit.format(
+                                    response += " {}".format(used_attacktype.str_crit.format(
                                         name_enemy=enemy_data.display_name,
                                         name_target=member.display_name
                                     ))
@@ -586,11 +586,10 @@ class EwEnemy:
                 self.poi = new_poi
                 self.time_lastenter = int(time.time())
 
-                print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
+                # print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
 
                 #new_district = EwDistrict(district=new_poi, id_server=self.id_server)
-                #enemy_data_constructor = EwEnemy()
-                #if len(new_district.get_enemies_in_district(enemy_data_constructor)) > 0:
+                #if len(new_district.get_enemies_in_district() > 0:
 
                 # When a raid boss enters a new district, give it a new identifier
                 self.identifier = set_identifier(new_poi, self.id_server)
@@ -686,11 +685,10 @@ async def enemy_perform_action(id_server):
 
         # If an enemy is marked for death or has been alive too long, delete it
         if enemy.life_state == 0 or (enemy.lifetime < (int(time.time()) - ewcfg.time_despawn)):
-            print("DELETE GATE 1")
             delete_enemy(enemy)
         else:
             # If an enemy is an activated raid boss, it has a 1/10 chance to move between districts.
-            if enemy.type in ewcfg.raid_bosses and enemy.life_state == 1 and check_raidboss_movecooldown(enemy):
+            if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == 1 and check_raidboss_movecooldown(enemy):
                 if random.randrange(20) == 0:
                     resp_cont = enemy.move()
                     if resp_cont != None:
@@ -719,7 +717,7 @@ async def spawn_enemy(id_server):
     elif rarity_choice <= 7500:
         # uncommon enemies
         enemytype = random.choice(ewcfg.uncommon_enemies)
-    elif rarity_choice <= 9000:
+    elif rarity_choice <= 9500:
         # rare enemies
         enemytype = random.choice(ewcfg.rare_enemies)
     else:
@@ -734,8 +732,7 @@ async def spawn_enemy(id_server):
         potential_chosen_poi = random.choice(outskirts_districts)
         # potential_chosen_poi = 'cratersvilleoutskirts'
         potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
-        enemy_constructor = EwEnemy()
-        enemies_list = potential_chosen_district.get_enemies_in_district(enemy_constructor)
+        enemies_list = potential_chosen_district.get_enemies_in_district()
         enemies_count = len(enemies_list)
 
         if enemies_count < ewcfg.max_enemies:
@@ -818,7 +815,7 @@ def find_enemy(enemy_search=None, user_data=None):
 
 # Deletes an enemy the database.
 def delete_enemy(enemy_data):
-    print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
+    # print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
     ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
         id_enemy=ewcfg.col_id_enemy
     ), (
@@ -852,7 +849,7 @@ def drop_enemy_loot(enemy_data, district_data):
     cards_dropped = False
 
     # Determines what items should be dropped based on enemy type.
-    if enemy_data.type == 'juvie':
+    if enemy_data.enemytype == 'juvie':
 
         poudrin_dropped = random.randrange(2) == 0
         pleb_dropped = random.randrange(10) == 0
@@ -870,11 +867,11 @@ def drop_enemy_loot(enemy_data, district_data):
         if crop_dropped:
             crop_amount = 1
 
-    elif enemy_data.type == 'microslime':
+    elif enemy_data.enemytype == 'microslime':
         patr_dropped = True
         patr_amount = 1
 
-    elif enemy_data.type == 'dinoslime':
+    elif enemy_data.enemytype == 'dinoslime':
 
         poudrin_dropped = True
         pleb_dropped = random.randrange(10) <= 3
@@ -894,7 +891,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 pleb_amount = 2
 
-    elif enemy_data.type == 'slimeadactyl':
+    elif enemy_data.enemytype == 'slimeadactyl':
 
         poudrin_dropped = True
         pleb_dropped = random.randrange(10) <= 3
@@ -913,7 +910,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 pleb_amount = 2
 
-    elif enemy_data.type == 'desertraider':
+    elif enemy_data.enemytype == 'desertraider':
 
         poudrin_dropped = True
         pleb_dropped = True
@@ -938,7 +935,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 crop_amount = 6
 
-    elif enemy_data.type == 'mammoslime':
+    elif enemy_data.enemytype == 'mammoslime':
         patr_dropped = random.randrange(3) == 0
         poudrin_dropped = random.randrange(10) <= 6
 
@@ -955,7 +952,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 patr_amount = 2
 
-    elif enemy_data.type == 'megaslime' or enemy_data.type == 'slimeasaurusrex':
+    elif enemy_data.enemytype == 'megaslime' or enemy_data.enemytype == 'slimeasaurusrex':
 
         poudrin_dropped = True
         pleb_dropped = True
@@ -1335,7 +1332,6 @@ async def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, 
 
             # Enemy was killed.
             delete_enemy(enemy_data)
-            print("DEBUG - ENEMY DELETED BY PLAYER KILLING")
 
             kill_descriptor = "beaten to death"
             if weapon != None:
@@ -1428,7 +1424,7 @@ async def kill_enemy(user_data, slimeoid, enemy_data, weapon, market_data, ctn, 
             enemy_data.persist()
             resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-        if was_killed and enemy_data.type in ewcfg.raid_bosses:
+        if was_killed and enemy_data.enemytype in ewcfg.raid_bosses:
             # announce raid boss kill in kill feed channel
 
             killfeed_resp = "*{}*: {}\n\n".format(cmd.message.author.display_name, old_response)
@@ -1561,7 +1557,7 @@ def get_enemy_data(enemy_type):
     enemy.totaldamage = 0
     enemy.level = 0
     enemy.life_state = 1
-    enemy.type = enemy_type
+    enemy.enemytype = enemy_type
     enemy.bleed_storage = 0
     enemy.time_lastenter = 0
     enemy.initialslimes = 0
@@ -1691,28 +1687,27 @@ def check_raidboss_countdown(enemy_data):
     time_now = int(time.time())
 
     # Wait for raid bosses
-    if enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer <= time_now - ewcfg.time_raidcountdown:
+    if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.raidtimer <= time_now - ewcfg.time_raidcountdown:
         # Raid boss has activated!
         return True
-    elif enemy_data.type in ewcfg.raid_bosses and enemy_data.raidtimer > time_now - ewcfg.time_raidcountdown:
+    elif enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.raidtimer > time_now - ewcfg.time_raidcountdown:
         # Raid boss hasn't activated.
         return False
 
 def check_raidboss_movecooldown(enemy_data):
     time_now = int(time.time())
 
-    if enemy_data.type in ewcfg.raid_bosses and enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
+    if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter <= time_now - ewcfg.time_raidboss_movecooldown:
         # Raid boss can move
         return True
-    elif enemy_data.type in ewcfg.raid_bosses and enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
+    elif enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > time_now - ewcfg.time_raidboss_movecooldown:
         # Raid boss can't move yet
         return False
 
 # Gives enemy an identifier so it's easier to pick out in a crowd of enemies
 def set_identifier(poi, id_server):
-    enemy_constructor = EwEnemy()
     district = EwDistrict(district=poi, id_server=id_server)
-    enemies_list = district.get_enemies_in_district(enemy_constructor)
+    enemies_list = district.get_enemies_in_district()
 
     # A list of identifiers from enemies in a district
     enemy_identifiers = []

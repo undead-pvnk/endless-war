@@ -145,7 +145,8 @@ class EwUser:
 			self.poi_death = self.poi
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
-			if cause == ewcfg.cause_enemy_killing:
+			if (cause != ewcfg.cause_killing and cause != ewcfg.cause_suicide and cause != ewcfg.cause_bleeding) \
+			or (cause == ewcfg.cause_enemy_killing):
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 		ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user)
 		ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)

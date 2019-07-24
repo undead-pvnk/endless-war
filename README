@@ -193,7 +193,7 @@ CREATE TABLE enemies (
     slimes bigint NOT NULL DEFAULT '0',
     totaldamage bigint NOT NULL DEFAULT '0',
     ai varchar(32) NOT NULL DEFAULT '',
-    type varchar(32) NOT NULL DEFAULT '',
+    enemytype varchar(32) NOT NULL DEFAULT '',
     attacktype varchar(32) NOT NULL DEFAULT '',
     display_name varchar(32) NOT NULL DEFAULT '',
     identifier varchar(32) NOT NULL DEFAULT '',

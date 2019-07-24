@@ -300,9 +300,13 @@ def databaseClose(conn_info):
 """ format responses with the username: """
 def formatMessage(user_target, message):
 	# If the display name belongs to a raid boss, hide it while it's counting down.
-	if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == 2:
-		return "{}".format(message)
-	else:
+	try:
+		if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == 2:
+			return "{}".format(message)
+		else:
+			return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+	# If the user has the name of a raid boss, catch the exception and format the message correctly
+	except:
 		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
 
 """ Decay slime totals for all users """

@@ -220,8 +220,6 @@ async def attack(cmd):
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
 		else:
-			# debugger
-			print(huntedenemy)
 
 			# no enemy is found within that district
 			response = "Your bloodlust is appreciated, but ENDLESS WAR couldn't find what you were trying to kill."
@@ -747,9 +745,7 @@ def explode(damage = 0, district_data = None):
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
 	users = district_data.get_players_in_district(life_states = life_states)
 
-	enemy_data = EwEnemy()
-
-	enemies = district_data.get_enemies_in_district(enemy_data)
+	enemies = district_data.get_enemies_in_district()
 
 	# damage players
 	for user in users:
