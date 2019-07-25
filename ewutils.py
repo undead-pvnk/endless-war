@@ -11,6 +11,7 @@ import math
 
 import ewstats
 import ewitem
+import ewhunting
 
 import discord
 
@@ -18,7 +19,7 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewhunting import EwEnemy, delete_enemy, spawn_enemy, enemy_perform_action
+from ewhunting import EwEnemy
 
 TERMINATE = False
 
@@ -489,7 +490,7 @@ async def enemyBleedSlimes(id_server = None):
 					total_bled += slimes_to_bleed
 
 					if enemy_data.slimes < 0:
-						delete_enemy(enemy_data)
+						ewhunting.delete_enemy(enemy_data)
 
 			await resp_cont.post()
 			conn.commit()
@@ -937,7 +938,7 @@ async def decrease_food_multiplier(id_user):
 async def spawn_enemies(id_server = None):
 	if random.randrange(3) == 2:
 		resp_cont = EwResponseContainer(id_server=id_server)
-		response, channel = await spawn_enemy(id_server)
+		response, channel = await ewhunting.spawn_enemy(id_server)
 
 		if response != "":
 			resp_cont.add_channel_response(channel, response)
@@ -953,9 +954,21 @@ async def spawn_enemies_tick_loop(id_server):
 
 async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
-	# Causes hostile enemies to attack every tick
+	# Causes hostile enemies to attack every tick.
 	while not TERMINATE:
 		# resp_cont = EwResponseContainer(id_server=id_server)
-		await enemy_perform_action(id_server)
+		await ewhunting.enemy_perform_action(id_server)
 
 		await asyncio.sleep(interval)
+
+# Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
+async def check_defender_targets(user_data, enemy_data):
+	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
+	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+
+	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
+		defending_enemy.id_target = ""
+		defending_enemy.persist()
+		return False
+	else:
+		return True

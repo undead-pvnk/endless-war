@@ -230,7 +230,7 @@ class EwEnemy:
 
         if enemy_data.ai == ewcfg.enemy_ai_coward:
             users = ewutils.execute_sql_query(
-                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = {life_state_corpse}'".format(
+                "SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = {life_state_corpse}".format(
                     id_user=ewcfg.col_id_user,
                     life_state=ewcfg.col_life_state,
                     poi=ewcfg.col_poi,
@@ -366,9 +366,13 @@ class EwEnemy:
                 if target_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile,
                                               ewcfg.life_state_lucky,
                                               ewcfg.life_state_executive]:
-                    # Target can be shot.
 
-                    was_hurt = True
+                    # If a target is being attacked by an enemy with the defender ai, check to make sure it can be hit.
+                    if (enemy_data.ai == ewcfg.enemy_ai_defender) and (await ewutils.check_defender_targets(target_data, enemy_data) == False):
+                        return
+                    else:
+                        # Target can be hurt by enemies.
+                        was_hurt = True
 
                 if was_hurt:
                     # Weaponized flavor text.
@@ -447,13 +451,11 @@ class EwEnemy:
 
                         district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
 
-                        # Player was killed.
+                        # Player was killed. Remove its id from enemies with defender ai.
+                        enemy_data.id_target = ""
                         target_data.id_killer = enemy_data.id_enemy
                         target_data.die(cause=ewcfg.cause_enemy_killing)
                         target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
-
-                        # If a player is killed, remove that player's ID from the enemy's designated target ID.
-                        enemy_data.id_target = ""
 
                         kill_descriptor = "beaten to death"
                         if used_attacktype != ewcfg.enemy_attacktype_unarmed:
@@ -586,6 +588,7 @@ class EwEnemy:
                 new_poi = random.choice(list(destinations))
                 self.poi = new_poi
                 self.time_lastenter = int(time.time())
+                self.id_target = ""
 
                 # print("DEBUG - {} MOVED FROM {} TO {}".format(self.display_name, old_poi, new_poi))
 
