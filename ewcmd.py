@@ -194,6 +194,7 @@ def gen_data_text(
 
 		response_block = ""
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
+
 		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
 
 		if user_kills > 0 and enemy_kills > 0:
@@ -202,6 +203,7 @@ def gen_data_text(
 			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
 			response_block += "They have {:,} confirmed hunts. ".format(enemy_kills)
+
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
@@ -300,6 +302,7 @@ async def data(cmd):
 			response_block += "You have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
 			response_block += "You have {:,} confirmed hunts. ".format(enemy_kills)
+
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)

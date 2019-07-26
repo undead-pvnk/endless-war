@@ -685,7 +685,11 @@ async def summon_enemy(cmd):
 
 # Gathers all enemies from the database and has them perform an action
 async def enemy_perform_action(id_server):
-    enemydata = ewutils.execute_sql_query("SELECT * FROM enemies")
+    enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+	id_enemy = ewcfg.col_id_enemy
+    ), (
+	id_server,
+    ))
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
 

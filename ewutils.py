@@ -311,6 +311,7 @@ def formatMessage(user_target, message):
 	except:
 		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
 
+
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):
 	if id_server != None:

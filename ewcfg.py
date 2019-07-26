@@ -15,7 +15,9 @@ from ewtransport import EwTransportLine
 import ewdebug
 
 # Global configuration options.
+
 version = "v3.5c"
+
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -711,6 +713,7 @@ time_kickout = 60 * 60  # 1 hour
 # time after coming online before you can act
 time_offline = 10
 
+
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
 
@@ -725,6 +728,7 @@ time_raidboss_movecooldown = 120
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
+
 
 # Emotes
 emote_tacobell = "<:tacobell:431273890195570699>"
@@ -1229,11 +1233,13 @@ item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
+
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
 
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -4837,7 +4843,7 @@ poi_list = [
 			"assaultflats",
 			"assault",
 			"flats",
-			"beach"
+			"beach",
 			"assflats",
 			"afb"
 		],
@@ -7777,6 +7783,7 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 		    item_id_stick : 3
+
 		},
 		products = ['faggot']
 	),
