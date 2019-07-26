@@ -962,7 +962,7 @@ async def enemy_action_tick_loop(id_server):
 		await asyncio.sleep(interval)
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
-async def check_defender_targets(user_data, enemy_data):
+def check_defender_targets(user_data, enemy_data):
 	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
 	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 

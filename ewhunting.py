@@ -359,7 +359,7 @@ class EwEnemy:
                 resp_cont.add_channel_response(ch_name, response)
 
             # enemies dont fuck with ghosts, ghosts dont fuck with enemies.
-            elif (target_iskillers or target_isrowdys or target_isjuvie) and (target_isnotdead):
+            elif (target_iskillers or target_isrowdys or target_isjuvie or target_isslimecorp) and (target_isnotdead):
                 was_killed = False
                 was_hurt = False
 
@@ -368,7 +368,7 @@ class EwEnemy:
                                               ewcfg.life_state_executive]:
 
                     # If a target is being attacked by an enemy with the defender ai, check to make sure it can be hit.
-                    if (enemy_data.ai == ewcfg.enemy_ai_defender) and (await ewutils.check_defender_targets(target_data, enemy_data) == False):
+                    if (enemy_data.ai == ewcfg.enemy_ai_defender) and (ewutils.check_defender_targets(target_data, enemy_data) == False):
                         return
                     else:
                         # Target can be hurt by enemies.
@@ -436,6 +436,8 @@ class EwEnemy:
 
                     if was_killed:
 
+                        # Dedorn player cosmetics
+                        ewitem.item_dedorn_cosmetics(id_server=target_data.id_server, id_user=target_data.id_user)
                         # Drop all items into district
                         ewitem.item_dropall(id_server=target_data.id_server, id_user=target_data.id_user)
 
