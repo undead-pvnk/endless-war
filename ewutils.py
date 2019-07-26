@@ -23,6 +23,8 @@ from ewhunting import EwEnemy
 
 TERMINATE = False
 
+TERMINATE = False
+
 db_pool = {}
 db_pool_id = 0
 
