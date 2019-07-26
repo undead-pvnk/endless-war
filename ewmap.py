@@ -16,7 +16,9 @@ from ewmarket import EwMarket
 from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
 from ewplayer import EwPlayer
+
 from ewhunting import EwEnemy
+
 
 move_counter = 0
 
@@ -1056,7 +1058,9 @@ async def scout(cmd):
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
 
+
 			detailed_players_resp += "\n" + scoutee_player.display_name
+
 			num_players += 1
 
 		# filters out low level enemies

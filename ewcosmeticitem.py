@@ -141,7 +141,9 @@ async def dye(cmd):
 					cosmetic = item
 
 				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
+
 					dye = item
+
 
 				if cosmetic != None and dye != None:
 					break

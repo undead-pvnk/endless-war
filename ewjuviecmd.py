@@ -194,8 +194,10 @@ async def mine(cmd):
 						flag = True
 
 
+
 					if row < 1 or col < 1:
 						coords = token.lower()
+
 
 						for char in coords:
 							if char in ewcfg.alphabet:
@@ -439,8 +441,10 @@ async def flag(cmd):
 			col = -1
 			for token in cmd.tokens[1:]:
 
+
 				if row < 1 or col < 1:
 					coords = token.lower()
+
 
 					for char in coords:
 						if char in ewcfg.alphabet:

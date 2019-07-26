@@ -23,6 +23,8 @@ from ewhunting import EwEnemy
 
 TERMINATE = False
 
+TERMINATE = False
+
 db_pool = {}
 db_pool_id = 0
 
@@ -310,6 +312,7 @@ def formatMessage(user_target, message):
 	# If the user has the name of a raid boss, catch the exception and format the message correctly
 	except:
 		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+
 
 """ Decay slime totals for all users """
 def decaySlimes(id_server = None):

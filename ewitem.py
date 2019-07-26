@@ -816,6 +816,11 @@ async def item_look(cmd):
 				else:
 					response += ", so you decide to throw it away."
 					item_drop(id_item)
+		
+		if item.item_type == ewcfg.it_cosmetic:
+			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+			if hue != None:
+				response += " It's been dyed in {} paint.".format(hue.str_name)
 
 		if item.item_type == ewcfg.it_cosmetic:
 			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
