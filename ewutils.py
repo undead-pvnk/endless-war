@@ -20,6 +20,7 @@ from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
 from ewhunting import EwEnemy
+from ewmarket import EwMarket
 
 TERMINATE = False
 
@@ -975,3 +976,23 @@ def check_defender_targets(user_data, enemy_data):
 		return False
 	else:
 		return True
+
+def get_move_speed(user_data):
+	mutations = user_data.get_mutations()
+	market_data = EwMarket(id_server = user_data.id_server)
+	move_speed = 1
+        
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 0.5
+
+	if ewcfg.mutation_id_organicfursuit in mutations and (
+		(market_data.day % 31 == 0 and market_data.clock >= 20)
+		or (market_data.day % 31 == 1 and market_data.clock < 6)
+	):
+		move_speed *= 2
+	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
+		move_speed *= 2
+	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
+		move_speed *= 2
+
+	return move_speed
