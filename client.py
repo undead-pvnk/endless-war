@@ -82,8 +82,8 @@ cmd_map = {
 	ewcfg.cmd_unjam: ewwep.unjam,
 
 	# Get a weapon into your inventory
-	ewcfg.cmd_arm: ewwep.arm,
-	ewcfg.cmd_arsenalize: ewwep.arm,
+	#ewcfg.cmd_arm: ewwep.arm,
+	#ewcfg.cmd_arsenalize: ewwep.arm,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
@@ -651,9 +651,9 @@ async def on_ready():
 						# Update the list of available bazaar items by clearing the current list and adding the new items
 						market_data.bazaar_wares.clear()
 
+						bazaar_general_items = []
 						bazaar_foods = []
 						bazaar_cosmetics = []
-						bazaar_general_items = []
 
 						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
 							if item in ewcfg.item_names:
@@ -678,6 +678,9 @@ async def on_ready():
 							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
 						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
 							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+
+						if random.random() == 0.1:
+							market_data.bazaar_wares['minigun'] = 'minigun'
 
 					market_data.persist()
 

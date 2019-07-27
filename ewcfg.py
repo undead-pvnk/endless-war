@@ -1096,7 +1096,7 @@ stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 stat_capture_points_contributed = 'capture_points_contributed'
 
 stat_revolver_kills = 'revolver_kills'
-stat_dual_pistols_kills 'dual_pistols_kills'
+stat_dual_pistols_kills = 'dual_pistols_kills'
 stat_shotgun_kills = 'shotgun_kills'
 stat_rifle_kills = 'rifle_kills'
 stat_smg_kills = 'smg_kills'
@@ -1441,8 +1441,8 @@ for c in item_list:
 		dye_list.append(c)
 		dye_map[c.str_name] = c.id_item
 
-# A Weapon Effect Function for "gun". Takes an EwEffectContainer as ctn.
-def wef_gun(ctn = None):
+# A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
+def wef_revolver(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -1912,29 +1912,33 @@ vendor_dojo = "Dojo"
 weapon_class_ammo = "ammo"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
+weapon_class_jammable = "jammable"
 
 # All weapons in the game.
 weapon_list = [
-	EwWeapon( # 1 TODO GET NEW FLAVOR TEXT
-		id_weapon = "gun",
-		alias = [
-			"pistol",
-			"revolver"
-		],
-		str_crit = "**Critical Hit!** {name_player} has dealt {name_target} a serious wound!",
-		str_miss = "**You missed!** Your shot failed to land!",
-		str_equip = "You equip the revolver.",
-		str_weapon = "a revolver",
+	EwWeapon( # 1
+		id_weapon = "revolver",
+        alias = [
+            "pistol",
+            "handgun",
+            "bigiron"
+        ],
+		str_crit = "**Critical Hit!** You have fataly wounded {name_target} with a lethal shot!",
+        str_miss = "**You missed!** Your shot whizzed past {name_target}'s head!",
+        str_equip = "You equip the revolver.",
+        str_weapon = "revolver",
 		str_weaponmaster_self = "You are a rank {rank} master of the revolver.",
-		str_weaponmaster = "They are a rank {rank} master of the revolver.",
-		str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
-		str_trauma = "They have scarring on both temples, which occasionally bleeds.",
-		str_kill = "{name_player} puts their gun to {name_target}'s head. **BANG**. Execution-style. Blood pools across the hot asphalt. {emote_skull}",
-		str_killdescriptor = "gunned down",
+        str_weaponmaster = "They are a rank {rank} master of the revolver.",
+        str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
+        str_trauma = "They have scarring on both temples, which occasionally bleeds.",
+        str_kill = "{name_player} puts their revolver to {name_target}'s head. **BANG**. Execution-style. Blood splatters across the hot asphalt. {emote_skull}",
+        str_killdescriptor = "gunned down",
 		str_damage = "{name_target} takes a bullet to the {hitzone}!!",
-		str_duel = "**BANG BANG.** {name_player} and {name_target} practice their quick-draw, bullets whizzing past one another's heads.",
-		fn_effect = wef_gun,
+        str_duel = "**BANG BANG**. {name_player} and {name_target} practice their quick-draw, bullets whizzing past one another's heads.",
 		str_description = "It's a revolver",
+		str_reload = "You swing out the revolver’s chamber, knocking out the used shells onto the floor before hastily slamming fresh bullets back into it.",
+		str_reload_warning = "**BANG--** *tk tk...* **SHIT!!** {name_player} just spent the last of the ammo in their revolver’s chamber, it’s out of bullets!!",
+		fn_effect = wef_revolver,
 		clip_size = 6,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
@@ -1942,53 +1946,63 @@ weapon_list = [
 	),
 	EwWeapon( # 2
 		id_weapon = "dualpistols",
-		alias = [
-			"pistols",
-			"guns",
-			"dual"
-		],
-		str_crit = "**Critical Hit!** {name_player} has dealt {name_target} a serious wound!",
-		str_miss = "**You missed!** Your shot failed to land!",
-		str_equip = "You equip the dual pistols.",
-		str_weapon = "dual pistols",
+        alias = [
+            "dual",
+            "pistols",
+            "berettas",
+        ],
+		str_crit = "**Critical Hit!** {name_player} has lodged several bullets into {name_target}'s vital arteries!",
+        str_miss = "**You missed!** Your numerous, haphazard shots hit everything but {name_target}!",
+        str_equip = "You equip the dual pistols.",
+        str_weapon = "dual pistols",
 		str_weaponmaster_self = "You are a rank {rank} master of the dual pistols.",
-		str_weaponmaster = "They are a rank {rank} master of the dual pistols.",
-		str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
-		str_trauma = "They have scarring on both temples, which occasionally bleeds.",
-		str_kill = "{name_player} puts their gun to {name_target}'s head. **BANG**. Execution-style. Blood pools across the hot asphalt. {emote_skull}",
-		str_killdescriptor = "gunned down",
-		str_damage = "{name_target} takes a bullet to the {hitzone}!!",
-		str_duel = "**BANG BANG.** {name_player} and {name_target} practice their quick-draw, bullets whizzing past one another's heads.",
-		fn_effect = wef_dualpistols,
+        str_weaponmaster = "They are a rank {rank} master of the dual pistols.",
+        str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
+        str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
+        str_kill = "{name_player} dramatically pulls both triggers on their dual pistols midair, sending two bullets straight into {name_target}'s lungs'. {emote_skull}",
+        str_killdescriptor = "double gunned down",
+        str_damage = "{name_target} takes a flurry of bullets to the {hitzone}!!",
+        str_duel = "**tk tk tk tk tk tk tk tk tk tk**. {name_player} and {name_target} hone their twitch aim and trigger fingers, unloading clip after clip of airsoft BBs into one another with the eagerness of small children.",
 		str_description = "They're dual pistols",
+		str_reload = "You swing out the chamber on both of your dual pistols, knocking out the used shells onto the floor before hastily slamming fresh bullets back into them.",
+		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s chambers, they’re out of bullets!!",
+		fn_effect = wef_dualpistols,
 		clip_size = 12,
-		price = 1000,
+		price = 10000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_dual_pistols_kills
 	),
-	EwWeapon( # 4#TODO
+	EwWeapon( # 3
 		id_weapon = "shotgun",
-		str_crit = "**Critical hit!!** {name_target} shotgun",
-		str_miss = "**MISS!!** {name_player} shotgun",
-		str_equip = "You equip the shotgun.",
-		str_weapon = "a shotgun",
-		str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
-		str_weaponmaster = "They are a rank {rank} master of the shotgun.",
-		str_trauma_self = "shotgun trauma self.",
-		str_trauma = "shotgun trauma.",
-		str_kill = "shotgun kill",
-		str_killdescriptor = "shotgun kill description",
-		str_damage = "shotgun dmg",
-		str_duel = "shotgun spar.",
+        alias = [
+            "boomstick",
+            "remington",
+            "scattergun",
+        ],
+		str_crit = "**Critical Hit!** {name_player} has landed a thick, meaty shot into {name_target}'s chest!",
+        str_miss = "**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
+        str_equip = "You equip the shotgun.",
+        str_weapon = "shotgun",
+        str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
+        str_weaponmaster = "They are a rank {rank} master of the shotgun.",
+        str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+        str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+        str_kill = "{name_player} blasts their shotgun into {name_target}'s chest at point-blank range, causing guts to explode from their back and coat the surrounding street. chk chk Who's next? {emote_skull}",
+        str_killdescriptor = "pumped full of lead",
+        str_damage = "{name_target} takes a shotgun blast to the {hitzone}!!",
+        str_duel = "**BOOM.** {name_player} and {name_target} stand about five feet away from a wall, pumping it full of lead over and over to study it's bullet spread.",
+		str_description = "It's a shotgun.",
+		str_reload = "You tilt your shotgun and pop shell after shell into it’s chamber before cocking the forend back. Groovy.",
+		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
 		fn_effect = wef_shotgun,
-		str_description = "A shotgun.",
 		clip_size = 2,
+		price = 10000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_shotgun_kills
 	),	
-	EwWeapon( # 3
+	EwWeapon( # 4
 		id_weapon = "rifle",
 		alias = [
 			"assaultrifle",
@@ -2007,61 +2021,74 @@ weapon_list = [
 		str_killdescriptor = "gunned down",
 		str_damage = "Bullets rake over {name_target}'s {hitzone}!!",
 		str_duel = "**RAT-TAT-TAT-TAT-TAT!!** {name_player} and {name_target} practice shooting at distant targets with quick, controlled bursts.",
-		fn_effect = wef_rifle,
 		str_description = "It's a rifle",
+		str_reload = "You hastily rip the spent magazine out of your assault rifle, before slamming a fresh one back into it.",
+		str_reload_warning = "**RAT-TAT-TAT--** *ttrrr...* **SHIT!!** {name_player}’s rifle just chewed up the last of it’s magazine, it’s out of bullets!!",
+		fn_effect = wef_rifle,
 		clip_size = 4,
-		price = 1500,
+		price = 10000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_rifle_kills
 	),
-	EwWeapon( # 6#TODO
+	EwWeapon( # 5
 		id_weapon = "smg",
-		alias = [
-			"submachinegun"
-		],
-		str_crit = "**Critical hit!!** {name_player} smg",
+        alias = [
+            "submachinegun",
+            "machinegun"
+        ],
+        str_crit = "**Critical hit!!** {name_target}’s vital arteries are ruptured by miraculously accurate bullets that actually hit their intended target!!",
+        str_miss = "**You missed!!** {name_player}'s reckless aiming sends their barrage of bullets in every direction but into {name_target}’s body!",
+        str_equip = "You equip the SMG.",
+        str_weapon = "a SMG",
+        str_weaponmaster_self = "You are a rank {rank} master of the SMG.",
+        str_weaponmaster = "They are a rank {rank} master of the SMG.",
+        str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
+        str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
+        str_kill = "**RATTA TATTA TAT!!** {name_player}’s bullet rip through what little was left of {name_target} after the initial barrage. All that remains is a few shreds of clothing and splatterings of slime. {emote_skull}",
+        str_killdescriptor = "riddled with bullets",
+        str_damage = "A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
+        str_duel = "**RATTA TATTA TAT!!** {name_player} and {name_target} spray bullets across the floor and walls of the Dojo, having a great time.",
+        str_description = "It's a submachine gun",
 		str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
-		str_miss = "**MISS!!** {name_player} smg",
-		str_equip = "smg equip.",
-		str_weaponmaster_self = "You are a rank {rank} master of the submachine gun.",
-		str_weaponmaster = "They are a rank {rank} master of the submachine gun.",
-		str_weapon = "a submachine gun",
-		str_trauma_self = "smg trauma self.",
-		str_trauma = "smg trauma.",
-		str_kill = "{name_player} smg kills {name_target} {emote_skull}",
-		str_killdescriptor = "smg killded",
-		str_damage = "{name_target} is hit by smg in {hitzone} with {strikes} bullets!!",
-		str_duel = "smg duel",
+		str_reload = "You hastily rip the spent magazine out of your SMG, before slamming a fresh one back into it.",
+        str_reload_warning = "**RATTA TATTA--** *tk tk tk tk…* **SHIT!!** {name_player}’s SMG just chewed up the last of it’s magazine, it’s out of bullets!!",
+        str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
 		fn_effect = wef_smg,
-		str_description = "It's a submachine gun",
-		clip_size=4,
-		price = 1000,
+		clip_size = 4,
+		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills
 	),	
-		EwWeapon( # 6#TODO
+		EwWeapon( # 6
 		id_weapon = "minigun",
-		str_crit = "**Critical hit!!** {name_player} minigun",
-		str_miss = "**MISS!!** {name_player} minigun",
-		str_equip = "minigun equip.",
-		str_weaponmaster_self = "You are a rank {rank} master of the minigun.",
-		str_weaponmaster = "They are a rank {rank} master of the minigun.",
-		str_weapon = "a minigun",
-		str_trauma_self = "minigun trauma self.",
-		str_trauma = "minigun trauma.",
-		str_kill = "{name_player} minigun kills {name_target} {emote_skull}",
-		str_killdescriptor = "minigun killded",
-		str_damage = "{name_target} is hit by minigun in {hitzone} {strikes} times!!",
-		str_duel = "minigun duel",
+        alias = [
+            "mini",
+            "gatlinggun"
+        ],
+        str_crit = "**Critical hit!!** Round after round of bullets fly through {name_target}, inflicting irreparable damage!!",
+        str_miss = "**You missed!!** Despite the growing heap of used ammunition shells {name_player} has accrued, none of their bullets actually hit {name_target}!",
+        str_equip = "You equip the minigun.",
+        str_weapon = "a minigun",
+        str_weaponmaster_self = "You are a rank {rank} master of the minigun.",
+        str_weaponmaster = "They are a rank {rank} master of the minigun.",
+        str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
+        str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
+        str_kill = "**TKTKTKTKTKTKTKTKTK!!** {name_player} pushes their minigun barrel right up to {name_target}’s chest, unloading a full round of ammunition and knocking their lifeless corpse back a few yards from the sheer force of the bullets. They failed to outsmart bullet. {emote_skull}",
+        str_killdescriptor = "obliterated",
+        str_damage = "Cascades of bullet easily puncture and rupture {name_target}’s {hitzone}!!",
+        str_duel = "**...** {name_player} and {name_target} crouch close to the ground, throwing sandwiches unto the floor next to each other and repeating memetic voice lines ad nauseam.",
+        str_description = "It's a minigun",
+		#str_reload = "You curse under your breath, before pulling a fresh belt of bullets from hammerspace and jamming it into your minigun’s hungry feed.",
+        #str_reload_warning = "**TKTKTKTKTKTK--** *wrrrrrr…* **SHIT!!** {name_player}’s minigun just inhaled the last of it’s belt, it’s out of bullets!!",
 		fn_effect = wef_minigun,
-		str_description = "It's a minigun",
-		price = 10000000,
-		vendors = [vendor_dojo],
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		#classes= [weapon_class_ammo],
 		stat = stat_minigun_kills
 	),	
-	EwWeapon( # 6
+	EwWeapon( # 7
 		id_weapon = "bat",
 		alias = [
 			"club",
@@ -2079,11 +2106,11 @@ weapon_list = [
 		str_kill = "{name_player} pulls back for a brutal swing! **CRUNCCHHH.** {name_target}'s brains splatter over the sidewalk. {emote_skull}",
 		str_killdescriptor = "nail bat battered",
 		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
-		str_backfire = "bat backfire",#TODO
+		str_backfire = "{name_player} recklessly budgens themselves with a particularly overzealous swing! Man, how the hell could they fuck up so badly?",
 		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
-		fn_effect = wef_bat,
 		str_description = "It's a nailbat",
-		price = 1000,
+		fn_effect = wef_bat,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_bat_kills
 	),	
@@ -2094,7 +2121,7 @@ weapon_list = [
 			"knuckledusters",
 			"dusters"
 		],
-		str_crit = "sky uppercut",#TODO
+		str_crit = "***SKY UPPERCUT!!*** {name_player} executes an artificially difficult combo, rocketing their fist into the bottom of {name_target}’s jaw so hard that {target}’s colliding teeth brutally sever an inch off their own tongue!!",
 		str_miss = "**MISS!** {name_player} couldn't land a single blow!!",
 		str_equip = "You equip the brass knuckles.",
 		str_weapon = "brass knuckles",
@@ -2106,13 +2133,13 @@ weapon_list = [
 		str_killdescriptor = "pummeled to death",
 		str_damage = "{name_target} is socked in the {hitzone}!!",
 		str_duel = "**POW! BIFF!!** {name_player} and {name_target} take turns punching each other in the abs. It hurts so good.",
-		fn_effect = wef_brassknuckles,
 		str_description = "They're brass knuckles",
-		price = 1000,
+		fn_effect = wef_brassknuckles,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_brassknuckles_kills
 	),
-	EwWeapon( # 5
+	EwWeapon( # 9
 		id_weapon = "katana",
 		alias = [
 			"weebsword",
@@ -2132,40 +2159,44 @@ weapon_list = [
 		str_killdescriptor = "bisected",
 		str_damage = "{name_target} is slashed across the {hitzone}!!",
 		str_duel = "**CRACK!! THWACK!! CRACK!!** {name_player} and {name_target} duel with bamboo swords, viciously striking at head, wrist and belly.",
-		fn_effect = wef_katana,
 		str_description = "It's a katana",
-		price = 1000,
+		fn_effect = wef_katana,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_katana_kills
 	),
-	EwWeapon( # 5#TODO
-		id_weapon = "broadsword",
-		alias = [
-			"sword",
+	EwWeapon( # 10
+        id_weapon = "broadsword",
+        alias = [
+            "sword",
+            "highlander",
+            "arawheapofiron",
 			"eyelander"
-		],
-		str_crit = "**Critical hit!!** {name_target} broadsword",
-		str_miss = "broadsword miss",
+        ],
+  		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
+        str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
 		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
-		str_weapon = "a broadsword",
-		str_weaponmaster_self = "You are a rank {rank} broadsword.",
-		str_weaponmaster = "They are a rank {rank} broadsword.",
-		str_trauma_self = "broadsword trauma self.",
-		str_trauma = "broadsword trauma.",
-		str_kill = "broadsword kill {emote_skull}",
-		str_killdescriptor = "decapitated",
-		str_damage = "{name_target} broadsworded {hitzone}!!",
-		str_duel = "broadsword spar",
-		fn_effect = wef_broadsword,
+        str_weapon = "a broadsword",
+        str_weaponmaster_self = "You are a rank {rank} berserker.",
+        str_weaponmaster = "They are a rank {rank} berserker.",
+        str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
+        str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
+        str_kill = "{name_player} skewers {name_target} through the back to the hilt of their broadsword, before kicking their lifeless corpse onto the street corner in gruseome fashion. {name_player} screams at the top of their lungs. {emote_skull}",
+        str_killdescriptor = "slayed",
+        str_damage = "{name_target}'s {hitzone} is seperated from their body!!",
+        str_duel = "SCHWNG SCHWNG! {name_player} and {name_target} scream at the top of their lungs to rehearse their battle cries.",
 		str_description = "It's a broadsword",
-		clip_size=1,
-		price = 1000,
+		str_reload = "You summon strength and muster might from every muscle on your body to hoist your broadsword up for another swing.",
+		str_reload_warning = "**THUD...** {name_player}’s broadsword is too heavy, it’s blade has fallen to the ground!!",
+		fn_effect = wef_broadsword,
+		clip_size = 1,
+		price = 10000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo],
 		stat = stat_broadsword_kills
 	),
-	EwWeapon( # 4
+	EwWeapon( # 11
 		id_weapon = "nun-chucks",
 		alias = [
 			"nanchacku",
@@ -2186,13 +2217,13 @@ weapon_list = [
 		str_killdescriptor = "fatally bludgeoned",
 		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
 		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
-		fn_effect = wef_nunchucks,
 		str_description = "They're nunchucks",
-		price = 1000,
+		fn_effect = wef_nunchucks,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_nunchucks_kills
 	),
-	EwWeapon( # 11
+	EwWeapon( # 12
 		id_weapon = "scythe",
 		alias = [
 			"sickle"
@@ -2209,38 +2240,38 @@ weapon_list = [
 		str_killdescriptor = "sliced in twain",
 		str_damage = "{name_target} is cleaved through the {hitzone}!!",
 		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
+		str_description = "It's a scythe",		
 		fn_effect = wef_scythe,
-		str_description = "It's a scythe",
-		price = 2000,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_scythe_kills
 	),
-	EwWeapon( # 12	
-		id_weapon = "yo-yos",
+	EwWeapon( # 13	
+		id_weapon = "yo-yo",
 		alias = [
-			"yo-yo",
+			"yo-yos",
 			"yoyo",
 			"yoyos"
 		],
-		str_crit = "**Critical hit!!** {name_target} yo-yos",
-		str_miss = "**MISS!!** {name_player} yo-yos",
-		str_equip = "You equip the yo-yos.",
-		str_weapon = "yo-yos",
-		str_weaponmaster_self = "You are a rank {rank} master of the yo-yos.",
-		str_weaponmaster = "They are a rank {rank} master of the yo-yos.",
-		str_trauma_self = "yo-yos trauma self.",
-		str_trauma = "yo-yos trauma.",
-		str_kill = "yo-yos kill",
-		str_killdescriptor = "yo-yos kill description",
-		str_damage = "yo-yos dmg",
-		str_duel = "yo-yos spar.",
-		fn_effect = wef_yoyo,#make yoyo function
-		str_description = "They're yo-yos",
-		price = 1000,
+		str_crit = "SMAAAASH!! {name_player} pulls off a modified Magic Drop, landing a critical hit on {name_target} just after the rejection!",
+        str_miss = "You missed! {name_player} misjudges their yo-yos trajectory and botches an easy trick.",
+        str_equip = "You equip the yo-yo.",
+        str_weaponmaster_self = "You are a rank {rank} master of the yo-yo.",
+        str_weaponmaster = "They are a rank {rank} master of the yo-yo.",
+        str_weapon = "a yo-yo",
+        str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
+        str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
+        str_kill = "{name_player} performs a modified Kwyjibo, effortlessly nailing each step before killing their opponent just ahead of the dismount.",
+        str_killdescriptor = "amazed",
+        str_damage = "{name_target} used {name_target}'s {hitzone} as a counterweight!!",
+        str_duel = "whhzzzzzz {name_player} and {name_target} practice trying to Walk the Dog for hours. It never clicks.",
+		str_description = "It's a yo-yo",		
+		fn_effect = wef_yoyo,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_yoyo_kills
 	),
-	EwWeapon( # 10
+	EwWeapon( # 14
 		id_weapon = "knives",
 		alias = [
 			"knife",
@@ -2261,14 +2292,14 @@ weapon_list = [
 		str_killdescriptor = "knifed",
 		str_damage = "{name_target} is stuck by a knife in the {hitzone}!!",
 		str_duel = "**TING! TING!!** {name_player} and {name_target} take turns hitting one another's knives out of the air.",
+		str_description = "They're throwing knives",		
 		fn_effect = wef_knives,
-		str_description = "They're throwing knives",
-		price = 100,
+		price = 1000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown],
 		stat = stat_knives_kills
 	),
-	EwWeapon( # 9
+	EwWeapon( # 15
 		id_weapon = "molotov",
 		alias = [
 			"firebomb",
@@ -2278,7 +2309,7 @@ weapon_list = [
 		],
 		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
-		str_crit = "",#TODO
+		str_crit = "{name_player}’s cocktail shatters at the feet of {name_target}, sending a shower of shattered shards of glass into them!!",
 		str_equip = "You equip the molotov cocktail.",
 		str_weapon = "molotov cocktails",
 		str_weaponmaster_self = "You are a rank {rank} master arsonist.",
@@ -2289,38 +2320,39 @@ weapon_list = [
 		str_killdescriptor = "exploded",
 		str_damage = "{name_target} dodges a bottle, but is singed on the {hitzone} by the blast!!",
 		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
-		fn_effect = wef_molotov,
 		str_description = "They're molotov bottles",
-		price = 200,
+		fn_effect = wef_molotov,
+		price = 1000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_molotov_kills
 	),
-	EwWeapon( # 14	#TODO
-		id_weapon = "grenade",
-		alias = [
-			"nade"
-		],
-		str_crit = "**Critical hit!!** {name_target} grenade",
-		str_miss = "**MISS!!** {name_player} grenade",
-		str_equip = "You equip the grenade.",
-		str_weapon = "a grenade",
-		str_weaponmaster_self = "You are a rank {rank} master of the grenade.",
-		str_weaponmaster = "They are a rank {rank} master of the grenade.",
-		str_trauma_self = "grenade trauma self.",
-		str_trauma = "grenade trauma.",
-		str_kill = "grenade kill",
-		str_killdescriptor = "grenade kill description",
-		str_damage = "grenade dmg",
-		str_duel = "grenade spar.",
-		str_backfire = "The grenade explodes in {name_player}'s hand.",
+	EwWeapon( # 16
+		id_weapon = "grenades",
+        alias = [
+            "nades",
+			"grenade"
+        ],
+        str_crit = "**Critical hit!!** {name_target} is blown off their feet by the initial explosion, and lacerated by innumerable shards of shrapnel scattering themselves through their body!!",
+        str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
+        str_equip = "You equip the grenades.",
+        str_weapon = "a stack of grenades",
+        str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
+        str_weaponmaster = "They are a rank {rank} master of the grenades.",
+        str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
+        str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
+        str_kill = "**KA-BOOM!!** {name_player} pulls the safety pin and holds their grenade just long enough to cause it to explode mid air, right in front of {name_target}’s face, blowing it to smithereens. {emote_skull}",
+        str_killdescriptor = "exploded",
+        str_damage = "{name_player}’s grenade explodes, sending {name_target}’s {hitzone} flying off their body!!",
+        str_duel = "**KA-BOOM!!** {name_player} and {name_target} pull the pin out of their grenades and hold it in their hands to get a feel for how long it takes for them to explode. They lose a few body parts in the process.",
+		str_description = "A stack of grenades.",
 		fn_effect = wef_grenade,
-		str_description = "A grenade.",
+		price = 1000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_grenade_kills
 	),
-	EwWeapon( # 7
+	EwWeapon( # 17
 		id_weapon = "garrote",
 		alias = [
 			"wire",
@@ -2339,13 +2371,13 @@ weapon_list = [
 		str_killdescriptor = "garrote wired",
 		str_damage = "{name_target} is ensnared by {name_player}'s wire!!",
 		str_duel = "{name_player} and {name_target} compare their dexterity by playing Cat's Cradle with deadly wire.",
+		str_description = "It's a garrote wire.",
 		fn_effect = wef_garrote,
-		str_description = "It's a garrote",
-		price = 1000,
+		price = 10000,
 		vendors = [vendor_dojo],
 		stat = stat_garrote_kills
 	),
-	EwWeapon(  # 11
+	EwWeapon(  # 18
 		id_weapon = "pickaxe",
 		alias = [
 			"pick",
@@ -2364,8 +2396,8 @@ weapon_list = [
 		str_killdescriptor = "!mined",
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
-		fn_effect = wef_pickaxe,
 		str_description = "It's a pickaxe",
+		fn_effect = wef_pickaxe,
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills
 	)
@@ -2375,31 +2407,11 @@ weapon_vendors = [
 	vendor_dojo
 ]
 
-weapon_vendor_inv = {}
-
 # A map of id_weapon to EwWeapon objects.
 weapon_map = {}
 
 # A list of weapon names
 weapon_names = []
-
-# Populate weapon map, including all aliases.
-for weapon in weapon_list:
-	weapon_map[weapon.id_weapon] = weapon
-	weapon_names.append(weapon.id_weapon)
-
-	for vendor in weapon.vendors:
-		vendor_list = weapon_vendor_inv.get(vendor)
-
-		if vendor_list == None:
-			vendor_list = []
-			weapon_vendor_inv[vendor] = vendor_list
-
-		vendor_list.append(weapon.id_weapon)
-
-	for alias in weapon.alias:
-		weapon_map[alias] = weapon
-
 
 # All weather effects in the game.
 weather_list = [
@@ -8761,10 +8773,8 @@ stock_emotes = {
     stock_pizzahut : emote_pizzahut,
     stock_tacobell : emote_tacobell
 }
-
 # A map of vendor names to their items.
 vendor_inv = {}
-
 
 # Populate item map, including all aliases.
 for item in item_list:
@@ -8819,6 +8829,22 @@ for cosmetic in cosmetic_items_list:
 
 		vendor_list.append(cosmetic.id_cosmetic)
 
+# Populate weapon map, including all aliases.
+for weapon in weapon_list:
+	weapon_map[weapon.id_weapon] = weapon
+	weapon_names.append(weapon.id_weapon)
+
+	for vendor in weapon.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(weapon.id_weapon)
+
+	for alias in weapon.alias:
+		weapon_map[alias] = weapon
 
 # List of items you can obtain via milling.
 mill_results = []

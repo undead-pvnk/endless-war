@@ -448,7 +448,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_weapon
 				)
 
-				if len(weapons_held) > user_data.get_weapon_capacity():
+				if len(weapons_held) >= user_data.get_weapon_capacity():
 					response += " But you couldn't carry any more weapons, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
@@ -826,20 +826,21 @@ async def item_look(cmd):
 				if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
 					response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(player.display_name, name)
 				else:
-					response += "Your beloved partner. You can't help but give it a kiss on the handle.\n"
+					response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
 
 			weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+
 			if ewcfg.weapon_class_ammo in weapon.classes:
 				response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
 
 			totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
 
 			if totalkills < 10:
-				response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed people {} times.\n".format(totalkills))
+				response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed {} people.\n".format(totalkills))
 			elif totalkills < 100:
-				response += "There's some noticeable wear and tear on it. It has killed people {} times.\n".format(totalkills)
+				response += "There's some noticeable wear and tear on it. It has killed {} people.\n".format(totalkills)
 			else:
-				response += "A true legend in the battlefield, it has killed people {} times.\n".format(totalkills)
+				response += "A true legend in the battlefield, it has killed {} people.\n".format(totalkills)
 			
 			response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)			
 
