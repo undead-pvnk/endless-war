@@ -557,6 +557,7 @@ hunger_pershot = 10
 hunger_perspar = 30
 hunger_perfarm = 50
 hunger_permine = 1
+hunger_perminereset = 10
 hunger_perscavenge = 2
 hunger_pertick = 3
 

@@ -164,6 +164,7 @@ async def mine(cmd):
 
 		else:
 			printgrid = False
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 
 			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -189,6 +190,8 @@ async def mine(cmd):
 				for token in cmd.tokens[1:]:
 				
 					if token.lower() == "reset":
+						user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
+						user_data.persist()
 						init_grid(user_data.poi, user_data.id_server)
 						return await print_grid(cmd)
 
@@ -208,11 +211,7 @@ async def mine(cmd):
 
 				row -= 1
 			
-				if row not in range(len(grid)):
-					response = "Invalid vein."
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					return await print_grid(cmd)
-				if col not in range(len(grid[row])):
+				if row not in range(len(grid)) or col not in range(len(grid[row])):
 					response = "Invalid vein."
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
@@ -238,14 +237,15 @@ async def mine(cmd):
 					user_data.change_slimes(n = -(user_data.slimes * 0.5))
 					user_data.persist()
 
+					init_grid(user_data.poi, user_data.id_server)
 					response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					await print_grid(cmd)
-					init_grid(user_data.poi, user_data.id_server)
 					return await print_grid(cmd)
 
 				if mining_yield == 0:
+					user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
+					user_data.persist()
 					response = "This vein has already been mined dry."
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					if printgrid:
@@ -354,7 +354,6 @@ async def mine(cmd):
 				mining_yield *= 2
 
 			# Fatigue the miner.
-			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
