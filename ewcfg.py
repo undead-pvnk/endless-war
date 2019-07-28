@@ -548,6 +548,8 @@ slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
 slimes_permill = 75000
+slimes_invein = 3500
+slimes_pertile = 25
 
 # hunger
 min_stamina = 100
