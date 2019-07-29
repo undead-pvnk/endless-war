@@ -435,7 +435,7 @@ async def cast(cmd):
 				fun = 70
 			bun = 0
 
-			while True:
+			while not ewutils.TERMINATE:
 				
 				if fun <= 0:
 					fun = 1
@@ -445,6 +445,8 @@ async def cast(cmd):
 				timer = 0
 				while timer <= 60:
 					await asyncio.sleep(1)
+					user_data = EwUser(member = cmd.message.author)
+
 					if user_data.poi != fisher.pier:
 						fisher.fishing = False
 						return
@@ -478,7 +480,9 @@ async def cast(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.bait = False
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
+
+			return
 
 	else:
 		response = "You can't fish here. Go to a pier."
