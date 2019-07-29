@@ -890,7 +890,7 @@ async def on_message(message):
 			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
 				response = "You cannot participate in the ENDLESS WAR while offline."
-
+    
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 

@@ -553,7 +553,7 @@ offline_cmds = [
 	cmd_scout,
 	cmd_scout_alt1
 ]
-
+		
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -9392,11 +9392,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion"
+mutation_id_spontaneouscombustion = "spontaneouscombustion" 
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother"
+mutation_id_sharptoother = "sharptoother" 
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -9424,7 +9424,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill"
+mutation_id_dressedtokill = "dressedtokill" 
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"

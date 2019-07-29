@@ -1962,7 +1962,7 @@ async def restoreslimeoid(cmd):
 	if slimeoid.life_state != ewcfg.slimeoid_state_none:
 		response = "You already have an active slimeoid."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+	
 	if item_sought is None:
 		if item_search:
 			response = "You need a slimeoid's heart to restore it to life."
@@ -1982,7 +1982,7 @@ async def restoreslimeoid(cmd):
 	if user_data.slimes < slimes_to_restore:
 		response = "You need at least {} slime to restore this slimeoid.".format(slimes_to_restore)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+		
 
 	slimeoid.life_state = ewcfg.slimeoid_state_active
 	slimeoid.id_user = user_data.id_user
@@ -1992,8 +1992,8 @@ async def restoreslimeoid(cmd):
 
 	response = "You insert the heart of your beloved {} into one of the restoration tanks. A series of clattering sensors analyze the crystalline core. Then, just like when it was first incubated, the needle pricks you and extracts slime from your body, which coalesces around the poudrin-like heart. Bit by bit the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(slimeoid.name, slimeoid.name)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
+			
+		
 
 
 async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
@@ -2216,7 +2216,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			s2moxie += 2
 			s2chutzpah += 2
 		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
-
+			
 
 	s1_active = False
 	in_range = False
@@ -2850,14 +2850,14 @@ async def dress_slimeoid(cmd):
 						response += "take off your {} and give it to {}.".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
 					else:
 						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
-
+					
 					cosmetic.item_props['slimeoid'] = 'true'
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'
-
+					
 			cosmetic.persist()
 		else:
 			response = 'Adorn which cosmetic? Check your **!inventory**.'
-
-
+		
+	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

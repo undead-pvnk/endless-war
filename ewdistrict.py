@@ -95,7 +95,7 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes
 		))
-
+	
 	def get_number_of_friendly_neighbors(self):
 		if self.controlling_faction == "":
 			return 0
@@ -111,7 +111,7 @@ class EwDistrict:
 	def all_neighbors_friendly(self):
 		if self.controlling_faction == "":
 			return False
-
+		
 		neighbors = ewcfg.poi_neighbors[self.name]
 		for neighbor_id in neighbors:
 			neighbor_poi = ewcfg.id_to_poi.get(neighbor_id)
@@ -166,9 +166,9 @@ class EwDistrict:
 			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
-
+			
 			nega_present = len(slimeoids) > 0
-
+                        
 			if nega_present:
 				decay *= 1.5
 
@@ -251,7 +251,7 @@ class EwDistrict:
 							progress = progress_percent_after
 						)
 						channels = [ewcfg.id_to_poi[self.name].channel]
-
+						
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 					else:
@@ -261,7 +261,7 @@ class EwDistrict:
 							progress = progress_percent_after
 						)
 						channels = [ewcfg.id_to_poi[self.name].channel]
-
+						
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 			else:  # if it was a negative change
@@ -283,7 +283,7 @@ class EwDistrict:
 							progress = progress_percent_after
 						)
 						channels = ewcfg.hideout_channels
-
+						
 						for ch in channels:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
@@ -293,7 +293,7 @@ class EwDistrict:
 						progress = progress_percent_after
 					)
 					channels = [ewcfg.id_to_poi[self.name].channel]
-
+					
 					for ch in channels:
 						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 				else:  # if it's an uncontrolled district
@@ -303,7 +303,7 @@ class EwDistrict:
 						progress = progress_percent_after
 					)
 					channels = [ewcfg.id_to_poi[self.name].channel]
-
+					
 					for ch in channels:
 						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
@@ -361,7 +361,7 @@ class EwDistrict:
 						district = ewcfg.id_to_poi[self.name].str_name
 					)
 					channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
-
+					
 					for ch in channels:
 						resp_cont_owner.add_channel_response(channel = ch, response = message)
 				else:  # successful de-capture or full decay
@@ -372,7 +372,7 @@ class EwDistrict:
 							other_faction = self.controlling_faction  # the faction that just lost control
 						)
 						channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
-
+						
 						for ch in channels:
 							resp_cont_owner.add_channel_response(channel = ch, response = message)
 
@@ -411,8 +411,8 @@ async def capture_progress(cmd):
 
 	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
+		
+		
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -437,10 +437,10 @@ async def capture_tick(id_server):
 			controlling_faction = dist.controlling_faction
 
 			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
-
+					
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
-
+			
 			nega_present = len(slimeoids) > 0
 #			if nega_present:
 #				continue
@@ -483,7 +483,7 @@ async def capture_tick(id_server):
 							player_capture_speed *= 2
 						if ewcfg.mutation_id_patriot in mutations and dist.controlling_faction == player_faction:
 							player_capture_speed *= 2
-
+							
 
 						capture_speed += player_capture_speed
 						dc_stat_increase_list.append(player_id)

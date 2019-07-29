@@ -776,7 +776,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-
+        
 """
 	Calculate how many weapons the player can carry
 """

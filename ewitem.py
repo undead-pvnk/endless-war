@@ -681,7 +681,7 @@ def inventory(
 					item_data.persist()
 
 					ewutils.logMsg('Updated poudrin to new format: {}'.format(id_item))
-
+					    
 				item_def = ewcfg.item_def_map.get(item_type)
 
 				if(item_def != None):
@@ -816,7 +816,7 @@ async def item_look(cmd):
 				else:
 					response += ", so you decide to throw it away."
 					item_drop(id_item)
-
+		
 		if item.item_type == ewcfg.it_cosmetic:
 			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
 			if hue != None:

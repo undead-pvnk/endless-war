@@ -129,7 +129,7 @@ class EwUser:
 					add_success = self.add_mutation(new_mutation)
 					if add_success:
 						response += "\n\nWhat’s this? You are mutating!! {}".format(ewcfg.mutations_map[new_mutation].str_acquire)
-
+						
 			self.slimelevel = new_level
 			if self.life_state == ewcfg.life_state_corpse:
 				ewstats.track_maximum(user = self, metric = ewcfg.stat_max_ghost_level, value = self.slimelevel)
@@ -138,7 +138,7 @@ class EwUser:
 
 		return response
 
-
+		
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
 			self.busted = True
@@ -169,7 +169,7 @@ class EwUser:
 		ewutils.moves_active[self.id_user] = 0
 		ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user)
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
-
+		
 		self.clear_mutations()
 		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
@@ -234,7 +234,7 @@ class EwUser:
 				ewutils.food_multiplier[self.id_user] += 1
 			else:
 				ewutils.food_multiplier[self.id_user] = 1
-
+				
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
@@ -291,7 +291,7 @@ class EwUser:
 					self.id_server,
 					self.id_user
 				))
-
+    
 			for mutation_data in mutations:
 				result.append(mutation_data[0])
 		except:
@@ -495,7 +495,7 @@ class EwUser:
 						ewcfg.poi_id_downtown,
 						ewcfg.life_state_juvenile
 					))
-
+					
 					conn.commit()
 
 				if (self.time_joined == 0) and (member != None) and (member.joined_at != None):
@@ -530,7 +530,7 @@ class EwUser:
 
 	""" Save this user object to the database. """
 	def persist(self):
-
+	
 		try:
 			# Get database handles if they weren't passed.
 			conn_info = ewutils.databaseConnect()
