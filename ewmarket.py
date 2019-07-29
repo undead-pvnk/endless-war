@@ -30,10 +30,14 @@ class EwMarket:
 	donated_slimes = 0
 	donated_poudrins = 0
 
+	# Dict of bazaar items available for purchase
+	bazaar_wares = None
+
 	""" Load the market data for this server from the database. """
 	def __init__(self, id_server = None):
 		if(id_server != None):
 			self.id_server = id_server
+			self.bazaar_wares = {}
 
 			try:
 				conn_info = ewutils.databaseConnect()
@@ -65,6 +69,22 @@ class EwMarket:
 					self.decayed_slimes = result[6]
 					self.donated_slimes = result[7]
 					self.donated_poudrins = result[8]
+
+					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
+						ewcfg.col_name,
+						ewcfg.col_value,
+						ewcfg.col_id_server,
+					), (
+						self.id_server,
+					))
+
+					for row in cursor:
+						# this try catch is only necessary as long as extraneous props exist in the table
+						try:
+							self.bazaar_wares[row[0]] = row[1]
+						except:
+							ewutils.logMsg("extraneous bazaar item row detected.")
+
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server,))
@@ -107,6 +127,20 @@ class EwMarket:
 				self.donated_slimes,
 				self.donated_poudrins,
 			))
+
+			# Write out all current item rows.
+			for name in self.bazaar_wares:
+				cursor.execute("REPLACE INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
+					ewcfg.col_id_server,
+					ewcfg.col_name,
+					ewcfg.col_value,
+				), (
+					self.id_server,
+					name,
+					self.bazaar_wares[name],
+				))
+
+			conn.commit()
 		finally:
 			# Clean up the database handles.
 			cursor.close()

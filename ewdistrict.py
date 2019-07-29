@@ -11,7 +11,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 
 """
-	district data model for database persistence
+    district data model for database persistence
 """
 
 
@@ -171,11 +171,12 @@ class EwDistrict:
             nega_present = len(slimeoids) > 0
 
             if nega_present:
-                decay *= 5
+                decay *= 1.5
+
 
             if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
                 # reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
-                responses = self.change_capture_points(decay, ewcfg.actor_decay)
+                responses = self.change_capture_points(int(decay), ewcfg.actor_decay)
                 resp_cont_decay.add_response_container(responses)
 
         if self.capture_points < 0:
@@ -320,8 +321,8 @@ class EwDistrict:
         return resp_cont_change_cp
 
     """
-		Change who controls the district. Can be used to update the channel topic by passing the already controlling faction as an arg.
-	"""
+        Change who controls the district. Can be used to update the channel topic by passing the already controlling faction as an arg.
+    """
 
     def change_ownership(self, new_owner, actor, client=None):  # actor can either be a faction, "decay", or "init"
         resp_cont_owner = ewutils.EwResponseContainer(client=ewutils.get_client(), id_server=self.id_server)
@@ -389,7 +390,7 @@ class EwDistrict:
 
 
 """
-	Informs the player about their current zone's capture progress
+    Informs the player about their current zone's capture progress
 """
 
 
@@ -422,7 +423,7 @@ async def capture_progress(cmd):
 
 
 """
-	Updates/Increments the capture_points values of all districts every time it's called
+    Updates/Increments the capture_points values of all districts every time it's called
 """
 
 
@@ -547,14 +548,14 @@ async def capture_tick(id_server):
 
 
 """
-	Coroutine that continually calls capture_tick; is called once per server, and not just once globally
+    Coroutine that continually calls capture_tick; is called once per server, and not just once globally
 """
 
 
 async def capture_tick_loop(id_server):
     interval = ewcfg.capture_tick_length
     # causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-    while True:
+    while not ewutils.TERMINATE:
         await capture_tick(id_server=id_server)
         # ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
 
@@ -562,7 +563,7 @@ async def capture_tick_loop(id_server):
 
 
 """
-	Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
+    Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
 
 

@@ -10,8 +10,6 @@ import ewitem
 """ Market data model for database persistence """
 
 """ User model for database persistence """
-
-
 class EwUser:
     id_user = ""
     id_server = ""
@@ -39,6 +37,7 @@ class EwUser:
     rr_challenger = ""
     time_last_action = 0
     weaponmarried = False
+    arrested = False
 
     time_lastkill = 0
     time_lastrevive = 0
@@ -51,7 +50,6 @@ class EwUser:
     time_joined = 0
 
     """ fix data in this object if it's out of acceptable ranges """
-
     def limit_fix(self):
         if self.hunger > self.get_hunger_max():
             self.hunger = self.get_hunger_max()
@@ -66,7 +64,6 @@ class EwUser:
             self.time_last_action = int(time.time())
 
     """ gain or lose slime, recording statistics and potentially leveling up. """
-
     def change_slimes(self, n=0, source=None):
         change = int(n)
         self.slimes += change
@@ -117,17 +114,16 @@ class EwUser:
         if new_level > self.slimelevel:
             if self.life_state != ewcfg.life_state_corpse:
                 response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
-            current_mutations = self.get_mutations()
             for level in range(self.slimelevel + 1, new_level + 1):
                 if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
+                    current_mutations = self.get_mutations()
                     new_mutation = random.choice(list(ewcfg.mutation_ids))
                     while new_mutation in current_mutations:
                         new_mutation = random.choice(list(ewcfg.mutation_ids))
 
                     add_success = self.add_mutation(new_mutation)
                     if add_success:
-                        response += "\n\nWhat’s this? You are mutating!! {}".format(
-                            ewcfg.mutations_map[new_mutation].str_acquire)
+                        response += "\n\nWhat’s this? You are mutating!! {}".format(ewcfg.mutations_map[new_mutation].str_acquire)
 
             self.slimelevel = new_level
             if self.life_state == ewcfg.life_state_corpse:
@@ -136,6 +132,7 @@ class EwUser:
                 ewstats.track_maximum(user=self, metric=ewcfg.stat_max_level, value=self.slimelevel)
 
         return response
+
 
     def die(self, cause=None):
         if cause == ewcfg.cause_busted:
@@ -171,8 +168,7 @@ class EwUser:
         self.clear_mutations()
         # ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
-        ewutils.logMsg(
-            'server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
+        ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
 
     def add_bounty(self, n=0):
         self.bounty += int(n)
@@ -222,8 +218,7 @@ class EwUser:
         item_props = food_item.item_props
         mutations = self.get_mutations()
 
-        if ewcfg.mutation_id_spoiledappetite not in mutations and float(
-                food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
+        if ewcfg.mutation_id_spoiledappetite not in mutations and float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
             response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
             ewitem.item_drop(food_item.id_item)
         else:
@@ -258,13 +253,13 @@ class EwUser:
 
         return response
 
+
     def add_mutation(self, id_mutation):
         mutations = self.get_mutations()
         if id_mutation in mutations:
             return False
         try:
-            ewutils.execute_sql_query(
-                "REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}) VALUES (%s, %s, %s)".format(
+            ewutils.execute_sql_query("REPLACE INTO mutations({id_server}, {id_user}, {id_mutation}) VALUES (%s, %s, %s)".format(
                     id_server=ewcfg.col_id_server,
                     id_user=ewcfg.col_id_user,
                     id_mutation=ewcfg.col_id_mutation
@@ -279,11 +274,11 @@ class EwUser:
             ewutils.logMsg("Failed to add mutation for user {}.".format(self.id_user))
             return False
 
+
     def get_mutations(self):
         result = []
         try:
-            mutations = ewutils.execute_sql_query(
-                "SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
+            mutations = ewutils.execute_sql_query("SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
                     id_mutation=ewcfg.col_id_mutation,
                     id_server=ewcfg.col_id_server,
                     id_user=ewcfg.col_id_user
@@ -319,14 +314,11 @@ class EwUser:
             response = "Juvies can't equip weapons."
         elif self.weaponmarried == True:
             current_weapon = ewitem.EwItem(id_item=self.weapon)
-            response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(
-                current_weapon.item_props.get("weapon_name") if len(
-                    current_weapon.item_props.get("weapon_name")) > 0 else "partner")
+            response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(current_weapon.item_props.get("weapon_name") if len(current_weapon.item_props.get("weapon_name")) > 0 else "partner")
             # Have to load the item again or the wrong item props are used
             weapon_item = ewitem.EwItem(id_item=weapon_item.id_item)
         else:
-            response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(
-                weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+            response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
             self.weapon = weapon_item.id_item
 
         return response
@@ -350,6 +342,7 @@ class EwUser:
     def get_hunger_max(self):
         return ewutils.hunger_max_bylevel(self.slimelevel)
 
+
     def get_mention(self):
         return "<@{id_user}>".format(id_user=self.id_user)
 
@@ -369,8 +362,7 @@ class EwUser:
     def unban(self, faction=None):
         if faction is None:
             return
-        ewutils.execute_sql_query(
-            "DELETE FROM bans WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
+        ewutils.execute_sql_query("DELETE FROM bans WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
                 id_user=ewcfg.col_id_user,
                 id_server=ewcfg.col_id_server,
                 faction=ewcfg.col_faction
@@ -396,8 +388,8 @@ class EwUser:
 
         return bans
 
-    """ Create a new EwUser and optionally retrieve it from the database. """
 
+    """ Create a new EwUser and optionally retrieve it from the database. """
     def __init__(self, member=None, id_user=None, id_server=None):
         if (id_user == None) and (id_server == None):
             if (member != None):
@@ -415,8 +407,7 @@ class EwUser:
                 cursor = conn.cursor();
 
                 # Retrieve object
-                cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+                cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
                         ewcfg.col_slimes,
                         ewcfg.col_slimelevel,
                         ewcfg.col_hunger,
@@ -448,6 +439,7 @@ class EwUser:
                         ewcfg.col_poi_death,
                         ewcfg.col_slime_donations,
                         ewcfg.col_poudrin_donations,
+                    ewcfg.col_arrested,
                     ), (
                         id_user,
                         id_server
@@ -487,6 +479,7 @@ class EwUser:
                     self.poi_death = result[28]
                     self.slime_donations = result[29]
                     self.poudrin_donations = result[30]
+                    self.arrested = (result[31] == 1)
                 else:
                     self.poi = ewcfg.poi_id_downtown
                     self.life_state = ewcfg.life_state_juvenile
@@ -530,7 +523,6 @@ class EwUser:
                 ewutils.databaseClose(conn_info)
 
     """ Save this user object to the database. """
-
     def persist(self):
 
         try:
@@ -542,8 +534,7 @@ class EwUser:
             self.limit_fix();
 
             # Save the object.
-            cursor.execute(
-                "REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+            cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_user,
                     ewcfg.col_id_server,
                     ewcfg.col_slimes,
@@ -578,6 +569,7 @@ class EwUser:
                     ewcfg.col_poi_death,
                     ewcfg.col_slime_donations,
                     ewcfg.col_poudrin_donations,
+                ewcfg.col_arrested,
                 ), (
                     self.id_user,
                     self.id_server,
@@ -613,6 +605,7 @@ class EwUser:
                     self.poi_death,
                     self.slime_donations,
                     self.poudrin_donations,
+                (1 if self.arrested else 0),
                 ))
 
             conn.commit()

@@ -47,9 +47,6 @@ class EwFood:
 	# The way that you can acquire this item. If blank, it's not relevant.
 	acquisition = ""
 
-	# Any necessary additional context needed to match this item to it's usage scenario
-	context = ""
-
 	def __init__(
 		self,
 		id_food = "",
@@ -64,7 +61,6 @@ class EwFood:
 		time_expir = 0,
 		ingredients = "",
 		acquisition = "",
-		context = "",
 	):
 		self.id_food = id_food
 		self.alias = alias
@@ -78,13 +74,13 @@ class EwFood:
 		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir
 		self.ingredients = ingredients
 		self.acquisition = acquisition
-		self.context = context
 
 
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	market_data = EwMarket(id_server = cmd.message.server.id)
 
 	if poi == None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
@@ -94,7 +90,9 @@ async def menu(cmd):
 
 		for vendor in poi.vendors:
 			items = []
-			for item_name in ewcfg.vendor_inv[vendor]:
+			# If the vendor is the bazaar get the current rotation of items from the market_data
+			vendor_inv = ewcfg.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
+			for item_name in vendor_inv:
 				item_item = ewcfg.item_map.get(item_name)
 				food_item = ewcfg.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
@@ -135,6 +133,7 @@ async def menu(cmd):
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	market_data = EwMarket(id_server = cmd.message.server.id)
 
 	if len(poi.vendors) == 0:
 		# Only allowed in locations with a vendor.
@@ -149,16 +148,22 @@ async def order(cmd):
 		# Finds the item if it's an EwGeneralItem.
 		item = ewcfg.item_map.get(value)
 		item_type = ewcfg.it_item
+		if item != None:
+			item_id = item.id_item
 
 		# Finds the item if it's an EwFood item.
 		if item == None:
 			item = ewcfg.food_map.get(value)
 			item_type = ewcfg.it_food
+			if item != None:
+				item_id = item.id_food
 
 		# Finds the item if it's an EwCosmeticItem.
 		if item == None:
 			item = ewcfg.cosmetic_map.get(value)
 			item_type = ewcfg.it_cosmetic
+			if item != None:
+				item_id = item.id_cosmetic
 
 		if item != None:
 			# Gets a vendor that the item is available and the player currently located in
@@ -167,12 +172,16 @@ async def order(cmd):
 			except:
 				current_vendor = None
 
+			# Check if the item is available in the current bazaar item rotation
+			if current_vendor == ewcfg.vendor_bazaar:
+				if item_id not in market_data.bazaar_wares.values():
+					current_vendor = None
+
 			if current_vendor is None or len(current_vendor) < 1:
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
 
 			else:
 				response = ""
-				market_data = EwMarket(id_server = cmd.message.server.id)
 
 				value = item.price
 
