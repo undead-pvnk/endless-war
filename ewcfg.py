@@ -1160,8 +1160,8 @@ stats_clear_on_death = [
 	stat_slimesfromkills,
 	stat_kills,
 	stat_ghostbusts,
-		stat_slimesfarmed,
-		stat_slimesscavenged
+        stat_slimesfarmed,
+        stat_slimesscavenged
 ]
 
 context_slimeoidheart = 'slimeoidheart'

@@ -87,7 +87,7 @@ class EwMarket:
 
 				else:
 					# Create a new database entry if the object is missing.
-					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server,))
+					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
 
 					conn.commit()
 			finally:
@@ -95,7 +95,7 @@ class EwMarket:
 				cursor.close()
 				ewutils.databaseClose(conn_info)
 
-	""" Save market data object to the database.  """
+	""" Save market data object to the database. """
 	def persist(self):
 		try:
 			conn_info = ewutils.databaseConnect()
