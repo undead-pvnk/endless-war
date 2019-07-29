@@ -661,8 +661,8 @@ async def appraise(cmd):
 		name = item_sought.get('name')
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		item_props = fish.item_props
-		str_fish = fish.item_props.get('str_name')
-		id_fish = item_props['id_food']
+		# str_fish = fish.item_props.get('str_name')
+		# id_fish = item_props['id_food']
 		acquisition = item_props['acquisition']
 
 		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You submit your {} for appraisal".format(name)
@@ -670,70 +670,72 @@ async def appraise(cmd):
 		if acquisition != ewcfg.acquisition_fishing:
 			response += '. \n"Have you lost yer mind, laddy? That’s not a fish!! Just what’re you trying to pull??"'.format(name)
 
-		if payment == None:
-			response += ", but he says he won’t provide his services for free... but, if you bring him a Manhattan Project, you might be able to get an appraisal."
-
 		else:
-			item_props = fish.item_props
-			rarity = item_props['rarity']
-			size = item_props['size']
-			value = int(item_props['value'])
 
-			response += 'and offer him a Manhattan Project as payment. \n"Hm, alright, let’s see here...'
+			if payment == None:
+				response += ", but he says he won’t provide his services for free... but, if you bring him a Manhattan Project, you might be able to get an appraisal."
 
-			if rarity == "common":
-				response += "Ah, a {}, that’s a pretty common fish... ".format(name)
+			else:
+				item_props = fish.item_props
+				rarity = item_props['rarity']
+				size = item_props['size']
+				value = int(item_props['value'])
 
-			if rarity == "uncommon":
-				response += "Interesting, a {}, that’s a pretty uncommon fish you’ve got there... ".format(name)
+				response += 'and offer him a Manhattan Project as payment. \n"Hm, alright, let’s see here...'
 
-			if rarity == "rare":
-				response += "Amazing, it’s a {}! Consider yourself lucky, that’s a pretty rare fish! ".format(name)
+				if rarity == "common":
+					response += "Ah, a {}, that’s a pretty common fish... ".format(name)
 
-			if rarity == "promo":
-				response += "Shiver me timbers, is that a {}?? Unbelievable, that’s an extremely rare fish!! It was only ever released as a promotional item in Japan during the late ‘90s. ".format(name)
+				if rarity == "uncommon":
+					response += "Interesting, a {}, that’s a pretty uncommon fish you’ve got there... ".format(name)
 
-			if size == "miniscule":
-				response += "Or, is it just a speck of dust? Seriously, that {} is downright miniscule! "
+				if rarity == "rare":
+					response += "Amazing, it’s a {}! Consider yourself lucky, that’s a pretty rare fish! ".format(name)
 
-			if size == "small":
-				response += "Hmmm, it’s a little small, don’t you think? "
+				if rarity == "promo":
+					response += "Shiver me timbers, is that a {}?? Unbelievable, that’s an extremely rare fish!! It was only ever released as a promotional item in Japan during the late ‘90s. ".format(name)
 
-			if size == "average":
-				response += "It’s an average size for the species. "
+				if size == "miniscule":
+					response += "Or, is it just a speck of dust? Seriously, that {} is downright miniscule! "
 
-			if size == "big":
-				response += "Whoa, that’s a big one, too! "
+				if size == "small":
+					response += "Hmmm, it’s a little small, don’t you think? "
 
-			if size == "huge":
-				response += "Look at the size of that thing, it’s huge! "
+				if size == "average":
+					response += "It’s an average size for the species. "
 
-			if size == "colossal":
-				response += "By Neptune’s beard, what a sight to behold, this {name} is absolutely colossal!! In all my years in the Navy, I don’t think I’ve ever seen a {name} as big as yours!! ".format(name = name)
+				if size == "big":
+					response += "Whoa, that’s a big one, too! "
 
-			response += "So, I’d say this fish "
+				if size == "huge":
+					response += "Look at the size of that thing, it’s huge! "
 
-			if value <= 20:
-				response += 'is absolutely worthless."'
+				if size == "colossal":
+					response += "By Neptune’s beard, what a sight to behold, this {name} is absolutely colossal!! In all my years in the Navy, I don’t think I’ve ever seen a {name} as big as yours!! ".format(name = name)
 
-			if value <= 40 and value >= 21:
-				response += 'isn’t worth very much."'
+				response += "So, I’d say this fish "
 
-			if value <= 60 and value >= 41:
-				response += 'is somewhat valuable."'
+				if value <= 20:
+					response += 'is absolutely worthless."'
 
-			if value <= 80 and value >= 61:
-				response += 'is highly valuable!"'
+				if value <= 40 and value >= 21:
+					response += 'isn’t worth very much."'
 
-			if value <= 99 and value >= 81:
-				response += 'is worth a fortune!!"'
+				if value <= 60 and value >= 41:
+					response += 'is somewhat valuable."'
 
-			if value >= 100:
-				response += 'is the most magnificent specimen I’ve ever seen!"'
+				if value <= 80 and value >= 61:
+					response += 'is highly valuable!"'
 
-			ewitem.item_delete(id_item = payment.get('id_item'))
+				if value <= 99 and value >= 81:
+					response += 'is worth a fortune!!"'
 
-			user_data.persist()
+				if value >= 100:
+					response += 'is the most magnificent specimen I’ve ever seen!"'
+
+				ewitem.item_delete(id_item = payment.get('id_item'))
+
+				user_data.persist()
 	else:
 		if item_search:  # If they didn't forget to specify an item and it just wasn't found.
 			response = "You don't have one."
@@ -767,8 +769,6 @@ async def barter(cmd):
 		str_fish = fish.item_props.get('str_name')
 		item_props = fish.item_props
 		acquisition = item_props['acquisition']
-		value = int(item_props['value'])
-
 		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You submit your {} for bartering. ".format(str_fish)
 
 		if acquisition != ewcfg.acquisition_fishing:
@@ -885,13 +885,22 @@ async def barter(cmd):
 				except:
 					accepted = False
 
+
 				if accepted == True:
 					offer_receive = str(offer.offer_receive)
 
-					if offer_receive.isdigit() == True:
-						slime_gain = int(offer.offer_receive)
+					# For some reason, offer.offer_receive is brought here as a tuple on the first barter if it's an integer.
+					# If it's a tuple, remove the tuple parts of it so it can be read as an integer.
+					# print(offer.offer_receive)
 
-						response = ""
+					offer_receive = offer_receive.replace("(", "")
+					offer_receive = offer_receive.replace(")", "")
+					offer_receive = offer_receive.replace(",", "")
+
+					response = ""
+
+					if offer_receive.isdigit() == True:
+						slime_gain = int(offer_receive)
 
 						user_initial_level = user_data.slimelevel
 
@@ -902,8 +911,10 @@ async def barter(cmd):
 						# Tell the player their slime level increased.
 						if was_levelup:
 							response += levelup_response
+							response += "\n\n"
 
 					else:
+
 						if hasattr(item, 'id_item'):
 							ewitem.item_create(
 								item_type = ewcfg.it_item,
@@ -915,6 +926,7 @@ async def barter(cmd):
 									'item_name': item.str_name,
 									'item_desc': item.str_desc,
 									'ingredients': item.ingredients,
+									'acquisition': item.acquisition,
 								}
 							),
 

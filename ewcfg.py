@@ -4242,7 +4242,7 @@ fish_list  =  [
     ),
     EwFish(
         id_fish = "sweetfish",
-        str_name = "sweet fish",
+        str_name = "Sweet Fish",
         rarity = "rare",
         catch_time = "day",
         catch_weather = None,
