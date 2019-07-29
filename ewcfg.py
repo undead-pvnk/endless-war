@@ -1425,6 +1425,80 @@ item_list = [
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
+		id_item = item_id_tradingcardpack,
+		alias = [
+			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
+			"tradingcard",
+			"trading",
+			"card",
+			"cardpack",
+			"pack"
+		],
+		str_name = "Trading Cards",
+		str_desc = "A pack of trading cards",
+		price = 1000,
+		vendors = [vendor_bazaar],
+	),
+	EwGeneralItem(
+		id_item = "rightleg",
+		context = 'slimexodia',
+		str_name = "The Right Leg of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
+	),
+	EwGeneralItem(
+		id_item = "leftleg",
+		context = 'slimexodia',
+		str_name = "Left Leg of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
+	),
+	EwGeneralItem(
+		id_item = "slimexodia",
+		context = 'slimexodia',
+		str_name = "Slimexodia The Forbidden {}".format(emote_111),
+		str_desc = "The centerpiece of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
+	),
+	EwGeneralItem(
+		id_item = "rightarm",
+		context = 'slimexodia',
+		str_name = "Right Arm of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
+	),
+	EwGeneralItem(
+		id_item = "leftarm",
+		context = 'slimexodia',
+		str_name = "Left Arm of The Forbidden {}".format(emote_111),
+		str_desc = "One of the extremely rare, legendary Forbidden {} cards. Gazing upon the card and its accompanying "
+				   "intense holographic sheen without the proper eyewear can have disastrous consequences. Yet, you do it anyway. "
+				   "It’s just too beautiful not to.".format(emote_111),
+	),
+	EwGeneralItem(
+		id_item = item_id_forbidden111,
+		str_name = "The Forbidden {}".format(emote_111),
+		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
+		acquisition = acquisition_smelting
+	),
+	EwGeneralItem(
+		id_item = item_id_stick,
+		str_name = "stick",
+		str_desc = "It’s just some useless, dumb stick.",
+		acquisition = acquisition_milling,
+		ingredients = item_id_direapples,
+	),
+	EwGeneralItem(
+		id_item = "faggot",
+		str_name = "faggot",
+		str_desc = "Wow, incredible! We’ve evolved from one dumb stick to several, all tied together for the sake of a retarded puesdo-pun! Truly, ENDLESS WAR has reached its peak. It’s all downhill from here, folks.",
+		acquisition = acquisition_smelting
+	),
+	EwGeneralItem(
 		id_item = "seaweed",
 		str_name = "Seaweed",
 		str_desc = "OH GOD IT'S A FUCKING SEAWEED!",
@@ -1455,7 +1529,7 @@ item_list = [
 		acquisition = acquisition_bartering,
 		ingredients = "generic",
 		context = 60,
-	),
+	)
 ]
 
 # A map of id_item to EwGeneralItem objects.
@@ -8187,6 +8261,151 @@ smelting_recipe_list = [
 	),
 ]
 
+# A map of id_cosmetic to EwCosmeticItem objects.
+cosmetic_map = {}
+
+# A list of cosmetic names.
+cosmetic_names = []
+
+smelting_recipe_list = [
+	EwSmeltingRecipe(
+		id_recipe = "cosmetic",
+		str_name = "a cosmetic",
+		alias = [
+			"hat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 2
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_quadruplestuffedcrust,
+		str_name = "a Quadruple Stuffed Crust",
+		alias = [
+			"qsc",
+			"quadruple",
+			"quadruplestuffed",
+		],
+		ingredients = {
+			item_id_doublestuffedcrust : 2
+		},
+		products = [item_id_quadruplestuffedcrust],
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_octuplestuffedcrust,
+		str_name = "an Octuple Stuffed Crust",
+		alias = [
+			"osc",
+			"octuple",
+			"octuplestuffed",
+		],
+		ingredients = {
+			item_id_quadruplestuffedcrust : 2
+		},
+		products = [item_id_octuplestuffedcrust],
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_sexdecuplestuffedcrust,
+		str_name = "a Sexdecuple Stuffed Crust",
+		alias = [
+			"sdsc",
+			"sexdecuple",
+			"sexdecuplestuffed",
+		],
+		ingredients = {
+			item_id_octuplestuffedcrust : 2
+		},
+		products = [item_id_sexdecuplestuffedcrust],
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_duotrigintuplestuffedcrust,
+		str_name = "a Duotrigintuple Stuffed Crust",
+		alias = [
+			"dtsc",
+			"duotrigintuple",
+			"duotrigintuplestuffed",
+		],
+		ingredients = {
+			item_id_sexdecuplestuffedcrust : 2
+		},
+		products = [item_id_duotrigintuplestuffedcrust],
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_quattuorsexagintuplestuffedcrust,
+		str_name = "a Quattuorsexagintuple Stuffed Crust",
+		alias = [
+			"qssc",
+			"quattuorsexagintuple",
+			"quattuorsexagintuplestuffed",
+		],
+		ingredients = {
+			item_id_duotrigintuplestuffedcrust : 2
+		},
+		products = [item_id_quattuorsexagintuplestuffedcrust],
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_forbiddenstuffedcrust,
+		str_name = "a Forbidden Stuffed Crust",
+		alias = [
+			"fsc",
+			"forbiddenstuffedcrust",
+		],
+		ingredients = {
+			item_id_quattuorsexagintuplestuffedcrust : 2,
+			item_id_forbidden111 : 1
+		},
+		products = [item_id_forbiddenstuffedcrust],
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_forbidden111,
+		str_name = "The Forbidden {}".format(emote_111),
+		alias = [
+			"forbiddenone",
+			"forbidden",
+			"sealed",
+			"exodia",
+			"oneoneone",
+			"forbidden111",
+			":111:",
+		],
+		ingredients = {'leftleg' : 1,
+			'rightleg' : 1,
+			'slimexodia' : 1,
+			'rightarm' : 1,
+			'leftarm' : 1
+		},
+		products = [item_id_forbidden111]
+	),
+	EwSmeltingRecipe(
+		id_recipe = "pickaxe",
+		str_name = "a Poudrin Pickaxe",
+		alias = [
+			"pp", # LOL
+			"poudrinpick",
+			"poudrinpickaxe",
+			"pick"
+		],
+		ingredients = {
+			item_id_slimepoudrin : 3,
+			item_id_stick : 2
+		},
+		products = ['pickaxe']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "faggot",
+		str_name = "a Faggot",
+		alias = [
+			"f",
+			"fag",
+		],
+		ingredients = {
+		    item_id_stick : 6
+		},
+		products = ['faggot']
+	),
+]
+
 # A map of id_recipe to EwSmeltingRecipe objects.
 smelting_recipe_map = {}
 
@@ -9392,11 +9611,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_spontaneouscombustion = "spontaneouscombustion"
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother" 
+mutation_id_sharptoother = "sharptoother"
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -9424,7 +9643,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill" 
+mutation_id_dressedtokill = "dressedtokill"
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"
