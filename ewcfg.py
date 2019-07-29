@@ -553,7 +553,6 @@ offline_cmds = [
 	cmd_scout,
 	cmd_scout_alt1
 ]
-		
 
 # Slime costs/values
 slimes_onrevive = 20
@@ -1452,7 +1451,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = "string",
 		str_name = "string",
-		str_desc = "It’s just some ",
+		str_desc = "It’s just some string.",
 		acquisition = acquisition_bartering,
 		ingredients = "generic",
 		context = 60,

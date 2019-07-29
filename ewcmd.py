@@ -15,8 +15,6 @@ from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
 
 """ class to send general data about an interaction to a command """
-
-
 class EwCmd:
     cmd = ""
     tokens = []
@@ -43,10 +41,7 @@ class EwCmd:
             self.tokens_count = len(tokens)
             self.cmd = tokens[0]
 
-
 """ Send an initial message you intend to edit later while processing the command. Returns handle to the message. """
-
-
 async def start(cmd=None, message='...', channel=None, client=None):
     if cmd != None:
         channel = cmd.message.channel
@@ -57,31 +52,23 @@ async def start(cmd=None, message='...', channel=None, client=None):
 
     return None
 
-
 """ pure flavor command, howls """
-
-
 async def cmd_howl(cmd):
     user_data = EwUser(member=cmd.message.author)
     slimeoid = EwSlimeoid(member=cmd.message.author)
     response = ewcfg.howls[random.randrange(len(ewcfg.howls))]
 
     if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-        response += "\n{} howls along with you! {}".format(str(slimeoid.name),
-                                                           ewcfg.howls[random.randrange(len(ewcfg.howls))])
+        response += "\n{} howls along with you! {}".format(str(slimeoid.name), ewcfg.howls[random.randrange(len(ewcfg.howls))])
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
 """ returns true if it's night time and the casino is open, else false. """
-
-
 def is_casino_open(t):
     if t < 18 and t >= 6:
         return False
 
     return True
-
 
 def gen_score_text(
         id_user=None,
@@ -111,10 +98,7 @@ def gen_score_text(
 
     return response
 
-
 """ show player's slime score """
-
-
 async def score(cmd):
     user_data = None
     member = None
@@ -140,7 +124,6 @@ async def score(cmd):
     await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
     if member != None:
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
-
 
 def gen_data_text(
         id_user=None,
@@ -188,10 +171,7 @@ def gen_data_text(
         weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
         if weapon != None:
-            response += " {} {}{}.".format(
-                ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding, (
-                    "" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
-                        weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
+            response += " {} {}{}.".format(ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding, ("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
             if user_data.weaponskill >= 5:
                 response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
 
@@ -225,10 +205,7 @@ def gen_data_text(
 
     return response
 
-
 """ show player information and description """
-
-
 async def data(cmd):
     response = ""
     user_data = None
@@ -267,10 +244,7 @@ async def data(cmd):
         weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
         if weapon != None:
-            response += " {} {}{}.".format(
-                ewcfg.str_weapon_married_self if user_data.weaponmarried == True else ewcfg.str_weapon_wielding_self, (
-                    "" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
-                        weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
+            response += " {} {}{}.".format(ewcfg.str_weapon_married_self if user_data.weaponmarried == True else ewcfg.str_weapon_wielding_self, ("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
             if user_data.weaponskill >= 5:
                 response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4)))
 
@@ -328,13 +302,13 @@ async def data(cmd):
 
         response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
 
+
     # Send the response to the player.
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
     if member != None:
         await ewrolemgr.updateRoles(client=cmd.client, member=member)
-
 
 def weather_txt(id_server):
     response = ""
@@ -371,10 +345,7 @@ def weather_txt(id_server):
     response += "It is currently {}{} in NLACakaNM.{}".format(displaytime, ampm, (' ' + flair))
     return response
 
-
 """ time and weather information """
-
-
 async def weather(cmd):
     response = weather_txt(cmd.message.server.id)
 
@@ -385,86 +356,54 @@ async def weather(cmd):
 """
     Harvest is not and has never been a command.
 """
-
-
 async def harvest(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      '**HARVEST IS NOT A COMMAND YOU FUCKING IDIOT**'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '**HARVEST IS NOT A COMMAND YOU FUCKING IDIOT**'))
 
 """
     Salute the NLACakaNM flag.
 """
-
-
 async def salute(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'https://ew.krakissi.net/img/nlacakanm_flag.gif'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'https://ew.krakissi.net/img/nlacakanm_flag.gif'))
 
 """
     Burn the NLACakaNM flag.
 """
-
-
 async def unsalute(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'https://ew.krakissi.net/img/nlacakanm_flag_burning.gif'))
-
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'https://ew.krakissi.net/img/nlacakanm_flag_burning.gif'))
 """
     Burn the NLACakaNM flag.
 """
-
-
 async def hurl(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel,
-                               ewutils.formatMessage(cmd.message.author, 'https://ew.krakissi.net/img/tfaaap-hurl.gif'))
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'https://ew.krakissi.net/img/tfaaap-hurl.gif'))
 
 
 """
     Rowdys THRASH
 """
-
-
 async def thrash(cmd):
     user_data = EwUser(member=cmd.message.author)
 
-    if (
-            user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_rowdys:
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                          '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_rowdyfucker + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rowdyfucker + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf))
-
+    if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_rowdys:
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_rowdyfucker + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rowdyfucker + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime3 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_slime1 + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf + ewcfg.emote_rf))
 
 """
     Killers DAB
 """
-
-
 async def dab(cmd):
     user_data = EwUser(member=cmd.message.author)
 
-    if (
-            user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                          '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck))
-
+    if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n'  + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller  + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck))
 
 """
     advertise patch notes
 """
-
-
 async def patchnotes(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'Look for the latest patchnotes on the news page: https://ew.krakissi.net/news/'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Look for the latest patchnotes on the news page: https://ew.krakissi.net/news/'))
 
 """
     advertise help services
 """
-
-
 async def help(cmd):
     response = ""
     topic = None
@@ -540,46 +479,28 @@ async def help(cmd):
 """
     Link to the world map.
 """
-
-
 async def map(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'Online world map: https://ew.krakissi.net/map/'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Online world map: https://ew.krakissi.net/map/'))
 
 """
     Link to the RFCK wiki.
 """
-
-
 async def wiki(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'Rowdy Fuckers Cop Killers Wiki: https://rfck.miraheze.org/wiki/Main_Page'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Wiki: https://rfck.miraheze.org/wiki/Main_Page'))
 
 """
     Link to the fan art booru.
 """
-
-
 async def booru(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'Rowdy Fuckers Cop Killers Booru: http://rfck.booru.org/'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Rowdy Fuckers Cop Killers Booru: http://rfck.booru.org/'))
 
 """
     Link to the leaderboards on ew.krakissi.net.
 """
-
-
 async def leaderboard(cmd):
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-                                                                                      'Live leaderboards: https://ew.krakissi.net/stats/'))
-
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Live leaderboards: https://ew.krakissi.net/stats/'))
 
 """ Accept a russian roulette challenge """
-
-
 async def accept(cmd):
     user = EwUser(member=cmd.message.author)
     if (user.rr_challenger != ""):
@@ -588,18 +509,14 @@ async def accept(cmd):
             challenger.rr_challenger = user.id_user
             challenger.persist()
             slimeoid_data = EwSlimeoid(member=cmd.message.author)
-            if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(
-                    slimeoid_data.id_slimeoid):
+            if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
                 response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
             elif cmd.message.channel.name == ewcfg.channel_casino:
                 response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
-            await ewutils.send_message(cmd.client, cmd.message.channel,
-                                       ewutils.formatMessage(cmd.message.author, response))
+            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ Refuse a russian roulette challenge """
-
-
 async def refuse(cmd):
     user = EwUser(member=cmd.message.author)
 
@@ -611,8 +528,7 @@ async def refuse(cmd):
 
         if (user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
             response = "You refuse the challenge, but not before leaving a large puddle of urine beneath you."
-            await ewutils.send_message(cmd.client, cmd.message.channel,
-                                       ewutils.formatMessage(cmd.message.author, response))
+            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
         else:
             challenger.rr_challenger = ""
             challenger.persist()

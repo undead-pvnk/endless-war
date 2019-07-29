@@ -90,7 +90,6 @@ class EwMarket:
 					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server,))
 
 					conn.commit()
-
 			finally:
 				# Clean up the database handles.
 				cursor.close()

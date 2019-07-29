@@ -13,8 +13,6 @@ from ewmarket import EwMarket
 """
     district data model for database persistence
 """
-
-
 class EwDistrict:
     id_server = ""
 
@@ -39,6 +37,7 @@ class EwDistrict:
     # The amount of slime in the district
     slimes = 0
 
+
     def __init__(self, id_server=None, district=None):
         if id_server is not None and district is not None:
             self.id_server = id_server
@@ -54,8 +53,7 @@ class EwDistrict:
             else:
                 self.max_capture_points = 0
 
-            data = ewutils.execute_sql_query(
-                "SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes} FROM districts WHERE id_server = %s AND {district} = %s".format(
+            data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes} FROM districts WHERE id_server = %s AND {district} = %s".format(
                     controlling_faction=ewcfg.col_controlling_faction,
                     capturing_faction=ewcfg.col_capturing_faction,
                     capture_points=ewcfg.col_capture_points,
@@ -83,8 +81,7 @@ class EwDistrict:
                 ))
 
     def persist(self):
-        ewutils.execute_sql_query(
-            "REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+        ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}) VALUES(%s, %s, %s, %s, %s, %s)".format(
                 district=ewcfg.col_district,
                 controlling_faction=ewcfg.col_controlling_faction,
                 capturing_faction=ewcfg.col_capturing_faction,
@@ -157,12 +154,14 @@ class EwDistrict:
 
         return filtered_players
 
+
     def decay_capture_points(self):
         resp_cont_decay = ewutils.EwResponseContainer(client=ewutils.get_client(), id_server=self.id_server)
         if self.capture_points > 0:
 
             neighbors = ewcfg.poi_neighbors[self.name]
             all_neighbors_friendly = self.all_neighbors_friendly()
+
 
             decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
 
@@ -198,6 +197,7 @@ class EwDistrict:
 
         return resp_cont_decay
 
+
     def change_capture_points(self, progress, actor):  # actor can either be a faction or "decay"
         progress_percent_before = int(self.capture_points / self.max_capture_points * 100)
 
@@ -214,8 +214,7 @@ class EwDistrict:
         progress_percent_after = int(self.capture_points / self.max_capture_points * 100)
 
         # display a message if it's reached a certain amount
-        if (progress_percent_after // ewcfg.capture_milestone) != (
-                progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
+        if (progress_percent_after // ewcfg.capture_milestone) != (progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
             if progress > 0:  # if it was a positive change
                 if ewcfg.capture_milestone <= progress_percent_after < ewcfg.capture_milestone * 2:  # if its the first milestone
                     message = "{faction} have started capturing {district}. Current progress: {progress}%".format(
@@ -323,7 +322,6 @@ class EwDistrict:
     """
         Change who controls the district. Can be used to update the channel topic by passing the already controlling faction as an arg.
     """
-
     def change_ownership(self, new_owner, actor, client=None):  # actor can either be a faction, "decay", or "init"
         resp_cont_owner = ewutils.EwResponseContainer(client=ewutils.get_client(), id_server=self.id_server)
 
@@ -347,11 +345,11 @@ class EwDistrict:
 
                 # replace the the string of the previously controlling faction with that of the new one.
                 else:
-                    new_topic = channel.topic.replace(ewcfg.control_topics[self.controlling_faction],
-                                                      ewcfg.control_topics[new_owner])
+                    new_topic = channel.topic.replace(ewcfg.control_topics[self.controlling_faction], ewcfg.control_topics[new_owner])
 
                 if client is None:
                     client = ewutils.get_client()
+
 
                 if client is not None:
                     resp_cont_owner.add_channel_topic(channel=channel_str, topic=new_topic)
@@ -383,17 +381,13 @@ class EwDistrict:
         return resp_cont_owner
 
     """ add or remove slime """
-
     def change_slimes(self, n=0, source=None):
         change = int(n)
         self.slimes += change
 
-
 """
     Informs the player about their current zone's capture progress
 """
-
-
 async def capture_progress(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -403,30 +397,26 @@ async def capture_progress(cmd):
 
     if not user_data.poi in ewcfg.capturable_districts:
         response += "This zone cannot be captured."
-        return await ewutils.send_message(cmd.client, cmd.message.channel,
-                                          ewutils.formatMessage(cmd.message.author, response))
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     district_data = EwDistrict(id_server=user_data.id_server, district=user_data.poi)
+
 
     if district_data.controlling_faction != "":
         response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
     elif district_data.capturing_faction != "":
         response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
     else:
-        response += "Nobody has staked a claim to this district yet. ".format(
-            district_data.controlling_faction.capitalize())
+        response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
-    response += "Current capture progress: {:.3g}%".format(
-        100 * district_data.capture_points / district_data.max_capture_points)
-    return await ewutils.send_message(cmd.client, cmd.message.channel,
-                                      ewutils.formatMessage(cmd.message.author, response))
+    response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 
 """
     Updates/Increments the capture_points values of all districts every time it's called
 """
-
-
 async def capture_tick(id_server):
     # the variables might apparently be accessed before assignment if i didn't declare them here
     cursor = None
@@ -435,6 +425,7 @@ async def capture_tick(id_server):
     resp_cont_capture_tick = ewutils.EwResponseContainer(client=ewutils.get_client(), id_server=id_server)
 
     all_districts = ewcfg.capturable_districts
+
 
     if len(all_districts) > 0:  # if all_districts isn't empty
         server = ewcfg.server_list[id_server]
@@ -445,8 +436,8 @@ async def capture_tick(id_server):
             dist = EwDistrict(id_server=id_server, district=district_name)
             controlling_faction = dist.controlling_faction
 
-            gangsters_in_district = dist.get_players_in_district(min_slimes=ewcfg.min_slime_to_cap,
-                                                                 life_states=[ewcfg.life_state_enlisted])
+            gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
+
 
             slimeoids = ewutils.get_slimeoids_in_poi(poi=district_name, id_server=id_server, sltype=ewcfg.sltype_nega)
 
@@ -480,8 +471,7 @@ async def capture_tick(id_server):
                 # ewutils.logMsg("Online status checked. Time elapsed: %f" % (time.time() - time_old) + " Server: %s" % id_server + " Player: %s" % player_id + " Status: %s" % ("online" if player_online else "offline"))
 
                 if player_online:
-                    if faction_capture not in [None,
-                                               player_faction]:  # if someone of the opposite faction is in the district
+                    if faction_capture not in [None, player_faction]:  # if someone of the opposite faction is in the district
                         faction_capture = 'both'  # standstill, gang violence has to happen
                         capture_speed = 0
                         dc_stat_increase_list.clear()
@@ -494,8 +484,10 @@ async def capture_tick(id_server):
                         if ewcfg.mutation_id_patriot in mutations and dist.controlling_faction == player_faction:
                             player_capture_speed *= 2
 
+
                         capture_speed += player_capture_speed
                         dc_stat_increase_list.append(player_id)
+
 
             if faction_capture not in ['both', None]:  # if only members of one faction is present
                 if district_name in ewcfg.capturable_districts:
@@ -514,6 +506,7 @@ async def capture_tick(id_server):
 
                     capture_speed *= ewcfg.capture_gradient * capture_progress / dist.max_capture_points + ewcfg.baseline_capture_speed
 
+
                     if dist.capture_points < dist.max_capture_points:
                         for stat_recipient in dc_stat_increase_list:
                             ewstats.change_stat(
@@ -524,34 +517,27 @@ async def capture_tick(id_server):
                             )
 
                     if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
-                        responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed,
-                                                               faction_capture)
+                        responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
                         resp_cont_capture_tick.add_response_container(responses)
 
                     elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
-                        responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed,
-                                                               faction_capture)
+                        responses =  dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
                         resp_cont_capture_tick.add_response_container(responses)
 
                         dist.capturing_faction = faction_capture
 
                     # lower the enemy faction's progress to revert it to neutral (or potentially get it onto your side without becoming neutral first)
                     else:  # if the (de-)capturing faction is not in control
-                        responses = dist.change_capture_points(
-                            -(ewcfg.capture_tick_length * capture_speed * ewcfg.decapture_speed_multiplier),
-                            faction_capture)
+                        responses =  dist.change_capture_points(-(ewcfg.capture_tick_length * capture_speed * ewcfg.decapture_speed_multiplier), faction_capture)
                         resp_cont_capture_tick.add_response_container(responses)
 
                     dist.persist()
 
     await resp_cont_capture_tick.post()
 
-
 """
     Coroutine that continually calls capture_tick; is called once per server, and not just once globally
 """
-
-
 async def capture_tick_loop(id_server):
     interval = ewcfg.capture_tick_length
     # causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
@@ -561,12 +547,9 @@ async def capture_tick_loop(id_server):
 
         await asyncio.sleep(interval)
 
-
 """
     Gives both kingpins the appropriate amount of slime for how many districts they own and lowers the capture_points property of each district by a certain amount, turning them neutral after a while
 """
-
-
 async def give_kingpins_slime_and_decay_capture_points(id_server):
     resp_cont_decay_loop = ewutils.EwResponseContainer(client=ewutils.get_client(), id_server=id_server)
 
@@ -580,8 +563,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
                 district = EwDistrict(id_server=id_server, district=id_district)
 
                 # if the kingpin is controlling this district give the kingpin slime based on the district's property class
-                if district.controlling_faction == (
-                ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
+                if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
                     slimegain = ewcfg.district_control_slime_yields[district.property_class]
                     # increase slimeyields by 10 percent per friendly neighbor
                     friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
@@ -590,8 +572,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
             kingpin.change_slimes(n=total_slimegain)
             kingpin.persist()
 
-            ewutils.logMsg(
-                kingpin_role + " just received %d" % total_slimegain + " slime for their captured districts.")
+            ewutils.logMsg(kingpin_role + " just received %d" % total_slimegain + " slime for their captured districts.")
 
     # Decay capture points.
     for id_district in ewcfg.capturable_districts:

@@ -10,7 +10,6 @@ from ewmarket import EwMarket
 from ewfood import EwFood
 from ewitem import EwItem
 
-
 class EwFarm:
     id_server = ""
     id_user = ""
@@ -66,12 +65,9 @@ class EwFarm:
             )
         )
 
-
 """
     Reap planted crops.
 """
-
-
 async def reap(cmd):
     user_data = EwUser(member=cmd.message.author)
     response = ""
@@ -186,14 +182,13 @@ async def reap(cmd):
 
                 farm.time_lastsow = 0  # 0 means no seeds are currently planted
                 farm.persist()
+
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """
     Sow seeds that may eventually be !reaped.
 """
-
-
 async def sow(cmd):
     user_data = EwUser(member=cmd.message.author)
 
@@ -236,13 +231,11 @@ async def sow(cmd):
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
 async def mill(cmd):
     user_data = EwUser(member=cmd.message.author)
     market_data = EwMarket(id_server=user_data.id_server)
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-    item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id,
-                                   id_server=cmd.message.server.id if cmd.message.server is not None else None)
+    item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
     # Checking availability of milling
     if user_data.life_state != ewcfg.life_state_juvenile:
@@ -310,8 +303,7 @@ async def mill(cmd):
                     }
                 ),
 
-            response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You painfully grip the needle-covered crank handle, dripping {} slime into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(
-                ewcfg.slimes_permill, item.str_name)
+            response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You painfully grip the needle-covered crank handle, dripping {} slime into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(ewcfg.slimes_permill, item.str_name)
 
             market_data.donated_slimes += ewcfg.slimes_permill
             market_data.persist()

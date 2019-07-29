@@ -146,6 +146,7 @@ async def order(cmd):
 			value = value.lower()
 
 		# Finds the item if it's an EwGeneralItem.
+
 		item = ewcfg.item_map.get(value)
 		item_type = ewcfg.it_item
 		if item != None:

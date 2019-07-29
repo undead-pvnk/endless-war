@@ -254,7 +254,6 @@ class EwSlimeoid:
 		finally:
 			return resp_cont
 
-
 """ slimeoid model object """
 class EwBody:
 	id_body = ""
