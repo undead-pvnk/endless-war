@@ -273,7 +273,10 @@ cmd_map = {
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
 	ewcfg.cmd_check_farm: ewfarm.check_farm,
-	ewcfg.cmd_irrigate: ewfarm.irrigate,
+	ewcfg.cmd_irrigate: ewfarm.cultivate,
+	ewcfg.cmd_weed: ewfarm.cultivate,
+	ewcfg.cmd_fertilize: ewfarm.cultivate,
+	ewcfg.cmd_pesticide: ewfarm.cultivate,
 	ewcfg.cmd_mill: ewfarm.mill,
 
      #scavenging

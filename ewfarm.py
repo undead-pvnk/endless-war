@@ -408,11 +408,11 @@ async def check_farm(cmd):
 			elif farm.phase == ewcfg.farm_phase_sow:
 				response = "You only just planted the seeds. Check back later."
 			else:
-				if farm.slimes_onreap < 100000:
+				if farm.slimes_onreap < ewcfg.reap_gain:
 					response = "Your crop looks frail and weak."
-				elif farm.slimes_onreap < 160000:
+				elif farm.slimes_onreap < ewcfg.reap_gain + 3 * ewcfg.farm_slimes_peraction:
 					response = "Your crop looks small and generally unremarkable."
-				elif farm.slimes_onreap < 240000:
+				elif farm.slimes_onreap < ewcfg.reap_gain + 6 * ewcfg.farm_slimes_peraction:
 					response = "Your crop seems to be growing well."
 				else:
 					response = "Your crop looks powerful and bursting with nutrients."
@@ -424,7 +424,7 @@ async def check_farm(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-async def irrigate(cmd):
+async def cultivate(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
@@ -450,7 +450,8 @@ async def irrigate(cmd):
 			farm = farm_id
 		)
 
-		farm_action = ewcfg.id_to_farm_action.get(ewcfg.farm_action_water)
+		
+		farm_action = ewcfg.cmd_to_farm_action.get(cmd.tokens[0])
 
 		if farm.time_lastsow == 0:
 			response = "You missed a step, you haven’t planted anything here yet."
