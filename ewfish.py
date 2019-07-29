@@ -741,7 +741,7 @@ async def appraise(cmd):
 			response = "You don't have one."
 
 		else:
-			response = "Ask Captain Albert Alexander tp appraise which fish? (check **!inventory**)"
+			response = "Ask Captain Albert Alexander to appraise which fish? (check **!inventory**)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
