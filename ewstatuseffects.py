@@ -1,12 +1,8 @@
 import time
 import math
-import asyncio
 
 import ewcfg
 import ewutils
-import ewrolemgr
-
-from ewplayer import EwPlayer
 
 class EwStatusEffectDef:
 	id_status = ""

@@ -141,7 +141,7 @@ async def order(cmd):
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	market_data = EwMarket(id_server = cmd.message.server.id)
 
-	if poi != None or len(poi.vendors) == 0:
+	if poi == None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
@@ -309,6 +309,7 @@ async def order(cmd):
 									weapon.stack_size += 1
 									weapon.persist()
 									response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
+									user_data.persist()
 									break
 
 						if has_weapon == False:

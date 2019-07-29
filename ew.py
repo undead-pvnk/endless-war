@@ -28,7 +28,6 @@ class EwUser:
 	weaponskill = 0
 	trauma = ""
 	poi_death = ""
-	ghostbust = False
 	inebriation = 0
 	faction = ""
 	poi = ""
@@ -156,7 +155,6 @@ class EwUser:
 		self.slimelevel = 1
 		self.hunger = 0
 		self.inebriation = 0
-		self.ghostbust = False
 		# Clear weapon and weaponskill.
 		self.weapon = -1
 		self.weaponskill = 0
@@ -244,7 +242,7 @@ class EwUser:
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
-					self.ghostbust = True
+					self.applyStatus(id_status = ewcfg.status_ghostbust_id)
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
 						self.die(cause = ewcfg.cause_busted)
@@ -253,9 +251,6 @@ class EwUser:
 				pass
 
 			response = item_props['str_eat'] + ("\n\nYou're stuffed!" if self.hunger <= 0 else "")
-
-			if resp_status:
-				response += resp_status	
 
 			ewitem.item_delete(food_item.id_item)
 
@@ -355,7 +350,7 @@ class EwUser:
 		if id_status != None:
 			status = None
 
-			status = ewcfg.status_effects_map.get(id_status)
+			status = ewcfg.status_effects_def_map.get(id_status)
 
 			if status != None:
 				statuses = self.getStatusEffects()
@@ -484,7 +479,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -499,7 +494,6 @@ class EwUser:
 					ewcfg.col_time_lastspar,
 					ewcfg.col_time_lasthaunt,
 					ewcfg.col_time_lastinvest,
-					ewcfg.col_ghostbust,
 					ewcfg.col_inebriation,
 					ewcfg.col_faction,
 					ewcfg.col_poi,
@@ -539,24 +533,23 @@ class EwUser:
 					self.time_lastspar = result[11]
 					self.time_lasthaunt = result[12]
 					self.time_lastinvest = result[13]
-					self.ghostbust = (result[14] == 1)
-					self.inebriation = result[15]
-					self.faction = result[16]
-					self.poi = result[17]
-					self.life_state = result[18]
-					self.busted = (result[19] == 1)
-					self.rr_challenger = result[20]
-					self.time_last_action = result[21]
-					self.weaponmarried = (result[22] == 1)
-					self.time_lastscavenge = result[23]
-					self.bleed_storage = result[24]
-					self.time_lastenter = result[25]
-					self.time_lastoffline = result[26]
-					self.time_joined = result[27]
-					self.poi_death = result[28]
-					self.slime_donations = result[29]
-					self.poudrin_donations = result[30]
-					self.arrested = (result[31] == 1)
+					self.inebriation = result[14]
+					self.faction = result[15]
+					self.poi = result[16]
+					self.life_state = result[17]
+					self.busted = (result[18] == 1)
+					self.rr_challenger = result[19]
+					self.time_last_action = result[20]
+					self.weaponmarried = (result[21] == 1)
+					self.time_lastscavenge = result[22]
+					self.bleed_storage = result[23]
+					self.time_lastenter = result[24]
+					self.time_lastoffline = result[25]
+					self.time_joined = result[26]
+					self.poi_death = result[27]
+					self.slime_donations = result[28]
+					self.poudrin_donations = result[29]
+					self.arrested = (result[30] == 1)
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -611,7 +604,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -629,7 +622,6 @@ class EwUser:
 				ewcfg.col_time_lastspar,
 				ewcfg.col_time_lasthaunt,
 				ewcfg.col_time_lastinvest,
-				ewcfg.col_ghostbust,
 				ewcfg.col_inebriation,
 				ewcfg.col_faction,
 				ewcfg.col_poi,
@@ -665,7 +657,6 @@ class EwUser:
 				self.time_lastspar,
 				self.time_lasthaunt,
 				self.time_lastinvest,
-				(1 if self.ghostbust else 0),
 				self.inebriation,
 				self.faction,
 				self.poi,

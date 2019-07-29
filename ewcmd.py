@@ -205,9 +205,9 @@ def gen_data_text(
 		for status in statuses:
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
-				status_flavor = ewcfg.status_effects_map.get(status)
+				status_flavor = ewcfg.status_effects_def_map.get(status)
 				if status_flavor is not None:
-					response += " " + status_flavor.str_describe
+					response_block += status_flavor.str_describe + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
@@ -288,9 +288,6 @@ async def data(cmd):
 				round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
 			)
 
-		if user_data.ghostbust:
-			response_block += "The coleslaw in your stomach enables you to bust ghosts. "
-
 		if user_data.busted and user_data.life_state == ewcfg.life_state_corpse:
 			response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
 
@@ -299,9 +296,9 @@ async def data(cmd):
 		for status in statuses:
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
-				status_flavor = ewcfg.status_effects_map.get(status)
+				status_flavor = ewcfg.status_effects_def_map.get(status)
 				if status_flavor is not None:
-					response += " " + status_flavor.str_describe_self	
+					response_block += status_flavor.str_describe_self + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))

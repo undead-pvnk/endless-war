@@ -259,7 +259,7 @@ def canAttack(cmd):
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
 	elif cmd.mentions_count == 1:
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 
 		# Get target's info.
 		member = cmd.mentions[0]
@@ -451,7 +451,10 @@ async def attack(cmd):
 				weapon_item.item_props['time_lastattack'] = time_now
 				weapon_item.persist()
 
-				if weapon.id_weapon == "garrote":
+				# Spend slimes, to a minimum of zero
+				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
+
+				if weapon.id_weapon == ewcfg.weapon_id_garrote:
 					user_data.persist()
 					shootee_data.persist()
 					response = "You wrap your wire around {}'s neck...".format(member.display_name)
@@ -468,14 +471,12 @@ async def attack(cmd):
 						return
 					# A user left the district or strangling was broken
 					elif msg != None or user_data.poi != shootee_data.poi:
-						# Spend slimes, to a minimum of zero
-						user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 						return
 					else:
 						shootee_data.clear_status(ewcfg.status_strangled_id)
 						#shootee_data.persist()
 					
-				if weapon.id_weapon == "minigun":
+				if weapon.id_weapon == ewcfg.weapon_id_minigun:
 					user_data.persist()
 					shootee_data.persist()
 					response = "You begin revving up your minigun..."
@@ -485,14 +486,12 @@ async def attack(cmd):
 					await asyncio.sleep(5)
 					user_data = EwUser(member = cmd.message.author)
 					shootee_data = EwUser(member = member)
-					
+
 					# One of the players died in the meantime
 					if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
 						return
 					# A user left the district
 					if user_data.poi != shootee_data.poi:
-						# Spend slimes, to a minimum of zero
-						user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 						miss = True
 
 				# Remove a bullet from the weapon
@@ -504,20 +503,28 @@ async def attack(cmd):
 					weapon_item.stack_size -= 1
 
 				if ewcfg.weapon_class_exploding in weapon.classes:
+					user_data.persist()
+					shootee_data.persist()
+
 					if not miss:
 						life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
 						factions = ["", user_data.faction if backfire else shootee_data.faction]
 						# Burn players in district
-						if weapon.id_weapon == "molotov":
+						if weapon.id_weapon == ewcfg.weapon_id_molotov:
 							bystanders = district_data.get_players_in_district(life_states=life_states, factions=factions)
 							for bystander in bystanders:
+								print(bystander)
 								bystander_data = EwUser(id_user = bystander, id_server = user_data.id_server)
-								resp = bystander_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage, source=user_data.id_user).format(name_player = member.display_name)
+								bystander_player_data = EwPlayer(id_user = bystander, id_server = user_data.id_server)
+								resp = bystander_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage, source=user_data.id_user).format(name_player = bystander_player_data.display_name)
 								resp_cont.add_channel_response(cmd.message.channel.name, resp)
 						#Damage players in district
 						else:
-							resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now)
+							resp = await weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now)
 							resp_cont.add_response_container(resp)
+
+					user_data = EwUser(member = cmd.message.author)
+					shootee_data = EwUser(member = member)
 
 			# can't hit lucky lucy
 			if shootee_data.life_state == ewcfg.life_state_lucky:
@@ -565,9 +572,6 @@ async def attack(cmd):
 
 				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
 					slimes_damage *= 1.2
-
-			# Spend slimes, to a minimum of zero
-			user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -726,7 +730,7 @@ async def attack(cmd):
 					if ewcfg.mutation_id_spontaneouscombustion in shootee_mutations:
 						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(member.display_name)
 						resp_cont.add_channel_response(cmd.message.channel.name, explode_resp)
-						explosion = explode(damage = explode_damage, district_data = district_data)
+						explosion = await explode(damage = explode_damage, district_data = district_data)
 						resp_cont.add_response_container(explosion)
 					user_data = EwUser(member = cmd.message.author)
 					shootee_data = EwUser(member = member)
@@ -885,9 +889,12 @@ async def suicide(cmd):
 		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 """ Damage all players in a district """
-def explode(damage = 0, district_data = None):
+async def explode(damage = 0, district_data = None):
 	id_server = district_data.id_server
 	poi = district_data.name
+
+	client = ewutils.get_client()
+	server = client.get_server(id_server)
 
 	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 	response = ""
@@ -920,8 +927,10 @@ def explode(damage = 0, district_data = None):
 				resp_cont.add_channel_response(channel, response)
 
 				if ewcfg.mutation_id_spontaneouscombustion in mutations:
-					sub_explosion = explode(explode_damage, district_data)
+					sub_explosion = await explode(explode_damage, district_data)
 					resp_cont.add_response_container(sub_explosion)
+
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 			else:
 				# survive
 				slime_splatter = 0.5 * slimes_damage
@@ -934,7 +943,7 @@ def explode(damage = 0, district_data = None):
 	return resp_cont
 
 """ Damage all players in a district; Exploding weapon's effect """
-def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0):
+async def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0):
 	if user_data != None and shootee_data != None and district_data != None:
 		user_player = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 		shootee_player = EwPlayer(id_user=shootee_data.id_user, id_server=shootee_data.id_server)
@@ -942,6 +951,9 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
+		client = ewutils.get_client()
+		server = client.get_server(user_data.id_server)
+		
 		channel = ewcfg.id_to_poi.get(user_data.poi).channel
 
 		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
@@ -1032,8 +1044,10 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					if ewcfg.mutation_id_spontaneouscombustion in target_data.get_mutations():
 						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(member.display_name)
 						resp_cont.add_channel_response(channel, explode_resp)
-						explosion = explode(damage = explode_damage, district_data = district_data)
+						explosion = await explode(damage = explode_damage, district_data = district_data)
 						resp_cont.add_response_container(explosion)
+
+					await ewrolemgr.updateRoles(client = client, member = server.get_member(target_data.id_user))
 				#Survived the explosion
 				else:
 					response += "{} was caught in an explosion during your fight with {} and lost {} slime".format(target_player.display_name, shootee_player.display_name, damage)
@@ -1535,7 +1549,7 @@ async def unjam(cmd):
 			if weapon_item.item_props.get("jammed") == "True":
 				weapon_item.item_props["jammed"] = "False"
 				weapon_item.persist()
-				response = weapon.str_unjam
+				response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
 			else:
 				response = "Let’s not get ahead of ourselves, there’s nothing clogging with your {weapon} (yet)!!".format(weapon = weapon.id_weapon)
 		else:
@@ -1547,14 +1561,14 @@ async def unjam(cmd):
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
 def apply_combat_mods(user_data = None, desired_type = None, target = None):
-	if user_data != None and type != None and target != None:
+	if user_data != None and desired_type != None and target != None:
 
 		modifier = 0
 
 		# Get the user's status effects
 		user_statuses = user_data.getStatusEffects()
 		for status in user_statuses:
-			status_flavor = ewcfg.status_effects_map.get(status)
+			status_flavor = ewcfg.status_effects_def_map.get(status)
 
 			if status_flavor is not None:
 				if target == ewcfg.status_effect_target_self:

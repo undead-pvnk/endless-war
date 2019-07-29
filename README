@@ -25,7 +25,6 @@ CREATE TABLE users (
 	totaldamage bigint NOT NULL DEFAULT '0',
 	weaponskill int NOT NULL DEFAULT '0',
 	bounty bigint NOT NULL DEFAULT '0',
-	ghostbust int NOT NULL DEFAULT '0',
 	inebriation int NOT NULL DEFAULT '0',
 	faction varchar(32) NOT NULL default '',
 	poi varchar(64) NOT NULL default 'downtown',

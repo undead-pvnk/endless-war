@@ -388,6 +388,8 @@ async def bleed_tick_loop(id_server):
 async def bleedSlimes(id_server = None):
 	if id_server != None:
 		try:
+			client = get_client()
+			server = client.get_server(id_server)
 			conn_info = databaseConnect()
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
@@ -432,9 +434,9 @@ async def bleedSlimes(id_server = None):
 					district_data.persist()
 					total_bled += slimes_to_bleed
 
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+
 			await resp_cont.post()
-
-
 
 			conn.commit()
 		finally:
@@ -496,7 +498,7 @@ def pushdownServerInebriation(id_server = None):
 	Coroutine that continually calls burnSlimes; is called once per server, and not just once globally
 """
 async def burn_tick_loop(id_server):
-	interval = 1#ewcfg.burn_tick_length
+	interval = ewcfg.burn_tick_length
 	while not TERMINATE:
 		await burnSlimes(id_server = id_server)
 		await asyncio.sleep(interval)
@@ -537,68 +539,49 @@ async def burnSlimes(id_server = None):
 			# Damage stats
 			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
 
-			if user_data.life_state == ewcfg.life_state_corpse:
-				logMsg("ghost burn")
-				if user_data.slimes + slimes_to_burn >= 0:
-					killer = EwPlayer(id_server = id_server, id_user=killer_data.id_user)
+			# Player died
+			if user_data.slimes - slimes_to_burn < 0:	
+				weapon = ewcfg.weapon_map.get(ewcfg.weapon_id_molotov)
 
-					# Kill stats
-					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_ghostbusts)
-					ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_bust_level, value = user_data.slimelevel)
+				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
+				killer = EwPlayer(id_server = id_server, id_user=killer_data.id_user)
 
-					# Player was busted.
-					user_data.die(cause = ewcfg.cause_busted)
-					
-					deathreport = "Your ghost has been busted by {}. {}".format(killer.display_name, ewcfg.emote_bustin)
-					deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(server.get_member(user_data.id_user), deathreport)
-					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+				# Kill stats
+				ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
+				ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
 
-				else:
-					user_data.change_slimes(n = slimes_to_burn, source = ewcfg.source_busting)
-			else:
-				# Player died
-				if user_data.slimes - slimes_to_burn < 0:	
-					weapon = ewcfg.weapon_map.get('molotov')
+				if killer_data.slimelevel > user_data.slimelevel:
+					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
+				elif killer_data.slimelevel < user_data.slimelevel:
+					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
 
-					player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
-					killer = EwPlayer(id_server = id_server, id_user=killer_data.id_user)
-
-					# Kill stats
-					ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
-					ewstats.track_maximum(user = killer_data, metric = ewcfg.stat_biggest_kill, value = int(slimes_dropped))
-
-					if killer_data.slimelevel > user_data.slimelevel:
-						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_ganks)
-					elif killer_data.slimelevel < user_data.slimelevel:
-						ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_lifetime_takedowns)
-
-					# Collect bounty
-					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-					
-					if user_data.slimes >= 0:
-						killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
-
-					# Kill player
-					user_data.id_killer = killer_data.id_user
-					user_data.die(cause = ewcfg.cause_burning)
-					user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+				# Collect bounty
+				coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
 				
-					deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer.display_name, ewcfg.emote_slimeskull)
-					deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(server.get_member(user_data.id_user), deathreport)
-					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+				if user_data.slimes >= 0:
+					killer_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
-					user_data.trauma = weapon.id_weapon
+				# Kill player
+				user_data.id_killer = killer_data.id_user
+				user_data.die(cause = ewcfg.cause_burning)
+				user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+			
+				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer.display_name, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(server.get_member(user_data.id_user), deathreport)
+				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
-					await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
-				else:
-					user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
+				user_data.trauma = weapon.id_weapon
+
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+			else:
+				user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
 				
 			user_data.persist()
 
 		await resp_cont.post()	
 
 async def remove_status_loop(id_server):
-	interval = 5
+	interval = ewcfg.removestatus_tick_length
 	while not TERMINATE:
 		await removeExpiredStatuses(id_server = id_server)
 		await asyncio.sleep(interval)
@@ -622,20 +605,18 @@ async def removeExpiredStatuses(id_server = None):
 			statuses = user_data.getStatusEffects()
 
 			for status in statuses:
-				status_def = ewcfg.status_effects_map.get(status)
+				status_def = ewcfg.status_effects_def_map.get(status)
 				status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 	
 				if status_def.time_expire > 0:
 					if status_effect.time_expire < time_now:
 						user_data.clear_status(id_status=status)
-						logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
 
 				# Status that expire under special conditions
 				else:
 					if status == ewcfg.status_stunned_id:
 						if int(status_effect.value) < time_now:
 							user_data.clear_status(id_status=status)
-							logMsg("Cleared status {} for user {}".format(status, user_data.id_user))
 
 			await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 

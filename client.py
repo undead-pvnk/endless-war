@@ -47,6 +47,7 @@ import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
+from ewplayer import EwPlayer
 from ewmarket import EwMarket
 from ewmarket import EwStock
 from ewdistrict import EwDistrict
@@ -836,10 +837,9 @@ async def on_message(message):
 
 		if ewcfg.status_strangled_id in statuses:
 			strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=user_data)
-			source = message.server.get_member(strangle_effect.source)
+			source = EwPlayer(id_user=strangle_effect.source, id_server=message.server.id)
 			response = "You manage to break {}'s garrote wire!".format(source.display_name)
 			user_data.clear_status(ewcfg.status_strangled_id)			
-			ewutils.logMsg("cleared strangled status for user {}".format(user_data.id_user))
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:

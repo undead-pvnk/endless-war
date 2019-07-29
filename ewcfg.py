@@ -652,6 +652,12 @@ bleed_half_life = 60 * 5 #five minutes
 # how often to bleed
 bleed_tick_length = 10
 
+# how often to burn
+burn_tick_length = 1
+
+# how often to check for statuses to be removed
+removestatus_tick_length = 5
+
 # Unearthed Item rarity (for enlisted players)
 unearthed_item_rarity = 1500
 
@@ -660,9 +666,6 @@ scavenge_item_rarity = 1000
 
 # Lifetimes
 invuln_onrevive = 0
-
-# Weapon fee
-weapon_fee = 100
 
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
@@ -1208,6 +1211,26 @@ item_id_blacklimes = "blacklimes"
 item_id_phosphorpoppies = "phosphorpoppies"
 item_id_direapples = "direapples"
 
+#weapon ids
+weapon_id_revolver = 'revolver'
+weapon_id_dualpistols = 'dualpistols'
+weapon_id_shotgun = 'shotgun'
+weapon_id_rifle = 'rifle'
+weapon_id_smg = 'smg'
+weapon_id_minigun = 'minigun'
+weapon_id_bat = 'bat'
+weapon_id_brassknuckles = 'brassknuckles'
+weapon_id_katana = 'katana'
+weapon_id_broadsword = 'broadsword'
+weapon_id_nunchucks = 'nun-chucks'
+weapon_id_scythe = 'scythe'
+weapon_id_yoyo = 'yo-yo'
+weapon_id_knives = 'knives'
+weapon_id_molotov = 'molotov'
+weapon_id_grenades = 'grenades'
+weapon_id_garrote = 'garrote'
+weapon_id_pickaxe = 'pickaxe'
+
 # List of normal items.
 item_list = [
 	EwGeneralItem(
@@ -1516,7 +1539,7 @@ def wef_smg(ctn = None):
 	else:
 		for count in range(6):
 			aim = (random.randrange(100) + 1)
-			if aim <= (25 + int(100 * ctn.miss_mod)):
+			if aim > (25 + int(100 * ctn.miss_mod)):
 				ctn.strikes += 1
 
 				if aim >= (95 - int(100 * ctn.crit_mod)):
@@ -1917,7 +1940,7 @@ weapon_class_jammable = "jammable"
 # All weapons in the game.
 weapon_list = [
 	EwWeapon( # 1
-		id_weapon = "revolver",
+		id_weapon = weapon_id_revolver,
         alias = [
             "pistol",
             "handgun",
@@ -1945,7 +1968,7 @@ weapon_list = [
 		stat = stat_revolver_kills
 	),
 	EwWeapon( # 2
-		id_weapon = "dualpistols",
+		id_weapon = weapon_id_dualpistols,
         alias = [
             "dual",
             "pistols",
@@ -1974,7 +1997,7 @@ weapon_list = [
 		stat = stat_dual_pistols_kills
 	),
 	EwWeapon( # 3
-		id_weapon = "shotgun",
+		id_weapon = weapon_id_shotgun,
         alias = [
             "boomstick",
             "remington",
@@ -2003,7 +2026,7 @@ weapon_list = [
 		stat = stat_shotgun_kills
 	),	
 	EwWeapon( # 4
-		id_weapon = "rifle",
+		id_weapon = weapon_id_rifle,
 		alias = [
 			"assaultrifle",
 			"machinegun",
@@ -2032,7 +2055,7 @@ weapon_list = [
 		stat = stat_rifle_kills
 	),
 	EwWeapon( # 5
-		id_weapon = "smg",
+		id_weapon = weapon_id_smg,
         alias = [
             "submachinegun",
             "machinegun"
@@ -2062,7 +2085,7 @@ weapon_list = [
 		stat = stat_smg_kills
 	),	
 		EwWeapon( # 6
-		id_weapon = "minigun",
+		id_weapon = weapon_id_minigun,
         alias = [
             "mini",
             "gatlinggun"
@@ -2089,7 +2112,7 @@ weapon_list = [
 		stat = stat_minigun_kills
 	),	
 	EwWeapon( # 7
-		id_weapon = "bat",
+		id_weapon = weapon_id_bat,
 		alias = [
 			"club",
 			"batwithnails",
@@ -2115,7 +2138,7 @@ weapon_list = [
 		stat = stat_bat_kills
 	),	
 	EwWeapon( # 8
-		id_weapon = "brassknuckles",
+		id_weapon = weapon_id_brassknuckles,
 		alias = [
 			"knuckles",
 			"knuckledusters",
@@ -2140,7 +2163,7 @@ weapon_list = [
 		stat = stat_brassknuckles_kills
 	),
 	EwWeapon( # 9
-		id_weapon = "katana",
+		id_weapon = weapon_id_katana,
 		alias = [
 			"weebsword",
 			"ninjasword",
@@ -2166,7 +2189,7 @@ weapon_list = [
 		stat = stat_katana_kills
 	),
 	EwWeapon( # 10
-        id_weapon = "broadsword",
+        id_weapon = weapon_id_broadsword,
         alias = [
             "sword",
             "highlander",
@@ -2197,7 +2220,7 @@ weapon_list = [
 		stat = stat_broadsword_kills
 	),
 	EwWeapon( # 11
-		id_weapon = "nun-chucks",
+		id_weapon = weapon_id_nunchucks,
 		alias = [
 			"nanchacku",
 			"nunchaku",
@@ -2224,7 +2247,7 @@ weapon_list = [
 		stat = stat_nunchucks_kills
 	),
 	EwWeapon( # 12
-		id_weapon = "scythe",
+		id_weapon = weapon_id_scythe,
 		alias = [
 			"sickle"
 		],
@@ -2247,7 +2270,7 @@ weapon_list = [
 		stat = stat_scythe_kills
 	),
 	EwWeapon( # 13	
-		id_weapon = "yo-yo",
+		id_weapon = weapon_id_yoyo,
 		alias = [
 			"yo-yos",
 			"yoyo",
@@ -2272,7 +2295,7 @@ weapon_list = [
 		stat = stat_yoyo_kills
 	),
 	EwWeapon( # 14
-		id_weapon = "knives",
+		id_weapon = weapon_id_knives,
 		alias = [
 			"knife",
 			"dagger",
@@ -2294,13 +2317,13 @@ weapon_list = [
 		str_duel = "**TING! TING!!** {name_player} and {name_target} take turns hitting one another's knives out of the air.",
 		str_description = "They're throwing knives",		
 		fn_effect = wef_knives,
-		price = 1000,
+		price = 500,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown],
 		stat = stat_knives_kills
 	),
 	EwWeapon( # 15
-		id_weapon = "molotov",
+		id_weapon = weapon_id_molotov,
 		alias = [
 			"firebomb",
 			"molotovcocktail",
@@ -2322,13 +2345,13 @@ weapon_list = [
 		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
 		str_description = "They're molotov bottles",
 		fn_effect = wef_molotov,
-		price = 1000,
+		price = 500,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_molotov_kills
 	),
 	EwWeapon( # 16
-		id_weapon = "grenades",
+		id_weapon = weapon_id_grenades,
         alias = [
             "nades",
 			"grenade"
@@ -2347,13 +2370,13 @@ weapon_list = [
         str_duel = "**KA-BOOM!!** {name_player} and {name_target} pull the pin out of their grenades and hold it in their hands to get a feel for how long it takes for them to explode. They lose a few body parts in the process.",
 		str_description = "A stack of grenades.",
 		fn_effect = wef_grenade,
-		price = 1000,
+		price = 500,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_thrown, weapon_class_exploding],
 		stat = stat_grenade_kills
 	),
 	EwWeapon( # 17
-		id_weapon = "garrote",
+		id_weapon = weapon_id_garrote,
 		alias = [
 			"wire",
 			"garrotewire",
@@ -2378,7 +2401,7 @@ weapon_list = [
 		stat = stat_garrote_kills
 	),
 	EwWeapon(  # 18
-		id_weapon = "pickaxe",
+		id_weapon = weapon_id_pickaxe,
 		alias = [
 			"pick",
 			"poudrinpickaxe",
@@ -8951,7 +8974,7 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_ghostbust_id,
 		time_expire = 86400,
-		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts'
+		str_describe_self = 'The coleslaw in your stomach allows you to bust ghosts.'
 	),
 	EwStatusEffectDef(
 		id_status = status_strangled_id,
@@ -8960,14 +8983,14 @@ status_effect_list = [
 	),
 	EwStatusEffectDef(
 		id_status = status_stunned_id,
-		str_describe = 'They are stunned'
+		str_describe = 'They are stunned.'
 	)
 ]
 
-status_effects_map = {}
+status_effects_def_map = {}
 
 for status in status_effect_list:
-	status_effects_map[status.id_status] = status
+	status_effects_def_map[status.id_status] = status
 
 stackable_status_effects = [
 	status_burning_id
