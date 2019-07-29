@@ -49,6 +49,8 @@ class EwUser:
     time_lastoffline = 0
     time_joined = 0
 
+    move_speed = 1 # not a database column
+
     """ fix data in this object if it's out of acceptable ranges """
     def limit_fix(self):
         if self.hunger > self.get_hunger_max():
@@ -62,6 +64,9 @@ class EwUser:
 
         if self.time_last_action <= 0:
             self.time_last_action = int(time.time())
+
+        if self.move_speed <= 0:
+            self.move_speed = 1
 
     """ gain or lose slime, recording statistics and potentially leveling up. """
     def change_slimes(self, n=0, source=None):
@@ -516,6 +521,7 @@ class EwUser:
                 else:
                     self.weaponskill = 0
 
+                self.move_speed = ewutils.get_move_speed(self)
                 self.limit_fix();
             finally:
                 # Clean up the database handles.
