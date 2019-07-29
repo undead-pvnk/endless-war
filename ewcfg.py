@@ -1664,8 +1664,8 @@ def wef_scythe(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "pickaxe"
-def wef_pickaxe(ctn = None):
+# weapon effect function for all weapons which double as tools.
+def wef_tool(ctn = None):
 	ctn.slimes_damage *= 0.2
 
 	aim = (random.randrange(10) + 1)
