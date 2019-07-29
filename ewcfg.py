@@ -1929,7 +1929,7 @@ weapon_list = [
 		str_killdescriptor = "!mined",
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
-		fn_effect = wef_pickaxe,
+		fn_effect = wef_tool,
 		str_description = "It's a pickaxe",
 		acquisition = acquisition_smelting
 	),
