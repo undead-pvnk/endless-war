@@ -553,7 +553,7 @@ offline_cmds = [
 	cmd_scout,
 	cmd_scout_alt1
 ]
-
+		
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20

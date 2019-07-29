@@ -433,7 +433,7 @@ async def cast(cmd):
 
 			while True:
 				damp = random.randrange(fun)
-				timer = 59
+				timer = 0
 				while timer <= 60:
 					await asyncio.sleep(1)
 					if user_data.poi != fisher.pier:

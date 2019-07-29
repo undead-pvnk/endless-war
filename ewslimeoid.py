@@ -2850,14 +2850,14 @@ async def dress_slimeoid(cmd):
 						response += "take off your {} and give it to {}.".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
 					else:
 						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
-
+					
 					cosmetic.item_props['slimeoid'] = 'true'
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'
-
+					
 			cosmetic.persist()
 		else:
 			response = 'Adorn which cosmetic? Check your **!inventory**.'
-
-
+		
+	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

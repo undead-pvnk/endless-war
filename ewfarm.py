@@ -115,7 +115,7 @@ async def reap(cmd):
 					unearthed_item_amount = 0
 
 					unearthed_item_chance = 500 / ewcfg.unearthed_item_rarity  # 1 in 3 chance
-
+					
 					if ewcfg.mutation_id_lucky in mutations:
 						unearthed_item_chance *= 1.33
 
