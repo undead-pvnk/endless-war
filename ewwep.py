@@ -16,7 +16,7 @@ from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
-from ewfish import fishers
+from ewfishy import fishers
 
 """ A weapon object which adds flavor text to kill/shoot. """
 
