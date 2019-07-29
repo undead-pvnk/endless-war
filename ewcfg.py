@@ -908,6 +908,8 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
+
+#Database columns for bartering
 col_offer_give = 'offer_give'
 col_offer_receive = 'offer_receive'
 col_time_sinceoffer = 'time_sinceoffer'
