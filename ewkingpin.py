@@ -28,6 +28,7 @@ async def pardon(cmd):
 		else:
 			member_data = EwUser(member = member)
 			member_data.unban(faction = user_data.faction)
+			member_data.arrested = False
 
 			if member_data.faction == "":
 				response = "{} has been allowed to join the {} again.".format(member.display_name, user_data.faction)
@@ -38,9 +39,9 @@ async def pardon(cmd):
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 
-				member_data.persist()
 				response = "{} has been released from his association with the {}.".format(member.display_name, faction_old)
-				await ewrolemgr.updateRoles(client = cmd.client, member = member)
+			member_data.persist()
+			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
