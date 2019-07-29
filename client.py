@@ -42,7 +42,7 @@ import ewmutation
 import ewquadrants
 import ewtransport
 import ewdebug
-import ewfishy
+import ewfish
 
 from ewitem import EwItem
 from ew import EwUser
@@ -264,8 +264,8 @@ cmd_map = {
     ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
     # fishing
-    ewcfg.cmd_cast: ewfishy.cast,
-    ewcfg.cmd_reel: ewfishy.reel,
+    ewcfg.cmd_cast: ewfish.cast,
+    ewcfg.cmd_reel: ewfish.reel,
 
     # cosmetics
     ewcfg.cmd_smelt: ewcosmeticitem.smelt,
