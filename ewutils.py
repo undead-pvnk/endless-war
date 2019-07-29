@@ -22,8 +22,6 @@ from ewmarket import EwMarket
 
 TERMINATE = False
 
-TERMINATE = False
-
 db_pool = {}
 db_pool_id = 0
 

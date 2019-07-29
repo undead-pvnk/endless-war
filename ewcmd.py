@@ -139,8 +139,6 @@ def gen_data_text(
 
 	mutations = user_data.get_mutations()
 
-	mutations = user_data.get_mutations()
-
 	cosmetics = ewitem.inventory(
 		id_user = user_data.id_user,
 		id_server = user_data.id_server,
