@@ -11,6 +11,7 @@ from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+from ewfarm import EwFarmAction
 import ewdebug
 
 # Global configuration options.
@@ -448,6 +449,8 @@ cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
+cmd_check_farm = cmd_prefix + 'checkfarm'
+cmd_irrigate = cmd_prefix + 'irrigate'
 cmd_mill = cmd_prefix + 'mill'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
@@ -658,7 +661,36 @@ weapon_fee = 100
 
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
-reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
+reap_gain = 100000
+farm_slimes_peraction = 20000
+time_nextphase = 20 * 60 # 20 minutes
+farm_tick_length = 60 # 1 minute
+
+farm_phase_sow = 0
+farm_phase_reap = 11
+
+farm_action_none = 0
+farm_action_water = 1
+farm_action_fertilize = 2
+farm_action_weed = 3
+farm_action_pesticide = 4
+
+farm_actions = [
+	EwFarmAction(
+		id_action = farm_action_water,
+		str_check = "Your crop is dry and weak. It needs some water.",
+		str_execute = "You pour water on your parched crop.",
+		str_execute_fail = "You pour gallons of water on the already saturated soil, nearly drowning your crop.",
+	),
+]
+
+id_to_farm_action = {}
+farm_action_ids = []
+
+for farm_action in farm_actions:
+	id_to_farm_action[farm_action.id_action] = farm_action
+	farm_action_ids.append(farm_action.id_action)
+	
 
 # Cooldowns
 cd_kill = 5
@@ -870,8 +902,6 @@ col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
 col_rrchallenger = 'rr_challenger_id'
-col_time_lastsow = 'time_lastsow'
-col_farm = 'farm'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -955,6 +985,14 @@ col_mutation_counter = 'mutation_counter'
 col_transport_type = 'transport_type'
 col_current_line = 'current_line'
 col_current_stop = 'current_stop'
+
+# Database columns for farms
+col_farm = 'farm'
+col_time_lastsow = 'time_lastsow'
+col_phase = 'phase'
+col_time_lastphase = 'time_lastphase'
+col_slimes_onreap = 'slimes_onreap'
+col_action_required = 'action_required'
 
 # Database columns for troll romance
 col_quadrant = 'quadrant'
