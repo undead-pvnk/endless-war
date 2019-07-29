@@ -4377,6 +4377,25 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+fish_rarity_common = "common"
+fish_rarity_uncommon = "uncommon"
+fish_rarity_rare = "rare"
+fish_rarity_promo = "promo"
+
+fish_catchtime_rain = "rain"
+fish_catchtime_night = "night"
+fish_catchtime_day = "day"
+
+fish_slime_freshwater = "freshwater"
+fish_slime_saltwater = "saltwater"
+
+fish_size_miniscule = "miniscule"
+fish_size_small = "small"
+fish_size_average = "average"
+fish_size_big = "big"
+fish_size_huge = "huge"
+fish_size_colossal = "colossal"
+
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**5 6 7 0 9**',

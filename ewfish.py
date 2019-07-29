@@ -175,21 +175,21 @@ def gen_fish(x, cmd, has_fishingrod):
 
 		elif rarity_number >= 21 and rarity_number < 31:  # 10%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "common":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 31 and rarity_number < 71:  # 40%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "uncommon":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 71 and rarity_number < 91:  # 20%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "rare":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
 					fish_pool.append(fish)
 		else:  # 10%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "promo":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 					fish_pool.append(fish)
 
 	else:
@@ -199,21 +199,21 @@ def gen_fish(x, cmd, has_fishingrod):
 
 		elif rarity_number >= 11 and rarity_number < 61: # 50%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "common":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_common:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 61 and rarity_number < 91: # 30%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "uncommon":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_uncommon:
 					fish_pool.append(fish)
 
 		elif rarity_number >= 91 and rarity_number < 100: # 9%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "rare":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_rare:
 					fish_pool.append(fish)
 		else: # 1%
 			for fish in ewcfg.fish_names:
-				if ewcfg.fish_map[fish].rarity == "promo":
+				if ewcfg.fish_map[fish].rarity == ewcfg.fish_rarity_promo:
 					fish_pool.append(fish)
 
 	market_data = x #todo ?
@@ -221,16 +221,16 @@ def gen_fish(x, cmd, has_fishingrod):
 
 	if weather_data.name != "rainy":
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time == "rain":
+			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_rain:
 				fish_pool.remove(fish)
 
 	if market_data.clock < 20 or market_data.clock > 5:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time == "night":
+			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_night:
 				fish_pool.remove(fish)
 	elif market_data.clock < 8 or market_data.clock > 17:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].catch_time == "day":
+			if ewcfg.fish_map[fish].catch_time == ewcfg.fish_catchtime_day:
 				fish_pool.remove(fish)
 	else:
 		for fish in fish_pool:
@@ -239,12 +239,12 @@ def gen_fish(x, cmd, has_fishingrod):
 
 	if cmd.message.channel.name in ["slimes-end-pier", "ferry"]:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].slime == "freshwater":
+			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
 				fish_pool.remove(fish)
 
 	elif cmd.message.channel.name in ["jaywalker-plain-pier", "little-chernobyl-pier"]:
 		for fish in fish_pool:
-			if ewcfg.fish_map[fish].slime == "saltwater":
+			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_saltwater:
 				fish_pool.remove(fish)
 
 	fish = random.choice(fish_pool)
@@ -257,31 +257,31 @@ def gen_fish_size(has_fishingrod):
 
 	if has_fishingrod == True:
 		if size_number >= 0 and size_number < 6:  # 5%
-			size = "miniscule"
+			size = ewcfg.fish_size_miniscule
 		elif size_number >= 6 and size_number < 11:  # 5%
-			size = "small"
+			size = ewcfg.fish_size_small
 		elif size_number >= 11 and size_number < 31:  # 20%
-			size = "average"
+			size = ewcfg.fish_size_average
 		elif size_number >= 31 and size_number < 71:  # 40%
-			size = "big"
+			size = ewcfg.fish_size_big
 		elif size_number >= 71 and size_number < 91:  # 20
-			size = "huge"
+			size = ewcfg.fish_size_huge
 		else:  # 10%
-			size = "colossal"
+			size = ewcfg.fish_size_colossal
 
 	else:
 		if size_number >= 0 and size_number < 6:  # 5%
-			size = "miniscule"
+			size = ewcfg.fish_size_miniscule
 		elif size_number >= 6 and size_number < 21:  # 15%
-			size = "small"
+			size = ewcfg.fish_size_small
 		elif size_number >= 21 and size_number < 71:  # 50%
-			size = "average"
+			size = ewcfg.fish_size_average
 		elif size_number >= 71 and size_number < 86:  # 15%
-			size = "big"
+			size = ewcfg.fish_size_big
 		elif size_number >= 86 and size_number < 100:  # 4
-			size = "huge"
+			size = ewcfg.fish_size_huge
 		else:  # 1%
-			size = "colossal"
+			size = ewcfg.fish_size_colossal
 
 	return size
 
@@ -290,15 +290,15 @@ def gen_bite_text(size):
 	if size == "item":
 		text = "You feel a distinctly inanimate tug at your fishing pole!"
 
-	elif size == "miniscule":
+	elif size == ewcfg.fish_size_miniscule:
 		text = "You feel a wimpy tug at your fishing pole!"
-	elif size == "small":
+	elif size == ewcfg.fish_size_small:
 		text = "You feel a mediocre tug at your fishing pole!"
-	elif size == "average":
+	elif size == ewcfg.fish_size_average:
 		text = "You feel a modest tug at your fishing pole!"
-	elif size == "big":
+	elif size == ewcfg.fish_size_big:
 		text = "You feel a mildly threatening tug at your fishing pole!"
-	elif size == "huge":
+	elif size == ewcfg.fish_size_huge:
 		text = "You feel a startlingly strong tug at your fishing pole!"
 	else:
 		text = "You feel a tug at your fishing pole so intense that you nearly get swept off your feet!"
@@ -383,15 +383,15 @@ async def cast(cmd):
 							fisher.current_fish = "marlinsupreme"
 
 					elif item in ["blacklimes", "blacklimesour"]:
-						if random.randrange(1) == 1:
+						if random.randrange(2) == 1:
 							fisher.current_fish = "blacklimesalmon"
 
 					elif item in ["pinkrowddishes", "pinkrowdatouille"]:
-						if random.randrange(1) == 1:
+						if random.randrange(2) == 1:
 							fisher.current_fish = "thrash"
 
 					elif item in ["purplekilliflowercrustpizza", "purplekilliflower"]:
-						if random.randrange(1) == 1:
+						if random.randrange(2) == 1:
 							fisher.current_fish = "dab"
 
 					elif item == "kingpincrab":
@@ -399,7 +399,7 @@ async def cast(cmd):
 							fisher.current_fish = "kingpincrab"
 
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
-						if random.randrange(1) == 1:
+						if random.randrange(2) == 1:
 							fisher.current_fish = "plebefish"
 					ewitem.item_delete(item_sought.get('id_item'))
 
@@ -420,20 +420,29 @@ async def cast(cmd):
 			else:
 				response += "glowing Slime Lake."
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 			user_data.hunger += ewcfg.hunger_perfish * ewutils.hunger_cost_mod(user_data.slimelevel)
 			user_data.persist()
+			
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 			bite_text = gen_bite_text(fisher.current_size)
-			fun = 99
+			
+			# User has a 1/10 chance to get a bite
+			fun = 100
 
 			if fisher.bait == True:
-				fun = 69
+				# Bait attatched, user has a 1/7 chance to get a bite
+				fun = 70
 			bun = 0
 
 			while True:
-				damp = random.randrange(fun)
-				timer = 0
+				
+				if fun <= 0:
+					fun = 1
+				else:
+					damp = random.randrange(fun)
+					
+				timer = 59
 				while timer <= 60:
 					await asyncio.sleep(1)
 					if user_data.poi != fisher.pier:
@@ -445,7 +454,7 @@ async def cast(cmd):
 					if fisher.fishing == False:
 						return
 					timer += 1
-				if damp != 1 and damp != 2 and damp != 3 and damp != 4 and damp != 5 and damp != 6 and damp != 7 and damp != 8 and damp != 9 and damp != 10:
+				if damp > 10:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(nobite_text)))
 					fun -= 2
 					bun += 1
@@ -543,24 +552,24 @@ async def reel(cmd):
 
 				value = 0
 
-				if fisher.current_size == "miniscule":
+				if fisher.current_size == ewcfg.fish_size_miniscule:
 					slime_gain = ewcfg.fish_gain * 1
 					value += 10
 
-				elif fisher.current_size == "small":
+				elif fisher.current_size == ewcfg.fish_size_small:
 					slime_gain = ewcfg.fish_gain * 2
 
 					value += 20
 
-				elif fisher.current_size == "average":
+				elif fisher.current_size == ewcfg.fish_size_average:
 					slime_gain = ewcfg.fish_gain * 3
 					value += 30
 
-				elif fisher.current_size == "big":
+				elif fisher.current_size == ewcfg.fish_size_big:
 					slime_gain = ewcfg.fish_gain * 4
 					value += 40
 
-				elif fisher.current_size == "huge":
+				elif fisher.current_size == ewcfg.fish_size_huge:
 					slime_gain = ewcfg.fish_gain * 5
 					value += 50
 
@@ -568,25 +577,25 @@ async def reel(cmd):
 					slime_gain = ewcfg.fish_gain * 6
 					value += 60
 
-				if ewcfg.fish_map[fisher.current_fish].rarity == "common":
+				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_common:
 					value += 10
 
-				if ewcfg.fish_map[fisher.current_fish].rarity == "uncommon":
+				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_uncommon:
 					value += 20
 
-				if ewcfg.fish_map[fisher.current_fish].rarity == "rare":
+				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_rare:
 					value += 30
 
-				if ewcfg.fish_map[fisher.current_fish].rarity == "promo":
+				if ewcfg.fish_map[fisher.current_fish].rarity == ewcfg.fish_rarity_promo:
 					value += 40
 
 				if user_data.life_state == 2:
-					if ewcfg.fish_map[fisher.current_fish].catch_time == "day" and user_data.faction == ewcfg.faction_rowdys:
+					if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_day and user_data.faction == ewcfg.faction_rowdys:
 						gang_bonus = True
 						slime_gain = slime_gain * 1.5
 						value += 20
 
-					if ewcfg.fish_map[fisher.current_fish].catch_time == "night" and user_data.faction == ewcfg.faction_killers:
+					if ewcfg.fish_map[fisher.current_fish].catch_time == ewcfg.fish_catchtime_night and user_data.faction == ewcfg.faction_killers:
 						gang_bonus = True
 						slime_gain = slime_gain * 1.5
 						value += 20
@@ -683,34 +692,34 @@ async def appraise(cmd):
 
 				response += 'and offer him a Manhattan Project as payment. \n"Hm, alright, let’s see here...'
 
-				if rarity == "common":
+				if rarity == ewcfg.fish_rarity_common:
 					response += "Ah, a {}, that’s a pretty common fish... ".format(name)
 
-				if rarity == "uncommon":
+				if rarity == ewcfg.fish_rarity_uncommon:
 					response += "Interesting, a {}, that’s a pretty uncommon fish you’ve got there... ".format(name)
 
-				if rarity == "rare":
+				if rarity == ewcfg.fish_rarity_rare:
 					response += "Amazing, it’s a {}! Consider yourself lucky, that’s a pretty rare fish! ".format(name)
 
-				if rarity == "promo":
+				if rarity == ewcfg.fish_rarity_promo:
 					response += "Shiver me timbers, is that a {}?? Unbelievable, that’s an extremely rare fish!! It was only ever released as a promotional item in Japan during the late ‘90s. ".format(name)
 
-				if size == "miniscule":
+				if size == ewcfg.fish_size_miniscule:
 					response += "Or, is it just a speck of dust? Seriously, that {} is downright miniscule! "
 
-				if size == "small":
+				if size == ewcfg.fish_size_small:
 					response += "Hmmm, it’s a little small, don’t you think? "
 
-				if size == "average":
+				if size == ewcfg.fish_size_average:
 					response += "It’s an average size for the species. "
 
-				if size == "big":
+				if size == ewcfg.fish_size_big:
 					response += "Whoa, that’s a big one, too! "
 
-				if size == "huge":
+				if size == ewcfg.fish_size_huge:
 					response += "Look at the size of that thing, it’s huge! "
 
-				if size == "colossal":
+				if size == ewcfg.fish_size_colossal:
 					response += "By Neptune’s beard, what a sight to behold, this {name} is absolutely colossal!! In all my years in the Navy, I don’t think I’ve ever seen a {name} as big as yours!! ".format(name = name)
 
 				response += "So, I’d say this fish "
@@ -766,13 +775,13 @@ async def barter(cmd):
 		name = item_sought.get('name')
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		id_fish = fish.item_props.get('id_food')
-		str_fish = fish.item_props.get('str_name')
+		# str_fish = fish.item_props.get('str_name')
 		item_props = fish.item_props
 		acquisition = item_props['acquisition']
-		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You submit your {} for bartering. ".format(str_fish)
+		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You submit your {} for bartering".format(name)
 
 		if acquisition != ewcfg.acquisition_fishing:
-			response += '. \n"Have you lost yer mind, laddy? That’s not a fish!! Just what’re you trying to pull??"'.format(str_fish)
+			response += '. \n"Have you lost yer mind, laddy? That’s not a fish!! Just what’re you trying to pull??"'
 
 		else:
 			value = int(item_props['value'])
@@ -838,15 +847,16 @@ async def barter(cmd):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				else:
-					offer_decision = random.randint(0, 3)
+					# Random choice between 0, 1, and 2
+					offer_decision = random.randint(0, 2)
 
-					if offer_decision != 3: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
+					if offer_decision != 2: # If Captain Albert Alexander wants to offer you slime for your fish. 66% chance.
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
 						slime_gain = random.randint(min_value, max_value)
 
-						offer.offer_receive = slime_gain,
+						offer.offer_receive = slime_gain
 
 						response = '"Hm, alright… for this {}... I’ll offer you {} slime! Trust me, you’re not going to get a better deal anywhere else, laddy."'.format(name, slime_gain)
 
@@ -889,14 +899,6 @@ async def barter(cmd):
 				if accepted == True:
 					offer_receive = str(offer.offer_receive)
 
-					# For some reason, offer.offer_receive is brought here as a tuple on the first barter if it's an integer.
-					# If it's a tuple, remove the tuple parts of it so it can be read as an integer.
-					# print(offer.offer_receive)
-
-					offer_receive = offer_receive.replace("(", "")
-					offer_receive = offer_receive.replace(")", "")
-					offer_receive = offer_receive.replace(",", "")
-
 					response = ""
 
 					if offer_receive.isdigit() == True:
@@ -922,7 +924,7 @@ async def barter(cmd):
 								id_server = cmd.message.server.id,
 								item_props = {
 									'id_item': item.id_item,
-									'context': fish.item_props.get('size'),
+									'context': item.context,
 									'item_name': item.str_name,
 									'item_desc': item.str_desc,
 									'ingredients': item.ingredients,
