@@ -15,7 +15,7 @@ from ewfish import EwFish
 import ewdebug
 
 # Global configuration options.
-version = "v3.5b - Fishing"
+version = "v3.5c"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
