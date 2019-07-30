@@ -258,7 +258,7 @@ CREATE TABLE bazaar_wares (
 CREATE TABLE offers (
 	id_server varchar(128) NOT NULL,
 	id_user varchar(128) NOT NULL,
-	offer_give varchar(32) NOT NULL,
+	offer_give int NOT NULL,
 	offer_receive varchar(32) NOT NULL DEFAULT '',
 	time_sinceoffer int NOT NULL DEFAULT '0',
 

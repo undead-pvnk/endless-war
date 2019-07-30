@@ -682,6 +682,7 @@ reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficie
 
 # fishing
 fish_gain = 10000 # multiplied by fish size class
+fish_offer_timeout = 1440 # in minutes; 24 hours
 
 # Cooldowns
 cd_kill = 5
