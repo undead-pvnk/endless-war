@@ -547,7 +547,7 @@ def path_to(
 		return pois_adjacent
 
 def landmark_heuristic(path, coord_end):
-	if len(landmarks) < 2 or coord_end is None:
+	if len(landmarks) < 1 or coord_end is None:
 		return 0
 	else:
 		last_step = path.steps[-1]

@@ -7207,8 +7207,7 @@ for poi in poi_list:
 landmark_pois = [
 	poi_id_countryclub,
 	poi_id_charcoalpark,
-	poi_id_beachresort,
-	poi_id_diner
+	poi_id_slimesend_pier,
 ]
 
 # maps districts to their immediate neighbors

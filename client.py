@@ -458,14 +458,17 @@ async def on_ready():
 		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
+
 	for id_poi in ewcfg.landmark_pois:
+		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
 		poi = ewcfg.id_to_poi.get(id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
 			coord_start = poi.coord,
 			user_data = fake_observer
 		)
 
-		#ewutils.logMsg(ewmap.landmarks[id_poi])
+	ewutils.logMsg("finished landmark precomputation")
+
 	try:
 		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:
