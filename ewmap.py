@@ -477,7 +477,7 @@ def path_to(
 
 
 	path_id = 0
-	heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, coord_end), 0, path_base))
+	heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, coord_end) / user_data.move_speed, 0, path_base))
 	path_id += 1
 
 	count_iter = 0
@@ -531,7 +531,7 @@ def path_to(
 
 				branch = path_branch(path_base, neigh, user_data, coord_end)
 				if branch != None:
-					heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, coord_end), path_id, branch))
+					heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, coord_end) / user_data.move_speed, path_id, branch))
 					path_id += 1
 
 
