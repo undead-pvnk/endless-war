@@ -902,9 +902,9 @@ async def barter(cmd):
 					message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = check)
 
 					if message != None:
-						if message.content == "!accept":
+						if message.content.lower() == "!accept":
 							accepted = True
-						if message.content == "!refuse":
+						if message.content.lower() == "!refuse":
 							accepted = False
 				except:
 					accepted = False
