@@ -700,7 +700,7 @@ def explode(damage = 0, district_data = None):
 	response = ""
 	channel = ewcfg.id_to_poi.get(poi).channel
 
-	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
 	users = district_data.get_players_in_district(life_states = life_states)
 
 	for user in users:

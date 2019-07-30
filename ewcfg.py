@@ -11,10 +11,11 @@ from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+from ewfish import EwFish
 import ewdebug
 
 # Global configuration options.
-version = "v3.5b"
+version = "v3.5c"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -164,6 +165,12 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+poi_id_toxington_pier = "toxingtonpier"
+poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
+poi_id_crookline_pier = "crooklinepier"
+poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
+poi_id_vagrantscorner_pier = "vagrantscornerpier"
+poi_id_slimesend_pier = "slimesendpier"
 
 # Transport types
 transport_type_ferry = "ferry"
@@ -270,6 +277,12 @@ channel_countryclub = "the-country-club"
 channel_rowdyroughhouse = "rowdy-roughhouse"
 channel_copkilltown = "cop-killtown"
 channel_slimesea = "slime-sea"
+channel_tt_pier = "toxington-pier"
+channel_jp_pier = "jaywalker-plain-pier"
+channel_cl_pier = "crookline-pier"
+channel_afb_pier = "assault-flats-beach-pier"
+channel_vc_pier = "vagrants-corner-pier"
+channel_se_pier = "slimes-end-pier"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -449,6 +462,10 @@ cmd_refuse = cmd_prefix + 'refuse'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_mill = cmd_prefix + 'mill'
+cmd_cast = cmd_prefix + 'cast'
+cmd_reel = cmd_prefix + 'reel'
+cmd_appraise = cmd_prefix + 'appraise'
+cmd_barter = cmd_prefix + 'barter'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
@@ -558,6 +575,7 @@ hunger_perspar = 30
 hunger_perfarm = 50
 hunger_permine = 1
 hunger_perminereset = 10
+hunger_perfish = 35
 hunger_perscavenge = 2
 hunger_pertick = 3
 
@@ -575,6 +593,8 @@ acquisition_smelting = "smelting"
 acquisition_milling = "milling"
 acquisition_mining = "mining"
 acquisition_dojo = "dojo"
+acquisition_fishing = "fishing"
+acquisition_bartering = "bartering"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -662,6 +682,10 @@ weapon_fee = 100
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
+
+# fishing
+fish_gain = 10000 # multiplied by fish size class
+fish_offer_timeout = 1440 # in minutes; 24 hours
 
 # Cooldowns
 cd_kill = 5
@@ -819,6 +843,7 @@ str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
+str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
 
 generic_role_name = 'NLACakaNM'
 
@@ -899,6 +924,11 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
+
+#Database columns for bartering
+col_offer_give = 'offer_give'
+col_offer_receive = 'offer_receive'
+col_time_sinceoffer = 'time_sinceoffer'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -1116,6 +1146,8 @@ source_ghostification = 9
 source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
+source_fishing = 13
+
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1409,6 +1441,38 @@ item_list = [
 		str_desc = "Wow, incredible! We’ve evolved from one dumb stick to several, all tied together for the sake of a retarded puesdo-pun! Truly, ENDLESS WAR has reached its peak. It’s all downhill from here, folks.",
 		acquisition = acquisition_smelting
 	),
+	EwGeneralItem(
+		id_item = "seaweed",
+		str_name = "Seaweed",
+		str_desc = "OH GOD IT'S A FUCKING SEAWEED!",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "oldboot",
+		str_name = "Old Boot",
+		str_desc = "OH GOD IT'S A FUCKING OLD BOOT!",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "tincan",
+		str_name = "Tin Can",
+		str_desc = "OH GOD IT'S A FUCKING TIN CAN!",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "string",
+		str_name = "string",
+		str_desc = "It’s just some string.",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 60,
+	),
 ]
 
 # A map of id_item to EwGeneralItem objects.
@@ -1618,8 +1682,8 @@ def wef_scythe(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "pickaxe"
-def wef_pickaxe(ctn = None):
+# weapon effect function for all weapons which double as tools.
+def wef_tool(ctn = None):
 	ctn.slimes_damage *= 0.2
 
 	aim = (random.randrange(10) + 1)
@@ -1883,8 +1947,34 @@ weapon_list = [
 		str_killdescriptor = "!mined",
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
-		fn_effect = wef_pickaxe,
+		fn_effect = wef_tool,
 		str_description = "It's a pickaxe",
+		acquisition = acquisition_smelting
+	),
+	EwWeapon(  # 12
+		id_weapon = "fishingrod",
+		alias = [
+			"fish",
+			"fishing",
+			"rod",
+			"super",
+			"superrod",
+			"superfishingrod"
+		],
+		str_crit = "**Critical hit!!** By sheer dumb luck, {name_player} manages to get a good hit off on {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} is too weak to cast their fishing rod!",
+		str_equip = "You equip the super fishing rod.",
+		str_weapon = "a super fishing rod",
+		str_weaponmaster_self = "You are a rank {rank} coward of the super fishing rod.",
+		str_weaponmaster = "They are a rank {rank} coward of the super fishing rod.",
+		str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
+		str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
+		str_kill = "*whsssh* {name_player} summons what little courage they possess to reel in {name_target} and wring all the slime out of them. How embarrassing! {emote_skull}",
+		str_killdescriptor = "!reeled",
+		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
+		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together,discussing fishing strategy and preferred types of bait.",
+		fn_effect = wef_tool,
+		str_description = "It's a super fishing rod",
 		acquisition = acquisition_smelting
 	)
 ]
@@ -3626,6 +3716,703 @@ vendor_stock_map = {
 	vendor_tacobell : stock_tacobell
 	}
 
+# All the fish, baby!
+fish_list  =  [
+	EwFish(
+		id_fish = "neoneel",
+		str_name = "Neon Eel",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its slippery body is bathed in a bright green glow.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "fantaray",
+		str_name = "Fanta Ray",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Wait a minute, wasn't this the thing that killed that famous guy? Better be careful!",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "thalamuscaranx",
+		str_name = "Thalamus Caranx",
+		rarity = "uncommon",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "Finally, a worthy fish emerges.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "fuckshark",
+		str_name = "Fuck Shark",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You recall reading that this thing has the same nutritional value as SUPER WATER FUCK ENERGY.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "sourfish",
+		str_name = "Sourfish",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It gives you an oddly cynical gaze."
+	),
+	EwFish(
+		id_fish = "snakeheadtrout",
+		str_name = "Snakehead Trout",
+		rarity = "common",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "It has the body of a trout and the head of a snake. Heavy fuckin' metal.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "gar",
+		str_name = "Gar",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You have the strange urge to wrestle this fish into submission. You almost resist it."
+	),
+	EwFish(
+		id_fish = "clownfish",
+		str_name = "Clownfish",
+		rarity = "rare",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "Its face kinda looks like a clown if you squint.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "seasaint",
+		str_name = "Seasaint",
+		rarity = "rare",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "It has a beanie on.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "holykrakerel",
+		str_name = "Holy Krakerel",
+		rarity = "uncommon",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "It looks bovine-adjacent."
+	),
+	EwFish(
+		id_fish = "seajuggalo",
+		str_name = "Sea Juggalo",
+		rarity = "uncommon",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "This motherfucker definitely has some sick fuckin' musical taste."
+	),
+	EwFish(
+		id_fish = "plebefish",
+		str_name = "Plebefish",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "God. This fucking retard. It just doesn't fucking GET it."
+	),
+	EwFish(
+		id_fish = "bufferfish",
+		str_name = "Bufferfish",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish has the ability to lag out predators in order to get away."
+	),
+	EwFish(
+		id_fish = "slimesquid",
+		str_name = "Slime Squid",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just a green squid.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "jellyturkeyfish",
+		str_name = "Jelly Turkeyfish",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You nearly prick your finger on one of the many of the venomous spines on its back.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "iridescentsnapper",
+		str_name = "Iridescent Snapper",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its scales change color if you shake it. Fun.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "barredkatanajaw",
+		str_name = "Barred Katanajaw",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its stripes make it look vaguely Japanese.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "doublestuffedflounder",
+		str_name = "Double-Stuffed Flounder",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "No one out-Flounders this fish."
+	),
+	EwFish(
+		id_fish = "seacolonel",
+		str_name = "Sea Colonel",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish definitely looks like its dropped out of high school."
+	),
+	EwFish(
+		id_fish = "marlinsupreme",
+		str_name = "Marlin Supreme",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Live mas."
+	),
+	EwFish(
+		id_fish = "relicanth",
+		str_name = "Relicanth",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = "rain",
+		str_desc = "It doesn't have teeth.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "stunfisk",
+		str_name = "rare",
+		rarity = "Stunfisk",
+		catch_time = None,
+		catch_weather = "rain",
+		str_desc = "Its hide is so tough it can be stepped on by Connor without being injured.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "bathyphysaheadshark",
+		str_name = "Bathyphysahead Shark",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This one looks fucking terrifying. I'm serious, search for 'bathyphysa' on Google.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "anglershark",
+		str_name = "Angler Shark",
+		rarity = "rare",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "It has a little poudrin on its head.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "bigtopoctopus",
+		str_name = "Big Top Octopus",
+		rarity = "rare",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "It kinda looks like a circus tent."
+	),
+	EwFish(
+		id_fish = "souroctopus",
+		str_name = "Sour Octopus",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It would rather be in a jar.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "octohuss",
+		str_name = "Octohuss",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Don't let it near a horse. Or a drawing tablet.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "jarocephalopod",
+		str_name = "Jar O' Cephalopod",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It looks content in there."
+	),
+	EwFish(
+		id_fish = "dab",
+		str_name = "Dab",
+		rarity = "common",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "Pretty Killercore.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "thrash",
+		str_name = "Thrash",
+		rarity = "common",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "Pretty Rowdycore.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "arsonfish",
+		str_name = "Arsonfish",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its scales are so hot, you continuously toss the fish upwards to avoid getting burned."
+	),
+	EwFish(
+		id_fish = "cruna",
+		str_name = "Cruna",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just a green tuna fish."
+
+	),
+	EwFish(
+		id_fish = "modelopole",
+		str_name = "Modelopole",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "UH-OH, IT'S MODELOPOLE TIME!",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "universefrog",
+		str_name = "Universe Frog",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's a huge fuckin' color-changing frog."
+	),
+	EwFish(
+		id_fish = "galaxyfrog",
+		str_name = "Galaxy Frog",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's a big fuckin' color-changing frog."
+	),
+	EwFish(
+		id_fish = "solarfrog",
+		str_name = "Solar Frog",
+		rarity = "rare",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "Don't stare at it!"
+	),
+	EwFish(
+		id_fish = "lunarfrog",
+		str_name = "Lunar Frog",
+		rarity = "rare",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "It's said to control the waves of the Slime Sea."
+	),
+	EwFish(
+		id_fish = "killifish",
+		str_name = "Killifish",
+		rarity = "common",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "Apparently there are 1270 different species of Killifish."
+	),
+	EwFish(
+		id_fish = "lee",
+		str_name = "Lee",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Oh shit, it's Lee!"
+	),
+	EwFish(
+		id_fish = "palemunch",
+		str_name = "Pale Munch",
+		rarity = "common",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "This fish looks like it needs some sleep."
+	),
+	EwFish(
+		id_fish = "moldfish",
+		str_name = "Moldfish",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's said to have the memory capacity of 16 GB."
+	),
+	EwFish(
+		id_fish = "neonjuvie",
+		str_name = "Neon Juvie",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Pretty Juviecore."
+	),
+	EwFish(
+		id_fish = "greengill",
+		str_name = "Greengill",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its gills are green."
+	),
+	EwFish(
+		id_fish = "corpsecarp",
+		str_name = "Corpse Carp",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It smells like a rotting fish.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "slimewatergoby",
+		str_name = "Slimewater Goby",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This little fucko hates fun.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "nibblefish",
+		str_name = "Nibblefish",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It looks hungry."
+	),
+	EwFish(
+		id_fish = "piranhoid",
+		str_name = "Piranhoid",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish is said to occasionally jump out of the water and bite unsuspecting slimeoids."
+	),
+	EwFish(
+		id_fish = "torrentfish",
+		str_name = "Torrentfish",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish looks like it doesn't pay for ANY of its anime."
+	),
+	EwFish(
+		id_fish = "barbeln8",
+		str_name = "Barbel N8",
+		rarity = "common",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "It looks like it could run a shady corporation."
+	),
+	EwFish(
+		id_fish = "mace",
+		str_name = "Mace",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "These fish are called Mud Carps in Nu Hong Kong.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "blacklimesalmon",
+		str_name = "Black Lime Salmon",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Kinda smells like Black Limes."
+	),
+	EwFish(
+		id_fish = "char",
+		str_name = "Char",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "These fish migrated south after the North Pole was nuked."
+	),
+	EwFish(
+		id_fish = "arijuana",
+		str_name = "Arijuana",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "These fish are banned from the USA."
+	),
+	EwFish(
+		id_fish = "thebassedgod",
+		str_name = "The Bassed God",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This is The Bassed God. He's gonna fuck your bitch.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "flarp",
+		str_name = "Flarp",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's a carp thats really flexible."
+	),
+	EwFish(
+		id_fish = "clouttrout",
+		str_name = "Clout Trout",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish has the eyes of a winner."
+	),
+	EwFish(
+		id_fish = "slimekoi",
+		str_name = "Slimekoi",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Slimekoi is a level 3 slimeboi."
+	),
+	EwFish(
+		id_fish = "deadkoi",
+		str_name = "Deadkoi",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Deadkoi is a level 3 deadboi."
+	),
+	EwFish(
+		id_fish = "magicksdorado",
+		str_name = "magicksDorado",
+		rarity = "uncommon",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "No relation."
+	),
+	EwFish(
+		id_fish = "straubling",
+		str_name = "Straubling",
+		rarity = "uncommon",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "No relation."
+	),
+	EwFish(
+		id_fish = "croach",
+		str_name = "Croach",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's very uncommon in North America.",
+		slime = "freshwater"
+	),
+	EwFish(
+		id_fish = "slimesmelt",
+		str_name = "Slime Smelt",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It could sure use a bath."
+	),
+	EwFish(
+		id_fish = "neomilwaukianmittencrab",
+		str_name = "Neo-Milwaukian Mitten Crab",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Known for their furry claws, Mitten Crabs were considered an invasive species, but eventually people stopped caring about that because they had bigger fish to fry (metaphorically, of course)."
+	),
+	EwFish(
+		id_fish = "yellowslash",
+		str_name = "Yellow Slash",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish is the successor to Classic Milwaukee's Yellow Perch."
+	),
+	EwFish(
+		id_fish = "sweetfish",
+		str_name = "Sweet Fish",
+		rarity = "rare",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "Also known as Gillanaks."
+	),
+	EwFish(
+		id_fish = "hardboiledturtle",
+		str_name = "Hard Boiled Turtle",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This radical dude doesn't take shit from anyone."
+	),
+	EwFish(
+		id_fish = "oozesalmon",
+		str_name = "Ooze Salmon",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You wonder how good it would taste on a bagel."
+	),
+	EwFish(
+		id_fish = "toxicpike",
+		str_name = "Toxic Pike",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Don't let it bite you."
+	),
+	EwFish(
+		id_fish = "uncookedkingpincrab",
+		str_name = "Kingpin Crab",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It reminds you of your last meal at Red Mobster.",
+		slime = "saltwater"
+	),
+	EwFish(
+		id_fish = "regiarapaima",
+		str_name = "Regiarapaima",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Regigas sends its regards."
+	),
+	EwFish(
+		id_fish = "kinkfish",
+		str_name = "Kinkfish",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish looks like it's down to get wacky."
+	),
+	EwFish(
+		id_fish = "nuclearbream",
+		str_name = "Nuclear Bream",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Not to be confused with BREEAM, although this fish looks like its in the mood for assessing shit."
+	),
+	EwFish(
+		id_fish = "killercod",
+		str_name = "Killer Cod",
+		rarity = "common",
+		catch_time = "night",
+		catch_weather = None,
+		str_desc = "Quite Killercore."
+	),
+	EwFish(
+		id_fish = "pinksnapper",
+		str_name = "Pink Snapper",
+		rarity = "common",
+		catch_time = "day",
+		catch_weather = None,
+		str_desc = "Quite Rowdycore."
+	),
+	EwFish(
+		id_fish = "angerfish",
+		str_name = "Angerfish",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It doesn't look very happy to be here."
+	),
+	EwFish(
+		id_fish = "flopfish",
+		str_name = "Flop Fish",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's floppin'."
+	),
+	EwFish(
+		id_fish = "cardboardcrab",
+		str_name = "Cardboard Crab",
+		rarity = "uncommon",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It originated when Shigeru Miyamoto decided to splice crab DNA with a Nintendo Labo Piano."
+	),
+	EwFish(
+		id_fish = "easysardines",
+		str_name = "Easy Sardines",
+		rarity = "rare",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "In terms of difficulty, this little bitch looks real low on the rungs."
+	),
+	EwFish(
+		id_fish = "largebonedlionfish",
+		str_name = "Large-Boned Lionfish",
+		rarity = "common",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's not fat."
+	),
+	EwFish(
+		id_fish = "paradoxcrocodile",
+		str_name = "Paradox Crocodile",
+		rarity = "promo",
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It has no arms and a blue bandana.",
+		slime = "freshwater"
+	)
+]
+
+# A map of id_fish to EwFish objects.
+fish_map = {}
+
+# A list of fish names.
+fish_names = []
+
+fish_rarity_common = "common"
+fish_rarity_uncommon = "uncommon"
+fish_rarity_rare = "rare"
+fish_rarity_promo = "promo"
+
+fish_catchtime_rain = "rain"
+fish_catchtime_night = "night"
+fish_catchtime_day = "day"
+
+fish_slime_freshwater = "freshwater"
+fish_slime_saltwater = "saltwater"
+
+fish_size_miniscule = "miniscule"
+fish_size_small = "small"
+fish_size_average = "average"
+fish_size_big = "big"
+fish_size_huge = "huge"
+fish_size_colossal = "colossal"
+
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**5 6 7 0 9**',
@@ -3754,7 +4541,7 @@ poi_list = [
 		str_enter = "arrive at",
 		str_name = "ENDLESS WAR",
 		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
-		coord = (27, 16),
+		coord = (57, 40),
 		channel = channel_endlesswar,
 		role = "Endless War"
 	),
@@ -3768,7 +4555,7 @@ poi_list = [
 		str_in = "in the lobby of",
 		str_name = "SlimeCorp HQ",
 		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
-		coord = (27, 18),
+		coord = (61, 40),
 		channel = channel_slimecorphq,
 		role = "SlimeCorp HQ",
 		pvp = False,
@@ -3783,14 +4570,32 @@ poi_list = [
 		],
 		str_name = "Downtown NLACakaNM",
 		str_desc = "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren’t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
-		coord = (23, 16),
+		coord = (59, 40),
 		coord_alias = [
-			(24, 16),
-			(25, 16),
-			(25, 17),
-			(25, 18),
-			(23, 17),
-			(23, 18)
+			(59, 36),
+			(59, 37),
+			(59, 43),
+			(59, 44),
+			(55, 38),
+			(56, 38),
+			(57, 38),
+			(58, 38),
+			(59, 38),
+			(60, 38),
+			(61, 38),
+			(62, 38),
+			(63, 38),
+			(59, 39),
+			(59, 41),
+			(55, 42),
+			(56, 42),
+			(57, 42),
+			(58, 42),
+			(59, 42),
+			(60, 42),
+			(61, 42),
+			(62, 42),
+			(63, 42)
 		],
 		channel = "downtown",
 		role = "Downtown",
@@ -3806,10 +4611,28 @@ poi_list = [
 		],
 		str_name = "Smogsburg",
 		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
-		coord = (23, 11),
+		coord = (59, 28),
 		coord_alias = [
-			(24, 11),
-			(25, 11)
+			(55, 26),
+			(56, 26),
+			(57, 26),
+			(58, 26),
+			(59, 26),
+			(60, 26),
+			(61, 26),
+			(62, 26),
+			(63, 26),
+			(59, 27),
+			(59, 29),
+			(55, 30),
+			(56, 30),
+			(57, 30),
+			(58, 30),
+			(59, 30),
+			(60, 30),
+			(61, 30),
+			(62, 30),
+			(63, 30)
 		],
 		channel = "smogsburg",
 		role = "Smogsburg",
@@ -3832,7 +4655,29 @@ poi_list = [
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Edifices of various sinister architectural styles rise above the pavement. Gothic cathedrals, Victorian buildings, and New England brownstone apartments all dyed cool, dark colors. This district even hosts a miniature Japantown, featuring stores and restaurants that clutter your vision with densely packed fluorescent signage and other visual noise. Often cloaked in shadow from the height of these imposing buildings, the narrow, cobblestone streets of this district are perfect to brood and foster your angst in.\nCop Killtown is the gang base of the hardboiled, and calculating Killers. St. Ben’s Cathedral looms menacing on the horizon.\nhttps://discord.gg/xSQQD2M\n\nThis area contains the Cop Killtown Subway Station. To the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the Northwest is Gatlingsdale.",
-		coord = (17, 13),
+		coord = (44, 32),
+		coord_alias = [
+			(40, 30),
+			(41, 30),
+			(42, 30),
+			(43, 30),
+			(44, 30),
+			(45, 30),
+			(46, 30),
+			(47, 30),
+			(48, 30),
+			(44, 31),
+			(44, 33),
+			(40, 34),
+			(41, 34),
+			(42, 34),
+			(43, 34),
+			(44, 34),
+			(45, 34),
+			(46, 34),
+			(47, 34),
+			(48, 34)
+		],
 		channel = channel_copkilltown,
 		role = "Cop Killtown",
 		factions = [
@@ -3849,10 +4694,28 @@ poi_list = [
 		],
 		str_name = "Krak Bay",
 		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
-		coord = (16, 19),
+		coord = (43, 44),
 		coord_alias = [
-			(17, 19),
-			(18, 19)
+			(39, 42),
+			(40, 42),
+			(41, 42),
+			(42, 42),
+			(43, 42),
+			(44, 42),
+			(45, 42),
+			(46, 42),
+			(47, 42),
+			(43, 43),
+			(43, 45),
+			(39, 46),
+			(40, 46),
+			(41, 46),
+			(42, 46),
+			(43, 46),
+			(44, 46),
+			(45, 46),
+			(46, 46),
+			(47, 46)
 		],
 		channel = "krak-bay",
 		role = "Krak Bay",
@@ -3867,7 +4730,29 @@ poi_list = [
 		],
 		str_name = "Poudrin Alley",
 		str_desc = "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren’t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay.",
-		coord = (19, 23),
+		coord = (50, 54),
+		coord_alias = [
+			(48, 50),
+			(48, 51),
+			(48, 52),
+			(48, 53),
+			(48, 54),
+			(48, 55),
+			(48, 56),
+			(48, 57),
+			(48, 58),
+			(49, 54),
+			(51, 54),
+			(52, 50),
+			(52, 51),
+			(52, 52),
+			(52, 53),
+			(52, 54),
+			(52, 55),
+			(52, 56),
+			(52, 57),
+			(52, 58)
+		],
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
@@ -3886,10 +4771,28 @@ poi_list = [
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Cheap townhouses and abandoned warehouses host graffiti art on basically every surface. An almost completely overrun slum, many of the deteriorated buildings have been painted a bright pink by the gangsters that seized them. Overpopulated and underhoused, the majority of the residents have constructed shanty houses for themselves and gather around trash can bonfires. Loud music blasts from bass-heavy speakers all hours of the night, fueling the seemingly constant parties this district is known for.\nRowdy Roughhouse is the gang base of the hot blooded, and reckless Rowdys. In the heart of the district stands the Rowdy Roughhouse, for which the district is named. Yes, it’s confusing, we know.\nhttps://discord.gg/D6jwpU3\n\nThis area contains the Rowdy Roughhouse Subway Station. To the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
-		coord = (25, 21),
+		coord = (62, 51),
 		coord_alias = [
-			(26, 21),
-			(27, 21)
+			(58, 49),
+			(59, 49),
+			(60, 49),
+			(61, 49),
+			(62, 49),
+			(63, 49),
+			(64, 49),
+			(65, 49),
+			(66, 49),
+			(62, 50),
+			(62, 52),
+			(58, 53),
+			(59, 53),
+			(60, 53),
+			(61, 53),
+			(62, 53),
+			(63, 53),
+			(64, 53),
+			(65, 53),
+			(66, 53)
 		],
 		channel = channel_rowdyroughhouse,
 		role = "Rowdy Roughhouse",
@@ -3907,10 +4810,28 @@ poi_list = [
 		],
 		str_name = "Green Light District",
 		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
-		coord = (28, 13),
+		coord = (73, 33),
 		coord_alias = [
-			(29, 13),
-			(30, 13)
+			(71, 29),
+			(71, 30),
+			(71, 31),
+			(71, 32),
+			(71, 33),
+			(71, 34),
+			(71, 35),
+			(71, 36),
+			(71, 37),
+			(72, 33),
+			(74, 33),
+			(75, 29),
+			(75, 30),
+			(75, 31),
+			(75, 32),
+			(75, 33),
+			(75, 34),
+			(75, 35),
+			(75, 36),
+			(75, 37)
 		],
 		channel = "green-light-district",
 		role = "Green Light District",
@@ -3924,7 +4845,29 @@ poi_list = [
 		],
 		str_name = "Old New Yonkers",
 		str_desc = "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district’s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee’s and fucking IHOP.\n\nTo the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
-		coord = (32, 9),
+		coord = (80, 21),
+		coord_alias = [
+			(76, 19),
+			(77, 19),
+			(78, 19),
+			(79, 19),
+			(80, 19),
+			(81, 19),
+			(82, 19),
+			(83, 19),
+			(84, 19),
+			(80, 20),
+			(80, 22),
+			(76, 23),
+			(77, 23),
+			(78, 23),
+			(79, 23),
+			(80, 23),
+			(81, 23),
+			(82, 23),
+			(83, 23),
+			(84, 23)
+		],
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
@@ -3940,7 +4883,29 @@ poi_list = [
 		],
 		str_name = "Little Chernobyl",
 		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nTo the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
-		coord = (25, 7),
+		coord = (67, 18),
+		coord_alias = [
+			(63, 16),
+			(64, 16),
+			(65, 16),
+			(66, 16),
+			(67, 16),
+			(68, 16),
+			(69, 16),
+			(70, 16),
+			(71, 16),
+			(67, 17),
+			(67, 19),
+			(63, 20),
+			(64, 20),
+			(65, 20),
+			(66, 20),
+			(67, 20),
+			(68, 20),
+			(69, 20),
+			(70, 20),
+			(71, 20)
+		],
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
@@ -3953,11 +4918,29 @@ poi_list = [
 			"ab"
 		],
 		str_name = "Arsonbrook",
-		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights.",
-		coord = (21, 3),
+		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
+		coord = (56, 10),
 		coord_alias = [
-			(22, 3),
-			(23, 3)
+			(54, 6),
+			(54, 7),
+			(54, 8),
+			(54, 9),
+			(54, 10),
+			(54, 11),
+			(54, 12),
+			(54, 13),
+			(54, 14),
+			(55, 10),
+			(57, 10),
+			(58, 6),
+			(58, 7),
+			(58, 8),
+			(58, 9),
+			(58, 10),
+			(58, 11),
+			(58, 12),
+			(58, 13),
+			(58, 14)
 		],
 		channel = "arsonbrook",
 		role = "Arsonbrook",
@@ -3972,12 +4955,29 @@ poi_list = [
 			"ah"
 		],
 		str_name = "Astatine Heights",
-		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington.",
-		coord = (17, 6),
+		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts.",
+		coord = (46, 16),
 		coord_alias = [
-			(17, 5),
-			(17, 4),
-			(17, 3)
+			(42, 14),
+			(43, 14),
+			(44, 14),
+			(45, 14),
+			(46, 14),
+			(47, 14),
+			(48, 14),
+			(49, 14),
+			(50, 14),
+			(46, 15),
+			(46, 17),
+			(42, 18),
+			(43, 18),
+			(44, 18),
+			(45, 18),
+			(46, 18),
+			(47, 18),
+			(48, 18),
+			(49, 18),
+			(50, 18)
 		],
 		channel = "astatine-heights",
 		role = "Astatine Heights",
@@ -3993,10 +4993,28 @@ poi_list = [
 		],
 		str_name = "Gatlingsdale",
 		str_desc = "Hundreds of small “nerdy” retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington.",
-		coord = (13, 9),
+		coord = (36, 21),
 		coord_alias = [
-			(13, 10),
-			(13, 11)
+			(32, 19),
+			(33, 19),
+			(34, 19),
+			(35, 19),
+			(36, 19),
+			(37, 19),
+			(38, 19),
+			(39, 19),
+			(40, 19),
+			(36, 20),
+			(36, 22),
+			(32, 23),
+			(33, 23),
+			(34, 23),
+			(35, 23),
+			(36, 23),
+			(37, 23),
+			(38, 23),
+			(39, 23),
+			(40, 23)
 		],
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
@@ -4012,7 +5030,29 @@ poi_list = [
 		],
 		str_name = "Vandal Park",
 		str_desc = "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district’s famous Battle Arena.\nVandal Park’s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you’ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill.",
-		coord = (10, 12),
+		coord = (28, 28),
+		coord_alias = [
+			(24, 26),
+			(25, 26),
+			(26, 26),
+			(27, 26),
+			(28, 26),
+			(29, 26),
+			(30, 26),
+			(31, 26),
+			(32, 26),
+			(28, 27),
+			(28, 29),
+			(24, 30),
+			(25, 30),
+			(26, 30),
+			(27, 30),
+			(28, 30),
+			(29, 30),
+			(30, 30),
+			(31, 30),
+			(32, 30)
+		],
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
@@ -4026,11 +5066,29 @@ poi_list = [
 			"gb"
 		],
 		str_name = "Glocksbury",
-		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury.",
-		coord = (8, 16),
+		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts.",
+		coord = (27, 38),
 		coord_alias = [
-			(7, 16),
-			(6, 16)
+			(23, 36),
+			(24, 36),
+			(25, 36),
+			(26, 36),
+			(27, 36),
+			(28, 36),
+			(29, 36),
+			(30, 36),
+			(31, 36),
+			(27, 37),
+			(27, 39),
+			(23, 40),
+			(24, 40),
+			(25, 40),
+			(26, 40),
+			(27, 40),
+			(28, 40),
+			(29, 40),
+			(30, 40),
+			(31, 40)
 		],
 		channel = "glocksbury",
 		role = "Glocksbury",
@@ -4050,10 +5108,28 @@ poi_list = [
 		],
 		str_name = "North Sleezeborough",
 		str_desc = "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn’t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough.",
-		coord = (10, 19),
+		coord = (29, 46),
 		coord_alias = [
-			(10, 20),
-			(10, 21)
+			(25, 44),
+			(26, 44),
+			(27, 44),
+			(28, 44),
+			(29, 44),
+			(30, 44),
+			(31, 44),
+			(32, 44),
+			(33, 44),
+			(29, 45),
+			(29, 47),
+			(25, 48),
+			(26, 48),
+			(27, 48),
+			(28, 48),
+			(29, 48),
+			(30, 48),
+			(31, 48),
+			(32, 48),
+			(33, 48)
 		],
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
@@ -4072,14 +5148,29 @@ poi_list = [
 			"ss"
 		],
 		str_name = "South Sleezeborough",
-		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline.",
-		coord = (12, 22),
+		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
+		coord = (29, 57),
 		coord_alias = [
-			(12, 23),
-			(12, 24),
-			(12, 25),
-			(12, 26),
-			(12, 27)
+			(27, 53),
+			(27, 54),
+			(27, 55),
+			(27, 56),
+			(27, 57),
+			(27, 58),
+			(27, 59),
+			(27, 60),
+			(27, 61),
+			(28, 57),
+			(30, 57),
+			(31, 53),
+			(31, 54),
+			(31, 55),
+			(31, 56),
+			(31, 57),
+			(31, 58),
+			(31, 59),
+			(31, 60),
+			(31, 61)
 		],
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
@@ -4094,8 +5185,30 @@ poi_list = [
 			"og"
 		],
 		str_name = "Ooze Gardens",
-		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough.",
-		coord = (14, 25),
+		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
+		coord = (37, 62),
+		coord_alias = [
+			(35, 58),
+			(35, 59),
+			(35, 60),
+			(35, 61),
+			(35, 62),
+			(35, 63),
+			(35, 64),
+			(35, 65),
+			(35, 66),
+			(36, 62),
+			(38, 62),
+			(39, 58),
+			(39, 59),
+			(39, 60),
+			(39, 61),
+			(39, 62),
+			(39, 63),
+			(39, 64),
+			(39, 65),
+			(39, 66)
+		],
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
@@ -4109,11 +5222,29 @@ poi_list = [
 			"cv"
 		],
 		str_name = "Cratersville",
-		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens.",
-		coord = (19, 28),
+		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
+		coord = (48, 64),
 		coord_alias = [
-			(20, 28),
-			(21, 28)
+			(44, 62),
+			(45, 62),
+			(46, 62),
+			(47, 62),
+			(48, 62),
+			(49, 62),
+			(50, 62),
+			(51, 62),
+			(52, 62),
+			(48, 63),
+			(48, 65),
+			(44, 66),
+			(45, 66),
+			(46, 66),
+			(47, 66),
+			(48, 66),
+			(49, 66),
+			(50, 66),
+			(51, 66),
+			(52, 66)
 		],
 		channel = "cratersville",
 		role = "Cratersville",
@@ -4129,11 +5260,29 @@ poi_list = [
 			"wt"
 		],
 		str_name = "Wreckington",
-		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville.",
-		coord = (27, 24),
+		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
+		coord = (63, 60),
 		coord_alias = [
-			(27, 25),
-			(27, 26)
+			(59, 58),
+			(60, 58),
+			(61, 58),
+			(62, 58),
+			(63, 58),
+			(64, 58),
+			(65, 58),
+			(66, 58),
+			(67, 58),
+			(63, 59),
+			(63, 61),
+			(59, 62),
+			(60, 62),
+			(61, 62),
+			(62, 62),
+			(63, 62),
+			(64, 62),
+			(65, 62),
+			(66, 62),
+			(67, 62)
 		],
 		channel = "wreckington",
 		role = "Wreckington",
@@ -4149,7 +5298,29 @@ poi_list = [
 		],
 		str_name = "Juvie's Row",
 		str_desc = "The landscape of this district is completely defined by it containing the city’s largest mineshafts. Almost the entire district is has been dug up, the earth overturned by a crazed populace trying to soak up every drop of slime it can get its hands on. There are few permanent structures here, and even less infrastructure. Swathes of juveniles have constructed shanty houses out of discarded building materials, suffering from the intense pollution and poor living conditions just to be closer to the mine shaft entrances that jut out of the otherwise useless, rugged terrain. Makeshift bazaars and other rudimentary amenities have popped up in the horribly overcrowded tent cities.\nJuvie’s Row might just be the most populous district of the city, with every ambitious juvenile spending at least some of their formative days toiling underground to eke out a pitiful existence. Seeing all the gang unaligned juvies here fills you with pity, as well as disgust.\n\nThis area contains the Juvie's Row Mines, the Juvie's Row Farms and the Juvie's Row Subway Station. To the Northeast is Vagrant's Corner. To the Northwest is the Green Light District.",
-		coord = (32, 18),
+		coord = (82, 38),
+		coord_alias = [
+			(78, 36),
+			(79, 36),
+			(80, 36),
+			(81, 36),
+			(82, 36),
+			(83, 36),
+			(84, 36),
+			(85, 36),
+			(86, 36),
+			(82, 37),
+			(82, 39),
+			(78, 40),
+			(79, 40),
+			(80, 40),
+			(81, 40),
+			(82, 40),
+			(83, 40),
+			(84, 40),
+			(85, 40),
+			(86, 40)
+		],
 		channel = "juvies-row",
 		role = "Juvie's Row",
 		pvp = False,
@@ -4165,7 +5336,29 @@ poi_list = [
 		],
 		str_name = "Slime's End",
 		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\n To the North is Vagrant's Corner.",
-		coord = (40, 16),
+		coord = (98, 38),
+		coord_alias = [
+			(94, 36),
+			(95, 36),
+			(96, 36),
+			(97, 36),
+			(98, 36),
+			(99, 36),
+			(100, 36),
+			(101, 36),
+			(102, 36),
+			(98, 37),
+			(98, 39),
+			(94, 40),
+			(95, 40),
+			(96, 40),
+			(97, 40),
+			(98, 40),
+			(99, 40),
+			(100, 40),
+			(101, 40),
+			(102, 40)
+		],
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
@@ -4180,12 +5373,28 @@ poi_list = [
 		],
 		str_name = "Vagrant's Corner",
 		str_desc = "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant’s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you’re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
-		coord = (37, 11),
+		coord = (92, 27),
 		coord_alias = [
-			(38, 11),
-			(39, 11),
-			(39, 10),
-			(39, 9)
+			(88, 25),
+			(89, 25),
+			(90, 25),
+			(91, 25),
+			(92, 25),
+			(93, 25),
+			(94, 25),
+			(95, 25),
+			(96, 25),
+			(92, 26),
+			(92, 28),
+			(88, 29),
+			(89, 29),
+			(90, 29),
+			(91, 29),
+			(92, 29),
+			(93, 29),
+			(94, 29),
+			(95, 29),
+			(96, 29)
 		],
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
@@ -4203,11 +5412,29 @@ poi_list = [
 			"afb"
 		],
 		str_name = "Assault Flats Beach",
-		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers.",
-		coord = (40, 6),
+		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
+		coord = (97, 16),
 		coord_alias = [
-			(40, 5),
-			(40, 4)
+			(95, 12),
+			(95, 13),
+			(95, 14),
+			(95, 15),
+			(95, 16),
+			(95, 17),
+			(95, 18),
+			(95, 19),
+			(95, 20),
+			(96, 16),
+			(98, 16),
+			(99, 12),
+			(99, 13),
+			(99, 14),
+			(99, 15),
+			(99, 16),
+			(99, 17),
+			(99, 18),
+			(99, 19),
+			(99, 20)
 		],
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
@@ -4222,8 +5449,30 @@ poi_list = [
 			"nny"
 		],
 		str_name = "New New Yonkers",
-		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden.",
-		coord = (36, 4),
+		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
+		coord = (89, 12),
+		coord_alias = [
+			(85, 10),
+			(86, 10),
+			(87, 10),
+			(88, 10),
+			(89, 10),
+			(90, 10),
+			(91, 10),
+			(92, 10),
+			(93, 10),
+			(89, 11),
+			(89, 13),
+			(85, 14),
+			(86, 14),
+			(87, 14),
+			(88, 14),
+			(89, 14),
+			(90, 14),
+			(91, 14),
+			(92, 14),
+			(93, 14)
+		],
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
@@ -4236,8 +5485,30 @@ poi_list = [
 			"bd"
 		],
 		str_name = "Brawlden",
-		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook.",
-		coord = (28, 3),
+		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
+		coord = (71, 8),
+		coord_alias = [
+			(67, 6),
+			(68, 6),
+			(69, 6),
+			(70, 6),
+			(71, 6),
+			(72, 6),
+			(73, 6),
+			(74, 6),
+			(75, 6),
+			(71, 7),
+			(71, 9),
+			(67, 10),
+			(68, 10),
+			(69, 10),
+			(70, 10),
+			(71, 10),
+			(72, 10),
+			(73, 10),
+			(74, 10),
+			(75, 10)
+		],
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
@@ -4253,8 +5524,30 @@ poi_list = [
 			"tx"
 		],
 		str_name = "Toxington",
-		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park.",
-		coord = (9, 4),
+		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park. To the North is Toxington Outskirts.",
+		coord = (27, 10),
+		coord_alias = [
+			(23, 8),
+			(24, 8),
+			(25, 8),
+			(26, 8),
+			(27, 8),
+			(28, 8),
+			(29, 8),
+			(30, 8),
+			(31, 8),
+			(27, 9),
+			(27, 11),
+			(23, 12),
+			(24, 12),
+			(25, 12),
+			(26, 12),
+			(27, 12),
+			(28, 12),
+			(29, 12),
+			(30, 12),
+			(31, 12)
+		],
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
@@ -4271,8 +5564,30 @@ poi_list = [
 			"ch"
 		],
 		str_name = "Charcoal Park",
-		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill.",
-		coord = (3, 3),
+		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
+		coord = (15, 10),
+		coord_alias = [
+			(11, 8),
+			(12, 8),
+			(13, 8),
+			(14, 8),
+			(15, 8),
+			(16, 8),
+			(17, 8),
+			(18, 8),
+			(19, 8),
+			(15, 9),
+			(15, 11),
+			(11, 12),
+			(12, 12),
+			(13, 12),
+			(14, 12),
+			(15, 12),
+			(16, 12),
+			(17, 12),
+			(18, 12),
+			(19, 12)
+		],
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
@@ -4287,8 +5602,30 @@ poi_list = [
 			"ph"
 		],
 		str_name = "Polonium Hill",
-		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury.",
-		coord = (5, 9),
+		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
+		coord = (15, 20),
+		coord_alias = [
+			(11, 18),
+			(12, 18),
+			(13, 18),
+			(14, 18),
+			(15, 18),
+			(16, 18),
+			(17, 18),
+			(18, 18),
+			(19, 18),
+			(15, 19),
+			(15, 21),
+			(11, 22),
+			(12, 22),
+			(13, 22),
+			(14, 22),
+			(15, 22),
+			(16, 22),
+			(17, 22),
+			(18, 22),
+			(19, 22)
+		],
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
@@ -4306,7 +5643,29 @@ poi_list = [
 		],
 		str_name = "West Glocksbury",
 		str_desc = "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city’s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury’s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
-		coord = (4, 14),
+		coord = (14, 34),
+		coord_alias = [
+			(10, 32),
+			(11, 32),
+			(12, 32),
+			(13, 32),
+			(14, 32),
+			(15, 32),
+			(16, 32),
+			(17, 32),
+			(18, 32),
+			(14, 33),
+			(14, 35),
+			(10, 36),
+			(11, 36),
+			(12, 36),
+			(13, 36),
+			(14, 36),
+			(15, 36),
+			(16, 36),
+			(17, 36),
+			(18, 36)
+		],
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
@@ -4322,11 +5681,29 @@ poi_list = [
 			"jp",
 		],
 		str_name = "Jaywalker Plain",
-		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford.",
-		coord = (4, 19),
+		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
+		coord = (13, 46),
 		coord_alias = [
-			(5, 19),
-			(5, 20)
+			(9, 44),
+			(10, 44),
+			(11, 44),
+			(12, 44),
+			(13, 44),
+			(14, 44),
+			(15, 44),
+			(16, 44),
+			(17, 44),
+			(13, 45),
+			(13, 47),
+			(9, 48),
+			(10, 48),
+			(11, 48),
+			(12, 48),
+			(13, 48),
+			(14, 48),
+			(15, 48),
+			(16, 48),
+			(17, 48)
 		],
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
@@ -4341,8 +5718,30 @@ poi_list = [
 			"cl",
 		],
 		str_name = "Crookline",
-		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford.",
-		coord = (8, 23),
+		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
+		coord = (20, 58),
+		coord_alias = [
+			(18, 54),
+			(18, 55),
+			(18, 56),
+			(18, 57),
+			(18, 58),
+			(18, 59),
+			(18, 60),
+			(18, 61),
+			(18, 62),
+			(19, 58),
+			(21, 58),
+			(22, 54),
+			(22, 55),
+			(22, 56),
+			(22, 57),
+			(22, 58),
+			(22, 59),
+			(22, 60),
+			(22, 61),
+			(22, 62)
+		],
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
@@ -4356,8 +5755,30 @@ poi_list = [
 			"df",
 		],
 		str_name = "Dreadford",
-		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline.",
-		coord = (3, 23),
+		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
+		coord = (10, 53),
+		coord_alias = [
+			(6, 51),
+			(7, 51),
+			(8, 51),
+			(9, 51),
+			(10, 51),
+			(11, 51),
+			(12, 51),
+			(13, 51),
+			(14, 51),
+			(10, 52),
+			(10, 54),
+			(6, 55),
+			(7, 55),
+			(8, 55),
+			(9, 55),
+			(10, 55),
+			(11, 55),
+			(12, 55),
+			(13, 55),
+			(14, 55)
+		],
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
@@ -4403,7 +5824,7 @@ poi_list = [
 		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
 		channel = channel_stockexchange,
 		role = "Stock Exchange",
-		coord = (21, 16),
+		coord = (63, 40),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_downtown
@@ -4420,7 +5841,7 @@ poi_list = [
 		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren.\n\nExits into Brawlden.",
 		channel = channel_bazaar,
 		role = "Bazaar",
-		coord = (21, 11),
+		coord = (57, 28),
 		pvp = False,
 		vendors = [
 			vendor_bazaar
@@ -4443,7 +5864,7 @@ poi_list = [
 		str_desc = "A delightfully run-down movie theater, with warm carpeted walls fraying ever so slightly. Films hand picked by the Rowdy Fucker and/or Cop Killer are regularly screened.\n\nExits into Astatine Heights.",
 		channel = channel_cinema,
 		role = "Cinema",
-		coord = (19, 3),
+		coord = (48, 16),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_astatineheights
@@ -4471,7 +5892,7 @@ poi_list = [
 				   "and brittle, you’ll wish you spent your time doing this more.\n\nExits into Krak Bay.",
 		channel = channel_foodcourt,
 		role = "Food Court",
-		coord = (16, 17),
+		coord = (41, 44),
 		pvp = False,
 		vendors = [
 			vendor_pizzahut,
@@ -4497,7 +5918,7 @@ poi_list = [
 		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here.\n\nExits into Gatlingsdale.",
 		channel = channel_nlacu,
 		role = "NLAC U",
-		coord = (15, 9),
+		coord = (34, 21),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_gatlingsdale
@@ -4515,7 +5936,7 @@ poi_list = [
 		str_desc = "A huge arena stadium capable of housing tens of thousands of battle enthusiasts, ringing a large field where Slimeoid Battles are held. All the seats are empty.\n\nExits into Vandal Park.",
 		channel = channel_arena,
 		role = "Arena",
-		coord = (10, 10),
+		coord = (24, 28),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_vandalpark
@@ -4534,7 +5955,7 @@ poi_list = [
 		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
 		channel = channel_dojo,
 		role = "Dojo",
-		coord = (12, 29),
+		coord = (29, 59),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_southsleezeborough
@@ -4557,7 +5978,7 @@ poi_list = [
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
-		coord = (39, 13),
+		coord = (94, 27),
 		pvp = False,
 		vendors = [
 			vendor_bar
@@ -4580,7 +6001,7 @@ poi_list = [
 		str_desc = "The darkened derelict 7-11 stands as it always has, a steadfast pillar of NLACakaNM culture. On its dirty exterior walls are spraypainted messages about \"patch notes\", \"github\", and other unparseable nonsense.\n\nExits into Poudrin Alley.",
 		channel = channel_711,
 		role = "7-11",
-		coord = (19, 25),
+		coord = (50, 58),
 		pvp = False,
 		vendors = [
 			vendor_vendingmachine
@@ -4609,7 +6030,7 @@ poi_list = [
 		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
-		coord = (28, 1),
+		coord = (67, 8),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_brawlden
@@ -4625,7 +6046,7 @@ poi_list = [
 		],
 		str_name = "The Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Juvie's Row.",
-		coord = (34, 18),
+		coord = (84, 38),
 		channel = channel_mines,
 		role = "Mines",
 		pvp = False,
@@ -4644,7 +6065,7 @@ poi_list = [
 		],
 		str_name = "The Casino",
 		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit.\n\nExits into Green Light District.",
-		coord = (28, 15),
+		coord = (73, 35),
 		channel = channel_casino,
 		role = "Casino",
 		pvp = False,
@@ -4664,7 +6085,7 @@ poi_list = [
 		],
 		str_name = "The Cratersville Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR.\n\nExits into Cratersville.",
-		coord = (19, 30),
+		coord = (46, 64),
 		channel = channel_cv_mines,
 		role = "Cratersville Mines",
 		pvp = False,
@@ -4683,7 +6104,7 @@ poi_list = [
 		],
 		str_name = "The Toxington Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Toxington.",
-		coord = (9, 2),
+		coord = (25, 10),
 		channel = channel_tt_mines,
 		role = "Toxington Mines",
 		pvp = False,
@@ -4700,11 +6121,11 @@ poi_list = [
 			"sc",
 			"rf", #rowdy food
 			"sm",
-			#"k0ff"
+			"koff"
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
-		coord = (25, 24),
+		coord = (65, 60),
 		channel = channel_diner,
 		role = "Smoker's Cough",
 		pvp = False,
@@ -4727,7 +6148,7 @@ poi_list = [
 		],
 		str_name = "Red Mobster Seafood",
 		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Astatine Heights.",
-		coord = (17, 1),
+		coord = (44, 16),
 		channel = channel_seafood,
 		role = "Red Mobster Seafood",
 		pvp = False,
@@ -4751,7 +6172,7 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Farms",
 		str_desc = "An array of haphazardly placed farms dot the already dense, crowded areas between mining shaft entrances and impoverished juvenile housing. Pollution is rampant here, with the numerous trash heaps and sludge refineries enjoying the majority of earth under the smoke-smuggered stars. It’s soil is irradiated and barely arable, but it will do. It has to.\n\nExits into Juvie's Row.",
-		coord = (32, 20),
+		coord = (80, 38),
 		channel = channel_jr_farms,
 		role = "Juvie's Row Farms",
 		pvp = False,
@@ -4774,7 +6195,7 @@ poi_list = [
 		],
 		str_name = "The Ooze Gardens Farms",
 		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here.\n\nExits into Ooze Gardens.",
-		coord = (14, 27),
+		coord = (37, 66),
 		channel = channel_og_farms,
 		role = "Ooze Gardens Farms",
 		pvp = False,
@@ -4795,7 +6216,7 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Farms",
 		str_desc = "A series of reedy creeks interspersed with quiet farms and burnt, black trees. It’s overcast skies make the embers from frequent forest fires glow even brighter by comparison. It’s soil is fertile with copious amounts of soot and accompanying nutrients.\n\nExits into Arsonbrook.",
-		coord = (21, 1),
+		coord = (56, 12),
 		channel = channel_ab_farms,
 		role = "Arsonbrook Farms",
 		pvp = False,
@@ -4812,7 +6233,7 @@ poi_list = [
 		],
 		str_name = "Neo Milwaukee State",
 		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it’s needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent’s ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday.\n\nExits into North Sleezeborough. ",
-		coord = (12, 19),
+		coord = (27, 46),
 		channel = channel_neomilwaukeestate,
 		role = "Neo Milwaukee State",
 		pvp = False,
@@ -4828,7 +6249,7 @@ poi_list = [
 		],
 		str_name = "The Resort",
 		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported red sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
-		coord = (42, 6),
+		coord = (97, 14),
 		channel = channel_beachresort,
 		role = "Beach Resort",
 		pvp = False,
@@ -4847,7 +6268,7 @@ poi_list = [
 		],
 		str_name = "The Country Club",
 		str_desc = "On top of a grassy hill, behind several wired/eletric fences, lies Dreadford’s famous country club. The lodge itself is a huge, old wooden lodge from the 1800s, with hundreds of knick-knacks, hunting trophies and historic photos hung up on the wall, and tacky rugs and furniture around a roaring fire in it’s center. Sprawling out from the club itself is the complex’s signature golf course, where all the pompous rich assholes go to waste their time and chit-chat with each other about cheating on their wives.\n\nExits into Dreadford.",
-		coord = (3, 25),
+		coord = (8, 53),
 		channel = channel_countryclub,
 		role = "Country Club",
 		pvp = False,
@@ -4856,6 +6277,102 @@ poi_list = [
 		],
 		is_subzone = True,
 		mother_district = poi_id_dreadford
+	),
+	EwPoi(  # Toxington Pier
+		id_poi = poi_id_toxington_pier,
+		alias = [
+			"toxingtonpier",
+			"ttpier",
+			"ttp",
+		],
+		str_name = "Toxington Pier",
+		str_desc = "A rickety, decaying pier stretching over a bubbling lake of molten slime. Use of your olfactory organs in any capacity is not recommended, the toxic fumes this district is known for originate here, from these lakes. But, there are some pretty sicknasty fuckin’ fishes down there, you bet.\n\nExits into Toxington.",
+		coord = (25, 6),
+		channel = channel_tt_pier,
+		role = "Toxington Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_toxington
+	),
+	EwPoi(  # Jaywalker Plain Pier
+		id_poi = poi_id_jaywalkerplain_pier,
+		alias = [
+			"jaywalkerplainpier",
+			"jppier",
+			"jpp",
+		],
+		str_name = "Jaywalker Plain Pier",
+		str_desc = "An old, sundrenched pier stretching over a lake overgrown with reeds and similar vegetation. It’s just one of the many natural beauties overlooked by the district’s perpetually twisted (a colloquialism for being drunk and high at the same time) population.\n\nExits into Jaywalker Plain.",
+		coord = (9 , 42),
+		channel = channel_jp_pier,
+		role = "Jaywalker Plain Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_jaywalkerplain
+	),
+	EwPoi(  # Crookline Pier
+		id_poi = poi_id_crookline_pier,
+		alias = [
+			"crooklinepier",
+			"clpier",
+			"clp",
+		],
+		str_name = "Crookline Pier",
+		str_desc = "A dark, modern pier stretching over a large lake on the outskirts of the district. Bait shops and other aquatic-based stores surround the water, with the occasional restaurant breaking up the monotony.\n\nExits into Crookline.",
+		coord = (16, 58),
+		channel = channel_cl_pier,
+		role = "Crookline Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_crookline
+	),
+	EwPoi(  # Assault Flats Beach Pier
+		id_poi = poi_id_assaultflatsbeach_pier,
+		alias = [
+			"assaultflatsbeachpier",
+			"afbpier",
+			"afbp",
+		],
+		str_name = "Assault Flats Beach Pier",
+		str_desc = "A white, picturesque wooden pier stretching far out into the Slime Sea. This famous landmark is a common destination for robber barons on vacation, with a various roller coasters and rides occupying large parts of the pier. It’s really fucking lame, and you feel sick thinking about the astronomical slime the yuppies around you have ontained solely through inhereitance. You vow to piss on the ferris wheel if you get the proper mutations.\n\nExits into Assault Flats Beach.",
+		coord = (101, 16),
+		channel = channel_afb_pier,
+		role = "Assault Flats Beach Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_assaultflatsbeach_pier
+	),
+	EwPoi(  # Vagrant's Corner Pier
+		id_poi = poi_id_vagrantscorner_pier,
+		alias = [
+			"vagrantscornerpier",
+			"vcpier",
+			"vcpr",
+		],
+		str_name = "Vagrant's Corner Pier",
+		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+		coord = (98, 25),
+		channel = channel_vc_pier,
+		role = "Vagrant's Corner Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_vagrantscorner
+	),
+	EwPoi(  # Slime's End Pier
+		id_poi = poi_id_slimesend_pier,
+		alias = [
+			"slimesendpier",
+			"sepier",
+			"sep",
+		],
+		str_name = "Slime's End Pier",
+		str_desc = "A lonesome pier at the very end of the Slime’s End peninsula, stretching out into the Slime Sea. From here, you’re able to clearly make out Downtown in the distance, pumping light pollution into the normally polluted air. You’re itching to get back there and punch some grandmas once you’re done wringing slime out of fish.\n\nExits into Slime's End.",
+		coord = (102, 42),
+		channel = channel_se_pier,
+		role = "Slime's End Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_slimesend
 	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
@@ -4878,7 +6395,7 @@ poi_list = [
 		],
 		str_name = "The Wreckington Ferry Port",
 		str_desc = "Caddy corner to Wreckington’s iconic junkyard lies its less famous shipyard, filled mostly with dozens upon dozens of different garbage barges dumping off metric tons of trash every day but also hosting this very terminal! The ferry takes you from here to Vagrant’s Corner, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Wreckington.",
-		coord = (29, 24),
+		coord = (59, 60),
 		channel = channel_wt_port,
 		role = "Wreckington Port",
 		pvp = True,
@@ -4901,7 +6418,7 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Ferry Port",
 		str_desc = "Down one of hundreds of piers on the crowded Vagrant’s Corner wharf sits this dingy dinghy terminal. The ferry takes you from here to Wreckington, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Vagrant's Corner.",
-		coord = (41, 11),
+		coord = (88, 27),
 		channel = channel_vc_port,
 		role = "Vagrant's Corner Port",
 		pvp = True,
@@ -4928,8 +6445,8 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-                str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
-		coord = (9, 6),
+				str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
+		coord = (23, 10),
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
@@ -4957,7 +6474,7 @@ poi_list = [
 		],
 		str_name = "The Astatine Heights Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Astatine Heights.",
-		coord = (15, 3),
+		coord = (42, 16),
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
@@ -4985,7 +6502,7 @@ poi_list = [
 		],
 		str_name = "The Gatlingsdale Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Gatlingsdale.",
-		coord = (15, 11),
+		coord = (32, 21),
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
@@ -5013,7 +6530,7 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into Arsonbrook.",
-		coord = (23, 1),
+		coord = (56, 14),
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
@@ -5042,7 +6559,7 @@ poi_list = [
 		],
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
-		coord = (17, 15),
+		coord = (40, 32),
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
@@ -5070,10 +6587,10 @@ poi_list = [
 		],
 		str_name = "The Smogsburg Subway Station",
 		str_desc = str_green_subway_station_description + \
-                        "\n\n" + str_subway_connecting_sentence.format("yellow") + \
-                        "\n\n" + str_yellow_subway_station_description \
+						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
+						"\n\n" + str_yellow_subway_station_description \
 			+ "\n\nExits into Smogsburg.",
-		coord = (25, 9),
+		coord = (55, 28),
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
@@ -5096,7 +6613,7 @@ poi_list = [
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
 		str_desc = str_downtown_station_description,
-		coord = (23, 20),
+		coord = (55, 40),
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
 		pvp = True,
@@ -5124,10 +6641,10 @@ poi_list = [
 		],
 		str_name = "The Krak Bay Subway Station",
 		str_desc = str_green_subway_station_description + \
-                        "\n\n" + str_subway_connecting_sentence.format("yellow") + \
-                        "\n\n" + str_yellow_subway_station_description + \
+						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
+						"\n\n" + str_yellow_subway_station_description + \
 			"\n\nExits into Krak Bay.",
-		coord = (18, 17),
+		coord = (39, 44),
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
@@ -5155,7 +6672,7 @@ poi_list = [
 		],
 		str_name = "The Glocksbury Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Glocksbury.",
-		coord = (6, 18),
+		coord = (23, 38),
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
@@ -5183,7 +6700,7 @@ poi_list = [
 		],
 		str_name = "The West Glocksbury Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into West Glocksbury.",
-		coord = (2, 14),
+		coord = (10, 34),
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
@@ -5211,7 +6728,7 @@ poi_list = [
 		],
 		str_name = "The Jaywalker Plain Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Jaywalker Plain.",
-		coord = (2, 19),
+		coord = (9, 46),
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
@@ -5240,7 +6757,7 @@ poi_list = [
 		],
 		str_name = "The North Sleezeborough Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into North Sleezeborough.",
-		coord = (10, 23),
+		coord = (25, 46),
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
@@ -5269,7 +6786,7 @@ poi_list = [
 		],
 		str_name = "The South Sleezeborough Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
-		coord = (10, 27),
+		coord = (29, 61),
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
@@ -5297,7 +6814,7 @@ poi_list = [
 		],
 		str_name = "The Cratersville Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cratersville.",
-		coord = (21, 30),
+		coord = (44, 64),
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
@@ -5325,7 +6842,7 @@ poi_list = [
 		],
 		str_name = "The Wreckington Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Wreckington.",
-		coord = (25, 26),
+		coord = (61, 60),
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
@@ -5352,7 +6869,7 @@ poi_list = [
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
-		coord = (29, 21),
+		coord = (58, 51),
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
@@ -5381,7 +6898,7 @@ poi_list = [
 		],
 		str_name = "The Green Light District Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Green Light District.",
-		coord = (30, 15),
+		coord = (73, 37),
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
@@ -5409,7 +6926,7 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Juvie's Row.",
-		coord = (30, 18),
+		coord = (78, 38),
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
@@ -5437,7 +6954,7 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Vagrant's Corner.",
-		coord = (41, 9),
+		coord = (90, 27),
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
@@ -5470,7 +6987,7 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
-		coord = (42, 4),
+		coord = (97, 18),
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
 		pvp = True,
@@ -5494,7 +7011,7 @@ poi_list = [
 		],
 		str_name = "The Dreadford Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Dreadford.",
-		coord = (1, 23),
+		coord = (6, 53),
 		channel = channel_df_blimp_tower,
 		role = "Dreadford Blimp Tower",
 		pvp = True,
@@ -5521,7 +7038,7 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.",
-		coord = (40, 2),
+		coord = (97, 20),
 		channel = channel_afb_blimp_tower,
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
@@ -5703,6 +7220,12 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+
+landmark_pois = [
+	poi_id_countryclub,
+	poi_id_charcoalpark,
+	poi_id_slimesend_pier,
+]
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -6688,6 +8211,21 @@ smelting_recipe_list = [
 		    item_id_stick : 6
 		},
 		products = ['faggot']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "fishingrod",
+		str_name = "a fishing rod",
+		alias = [
+			"fish",
+			"fishing",
+			"rod",
+			"fr"
+		],
+		ingredients = {
+			'string': 2,
+			'stick': 3
+		},
+		products = ['fishingrod']
 	),
 ]
 
@@ -8298,6 +9836,23 @@ for food in food_list:
 	for alias in food.alias:
 		food_map[alias] = food
 
+# Populate fish map, including all aliases.
+for fish in fish_list:
+	fish_map[fish.id_fish] = fish
+	fish_names.append(fish.id_fish)
+
+	# Add fish to its vendors' lists.
+	for vendor in fish.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(fish.id_fish)
+
+	for alias in fish.alias:
+		fish_map[alias] = fish
 
 # Populate cosmetic map.
 for cosmetic in cosmetic_items_list:
@@ -8334,6 +9889,28 @@ for m in food_list:
 for m in cosmetic_items_list:
 	if m.acquisition == acquisition_milling:
 		mill_results.append(m)
+	else:
+		pass
+
+# List of items you can obtain via appraisal.
+appraise_results = []
+
+# Gather all items that can be the result of milling.
+for a in item_list:
+	if a.acquisition == acquisition_bartering:
+		appraise_results.append(a)
+	else:
+		pass
+
+for a in food_list:
+	if a.acquisition == acquisition_bartering:
+		appraise_results.append(a)
+	else:
+		pass
+
+for a in cosmetic_items_list:
+	if a.acquisition == acquisition_bartering:
+		appraise_results.append(a)
 	else:
 		pass
 
@@ -8393,6 +9970,16 @@ slimexodia_parts = []
 for slimexodia in item_list:
 	if slimexodia.context == 'slimexodia':
 		slimexodia_parts.append(slimexodia)
+	else:
+		pass
+
+# Shitty bait that always yields Plebefish while fishing.
+plebe_bait = []
+
+# Gather all shitty bait.
+for bait in food_list:
+	if bait.price == None or bait.price <= 1000:
+		plebe_bait.append(bait.id_food)
 	else:
 		pass
 
