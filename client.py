@@ -681,7 +681,7 @@ async def on_ready():
 							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
 
 						if random.random() == 0.1:
-							market_data.bazaar_wares['minigun'] = 'minigun'
+							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
 
 					market_data.persist()
 
