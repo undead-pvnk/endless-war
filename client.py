@@ -438,6 +438,8 @@ async def on_ready():
 	ewmap.map_draw()
 
 	# Flatten role names to all lowercase, no spaces.
+	fake_observer = EwUser()
+	fake_observer.life_state = ewcfg.life_state_observer
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
@@ -445,8 +447,6 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			fake_observer = EwUser()
-			fake_observer.life_state = ewcfg.life_state_observer
 			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
@@ -458,6 +458,14 @@ async def on_ready():
 		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
+	for id_poi in ewcfg.landmark_pois:
+		poi = ewcfg.id_to_poi.get(id_poi)
+		ewmap.landmarks[id_poi] = ewmap.score_map_from(
+			coord_start = poi.coord,
+			user_data = fake_observer
+		)
+
+		#ewutils.logMsg(ewmap.landmarks[id_poi])
 	try:
 		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:

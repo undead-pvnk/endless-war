@@ -1,6 +1,7 @@
 import asyncio
 import time
 import math
+import heapq
 
 from copy import deepcopy
 
@@ -263,6 +264,8 @@ sem_wall = -1
 sem_city = -2
 sem_city_alias = -3
 
+landmarks = {}
+
 def pairToString(pair):
 	return "({},{})".format("{}".format(pair[0]).rjust(2), "{}".format(pair[1]).ljust(2))
 
@@ -376,6 +379,67 @@ def path_branch(path_base, coord_next, user_data, coord_end):
 	
 	return path_next
 
+def score_map_from(
+	coord_start = None,
+	coord_end = None,
+	poi_start = None,
+	user_data = None,
+):
+	score_map = []
+	for row in map_world:
+		score_map.append(list(map(replace_with_inf, row)))
+
+	paths_finished = []
+	paths_walking = []
+
+	pois_adjacent = []
+
+	if poi_start != None:
+		poi = ewcfg.id_to_poi.get(poi_start)
+
+		if poi != None:
+			coord_start = poi.coord
+
+	path_base = EwPath(
+		steps = [ coord_start ],
+		cost = 0,
+		visited = { coord_start[0]: { coord_start[1]: True } }
+	)
+
+
+	paths_walking.append(path_base)
+
+	count_iter = 0
+	while len(paths_walking) > 0:
+		count_iter += 1
+
+		paths_walking_new = []
+
+		for path in paths_walking:
+			step_last = path.steps[-1]
+			score_current = score_map[step_last[1]][step_last[0]]
+			if path.cost >= score_current:
+				continue
+
+			score_map[step_last[1]][step_last[0]] = path.cost
+
+			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
+
+
+			path_base = EwPath(path_from = path)
+			for neigh in neighbors(step_last):
+				if neigh == step_penult:
+					continue
+
+				branch = path_branch(path_base, neigh, user_data, coord_end)
+				if branch != None:
+					paths_walking_new.append(branch)
+
+
+		paths_walking = paths_walking_new
+
+	return score_map
+
 def path_to(
 	coord_start = None,
 	coord_end = None,
@@ -412,21 +476,22 @@ def path_to(
 	)
 
 
-	paths_walking.append(path_base)
+	path_id = 0
+	heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, coord_end), 0, path_base))
+	path_id += 1
 
 	count_iter = 0
 	while len(paths_walking) > 0:
 		count_iter += 1
 
-		paths_walking_new = []
+		path_tuple = heapq.heappop(paths_walking)
 
-		for path in paths_walking:
+		path = path_tuple[-1]
+
+		if path is not None:
+
 			step_last = path.steps[-1]
-			score_current = score_map[step_last[1]][step_last[0]]
-			if path.cost >= score_golf or path.cost >= score_current:
-				continue
-
-			score_map[step_last[1]][step_last[0]] = path.cost
+			#ewutils.logMsg("visiting " + str(step_last))
 
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
@@ -440,7 +505,7 @@ def path_to(
 						paths_finished = []
 					if path_final.cost <= score_golf:
 						paths_finished.append(path_final)
-					continue
+					break
 
 			else:
 				# Looking for adjacent points of interest.
@@ -466,10 +531,9 @@ def path_to(
 
 				branch = path_branch(path_base, neigh, user_data, coord_end)
 				if branch != None:
-					paths_walking_new.append(branch)
+					heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, coord_end), path_id, branch))
+					path_id += 1
 
-
-		paths_walking = paths_walking_new
 
 	if coord_end != None:
 		path_true = None
@@ -481,6 +545,22 @@ def path_to(
 		return path_true
 	else:
 		return pois_adjacent
+
+def landmark_heuristic(path, coord_end):
+	if len(landmarks) < 2 or coord_end is None:
+		return 0
+	else:
+		last_step = path.steps[-1]
+		scores = []
+		for lm in landmarks:
+			score_map = landmarks.get(lm)
+			score_path = score_map[last_step[1]][last_step[0]]
+			score_goal = score_map[coord_end[1]][coord_end[0]]
+			scores.append(abs(score_path - score_goal))
+
+		return max(scores)
+		    
+	
 
 def replace_with_inf(n):
 	return math.inf

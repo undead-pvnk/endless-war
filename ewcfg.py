@@ -7204,6 +7204,13 @@ for poi in poi_list:
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
 
+landmark_pois = [
+	poi_id_countryclub,
+	poi_id_charcoalpark,
+	poi_id_beachresort,
+	poi_id_diner
+]
+
 # maps districts to their immediate neighbors
 poi_neighbors = {}
 
