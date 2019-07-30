@@ -320,6 +320,7 @@ nobite_text = [
 """ Casts a line into the Slime Sea """
 async def cast(cmd):
 	time_now = round(time.time())
+	has_reeled = False
 	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
@@ -362,9 +363,10 @@ async def cast(cmd):
 
 			if item_sought:
 				item = EwItem(id_item = item_sought.get('id_item'))
-				str_name = item = EwItem(id_item = item_sought.get('str_name'))
 
 				if item.item_type == ewcfg.it_food:
+
+					str_name = item.item_props['food_name']
 					fisher.bait = True
 
 					if item in ewcfg.plebe_bait:
@@ -480,14 +482,17 @@ async def cast(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.bait = False
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
-
-			return
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
+			else:
+				has_reeled = True
 
 	else:
 		response = "You can't fish here. Go to a pier."
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	# Don't send out a response if the user actually reeled in a fish, since that gets sent by the reel command instead.
+	if has_reeled == False:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 
 
 """ Reels in the fishing line.. """
@@ -539,6 +544,11 @@ async def reel(cmd):
 				else:
 					response = "You reel in two {}s!".format(item.str_name)
 
+				fisher.fishing = False
+				fisher.bite = False
+				fisher.current_fish = ""
+				fisher.current_size = ""
+				fisher.pier = ""
 				user_data.persist()
 
 			else:
