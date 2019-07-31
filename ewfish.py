@@ -909,6 +909,27 @@ async def barter(cmd):
 				except:
 					accepted = False
 
+				offer = EwOffer(
+					id_server = cmd.message.server.id,
+					id_user = cmd.message.author.id,
+					offer_give = id_fish
+				)
+
+				user_data = EwUser(member = cmd.message.author)
+				fish = EwItem(id_item = id_fish)
+
+				# cancel deal if fish is no longer in user's inventory
+				if fish.id_owner != user_data.id_user:
+					accepted = False
+
+				# cancel deal if the user has left the speakeasy
+				if user_data.poi != ewcfg.poi_id_speakeasy:
+					accepted = False
+
+				# cancel deal if the offer has been deleted
+				if offer.time_sinceoffer == 0:
+					accepted = False
+
 
 				if accepted == True:
 					offer_receive = str(offer.offer_receive)
