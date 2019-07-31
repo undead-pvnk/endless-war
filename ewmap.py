@@ -426,20 +426,14 @@ def score_map_from(
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
 
 
-			path_base = path
-			has_branched = False
+			path_base = EwPath(path_from = path)
 			for neigh in neighbors(step_last):
 				if neigh == step_penult:
 					continue
-				if has_branched:
-					branch = path_branch(path_base, neigh, user_data, coord_end)
-		    
-					if branch != None:
-						paths_walking_new.append(branch)
-				else:
-					if path_step(path_base, neigh, user_data, coord_end):
-						paths_walking_new.append(path_base)
-						has_branched = True
+
+				branch = path_branch(path_base, neigh, user_data, coord_end)
+				if branch != None:
+					paths_walking_new.append(branch)
 
 
 		paths_walking = paths_walking_new
@@ -530,22 +524,15 @@ def path_to(
 						pois_adjacent.append(poi_adjacent)
 						continue
 
-			path_base = path
-			has_branched = False
+			path_base = EwPath(path_from = path)
 			for neigh in neighbors(step_last):
 				if neigh == step_penult:
 					continue
 
-				if has_branched:
-					branch = path_branch(path_base, neigh, user_data, coord_end)
-					if branch != None:
-						heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, coord_end), path_id, branch))
-						path_id += 1
-				else:
-					if path_step(path_base, neigh, user_data, coord_end):
-						heapq.heappush(paths_walking, (path_base.cost + landmark_heuristic(path_base, coord_end), path_id, path_base))
-						path_id += 1
-						has_branched = True
+				branch = path_branch(path_base, neigh, user_data, coord_end)
+				if branch != None:
+					heapq.heappush(paths_walking, (branch.cost + landmark_heuristic(branch, coord_end), path_id, branch))
+					path_id += 1
 
 
 	if coord_end != None:
