@@ -7209,6 +7209,8 @@ landmark_pois = [
 	poi_id_countryclub,
 	poi_id_charcoalpark,
 	poi_id_slimesend_pier,
+	poi_id_beachresort,
+	poi_id_diner,
 ]
 
 # maps districts to their immediate neighbors
