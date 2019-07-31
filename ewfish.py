@@ -686,7 +686,7 @@ async def appraise(cmd):
 		item_props = fish.item_props
 		# str_fish = fish.item_props.get('str_name')
 		# id_fish = item_props['id_food']
-		acquisition = item_props['acquisition']
+		acquisition = item_props.get('acquisition')
 
 		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You submit your {} for appraisal".format(name)
 
