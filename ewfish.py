@@ -791,7 +791,7 @@ async def barter(cmd):
 		id_fish = fish.id_item
 		# str_fish = fish.item_props.get('str_name')
 		item_props = fish.item_props
-		acquisition = item_props['acquisition']
+		acquisition = item_props.get('acquisition')
 		response = "You approach a man of particularly swashbuckling appearance, adorned in an old sea captain's uniform and bicorne cap, and surrounded by empty glass steins. You ask him if he is Captain Albert Alexander and he replies that he hasn’t heard that name in a long time. You submit your {} for bartering".format(name)
 
 		if acquisition != ewcfg.acquisition_fishing:
