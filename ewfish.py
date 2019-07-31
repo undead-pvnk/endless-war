@@ -471,8 +471,8 @@ async def cast(cmd):
 					break
 
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, bite_text))
 			fisher.bite = True
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, bite_text))
 
 			await asyncio.sleep(6)
 
