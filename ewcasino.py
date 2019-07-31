@@ -959,7 +959,7 @@ async def baccarat(cmd):
 			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 
 def check(str):
-	if str.content == ewcfg.cmd_accept or str.content == ewcfg.cmd_refuse:
+	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
 		return True
 
 async def russian_roulette(cmd):
