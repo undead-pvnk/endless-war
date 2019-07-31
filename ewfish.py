@@ -474,7 +474,7 @@ async def cast(cmd):
 			fisher.bite = True
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, bite_text))
 
-			await asyncio.sleep(6)
+			await asyncio.sleep(8)
 
 			if fisher.bite != False:
 				fisher.fishing = False
