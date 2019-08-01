@@ -526,17 +526,14 @@ async def reel(cmd):
 
 				unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
+				item_props = ewitem.gen_item_props(item)
+
 				for creation in range(unearthed_item_amount):
 					ewitem.item_create(
-						item_type = ewcfg.it_item,
+						item_type = item.item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
-						item_props = {
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
+						item_props = item_props
 					),
 
 				if unearthed_item_amount == 1:
@@ -719,7 +716,7 @@ async def appraise(cmd):
 					response += "Shiver me timbers, is that a {}?? Unbelievable, that’s an extremely rare fish!! It was only ever released as a promotional item in Japan during the late ‘90s. ".format(name)
 
 				if size == ewcfg.fish_size_miniscule:
-					response += "Or, is it just a speck of dust? Seriously, that {} is downright miniscule! "
+					response += "Or, is it just a speck of dust? Seriously, that {} is downright miniscule! ".format(name)
 
 				if size == ewcfg.fish_size_small:
 					response += "Hmmm, it’s a little small, don’t you think? "
@@ -951,51 +948,15 @@ async def barter(cmd):
 							response += "\n\n"
 
 					else:
+						item_props = ewitem.gen_item_props(item)	
 
-						if hasattr(item, 'id_item'):
-							ewitem.item_create(
-								item_type = ewcfg.it_item,
-								id_user = cmd.message.author.id,
-								id_server = cmd.message.server.id,
-								item_props = {
-									'id_item': item.id_item,
-									'context': item.context,
-									'item_name': item.str_name,
-									'item_desc': item.str_desc,
-									'ingredients': item.ingredients,
-									'acquisition': item.acquisition,
-								}
-							),
+						ewitem.item_create(
+							item_type = item.item_type,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = item_props
+						)
 
-						if hasattr(item, 'id_food'):
-							ewitem.item_create(
-								item_type = ewcfg.it_food,
-								id_user = cmd.message.author.id,
-								id_server = cmd.message.server.id,
-								item_props = {
-									'id_food': item.id_food,
-									'food_name': item.str_name,
-									'food_desc': item.str_desc,
-									'recover_hunger': item.recover_hunger,
-									'inebriation': item.inebriation,
-									'str_eat': item.str_eat,
-									'time_expir': time.time() + ewcfg.std_food_expir
-								}
-							),
-
-						if hasattr(item, 'id_cosmetic'):
-							ewitem.item_create(
-								item_type = ewcfg.it_cosmetic,
-								id_user = cmd.message.author.id,
-								id_server = cmd.message.server.id,
-								item_props = {
-									'id_cosmetic': item.id_cosmetic,
-									'cosmetic_name': item.str_name,
-									'cosmetic_desc': item.str_desc,
-									'rarity': item.rarity,
-									'adorned': 'false'
-								}
-							),
 
 					ewitem.item_delete(id_item = item_sought.get('id_item'))
 
