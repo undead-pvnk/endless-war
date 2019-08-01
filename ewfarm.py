@@ -147,14 +147,14 @@ async def reap(cmd):
 					#  Determine what crop is grown.
 					vegetable = random.choice(ewcfg.vegetable_list)
 
-					item_props = gen_item_props(vegetable)
+					item_props = ewitem.gen_item_props(vegetable)
 
 					#  Create and give a bushel of whatever crop was grown.
 					for vcreate in range(3):
 						ewitem.item_create(
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
-							item_type = item.item_type,
+							item_type = vegetable.item_type,
 							item_props = item_props
 						)
 
