@@ -658,6 +658,7 @@ async def suicide(cmd):
 		user_isgeneral = user_data.life_state == ewcfg.life_state_kingpin
 		user_isjuvenile = user_data.life_state == ewcfg.life_state_juvenile
 		user_isdead = user_data.life_state == ewcfg.life_state_corpse
+		user_isexecutive = user_data.life_state == (ewcfg.life_state_executive or ewcfg.life_state_lucky)
 
 		if user_isdead:
 			response = "Too late for that."
@@ -665,7 +666,7 @@ async def suicide(cmd):
 			response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
-		elif user_iskillers or user_isrowdys:
+		elif user_iskillers or user_isrowdys or user_isexecutive:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
 				challenger = EwUser(id_user= user_data.rr_challenger, id_server= user_data.id_server)
