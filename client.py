@@ -280,6 +280,7 @@ cmd_map = {
 	ewcfg.cmd_reel: ewfish.reel,
 	ewcfg.cmd_appraise: ewfish.appraise,
 	ewcfg.cmd_barter: ewfish.barter,
+	ewcfg.cmd_embiggen: ewfish.embiggen,
 
 	 #scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
@@ -394,7 +395,7 @@ cmd_map = {
 	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
-debug = False
+debug = True
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True

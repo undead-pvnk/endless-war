@@ -986,3 +986,79 @@ def kill_dead_offers(id_server):
 		id_server,
 		time_now - ewcfg.fish_offer_timeout,
 	))
+
+async def embiggen(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+		response = "How are you going to embiggen your fish on the side of the street? You’ve got to see a professional for this, man. Head to the SlimeCorp Laboratory, they’ve got dozens of modern day magic potions ‘n shit over there."
+
+	elif item_sought:
+		name = item_sought.get('name')
+		fish = EwItem(id_item = item_sought.get('id_item'))
+		size = fish.item_props.get('size')
+
+		poudrin_cost = 0
+
+		if size == "miniscule":
+			poudrin_cost = 2
+
+		if size == "small":
+			poudrin_cost = 4
+
+		if size == "average":
+			poudrin_cost = 8
+
+		if size == "big":
+			poudrin_cost = 16
+
+		if size == "huge":
+			poudrin_cost = 32
+
+		poudrins_owned = ewitem.find_item_all(item_search = "slimepoudrin", id_user = user_data.id_user, id_server = user_data.id_server)
+		poudrin_amount = ewitem.find_poudrin(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+
+		if poudrin_cost == 0:
+			response = "Your {} is already as colossal as a fish can get!".format(name)
+
+		elif poudrin_amount < poudrin_cost:
+			response = "You need {} poudrins to embiggen your {}, but you only have {}!!".format(poudrin_cost, name, poudrin_amount)
+
+		else:
+			if size == "miniscule":
+				fish.item_props['size'] = 'small'
+
+			if size == "small":
+				fish.item_props['size'] = 'average'
+
+			if size == "average":
+				fish.item_props['size'] = 'big'
+
+			if size == "big":
+				fish.item_props['size'] = 'huge'
+
+			if size == "huge":
+				fish.item_props['size'] = 'colossal'
+
+			fish.persist()
+
+			for id_item in poudrins_owned:
+				ewitem.item_delete(id_item = id_item)
+
+			market_data.donated_poudrins += poudrin_cost
+			market_data.persist()
+			user_data.poudrin_donations += 1
+			user_data.persist()
+
+			response = "After several minutes long elevator descents, in the depths of some basement level far below the laboratory's lobby, you lay down your {} on a reclined medical chair. A SlimeCorp employee finishes the novel length terms of service they were reciting and asks you if you have any questions. You weren’t listening so you just tell them to get on with it so you can go back to haggling prices with Captain Albert Alexander. They oblige.\nThey grab a butterfly needle and carefully stab your fish with it, injecting filled with some bizarre, multi-colored serum you’ve never seen before. Sick, it’s bigger now!!".format(name)
+
+	else:
+		if item_search:  # If they didn't forget to specify an item and it just wasn't found.
+			response = "You don't have one."
+		else:
+			response = "Emiggen which fish? (check **!inventory**)"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
