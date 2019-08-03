@@ -395,7 +395,7 @@ cmd_map = {
 	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
-debug = True
+debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
