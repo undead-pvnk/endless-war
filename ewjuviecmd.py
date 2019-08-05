@@ -165,6 +165,7 @@ async def mine(cmd):
 		else:
 			printgrid = False
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -191,6 +192,8 @@ async def mine(cmd):
 				
 					if token.lower() == "reset":
 						user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
+						if random.random() < extra:
+							user_data.hunger += ewcfg.hunger_perminereset
 						user_data.persist()
 						init_grid(user_data.poi, user_data.id_server)
 						return await print_grid(cmd)
@@ -284,51 +287,15 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(ewcfg.mine_results)
 
-				if hasattr(item, 'id_item'):
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = ewcfg.it_item,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_item': item.id_item,
-								'context': item.context,
-								'item_name': item.str_name,
-								'item_desc': item.str_desc,
-							}
-						),
+				item_props = ewitem.gen_item_props(item)
 
-				elif hasattr(item, 'id_food'):
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = ewcfg.it_food,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_food': item.id_food,
-								'food_name': item.str_name,
-								'food_desc': item.str_desc,
-								'recover_hunger': item.recover_hunger,
-								'inebriation': item.inebriation,
-								'str_eat': item.str_eat,
-								'time_expir': time.time() + ewcfg.farm_food_expir
-							}
-						),
-
-				elif hasattr(item, 'id_cosmetic'):
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = ewcfg.it_cosmetic,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_cosmetic': item.id_cosmetic,
-								'cosmetic_name': item.str_name,
-								'cosmetic_desc': item.str_desc,
-								'rarity': item.rarity,
-								'adorned': 'false'
-							}
-						),
+				for creation in range(unearthed_item_amount):
+					ewitem.item_create(
+						item_type = item.item_type,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = item_props
+					)
 
 				if unearthed_item_amount == 1:
 					response = "You unearthed a {}! ".format(item.str_name)
@@ -354,7 +321,6 @@ async def mine(cmd):
 				mining_yield *= 2
 
 			# Fatigue the miner.
-			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
 			if extra > 0:  # if hunger_cost_mod is not an integer
