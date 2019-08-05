@@ -280,6 +280,7 @@ cmd_map = {
 	ewcfg.cmd_reel: ewfish.reel,
 	ewcfg.cmd_appraise: ewfish.appraise,
 	ewcfg.cmd_barter: ewfish.barter,
+	ewcfg.cmd_embiggen: ewfish.embiggen,
 
 	 #scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
