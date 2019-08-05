@@ -179,7 +179,7 @@ async def mine(cmd):
 			if cmd.tokens_count < 2:
 				response = "Please specify which vein to mine."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid_ms(cmd)
+				return await print_grid(cmd)
 
 			else:
 				#minesweeper = True
@@ -620,7 +620,7 @@ async def scavenge(cmd):
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
-def init_grid_ms(poi, id_server):
+def init_grid(poi, id_server):
 	grid = []
 	slime_grid = []
 	num_rows = 15
@@ -658,7 +658,7 @@ def init_grid_ms(poi, id_server):
 		grid_cont = EwMineGrid(grid = slime_grid)
 		mines_map.get(poi)[id_server] = grid_cont
 
-async def print_grid_ms(cmd):
+async def print_grid(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
