@@ -1035,24 +1035,25 @@ async def embiggen(cmd):
 
 			else:
 				if size == ewcfg.fish_size_miniscule:
-					fish.item_props['size'] = 'small'
+					fish.item_props['size'] = ewcfg.fish_size_small
 
 				if size == ewcfg.fish_size_small:
-					fish.item_props['size'] = 'average'
+					fish.item_props['size'] = ewcfg.fish_size_average
 
 				if size == ewcfg.fish_size_average:
-					fish.item_props['size'] = 'big'
+					fish.item_props['size'] = ewcfg.fish_size_big
 
 				if size == ewcfg.fish_size_big:
-					fish.item_props['size'] = 'huge'
+					fish.item_props['size'] = ewcfg.fish_size_huge
 
 				if size == ewcfg.fish_size_huge:
-					fish.item_props['size'] = 'colossal'
+					fish.item_props['size'] = ewcfg.fish_size_colossal
 
 				fish.persist()
 
 				for delete in range(poudrin_cost):
-					ewitem.item_delete(id_item = "slimepoudrin")
+					poudrin = poudrins_owned.pop()
+					ewitem.item_delete(id_item = poudrin.get("id_item"))
 
 				market_data.donated_poudrins += poudrin_cost
 				market_data.persist()
