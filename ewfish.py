@@ -23,7 +23,7 @@ fishers = {}
 class EwOffer:
 	id_server = ""
 	id_user = ""
-	offer_give = ""
+	offer_give = 0
 	offer_receive = ""
 	time_sinceoffer = 0
 
@@ -704,7 +704,7 @@ async def appraise(cmd):
 				size = item_props['size']
 				value = int(item_props['value'])
 
-				response += 'and offer him a Manhattan Project as payment. \n"Hm, alright, let’s see here...'
+				response += ' and offer him a Manhattan Project as payment. \n"Hm, alright, let’s see here...'
 
 				if rarity == ewcfg.fish_rarity_common:
 					response += "Ah, a {}, that’s a pretty common fish... ".format(name)
@@ -788,7 +788,7 @@ async def barter(cmd):
 	elif item_sought:
 		name = item_sought.get('name')
 		fish = EwItem(id_item = item_sought.get('id_item'))
-		id_fish = fish.item_props.get('id_food')
+		id_fish = fish.id_item
 		# str_fish = fish.item_props.get('str_name')
 		item_props = fish.item_props
 		acquisition = item_props['acquisition']
@@ -826,7 +826,7 @@ async def barter(cmd):
 				cur_time_min = time.time() / 60
 				time_offered = cur_time_min - offer.time_sinceoffer
 
-				if offer.time_sinceoffer > 0 and time_offered < 1440:
+				if offer.time_sinceoffer > 0 and time_offered < ewcfg.fish_offer_timeout:
 					offer_receive = str(offer.offer_receive)
 
 					if offer_receive.isdigit() == True:
@@ -994,3 +994,13 @@ async def barter(cmd):
 			response = "Offer Captain Albert Alexander which fish? (check **!inventory**)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def kill_dead_offers(id_server):
+	time_now = int(time.time() / 60)
+	ewutils.execute_sql_query("DELETE FROM offers WHERE {id_server} = %s AND {time_sinceoffer} < %s".format(
+		id_server = ewcfg.col_id_server,
+		time_sinceoffer = ewcfg.col_time_sinceoffer,
+	),(
+		id_server,
+		time_now - ewcfg.fish_offer_timeout,
+	))

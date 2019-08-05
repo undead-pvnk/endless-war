@@ -720,6 +720,9 @@ async def on_ready():
 					# Decrease inebriation for all players above min (0).
 					ewutils.pushdownServerInebriation(id_server = server.id)
 
+					# Remove fish offers which have timed out
+					ewfish.kill_dead_offers(id_server = server.id)
+
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
 					await ewmap.kick(server.id)
