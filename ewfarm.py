@@ -20,6 +20,7 @@ class EwFarm:
 	time_lastphase = 0
 	slimes_onreap = 0
 	action_required = 0
+	crop = ""
 
 	def __init__(
 		self,
@@ -33,13 +34,14 @@ class EwFarm:
 			self.name = farm
 
 			data = ewutils.execute_sql_query(
-				"SELECT {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required} FROM farms WHERE id_server = %s AND id_user = %s AND {col_farm} = %s".format(
+				"SELECT {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop} FROM farms WHERE id_server = %s AND id_user = %s AND {col_farm} = %s".format(
 					time_lastsow = ewcfg.col_time_lastsow,
 					col_farm = ewcfg.col_farm,
 					phase = ewcfg.col_phase,
 					time_lastphase = ewcfg.col_time_lastphase,
 					slimes_onreap = ewcfg.col_slimes_onreap,
 					action_required = ewcfg.col_action_required,
+					crop = ewcfg.col_crop,
 				), (
 					id_server,
 					id_user,
@@ -54,6 +56,7 @@ class EwFarm:
 				self.time_lastphase = data[0][2]
 				self.slimes_onreap = data[0][3]
 				self.action_required = data[0][4]
+				self.crop = data[0][5]
 			else:  # create new entry
 				ewutils.execute_sql_query(
 					"REPLACE INTO farms (id_server, id_user, {col_farm}) VALUES (%s, %s, %s)".format(
@@ -67,13 +70,14 @@ class EwFarm:
 
 	def persist(self):
 		ewutils.execute_sql_query(
-			"REPLACE INTO farms(id_server, id_user, {farm}, {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+			"REPLACE INTO farms(id_server, id_user, {farm}, {time_lastsow}, {phase}, {time_lastphase}, {slimes_onreap}, {action_required}, {crop}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				farm = ewcfg.col_farm,
 				time_lastsow = ewcfg.col_time_lastsow,
 				phase = ewcfg.col_phase,
 				time_lastphase = ewcfg.col_time_lastphase,
 				slimes_onreap = ewcfg.col_slimes_onreap,
 				action_required = ewcfg.col_action_required,
+				crop = ewcfg.col_crop,
 			), (
 				self.id_server,
 				self.id_user,
@@ -83,6 +87,7 @@ class EwFarm:
 				self.time_lastphase,
 				self.slimes_onreap,
 				self.action_required,
+				self.crop,
 			)
 		)
 
@@ -164,7 +169,7 @@ async def reap(cmd):
 					unearthed_item = False
 					unearthed_item_amount = 0
 
-					unearthed_item_chance = 500 / ewcfg.unearthed_item_rarity  # 1 in 3 chance
+					unearthed_item_chance = 50 / ewcfg.unearthed_item_rarity  # 1 in 30 chance
 					
 					if ewcfg.mutation_id_lucky in mutations:
 						unearthed_item_chance *= 1.33
@@ -195,7 +200,9 @@ async def reap(cmd):
 							response += "two {}s, ".format(item.str_name)
 
 					#  Determine what crop is grown.
-					vegetable = random.choice(ewcfg.vegetable_list)
+					vegetable = ewcfg.food_map.get(farm.crop)
+					if vegetable is None:
+						vegetable = random.choice(ewcfg.vegetable_list)
 
 					item_props = ewitem.gen_item_props(vegetable)
 
@@ -257,18 +264,45 @@ async def sow(cmd):
 		if farm.time_lastsow > 0:
 			response = "You’ve already sown something here. Try planting in another farming location. If you’ve planted in all three farming locations, you’re shit out of luck. Just wait, asshole."
 		else:
-			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+			if cmd.tokens_count > 1:
+				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+			else:
+				item_search = "slimepoudrin"
 
-			if poudrin == None:
+			item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+			if item_sought == None:
 				response = "You don't have anything to plant! Try collecting a poudrin."
 			else:
+				slimes_onreap = ewcfg.reap_gain
+				item_data = EwItem(id_item = item_sought.get("id_item"))
+				if item_data.item_type == ewcfg.it_item:
+					if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin \
+					or item_data.item_props.get("context") == ewcfg.context_slimeoidheart:
+						vegetable = random.choice(ewcfg.vegetable_list)
+						slimes_onreap *= 2
+					else:
+						response = "The soil has enough toxins without you burying your trash here."
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				elif item_data.item_type == ewcfg.it_food:
+					food_id = item_data.item_props.get("id_food")
+					vegetable = ewcfg.food_map.get(food_id)
+					if ewcfg.vendor_farm not in vegetable.vendors:
+						response = "It sure would be nice if {}s grew on trees, but alas they do not. Idiot.".format(item_sought.get("name"))
+						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+				else:
+					response = "The soil has enough toxins without you burying your trash here."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					
 				# Sowing
-				response = "You sow a poudrin into the fertile soil beneath you. It will grow in about 3 hours."
+				response = "You sow a {} into the fertile soil beneath you. It will grow in about 3 hours.".format(item_sought.get("name"))
 
 				farm.time_lastsow = int(time.time() / 60)  # Grow time is stored in minutes.
 				farm.time_lastphase = int(time.time())
-				farm.slimes_onreap = ewcfg.reap_gain
-				ewitem.item_delete(id_item = poudrin.get('id_item'))  # Remove Poudrins
+				farm.slimes_onreap = slimes_onreap
+				farm.crop = vegetable.id_food
+				ewitem.item_delete(id_item = item_sought.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
 

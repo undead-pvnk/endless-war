@@ -1052,6 +1052,7 @@ col_phase = 'phase'
 col_time_lastphase = 'time_lastphase'
 col_slimes_onreap = 'slimes_onreap'
 col_action_required = 'action_required'
+col_crop = 'crop'
 
 # Database columns for troll romance
 col_quadrant = 'quadrant'
