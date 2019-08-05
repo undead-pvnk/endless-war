@@ -177,21 +177,17 @@ async def reap(cmd):
 						# If there are multiple possible products, randomly select one.
 						item = random.choice(ewcfg.mine_results)
 
-						if hasattr(item, 'id_item'):
+						item_props = ewitem.gen_item_props(item)
+
+						if item is not None:
+
 							for creation in range(unearthed_item_amount):
 								ewitem.item_create(
-									item_type = ewcfg.it_item,
+									item_type = item.item_type,
 									id_user = cmd.message.author.id,
 									id_server = cmd.message.server.id,
-									item_props = {
-										'id_item': item.id_item,
-										'context': item.context,
-										'item_name': item.str_name,
-										'item_desc': item.str_desc,
-									}
-								),
-						else:
-							pass
+									item_props = item_props
+								)
 
 						if unearthed_item_amount == 1:
 							response += "a {}, ".format(item.str_name)
@@ -201,20 +197,15 @@ async def reap(cmd):
 					#  Determine what crop is grown.
 					vegetable = random.choice(ewcfg.vegetable_list)
 
+					item_props = ewitem.gen_item_props(vegetable)
+
 					#  Create and give a bushel of whatever crop was grown.
 					for vcreate in range(3):
 						ewitem.item_create(
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
-							item_type = ewcfg.it_food,
-							item_props = {
-								'id_food': vegetable.id_food,
-								'food_name': vegetable.str_name,
-								'food_desc': vegetable.str_desc,
-								'recover_hunger': vegetable.recover_hunger,
-								'str_eat': vegetable.str_eat,
-								'time_expir': time.time() + ewcfg.farm_food_expir
-							}
+							item_type = vegetable.item_type,
+							item_props = item_props
 						)
 
 					response += "and a bushel of {}!".format(vegetable.str_name)
@@ -311,49 +302,14 @@ async def mill(cmd):
 		if len(items) > 0:
 			item = random.choice(items)
 
-			if hasattr(item, 'id_item'):
-				ewitem.item_create(
-					item_type = ewcfg.it_item,
-					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
-					item_props = {
-						'id_item': item.id_item,
-						'context': item.context,
-						'item_name': item.str_name,
-						'item_desc': item.str_desc,
-						'ingredients': item.ingredients,
-					}
-				),
-
-			elif hasattr(item, 'id_food'):
-				ewitem.item_create(
-					item_type = ewcfg.it_food,
-					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
-					item_props = {
-						'id_food': item.id_food,
-						'food_name': item.str_name,
-						'food_desc': item.str_desc,
-						'recover_hunger': item.recover_hunger,
-						'inebriation': item.inebriation,
-						'str_eat': item.str_eat,
-						'time_expir': time.time() + ewcfg.farm_food_expir
-					}
-				),
-
-			elif hasattr(item, 'id_cosmetic'):
-				ewitem.item_create(
-					item_type = ewcfg.it_cosmetic,
-					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
-					item_props = {
-						'id_cosmetic': item.id_cosmetic,
-						'cosmetic_name': item.str_name,
-						'cosmetic_desc': item.str_desc,
-						'rarity': item.rarity,
-						'adorned': 'false'
-					}
-				),
+			item_props = ewitem.gen_item_props(item)
+			
+			ewitem.item_create(
+				item_type = item.item_type,
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_props = item_props
+			)
 
 			response = "You walk up to the official SlimeCorp Milling Station and shove your irradiated produce into the hand-crank. You painfully grip the needle-covered crank handle, dripping {} slime into a small compartment on the device’s side which supposedly fuels it. You begin slowly churning them into a glorious, pastry goo. As the goo tosses and turns inside the machine, it solidifies, and after a few moments a {} pops out!".format(ewcfg.slimes_permill, item.str_name)
 

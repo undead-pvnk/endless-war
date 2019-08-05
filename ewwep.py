@@ -19,6 +19,9 @@ from ewplayer import EwPlayer
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
+
+	item_type = "weapon"
+
 	# A unique name for the weapon. This is used in the database and typed by
 	# users, so it should be one word, all lowercase letters.
 	id_weapon = ""
@@ -91,6 +94,8 @@ class EwWeapon:
 		str_description = "",
 		acquisition = "dojo"
 	):
+		self.item_type = ewcfg.it_weapon
+
 		self.id_weapon = id_weapon
 		self.alias = alias
 		self.str_equip = str_equip
@@ -109,6 +114,8 @@ class EwWeapon:
 		self.str_miss = str_miss
 		self.str_description = str_description
 		self.acquisition = acquisition
+
+		self.str_name = self.str_weapon
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -941,12 +948,7 @@ async def arm(cmd):
 				
 			else:
 				response = "You "
-				item_props = {
-					"weapon_type": weapon.id_weapon,
-					"weapon_name": "",
-					"weapon_desc": weapon.str_description,
-					"married": ""
-				}
+				item_props = ewitem.gen_item_props(weapon)
 
 				ewitem.item_create(
 					item_type = ewcfg.it_weapon,
