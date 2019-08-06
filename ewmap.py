@@ -494,8 +494,6 @@ def path_to(
 	while len(paths_walking) > 0:
 		count_iter += 1
 
-		ewutils.logMsg("paths walking: {}".format(len(paths_walking)))
-
 		path_tuple = heapq.heappop(paths_walking)
 
 		path = path_tuple[-1]
