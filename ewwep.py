@@ -659,7 +659,7 @@ async def suicide(cmd):
 		user_isjuvenile = user_data.life_state == ewcfg.life_state_juvenile
 		user_isdead = user_data.life_state == ewcfg.life_state_corpse
 		user_isexecutive = user_data.life_state == ewcfg.life_state_executive
-		user_islucky = user_data.lifestate == ewcfg.life_state_lucky
+		user_islucky = user_data.life_state == ewcfg.life_state_lucky
 
 		if user_isdead:
 			response = "Too late for that."
