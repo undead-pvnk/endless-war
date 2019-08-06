@@ -20,6 +20,9 @@ from ewplayer import EwPlayer
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
+
+	item_type = "weapon"
+
 	# A unique name for the weapon. This is used in the database and typed by
 	# users, so it should be one word, all lowercase letters.
 	id_weapon = ""
@@ -137,6 +140,8 @@ class EwWeapon:
 		acquisition = "dojo",
 		stat = ""
 	):
+		self.item_type = ewcfg.it_weapon
+
 		self.id_weapon = id_weapon
 		self.alias = alias
 		self.str_equip = str_equip
@@ -166,6 +171,8 @@ class EwWeapon:
 		self.classes = classes
 		self.acquisition = acquisition
 		self.stat = stat
+
+		self.str_name = self.str_weapon
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -850,6 +857,8 @@ async def suicide(cmd):
 		user_isgeneral = user_data.life_state == ewcfg.life_state_kingpin
 		user_isjuvenile = user_data.life_state == ewcfg.life_state_juvenile
 		user_isdead = user_data.life_state == ewcfg.life_state_corpse
+		user_isexecutive = user_data.life_state == ewcfg.life_state_executive
+		user_islucky = user_data.lifestate == ewcfg.life_state_lucky
 
 		if user_isdead:
 			response = "Too late for that."
@@ -857,7 +866,7 @@ async def suicide(cmd):
 			response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
-		elif user_iskillers or user_isrowdys:
+		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
 				response = "You can't do that now"
@@ -900,7 +909,7 @@ async def explode(damage = 0, district_data = None):
 	response = ""
 	channel = ewcfg.id_to_poi.get(poi).channel
 
-	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
 	users = district_data.get_players_in_district(life_states = life_states)
 
 	for user in users:
@@ -1217,124 +1226,6 @@ async def equip(cmd):
 	else:
 		response = "You don't have one"
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-""" get a weapon into your inventory"""
-async def arm(cmd):
-	response = ""
-	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
-
-	weapons_held = ewitem.inventory(
-		id_user = user_data.id_user,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_weapon
-	)
-
-	# No vendors in this district
-	if poi == None or len(poi.vendors) == 0:
-		response = "There are no weapon dealers here. Try the Dojo"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	available_weapons = []
-	valid_vendors = (set(poi.vendors).intersection(set(ewcfg.weapon_vendors)))
-
-	# Check weapon vendors' inventory and add found weapons to available_weapons
-	for vendor in valid_vendors:
-		if ewcfg.weapon_vendor_inv.get(vendor) is not None:
-			for name in ewcfg.weapon_vendor_inv.get(vendor):
-				weapon = ewcfg.weapon_map.get(name)
-				available_weapons.append("{name} ({price})".format(name=name, price=weapon.price))
-
-	# No weapon vendors in this district or they have nothing to sell
-	if len(valid_vendors) == 0 or len(available_weapons) == 0:
-		response = "There are no weapon dealers here. Try the Dojo" 
-
-	elif user_data.life_state == ewcfg.life_state_corpse:
-		response = "Ghosts can't hold weapons."
-		
-	else:
-		value = None
-		if cmd.tokens_count > 1:
-			value = cmd.tokens[1]
-			value = value.lower()	
-
-		amount = 1
-
-		weapon = ewcfg.weapon_map.get(value)
-
-		if weapon != None:
-			if weapon.acquisition != ewcfg.acquisition_dojo:
-				weapon = None
-
-		if weapon != None:
-			# Gets the vendor that the item is available and the player currently located in
-			try:
-				current_vendor = (set(weapon.vendors).intersection(set(poi.vendors))).pop()
-			except:
-				current_vendor = None
-
-		if weapon != None and current_vendor != None:
-			has_weapon = False
-
-			# Player doesn't have enough money
-			if weapon.price > 0 and (weapon.price * amount) > user_data.slimes:
-				response = "The fee for taking the {weapon} is {price} slime and you only have {slimes}.".format(weapon=weapon.str_weapon, price=weapon.price, slimes=user_data.slimes)
-
-			else:
-				item_props = {
-					"weapon_type": weapon.id_weapon,
-					"weapon_name": "",
-					"weapon_desc": weapon.str_description,
-					"married": "",
-					"ammo": weapon.clip_size
-				}
-
-				# Thrown weapons are stackable
-				if ewcfg.weapon_class_thrown in weapon.classes:
-					# Amount to buy for stackable weapons					
-					for token in cmd.tokens[1:]:
-						if token != value:
-							amount = ewutils.getIntToken(cmd.tokens)
-							amount = min(amount, 20)
-					if amount is None:
-						amount = 1
-
-					# Check the player's inventory for the weapon and add amount to stack size
-					for wep in weapons_held:
-						wep = EwItem(id_item=wep.get("id_item"))
-						if wep.item_props.get("weapon_type") == weapon.id_weapon and wep.stack_size < wep.stack_max:
-							if wep.stack_size + amount > wep.stack_max:
-								amount = wep.stack_max - wep.stack_size
-
-							has_weapon = True
-							wep.stack_size += amount
-							wep.persist()
-							user_data.change_slimes(n = -(weapon.price * amount), source=ewcfg.source_spending)
-							response = "You pay {price} slime and take {amount}{weapon}.".format(amount=(str(amount) + " ") if amount > 1 else "", price=(weapon.price * amount), weapon=weapon.str_weapon)
-							break
-					
-				if has_weapon is False:
-					if len(weapons_held) >= user_data.get_weapon_capacity():
-							response = "You can't carry any more weapons."
-					else:
-						ewitem.item_create(
-							item_type = ewcfg.it_weapon,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							stack_max = 20 if ewcfg.weapon_class_thrown in weapon.classes else -1,
-							stack_size = amount if ewcfg.weapon_class_thrown in weapon.classes else 1,
-							item_props = item_props
-						)
-
-						user_data.change_slimes(n = -(weapon.price * amount), source = ewcfg.source_spending)
-						user_data.persist()
-
-						response += "You pay {price} slime and take {amount}{weapon}.".format(price=weapon.price, amount=(str(amount) + " " if amount > 1 else ""), weapon=weapon.str_weapon)
-		else:
-			response = "Choose your weapon: {}".format(ewutils.formatNiceList(names = available_weapons, conjunction = "or"))
-
-	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ name a weapon using a slime poudrin """
