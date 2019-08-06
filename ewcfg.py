@@ -571,6 +571,8 @@ slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
 slimes_permill = 75000
+slimes_invein = 2000
+slimes_pertile = 25
 
 # hunger
 min_stamina = 100
@@ -578,6 +580,7 @@ hunger_pershot = 10
 hunger_perspar = 30
 hunger_perfarm = 50
 hunger_permine = 1
+hunger_perminereset = 10
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
@@ -850,12 +853,25 @@ cell_empty = -1
 cell_empty_marked = -2
 cell_empty_open = -3
 
-symbol_map = {
+cell_slime = 0
+
+
+symbol_map_ms = {
 	-1 : "/",
 	1 : "/",
 	-2 : "+",
 	2 : "+",
 	3 : "X"
+}
+
+symbol_map_pokemine = {
+	-1 : "_",
+	0 : "~",
+	1 : "X",
+	11 : ";",
+	12 : "/",
+	13 : "#"
+	
 }
 
 number_emote_map = {
