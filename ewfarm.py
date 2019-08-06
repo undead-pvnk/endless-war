@@ -10,6 +10,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewfood import EwFood
 from ewitem import EwItem
+from ewslimeoid import EwSlimeoid
 
 class EwFarm:
 	id_server = ""
@@ -277,10 +278,16 @@ async def sow(cmd):
 				slimes_onreap = ewcfg.reap_gain
 				item_data = EwItem(id_item = item_sought.get("id_item"))
 				if item_data.item_type == ewcfg.it_item:
-					if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin \
-					or item_data.item_props.get("context") == ewcfg.context_slimeoidheart:
+					if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
 						vegetable = random.choice(ewcfg.vegetable_list)
 						slimes_onreap *= 2
+					elif item_data.item_props.get("context") == ewcfg.context_slimeoidheart:
+						vegetable = random.choice(ewcfg.vegetable_list)
+						slimes_onreap *= 2
+
+						slimeoid_data = EwSlimeoid(id_slimeoid = item_data.item_props.get("subcontext"))
+						slimeoid_data.delete()
+						
 					else:
 						response = "The soil has enough toxins without you burying your trash here."
 						return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -302,6 +309,8 @@ async def sow(cmd):
 				farm.time_lastphase = int(time.time())
 				farm.slimes_onreap = slimes_onreap
 				farm.crop = vegetable.id_food
+				farm.phase = ewcfg.farm_phase_sow
+				farm.action_required = ewcfg.farm_action_none
 				ewitem.item_delete(id_item = item_sought.get('id_item'))  # Remove Poudrins
 
 				farm.persist()
