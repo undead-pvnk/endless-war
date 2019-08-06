@@ -494,13 +494,19 @@ def path_to(
 	while len(paths_walking) > 0:
 		count_iter += 1
 
+		ewutils.logMsg("paths walking: {}".format(len(paths_walking)))
+
 		path_tuple = heapq.heappop(paths_walking)
 
 		path = path_tuple[-1]
 
 		if path is not None:
-
 			step_last = path.steps[-1]
+			score_current = score_map[step_last[1]][step_last[0]]
+			if path.cost >= score_current:
+				continue
+
+			score_map[step_last[1]][step_last[0]] = path.cost
 			#ewutils.logMsg("visiting " + str(step_last))
 
 			step_penult = path.steps[-2] if len(path.steps) >= 2 else None
