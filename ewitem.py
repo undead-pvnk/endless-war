@@ -1168,7 +1168,8 @@ def gen_item_props(item):
 			"weapon_type": item.id_weapon,
 			"weapon_name": "",
 			"weapon_desc": item.str_description,
-			"married": ""
+			"married": "",
+			"ammo": item.clip_size
 		}
 
 	elif item.item_type == ewcfg.it_cosmetic:
