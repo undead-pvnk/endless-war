@@ -269,8 +269,6 @@ async def order(cmd):
 							elif user_data.life_state == ewcfg.life_state_corpse:
 								response = "Ghosts can't hold weapons."
 
-							else:
-
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 
 					if company_data is not None:
@@ -284,8 +282,8 @@ async def order(cmd):
 						item_type = item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
-						stack_max = 20 if item_type = ewcfg.it_weapon and ewcfg.weapon_class_thrown in item_classes else -1
-						stack_size = 1 if item_type = ewcfg.it_weapon and ewcfg.weapon_class_thrown in item_classes else 0
+						stack_max = 20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
+						stack_size = 1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 						item_props = item_props
 					)
 
