@@ -1105,10 +1105,10 @@ async def scout(cmd):
 			if ewcfg.mutation_id_threesashroud in scoutee_mutations and scoutee_data.life_state == ewcfg.life_state_enlisted:
 				allies_in_district = district_data.get_players_in_district(min_level = min_level, life_states = [ewcfg.life_state_enlisted], factions = [scoutee_data.faction])
 				if len(allies_in_district) > 3:
-					return
+					continue
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
-				return
+				continue
 
 			detailed_resp += "\n" + scoutee_player.display_name
 			num_players += 1
