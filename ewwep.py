@@ -419,7 +419,7 @@ async def attack(cmd):
 					if user_data.id_user in allies_in_district:
 						allies_in_district.remove(user_data.id_user)
 
-					slimes_damage *= 1 + 0.05 * len(allies_in_district)
+					slimes_damage *= 1 + 0.1 * len(allies_in_district)
 				if ewcfg.mutation_id_dressedtokill in user_mutations:
 					items = ewitem.inventory(
 						id_user = cmd.message.author.id,
