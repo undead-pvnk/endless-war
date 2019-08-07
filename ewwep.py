@@ -408,7 +408,7 @@ async def attack(cmd):
 					or (market_data.day % 31 == 1 and market_data.clock < 6)
 				):
 					slimes_damage *= 0.1
-				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
+				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.5:
 					slimes_damage *= 0.75
 				if ewcfg.mutation_id_socialanimal in user_mutations:
 					allies_in_district = district_data.get_players_in_district(
