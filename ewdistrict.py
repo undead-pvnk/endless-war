@@ -460,6 +460,8 @@ async def capture_tick(id_server):
 				player_id = player
 				user_data = EwUser(id_user = player_id, id_server = id_server)
 				player_faction = user_data.faction
+				if user_data.time_lastpvp + ewcfg.time_pvp < time_old:
+					continue
 
 				mutations = user_data.get_mutations()
 

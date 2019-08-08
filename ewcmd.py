@@ -382,6 +382,7 @@ async def hurl(cmd):
 """
 async def thrash(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	time_now = int(time.time())
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_rowdys:
 		# start pvp timer
@@ -397,6 +398,7 @@ async def thrash(cmd):
 """
 async def dab(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	time_now = int(time.time())
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
 		# start pvp timer
