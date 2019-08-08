@@ -531,7 +531,7 @@ async def scavenge(cmd):
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
 
-			if ewcfg.mutation_id_whitenationalist in scoutee_mutations and market_data.weather == "snow":
+			if ewcfg.mutation_id_whitenationalist in mutations and market_data.weather == "snow":
 				scavenge_mod *= 1.5
 
 			if ewcfg.mutation_id_webbedfeet in mutations:

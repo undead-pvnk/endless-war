@@ -408,7 +408,7 @@ async def attack(cmd):
 					or (market_data.day % 31 == 1 and market_data.clock < 6)
 				):
 					slimes_damage *= 0.1
-				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
+				if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.5:
 					slimes_damage *= 0.75
 				if ewcfg.mutation_id_socialanimal in user_mutations:
 					allies_in_district = district_data.get_players_in_district(
@@ -419,7 +419,7 @@ async def attack(cmd):
 					if user_data.id_user in allies_in_district:
 						allies_in_district.remove(user_data.id_user)
 
-					slimes_damage *= 1 + 0.05 * len(allies_in_district)
+					slimes_damage *= 1 + 0.1 * len(allies_in_district)
 				if ewcfg.mutation_id_dressedtokill in user_mutations:
 					items = ewitem.inventory(
 						id_user = cmd.message.author.id,
