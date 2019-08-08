@@ -253,7 +253,7 @@ async def attack(cmd):
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-		elif shoote_data.time_lastpvp + ewcfg.time_pvp < time_now:
+		elif shootee_data.time_lastpvp + ewcfg.time_pvp < time_now:
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
