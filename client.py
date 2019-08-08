@@ -633,7 +633,6 @@ async def on_ready():
 
 		if time_last_pvp + ewcfg.update_pvp <= time_now:
 			for server in client.servers:
-				ewutils.logMsg("beginning role update for server {}".format(server.id))
 				role_ids = []
 				for pvp_role in ewcfg.role_to_pvp_role.values():
 					role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
@@ -643,7 +642,6 @@ async def on_ready():
 						if role.id in role_ids:
 							await ewrolemgr.updateRoles(client = client, member = member)
 							continue
-				ewutils.logMsg("finished role update for server {}".format(server.id))
 			time_last_pvp = time_now
 						
 
