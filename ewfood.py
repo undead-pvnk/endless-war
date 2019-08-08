@@ -106,6 +106,7 @@ async def menu(cmd):
 				item_item = ewcfg.item_map.get(item_name)
 				food_item = ewcfg.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
+				furniture_item = ewcfg.furniture_map.get(item_name)
 
 				# increase profits for the stock market
 				stock_data = None
@@ -123,6 +124,9 @@ async def menu(cmd):
 
 				if cosmetic_item:
 					value = cosmetic_item.price
+
+				if furniture_item:
+					value = furniture_item.price
 
 				if stock_data is not None:
 					value *= (stock_data.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2
@@ -175,7 +179,11 @@ async def order(cmd):
 			item_type = ewcfg.it_cosmetic
 			if item != None:
 				item_id = item.id_cosmetic
-
+		if item == None:
+			item = ewcfg.furniture_map.get(value)
+			item_type = ewcfg.it_furniture
+			if item != None:
+				item_id = item.id_furniture
 		if item != None:
 			item_type = item.item_type
 			# Gets a vendor that the item is available and the player currently located in

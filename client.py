@@ -133,7 +133,8 @@ cmd_map = {
 	ewcfg.cmd_depart: ewapt.depart,
 	ewcfg.cmd_consult: ewapt.consult,
 	ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
-	ewcfg.cmd_sign_lease:ewapt.signlease,
+	ewcfg.cmd_sign_lease: ewapt.signlease,
+	ewcfg.cmd_apartment: ewapt.apartment,
 
 
 
@@ -676,6 +677,7 @@ async def on_ready():
 						bazaar_foods = []
 						bazaar_cosmetics = []
 						bazaar_general_items = []
+						bazaar_furniture = []
 
 						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
 							if item in ewcfg.item_names:
@@ -686,6 +688,9 @@ async def on_ready():
 
 							elif item in ewcfg.cosmetic_names:
 								bazaar_cosmetics.append(item)
+
+							elif item in ewcfg.furniture_names:
+								bazaar_furniture.append(item)
 
 						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
 
@@ -700,6 +705,8 @@ async def on_ready():
 							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
 						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
 							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+
+						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
 
 					market_data.persist()
 

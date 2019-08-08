@@ -1151,6 +1151,16 @@ def gen_item_props(item):
 			'rarity': item.rarity,
 			'adorned': 'false'
 		}
+	elif item.item_type == ewcfg.it_furniture:
+		item_props = {
+			'id_furniture': item.id_furniture,
+			'furniture_name': item.str_name,
+			'furniture_desc': item.str_desc,
+			'rarity': item.rarity,
+			'furniture_place_desc': item.furniture_place_desc,
+			'furniture_look_desc': item.furniture_look_desc,
+			'acquisition': item.acquisition
+		}
 
 	return item_props
 		

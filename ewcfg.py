@@ -13,6 +13,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewfarm import EwFarmAction
 from ewfish import EwFish
+from ewapt import EwFurniture
 #import ewdebug
 
 # Global configuration options.
@@ -503,10 +504,14 @@ cmd_sign_lease = cmd_prefix + 'signlease'
 cmd_rent_cycle = cmd_prefix + 'rentcycle'
 cmd_fridge = cmd_prefix + 'fridge'
 cmd_closet = cmd_prefix + 'closet'
-cmd_stow = cmd_prefix + 'stow'
+cmd_store = cmd_prefix + 'store'
 cmd_unfridge = cmd_prefix + 'unfridge'
 cmd_uncloset = cmd_prefix + 'uncloset'
 cmd_take = cmd_prefix + 'take'
+cmd_furnish = cmd_prefix + 'furnish'
+cmd_unfurnish = cmd_prefix + 'unfurnish'
+cmd_freeze = cmd_prefix + 'freeze'
+cmd_apartment = cmd_prefix + 'apartment'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
@@ -4506,6 +4511,44 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+furniture_list = [
+EwFurniture(
+		id_furniture = "interrogationchair",
+		str_name = "interrogation chair",
+		str_desc = "This is the kind of chair shitty cops use to question their victims. Sitting in it gives you war flashbacks to when you were arrested, so you'll probably only whip it out for special occasions.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 100000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's an interrogation chair here for some reason.",
+		furniture_place_desc = "You place the chair in the middle of the room, trying not to think about police."),
+EwFurniture(
+		id_furniture = "brokenclock",
+		str_name = "broken clock",
+		str_desc = "You can't believe you own and treasure a broken clock. The bazaar sells these by convincing idiotic juvies they can fix it. They can't.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The broken clock says it's 2:33.",
+		furniture_place_desc = "You hang the clock on the wall."),
+EwFurniture(
+		id_furniture = "bevanssnot",
+		str_name = "Bevan's snot",
+		str_desc = "This stuff is actually pretty useful. It's a way to decorate your house with slime, without actually having to give up your own.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 10000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The walls are smeared with slime.",
+		furniture_place_desc = "You gently smear the slime facsimile on the walls."),
+
+]
+
+
+furniture_map = {}
+furniture_names = []
+
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**5 6 7 0 9**',
@@ -4585,6 +4628,7 @@ item_def_list = [
 			'vendor': None,
 			'str_eat': 'You eat the food item.',
 			'time_expir': std_food_expir,
+			'time_fridged': 0,
 		}
 	),
 
@@ -4623,6 +4667,8 @@ EwItemDef(
 			'furniture_place_desc': 'placed',
 			'furniture_look_desc': 'it\'s there',
 			'rarity': rarity_plebeian,
+			'vendor': None,
+
 		}
 	),
 ]
@@ -10007,6 +10053,17 @@ for cosmetic in cosmetic_items_list:
 			vendor_inv[vendor] = vendor_list
 
 		vendor_list.append(cosmetic.id_cosmetic)
+
+for furniture in furniture_list:
+	furniture_map[furniture.id_furniture] = furniture
+	furniture_names.append(furniture.id_furniture)
+
+	for vendor in furniture.vendors:
+		vendor_list.append(furniture.id_furniture)
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+		vendor_list.append(furniture.id_furniture)
 
 
 # List of items you can obtain via milling.
