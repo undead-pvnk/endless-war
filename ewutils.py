@@ -278,7 +278,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck", db = "rfck", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "root", passwd = "theapocolypse3", db = "rfck", charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False

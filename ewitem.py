@@ -1124,6 +1124,7 @@ def gen_item_props(item):
 			'inebriation': item.inebriation,
 			'str_eat': item.str_eat,
 			'time_expir': int(time.time()) + item.time_expir,
+			'time_fridged': item.time_fridged,
 		}
 	elif item.item_type == ewcfg.it_item:
 		item_props = {

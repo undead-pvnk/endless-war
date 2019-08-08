@@ -13,7 +13,7 @@ from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewfarm import EwFarmAction
 from ewfish import EwFish
-import ewdebug
+#import ewdebug
 
 # Global configuration options.
 version = "v3.5d"
@@ -64,6 +64,7 @@ battle_type_nega = 1
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
+poi_id_realestate = "realestateagency"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -101,6 +102,7 @@ poi_id_subway_white01 = "subwaywhite01"
 poi_id_subway_blue01 = "subwayblue01"
 poi_id_subway_blue02 = "subwayblue02"
 poi_id_blimp = "blimp"
+poi_id_apt = "apt"
 
 
 # ferry ports
@@ -284,6 +286,7 @@ channel_cl_pier = "crookline-pier"
 channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
+channel_apt = "apartment"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -493,10 +496,22 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 
+cmd_retire = cmd_prefix + 'retire'
+cmd_depart = cmd_prefix + 'depart'
+cmd_consult = cmd_prefix + 'consult'
+cmd_sign_lease = cmd_prefix + 'signlease'
+cmd_rent_cycle = cmd_prefix + 'rentcycle'
+cmd_fridge = cmd_prefix + 'fridge'
+cmd_closet = cmd_prefix + 'closet'
+cmd_stow = cmd_prefix + 'stow'
+cmd_unfridge = cmd_prefix + 'unfridge'
+cmd_uncloset = cmd_prefix + 'uncloset'
+cmd_take = cmd_prefix + 'take'
+
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
-cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
+#cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
+#cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -941,6 +956,13 @@ col_stack_max = 'stack_max'
 col_stack_size = 'stack_size'
 col_soulbound = 'soulbound'
 
+#Database columns for apartments
+col_apt_name = 'apt_name'
+col_apt_description = 'apt_description'
+col_rent = 'rent'
+col_apt_class = 'apt_class'
+
+
 # Database columns for server
 col_icon = "icon"
 
@@ -984,6 +1006,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
+col_apt_zone = 'apt_zone'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1083,6 +1106,7 @@ it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
+it_furniture = 'furniture'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -1494,7 +1518,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = item_id_forbidden111,
 		str_name = "The Forbidden {}".format(emote_111),
-		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
+		#str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
@@ -3757,8 +3781,8 @@ food_list = [
 		],
 		recover_hunger = 340282366920938463463374607431768211455,
 		str_name = "The Forbidden Stuffed Crust Pizza",
-		str_eat = ewdebug.forbiddenstuffedcrust_eat,
-		str_desc = ewdebug.forbiddenstuffedcrust_desc,
+		#str_eat = ewdebug.forbiddenstuffedcrust_eat,
+		#str_desc = ewdebug.forbiddenstuffedcrust_desc,
 		acquisition = acquisition_smelting
 	),
 ]
@@ -4587,6 +4611,18 @@ item_def_list = [
 			'cosmetic_desc': 'Cosmetic Item.',
 			'rarity': rarity_plebeian,
 			'hue': "",
+		}
+	),
+EwItemDef(
+		item_type = it_furniture,
+		str_name = "{furniture_name}",
+		str_desc = "{furniture_desc}",
+		soulbound = False,
+		item_props = {
+			'furniture_name': 'Furniture Item',
+			'furniture_place_desc': 'placed',
+			'furniture_look_desc': 'it\'s there',
+			'rarity': rarity_plebeian,
 		}
 	),
 ]
@@ -7116,6 +7152,23 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
+EwPoi( # realestate
+		id_poi = poi_id_realestate,
+		alias = [
+			"realestate"
+			"scre"
+			"landlord"
+		],
+		str_name = "SlimeCorp Real Estate Agency",
+		str_desc = "My mother tries to get me to go on dates. Do you know what that's LIKE? Do you know how HUMILIATING that is, Spencer?",
+		coord = (78, 21),
+		pvp = False,
+		channel = "slimecorp-real-estate-agency",
+		role = "Real Estate Agency",
+		mother_district = poi_id_oldnewyonkers,
+		is_subzone = True
+
+	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
 		alias = [
@@ -7255,6 +7308,21 @@ poi_list = [
 		transport_type = transport_type_blimp,
 		default_line = transport_line_blimp_df_to_afb,
 		default_stop = poi_id_df_blimp_tower
+	),
+EwPoi( # apt
+		id_poi = poi_id_apt,
+		alias = [
+			"apt",
+			"apartment",
+			"house",
+		],
+		str_name = "your apartment",
+		str_desc = "",
+		channel = channel_apt,
+		role = "Apartments",
+		coord = (0, 0),
+		pvp = False,
+		is_subzone = False,
 	)
 ]
 

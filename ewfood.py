@@ -49,6 +49,10 @@ class EwFood:
 	# The way that you can acquire this item. If blank, it's not relevant.
 	acquisition = ""
 
+	#Timestamp when an item was fridged.
+
+	time_fridged = 0
+
 	def __init__(
 		self,
 		id_food = "",
@@ -61,6 +65,7 @@ class EwFood:
 		inebriation = 0,
 		str_desc = "",
 		time_expir = 0,
+		time_fridged =0,
 		ingredients = "",
 		acquisition = "",
 	):
@@ -76,6 +81,7 @@ class EwFood:
 		self.inebriation = inebriation
 		self.str_desc = str_desc
 		self.time_expir = time_expir if time_expir > 0 else ewcfg.std_food_expir
+		self.time_fridged = time_fridged
 		self.ingredients = ingredients
 		self.acquisition = acquisition
 

@@ -128,9 +128,11 @@ async def restoreRoleNames(cmd):
 """
 async def updateRoles(
 	client = None,
-	member = None
+	member = None,
+	server_default = None
 ):
-	user_data = EwUser(member = member)
+
+	user_data = EwUser(member = member, id_server = server_default)
 	id_server = user_data.id_server
 
 	#roles_map = ewutils.getRoleMap(member.server.roles)
@@ -175,6 +177,8 @@ async def updateRoles(
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if poi != None:
 		poi_role = poi.role
+	else:
+		poi_role = None
 
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:

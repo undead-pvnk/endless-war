@@ -43,7 +43,8 @@ import ewquadrants
 import ewtransport
 import ewsmelting
 import ewfish
-import ewdebug
+import ewapt
+#import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -127,6 +128,14 @@ cmd_map = {
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
+
+	ewcfg.cmd_retire: ewapt.retire,
+	ewcfg.cmd_depart: ewapt.depart,
+	ewcfg.cmd_consult: ewapt.consult,
+	ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
+	ewcfg.cmd_sign_lease:ewapt.signlease,
+
+
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
@@ -393,8 +402,8 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	ewcfg.cmd_debug1: ewdebug.debug1,
-	ewcfg.cmd_debug2: ewdebug.debug2,
+	#ewcfg.cmd_debug1: ewdebug.debug1,
+	#ewcfg.cmd_debug2: ewdebug.debug2,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,
@@ -657,6 +666,8 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+						if market_data.day % 2 == 0:
+							ewapt.rent_time()
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
@@ -879,12 +890,15 @@ async def on_message(message):
 			Handle direct messages.
 		"""
 		if message.server == None:
+			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
+			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
-
+			elif usermodel.poi == ewcfg.poi_id_apt:
+				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:
 				time_last = last_helped_times.get(message.author.id, 0)
 
