@@ -766,7 +766,7 @@ time_pvp_kill = 600
 time_pvp_mine = 180
 time_pvp_haunt = 600
 time_pvp_invest_withdraw = 180
-time_pvp = 1800
+time_pvp = 600
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -984,6 +984,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
+col_time_lastpvp = 'time_lastpvp'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'

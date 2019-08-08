@@ -253,6 +253,10 @@ async def attack(cmd):
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
+		elif shoote_data.time_lastpvp + ewcfg.time_pvp < time_now:
+			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
+
 		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
 			if user_data.life_state == ewcfg.life_state_juvenile:
@@ -278,6 +282,9 @@ async def attack(cmd):
 
 			# Spend slimes, to a minimum of zero
 			user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
+
+			# start pvp timer
+			user_data.time_lastpvp = time_now
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -347,6 +354,9 @@ async def attack(cmd):
 				was_shot = True
 
 			if was_shot:
+				# start pvp timer
+				user_data.time_lastpvp = time_now
+
 				#hunger drain
 				user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 				

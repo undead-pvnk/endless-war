@@ -567,6 +567,7 @@ async def on_ready():
 	time_now = int(time.time())
 
 	time_last_twitch = time_now
+	time_last_pvp = time_now
 	time_twitch_downed = 0
 
 	# Every three hours we log a message saying the periodic task hook is still active. On startup, we want this to happen within about 60 seconds, and then on the normal 3 hour interval.
@@ -629,6 +630,16 @@ async def on_ready():
 			except:
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
+
+		if time_last_pvp + ewcfg.update_pvp <= time_now:
+			for server in client.servers:
+				ewutils.logMsg("beginning role update for server {}".format(server.id))
+				for member in server.members:
+						
+					await ewrolemgr.updateRoles(client = client, member = member)
+				ewutils.logMsg("finished role update for server {}".format(server.id))
+			time_last_pvp = time_now
+						
 
 		# Adjust the exchange rate of slime for the market.
 		try:

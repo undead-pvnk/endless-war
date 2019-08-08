@@ -127,7 +127,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think?"
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif ewmap.poi_is_pvp(haunted_data.poi) == False:
+		elif haunted_data.time_lastpvp + ewcfg.time_pvp < time_now:
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -151,7 +151,9 @@ async def haunt(cmd):
 			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
 			market_data.negaslime -= haunted_slimes
 			user_data.time_lasthaunt = time_now
+			user_data.time_lastpvp = time_now
 			user_data.busted = False
+
 
 			# Persist changes to the database.
 			user_data.persist()
@@ -171,6 +173,7 @@ async def haunt(cmd):
 			haunt_message += "."
 			haunt_message = ewutils.formatMessage(member, haunt_message)
 			resp_cont.add_channel_response(haunted_channel, haunt_message)
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		else:
 			# Some condition we didn't think of.
 			response = "You cannot haunt {}.".format(member.display_name)

@@ -48,6 +48,7 @@ class EwUser:
 	time_lastenter = 0
 	time_lastoffline = 0
 	time_joined = 0
+	time_lastpvp = 0
 
 	move_speed = 1 # not a database column
 
@@ -412,7 +413,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -445,6 +446,7 @@ class EwUser:
 					ewcfg.col_slime_donations,
 					ewcfg.col_poudrin_donations,
 					ewcfg.col_arrested,
+					ewcfg.col_time_lastpvp,
 				), (
 					id_user,
 					id_server
@@ -485,6 +487,7 @@ class EwUser:
 					self.slime_donations = result[29]
 					self.poudrin_donations = result[30]
 					self.arrested = (result[31] == 1)
+					self.time_lastpvp = result[32]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -540,7 +543,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -576,6 +579,7 @@ class EwUser:
 				ewcfg.col_slime_donations,
 				ewcfg.col_poudrin_donations,
 				ewcfg.col_arrested,
+				ewcfg.col_time_lastpvp,
 			), (
 				self.id_user,
 				self.id_server,
@@ -612,6 +616,7 @@ class EwUser:
 				self.slime_donations,
 				self.poudrin_donations,
 				(1 if self.arrested else 0),
+				self.time_lastpvp,
 			))
 
 			conn.commit()

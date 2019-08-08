@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import ewcfg
 import ewutils
@@ -132,6 +133,7 @@ async def updateRoles(
 ):
 	user_data = EwUser(member = member)
 	id_server = user_data.id_server
+	time_now = int(time.time())
 
 	#roles_map = ewutils.getRoleMap(member.server.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
@@ -166,7 +168,7 @@ async def updateRoles(
 
 	pvp_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
-		if user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_juviesrow]:
+		if user_data.time_lastpvp + ewcfg.time_pvp > time_now:
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
