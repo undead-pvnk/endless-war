@@ -62,6 +62,7 @@ async def banish(cmd):
 		else:
 			member_data = EwUser(member = member)
 			member_data.ban(faction = user_data.faction)
+			member_data.unvouch(faction = user_data.faction)
 
 			if member_data.faction == user_data.faction:
 				member_data.faction = ""

@@ -82,10 +82,14 @@ async def enlist(cmd):
 
 	elif user_data.life_state == ewcfg.life_state_juvenile:
 		bans = user_data.get_bans()
+		vouchers = user_data.get_vouchers()
 
 		if user_data.poi == ewcfg.poi_id_copkilltown:
 			if ewcfg.faction_killers in bans:
 				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if ewcfg.faction_killers not in vouchers:
+				response = "You need a current gang member's permission to join the {}.".format(ewcfg.faction_killers)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
 			user_data.life_state = ewcfg.life_state_enlisted
@@ -94,6 +98,9 @@ async def enlist(cmd):
 		else:
 			if ewcfg.faction_rowdys in bans:
 				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if ewcfg.faction_rowdys not in vouchers:
+				response = "You need a current gang member's permission to join the {}.".format(ewcfg.faction_rowdys)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
 			user_data.life_state = ewcfg.life_state_enlisted

@@ -635,10 +635,11 @@ def inaccessible(user_data = None, poi = None):
 		return False
 
 	bans = user_data.get_bans()
+	vouchers = user_data.get_vouchers()
 
 	if(
 		len(poi.factions) > 0 and
-		len(user_data.faction) > 0 and
+		set(vouchers).isdisjoint(set(poi.factions)) and
 		user_data.faction not in poi.factions
 	) or (
 		len(poi.life_states) > 0 and
