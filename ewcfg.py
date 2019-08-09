@@ -715,8 +715,7 @@ farm_actions = [
 		action = cmd_fertilize,
 		str_check = "Your crop looks malnourished like an African child in a charity ad.",
 		str_execute = "You fertilize your starving crop.",
-		str_execute_fail = "You give your crop some extra fertilizer for good measure. The ground's salinity shoots up as a result. Maybe look up ferti 
-		lizer burn, dumbass.",
+		str_execute_fail = "You give your crop some extra fertilizer for good measure. The ground's salinity shoots up as a result. Maybe look up fertilizer burn, dumbass.",
 	),
 	EwFarmAction(
 		id_action = farm_action_weed,
