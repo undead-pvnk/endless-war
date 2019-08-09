@@ -2075,7 +2075,7 @@ weapon_list = [
 			"bassss",
 			"basssS"
 		],
-		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharpy strike {name_target}’s {hitzone}.",
+		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharply strike {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
 		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck",
 		str_weapon = "A bass guitar",
