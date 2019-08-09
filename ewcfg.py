@@ -1771,6 +1771,25 @@ def wef_tool(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
+# weapon effect function for "bass"
+def wef_bass(ctn = None):
+	aim = (random.randrange(21) - 10)
+	user_mutations = ctn.user_data.get_mutations()
+	if aim <= -9:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
+
+	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
+
+	if aim >= 9:
+		ctn.crit = True
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+
 # All weapons in the game.
 weapon_list = [
 	EwWeapon( # 1
@@ -2044,6 +2063,32 @@ weapon_list = [
 		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together,discussing fishing strategy and preferred types of bait.",
 		fn_effect = wef_tool,
 		str_description = "It's a super fishing rod",
+		acquisition = acquisition_smelting
+	),
+        EwWeapon(  # 13
+		id_weapon = "bass",
+		alias = [
+			"bass",
+			"BasS",
+			"basssss",
+			"baaassss",
+			"bassss",
+			"basssS"
+		],
+		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharpy strike {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
+		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck",
+		str_weapon = "A bass guitar",
+		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
+		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
+		str_trauma_self = "There is a large concave dome in the side of your head.",
+		str_trauma = "There is a large concave dome in the side of their head.",
+		str_kill = "*CRASSHHH* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
+		str_killdescriptor = "Smashed to pieces",
+		str_damage = "{name_target} is wacked across the {hitzone}!!",
+		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
+		fn_effect = wef_bass,
+		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting
 	)
 ]
@@ -4262,6 +4307,14 @@ fish_list  =  [
 		catch_weather = None,
 		str_desc = "This is The Bassed God. He's gonna fuck your bitch.",
 		slime = fish_slime_saltwater
+	),
+        EwFish(
+		id_fish = "dirtybass",
+		str_name = "Dirty Bass",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "A Dirty Bass Guitar. Maybe you should try cleaning it?",
 	),
 	EwFish(
 		id_fish = "flarp",
@@ -8298,6 +8351,20 @@ smelting_recipe_list = [
 		},
 		products = ['fishingrod']
 	),
+        EwSmeltingRecipe(
+		id_recipe = "bass",
+		str_name = "a Bass Guitar",
+		alias = [
+			"bass",
+			"BASS",
+			"bas",
+			"bassss"
+		],
+		ingredients = {
+			'dirtybass' : 1
+		},
+		products = ['bass']
+        )       
 ]
 
 # A map of id_recipe to EwSmeltingRecipe objects.
