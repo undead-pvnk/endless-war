@@ -715,7 +715,8 @@ farm_actions = [
 		action = cmd_fertilize,
 		str_check = "Your crop looks malnourished like an African child in a charity ad.",
 		str_execute = "You fertilize your starving crop.",
-		str_execute_fail = "You give your crop some extra fertilizer for good measure. The ground's salinity shoots up as a result. Maybe look up fertilizer burn, dumbass.",
+		str_execute_fail = "You give your crop some extra fertilizer for good measure. The ground's salinity shoots up as a result. Maybe look up ferti 
+		lizer burn, dumbass.",
 	),
 	EwFarmAction(
 		id_action = farm_action_weed,
@@ -2069,16 +2070,11 @@ weapon_list = [
 		id_weapon = "bass",
 		alias = [
 			"bass",
-			"BasS",
-			"basssss",
-			"baaassss",
-			"bassss",
-			"basssS"
 		],
 		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharply strike {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
-		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck",
-		str_weapon = "A bass guitar",
+		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck.",
+		str_weapon = "a bass guitar.",
 		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		str_trauma_self = "There is a large concave dome in the side of your head.",
