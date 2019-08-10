@@ -137,7 +137,7 @@ def gen_data_text(
 		id_server = id_server
 	)
 	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
-
+	
 	mutations = user_data.get_mutations()
 
 	cosmetics = ewitem.inventory(
@@ -282,7 +282,7 @@ async def data(cmd):
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
-
+		
 		response_block = ""
 		for mutation in mutations:
 			mutation_flavor = ewcfg.mutations_map[mutation]
@@ -577,10 +577,10 @@ async def refuse(cmd):
 async def arrest(cmd):
 
 	author = cmd.message.author
-
+	
 	if not author.server_permissions.administrator:
 		return
-
+	
 	if cmd.mentions_count == 1:
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)

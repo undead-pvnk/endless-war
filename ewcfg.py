@@ -12,12 +12,12 @@ from ewmutation import EwMutationFlavor
 from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
+from ewfarm import EwFarmAction
+from ewfish import EwFish
 import ewdebug
 
 # Global configuration options.
-
-version = "v3.5c"
-
+version = "v3.5d - Prefix is '/'"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -167,6 +167,12 @@ poi_id_westglocksbury = "westglocksbury"
 poi_id_jaywalkerplain = "jaywalkerplain"
 poi_id_crookline = "crookline"
 poi_id_dreadford = "dreadford"
+poi_id_toxington_pier = "toxingtonpier"
+poi_id_jaywalkerplain_pier = "jaywalkerplainpier"
+poi_id_crookline_pier = "crooklinepier"
+poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
+poi_id_vagrantscorner_pier = "vagrantscornerpier"
+poi_id_slimesend_pier = "slimesendpier"
 
 # Outskirts
 poi_id_wreckington_outskirts = "wreckingtonoutskirts"
@@ -291,6 +297,12 @@ channel_countryclub = "the-country-club"
 channel_rowdyroughhouse = "rowdy-roughhouse"
 channel_copkilltown = "cop-killtown"
 channel_slimesea = "slime-sea"
+channel_tt_pier = "toxington-pier"
+channel_jp_pier = "jaywalker-plain-pier"
+channel_cl_pier = "crookline-pier"
+channel_afb_pier = "assault-flats-beach-pier"
+channel_vc_pier = "vagrants-corner-pier"
+channel_se_pier = "slimes-end-pier"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -341,7 +353,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -470,7 +482,17 @@ cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
+cmd_check_farm = cmd_prefix + 'checkfarm'
+cmd_irrigate = cmd_prefix + 'irrigate'
+cmd_weed = cmd_prefix + 'weed'
+cmd_fertilize = cmd_prefix + 'fertilize'
+cmd_pesticide = cmd_prefix + 'pesticide'
 cmd_mill = cmd_prefix + 'mill'
+cmd_cast = cmd_prefix + 'cast'
+cmd_reel = cmd_prefix + 'reel'
+cmd_appraise = cmd_prefix + 'appraise'
+cmd_barter = cmd_prefix + 'barter'
+cmd_embiggen = cmd_prefix + 'embiggen'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
@@ -558,7 +580,7 @@ offline_cmds = [
 	cmd_scout,
 	cmd_scout_alt1
 ]
-
+		
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -570,6 +592,8 @@ slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
 slimes_permill = 75000
+slimes_invein = 2000
+slimes_pertile = 25
 
 # hunger
 min_stamina = 100
@@ -577,6 +601,8 @@ hunger_pershot = 10
 hunger_perspar = 30
 hunger_perfarm = 50
 hunger_permine = 1
+hunger_perminereset = 10
+hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
 
@@ -594,6 +620,8 @@ acquisition_smelting = "smelting"
 acquisition_milling = "milling"
 acquisition_mining = "mining"
 acquisition_dojo = "dojo"
+acquisition_fishing = "fishing"
+acquisition_bartering = "bartering"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -686,7 +714,66 @@ weapon_fee = 100
 
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
-reap_gain = 300000  # this takes about 1 hour to mine, so mining is more efficient
+reap_gain = 100000
+farm_slimes_peraction = 25000
+time_nextphase = 20 * 60 # 20 minutes
+farm_tick_length = 60 # 1 minute
+
+farm_phase_sow = 0
+farm_phase_reap = 9
+
+farm_action_none = 0
+farm_action_water = 1
+farm_action_fertilize = 2
+farm_action_weed = 3
+farm_action_pesticide = 4
+
+farm_actions = [
+	EwFarmAction(
+		id_action = farm_action_water,
+		action = cmd_irrigate,
+		str_check = "Your crop is dry and weak. It needs some water.",
+		str_execute = "You pour water on your parched crop.",
+		str_execute_fail = "You pour gallons of water on the already saturated soil, nearly drowning your crop.",
+	),
+	EwFarmAction(
+		id_action = farm_action_fertilize,
+		action = cmd_fertilize,
+		str_check = "Your crop looks malnourished like an African child in a charity ad.",
+		str_execute = "You fertilize your starving crop.",
+		str_execute_fail = "You give your crop some extra fertilizer for good measure. The ground's salinity shoots up as a result. Maybe look up fertilizer burn, dumbass.",
+	),
+	EwFarmAction(
+		id_action = farm_action_weed,
+		action = cmd_weed,
+		str_check = "Your crop is completely overgrown with weeds.",
+		str_execute = "You make short work of the weeds.",
+		str_execute_fail = "You pull those damn weeds out in a frenzy. Hold on, that wasn't a weed. That was your crop. You put it back in the soil, but it looks much worse for the wear.",
+	),
+	EwFarmAction(
+		id_action = farm_action_pesticide,
+		action = cmd_pesticide,
+		str_check = "Your crop is being ravaged by parasites.",
+		str_execute = "You spray some of the good stuff on your crop and watch the pests drop like flies, in a very literal way.",
+		str_execute_fail = "You spray some of the really nasty stuff on your crop. Surely no pests will be able to eat it away now. Much like any other living creature, probably.",
+	),
+]
+
+id_to_farm_action = {}
+cmd_to_farm_action = {}
+farm_action_ids = []
+
+for farm_action in farm_actions:
+	cmd_to_farm_action[farm_action.action] = farm_action
+	for alias in farm_action.aliases:
+		cmd_to_farm_action[alias] = farm_action
+	id_to_farm_action[farm_action.id_action] = farm_action
+	farm_action_ids.append(farm_action.id_action)
+	
+
+# fishing
+fish_gain = 10000 # multiplied by fish size class
+fish_offer_timeout = 1440 # in minutes; 24 hours
 
 # Cooldowns
 cd_kill = 5
@@ -810,12 +897,25 @@ cell_empty = -1
 cell_empty_marked = -2
 cell_empty_open = -3
 
-symbol_map = {
+cell_slime = 0
+
+
+symbol_map_ms = {
 	-1 : "/",
 	1 : "/",
 	-2 : "+",
 	2 : "+",
 	3 : "X"
+}
+
+symbol_map_pokemine = {
+	-1 : "_",
+	0 : "~",
+	1 : "X",
+	11 : ";",
+	12 : "/",
+	13 : "#"
+	
 }
 
 number_emote_map = {
@@ -848,6 +948,7 @@ str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
+str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
 
 generic_role_name = 'NLACakaNM'
 
@@ -918,8 +1019,6 @@ col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
 col_rrchallenger = 'rr_challenger_id'
-col_time_lastsow = 'time_lastsow'
-col_farm = 'farm'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -931,6 +1030,11 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
+
+#Database columns for bartering
+col_offer_give = 'offer_give'
+col_offer_receive = 'offer_receive'
+col_time_sinceoffer = 'time_sinceoffer'
 
 #Database columns for slimeoids
 col_id_slimeoid = 'id_slimeoid'
@@ -1022,6 +1126,15 @@ col_mutation_counter = 'mutation_counter'
 col_transport_type = 'transport_type'
 col_current_line = 'current_line'
 col_current_stop = 'current_stop'
+
+# Database columns for farms
+col_farm = 'farm'
+col_time_lastsow = 'time_lastsow'
+col_phase = 'phase'
+col_time_lastphase = 'time_lastphase'
+col_slimes_onreap = 'slimes_onreap'
+col_action_required = 'action_required'
+col_crop = 'crop'
 
 # Database columns for troll romance
 col_quadrant = 'quadrant'
@@ -1172,6 +1285,8 @@ source_ghostification = 9
 source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
+source_fishing = 13
+
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1478,7 +1593,39 @@ item_list = [
 		str_name = "double faggot",
 		str_desc = "It's just a bundle of sticks, twice as long and hard as the two combined to form it. Hey, what are you chucklin' at?.",
 		acquisition = acquisition_smelting
-	)
+	),
+	EwGeneralItem(
+		id_item = "seaweed",
+		str_name = "Seaweed",
+		str_desc = "OH GOD IT'S A FUCKING SEAWEED!",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "oldboot",
+		str_name = "Old Boot",
+		str_desc = "OH GOD IT'S A FUCKING OLD BOOT!",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "tincan",
+		str_name = "Tin Can",
+		str_desc = "OH GOD IT'S A FUCKING TIN CAN!",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "string",
+		str_name = "string",
+		str_desc = "It’s just some string.",
+		acquisition = acquisition_bartering,
+		ingredients = "generic",
+		context = 60,
+	),
 ]
 
 # A map of id_item to EwGeneralItem objects.
@@ -1688,8 +1835,8 @@ def wef_scythe(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "pickaxe"
-def wef_pickaxe(ctn = None):
+# weapon effect function for all weapons which double as tools.
+def wef_tool(ctn = None):
 	ctn.slimes_damage *= 0.2
 
 	aim = (random.randrange(10) + 1)
@@ -1953,8 +2100,34 @@ weapon_list = [
 		str_killdescriptor = "!mined",
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
-		fn_effect = wef_pickaxe,
+		fn_effect = wef_tool,
 		str_description = "It's a pickaxe",
+		acquisition = acquisition_smelting
+	),
+	EwWeapon(  # 12
+		id_weapon = "fishingrod",
+		alias = [
+			"fish",
+			"fishing",
+			"rod",
+			"super",
+			"superrod",
+			"superfishingrod"
+		],
+		str_crit = "**Critical hit!!** By sheer dumb luck, {name_player} manages to get a good hit off on {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} is too weak to cast their fishing rod!",
+		str_equip = "You equip the super fishing rod.",
+		str_weapon = "a super fishing rod",
+		str_weaponmaster_self = "You are a rank {rank} coward of the super fishing rod.",
+		str_weaponmaster = "They are a rank {rank} coward of the super fishing rod.",
+		str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
+		str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
+		str_kill = "*whsssh* {name_player} summons what little courage they possess to reel in {name_target} and wring all the slime out of them. How embarrassing! {emote_skull}",
+		str_killdescriptor = "!reeled",
+		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
+		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together,discussing fishing strategy and preferred types of bait.",
+		fn_effect = wef_tool,
+		str_description = "It's a super fishing rod",
 		acquisition = acquisition_smelting
 	)
 ]
@@ -3849,6 +4022,703 @@ vendor_stock_map = {
 	vendor_tacobell : stock_tacobell
 	}
 
+fish_rarity_common = "common"
+fish_rarity_uncommon = "uncommon"
+fish_rarity_rare = "rare"
+fish_rarity_promo = "promo"
+
+fish_catchtime_rain = "rain"
+fish_catchtime_night = "night"
+fish_catchtime_day = "day"
+
+fish_slime_freshwater = "freshwater"
+fish_slime_saltwater = "saltwater"
+
+fish_size_miniscule = "miniscule"
+fish_size_small = "small"
+fish_size_average = "average"
+fish_size_big = "big"
+fish_size_huge = "huge"
+fish_size_colossal = "colossal"
+
+# All the fish, baby!
+fish_list  =  [
+	EwFish(
+		id_fish = "neoneel",
+		str_name = "Neon Eel",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its slippery body is bathed in a bright green glow.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "fantaray",
+		str_name = "Fanta Ray",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Wait a minute, wasn't this the thing that killed that famous guy? Better be careful!",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "thalamuscaranx",
+		str_name = "Thalamus Caranx",
+		rarity = fish_rarity_uncommon,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "Finally, a worthy fish emerges.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "fuckshark",
+		str_name = "Fuck Shark",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You recall reading that this thing has the same nutritional value as SUPER WATER FUCK ENERGY.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "sourfish",
+		str_name = "Sourfish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It gives you an oddly cynical gaze."
+	),
+	EwFish(
+		id_fish = "snakeheadtrout",
+		str_name = "Snakehead Trout",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "It has the body of a trout and the head of a snake. Heavy fuckin' metal.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "gar",
+		str_name = "Gar",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You have the strange urge to wrestle this fish into submission. You almost resist it."
+	),
+	EwFish(
+		id_fish = "clownfish",
+		str_name = "Clownfish",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "Its face kinda looks like a clown if you squint.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "seasaint",
+		str_name = "Seasaint",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "It has a beanie on.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "holykrakerel",
+		str_name = "Holy Krakerel",
+		rarity = fish_rarity_uncommon,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "It looks bovine-adjacent."
+	),
+	EwFish(
+		id_fish = "seajuggalo",
+		str_name = "Sea Juggalo",
+		rarity = fish_rarity_uncommon,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "This motherfucker definitely has some sick fuckin' musical taste."
+	),
+	EwFish(
+		id_fish = "plebefish",
+		str_name = "Plebefish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "God. This fucking retard. It just doesn't fucking GET it."
+	),
+	EwFish(
+		id_fish = "bufferfish",
+		str_name = "Bufferfish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish has the ability to lag out predators in order to get away."
+	),
+	EwFish(
+		id_fish = "slimesquid",
+		str_name = "Slime Squid",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just a green squid.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "jellyturkeyfish",
+		str_name = "Jelly Turkeyfish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You nearly prick your finger on one of the many of the venomous spines on its back.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "iridescentsnapper",
+		str_name = "Iridescent Snapper",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its scales change color if you shake it. Fun.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "barredkatanajaw",
+		str_name = "Barred Katanajaw",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its stripes make it look vaguely Japanese.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "doublestuffedflounder",
+		str_name = "Double-Stuffed Flounder",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "No one out-Flounders this fish."
+	),
+	EwFish(
+		id_fish = "seacolonel",
+		str_name = "Sea Colonel",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish definitely looks like its dropped out of high school."
+	),
+	EwFish(
+		id_fish = "marlinsupreme",
+		str_name = "Marlin Supreme",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Live mas."
+	),
+	EwFish(
+		id_fish = "relicanth",
+		str_name = "Relicanth",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = fish_catchtime_rain,
+		str_desc = "It doesn't have teeth.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "stunfisk",
+		str_name = fish_rarity_rare,
+		rarity = "Stunfisk",
+		catch_time = None,
+		catch_weather = fish_catchtime_rain,
+		str_desc = "Its hide is so tough it can be stepped on by Connor without being injured.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "bathyphysaheadshark",
+		str_name = "Bathyphysahead Shark",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This one looks fucking terrifying. I'm serious, search for 'bathyphysa' on Google.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "anglershark",
+		str_name = "Angler Shark",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "It has a little poudrin on its head.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "bigtopoctopus",
+		str_name = "Big Top Octopus",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "It kinda looks like a circus tent."
+	),
+	EwFish(
+		id_fish = "souroctopus",
+		str_name = "Sour Octopus",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It would rather be in a jar.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "octohuss",
+		str_name = "Octohuss",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Don't let it near a horse. Or a drawing tablet.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "jarocephalopod",
+		str_name = "Jar O' Cephalopod",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It looks content in there."
+	),
+	EwFish(
+		id_fish = "dab",
+		str_name = "Dab",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "Pretty Killercore.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "thrash",
+		str_name = "Thrash",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "Pretty Rowdycore.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "arsonfish",
+		str_name = "Arsonfish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its scales are so hot, you continuously toss the fish upwards to avoid getting burned."
+	),
+	EwFish(
+		id_fish = "cruna",
+		str_name = "Cruna",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's just a green tuna fish."
+
+	),
+	EwFish(
+		id_fish = "modelopole",
+		str_name = "Modelopole",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "UH-OH, IT'S MODELOPOLE TIME!",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "universefrog",
+		str_name = "Universe Frog",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's a huge fuckin' color-changing frog."
+	),
+	EwFish(
+		id_fish = "galaxyfrog",
+		str_name = "Galaxy Frog",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's a big fuckin' color-changing frog."
+	),
+	EwFish(
+		id_fish = "solarfrog",
+		str_name = "Solar Frog",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "Don't stare at it!"
+	),
+	EwFish(
+		id_fish = "lunarfrog",
+		str_name = "Lunar Frog",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "It's said to control the waves of the Slime Sea."
+	),
+	EwFish(
+		id_fish = "killifish",
+		str_name = "Killifish",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "Apparently there are 1270 different species of Killifish."
+	),
+	EwFish(
+		id_fish = "lee",
+		str_name = "Lee",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Oh shit, it's Lee!"
+	),
+	EwFish(
+		id_fish = "palemunch",
+		str_name = "Pale Munch",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "This fish looks like it needs some sleep."
+	),
+	EwFish(
+		id_fish = "moldfish",
+		str_name = "Moldfish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's said to have the memory capacity of 16 GB."
+	),
+	EwFish(
+		id_fish = "neonjuvie",
+		str_name = "Neon Juvie",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Pretty Juviecore."
+	),
+	EwFish(
+		id_fish = "greengill",
+		str_name = "Greengill",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Its gills are green."
+	),
+	EwFish(
+		id_fish = "corpsecarp",
+		str_name = "Corpse Carp",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It smells like a rotting fish.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "slimewatergoby",
+		str_name = "Slimewater Goby",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This little fucko hates fun.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "nibblefish",
+		str_name = "Nibblefish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It looks hungry."
+	),
+	EwFish(
+		id_fish = "piranhoid",
+		str_name = "Piranhoid",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish is said to occasionally jump out of the water and bite unsuspecting slimeoids."
+	),
+	EwFish(
+		id_fish = "torrentfish",
+		str_name = "Torrentfish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish looks like it doesn't pay for ANY of its anime."
+	),
+	EwFish(
+		id_fish = "barbeln8",
+		str_name = "Barbel N8",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "It looks like it could run a shady corporation."
+	),
+	EwFish(
+		id_fish = "mace",
+		str_name = "Mace",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "These fish are called Mud Carps in Nu Hong Kong.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "blacklimesalmon",
+		str_name = "Black Lime Salmon",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Kinda smells like Black Limes."
+	),
+	EwFish(
+		id_fish = "char",
+		str_name = "Char",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "These fish migrated south after the North Pole was nuked."
+	),
+	EwFish(
+		id_fish = "arijuana",
+		str_name = "Arijuana",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "These fish are banned from the USA."
+	),
+	EwFish(
+		id_fish = "thebassedgod",
+		str_name = "The Bassed God",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This is The Bassed God. He's gonna fuck your bitch.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "flarp",
+		str_name = "Flarp",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's a carp thats really flexible."
+	),
+	EwFish(
+		id_fish = "clouttrout",
+		str_name = "Clout Trout",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish has the eyes of a winner."
+	),
+	EwFish(
+		id_fish = "slimekoi",
+		str_name = "Slimekoi",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Slimekoi is a level 3 slimeboi."
+	),
+	EwFish(
+		id_fish = "deadkoi",
+		str_name = "Deadkoi",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Deadkoi is a level 3 deadboi."
+	),
+	EwFish(
+		id_fish = "magicksdorado",
+		str_name = "magicksDorado",
+		rarity = fish_rarity_uncommon,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "No relation."
+	),
+	EwFish(
+		id_fish = "straubling",
+		str_name = "Straubling",
+		rarity = fish_rarity_uncommon,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "No relation."
+	),
+	EwFish(
+		id_fish = "croach",
+		str_name = "Croach",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's very uncommon in North America.",
+		slime = fish_slime_freshwater
+	),
+	EwFish(
+		id_fish = "slimesmelt",
+		str_name = "Slime Smelt",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It could sure use a bath."
+	),
+	EwFish(
+		id_fish = "neomilwaukianmittencrab",
+		str_name = "Neo-Milwaukian Mitten Crab",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Known for their furry claws, Mitten Crabs were considered an invasive species, but eventually people stopped caring about that because they had bigger fish to fry (metaphorically, of course)."
+	),
+	EwFish(
+		id_fish = "yellowslash",
+		str_name = "Yellow Slash",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish is the successor to Classic Milwaukee's Yellow Perch."
+	),
+	EwFish(
+		id_fish = "sweetfish",
+		str_name = "Sweet Fish",
+		rarity = fish_rarity_rare,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "Also known as Gillanaks."
+	),
+	EwFish(
+		id_fish = "hardboiledturtle",
+		str_name = "Hard Boiled Turtle",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This radical dude doesn't take shit from anyone."
+	),
+	EwFish(
+		id_fish = "oozesalmon",
+		str_name = "Ooze Salmon",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "You wonder how good it would taste on a bagel."
+	),
+	EwFish(
+		id_fish = "toxicpike",
+		str_name = "Toxic Pike",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Don't let it bite you."
+	),
+	EwFish(
+		id_fish = "uncookedkingpincrab",
+		str_name = "Kingpin Crab",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It reminds you of your last meal at Red Mobster.",
+		slime = fish_slime_saltwater
+	),
+	EwFish(
+		id_fish = "regiarapaima",
+		str_name = "Regiarapaima",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Regigas sends its regards."
+	),
+	EwFish(
+		id_fish = "kinkfish",
+		str_name = "Kinkfish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "This fish looks like it's down to get wacky."
+	),
+	EwFish(
+		id_fish = "nuclearbream",
+		str_name = "Nuclear Bream",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "Not to be confused with BREEAM, although this fish looks like its in the mood for assessing shit."
+	),
+	EwFish(
+		id_fish = "killercod",
+		str_name = "Killer Cod",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_night,
+		catch_weather = None,
+		str_desc = "Quite Killercore."
+	),
+	EwFish(
+		id_fish = "pinksnapper",
+		str_name = "Pink Snapper",
+		rarity = fish_rarity_common,
+		catch_time = fish_catchtime_day,
+		catch_weather = None,
+		str_desc = "Quite Rowdycore."
+	),
+	EwFish(
+		id_fish = "angerfish",
+		str_name = "Angerfish",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It doesn't look very happy to be here."
+	),
+	EwFish(
+		id_fish = "flopfish",
+		str_name = "Flop Fish",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's floppin'."
+	),
+	EwFish(
+		id_fish = "cardboardcrab",
+		str_name = "Cardboard Crab",
+		rarity = fish_rarity_uncommon,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It originated when Shigeru Miyamoto decided to splice crab DNA with a Nintendo Labo Piano."
+	),
+	EwFish(
+		id_fish = "easysardines",
+		str_name = "Easy Sardines",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "In terms of difficulty, this little bitch looks real low on the rungs."
+	),
+	EwFish(
+		id_fish = "largebonedlionfish",
+		str_name = "Large-Boned Lionfish",
+		rarity = fish_rarity_common,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It's not fat."
+	),
+	EwFish(
+		id_fish = "paradoxcrocodile",
+		str_name = "Paradox Crocodile",
+		rarity = fish_rarity_promo,
+		catch_time = None,
+		catch_weather = None,
+		str_desc = "It has no arms and a blue bandana.",
+		slime = fish_slime_freshwater
+	)
+]
+
+# A map of id_fish to EwFish objects.
+fish_map = {}
+
+# A list of fish names.
+fish_names = []
+
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**5 6 7 0 9**',
@@ -5714,6 +6584,102 @@ poi_list = [
 		is_subzone = True,
 		mother_district = poi_id_dreadford
 	),
+	EwPoi(  # Toxington Pier
+		id_poi = poi_id_toxington_pier,
+		alias = [
+			"toxingtonpier",
+			"ttpier",
+			"ttp",
+		],
+		str_name = "Toxington Pier",
+		str_desc = "A rickety, decaying pier stretching over a bubbling lake of molten slime. Use of your olfactory organs in any capacity is not recommended, the toxic fumes this district is known for originate here, from these lakes. But, there are some pretty sicknasty fuckin’ fishes down there, you bet.\n\nExits into Toxington.",
+		coord = (25, 6),
+		channel = channel_tt_pier,
+		role = "Toxington Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_toxington
+	),
+	EwPoi(  # Jaywalker Plain Pier
+		id_poi = poi_id_jaywalkerplain_pier,
+		alias = [
+			"jaywalkerplainpier",
+			"jppier",
+			"jpp",
+		],
+		str_name = "Jaywalker Plain Pier",
+		str_desc = "An old, sundrenched pier stretching over a lake overgrown with reeds and similar vegetation. It’s just one of the many natural beauties overlooked by the district’s perpetually twisted (a colloquialism for being drunk and high at the same time) population.\n\nExits into Jaywalker Plain.",
+		coord = (9 , 42),
+		channel = channel_jp_pier,
+		role = "Jaywalker Plain Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_jaywalkerplain
+	),
+	EwPoi(  # Crookline Pier
+		id_poi = poi_id_crookline_pier,
+		alias = [
+			"crooklinepier",
+			"clpier",
+			"clp",
+		],
+		str_name = "Crookline Pier",
+		str_desc = "A dark, modern pier stretching over a large lake on the outskirts of the district. Bait shops and other aquatic-based stores surround the water, with the occasional restaurant breaking up the monotony.\n\nExits into Crookline.",
+		coord = (16, 58),
+		channel = channel_cl_pier,
+		role = "Crookline Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_crookline
+	),
+	EwPoi(  # Assault Flats Beach Pier
+		id_poi = poi_id_assaultflatsbeach_pier,
+		alias = [
+			"assaultflatsbeachpier",
+			"afbpier",
+			"afbp",
+		],
+		str_name = "Assault Flats Beach Pier",
+		str_desc = "A white, picturesque wooden pier stretching far out into the Slime Sea. This famous landmark is a common destination for robber barons on vacation, with a various roller coasters and rides occupying large parts of the pier. It’s really fucking lame, and you feel sick thinking about the astronomical slime the yuppies around you have ontained solely through inhereitance. You vow to piss on the ferris wheel if you get the proper mutations.\n\nExits into Assault Flats Beach.",
+		coord = (101, 16),
+		channel = channel_afb_pier,
+		role = "Assault Flats Beach Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_assaultflatsbeach_pier
+	),
+	EwPoi(  # Vagrant's Corner Pier
+		id_poi = poi_id_vagrantscorner_pier,
+		alias = [
+			"vagrantscornerpier",
+			"vcpier",
+			"vcpr",
+		],
+		str_name = "Vagrant's Corner Pier",
+		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+		coord = (98, 25),
+		channel = channel_vc_pier,
+		role = "Vagrant's Corner Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_vagrantscorner
+	),
+	EwPoi(  # Slime's End Pier
+		id_poi = poi_id_slimesend_pier,
+		alias = [
+			"slimesendpier",
+			"sepier",
+			"sep",
+		],
+		str_name = "Slime's End Pier",
+		str_desc = "A lonesome pier at the very end of the Slime’s End peninsula, stretching out into the Slime Sea. From here, you’re able to clearly make out Downtown in the distance, pumping light pollution into the normally polluted air. You’re itching to get back there and punch some grandmas once you’re done wringing slime out of fish.\n\nExits into Slime's End.",
+		coord = (102, 42),
+		channel = channel_se_pier,
+		role = "Slime's End Pier",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_slimesend
+	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
 		str_name = "The Slime Sea",
@@ -5785,7 +6751,7 @@ poi_list = [
 			"tts"
 		],
 		str_name = "The Toxington Subway Station",
-                str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
+				str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
 		coord = (23, 10),
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
@@ -5927,8 +6893,8 @@ poi_list = [
 		],
 		str_name = "The Smogsburg Subway Station",
 		str_desc = str_green_subway_station_description + \
-                        "\n\n" + str_subway_connecting_sentence.format("yellow") + \
-                        "\n\n" + str_yellow_subway_station_description \
+						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
+						"\n\n" + str_yellow_subway_station_description \
 			+ "\n\nExits into Smogsburg.",
 		coord = (55, 28),
 		channel = channel_sb_subway_station,
@@ -5981,8 +6947,8 @@ poi_list = [
 		],
 		str_name = "The Krak Bay Subway Station",
 		str_desc = str_green_subway_station_description + \
-                        "\n\n" + str_subway_connecting_sentence.format("yellow") + \
-                        "\n\n" + str_yellow_subway_station_description + \
+						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
+						"\n\n" + str_yellow_subway_station_description + \
 			"\n\nExits into Krak Bay.",
 		coord = (39, 44),
 		channel = channel_kb_subway_station,
@@ -6800,6 +7766,14 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+
+landmark_pois = [
+	poi_id_countryclub,
+	poi_id_charcoalpark,
+	poi_id_slimesend_pier,
+	poi_id_beachresort,
+	poi_id_diner,
+]
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -7811,7 +8785,22 @@ smelting_recipe_list = [
 			item_id_dinoslimemeat : 1
 		},
 		products = ['dinoslimesteak']
-	)
+	),
+	EwSmeltingRecipe(
+		id_recipe = "fishingrod",
+		str_name = "a fishing rod",
+		alias = [
+			"fish",
+			"fishing",
+			"rod",
+			"fr"
+		],
+		ingredients = {
+			'string': 2,
+			'stick': 3
+		},
+		products = ['fishingrod']
+	),
 ]
 
 # A map of id_recipe to EwSmeltingRecipe objects.
@@ -9019,11 +10008,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion"
+mutation_id_spontaneouscombustion = "spontaneouscombustion" 
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother"
+mutation_id_sharptoother = "sharptoother" 
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -9051,7 +10040,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill"
+mutation_id_dressedtokill = "dressedtokill" 
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"
@@ -9077,7 +10066,7 @@ mutations = [
 		id_mutation = mutation_id_fungalfeaster,
 		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to Fungal Feaster.",
 		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to Fungal Feaster.",
-		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore the hunger expended on your recent shots.",
+		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore all hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_sharptoother,
@@ -9107,7 +10096,7 @@ mutations = [
 		id_mutation = mutation_id_organicfursuit,
 		str_describe_self = "Your shedding is a constant source of embarrassment due to Organic Fursuit.",
 		str_describe_other = "Their shedding is a constant source of embarrassment due to Organic Fursuit.",
-		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage and movement speed every 31st night.",
+		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage dealt, 1/10th damage taken and movement speed every 31st night.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lightasafeather,
@@ -9119,7 +10108,7 @@ mutations = [
 		id_mutation = mutation_id_whitenationalist,
 		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
 		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
-		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Cannot be scouted while weather is snowy.",
+		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Scavenge bonus and cannot be scouted while weather is snowy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_spoiledappetite,
@@ -9137,7 +10126,7 @@ mutations = [
 		id_mutation = mutation_id_fatchance,
 		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
 		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
-		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 75% hunger.",
+		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 50% hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fastmetabolism,
@@ -9155,7 +10144,7 @@ mutations = [
 		id_mutation = mutation_id_lonewolf,
 		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to Lone Wolf.",
 		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to Lone Wolf.",
-		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate when in a district alone.",
+		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate and 50% damage buff when in a district alone.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_quantumlegs,
@@ -9173,13 +10162,13 @@ mutations = [
 		id_mutation = mutation_id_patriot,
 		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to Patriot.",
 		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to Patriot.",
-		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double recapture rate.",
+		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double capture rate.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_socialanimal,
 		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to Social Animal.",
 		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to Social Animal.",
-		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 5% for every ally in your district.",
+		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 10% for every ally in your district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_threesashroud,
@@ -9215,7 +10204,7 @@ mutations = [
 		id_mutation = mutation_id_dumpsterdiver,
 		str_describe_self = "You are exceptionally good at picking up trash due to Dumpster Diver.",
 		str_describe_other = "They are exceptionally good at picking up trash due to Dumpster Diver.",
-		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. Double chance to get items while scavenging.",
+		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. 10 times chance to get items while scavenging.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_trashmouth,
@@ -9421,6 +10410,23 @@ for food in food_list:
 	for alias in food.alias:
 		food_map[alias] = food
 
+# Populate fish map, including all aliases.
+for fish in fish_list:
+	fish_map[fish.id_fish] = fish
+	fish_names.append(fish.id_fish)
+
+	# Add fish to its vendors' lists.
+	for vendor in fish.vendors:
+		vendor_list = vendor_inv.get(vendor)
+
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+
+		vendor_list.append(fish.id_fish)
+
+	for alias in fish.alias:
+		fish_map[alias] = fish
 
 # Populate cosmetic map.
 for cosmetic in cosmetic_items_list:
@@ -9457,6 +10463,28 @@ for m in food_list:
 for m in cosmetic_items_list:
 	if m.acquisition == acquisition_milling:
 		mill_results.append(m)
+	else:
+		pass
+
+# List of items you can obtain via appraisal.
+appraise_results = []
+
+# Gather all items that can be the result of milling.
+for a in item_list:
+	if a.acquisition == acquisition_bartering:
+		appraise_results.append(a)
+	else:
+		pass
+
+for a in food_list:
+	if a.acquisition == acquisition_bartering:
+		appraise_results.append(a)
+	else:
+		pass
+
+for a in cosmetic_items_list:
+	if a.acquisition == acquisition_bartering:
+		appraise_results.append(a)
 	else:
 		pass
 
@@ -9516,6 +10544,16 @@ slimexodia_parts = []
 for slimexodia in item_list:
 	if slimexodia.context == 'slimexodia':
 		slimexodia_parts.append(slimexodia)
+	else:
+		pass
+
+# Shitty bait that always yields Plebefish while fishing.
+plebe_bait = []
+
+# Gather all shitty bait.
+for bait in food_list:
+	if bait.price == None or bait.price <= 1000:
+		plebe_bait.append(bait.id_food)
 	else:
 		pass
 

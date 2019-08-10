@@ -2216,7 +2216,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			s2moxie += 2
 			s2chutzpah += 2
 		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
-
+			
 
 	s1_active = False
 	in_range = False
@@ -2778,8 +2778,8 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 async def slimeoid_tick_loop(id_server):
 	while not ewutils.TERMINATE:
-		await slimeoid_tick(id_server)
 		await asyncio.sleep(ewcfg.slimeoid_tick_length)
+		await slimeoid_tick(id_server)
 
 async def slimeoid_tick(id_server):
 	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
@@ -2850,16 +2850,14 @@ async def dress_slimeoid(cmd):
 						response += "take off your {} and give it to {}.".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
 					else:
 						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
-
-
+					
 					cosmetic.item_props['slimeoid'] = 'true'
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'
-
+					
 			cosmetic.persist()
 		else:
 			response = 'Adorn which cosmetic? Check your **!inventory**.'
-
-
-
+		
+	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

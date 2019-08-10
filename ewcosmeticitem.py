@@ -12,6 +12,8 @@ from ewitem import EwItem
 	Cosmetic item model object
 """
 class EwCosmeticItem:
+	item_type = "cosmetic"
+
 	# The proper name of the cosmetic item
 	id_cosmetic = ""
 
@@ -45,6 +47,8 @@ class EwCosmeticItem:
 		vendors = [],
 
 	):
+		self.item_type = ewcfg.it_cosmetic
+
 		self.id_cosmetic = id_cosmetic
 		self.str_name = str_name
 		self.str_desc = str_desc
@@ -141,9 +145,7 @@ async def dye(cmd):
 					cosmetic = item
 
 				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
-
-					dye = item
-
+					dye = item	
 
 				if cosmetic != None and dye != None:
 					break
@@ -166,7 +168,7 @@ async def dye(cmd):
 				response = 'Use which dye? Check your **!inventory**.'
 		else:
 			response = 'Dye which cosmetic? Check your **!inventory**.'
-
+		
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You need to specify which cosmetic you want to paint and which dye you want to use! Check your **!inventory**.'))

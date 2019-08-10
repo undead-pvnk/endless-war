@@ -24,8 +24,6 @@ from ewmarket import EwMarket
 
 TERMINATE = False
 
-TERMINATE = False
-
 db_pool = {}
 db_pool_id = 0
 
@@ -452,7 +450,7 @@ async def bleedSlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)
+			databaseClose(conn_info)		
 
 """ Bleed slime for all enemies """
 async def enemyBleedSlimes(id_server = None):
@@ -840,7 +838,7 @@ def hunger_cost_mod(slimelevel):
 """
 def food_carry_capacity_bylevel(slimelevel):
 	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
-
+        
 """
 	Calculate how many weapons the player can carry
 """
@@ -848,7 +846,7 @@ def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
 def max_adorn_bylevel(slimelevel):
-		return math.ceil(slimelevel / ewcfg.max_adorn_mod)
+        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
 """
 	Returns an EwUser object of the selected kingpin
 """

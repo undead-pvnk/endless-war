@@ -205,7 +205,7 @@ class EwDistrict:
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
 			
 			nega_present = len(slimeoids) > 0
-                        
+			
 			if nega_present:
 				decay *= 1.5
 
@@ -474,7 +474,7 @@ async def capture_tick(id_server):
 			controlling_faction = dist.controlling_faction
 
 			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
-
+					
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
 			
@@ -518,9 +518,9 @@ async def capture_tick(id_server):
 						player_capture_speed = 1
 						if ewcfg.mutation_id_lonewolf in mutations and len(gangsters_in_district) == 1:
 							player_capture_speed *= 2
-						if ewcfg.mutation_id_patriot in mutations and dist.controlling_faction == player_faction:
+						if ewcfg.mutation_id_patriot in mutations:
 							player_capture_speed *= 2
-
+							
 
 						capture_speed += player_capture_speed
 						dc_stat_increase_list.append(player_id)

@@ -43,6 +43,7 @@ import ewquadrants
 import ewtransport
 import ewsmelting
 import ewhunting
+import ewfish
 import ewdebug
 
 from ewitem import EwItem
@@ -103,7 +104,7 @@ cmd_map = {
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
 	# flags a vein as dangerous
-	ewcfg.cmd_flag: ewjuviecmd.flag,
+	#ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
@@ -273,9 +274,21 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_check_farm: ewfarm.check_farm,
+	ewcfg.cmd_irrigate: ewfarm.cultivate,
+	ewcfg.cmd_weed: ewfarm.cultivate,
+	ewcfg.cmd_fertilize: ewfarm.cultivate,
+	ewcfg.cmd_pesticide: ewfarm.cultivate,
 	ewcfg.cmd_mill: ewfarm.mill,
 
-     #scavenging
+	# Fishing
+	ewcfg.cmd_cast: ewfish.cast,
+	ewcfg.cmd_reel: ewfish.reel,
+	ewcfg.cmd_appraise: ewfish.appraise,
+	ewcfg.cmd_barter: ewfish.barter,
+	ewcfg.cmd_embiggen: ewfish.embiggen,
+
+	 #scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
@@ -435,6 +448,8 @@ async def on_ready():
 	ewmap.map_draw()
 
 	# Flatten role names to all lowercase, no spaces.
+	fake_observer = EwUser()
+	fake_observer.life_state = ewcfg.life_state_observer
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
@@ -442,8 +457,6 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			fake_observer = EwUser()
-			fake_observer.life_state = ewcfg.life_state_observer
 			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
@@ -454,6 +467,17 @@ async def on_ready():
 
 		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
+
+
+	for id_poi in ewcfg.landmark_pois:
+		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
+		poi = ewcfg.id_to_poi.get(id_poi)
+		ewmap.landmarks[id_poi] = ewmap.score_map_from(
+			coord_start = poi.coord,
+			user_data = fake_observer
+		)
+
+	ewutils.logMsg("finished landmark precomputation")
 
 	try:
 		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
@@ -533,6 +557,7 @@ async def on_ready():
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -707,6 +732,9 @@ async def on_ready():
 
 					# Decrease inebriation for all players above min (0).
 					ewutils.pushdownServerInebriation(id_server = server.id)
+
+					# Remove fish offers which have timed out
+					ewfish.kill_dead_offers(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
@@ -889,7 +917,7 @@ async def on_message(message):
 			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
 				response = "You cannot participate in the ENDLESS WAR while offline."
-
+    
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 
