@@ -367,36 +367,37 @@ async def cast(cmd):
 				if item.item_type == ewcfg.it_food:
 
 					str_name = item.item_props['food_name']
+					id_food = item.item_props.get('id_food')
 					fisher.bait = True
 
-					if item in ewcfg.plebe_bait:
+					if id_food in ewcfg.plebe_bait:
 						fisher.current_fish = "plebefish"
 
-					elif item == "doublestuffedcrust":
+					elif id_food == "doublestuffedcrust":
 						if random.randrange(5) == 3:
 							fisher.current_fish = "doublestuffedflounder"
 
-					elif item in ["chickenbucket", "familymeal"]:
+					elif id_food in ["chickenbucket", "familymeal"]:
 						if random.randrange(5) == 3:
 							fisher.current_fish = "seacolonel"
 
-					elif item in ["steakvolcanoquesomachorito", "nachosupreme"]:
+					elif id_food in ["steakvolcanoquesomachorito", "nachosupreme"]:
 						if random.randrange(5) == 3:
 							fisher.current_fish = "marlinsupreme"
 
-					elif item in ["blacklimes", "blacklimesour"]:
+					elif id_food in ["blacklimes", "blacklimesour"]:
 						if random.randrange(2) == 1:
 							fisher.current_fish = "blacklimesalmon"
 
-					elif item in ["pinkrowddishes", "pinkrowdatouille"]:
+					elif id_food in ["pinkrowddishes", "pinkrowdatouille"]:
 						if random.randrange(2) == 1:
 							fisher.current_fish = "thrash"
 
-					elif item in ["purplekilliflowercrustpizza", "purplekilliflower"]:
+					elif id_food in ["purplekilliflowercrustpizza", "purplekilliflower"]:
 						if random.randrange(2) == 1:
 							fisher.current_fish = "dab"
 
-					elif item == "kingpincrab":
+					elif id_food == "kingpincrab":
 						if random.randrange(5) == 1:
 							fisher.current_fish = "kingpincrab"
 

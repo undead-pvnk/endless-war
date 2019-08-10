@@ -544,15 +544,36 @@ async def attack(cmd):
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
 
+			# Lone wolf
+			if ewcfg.mutation_id_lonewolf in user_mutations:
+				allies_in_district = district_data.get_players_in_district(
+					min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
+					life_states = [ewcfg.life_state_enlisted],
+					factions = [user_data.faction]
+				)
+				if user_data.id_user in allies_in_district:
+					allies_in_district.remove(user_data.id_user)
+
+				if len(allies_in_district) == 0:
+					slimes_damage *= 1.5
+			
+			# Organic fursuit
 			if ewcfg.mutation_id_organicfursuit in user_mutations and (
 				(market_data.day % 31 == 0 and market_data.clock >= 20)
 				or (market_data.day % 31 == 1 and market_data.clock < 6)
 			):
 				slimes_damage *= 2
+			if ewcfg.mutation_id_organicfursuit in shootee_mutations and (
+				(market_data.day % 31 == 0 and market_data.clock >= 20)
+				or (market_data.day % 31 == 1 and market_data.clock < 6)
+			):
+				slimes_damage *= 0.1
 
-			if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.75:
+			# Fat chance
+			if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.5:
 				slimes_damage *= 0.75
-
+			
+			# Social animal
 			if ewcfg.mutation_id_socialanimal in user_mutations:
 				allies_in_district = district_data.get_players_in_district(
 					min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
@@ -562,8 +583,9 @@ async def attack(cmd):
 				if user_data.id_user in allies_in_district:
 					allies_in_district.remove(user_data.id_user)
 
-				slimes_damage *= 1 + 0.05 * len(allies_in_district)
-
+				slimes_damage *= 1 + 0.1 * len(allies_in_district)
+				
+			# Dressed to kill
 			if ewcfg.mutation_id_dressedtokill in user_mutations:
 				items = ewitem.inventory(
 					id_user = cmd.message.author.id,
@@ -578,7 +600,7 @@ async def attack(cmd):
 						adorned_items += 1
 
 				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-					slimes_damage *= 1.2
+					slimes_damage *= 2
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -678,7 +700,7 @@ async def attack(cmd):
 					district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
 					levelup_response = user_data.change_slimes(n = slimes_tokiller, source = ewcfg.source_killing)
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
-						user_data.hunger = max(0, user_data.hunger - user_data.get_hunger_max() / 2)
+						user_data.hunger = 0
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
@@ -858,7 +880,7 @@ async def suicide(cmd):
 		user_isjuvenile = user_data.life_state == ewcfg.life_state_juvenile
 		user_isdead = user_data.life_state == ewcfg.life_state_corpse
 		user_isexecutive = user_data.life_state == ewcfg.life_state_executive
-		user_islucky = user_data.lifestate == ewcfg.life_state_lucky
+		user_islucky = user_data.life_state == ewcfg.life_state_lucky
 
 		if user_isdead:
 			response = "Too late for that."

@@ -532,6 +532,9 @@ async def scavenge(cmd):
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
 
+			if ewcfg.mutation_id_whitenationalist in mutations and market_data.weather == "snow":
+				scavenge_mod *= 1.5
+
 			if ewcfg.mutation_id_webbedfeet in mutations:
 				district_slimelevel = len(str(district_data.slimes))
 				scavenge_mod *= max(1, min(district_slimelevel - 3, 4))
@@ -559,7 +562,7 @@ async def scavenge(cmd):
 				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
 				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
 				if ewcfg.mutation_id_dumpsterdiver in mutations:
-					loot_chance *= 2
+					loot_chance *= 10
 				if random.random() < loot_chance:
 					loot_resp = ewitem.item_lootrandom(
 						id_server = user_data.id_server,

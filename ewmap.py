@@ -1108,6 +1108,7 @@ async def scout(cmd):
 					continue
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
+				continue
 
 			detailed_resp += "\n" + scoutee_player.display_name
 			num_players += 1

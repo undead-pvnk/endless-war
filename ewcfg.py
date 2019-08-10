@@ -10121,7 +10121,7 @@ mutations = [
 		id_mutation = mutation_id_fungalfeaster,
 		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to Fungal Feaster.",
 		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to Fungal Feaster.",
-		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore the hunger expended on your recent shots.",
+		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore all hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_sharptoother,
@@ -10151,7 +10151,7 @@ mutations = [
 		id_mutation = mutation_id_organicfursuit,
 		str_describe_self = "Your shedding is a constant source of embarrassment due to Organic Fursuit.",
 		str_describe_other = "Their shedding is a constant source of embarrassment due to Organic Fursuit.",
-		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage and movement speed every 31st night.",
+		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage dealt, 1/10th damage taken and movement speed every 31st night.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lightasafeather,
@@ -10163,7 +10163,7 @@ mutations = [
 		id_mutation = mutation_id_whitenationalist,
 		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
 		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
-		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Cannot be scouted while weather is snowy.",
+		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Scavenge bonus and cannot be scouted while weather is snowy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_spoiledappetite,
@@ -10181,7 +10181,7 @@ mutations = [
 		id_mutation = mutation_id_fatchance,
 		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
 		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
-		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 75% hunger.",
+		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 50% hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fastmetabolism,
@@ -10199,7 +10199,7 @@ mutations = [
 		id_mutation = mutation_id_lonewolf,
 		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to Lone Wolf.",
 		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to Lone Wolf.",
-		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate when in a district alone.",
+		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate and 50% damage buff when in a district alone.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_quantumlegs,
@@ -10217,13 +10217,13 @@ mutations = [
 		id_mutation = mutation_id_patriot,
 		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to Patriot.",
 		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to Patriot.",
-		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double recapture rate.",
+		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double capture rate.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_socialanimal,
 		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to Social Animal.",
 		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to Social Animal.",
-		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 5% for every ally in your district.",
+		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 10% for every ally in your district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_threesashroud,
@@ -10259,7 +10259,7 @@ mutations = [
 		id_mutation = mutation_id_dumpsterdiver,
 		str_describe_self = "You are exceptionally good at picking up trash due to Dumpster Diver.",
 		str_describe_other = "They are exceptionally good at picking up trash due to Dumpster Diver.",
-		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. Double chance to get items while scavenging.",
+		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. 10 times chance to get items while scavenging.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_trashmouth,
