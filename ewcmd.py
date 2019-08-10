@@ -468,6 +468,9 @@ async def help(cmd):
 			elif user_data.poi in ewcfg.poi_id_thesewers:
 				# death help
 				response = ewcfg.help_responses['death']
+			elif user_data.poi in ewcfg.poi_id_realestate:
+				#real estate help
+				response = ewcfg.help_responses['realestate']
 			else:
 				# catch-all response for when user isn't in a sub-zone with a help response
 				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
