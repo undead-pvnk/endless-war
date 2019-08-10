@@ -790,51 +790,64 @@ async def inventory_print(cmd):
 async def item_look(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
-	user_data = EwUser(member = author)
+	player = EwPlayer(id_user=cmd.message.author.id)
+	server = player.id_server
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=server)
 	mutations = user_data.get_mutations()
 
-	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id if server is not None else None)
+	item_dest = []
+	item_sought_inv = find_item(item_search=item_search, id_user=author.id, id_server=server)
+	item_dest.append(item_sought_inv)
+	iterate = 0
+	response = ""
+	if user_data.poi == "apt":
+		item_sought_closet = find_item(item_search=item_search, id_user=author.id + "closet", id_server=server)
+		item_sought_fridge = find_item(item_search=item_search, id_user=author.id + "fridge", id_server=server)
+		item_sought_decorate = find_item(item_search=item_search, id_user=author.id + "decorate", id_server=server)
+		item_dest.append(item_sought_closet)
+		item_dest.append(item_sought_fridge)
+		item_dest.append(item_sought_decorate)
+	for item_sought in item_dest:
+		iterate+=1
+		if item_sought:
+			item = EwItem(id_item = item_sought.get('id_item'))
 
-	if item_sought:
-		item = EwItem(id_item = item_sought.get('id_item'))
+			id_item = item.id_item
+			name = item_sought.get('name')
+			response = item_sought.get('item_def').str_desc
 
-		id_item = item.id_item
-		name = item_sought.get('name')
-		response = item_sought.get('item_def').str_desc
-
-		# Replace up to two levels of variable substitutions.
-		if response.find('{') >= 0:
-			response = response.format_map(item.item_props)
-
+			# Replace up to two levels of variable substitutions.
 			if response.find('{') >= 0:
 				response = response.format_map(item.item_props)
 
-		if item.item_type == ewcfg.it_food:
-			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
-				response += " This food item is rotten"
-				if ewcfg.mutation_id_spoiledappetite in mutations:
-					response += ". Yummy!"
-				else:
-					response += ", so you decide to throw it away."
-					item_drop(id_item)
-		
-		if item.item_type == ewcfg.it_cosmetic:
-			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
-			if hue != None:
-				response += " It's been dyed in {} paint.".format(hue.str_name)
+				if response.find('{') >= 0:
+					response = response.format_map(item.item_props)
 
-		response = name + "\n\n" + response
+			if item.item_type == ewcfg.it_food:
+				if float(item.item_props.get('time_expir') if not None else 0) < time.time():
+					response += " This food item is rotten"
+					if ewcfg.mutation_id_spoiledappetite in mutations:
+						response += ". Yummy!"
+					else:
+						response += ", so you decide to throw it away."
+						item_drop(id_item)
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if item.item_type == ewcfg.it_cosmetic:
+				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+				if hue != None:
+					response += " It's been dyed in {} paint.".format(hue.str_name)
 
-	else:
-		if item_search:  # if they didnt forget to specify an item and it just wasn't found
-			response = "You don't have one."
+			response = name + "\n\n" + response
+
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
-			response = "Inspect which item? (check **!inventory**)"
+			if iterate == len(item_dest) and response == "":
+				if item_search:  # if they didnt forget to specify an item and it just wasn't found
+					response = "You don't have one."
+				else:
+					response = "Inspect which item? (check **!inventory**)"
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):

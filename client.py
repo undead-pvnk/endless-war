@@ -135,6 +135,9 @@ cmd_map = {
 	ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
 	ewcfg.cmd_sign_lease: ewapt.signlease,
 	ewcfg.cmd_apartment: ewapt.apartment,
+	ewcfg.cmd_rip: ewapt.nothing,
+	ewcfg.cmd_sign: ewapt.nothing,
+	ewcfg.cmd_upgrade: ewapt.upgrade,
 
 
 
@@ -486,7 +489,7 @@ async def on_ready():
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
-		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
+		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version + "use tildes you fucks"))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 

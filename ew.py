@@ -48,7 +48,9 @@ class EwUser:
 	time_lastenter = 0
 	time_lastoffline = 0
 	time_joined = 0
+
 	apt_zone = "empty"
+
 	move_speed = 1 # not a database column
 
 	""" fix data in this object if it's out of acceptable ranges """
@@ -445,7 +447,8 @@ class EwUser:
 					ewcfg.col_slime_donations,
 					ewcfg.col_poudrin_donations,
 					ewcfg.col_arrested,
-					ewcfg.col_apt_zone
+					ewcfg.col_apt_zone,
+
 				), (
 					id_user,
 					id_server
@@ -487,6 +490,7 @@ class EwUser:
 					self.poudrin_donations = result[30]
 					self.arrested = (result[31] == 1)
 					self.apt_zone = result[32]
+
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -578,7 +582,7 @@ class EwUser:
 				ewcfg.col_slime_donations,
 				ewcfg.col_poudrin_donations,
 				ewcfg.col_arrested,
-				ewcfg.col_apt_zone
+				ewcfg.col_apt_zone,
 			), (
 				self.id_user,
 				self.id_server,
@@ -615,7 +619,8 @@ class EwUser:
 				self.slime_donations,
 				self.poudrin_donations,
 				(1 if self.arrested else 0),
-				self.apt_zone
+				self.apt_zone,
+
 			))
 
 			conn.commit()

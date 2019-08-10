@@ -338,7 +338,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '~'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -464,6 +464,8 @@ cmd_dab = cmd_prefix + 'dab'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
+cmd_sign = cmd_prefix + 'sign'
+cmd_rip = cmd_prefix + 'rip'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_check_farm = cmd_prefix + 'checkfarm'
@@ -508,10 +510,14 @@ cmd_store = cmd_prefix + 'store'
 cmd_unfridge = cmd_prefix + 'unfridge'
 cmd_uncloset = cmd_prefix + 'uncloset'
 cmd_take = cmd_prefix + 'take'
-cmd_furnish = cmd_prefix + 'furnish'
-cmd_unfurnish = cmd_prefix + 'unfurnish'
+cmd_decorate = cmd_prefix + 'decorate'
+cmd_undecorate = cmd_prefix + 'undecorate'
 cmd_freeze = cmd_prefix + 'freeze'
+cmd_unfreeze = cmd_prefix + 'unfreeze'
 cmd_apartment = cmd_prefix + 'apartment'
+cmd_aptname = cmd_prefix + 'aptname'
+cmd_aptdesc = cmd_prefix + 'aptdesc'
+cmd_upgrade  = cmd_prefix + 'upgrade'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
@@ -1012,6 +1018,7 @@ col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
 col_apt_zone = 'apt_zone'
+
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -4518,7 +4525,7 @@ EwFurniture(
 		str_desc = "This is the kind of chair shitty cops use to question their victims. Sitting in it gives you war flashbacks to when you were arrested, so you'll probably only whip it out for special occasions.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
-		price = 100000,
+		price = 500000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an interrogation chair here for some reason.",
 		furniture_place_desc = "You place the chair in the middle of the room, trying not to think about police."),
@@ -4542,6 +4549,227 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The walls are smeared with slime.",
 		furniture_place_desc = "You gently smear the slime facsimile on the walls."),
+EwFurniture(
+		id_furniture = "chair",
+		str_name = "chair",
+		str_desc = "It's a normal wooden chair. A sign of your entry into the rat race that is the economy.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a chair in the room.",
+		furniture_place_desc = "You set the chair where you think it's appropriate. How exciting."),
+EwFurniture(
+		id_furniture = "desk",
+		str_name = "desk",
+		str_desc = "A normal wooden desk. You can almost hear your soul breaking under your monotonous career.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 400000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You see a desk in the corner.",
+		furniture_place_desc = "You set up the desk in the corner of the room."),
+EwFurniture(
+		id_furniture = "couch",
+		str_name = "couch",
+		str_desc = "This one's a pull-out couch. The upholstery is pretty new, yet somehow looks worn out already.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 600000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a comfy couch up against the wall.",
+		furniture_place_desc = "You get some friend or another to help you move the couch in. They pretended like they were happy to do it, but you know they weren't."),
+EwFurniture(
+		id_furniture = "lamp",
+		str_name = "lamp",
+		str_desc = "A normal lamp. Good for reading, if your juvenile delinquent ass could actually read.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 50000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The lamp casts a warm light throughout the room.",
+		furniture_place_desc = "You set up the lamp, plug it in, and watch the one-light light show."),
+EwFurniture(
+		id_furniture = "lgbtqdesk",
+		str_name = "LGBTQ+ desk",
+		str_desc = "It's like a regular desk, but the drawers are all different colors of the rainbow.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 800000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A gaudy rainbow desk is in the corner of the room.",
+		furniture_place_desc = "You drag the desk into position. You feel gayer already."),
+EwFurniture(
+		id_furniture = "lgbtqchair",
+		str_name = "LGBTQ+ chair",
+		str_desc = "A rainbow striped chair. I'll bet you could give some pretty good man-on-man lap dances with this.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a rainbow chair set up.",
+		furniture_place_desc = "You place the chair in the best place you can think of."),
+EwFurniture(
+		id_furniture = "lgbtqcouch",
+		str_name = "LGBTQ+ couch",
+		str_desc = "There's no need for this couch to pull out.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A colorful couch sits against the wall",
+		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful."),
+EwFurniture(
+		id_furniture = "lgbtqlamp",
+		str_name = "LGBTQ+ lamp",
+		str_desc = "It's not actually the lamp that's LGBTQ. It's the bulb.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 50000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The fancy lamp flashes rainbow everywhere.",
+		furniture_place_desc = "You plug in the lamp and watch the pretty colors for awhile."),
+EwFurniture(
+		id_furniture = "lgbtqbed",
+		str_name = "LGBTQ+ bed",
+		str_desc = "This is where the magic happens.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a rainbow bed in the bedroom.",
+		furniture_place_desc = "You set up your bed, dreaming of all the same-sex poon you're gonna slam."),
+EwFurniture(
+		id_furniture = "bed",
+		str_name = "bed",
+		str_desc = "A standard-issue bed, ready-made for crying yourself to sleep.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 750000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a bed in the bedroom.",
+		furniture_place_desc = "The IKEA instructions are confusing, so it takes a few attempts to make the bed."),
+EwFurniture(
+		id_furniture = "hauntedbed",
+		str_name = "haunted bed",
+		str_desc = "This bed was owned by a long-gone staydead, way back in Season 1. You can still feel the negaslime residue on it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You hear ghostly moaning from the bedroom.",
+		furniture_place_desc = "You're about to place the mattress when a dozen spiders crawl out of it. Better be careful with this one."),
+EwFurniture(
+		id_furniture = "hauntedcouch",
+		str_name = "haunted couch",
+		str_desc = "Every person who sat on this couch was supposedly cursed to die the day after. That doesn't mean much in NLACakaNM, though.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The rustic couch against the wall looks old and haunted.",
+		furniture_place_desc = "You were going to ask some of your buds to help move this in, but you walked into the apartment and it was already there..."),
+EwFurniture(
+		id_furniture = "hauntedlamp",
+		str_name = "haunted lamp",
+		str_desc = "When you turn on this lamp it somehow makes the room darker.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 100000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The lighting in here is ominous, thanks to your lamp.",
+		furniture_place_desc = "You set up the old lamp. The light flickers."),
+EwFurniture(
+		id_furniture = "hauntedchair",
+		str_name = "haunted chair",
+		str_desc = "This chair doesn't seem to go well with other furniture, unless it's below a noose.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A haunted chair stands in the middle of the room",
+		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide."),
+EwFurniture(
+		id_furniture = "haunteddesk",
+		str_name = "haunted desk",
+		str_desc = "It just looks like an old desk. What did the store clerk mean by 'haunted'?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 800000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An old desk(haunted, apparently) is in the corner.",
+		furniture_place_desc = "You move the desk into the corner. Scary."),
+EwFurniture(
+		id_furniture = "armageddonspritzer",
+		str_name = "Armageddon Spritzer",
+		str_desc = "You look at the automatic scent spritzer, filled to the top with a sinister red liquid. You wonder to yourself why you bought this. All of a sudden, it sprays a puff directly into your face, and you begin to hallucinate.\n\nThe light begins to fade from your eyes as you're bombarded with cacophanous mental static. The buzzing and echoey clanging drives you to scream, but your body no longer exists. You try to clutch your face in desperation and all you feel is liquid. You feel burning. Burning everywhere. The sky flashes a dissonant dark orange, as though the sun was setting on reality itself, and although nobody is speaking, you feel it all calling to you. But you don't want this. Whatever memories haven't escaped you want this all to stop. You don't know your own name and you wish to remember it. And it all hurts. It hurts so much. Please stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop.\n\nWhen you wake up, your face is bleeding and 2 hours have passed. Well, shit. Guess you better prepare for when this goes off again in an hour.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 50000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The spritzer in here makes you feel the sicknasty feelings.",
+		furniture_place_desc = "You set up the spritzer high up on the wall. Gulp."),
+EwFurniture(
+		id_furniture = "beanbagchair",
+		str_name = "beanbag chair",
+		str_desc = "A cushy chair. You were told Digibro has one just like it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A beanbag chair is plopped just wherever.",
+		furniture_place_desc = "You plop the beanbag chair just wherever."),
+EwFurniture(
+		id_furniture = "slimebagchair",
+		str_name = "slimebag chair",
+		str_desc = "A squishy slime-based chair. It's nice and viscous, for your tired bottom.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 5000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A bright green slimebag chair is plopped just wherever.",
+		furniture_place_desc = "You plop the slimebag chair just wherever."),
+EwFurniture(
+		id_furniture = "bodypillow",
+		str_name = "body pillow",
+		str_desc = "A dakimakura with pillowcase. It's got your favorite slime waifu on it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 2000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a body pillow in the bedroom.",
+		furniture_place_desc = "You gently place the pillow in your room, being careful not to damage your waifu."),
+EwFurniture(
+		id_furniture = "futon",
+		str_name = "futon",
+		str_desc = "Every tenant's best friend. Foldable, holdable, lovable.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 5999999,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a futon against the wall.",
+		furniture_place_desc = "You get your friends to help you set up the futon. It's so light and convenient that they treat you to KFC at the end of it."),
+EwFurniture(
+		id_furniture = "vaporsposter",
+		str_name = "The Vapors poster",
+		str_desc = "It's a poster for The Cop Killer's comic. There's Magda. Yep. \npatreon.com/bensaint\nsaintcomix.com",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 900000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a Vapors poster on the wall.",
+		furniture_place_desc = "You roll out your fullbody Magda poster and place it on the wall. You wonder if it's considered a betrayal if Rowdys own these."),
+EwFurniture(
+		id_furniture = "burgerprintwallpaper",
+		str_name = "burger print wallpaper",
+		str_desc = "This wallpaper is a dead ringer for that burger jumpsuit the Rowdy Fucker always wears. Just having it makes you feel rancorous.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 900000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The walls are papered with burgers.",
+		furniture_place_desc = "You start by taking all your furniture out of your house. You buy a paintroller, some adhesive, and some tarp for the floor. You toil for a day sticking the adhesive and applying the wallpaper, then stay at someone else's flat for another day so it dries. And... dammit, the burgers aren't aligned correctly on the seams. Guess we'll just deal."),
+
 
 ]
 
