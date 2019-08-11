@@ -681,7 +681,7 @@ async def move(cmd = None, isApt = False):
 
 	if poi.id_poi == user_data.poi:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
-	elif isApt and poi.id_poi == user_data.apt_zone:
+	elif isApt and poi.id_poi == user_data.poi[3:]:
 		return await ewapt.depart(cmd=cmd)
 
 	if inaccessible(user_data = user_data, poi = poi):
@@ -690,7 +690,7 @@ async def move(cmd = None, isApt = False):
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
 	if isApt:
-		poi_current = ewcfg.id_to_poi.get(user_data.apt_zone)
+		poi_current = ewcfg.id_to_poi.get(user_data.poi[3:])
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
 		if user_data.life_state == ewcfg.life_state_corpse and poi.id_poi == ewcfg.poi_id_thesewers:

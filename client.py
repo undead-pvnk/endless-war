@@ -138,6 +138,7 @@ cmd_map = {
 	ewcfg.cmd_rip: ewapt.nothing,
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
+	ewcfg.cmd_knock: ewapt.knock,
 
 
 

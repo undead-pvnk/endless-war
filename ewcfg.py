@@ -584,6 +584,7 @@ cmd_apartment = cmd_prefix + 'apartment'
 cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'upgrade'
+cmd_knock = cmd_prefix + 'knock'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
@@ -1084,6 +1085,7 @@ col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_arrested = 'arrested'
 col_apt_zone = 'apt_zone'
+col_visiting = "visiting"
 
 
 #Database columns for bartering
@@ -7654,7 +7656,7 @@ EwPoi( # apt
 		alias = [
 			"apt",
 		],
-		str_name = "your apartment",
+		str_name = "an apartment",
 		str_desc = "",
 		channel = channel_apt,
 		role = "Apartments",
@@ -7667,7 +7669,7 @@ EwPoi( # apt-downtown
 		alias = [
 			"apt",
 		],
-		str_name = "your Downtown apartment",
+		str_name = "a Downtown apartment",
 		str_desc = "",
 		channel = channel_apt_downtown,
 		role = "Downtown Apartments",
@@ -7680,7 +7682,7 @@ EwPoi( # apt-smogsburg
 		alias = [
 			"apt",
 		],
-		str_name = "your Smogsburg apartment",
+		str_name = "a Smogsburg apartment",
 		str_desc = "",
 		channel = channel_apt_smogsburg,
 		role = "Smogsburg Apartments",
@@ -7693,7 +7695,7 @@ EwPoi( # apt-krakbay
 		alias = [
 			"apt",
 		],
-		str_name = "your Krak Bay apartment",
+		str_name = "a Krak Bay apartment",
 		str_desc = "",
 		channel = channel_apt_krakbay,
 		role = "Krak Bay Apartments",
@@ -7706,7 +7708,7 @@ EwPoi( # apt-poudrinalley
 		alias = [
 			"apt",
 		],
-		str_name = "your Poudrin Alley apartment",
+		str_name = "a Poudrin Alley apartment",
 		str_desc = "",
 		channel = channel_apt_poudrinalley,
 		role = "Poudrin Alley Apartments",
@@ -7719,7 +7721,7 @@ EwPoi( # apt-green-light-district
 		alias = [
 
 		],
-		str_name = "your Green Light District apartment",
+		str_name = "a Green Light District apartment",
 		str_desc = "",
 		channel = channel_apt_greenlightdistrict,
 		role = "Green Light District Apartments",
@@ -7732,7 +7734,7 @@ EwPoi( # apt-old-new-yonkers
 		alias = [
 
 		],
-		str_name = "your Old New Yonkers apartment",
+		str_name = "an Old New Yonkers apartment",
 		str_desc = "",
 		channel = channel_apt_oldnewyonkers,
 		role = "Old New Yonkers Apartments",
@@ -7745,7 +7747,7 @@ EwPoi( # apt-little-chernobyl
 		alias = [
 
 		],
-		str_name = "your Little Chernobyl apartment",
+		str_name = "a Little Chernobyl apartment",
 		str_desc = "",
 		channel = channel_apt_littlechernobyl,
 		role = "Little Chernobyl Apartments",
@@ -7758,7 +7760,7 @@ EwPoi( # apt-arsonbrook
 		alias = [
 
 		],
-		str_name = "your Arsonbrook apartment",
+		str_name = "an Arsonbrook apartment",
 		str_desc = "",
 		channel = channel_apt_oldnewyonkers,
 		role = "Arsonbrook Apartments",
@@ -7771,7 +7773,7 @@ EwPoi( # apt-astatine-heights
 		alias = [
 
 		],
-		str_name = "your Astatine Heights apartment",
+		str_name = "an Astatine Heights apartment",
 		str_desc = "",
 		channel = channel_apt_astatineheights,
 		role = "Astatine Heights Apartments",
@@ -7784,7 +7786,7 @@ EwPoi( # apt-gatlingsdale
 		alias = [
 
 		],
-		str_name = "your Gatlingsdale apartment",
+		str_name = "a Gatlingsdale apartment",
 		str_desc = "",
 		channel = channel_apt_gatlingsdale,
 		role = "Gatlingsdale Apartments",
@@ -7797,7 +7799,7 @@ EwPoi( # apt-vandal-park
 		alias = [
 
 		],
-		str_name = "your Vandal Park apartment",
+		str_name = "a Vandal Park apartment",
 		str_desc = "",
 		channel = channel_apt_vandalpark,
 		role = "Vandal Park Apartments",
@@ -7836,7 +7838,7 @@ EwPoi( # apt-south-sleezeborough
 		alias = [
 
 		],
-		str_name = "your South Sleezeborough apartment",
+		str_name = "a South Sleezeborough apartment",
 		str_desc = "",
 		channel = channel_apt_southsleezeborough,
 		role = "South Sleezeborough Apartments",
@@ -7849,7 +7851,7 @@ EwPoi( # ooze-gardens
 		alias = [
 
 		],
-		str_name = "your Ooze Gardens apartment",
+		str_name = "an Ooze Gardens apartment",
 		str_desc = "",
 		channel = channel_apt_oozegardens,
 		role = "Ooze Gardens Apartments",
@@ -7862,7 +7864,7 @@ EwPoi( # apt-cratersville
 		alias = [
 
 		],
-		str_name = "your Cratersville apartment",
+		str_name = "a Cratersville apartment",
 		str_desc = "",
 		channel = channel_apt_cratersville,
 		role = "Cratersville Apartments",
@@ -7888,7 +7890,7 @@ EwPoi( # apt-slimes-end
 		alias = [
 
 		],
-		str_name = "your Slime's End apartment",
+		str_name = "a Slime's End apartment",
 		str_desc = "",
 		channel = channel_apt_slimesend,
 		role = "Slime's End Apartments",
@@ -7901,7 +7903,7 @@ EwPoi( # apt-vagrants-corner
 		alias = [
 
 		],
-		str_name = "your Vagrant's Corner apartment",
+		str_name = "a Vagrant's Corner apartment",
 		str_desc = "",
 		channel = channel_apt_vagrantscorner,
 		role = "Vagrant's Corner Apartments",
@@ -7940,7 +7942,7 @@ EwPoi( # apt-brawlden
 		alias = [
 
 		],
-		str_name = "your Brawlden apartment",
+		str_name = "a Brawlden apartment",
 		str_desc = "",
 		channel = channel_apt_brawlden,
 		role = "Brawlden Apartments",
@@ -7953,7 +7955,7 @@ EwPoi( # apt-toxington
 		alias = [
 
 		],
-		str_name = "your Toxington apartment",
+		str_name = "a Toxington apartment",
 		str_desc = "",
 		channel = channel_apt_toxington,
 		role = "Toxington Apartments",
@@ -7966,7 +7968,7 @@ EwPoi( # apt-charcoal-park
 		alias = [
 
 		],
-		str_name = "your Charcoal Park apartment",
+		str_name = "a Charcoal Park apartment",
 		str_desc = "",
 		channel = channel_apt_charcoalpark,
 		role = "Charcoal Park Apartments",
@@ -7979,7 +7981,7 @@ EwPoi( # polonium-hill
 		alias = [
 
 		],
-		str_name = "your Polonium Hill apartment",
+		str_name = "a Polonium Hill apartment",
 		str_desc = "",
 		channel = channel_apt_poloniumhill,
 		role = "Polonium Hill Apartments",
@@ -7992,7 +7994,7 @@ EwPoi( # apt-west-glocksbury
 		alias = [
 
 		],
-		str_name = "your West Glocksbury apartment",
+		str_name = "a West Glocksbury apartment",
 		str_desc = "",
 		channel = channel_apt_westglocksbury,
 		role = "West Glocksbury Apartments",
@@ -8005,7 +8007,7 @@ EwPoi( # apt-jaywalker-plain
 		alias = [
 
 		],
-		str_name = "your Jaywalker Plain apartment",
+		str_name = "a Jaywalker Plain apartment",
 		str_desc = "",
 		channel = channel_apt_jaywalkerplain,
 		role = "Jaywalker Plain Apartments",
@@ -8018,7 +8020,7 @@ EwPoi( # apt-crookline
 		alias = [
 
 		],
-		str_name = "your Crookline apartment",
+		str_name = "a Crookline apartment",
 		str_desc = "",
 		channel = channel_apt_crookline,
 		role = "Crookline Apartments",
@@ -8031,7 +8033,7 @@ EwPoi( # apt-dreadford
 		alias = [
 
 		],
-		str_name = "your Dreadford apartment",
+		str_name = "a Dreadford apartment",
 		str_desc = "",
 		channel = channel_apt_dreadford,
 		role = "Dreadford Apartments",
