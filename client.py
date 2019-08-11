@@ -489,7 +489,7 @@ async def on_ready():
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
-		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version + "use tildes you fucks"))
+		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -1015,7 +1015,13 @@ async def on_message(message):
 				response += " {}".format(levelup_response)
 
 			user_data.persist()
+		elif debug == True and cmd == '!getcoin':
+			user_data = EwUser(member=message.author)
+			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)
 
+			response = "You get 1,000,000,000 slimecoin!"
+
+			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		# Deletes all items in your inventory.

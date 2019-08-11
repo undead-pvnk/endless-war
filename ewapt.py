@@ -167,34 +167,52 @@ async def consult(cmd):
     if poi == None:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That place doesn't exist. The consultant behind the counter is aroused by your stupidity."))
 
-    elif poi == ewcfg.poi_id_rowdyroughhouse or poi == ewcfg.poi_id_copkilltown or poi == ewcfg.poi_id_juviesrow:
+    elif poi.id_poi == ewcfg.poi_id_rowdyroughhouse or poi.id_poi == ewcfg.poi_id_copkilltown or poi.id_poi == ewcfg.poi_id_juviesrow:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
 
     elif poi.is_subzone:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
 
     elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach:
-        response = "This is Assault Flats Beach. There's dinosaurs, so we're charging all the legal fees to our tenants.\n\n"
+        if ewcfg.consult_responses[poi.id_poi]:
+            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
+        else:
+            response = "This is an S Class district the devs haven't written in yet.\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(6000000000*getPriceBase(cmd=cmd), 4*6000000000*getPriceBase(cmd=cmd))
 
     elif poi.id_poi == ewcfg.poi_id_dreadford:
-        response = "This is Dreadford. There's golfing old people, so we're charging all the legal fees to our tenants.\n\n"
+        if ewcfg.consult_responses[poi.id_poi]:
+            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
+        else:
+            response = "This is an S Class district the devs haven't written in yet.\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(6000000000*getPriceBase(cmd=cmd), 4*6000000000*getPriceBase(cmd=cmd))
 
     elif poi.id_poi == ewcfg.poi_id_downtown:
-        response = "This is Downtown. You need to be a big man if you're gonna take it downtown.\n\n"
+        if ewcfg.consult_responses[poi.id_poi]:
+            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
+        else:
+            response = "This is an S Class district the devs haven't written in yet.\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(3000000000*getPriceBase(cmd=cmd), 4*3000000000*getPriceBase(cmd=cmd))
 
     elif poi.property_class == "c":
-        response = "This is a C class district. If you want to write flavor text for each zone you'll need a bunch of these elif statements.\n\n"
+        if ewcfg.consult_responses[poi.id_poi]:
+            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
+        else:
+            response = "This is a C Class district the devs haven't written in yet.\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(getPriceBase(cmd=cmd), 4*getPriceBase(cmd=cmd))
 
     elif poi.property_class == "b":
-        response = "This is a B class district. These are placeholders, not intended to be in the game.\n\n"
+        if ewcfg.consult_responses[poi.id_poi]:
+            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
+        else:
+            response = "This is a B Class district the devs haven't written in yet.\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(1500*getPriceBase(cmd=cmd), 1500*4*getPriceBase(cmd=cmd))
 
     elif poi.property_class == "a":
-        response = "This is an A class district. Based on existing code, the remaining statements should be easy.\n\n"
+        if ewcfg.consult_responses[poi.id_poi]:
+            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
+        else:
+            response = "This is an A Class district the devs haven't written in yet.\n\n"
         response += "The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(2000000 * getPriceBase(cmd=cmd), 2000000 * 4 * getPriceBase(cmd=cmd))
 
     else:
@@ -293,7 +311,7 @@ async def retire(cmd):
 
     else:
         ewutils.moves_active[cmd.message.author.id] = 0
-        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You enter your apartment."))
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
         await asyncio.sleep(20)
         user_data.poi = poi_dest.id_poi
         user_data.persist()
@@ -513,6 +531,9 @@ async def store_item(cmd, dest):
 
         elif item_sought.get('item_type') == ewcfg.it_furniture and (dest != "decorate" and dest != "store"):
             response = "The fridge and closet don't have huge spaces for furniture storage. Try !decorate or !store instead."
+            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        elif item_sought.get('item_type') != ewcfg.it_furniture and (dest == "decorate"):
+            response = "Are you going to just drop items on the ground like a ruffian? Store them in your fridge or closet instead."
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
         if destination == "store":
@@ -743,6 +764,7 @@ async def bazaar_update(cmd):
     while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == \
             market_data.bazaar_wares['cosmetic1']:
         market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
+
     while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == \
             market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == \
             market_data.bazaar_wares['cosmetic2']:
@@ -752,9 +774,12 @@ async def bazaar_update(cmd):
 
 
     market_data.persist()
+
+
 async def freeze(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
     if ew_slime_model.name != "":
         ew_slime_model.id_user += "freeze"
         ew_slime_model.persist()
@@ -762,6 +787,7 @@ async def freeze(cmd):
 
     else:
         response = "You don't have a slimeoid for that."
+
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -772,8 +798,10 @@ async def unfreeze(cmd):
     for token in cmd.tokens:
         if firstCheck:
             firstCheck = False
+
         else:
             slimeoid_search += token + " "
+
     slimeoid_search = slimeoid_search[:-1]
 
     ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id+"freeze", slimeoid_name=slimeoid_search , id_server=playermodel.id_server)
@@ -792,15 +820,18 @@ async def unfreeze(cmd):
         ew_slime_model.id_user = cmd.message.author.id
         ew_slime_model.persist()
         response = "You open the freezer. Your slimeoid stumbles out, desperately gasping for air. {} isn't sure what it did to deserve cryostasis, but it gives you an apologetic yap in order to earn your forgiveness. \n\n {} is now your slimeoid.".format(ew_slime_model.name, ew_slime_model.name, ew_slime_model.name)
+
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def apartment (cmd):
     usermodel = EwUser(member=cmd.message.author)
     if usermodel.apt_zone == "empty":
         response = "You don't have an apartment."
+
     else:
         poi = ewcfg.id_to_poi.get(usermodel.apt_zone)
         response = "Your apartment is in {}.".format(poi.str_name)
+
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def apt_help(cmd):

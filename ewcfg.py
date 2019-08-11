@@ -338,7 +338,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '~'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -968,8 +968,8 @@ col_stack_size = 'stack_size'
 col_soulbound = 'soulbound'
 
 #Database columns for apartments
-col_apt_name = 'apt_name'
-col_apt_description = 'apt_description'
+col_apt_name = 'aptname'
+col_apt_description = 'aptdescription'
 col_rent = 'rent'
 col_apt_class = 'apt_class'
 
@@ -10429,6 +10429,37 @@ help_responses = {
 	"casino":"**The Casino** is a sub-zone in Green Light District where players may bet their slime coin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
 	"realestate":"This is the agency where you buy real estate. First, check out the property you want with !consult <district>. The real estate agent will tell you a bit about the area. Once you've made your decision, you can !signlease <district> to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first. \n\nFinally, if you own an apartment already, you can !upgrade it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture."
+}
+consult_responses = {
+"downtown":"This district has not been described yet.",
+"smogsburg":"This district has not been described yet.",
+"krakbay":"This district has not been described yet.",
+"poudrinalley":"This district has not been described yet.",
+"greenlightdistrict":"This district has not been described yet.",
+"oldnewyonkers":"This district has not been described yet.",
+"littlechernobyl":"This district has not been described yet.",
+"arsonbrook":"This district has not been described yet.",
+"astatineheights":"This district has not been described yet.",
+"gatlingsdale":"This district has not been described yet.",
+"vandalpark":"This district has not been described yet.",
+"glocksbury":"This district has not been described yet.",
+"northsleezeborough":"This district has not been described yet.",
+"southsleezeborough":"This district has not been described yet.",
+"oozegardens":"This district has not been described yet.",
+"cratersville":"This district has not been described yet.",
+"wreckington":"This district has not been described yet.",
+"slimesend":"This district has not been described yet.",
+"vagrantscorner":"This district has not been described yet.",
+"assaultflatsbeach":"This district has not been described yet.",
+"newnewyonkers":"This district has not been described yet.",
+"brawlden":"This district has not been described yet.",
+"toxington":"This district has not been described yet.",
+"charcoalpark":"This district has not been described yet.",
+"poloniumhill":"This district has not been described yet.",
+"westglocksbury":"This district has not been described yet.",
+"jaywalkerplain":"This district has not been described yet.",
+"crookline":"This district has not been described yet.",
+"dreadford":"This district has not been described yet."
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
