@@ -890,7 +890,7 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
 		move_speed *= 2
-	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.5:
-		move_speed *= 2
+	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
+		move_speed *= 1.33
 
 	return move_speed
