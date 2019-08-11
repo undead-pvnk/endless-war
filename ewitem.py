@@ -800,7 +800,7 @@ async def item_look(cmd):
 	item_dest.append(item_sought_inv)
 	iterate = 0
 	response = ""
-	if user_data.poi == "apt":
+	if user_data.poi == "apt"+user_data.apt_zone:
 		item_sought_closet = find_item(item_search=item_search, id_user=author.id + "closet", id_server=server)
 		item_sought_fridge = find_item(item_search=item_search, id_user=author.id + "fridge", id_server=server)
 		item_sought_decorate = find_item(item_search=item_search, id_user=author.id + "decorate", id_server=server)

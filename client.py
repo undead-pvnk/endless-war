@@ -907,7 +907,7 @@ async def on_message(message):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
-			elif usermodel.poi == ewcfg.poi_id_apt:
+			elif usermodel.poi[:3] == ewcfg.poi_id_apt:
 				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:
 				time_last = last_helped_times.get(message.author.id, 0)

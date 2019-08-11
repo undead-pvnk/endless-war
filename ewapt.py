@@ -303,7 +303,7 @@ async def signlease(cmd):
 async def retire(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = ewcfg.id_to_poi.get(user_data.poi)
-    poi_dest = ewcfg.id_to_poi.get("apt")
+    poi_dest = ewcfg.id_to_poi.get("apt"+user_data.apt_zone)
 
     if user_data.apt_zone != poi.id_poi:
         response = "You don't own an apartment here."
@@ -324,14 +324,14 @@ async def depart(cmd=None, isGoto = False):
     player = EwPlayer(id_user = cmd.message.author.id)
     user_data = EwUser(id_user = player.id_user, id_server = player.id_server)
     ewutils.logMsg("{}".format(user_data.id_server))
-    poi = ewcfg.id_to_poi.get("apt")
+    poi = ewcfg.id_to_poi.get("apt"+user_data.apt_zone)
     poi_dest = ewcfg.id_to_poi.get(user_data.apt_zone)
 
     client = ewutils.get_client()
     server = ewcfg.server_list[user_data.id_server]
     member_object = server.get_member(player.id_user)
 
-    if user_data.poi != "apt":
+    if user_data.poi != "apt"+user_data.apt_zone:
         response = "You're not in an apartment."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -379,7 +379,7 @@ async def rent_time(id_server = None):
 
                 if landowner[0] > user_data.slimecoin:
 
-                    if(user_data.poi == ewcfg.poi_id_apt):
+                    if(user_data.poi == ewcfg.poi_id_apt + user_data.apt_zone):
                         user_data.poi = user_data.apt_zone
                         server = ewcfg.server_list[user_data.id_server]
                         member_object = server.get_member(landowner[1])

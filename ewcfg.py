@@ -176,6 +176,40 @@ poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
 
+poi_id_apt_downtown ="aptdowntown"
+poi_id_apt_smogsburg ="aptsmogsburg"
+poi_id_apt_krakbay = "aptkrakbay"
+poi_id_apt_poudrinalley = "aptpoudrinalley"
+poi_id_apt_greenlightdistrict = "aptgreenlightdistrict"
+poi_id_apt_oldnewyonkers = "aptoldnewyonkers"
+poi_id_apt_littlechernobyl = "aptlittlechernobyl"
+poi_id_apt_arsonbrook = "aptarsonbrook"
+poi_id_apt_astatineheights = "aptastatineheights"
+poi_id_apt_gatlingsdale = "aptgatlingsdale"
+poi_id_apt_vandalpark = "aptvandalpark"
+poi_id_apt_glocksbury = "aptglocksbury"
+poi_id_apt_northsleezeborough = "aptnorthsleezeborough"
+poi_id_apt_southsleezeborough = "aptsouthsleezeborough"
+poi_id_apt_oozegardens = "aptoozegardens"
+poi_id_apt_cratersville = "aptcratersville"
+poi_id_apt_wreckington = "aptwreckington"
+poi_id_apt_slimesend = "aptslimesend"
+poi_id_apt_vagrantscorner = "aptvagrantscorner"
+poi_id_apt_assaultflatsbeach = "aptassaultflatsbeach"
+poi_id_apt_newnewyonkers = "aptnewnewyonkers"
+poi_id_apt_brawlden = "aptbrawlden"
+poi_id_apt_toxington = "apttoxington"
+poi_id_apt_charcoalpark = "aptcharcoalpark"
+poi_id_apt_poloniumhill = "aptpoloniumhill"
+poi_id_apt_westglocksbury = "aptwestglocksbury"
+poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
+poi_id_apt_crookline = "aptcrookline"
+poi_id_apt_dreadford = "aptdreadford"
+
+
+
+
+
 # Transport types
 transport_type_ferry = "ferry"
 transport_type_subway = "subway"
@@ -330,6 +364,38 @@ channel_killfeed = "kill-feed"
 channel_jrmineswall = "the-mines-wall"
 channel_ttmineswall = "toxington-mines-wall"
 channel_cvmineswall = "cratersville-mines-wall"
+
+channel_apt_downtown = "downtown-apartments"
+channel_apt_smogsburg ="smogsburg-apartments"
+channel_apt_krakbay ="krak-bay-apartments"
+channel_apt_poudrinalley ="poudrin-alley-apartments"
+channel_apt_greenlightdistrict ="green-light-district-apartments"
+channel_apt_oldnewyonkers ="old-new-yonkers-apartments"
+channel_apt_littlechernobyl ="little-chernobyl-apartments"
+channel_apt_arsonbrook ="arsonbrook-apartments"
+channel_apt_astatineheights ="astatine-heights-apartments"
+channel_apt_gatlingsdale ="gatlingsdale-apartments"
+channel_apt_vandalpark ="vandal-park-apartments"
+channel_apt_glocksbury ="glocksbury-apartments"
+channel_apt_northsleezeborough ="north-sleezeborough-apartments"
+channel_apt_southsleezeborough ="south-sleezeborough-apartments"
+channel_apt_oozegardens ="ooze-gardens-apartments"
+channel_apt_cratersville ="cratersville-apartments"
+channel_apt_wreckington ="wreckington-apartments"
+channel_apt_slimesend ="slimes-end-apartments"
+channel_apt_vagrantscorner ="vagrants-corner-apartments"
+channel_apt_assaultflatsbeach ="assault-flats-beach-apartments"
+channel_apt_newnewyonkers ="new-new-yonkers-apartments"
+channel_apt_brawlden ="brawlden-apartments"
+channel_apt_toxington ="toxington-apartments"
+channel_apt_charcoalpark ="charcoal-park-apartments"
+channel_apt_poloniumhill ="polonium-hill-apartments"
+channel_apt_westglocksbury ="west-glocksbury-apartments"
+channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
+channel_apt_crookline ="crookline-apartments"
+channel_apt_dreadford ="dreadford-apartments"
+
+
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -968,8 +1034,8 @@ col_stack_size = 'stack_size'
 col_soulbound = 'soulbound'
 
 #Database columns for apartments
-col_apt_name = 'aptname'
-col_apt_description = 'aptdescription'
+col_apt_name = 'apt_name'
+col_apt_description = 'apt_description'
 col_rent = 'rent'
 col_apt_class = 'apt_class'
 
@@ -7587,14 +7653,389 @@ EwPoi( # apt
 		id_poi = poi_id_apt,
 		alias = [
 			"apt",
-			"apartment",
-			"house",
 		],
 		str_name = "your apartment",
 		str_desc = "",
 		channel = channel_apt,
 		role = "Apartments",
 		coord = (0, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-downtown
+		id_poi = poi_id_apt_downtown,
+		alias = [
+			"apt",
+		],
+		str_name = "your Downtown apartment",
+		str_desc = "",
+		channel = channel_apt_downtown,
+		role = "Downtown Apartments",
+		coord = (2, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-smogsburg
+		id_poi = poi_id_apt_smogsburg,
+		alias = [
+			"apt",
+		],
+		str_name = "your Smogsburg apartment",
+		str_desc = "",
+		channel = channel_apt_smogsburg,
+		role = "Smogsburg Apartments",
+		coord = (4, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-krakbay
+		id_poi = poi_id_apt_krakbay,
+		alias = [
+			"apt",
+		],
+		str_name = "your Krak Bay apartment",
+		str_desc = "",
+		channel = channel_apt_krakbay,
+		role = "Krak Bay Apartments",
+		coord = (6, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-poudrinalley
+		id_poi = poi_id_apt_poudrinalley,
+		alias = [
+			"apt",
+		],
+		str_name = "your Poudrin Alley apartment",
+		str_desc = "",
+		channel = channel_apt_poudrinalley,
+		role = "Poudrin Alley Apartments",
+		coord = (8, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-green-light-district
+		id_poi = poi_id_apt_poudrinalley,
+		alias = [
+
+		],
+		str_name = "your Green Light District apartment",
+		str_desc = "",
+		channel = channel_apt_greenlightdistrict,
+		role = "Green Light District Apartments",
+		coord = (10, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-old-new-yonkers
+		id_poi = poi_id_apt_oldnewyonkers,
+		alias = [
+
+		],
+		str_name = "your Old New Yonkers apartment",
+		str_desc = "",
+		channel = channel_apt_oldnewyonkers,
+		role = "Old New Yonkers Apartments",
+		coord = (12, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-little-chernobyl
+		id_poi = poi_id_apt_littlechernobyl,
+		alias = [
+
+		],
+		str_name = "your Little Chernobyl apartment",
+		str_desc = "",
+		channel = channel_apt_littlechernobyl,
+		role = "Little Chernobyl Apartments",
+		coord = (14, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-arsonbrook
+		id_poi = poi_id_apt_arsonbrook,
+		alias = [
+
+		],
+		str_name = "your Arsonbrook apartment",
+		str_desc = "",
+		channel = channel_apt_oldnewyonkers,
+		role = "Arsonbrook Apartments",
+		coord = (16, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-astatine-heights
+		id_poi = poi_id_apt_astatineheights,
+		alias = [
+
+		],
+		str_name = "your Astatine Heights apartment",
+		str_desc = "",
+		channel = channel_apt_astatineheights,
+		role = "Astatine Heights Apartments",
+		coord = (18, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-gatlingsdale
+		id_poi = poi_id_apt_gatlingsdale,
+		alias = [
+
+		],
+		str_name = "your Gatlingsdale apartment",
+		str_desc = "",
+		channel = channel_apt_gatlingsdale,
+		role = "Gatlingsdale Apartments",
+		coord = (20, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-vandal-park
+		id_poi = poi_id_apt_vandalpark,
+		alias = [
+
+		],
+		str_name = "your Vandal Park apartment",
+		str_desc = "",
+		channel = channel_apt_vandalpark,
+		role = "Vandal Park Apartments",
+		coord = (22, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+	EwPoi(  # apt-glocksbury
+		id_poi=poi_id_apt_glocksbury,
+		alias=[
+
+		],
+		str_name="your Glocksbury apartment",
+		str_desc="",
+		channel=channel_apt_glocksbury,
+		role="Glocksbury Apartments",
+		coord=(24, 0),
+		pvp=False,
+		is_subzone=False,
+	),
+	EwPoi(  # apt-north-sleezeborough
+		id_poi=poi_id_apt_northsleezeborough,
+		alias=[
+
+		],
+		str_name="your North Sleezeborough apartment",
+		str_desc="",
+		channel=channel_apt_northsleezeborough,
+		role="North Sleezeborough Apartments",
+		coord=(26, 0),
+		pvp=False,
+		is_subzone=False,
+	),
+EwPoi( # apt-south-sleezeborough
+		id_poi = poi_id_apt_southsleezeborough,
+		alias = [
+
+		],
+		str_name = "your South Sleezeborough apartment",
+		str_desc = "",
+		channel = channel_apt_southsleezeborough,
+		role = "South Sleezeborough Apartments",
+		coord = (28, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # ooze-gardens
+		id_poi = poi_id_apt_oozegardens,
+		alias = [
+
+		],
+		str_name = "your Ooze Gardens apartment",
+		str_desc = "",
+		channel = channel_apt_oozegardens,
+		role = "Ooze Gardens Apartments",
+		coord = (30, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-cratersville
+		id_poi = poi_id_apt_cratersville,
+		alias = [
+
+		],
+		str_name = "your Cratersville apartment",
+		str_desc = "",
+		channel = channel_apt_cratersville,
+		role = "Cratersville Apartments",
+		coord = (32, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+	EwPoi(  # apt-wreckington
+		id_poi=poi_id_apt_wreckington,
+		alias=[
+
+		],
+		str_name="your Wreckington apartment",
+		str_desc="",
+		channel=channel_apt_wreckington,
+		role="Wreckington Apartments",
+		coord=(34, 0),
+		pvp=False,
+		is_subzone=False,
+	),
+EwPoi( # apt-slimes-end
+		id_poi = poi_id_apt_slimesend,
+		alias = [
+
+		],
+		str_name = "your Slime's End apartment",
+		str_desc = "",
+		channel = channel_apt_slimesend,
+		role = "Slime's End Apartments",
+		coord = (36, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-vagrants-corner
+		id_poi = poi_id_apt_vagrantscorner,
+		alias = [
+
+		],
+		str_name = "your Vagrant's Corner apartment",
+		str_desc = "",
+		channel = channel_apt_vagrantscorner,
+		role = "Vagrant's Corner Apartments",
+		coord = (38, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi(  # apt-afbr
+		id_poi=poi_id_apt_assaultflatsbeach,
+		alias=[
+
+		],
+		str_name="your Assault Flats Beach apartment",
+		str_desc="",
+		channel=channel_apt_assaultflatsbeach,
+		role="Assault Flats Beach Apartments",
+		coord=(40, 0),
+		pvp=False,
+		is_subzone=False,
+	),
+	EwPoi(  # apt-new-new-yonkers
+		id_poi=poi_id_apt_newnewyonkers,
+		alias=[
+
+		],
+		str_name="your New New Yonkers apartment",
+		str_desc="",
+		channel=channel_apt_newnewyonkers,
+		role="New New Yonkers Apartments",
+		coord=(42, 0),
+		pvp=False,
+		is_subzone=False,
+	),
+EwPoi( # apt-brawlden
+		id_poi = poi_id_apt_brawlden,
+		alias = [
+
+		],
+		str_name = "your Brawlden apartment",
+		str_desc = "",
+		channel = channel_apt_brawlden,
+		role = "Brawlden Apartments",
+		coord = (44, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-toxington
+		id_poi = poi_id_apt_toxington,
+		alias = [
+
+		],
+		str_name = "your Toxington apartment",
+		str_desc = "",
+		channel = channel_apt_toxington,
+		role = "Toxington Apartments",
+		coord = (46, 0),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-charcoal-park
+		id_poi = poi_id_apt_charcoalpark,
+		alias = [
+
+		],
+		str_name = "your Charcoal Park apartment",
+		str_desc = "",
+		channel = channel_apt_charcoalpark,
+		role = "Charcoal Park Apartments",
+		coord = (0, 2),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # polonium-hill
+		id_poi = poi_id_apt_poloniumhill,
+		alias = [
+
+		],
+		str_name = "your Polonium Hill apartment",
+		str_desc = "",
+		channel = channel_apt_poloniumhill,
+		role = "Polonium Hill Apartments",
+		coord = (0, 4),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-west-glocksbury
+		id_poi = poi_id_apt_westglocksbury,
+		alias = [
+
+		],
+		str_name = "your West Glocksbury apartment",
+		str_desc = "",
+		channel = channel_apt_westglocksbury,
+		role = "West Glocksbury Apartments",
+		coord = (0, 6),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-jaywalker-plain
+		id_poi = poi_id_apt_jaywalkerplain,
+		alias = [
+
+		],
+		str_name = "your Jaywalker Plain apartment",
+		str_desc = "",
+		channel = channel_apt_jaywalkerplain,
+		role = "Jaywalker Plain Apartments",
+		coord = (0, 8),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-crookline
+		id_poi = poi_id_apt_crookline,
+		alias = [
+
+		],
+		str_name = "your Crookline apartment",
+		str_desc = "",
+		channel = channel_apt_crookline,
+		role = "Crookline Apartments",
+		coord = (0, 10),
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-dreadford
+		id_poi = poi_id_apt_dreadford,
+		alias = [
+
+		],
+		str_name = "your Dreadford apartment",
+		str_desc = "",
+		channel = channel_apt_dreadford,
+		role = "Dreadford Apartments",
+		coord = (0, 12),
 		pvp = False,
 		is_subzone = False,
 	)
