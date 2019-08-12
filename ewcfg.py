@@ -4303,14 +4303,6 @@ fish_list  =  [
 		str_desc = "This is The Bassed God. He's gonna fuck your bitch.",
 		slime = fish_slime_saltwater
 	),
-        EwFish(
-		id_fish = "dirtybass",
-		str_name = "Dirty Bass",
-		rarity = fish_rarity_rare,
-		catch_time = None,
-		catch_weather = None,
-		str_desc = "A Dirty Bass Guitar. Maybe you should try cleaning it?",
-	),
 	EwFish(
 		id_fish = "flarp",
 		str_name = "Flarp",
@@ -8350,13 +8342,11 @@ smelting_recipe_list = [
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
-			"bass",
-			"BASS",
-			"bas",
-			"bassss"
+			"bass"
 		],
 		ingredients = {
-			'dirtybass' : 1
+			'thebassedgod' : 1
+			'string':4
 		},
 		products = ['bass']
         )       
