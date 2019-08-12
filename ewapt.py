@@ -800,12 +800,15 @@ async def freeze(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_server= playermodel.id_server, id_user=cmd.message.author.id)
     ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
     if usermodel.visiting != "empty" and ew_slime_model.name != "":
         response = "Your slimeoid, sensing you're trying to abandon them in someone else's freezer, begins to pout. Dammit, you can't refuse a face like that."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     elif usermodel.visiting != "empty":
         response = "You don't have a slimeoid on you."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     if ew_slime_model.name != "":
         ew_slime_model.id_user += "freeze"
         ew_slime_model.persist()
