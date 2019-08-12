@@ -101,10 +101,10 @@ class EwApartment:
 class EwFurniture:
     item_type = "furniture"
 
-    # The proper name of the cosmetic item
+    # The proper name of the furniture item
     id_furniture = ""
 
-    # The string name of the cosmetic item
+    # The string name of the furniture item
     str_name = ""
 
     # The text displayed when you look at it
@@ -113,16 +113,16 @@ class EwFurniture:
     # How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
     rarity = ""
 
-    # Cost in SlimeCoin to buy this item.
+    # Cost in SlimeCoin to buy this item. (slime now, but hopefully we make an exception for furniture)
     price = 0
 
-    # Names of the vendors selling this item.
+    # Names of the vendors selling this item. (yo munchy/ben, i kind of want to add a furniture mart)
     vendors = []
 
     #Text when placing the item
     furniture_place_desc = ""
 
-    #Text when !look-ing at the item
+    #Text when the generic "look" is used
     furniture_look_desc = ""
 
     #How you received this item
@@ -154,7 +154,7 @@ class EwFurniture:
 
 async def consult(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
-
+    #to check the descriptions, look for consult_responses in ewcfg
     if target_name == None or len(target_name) == 0:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What region would you like to look at?"))
     user_data = EwUser(member=cmd.message.author)
@@ -218,6 +218,8 @@ async def consult(cmd):
     else:
         response = "Not for sale."
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def signlease(cmd):
     target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
     if target_name == None or len(target_name) == 0:
@@ -300,6 +302,8 @@ async def signlease(cmd):
         response = "You signed the lease for an apartment in {} for {:,.2f} SlimeCoin a month.".format(poi.str_name, base_cost)
 
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def retire(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -308,6 +312,7 @@ async def retire(cmd):
     if user_data.apt_zone != poi.id_poi and user_data.visiting:
         response = "You don't own an apartment here."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     else:
         ewutils.moves_active[cmd.message.author.id] = 0
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
@@ -332,6 +337,7 @@ async def depart(cmd=None, isGoto = False):
     if user_data.poi != "apt"+user_data.apt_zone and user_data.visiting == "empty":
         response = "You're not in an apartment."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     else:
         if user_data.visiting != "empty":
             poi_dest = ewcfg.id_to_poi.get(user_data.poi[3:])
@@ -348,6 +354,7 @@ async def depart(cmd=None, isGoto = False):
             response = "Here we are. The outside world."
         return await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
+
 def getPriceBase(cmd):
     #based on stock success
     user_data = EwUser(member=cmd.message.author)
@@ -355,6 +362,8 @@ def getPriceBase(cmd):
     tcb = ewmarket.EwStock(stock='tacobell', id_server=user_data.id_server)
     hut = ewmarket.EwStock(stock='pizzahut', id_server=user_data.id_server)
     return (kfc.market_rate+tcb.market_rate+hut.market_rate)*67
+
+
 async def rent_time(id_server = None):
     if id_server != None:
         try:
@@ -389,16 +398,19 @@ async def rent_time(id_server = None):
                         response = "{} just got evicted. Point and laugh, everyone.".format(player.display_name)
                         await ewutils.send_message(client, ewutils.get_channel(server, poi.channel), response)
                     invToss = ewitem.inventory(id_user=user_data.id_user + "closet", id_server=user_data.id_server)
+
                     for stuff in invToss:
                         stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
                         stuffing.id_owner = poi.id_poi
                         stuffing.persist()
                     invToss2 = ewitem.inventory(id_user=user_data.id_user + "fridge", id_server=user_data.id_server)
+
                     for stuff in invToss2:
                         stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
                         stuffing.id_owner = poi.id_poi
                         stuffing.persist()
                     invToss3 = ewitem.inventory(id_user=user_data.id_user + "decorate", id_server=user_data.id_server)
+
                     for stuff in invToss3:
                         stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
                         stuffing.id_owner = poi.id_poi
@@ -418,9 +430,11 @@ async def rent_time(id_server = None):
             cursor.close()
             ewutils.databaseClose(conn_info)
 
+
 async def rent_cycle(cmd):
     user_data = EwUser(member = cmd.message.author)
     await rent_time(id_server = user_data.id_server)
+
 
 async def apt_look(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -429,6 +443,7 @@ async def apt_look(cmd):
     poi = ewcfg.id_to_poi.get(apt_model.poi)
     lookObject = cmd.message.author.id
     isVisiting = False
+
     if usermodel.visiting != "empty":
         apt_model = EwApartment(id_user=usermodel.visiting, id_server=playermodel.id_server)
         poi = ewcfg.id_to_poi.get(apt_model.poi)
@@ -436,8 +451,10 @@ async def apt_look(cmd):
         isVisiting = True
 
     response = "You stand in {}, your flat in {}.\n\n{}\n\n".format(apt_model.name, poi.str_name, apt_model.description)
+
     if isVisiting:
         response = response.replace("your", "a")
+
     furns = ewitem.inventory(id_user= lookObject+"decorate", id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
     for furn in furns:
@@ -537,6 +554,7 @@ async def store_item(cmd, dest):
     if usermodel.visiting != "empty":
         recipient = usermodel.visiting
         apt_model = EwApartment(id_server=playermodel.id_server, id_user=usermodel.visiting)
+
     else:
         recipient = cmd.message.author.id
 
@@ -640,9 +658,11 @@ async def remove_item(cmd, dest):
     apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
     if usermodel.visiting != "empty":
         recipient = usermodel.visiting
+
     else:
         recipient = cmd.message.author.id
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
     if item_search == "slimeoid" and dest == "store":
         await freeze(cmd)
 
@@ -652,10 +672,13 @@ async def remove_item(cmd, dest):
             item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "closet", id_server=playermodel.id_server)
             if not item_sought:
                 item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "decorate", id_server=playermodel.id_server)
+
     elif dest == "fridge":
         item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "fridge", id_server=playermodel.id_server)
+
     elif dest == "closet":
         item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "closet", id_server=playermodel.id_server)
+
     elif dest == "decorate":
         item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "decorate", id_server=playermodel.id_server)
         destination = "apartment"
@@ -702,12 +725,15 @@ async def upgrade(cmd):
     if(usermodel.poi != ewcfg.poi_id_realestate):
         response = "Upgrade your home at the apartment agency."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     elif(apt_model.apt_class == 's'):
         response = "Fucking hell, man. You're loaded, and we're not upgrading you."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     elif(usermodel.slimecoin < apt_model.rent*8):
         response = "You can't even afford the down payment. We're not entrusting an upgrade to a 99%er like you."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
     else:
         response = "Are you sure? The upgrade cost is {} SC, and rent goes up to {} SC per month. To you !accept the deal, or do you !refuse it?".format(apt_model.rent*8, apt_model.rent*2)
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -726,6 +752,7 @@ async def upgrade(cmd):
         if not accepted:
             response = "Eh. Your loss."
             return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+
         else:
             usermodel.change_slimecoin(n=apt_model.rent * -8, coinsource= ewcfg.coinsource_spending)
             apt_model.rent *= 2
@@ -748,7 +775,7 @@ def check(str):
         return True
 
 
-async def bazaar_update(cmd):
+async def bazaar_update(cmd): ##DEBUG COMMAND. DO NOT RELEASE WITH THIS.
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     market_data = EwMarket(playermodel.id_server)
     market_data.bazaar_wares.clear()
@@ -825,6 +852,7 @@ async def unfreeze(cmd):
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
     firstCheck = True
     slimeoid_search = ""
+
     for token in cmd.tokens:
         if firstCheck:
             firstCheck = False
@@ -836,8 +864,10 @@ async def unfreeze(cmd):
 
     ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id+"freeze", slimeoid_name=slimeoid_search , id_server=playermodel.id_server)
     yourslimeoid = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
     if usermodel.visiting != "empty":
         response = "The freezer's stuck! Well you're a guest, anyhow. You probably shouldn't steal any slimeoids."
+
     elif yourslimeoid.name != "":
         response = "You already have a slimeoid on you. !freeze it first."
 
@@ -865,9 +895,12 @@ async def apartment (cmd):
 
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
 async def apt_help(cmd):
     response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!store <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!take <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description."
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def customize(cmd = None, isDesc = False):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
