@@ -132,7 +132,7 @@ cmd_map = {
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
 	ewcfg.cmd_consult: ewapt.consult,
-	ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
+	#ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
 	ewcfg.cmd_sign_lease: ewapt.signlease,
 	ewcfg.cmd_apartment: ewapt.apartment,
 	ewcfg.cmd_rip: ewapt.nothing,

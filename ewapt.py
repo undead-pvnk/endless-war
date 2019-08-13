@@ -431,9 +431,9 @@ async def rent_time(id_server = None):
             ewutils.databaseClose(conn_info)
 
 
-async def rent_cycle(cmd):
-    user_data = EwUser(member = cmd.message.author)
-    await rent_time(id_server = user_data.id_server)
+#async def rent_cycle(cmd):
+ #   user_data = EwUser(member = cmd.message.author)
+ #   await rent_time(id_server = user_data.id_server)
 
 
 async def apt_look(cmd):
@@ -775,52 +775,51 @@ def check(str):
         return True
 
 
-async def bazaar_update(cmd): ##DEBUG COMMAND. DO NOT RELEASE WITH THIS.
-    playermodel = EwPlayer(id_user=cmd.message.author.id)
-    market_data = EwMarket(playermodel.id_server)
-    market_data.bazaar_wares.clear()
+    #async def bazaar_update(cmd): ##DEBUG COMMAND. DO NOT RELEASE WITH THIS.
+    #   playermodel = EwPlayer(id_user=cmd.message.author.id)
+    #  market_data = EwMarket(playermodel.id_server)
+    #   market_data.bazaar_wares.clear()
 
-    bazaar_foods = []
-    bazaar_cosmetics = []
-    bazaar_general_items = []
-    bazaar_furniture = []
+    #  bazaar_foods = []
+    #  bazaar_cosmetics = []
+    #  bazaar_general_items = []
+    #  bazaar_furniture = []
 
-    for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
-        if item in ewcfg.item_names:
-            bazaar_general_items.append(item)
+    # for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
+    #     if item in ewcfg.item_names:
+    #        bazaar_general_items.append(item)
+    #
+    #       elif item in ewcfg.food_names:
+    #          bazaar_foods.append(item)
+    #     elif item in ewcfg.cosmetic_names:
+    #          bazaar_cosmetics.append(item)
+    #
+    #       elif item in ewcfg.furniture_names:
+    #          bazaar_furniture.append(item)
+    #
+    #   market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
 
-        elif item in ewcfg.food_names:
-            bazaar_foods.append(item)
-
-        elif item in ewcfg.cosmetic_names:
-            bazaar_cosmetics.append(item)
-
-        elif item in ewcfg.furniture_names:
-            bazaar_furniture.append(item)
-
-    market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
-
-    market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
+    #   market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
     # Don't add repeated foods
-    while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == \
-            market_data.bazaar_wares['food1']:
-        market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+    #  while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == \
+    #         market_data.bazaar_wares['food1']:
+    #    market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
 
-    market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
+    # market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
     # Don't add repeated cosmetics
-    while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == \
-            market_data.bazaar_wares['cosmetic1']:
-        market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
+    # while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == \
+    #        market_data.bazaar_wares['cosmetic1']:
+    #   market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
 
-    while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == \
-            market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == \
-            market_data.bazaar_wares['cosmetic2']:
-        market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+    #while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == \
+    #       market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == \
+    #      market_data.bazaar_wares['cosmetic2']:
+    # market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
 
-    market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
+    #market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
 
 
-    market_data.persist()
+    #market_data.persist()
 
 
 async def freeze(cmd):
@@ -1022,8 +1021,8 @@ async def aptCommands(cmd):
         return await ewmap.move(cmd=cmd, isApt = True)
     elif cmd_text == ewcfg.cmd_knock:
         return await knock(cmd=cmd)
-    elif cmd_text == "~bazaarupdate":
-        return await bazaar_update(cmd)
+    #elif cmd_text == "~bazaarupdate":
+     #   return await bazaar_update(cmd)
     elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
         return await apt_help(cmd)
     elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
