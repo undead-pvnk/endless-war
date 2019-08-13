@@ -646,7 +646,7 @@ async def store_item(cmd, dest):
             response = "You store the {} in the {}.".format(name_string, destination)
 
     else:
-        response = "Are you sure you have that item?."
+        response = "Are you sure you have that item?"
 
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -672,6 +672,8 @@ async def remove_item(cmd, dest):
             item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "closet", id_server=playermodel.id_server)
             if not item_sought:
                 item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "decorate", id_server=playermodel.id_server)
+        else:
+            destination = "fridge"
 
     elif dest == "fridge":
         item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "fridge", id_server=playermodel.id_server)
@@ -708,13 +710,17 @@ async def remove_item(cmd, dest):
 
 
         if item_sought.get('item_type') == ewcfg.it_food and destination == "fridge":
-            item.item_props['time_expir'] = str(int(item.item_props.get('time_expir')) + (int(time.time())-int(item.item_props.get('time_fridged'))))
+            print("IT EXPIRES ON {}".format(item.item_props['time_expir']))
+            print("IT WAS PLACED ON {}".format(item.item_props.get('time_fridged')))
+            item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
+            print("IT NOW EXPIRES ON {}".format(item.item_props['time_expir']))
+            print("THE CURRENT TIME IS {}".format(time.time()))
             item.item_props['time_fridged'] = '0'
             item.persist()
         ewitem.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You take the {} from the {}.".format(name_string, destination)))
     else:
-        response = "Are you sure you have that item?."
+        response = "Are you sure you have that item?"
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def upgrade(cmd):
@@ -987,6 +993,11 @@ async def knock(cmd = None):
 async def aptCommands(cmd):
     tokens_count = len(cmd.tokens)
     cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
+    player = EwPlayer(id_user=cmd.message.author.id)
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
+    server = ewcfg.server_list[user_data.id_server]
+    member_object = server.get_member(player.id_user)
+
     if cmd_text == ewcfg.cmd_depart:
         return await depart(cmd)
     elif cmd_text == ewcfg.cmd_fridge:
@@ -1021,6 +1032,11 @@ async def aptCommands(cmd):
         return await ewmap.move(cmd=cmd, isApt = True)
     elif cmd_text == ewcfg.cmd_knock:
         return await knock(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_use:
+        cmd.message.author = member_object
+        cmd.message.server = server
+        return await ewitem.item_use(cmd=cmd)
+
     #elif cmd_text == "~bazaarupdate":
      #   return await bazaar_update(cmd)
     elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:

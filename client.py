@@ -1044,7 +1044,7 @@ async def on_message(message):
 					'food_desc': "This sure is a illegal Dire Apple!",
 					'recover_hunger': 500,
 					'str_eat': "You chomp into this illegal Dire Apple.",
-					'time_expir': time.time() + ewcfg.farm_food_expir
+					'time_expir': int(time.time() + ewcfg.farm_food_expir)
 				}
 			)
 

@@ -799,16 +799,17 @@ async def item_look(cmd):
 	server = player.id_server
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=server)
 	mutations = user_data.get_mutations()
-
+	if user_data.visiting != "empty":
+		user_data = EwUser(id_user=user_data.visiting, id_server=server)
 	item_dest = []
 	item_sought_inv = find_item(item_search=item_search, id_user=author.id, id_server=server)
 	item_dest.append(item_sought_inv)
 	iterate = 0
 	response = ""
 	if user_data.poi == "apt"+user_data.apt_zone:
-		item_sought_closet = find_item(item_search=item_search, id_user=author.id + "closet", id_server=server)
-		item_sought_fridge = find_item(item_search=item_search, id_user=author.id + "fridge", id_server=server)
-		item_sought_decorate = find_item(item_search=item_search, id_user=author.id + "decorate", id_server=server)
+		item_sought_closet = find_item(item_search=item_search, id_user=user_data.id_user + "closet", id_server=server)
+		item_sought_fridge = find_item(item_search=item_search, id_user=user_data.id_user + "fridge", id_server=server)
+		item_sought_decorate = find_item(item_search=item_search, id_user=user_data.id_user + "decorate", id_server=server)
 		item_dest.append(item_sought_closet)
 		item_dest.append(item_sought_fridge)
 		item_dest.append(item_sought_decorate)
@@ -829,7 +830,7 @@ async def item_look(cmd):
 					response = response.format_map(item.item_props)
 
 			if item.item_type == ewcfg.it_food:
-				if float(item.item_props.get('time_expir') if not None else 0) < time.time():
+				if float(item.item_props.get('time_expir') if not None else 0) < time.time() and item.id_owner[-6:] != "fridge":
 					response += " This food item is rotten"
 					if ewcfg.mutation_id_spoiledappetite in mutations:
 						response += ". Yummy!"
