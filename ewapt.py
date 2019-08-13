@@ -710,11 +710,7 @@ async def remove_item(cmd, dest):
 
 
         if item_sought.get('item_type') == ewcfg.it_food and destination == "fridge":
-            print("IT EXPIRES ON {}".format(item.item_props['time_expir']))
-            print("IT WAS PLACED ON {}".format(item.item_props.get('time_fridged')))
             item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
-            print("IT NOW EXPIRES ON {}".format(item.item_props['time_expir']))
-            print("THE CURRENT TIME IS {}".format(time.time()))
             item.item_props['time_fridged'] = '0'
             item.persist()
         ewitem.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
