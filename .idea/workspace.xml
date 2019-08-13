@@ -3,10 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="eb7ebd57-b788-4945-8995-fdd71376eed0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/client.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ewapt.py" beforeDir="false" afterPath="$PROJECT_DIR$/ewapt.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ewcfg.py" beforeDir="false" afterPath="$PROJECT_DIR$/ewcfg.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ewmap.py" beforeDir="false" afterPath="$PROJECT_DIR$/ewmap.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
