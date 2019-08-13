@@ -3988,8 +3988,8 @@ fish_list  =  [
 	),
 	EwFish(
 		id_fish = "stunfisk",
-		str_name = fish_rarity_rare,
-		rarity = "Stunfisk",
+		str_name = "Stunfisk",
+		rarity = fish_rarity_rare,
 		catch_time = None,
 		catch_weather = fish_catchtime_rain,
 		str_desc = "Its hide is so tough it can be stepped on by Connor without being injured.",
