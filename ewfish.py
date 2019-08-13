@@ -399,7 +399,7 @@ async def cast(cmd):
 
 					elif id_food == "kingpincrab":
 						if random.randrange(5) == 1:
-							fisher.current_fish = "kingpincrab"
+							fisher.current_fish = "uncookedkingpincrab"
 
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
