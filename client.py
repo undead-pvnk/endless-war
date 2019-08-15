@@ -672,7 +672,7 @@ async def on_ready():
 						market_data.clock = 0
 						market_data.day += 1
 						if market_data.day % 2 == 0:
-							ewapt.rent_time()
+							await ewapt.rent_time()
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
@@ -711,6 +711,8 @@ async def on_ready():
 							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
 
 						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
+						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
+							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
 
 					market_data.persist()
 

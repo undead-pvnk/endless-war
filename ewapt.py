@@ -11,8 +11,13 @@ import ewmap
 import ewrolemgr
 import ewmarket
 import ewitem
+import ewsmelting
+import ewcosmeticitem
 from ew import EwUser
 import ewslimeoid
+import ewwep
+import ewquadrants
+import ewweather
 from ewmarket import EwMarket
 import os
 import discord
@@ -165,54 +170,42 @@ async def consult(cmd):
     poi = ewcfg.id_to_poi.get(target_name)
 
     if poi == None:
-        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That place doesn't exist. The consultant behind the counter is aroused by your stupidity."))
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That place doesn't exist. The stupidity of the question drives the realtor to down another bottle."))
 
     elif poi.id_poi == ewcfg.poi_id_rowdyroughhouse or poi.id_poi == ewcfg.poi_id_copkilltown or poi.id_poi == ewcfg.poi_id_juviesrow:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
 
     elif poi.is_subzone:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
-
+    #check for S ranked districts separately, otherwise order by class
     elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach:
         if ewcfg.consult_responses[poi.id_poi]:
-            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
-        else:
-            response = "This is an S Class district the devs haven't written in yet.\n\n"
+            response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name)+ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(6000000000*getPriceBase(cmd=cmd), 4*6000000000*getPriceBase(cmd=cmd))
 
     elif poi.id_poi == ewcfg.poi_id_dreadford:
         if ewcfg.consult_responses[poi.id_poi]:
-            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
-        else:
-            response = "This is an S Class district the devs haven't written in yet.\n\n"
+            response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name)+ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(6000000000*getPriceBase(cmd=cmd), 4*6000000000*getPriceBase(cmd=cmd))
 
     elif poi.id_poi == ewcfg.poi_id_downtown:
         if ewcfg.consult_responses[poi.id_poi]:
-            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
-        else:
-            response = "This is an S Class district the devs haven't written in yet.\n\n"
+            response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name)+ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(3000000000*getPriceBase(cmd=cmd), 4*3000000000*getPriceBase(cmd=cmd))
 
     elif poi.property_class == "c":
         if ewcfg.consult_responses[poi.id_poi]:
-            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
-        else:
-            response = "This is a C Class district the devs haven't written in yet.\n\n"
+            response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name)+ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(getPriceBase(cmd=cmd), 4*getPriceBase(cmd=cmd))
 
     elif poi.property_class == "b":
         if ewcfg.consult_responses[poi.id_poi]:
-            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
-        else:
-            response = "This is a B Class district the devs haven't written in yet.\n\n"
+            response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name)+ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response +="The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(1500*getPriceBase(cmd=cmd), 1500*4*getPriceBase(cmd=cmd))
 
     elif poi.property_class == "a":
         if ewcfg.consult_responses[poi.id_poi]:
-            response = ewcfg.consult_responses[poi.id_poi] + "\n\n"
-        else:
-            response = "This is an A Class district the devs haven't written in yet.\n\n"
+            response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name)+ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
         response += "The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(2000000 * getPriceBase(cmd=cmd), 2000000 * 4 * getPriceBase(cmd=cmd))
 
     else:
@@ -242,7 +235,7 @@ async def signlease(cmd):
 
     elif poi.is_subzone:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
-
+    #these prices are based on prices in the design doc.
     elif poi.id_poi == ewcfg.poi_id_assaultflatsbeach:
         base_cost = 6000000000 * getPriceBase(cmd=cmd)
 
@@ -329,7 +322,7 @@ async def depart(cmd=None, isGoto = False):
     user_data = EwUser(id_user = player.id_user, id_server = player.id_server)
     ewutils.logMsg("{}".format(user_data.id_server))
     poi_dest = ewcfg.id_to_poi.get(user_data.apt_zone)
-
+    #isgoto checks if this is part of a goto command.
     client = ewutils.get_client()
     server = ewcfg.server_list[user_data.id_server]
     member_object = server.get_member(player.id_user)
@@ -340,7 +333,7 @@ async def depart(cmd=None, isGoto = False):
 
     else:
         if user_data.visiting != "empty":
-            poi_dest = ewcfg.id_to_poi.get(user_data.poi[3:])
+            poi_dest = ewcfg.id_to_poi.get(user_data.poi[3:]) #if the user is visiting another apartment, correct the exit zone
         if not isGoto:
             await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You exit the apartment."))
         await asyncio.sleep(20)
@@ -357,7 +350,7 @@ async def depart(cmd=None, isGoto = False):
 
 def getPriceBase(cmd):
     #based on stock success
-    user_data = EwUser(member=cmd.message.author)
+    user_data = EwUser(member=cmd.message.author) #market rates average to 1000. This fomula calculates prices to specification based on that amount.
     kfc = ewmarket.EwStock(stock='kfc', id_server = user_data.id_server)
     tcb = ewmarket.EwStock(stock='tacobell', id_server=user_data.id_server)
     hut = ewmarket.EwStock(stock='pizzahut', id_server=user_data.id_server)
@@ -372,7 +365,7 @@ async def rent_time(id_server = None):
             cursor = conn.cursor();
             client = ewutils.get_client()
 
-
+            #get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
             cursor.execute("SELECT apartment.rent, users.id_user FROM users INNER JOIN apartment ON users.id_user=apartment.id_user WHERE users.id_server = %s AND apartment.rent > 0".format(
 
             ), (
@@ -389,7 +382,7 @@ async def rent_time(id_server = None):
                 if landowner[0] > user_data.slimecoin:
 
                     if(user_data.poi == ewcfg.poi_id_apt + user_data.apt_zone):
-                        user_data.poi = user_data.apt_zone
+                        user_data.poi = user_data.apt_zone #toss out player
                         server = ewcfg.server_list[user_data.id_server]
                         member_object = server.get_member(landowner[1])
                         await ewrolemgr.updateRoles(client = client, member=member_object)
@@ -399,7 +392,7 @@ async def rent_time(id_server = None):
                         await ewutils.send_message(client, ewutils.get_channel(server, poi.channel), response)
                     invToss = ewitem.inventory(id_user=user_data.id_user + "closet", id_server=user_data.id_server)
 
-                    for stuff in invToss:
+                    for stuff in invToss: #toss all items out
                         stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
                         stuffing.id_owner = poi.id_poi
                         stuffing.persist()
@@ -665,7 +658,7 @@ async def remove_item(cmd, dest):
 
     if item_search == "slimeoid" and dest == "store":
         await freeze(cmd)
-
+    #if the command is "take", we need to determine where the item might be
     if dest == "apartment":
         item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "fridge", id_server=playermodel.id_server)
         if not item_sought:
@@ -688,7 +681,7 @@ async def remove_item(cmd, dest):
     name_string = ""
     if item_sought:
         item = ewitem.EwItem(id_item=item_sought.get('id_item'))
-
+        #check item type and get name
         if item_sought.get('item_type') == ewcfg.it_food:
             name_string = item.item_props['food_name']
         elif item_sought.get('item_type') == ewcfg.it_weapon:
@@ -846,7 +839,7 @@ async def freeze(cmd):
         response = "You don't have a slimeoid for that."
 
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+    #slimeoid storage works just like regular item storage. Just add "freeze" to the owner's name to store it.
 
 async def unfreeze(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -854,7 +847,7 @@ async def unfreeze(cmd):
     firstCheck = True
     slimeoid_search = ""
 
-    for token in cmd.tokens:
+    for token in cmd.tokens: #check for first occurrence in comma separated list
         if firstCheck:
             firstCheck = False
 
@@ -906,9 +899,9 @@ async def customize(cmd = None, isDesc = False):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+    #dual function for changing apt info
 
-
-    if not isDesc:
+    if not isDesc: #check for description function or name function
         property = "name"
         namechange = cmd.message.content[(len(ewcfg.cmd_aptname)):].strip()
     else:
@@ -936,7 +929,10 @@ async def knock(cmd = None):
     if cmd.mentions_count == 1:
         target = cmd.mentions[0]
         target_data = EwUser(member=target)
-        if target_data.apt_zone != user_data.poi:
+        if user_data.poi[:3] == "apt":
+            response = "You're already in an apartment."
+            return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        elif target_data.apt_zone != user_data.poi:
             response = "You're not anywhere near their apartment."
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -950,7 +946,7 @@ async def knock(cmd = None):
             try:
                 accepted = False
                 if user_data.rr_challenger == target_data.apt_zone:
-                    return
+                    return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
                 else:
                     user_data.rr_challenger = target_data.apt_zone
                     user_data.persist()
@@ -962,7 +958,7 @@ async def knock(cmd = None):
                         if message.content.lower() == ewcfg.cmd_refuse:
                             accepted = False
                     else:
-                        if user_data.rr_challenger != "":
+                        if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
                             user_data.persist()
             except:
                 accepted = False
@@ -993,8 +989,8 @@ async def aptCommands(cmd):
     user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
     server = ewcfg.server_list[user_data.id_server]
     member_object = server.get_member(player.id_user)
-
-    if cmd_text == ewcfg.cmd_depart:
+    #from here, all commands are prebuilt and just set to work in DMs
+    if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
         return await depart(cmd)
     elif cmd_text == ewcfg.cmd_fridge:
         await store_item(cmd=cmd, dest="fridge")
@@ -1028,18 +1024,83 @@ async def aptCommands(cmd):
         return await ewmap.move(cmd=cmd, isApt = True)
     elif cmd_text == ewcfg.cmd_knock:
         return await knock(cmd=cmd)
-    elif cmd_text == ewcfg.cmd_use:
-        cmd.message.author = member_object
-        cmd.message.server = server
+    cmd.message.author = member_object
+    cmd.message.server = server
+    if cmd_text == ewcfg.cmd_use:
         return await ewitem.item_use(cmd=cmd)
-
+    elif cmd_text == ewcfg.cmd_thrash:
+        return await ewcmd.thrash(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_dab:
+        return await ewcmd.dab(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_halt or cmd_text == ewcfg.cmd_halt_alt1:
+        return await ewmap.halt(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_howl or cmd_text == ewcfg.cmd_howl_alt1:
+        return await ewcmd.cmd_howl(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_data:
+        return await ewcmd.data(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_slimecoin or cmd_text == ewcfg.cmd_slimecoin_alt1 or cmd_text == ewcfg.cmd_slimecoin_alt2 or cmd_text == ewcfg.cmd_slimecoin_alt3:
+        return await ewmarket.slimecoin(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_score or cmd_text == ewcfg.cmd_score_alt1:
+        return await ewcmd.score(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_slimeoid:
+        return await ewslimeoid.slimeoid(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_adorn:
+        return await ewcosmeticitem.adorn(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_smelt:
+        return await ewsmelting.smelt(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_dress_slimeoid or cmd_text == ewcfg.cmd_dress_slimeoid_alt1:
+        return await ewslimeoid.dress_slimeoid(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_annoint or cmd_text == ewcfg.cmd_annoint_alt1:
+        return await ewwep.annoint(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_wiki:
+        return await ewcmd.wiki(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_unsalute:
+        return await ewcmd.unsalute(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_time:
+        return await ewcmd.weather(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_add_quadrant:
+        return await ewquadrants.add_quadrant(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_apartment:
+        return await apartment(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_booru:
+        return await ewcmd.booru(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_dyecosmetic or ewcfg.cmd_dyecosmetic_alt1 == cmd_text or ewcfg.cmd_dyecosmetic_alt2 == cmd_text or ewcfg.cmd_dyecosmetic_alt3 == cmd_text:
+        return await ewcosmeticitem.dye(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_equip == cmd_text:
+        return await ewwep.equip(cmd=cmd)
+    elif ewcfg.cmd_give == cmd_text:
+        return await ewitem.give(cmd=cmd)
+    elif ewcfg.cmd_hurl == cmd_text:
+        return await ewcmd.hurl(cmd=cmd)
+    elif ewcfg.cmd_map == cmd_text:
+        return await ewcmd.map(cmd=cmd)
+    elif ewcfg.cmd_news == cmd_text:
+        return await ewcmd.patchnotes(cmd=cmd)
+    elif ewcfg.cmd_petslimeoid == cmd_text:
+        return await ewslimeoid.petslimeoid(cmd=cmd)
+    elif ewcfg.cmd_quarterlyreport == cmd_text:
+        return await ewmarket.quarterlyreport(cmd=cmd)
+    elif ewcfg.cmd_salute == cmd_text:
+        return await ewcmd.salute(cmd=cmd)
+    elif ewcfg.cmd_get_ashen == cmd_text or ewcfg.cmd_get_ashen_alt1 == cmd_text:
+        return await ewquadrants.get_ashen(cmd=cmd)
+    elif ewcfg.cmd_get_caliginous == cmd_text or ewcfg.cmd_get_caliginous_alt1 == cmd_text:
+        return await ewquadrants.get_caliginous(cmd=cmd)
+    elif ewcfg.cmd_get_flushed == cmd_text or ewcfg.cmd_get_flushed_alt1 == cmd_text:
+        return await ewquadrants.get_ashen(cmd=cmd)
+    elif ewcfg.cmd_get_pale == cmd_text or ewcfg.cmd_get_pale_alt1 == cmd_text:
+        return await ewquadrants.get_pale(cmd=cmd)
+    elif ewcfg.cmd_get_quadrants == cmd_text:
+        return await ewquadrants.get_quadrants(cmd=cmd)
+    elif ewcfg.cmd_harvest == cmd_text:
+        return await ewcmd.harvest(cmd=cmd)
     #elif cmd_text == "~bazaarupdate":
      #   return await bazaar_update(cmd)
     elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
         return await apt_help(cmd)
     elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
         pass
-    else:
+    elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text
         randint = random.randint(1, 3)
         msg_mistake = "ENDLESS WAR is growing frustrated."
         if randint == 2:
@@ -1049,5 +1110,5 @@ async def aptCommands(cmd):
 
 
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, msg_mistake))
-async def nothing(cmd):
+async def nothing(cmd):# for an accept, refuse, sign or rip
     return 0

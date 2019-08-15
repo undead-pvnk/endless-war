@@ -1021,9 +1021,9 @@ async def look(cmd):
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
 	if poi.id_poi[:3] == "apt":
-		slimes_resp == ""
-		players_resp == ""
-		slimeoids_resp == ""
+		slimes_resp = ""
+		players_resp = ""
+		slimeoids_resp = ""
 
 	# post result to channel
 	if poi != None:
