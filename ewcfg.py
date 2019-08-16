@@ -585,6 +585,7 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'upgrade'
 cmd_knock = cmd_prefix + 'knock'
+cmd_cancel = cmd_prefix + 'cancel'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
@@ -7497,12 +7498,12 @@ poi_list = [
 EwPoi( # realestate
 		id_poi = poi_id_realestate,
 		alias = [
-			"realestate"
-			"rea"
-			"realtor"
-			"landlord"
-			"scre"
-			"apartmentagency"
+			"realestate",
+			"rea",
+			"realtor",
+			"landlord",
+			"scre",
+			"apartmentagency",
 			"realestateagent"
 		],
 		str_name = "SlimeCorp Real Estate Agency",

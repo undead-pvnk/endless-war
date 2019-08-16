@@ -402,6 +402,11 @@ async def rent_time(id_server = None):
                         stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
                         stuffing.id_owner = poi.id_poi
                         stuffing.persist()
+                        if stuff.get('item_type') == ewcfg.it_food:
+                            stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (
+                            int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
+                            stuffing.item_props['time_fridged'] = '0'
+                            stuffing.persist()
                     invToss3 = ewitem.inventory(id_user=user_data.id_user + "decorate", id_server=user_data.id_server)
 
                     for stuff in invToss3:
@@ -981,6 +986,67 @@ async def knock(cmd = None):
     else:
         response = "One door at a time, please."
         return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+async def cancel(cmd):
+    playermodel = EwPlayer(id_user=cmd.message.author.id)
+    usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+    aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+    if usermodel.poi != ewcfg.poi_id_realestate:
+        response = "You can only null your lease at the Real Estate Agency."
+    elif usermodel.apt_zone == "empty":
+        response = "You don't have an apartment."
+    elif aptmodel.rent * 4 > usermodel.slimecoin:
+        response = "You can't afford the lease separation. Time to take your eviction like a champ."
+    else:
+        poi = ewcfg.id_to_poi.get(usermodel.apt_zone)
+        response = "The separation will cost {} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
+        await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        try:
+            message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewslimeoid.check)
+
+            if message != None:
+                if message.content.lower() == ewcfg.cmd_prefix + "accept":
+                    accepted = True
+                if message.content.lower() == ewcfg.cmd_prefix + "refuse":
+                    accepted = False
+        except:
+            accepted = False
+        if not accepted:
+            response = "Ahahaha. Of course you don't."
+            return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+
+        else:
+            response = "You cancel your {} apartment for {} SlimeCoin.".format(poi.str_name , aptmodel.rent * 4)
+            invToss = ewitem.inventory(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server)
+
+            for stuff in invToss:  # toss all items out
+                stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
+                stuffing.id_owner = poi.id_poi
+                stuffing.persist()
+            invToss2 = ewitem.inventory(id_user=usermodel.id_user + "fridge", id_server=playermodel.id_server)
+
+            for stuff in invToss2:
+                stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
+                stuffing.id_owner = poi.id_poi
+                stuffing.persist()
+                if stuff.get('item_type') == ewcfg.it_food:
+                    stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (
+                            int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
+                    stuffing.item_props['time_fridged'] = '0'
+                    stuffing.persist()
+            invToss3 = ewitem.inventory(id_user=usermodel.id_user + "decorate", id_server=playermodel.id_server)
+
+            for stuff in invToss3:
+                stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
+                stuffing.id_owner = poi.id_poi
+                stuffing.persist()
+            aptmodel.rent = 0
+            usermodel.apt_zone = "empty"
+            aptmodel.poi = ""
+            aptmodel.apt_class = "c"
+            usermodel.persist()
+            aptmodel.persist()
+    return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 async def aptCommands(cmd):
     tokens_count = len(cmd.tokens)
@@ -993,23 +1059,25 @@ async def aptCommands(cmd):
     if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
         return await depart(cmd)
     elif cmd_text == ewcfg.cmd_fridge:
-        await store_item(cmd=cmd, dest="fridge")
+        return await store_item(cmd=cmd, dest="fridge")
     elif cmd_text == ewcfg.cmd_store:
-        await store_item(cmd=cmd, dest="store")
+        return await store_item(cmd=cmd, dest="store")
     elif cmd_text == ewcfg.cmd_closet:
-        await store_item(cmd=cmd, dest="closet")
+        return await store_item(cmd=cmd, dest="closet")
     elif cmd_text == ewcfg.cmd_take:
-        await remove_item(cmd=cmd, dest="apartment")
+        return await remove_item(cmd=cmd, dest="apartment")
     elif cmd_text == ewcfg.cmd_uncloset:
-        await remove_item(cmd=cmd, dest="closet")
+        return await remove_item(cmd=cmd, dest="closet")
     elif cmd_text == ewcfg.cmd_unfridge:
-        await remove_item(cmd=cmd, dest="fridge")
+        return await remove_item(cmd=cmd, dest="fridge")
     elif cmd_text == ewcfg.cmd_decorate:
-        await store_item(cmd=cmd, dest="decorate")
+        return await store_item(cmd=cmd, dest="decorate")
     elif cmd_text == ewcfg.cmd_undecorate:
-        await remove_item(cmd=cmd, dest="decorate")
+        return await remove_item(cmd=cmd, dest="decorate")
     elif cmd_text == ewcfg.cmd_upgrade:
-        await upgrade(cmd = cmd)
+        return await upgrade(cmd = cmd)
+    elif cmd_text == ewcfg.cmd_cancel:
+        return await cancel(cmd=cmd)
     elif cmd_text == ewcfg.cmd_look:
         return await apt_look(cmd)
     elif cmd_text == ewcfg.cmd_freeze:
