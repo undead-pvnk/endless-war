@@ -434,7 +434,7 @@ async def attack(cmd):
 							adorned_items += 1
 
 					if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-						slimes_damage *= 2
+						slimes_damage *= 1.5
 
 				# Spend slimes, to a minimum of zero
 				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
