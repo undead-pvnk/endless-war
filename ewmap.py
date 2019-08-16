@@ -930,7 +930,7 @@ async def teleport(cmd):
 		if time_lastuse + 30*60 > time_now:
 			response = "You can't do that again yet."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+			
 		valid_destinations = set()
 		neighbors = ewcfg.poi_neighbors.get(user_data.poi)
 		for neigh in neighbors:
@@ -1142,6 +1142,7 @@ async def scout(cmd):
 					continue
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
+				continue
 
 
 			detailed_players_resp += "\n" + scoutee_player.display_name
