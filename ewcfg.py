@@ -16,7 +16,7 @@ from ewfish import EwFish
 import ewdebug
 
 # Global configuration options.
-version = "v3.5d"
+version = "v3.5e"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -2079,7 +2079,7 @@ weapon_list = [
 		str_trauma_self = "There is a large concave dome in the side of your head.",
 		str_trauma = "There is a large concave dome in the side of their head.",
 		str_kill = "*CRASSHHH* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
-		str_killdescriptor = "Smashed to pieces",
+		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is wacked across the {hitzone}!!",
 		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		fn_effect = wef_bass,
@@ -8342,10 +8342,10 @@ smelting_recipe_list = [
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
-			"bass"
+			"bassguitar"
 		],
 		ingredients = {
-			'thebassedgod' : 1
+			'thebassedgod' : 1,
 			'string':4
 		},
 		products = ['bass']
@@ -10126,7 +10126,7 @@ nobite_text = [
 	"You hum some sea shanties...",
 	"You start to develop an existential crisis...",
 	"You jitter as other seamen catch fish before you. Fuck fishing...",
-	"You shake your head as a young seaman hooks a perfectly good slice of pizza on his hook... What a cretan...",
+	"You shake your head as a young seaman hooks a perfectly good slice of pizza on his hook... What a cretin...",
 	"You wonder if the Space Navy has been formed yet...",
 	"Man... Why were you excited for this shit?",
 	"Still better than Minesweeper...",
@@ -10136,7 +10136,7 @@ nobite_text = [
 	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
 	"You see a bird carry off a Plebefish in the distance... Good riddance...",
 	"You spot a stray bullet in the distance...",
-	"You see a dead body float up to the surface of the Slime..."
+	"You see a dead body float up to the surface of the Slime...",
 	"Fish..."
 ]
 
