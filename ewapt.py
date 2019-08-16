@@ -385,6 +385,7 @@ async def rent_time(id_server = None):
                         user_data.poi = user_data.apt_zone #toss out player
                         server = ewcfg.server_list[user_data.id_server]
                         member_object = server.get_member(landowner[1])
+                        await toss_squatters(cmd_id = user_data.id_user)
                         await ewrolemgr.updateRoles(client = client, member=member_object)
                         poi = ewcfg.id_to_poi.get(user_data.apt_zone)
                         player = EwPlayer(id_user = landowner[1])
@@ -1039,6 +1040,7 @@ async def cancel(cmd):
                 stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
                 stuffing.id_owner = poi.id_poi
                 stuffing.persist()
+            await toss_squatters(cmd.message.author.id)
             aptmodel.rent = 0
             usermodel.apt_zone = "empty"
             aptmodel.poi = ""
@@ -1180,3 +1182,29 @@ async def aptCommands(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, msg_mistake))
 async def nothing(cmd):# for an accept, refuse, sign or rip
     return 0
+async def toss_squatters(cmd_id):
+    player_info = EwPlayer(id_user=cmd_id)
+    if player_info.id_server != None:
+        conn_info = ewutils.databaseConnect()
+        conn = conn_info.get('conn')
+        cursor = conn.cursor();
+        client = ewutils.get_client()
+
+        # get all players visiting an evicted apartment and kick them out
+        cursor.execute(
+            "SELECT {} FROM users WHERE users.visiting = %s".format(
+                ewcfg.col_id_user
+            ), (
+                player_info.id_user,
+            ))
+
+        squatters = cursor.fetchall()
+
+        for squatter in squatters:
+            sqt_data = EwUser(id_user=squatter[0], id_server=player_info.id_server)
+            server = ewcfg.server_list[sqt_data.id_server]
+            member_object = server.get_member(squatter[0])
+            await ewrolemgr.updateRoles(client=client, member=member_object)
+            sqt_data.visiting = "empty"
+            sqt_data.poi = sqt_data.poi[3:]
+            sqt_data.persist()
