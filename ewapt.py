@@ -1016,6 +1016,7 @@ async def cancel(cmd):
             return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
 
         else:
+
             response = "You cancel your {} apartment for {} SlimeCoin.".format(poi.str_name , aptmodel.rent * 4)
             invToss = ewitem.inventory(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server)
 
@@ -1041,8 +1042,9 @@ async def cancel(cmd):
                 stuffing.id_owner = poi.id_poi
                 stuffing.persist()
             await toss_squatters(cmd.message.author.id)
-            aptmodel.rent = 0
             usermodel.apt_zone = "empty"
+            usermodel.change_slimecoin(n=aptmodel.rent * -4, coinsource=ewcfg.coinsource_spending)
+            aptmodel.rent = 0
             aptmodel.poi = ""
             aptmodel.apt_class = "c"
             usermodel.persist()
@@ -1204,7 +1206,7 @@ async def toss_squatters(cmd_id):
             sqt_data = EwUser(id_user=squatter[0], id_server=player_info.id_server)
             server = ewcfg.server_list[sqt_data.id_server]
             member_object = server.get_member(squatter[0])
+            sqt_data.poi = sqt_data.poi[3:]
             await ewrolemgr.updateRoles(client=client, member=member_object)
             sqt_data.visiting = "empty"
-            sqt_data.poi = sqt_data.poi[3:]
             sqt_data.persist()
