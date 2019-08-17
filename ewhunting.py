@@ -658,10 +658,12 @@ async def summon_enemy(cmd):
     if len(cmd.tokens) > 2:
         enemytype = cmd.tokens[1]
         enemy_location = cmd.tokens[2]
+        enemy_slimes = cmd.tokens[3]
+        enemy_displayname = cmd.tokens[4]
         poi = ewcfg.id_to_poi.get(enemy_location)
 
 
-    if enemytype != None and poi != None:
+    if enemytype != None and poi != None and enemy_slimes != None and enemy_displayname != None:
 
         enemy = get_enemy_data(enemytype)
 
@@ -669,7 +671,9 @@ async def summon_enemy(cmd):
         enemy.id_server = user_data.id_server
         enemy.poi = poi.id_poi
         enemy.level = level_byslime(enemy.slimes)
-        enemy.initialslimes = enemy.slimes
+        enemy.initialslimes = enemy_slimes
+        enemy.slimes = enemy_slimes
+        enemy.display_name = enemy_displayname
         enemy.lifetime = time_now
         enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
 
@@ -682,7 +686,7 @@ async def summon_enemy(cmd):
             enemy.poi
         )
     else:
-        response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION"
+        response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION / SLIME / DISPLAY NAME"
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1149,7 +1153,7 @@ def drop_enemy_loot(enemy_data, district_data):
         response += "They dropped a pack of trading cards!\n"
 
     if not poudrin_dropped and not pleb_dropped and not patr_dropped and not crop_dropped and not meat_dropped and not cards_dropped:
-        response = "They didn't drop anything..."
+        response = "They didn't drop anything...\n"
 
     return response
 

@@ -1356,9 +1356,10 @@ stats_clear_on_death = [
 	stat_slimesmined,
 	stat_slimesfromkills,
 	stat_kills,
+	stat_pve_kills,
 	stat_ghostbusts,
     stat_slimesfarmed,
-     stat_slimesscavenged
+    stat_slimesscavenged
 ]
 
 context_slimeoidheart = 'slimeoidheart'

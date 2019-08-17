@@ -540,14 +540,14 @@ async def attack(cmd):
 						if weapon.id_weapon == ewcfg.weapon_id_molotov:
 							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
 							for bystander in bystander_users:
-								print(bystander)
+								#print(bystander)
 								bystander_user_data = EwUser(id_user = bystander, id_server = user_data.id_server)
 								bystander_player_data = EwPlayer(id_user = bystander, id_server = user_data.id_server)
 								resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage, source=user_data.id_user).format(name_player = bystander_player_data.display_name)
 								resp_cont.add_channel_response(cmd.message.channel.name, resp)
 						#Damage players/enemies in district
 						else:
-							resp = await weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now)
+							resp = await weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
 							resp_cont.add_response_container(resp)
 
 					user_data = EwUser(member = cmd.message.author)
@@ -889,8 +889,7 @@ async def attack(cmd):
 
 		# Get target's info.
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
-		base_enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
-		enemy_data = base_enemy_data
+		enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
 
 		user_mutations = user_data.get_mutations()
 
@@ -978,7 +977,6 @@ async def attack(cmd):
 				await resp_cont.post()
 
 				user_data = EwUser(member=cmd.message.author)
-				enemy_data = EwEnemy(id_enemy=base_enemy_data.id_enemy)
 
 				# One of the players/enemies died in the meantime
 				if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.life_state_corpse:
@@ -999,7 +997,6 @@ async def attack(cmd):
 				await resp_cont.post()
 				await asyncio.sleep(5)
 				user_data = EwUser(member=cmd.message.author)
-				enemy_data = EwEnemy(id_enemy=base_enemy_data.id_enemy)
 
 				# One of the users/enemies died in the meantime
 				if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.enemy_lifestate_dead:
@@ -1027,18 +1024,17 @@ async def attack(cmd):
 					if weapon.id_weapon == ewcfg.weapon_id_molotov:
 						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
 						for bystander in bystander_users:
-							print(bystander)
+							#print(bystander)
 							bystander_user_data = EwUser(id_user=bystander, id_server=user_data.id_server)
 							bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
 							resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id,  value=bystander_damage, source=user_data.id_user).format(name_player=bystander_player_data.display_name)
 							resp_cont.add_channel_response(cmd.message.channel.name, resp)
 					# Damage players/enemies in district
 					else:
-						resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now)
+						resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=True)
 						resp_cont.add_response_container(resp)
 
 				user_data = EwUser(member=cmd.message.author)
-				enemy_data = EwEnemy(id_enemy=base_enemy_data)
 
 		if miss or backfire or jammed:
 			slimes_damage = 0
@@ -1195,6 +1191,9 @@ async def attack(cmd):
 
 			# When a raid boss dies, use this response instead so its drops aren't shown in the killfeed
 			old_response = response
+
+			# give player item for defeating an enemy
+			response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
 
 			if slimeoid.life_state == ewcfg.slimeoid_state_active:
 				brain = ewcfg.brain_map.get(slimeoid.ai)
@@ -1433,10 +1432,16 @@ async def explode(damage = 0, district_data = None):
 	return resp_cont
 
 """ Damage all players in a district; Exploding weapon's effect """
-async def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0):
+async def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None):
 	if user_data != None and shootee_data != None and district_data != None:
 		user_player = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
-		shootee_player = EwPlayer(id_user=shootee_data.id_user, id_server=shootee_data.id_server)
+		if target_enemy == False:
+			shootee_player = EwPlayer(id_user=shootee_data.id_user, id_server=shootee_data.id_server)
+		else:
+			enemy_data = shootee_data
+			
+			# This makes it so that a display name can still be accessed regardless if a player or enemy is the target of the attack
+			shootee_player = shootee_data
 
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -1448,9 +1453,10 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 
 		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 
-		bystanders = district_data.get_players_in_district(life_states=life_states, factions=factions)
+		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+		bystander_enemies = district_data.get_enemies_in_district()
 
-		for bystander in bystanders:
+		for bystander in bystander_users:
 			# Don't damage the shooter or the shootee a second time
 			if bystander != user_data.id_user and bystander != shootee_data.id_user:
 				response = ""
@@ -1545,8 +1551,71 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 				#Survived the explosion
 				else:
 					response += "{} was caught in an explosion during your fight with {} and lost {} slime".format(target_player.display_name, shootee_player.display_name, damage)
-					resp_cont.channel_response(channel, response)
+					resp_cont.add_channel_response(channel, response)
 					target_data.persist()
+
+		for bystander in bystander_enemies:
+			# Don't damage the shooter or the enemy a second time
+			
+			if bystander != user_data.id_user and bystander != enemy_data.id_enemy:
+				response = ""
+
+				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
+
+				slimes_dropped = target_enemy_data.totaldamage + target_enemy_data.slimes
+
+				was_killed = False
+
+				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
+					was_killed = True
+
+				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
+
+				# move around slime as a result of the shot
+				slimes_drained = int(3 * slimes_damage / 4)  # 3/4
+
+				damage = str(slimes_damage)
+
+				slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
+
+				slimes_directdamage = slimes_damage - slimes_tobleed
+				slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+
+				district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
+				target_enemy_data.bleed_storage += slimes_tobleed
+				target_enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
+				sewer_data.change_slimes(n=slimes_drained)
+				sewer_data.persist()
+
+				if was_killed:
+					# adjust statistics
+					ewstats.increment_stat(user=user_data, metric=ewcfg.stat_kills)
+					ewstats.track_maximum(user=user_data, metric=ewcfg.stat_biggest_kill, value=int(slimes_dropped))
+					if user_data.slimelevel > target_enemy_data.level:
+						ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_ganks)
+					elif user_data.slimelevel < target_enemy_data.level:
+						ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_takedowns)
+
+
+					# Give a bonus to the player's weapon skill for killing a stronger player.
+					if target_enemy_data.level >= user_data.slimelevel:
+						user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
+
+					district_data.change_slimes(n=target_enemy_data.slimes / 2, source=ewcfg.source_killing)
+					levelup_resp = user_data.change_slimes(n=target_enemy_data.slimes / 2, source=ewcfg.source_killing)
+
+					ewhunting.delete_enemy(target_enemy_data)
+
+					response += "{} was killed by an explosion during your fight with {}!".format(target_enemy_data.display_name, shootee_player.display_name)
+					response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
+					
+					resp_cont.add_channel_response(channel, response)
+
+				# Survived the explosion
+				else:
+					response += "{} was caught in an explosion during your fight with {} and lost {} slime".format(target_enemy_data.display_name, shootee_player.display_name, damage)
+					resp_cont.add_channel_response(channel, response)
+					target_enemy_data.persist()
 
 		return resp_cont
 
