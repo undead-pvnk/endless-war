@@ -266,20 +266,41 @@ def canAttack(cmd):
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
 	elif cmd.mentions_count <= 0:
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 		# user is going after enemies rather than players
-		
+
+		# Get target's info.
 		# converts ['THE', 'Lost', 'juvie'] into 'the lost juvie'
 		huntedenemy = " ".join(cmd.tokens[1:]).lower()
-		
+
 		enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
+
+		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
+		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
+		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 		
-		if enemy_data != None:
-			# enemy found, redirect variables to code in ewhunting
-			response = ewcfg.enemy_targeted_string
-		
-		elif enemy_data == None and (user_data.life_state == ewcfg.life_state_corpse):
+		if enemy_data == None and (user_data.life_state == ewcfg.life_state_corpse):
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
 			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+
+		elif (slimes_spent > user_data.slimes):
+			# Not enough slime to shoot.
+			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+
+		elif (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
+			# disallow kill if the player has killed recently
+			response = "Take a moment to appreciate your last slaughter."
+
+		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
+			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				response = "Juveniles lack the moral fiber necessary for violence."
+			else:
+				response = "You lack the moral fiber necessary for violence."
+				
+		elif enemy_data != None:
+			# enemy found, redirect variables to code in ewhunting
+			response = ewcfg.enemy_targeted_string
 			
 		else:
 			# no enemy is found within that district
@@ -948,7 +969,8 @@ async def attack(cmd):
 			)
 
 			# Make adjustments
-			weapon.fn_effect(ctn)
+			if weapon.id_weapon != ewcfg.weapon_id_garrote:
+				weapon.fn_effect(ctn)
 
 			# Apply effects for non-reference values
 			miss = ctn.miss
@@ -1019,7 +1041,12 @@ async def attack(cmd):
 
 				if not miss:
 					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
-					factions = ["", user_data.faction if backfire else "faction-enemy"]
+					bystander_faction = ""
+					if user_data.faction == "rowdys":
+						bystander_faction = "killers"
+					elif user_data.faction == "killers":
+						bystander_faction = "rowdys"
+					factions = ["", user_data.faction if backfire else bystander_faction]
 					# Burn players in district
 					if weapon.id_weapon == ewcfg.weapon_id_molotov:
 						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
@@ -1458,7 +1485,15 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 
 		for bystander in bystander_users:
 			# Don't damage the shooter or the shootee a second time
-			if bystander != user_data.id_user and bystander != shootee_data.id_user:
+			
+			# If an enemy is being targeted, check id_enemy instead of id_user when going through bystander_users
+			checked_id = None
+			if target_enemy:
+				checked_id = shootee_data.id_enemy
+			else:
+				checked_id = shootee_data.id_user
+			
+			if bystander != user_data.id_user and bystander != checked_id:
 				response = ""
 
 				target_data = EwUser(id_user=bystander, id_server=user_data.id_server)

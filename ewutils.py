@@ -594,7 +594,7 @@ async def burnSlimes(id_server = None):
 			slimes_dropped = user_data.totaldamage + user_data.slimes
 
 			# Deal 10% of total slime to burn every second
-			slimes_to_burn = math.ceil(int(result[1]) * 0.1)
+			slimes_to_burn = math.ceil(int(float(result[1])) * 0.1)
 
 			killer_data = EwUser(id_server = id_server, id_user=result[2])
 

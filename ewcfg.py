@@ -2386,7 +2386,7 @@ weapon_list = [
 			"knuckledusters",
 			"dusters"
 		],
-		str_crit = "***SKY UPPERCUT!!*** {name_player} executes an artificially difficult combo, rocketing their fist into the bottom of {name_target}’s jaw so hard that {target}’s colliding teeth brutally sever an inch off their own tongue!!",
+		str_crit = "***SKY UPPERCUT!!*** {name_player} executes an artificially difficult combo, rocketing their fist into the bottom of {name_target}’s jaw so hard that {name_target}’s colliding teeth brutally sever an inch off their own tongue!!",
 		str_miss = "**MISS!** {name_player} couldn't land a single blow!!",
 		str_equip = "You equip the brass knuckles.",
 		str_weapon = "brass knuckles",
