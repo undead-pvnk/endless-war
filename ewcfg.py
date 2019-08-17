@@ -21,7 +21,7 @@ from ewfish import EwFish
 import ewdebug
 
 # Global configuration options.
-version = "v3.6"
+version = "v3.6 - Prefix is /"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -356,7 +356,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'

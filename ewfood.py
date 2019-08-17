@@ -259,15 +259,19 @@ async def order(cmd):
 									weapon.stack_size += 1
 									weapon.persist()
 									response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
+									user_data.change_slimes(n=-value, source=ewcfg.source_spending)
 									user_data.persist()
-									return
+									return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 						if has_weapon == False:
 							if len(weapons_held) >= user_data.get_weapon_capacity():
 								response = "You can't carry any more weapons."
-							
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 							elif user_data.life_state == ewcfg.life_state_corpse:
 								response = "Ghosts can't hold weapons."
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 

@@ -15,6 +15,7 @@ from ewmarket import EwMarket
 from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
 from ewslimeoid import EwSlimeoid
+#from ewstatuseffects import EwEnemyStatusEffect
 
 """ Enemy data model for database persistence """
 
@@ -631,6 +632,8 @@ class EwEnemy:
                 self.totaldamage += change
 
         self.persist()
+
+   
 
 # Debug command. Could be used for events, perhaps?
 async def summon_enemy(cmd):

@@ -563,7 +563,7 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		#asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
+		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
 		#asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
@@ -972,7 +972,7 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item creation
-		elif debug == True and cmd == '!createtestitem':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
@@ -993,7 +993,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
 
 		# Creates a poudrin
-		elif debug == True and cmd == '!createpoudrin':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createpoudrin'):
 			for item in ewcfg.item_list:
 				if item.context == "poudrin":
 					ewitem.item_create(
@@ -1016,13 +1016,13 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
 		# Gives the user some slime
-		elif debug == True and cmd == '!getslime':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getslime'):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 10,000 slime!"
+			response = "You get 100,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 10000)
+			levelup_response = user_data.change_slimes(n = 100000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
@@ -1041,7 +1041,7 @@ async def on_message(message):
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-		elif debug == True and cmd == '!createapple':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
 			item_id = ewitem.item_create(
 				id_user = message.author.id,
 				id_server = message.server.id,
@@ -1065,7 +1065,7 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item deletion
-		elif debug == True and cmd == '!delete':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'delete'):
 			items = ewitem.inventory(
 				id_user = message.author.id,
 				id_server = message.server.id

@@ -496,7 +496,7 @@ async def enemyBleedSlimes(id_server = None):
 					district_data.persist()
 					total_bled += slimes_to_bleed
 
-					if enemy_data.slimes < 0:
+					if enemy_data.slimes <= 0:
 						ewhunting.delete_enemy(enemy_data)
 
 			await resp_cont.post()
