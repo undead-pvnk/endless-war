@@ -101,11 +101,7 @@ def process_max_ghostbusts(id_server = None, id_user = None, value = None):
 	pass
 
 def process_poudrins_looted(id_server = None, id_user = None, value = None):
-	poudrins = ewitem.inventory(
-		id_user = id_user,
-		id_server = id_server,
-		item_type_filter = ewcfg.it_slimepoudrin
-	)
-	poudrins_count = len(poudrins)
-	ewstats.track_maximum(id_user = id_user, id_server = id_server, metric = ewcfg.stat_max_poudrins, value = poudrins_count)
+	poudrin_amount = ewitem.find_poudrin(id_user = id_user, id_server = id_user)
+
+	ewstats.track_maximum(id_user = id_user, id_server = id_server, metric = ewcfg.stat_max_poudrins, value = poudrin_amount)
 	ewstats.change_stat(id_user = id_user, id_server = id_server, metric = ewcfg.stat_lifetime_poudrins, n = value)

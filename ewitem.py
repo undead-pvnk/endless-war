@@ -1,11 +1,13 @@
 import math
 import time
 import random
+import asyncio
 
 import ewutils
 import ewcfg
 import ewstats
 import ewrolemgr
+import ewsmelting
 from ew import EwUser
 from ewplayer import EwPlayer
 
@@ -190,32 +192,40 @@ class EwItem:
 """
 	These are unassuming, tangible, multi-faceted, customizable items that you can actually interact with in-game.
 """
-class EwDefaultItem:
+class EwGeneralItem:
+	item_type = "item"
 	id_item = " "
 	alias = []
 	context = ""
-	subcontext = ""
 	str_name = ""
 	str_desc = ""
 	ingredients = ""
+	acquisition = ""
+	price = 0
+	vendors = []
 
 	def __init__(
 		self,
 		id_item = " ",
 		alias = [],
 		context = "",
-		subcontext = "",
 		str_name = "",
 		str_desc = "",
 		ingredients = "",
+		acquisition = "",
+		price = 0,
+		vendors = [],
 	):
+		self.item_type = ewcfg.it_item
 		self.id_item = id_item
 		self.alias = alias
 		self.context = context
-		self.subcontext = subcontext
 		self.str_name = str_name
 		self.str_desc = str_desc
 		self.ingredients = ingredients
+		self.acquisition = acquisition
+		self.price = price
+		self.vendors = vendors
 
 
 """
@@ -356,7 +366,7 @@ def item_dedorn_cosmetics(
 	try:
 		
 		ewutils.execute_sql_query(
-			"UPDATE items_prop SET value = 'false' WHERE name = 'adorned' AND {id_item} IN (\
+			"UPDATE items_prop SET value = 'false' WHERE (name = 'adorned' or name = 'slimeoid') AND {id_item} IN (\
 				SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
 			)".format(
 				id_item = ewcfg.col_id_item,
@@ -428,7 +438,7 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_food
 				)
 
-				if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+				if len(food_items) >= user_data.get_food_capacity():
 					response += " But you couldn't carry any more food items, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
@@ -439,13 +449,13 @@ def item_lootrandom(id_server = None, id_user = None):
 					item_type_filter = ewcfg.it_weapon
 				)
 
-				if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+				if len(weapons_held) > user_data.get_weapon_capacity():
 					response += " But you couldn't carry any more weapons, so you tossed it back."
 				else:
 					give_item(id_user = id_user, id_server = id_server, id_item = id_item)
 
 			else:
-				if item_sought.get('item_type') == ewcfg.it_slimepoudrin:
+				if item_sought.get('name') == "Slime Poudrin":
 					ewstats.change_stat(
 						id_server = user_data.id_server,
 						id_user = user_data.id_user,
@@ -539,7 +549,7 @@ def item_loot(
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if len(weapons_held) <= math.floor(target_data.slimelevel / ewcfg.max_weapon_mod) if target_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) < 1:
+			if len(weapons_held) <= target_data.get_weapon_capacity():
 				give_item(id_user = target_data.id_user, id_server = target_data.id_server, id_item = source_data.weapon)
 
 	except:
@@ -560,7 +570,7 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 				item_type_filter = ewcfg.it_food
 			)
 
-			if len(food_items) >= math.ceil(user_data.slimelevel / ewcfg.max_food_in_inv_mod):
+			if len(food_items) >= user_data.get_food_capacity():
 				return False
 			else:
 				return True
@@ -571,7 +581,7 @@ def check_inv_capacity(id_user = None, id_server = None, item_type = None):
 				item_type_filter = ewcfg.it_weapon
 			)
 
-			if len(weapons_held) > math.floor(user_data.slimelevel / ewcfg.max_weapon_mod) if user_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+			if len(weapons_held) >= user_data.get_weapon_capacity():
 				return False
 			else:
 				return True
@@ -619,7 +629,7 @@ def cmd_is_inventory(cmd):
 def inventory(
 	id_user = None,
 	id_server = None,
-	item_type_filter = None
+	item_type_filter = None,
 ):
 	items = []
 
@@ -655,6 +665,25 @@ def inventory(
 				stack_max = row[3]
 				stack_size = row[4]
 
+				if item_type == 'slimepoudrin':
+					item_data = EwItem(id_item = id_item)
+					item_type = ewcfg.it_item
+					item_data.item_type = item_type
+					for item in ewcfg.item_list:
+						if item.context == "poudrin":
+							item_props = {
+								'id_item': item.id_item,
+								'context': item.context,
+								'item_name': item.str_name,
+								'item_desc': item.str_desc
+							}
+					item_def = ewcfg.item_def_map.get(item_type)
+					item_data.item_props.update(item_def.item_props)
+					item_data.item_props.update(item_props)
+					item_data.persist()
+
+					ewutils.logMsg('Updated poudrin to new format: {}'.format(id_item))
+					    
 				item_def = ewcfg.item_def_map.get(item_type)
 
 				if(item_def != None):
@@ -721,9 +750,14 @@ async def inventory_print(cmd):
 		response = "You are holding:"
 
 	try:
-		await ewutils.send_message(cmd.client, cmd.message.author, response)
+		msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
+
+	if msg_handle is None:
+		can_message_user = False
+
+	if not can_message_user:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if len(items) > 0:
@@ -762,6 +796,8 @@ async def item_look(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.message.server
+	user_data = EwUser(member = author)
+	mutations = user_data.get_mutations()
 
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id if server is not None else None)
 
@@ -781,8 +817,17 @@ async def item_look(cmd):
 
 		if item.item_type == ewcfg.it_food:
 			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
-				response += " This food item is rotten so you decide to throw it away."
-				item_delete(id_item)
+				response += " This food item is rotten"
+				if ewcfg.mutation_id_spoiledappetite in mutations:
+					response += ". Yummy!"
+				else:
+					response += ", so you decide to throw it away."
+					item_drop(id_item)
+		
+		if item.item_type == ewcfg.it_cosmetic:
+			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+			if hue != None:
+				response += " It's been dyed in {} paint.".format(hue.str_name)
 
 		response = name + "\n\n" + response
 
@@ -815,10 +860,17 @@ async def item_use(cmd):
 		if item.item_type == ewcfg.it_food:
 			response = user_data.eat(item)
 			user_data.persist()
+			asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
 
 		if item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)
 			user_data.persist()
+
+		if item.item_type == ewcfg.it_item:
+			name = item_sought.get('name')
+			if name == "Trading Cards":
+				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
+
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -890,6 +942,57 @@ def find_item(item_search = None, id_user = None, id_server = None):
 
 
 """
+	Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
+"""
+def find_item_all(item_search = None, id_user = None, id_server = None, item_type_filter = None):
+	items_sought = []
+	props_to_search = [
+		'weapon_type',
+		'id_item',
+		'id_food',
+		'id_cosmetic'
+	]
+
+
+	if item_search:
+		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+
+		# find the first (i.e. the oldest) item that matches the search
+		for item in items:
+			item_data = EwItem(id_item = item.get('id_item'))
+			for prop in props_to_search:
+				if prop in item_data.item_props and \
+				ewutils.flattenTokenListToString(item_data.item_props.get(prop)) == item_search:
+					items_sought.append(item)
+					break
+
+	return items_sought
+
+"""
+	Finds the amount of Slime Poudrins inside your inventory.
+"""
+def find_poudrin(id_user = None, id_server = None):
+
+	items = inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_item
+	)
+
+	poudrins = []
+
+	for poudrin in items:
+		name = poudrin.get('name')
+		if name != "Slime Poudrin":
+			pass
+		else:
+			poudrins.append(poudrin)
+
+	poudrins_amount = len(poudrins)
+
+	return poudrins_amount
+
+"""
 	Command that lets players !give others items
 """
 async def give(cmd):
@@ -922,7 +1025,7 @@ async def give(cmd):
 				item_type_filter = ewcfg.it_food
 			)
 
-			if len(food_items) >= math.ceil(EwUser(member = recipient).slimelevel / ewcfg.max_food_in_inv_mod):
+			if len(food_items) >= recipient_data.get_food_capacity():
 				response = "They can't carry any more food items."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -939,7 +1042,7 @@ async def give(cmd):
 			elif recipient_data.life_state == ewcfg.life_state_corpse:
 				response = "Ghosts can't hold weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif len(weapons_held) > math.floor(recipient_data.slimelevel / ewcfg.max_weapon_mod) if recipient_data.slimelevel >= ewcfg.max_weapon_mod else len(weapons_held) >= 1:
+			elif len(weapons_held) >= recipient_data.get_weapon_capacity():
 				response  = "They can't carry any more weapons."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1011,3 +1114,48 @@ async def discard(cmd):
 			response = "Discard which item? (check **!inventory**)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def gen_item_props(item):
+	item_props = {}
+	if not hasattr(item, "item_type"):
+		return item_props
+	if item.item_type == ewcfg.it_food:
+		
+		item_props = {
+			'id_food': item.id_food,
+			'food_name': item.str_name,
+			'food_desc': item.str_desc,
+			'recover_hunger': item.recover_hunger,
+			'inebriation': item.inebriation,
+			'str_eat': item.str_eat,
+			'time_expir': int(time.time()) + item.time_expir,
+		}
+	elif item.item_type == ewcfg.it_item:
+		item_props = {
+			'id_item': item.id_item,
+			'context': item.context,
+			'item_name': item.str_name,
+			'item_desc': item.str_desc,
+			'ingredients': item.ingredients,
+			'acquisition': item.acquisition,
+		}
+	elif item.item_type == ewcfg.it_weapon:
+		item_props = {
+			"weapon_type": item.id_weapon,
+			"weapon_name": "",
+			"weapon_desc": item.str_description,
+			"married": ""
+		}
+
+	elif item.item_type == ewcfg.it_cosmetic:
+		item_props = {
+			'id_cosmetic': item.id_cosmetic,
+			'cosmetic_name': item.str_name,
+			'cosmetic_desc': item.str_desc,
+			'rarity': item.rarity,
+			'adorned': 'false'
+		}
+
+	return item_props
+		
+		

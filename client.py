@@ -38,8 +38,12 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewmutation
 import ewquadrants
 import ewtransport
+import ewsmelting
+import ewfish
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -98,6 +102,9 @@ cmd_map = {
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
+	# flags a vein as dangerous
+	#ewcfg.cmd_flag: ewjuviecmd.flag,
+
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
 	ewcfg.cmd_score_alt1: ewcmd.score,
@@ -119,13 +126,16 @@ cmd_map = {
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
 
 	# Display the progress towards the current Quarterly Goal.
-	ewcfg.cmd_quarterly_report : ewmarket.quarterlyreport,
+	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
 
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
+
+	# how ghosts leave the sewers
+	ewcfg.cmd_manifest: ewspooky.manifest,
 
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -169,6 +179,8 @@ cmd_map = {
 
 	# See what's for sale in the Food Court.
 	ewcfg.cmd_menu: ewfood.menu,
+	ewcfg.cmd_menu_alt1: ewfood.menu,
+	ewcfg.cmd_menu_alt2: ewfood.menu,
 
 	# Order refreshing food and drinks!
 	ewcfg.cmd_order: ewfood.order,
@@ -250,6 +262,7 @@ cmd_map = {
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
+	ewcfg.cmd_scout_alt1: ewmap.scout,
 
 	# Check your current POI capture progress
 	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
@@ -260,15 +273,33 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_check_farm: ewfarm.check_farm,
+	ewcfg.cmd_irrigate: ewfarm.cultivate,
+	ewcfg.cmd_weed: ewfarm.cultivate,
+	ewcfg.cmd_fertilize: ewfarm.cultivate,
+	ewcfg.cmd_pesticide: ewfarm.cultivate,
 	ewcfg.cmd_mill: ewfarm.mill,
 
-     #scavenging
+	# Fishing
+	ewcfg.cmd_cast: ewfish.cast,
+	ewcfg.cmd_reel: ewfish.reel,
+	ewcfg.cmd_appraise: ewfish.appraise,
+	ewcfg.cmd_barter: ewfish.barter,
+	ewcfg.cmd_embiggen: ewfish.embiggen,
+
+	 #scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
-	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
+
+	#smelting
+	ewcfg.cmd_smelt: ewsmelting.smelt,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
@@ -328,7 +359,10 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-	
+	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+
 	# Negaslimeoids
 
 	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
@@ -350,8 +384,20 @@ cmd_map = {
 	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
+        # mutations
+        ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+        ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+
+	ewcfg.cmd_teleport: ewmap.teleport,
 	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+
+	# debug commands
+	ewcfg.cmd_debug1: ewdebug.debug1,
+	ewcfg.cmd_debug2: ewdebug.debug2,
+
+	# ban a player from using commands
+	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
 debug = False
@@ -398,6 +444,8 @@ async def on_ready():
 	ewmap.map_draw()
 
 	# Flatten role names to all lowercase, no spaces.
+	fake_observer = EwUser()
+	fake_observer.life_state = ewcfg.life_state_observer
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
@@ -405,8 +453,6 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			fake_observer = EwUser()
-			fake_observer.life_state = ewcfg.life_state_observer
 			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
@@ -417,6 +463,17 @@ async def on_ready():
 
 		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
+
+
+	for id_poi in ewcfg.landmark_pois:
+		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
+		poi = ewcfg.id_to_poi.get(id_poi)
+		ewmap.landmarks[id_poi] = ewmap.score_map_from(
+			coord_start = poi.coord,
+			user_data = fake_observer
+		)
+
+	ewutils.logMsg("finished landmark precomputation")
 
 	try:
 		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
@@ -491,8 +548,10 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		await ewtransport.init_transports(id_server = server.id)
+		if not debug:
+			await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -516,7 +575,7 @@ async def on_ready():
 	stream_live = None
 
 	ewutils.logMsg('Beginning periodic hook loop.')
-	while True:
+	while not ewutils.TERMINATE:
 		time_now = int(time.time())
 
 		# Periodic message to log that this stuff is still running.
@@ -599,6 +658,38 @@ async def on_ready():
 						market_data.clock = 0
 						market_data.day += 1
 
+					if market_data.clock == 6:
+						# Update the list of available bazaar items by clearing the current list and adding the new items
+						market_data.bazaar_wares.clear()
+
+						bazaar_foods = []
+						bazaar_cosmetics = []
+						bazaar_general_items = []
+
+						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
+							if item in ewcfg.item_names:
+								bazaar_general_items.append(item)
+
+							elif item in ewcfg.food_names:
+								bazaar_foods.append(item)
+
+							elif item in ewcfg.cosmetic_names:
+								bazaar_cosmetics.append(item)
+
+						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
+
+						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
+						# Don't add repeated foods
+						while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == market_data.bazaar_wares['food1']:
+							market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+
+						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
+						# Don't add repeated cosmetics
+						while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == market_data.bazaar_wares['cosmetic1']:
+							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
+						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
+							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+
 					market_data.persist()
 
 					if market_data.clock == 6:
@@ -635,6 +726,9 @@ async def on_ready():
 
 					# Decrease inebriation for all players above min (0).
 					ewutils.pushdownServerInebriation(id_server = server.id)
+
+					# Remove fish offers which have timed out
+					ewfish.kill_dead_offers(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
@@ -696,12 +790,16 @@ async def on_ready():
 async def on_member_join(member):
 	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
+	ewplayer.player_update(
+		member = member,
+		server = member.server
+	)
 
 @client.event
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		#await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):
@@ -802,23 +900,28 @@ async def on_message(message):
 		if len(message.author.roles) < 3:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
+		user_data = EwUser(member = message.author)
+		if user_data.arrested:
+			return
+
+		mutations = user_data.get_mutations()
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
 
-			response = "You cannot participate in the ENDLESS WAR while offline."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				response = "You cannot participate in the ENDLESS WAR while offline."
+    
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
-		user_data = EwUser(member = message.author)
 		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
 
-			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
+				response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
 		# Check the main command map for the requested command.
 		global cmd_map
@@ -852,28 +955,52 @@ async def on_message(message):
 
 		# Creates a poudrin
 		elif debug == True and cmd == '!createpoudrin':
-			item_id = ewitem.item_create(
-				item_type = ewcfg.it_slimepoudrin,
-				id_user = message.author.id,
-				id_server = message.server.id
-			)
-
-			ewutils.logMsg('Created item: {}'.format(item_id))
-			item = EwItem(id_item = item_id)
-			item.persist()
-
-			item = EwItem(id_item = item_id)
+			for item in ewcfg.item_list:
+				if item.context == "poudrin":
+					ewitem.item_create(
+						item_type = ewcfg.it_item,
+						id_user = message.author.id,
+						id_server = message.server.id,
+						item_props = {
+							'id_item': item.id_item,
+							'context': item.context,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					ewutils.logMsg('Created item: {}'.format(item.id_item))
+					item = EwItem(id_item = item.id_item)
+					item.persist()
+			else:
+				pass
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
 		# Gives the user some slime
 		elif debug == True and cmd == '!getslime':
 			user_data = EwUser(member = message.author)
+			user_initial_level = user_data.slimelevel
 
-			user_data.change_slimes(n = 10000)
+			response = "You get 10,000 slime!"
+
+			levelup_response = user_data.change_slimes(n = 10000)
+
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+			if was_levelup:
+				response += " {}".format(levelup_response)
+
 			user_data.persist()
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+		# Deletes all items in your inventory.
+		elif debug == True and cmd == '!clearinv':
+			user_data = EwUser(member = message.author)
+			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
+			response = "You destroy every single item in your inventory."
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		elif debug == True and cmd == '!createapple':
 			item_id = ewitem.item_create(
@@ -896,8 +1023,6 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
-
-
 
 		# FIXME debug
 		# Test item deletion
@@ -977,4 +1102,9 @@ if token == None or len(token) == 0:
 	sys.exit(0)
 
 # connect to discord and run indefinitely
-client.run(token)
+try:
+	client.run(token)
+finally:
+	ewutils.TERMINATE = True
+	ewutils.logMsg("main thread terminated.")
+

@@ -7,6 +7,7 @@ import time
 import re
 import random
 import asyncio
+import math
 
 import ewstats
 import ewitem
@@ -17,12 +18,17 @@ import ewcfg
 from ew import EwUser
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
+from ewmarket import EwMarket
+
+TERMINATE = False
 
 db_pool = {}
 db_pool_id = 0
 
 # Map of user IDs to their course ID.
 moves_active = {}
+
+food_multiplier = {}
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -64,19 +70,26 @@ class EwResponseContainer:
 
 	def add_channel_response(self, channel, response):
 		if channel in self.channel_responses:
-			self.channel_responses[channel] += "\n" + response
+			self.channel_responses[channel].append(response)
 		else:
-			self.channel_responses[channel] = response
+			self.channel_responses[channel] = [response]
 
 	def add_channel_topic(self, channel, topic):
 		self.channel_topics[channel] = topic
 
 	def add_response_container(self, resp_cont):
 		for ch in resp_cont.channel_responses:
-			self.add_channel_response(ch, resp_cont.channel_responses[ch])
+			responses = resp_cont.channel_responses[ch]
+			for r in responses:
+				self.add_channel_response(ch, r)
 
 		for ch in resp_cont.channel_topics:
 			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+	def format_channel_response(self, channel, member):
+		if channel in self.channel_responses:
+			for i in range(len(self.channel_responses[channel])):
+				self.channel_responses[channel][i] = formatMessage(member, self.channel_responses[channel][i])
 
 	async def post(self):
 		self.client = get_client()
@@ -94,7 +107,15 @@ class EwResponseContainer:
 		for ch in self.channel_responses:
 			channel = get_channel(server = server, channel_name = ch)
 			try:
-				message = await send_message(self.client, channel, self.channel_responses[ch])
+				response = ""
+				while len(self.channel_responses[ch]) > 0:
+					if len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+						response += "\n" + self.channel_responses[ch].pop(0)
+					else:
+						message = await send_message(self.client, channel, response)
+						messages.append(message)
+						response = ""
+				message = await send_message(self.client, channel, response)
 				messages.append(message)
 			except:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
@@ -354,7 +375,7 @@ def decaySlimes(id_server = None):
 async def bleed_tick_loop(id_server):
 	interval = ewcfg.bleed_tick_length
 	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
-	while True:
+	while not TERMINATE:
 		await bleedSlimes(id_server = id_server)
 		# ewutils.logMsg("Capture tick happened on server %s." % id_server + " Timestamp: %d" % int(time.time()))
 
@@ -689,6 +710,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 	elif life_state == ewcfg.life_state_grandfoe:
 		faction_role = ewcfg.role_grandfoe
 
+	elif life_state == ewcfg.life_state_executive:
+		faction_role = ewcfg.role_slimecorp
+
 	elif life_state == ewcfg.life_state_lucky:
 		faction_role = ewcfg.role_slimecorp
 
@@ -747,6 +771,20 @@ def hunger_cost_mod(slimelevel):
 	return hunger_max_bylevel(slimelevel) / 200
 
 
+"""
+	Calculate how much food the player can carry
+"""
+def food_carry_capacity_bylevel(slimelevel):
+	return math.ceil(slimelevel / ewcfg.max_food_in_inv_mod)
+        
+"""
+	Calculate how many weapons the player can carry
+"""
+def weapon_carry_capacity_bylevel(slimelevel):
+	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
+
+def max_adorn_bylevel(slimelevel):
+        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
 """
 	Returns an EwUser object of the selected kingpin
 """
@@ -831,3 +869,28 @@ def get_slimeoids_in_poi(id_server = None, poi = None, sltype = None):
 		slimeoids.append(row[0])
 
 	return slimeoids
+
+async def decrease_food_multiplier(id_user):
+	await asyncio.sleep(5)
+	if id_user in food_multiplier:
+		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
+
+def get_move_speed(user_data):
+	mutations = user_data.get_mutations()
+	market_data = EwMarket(id_server = user_data.id_server)
+	move_speed = 1
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 0.5
+
+	if ewcfg.mutation_id_organicfursuit in mutations and (
+		(market_data.day % 31 == 0 and market_data.clock >= 20)
+		or (market_data.day % 31 == 1 and market_data.clock < 6)
+	):
+		move_speed *= 2
+	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
+		move_speed *= 2
+	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
+		move_speed *= 1.33
+
+	return move_speed

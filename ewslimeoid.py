@@ -13,6 +13,7 @@ from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
+from ewitem import EwItem
 
 active_slimeoidbattles = {}
 
@@ -185,6 +186,11 @@ class EwSlimeoid:
 			cursor.close()
 			ewutils.databaseClose(conn_info)
 
+	def die(self):
+		self.life_state = ewcfg.slimeoid_state_dead
+		self.id_user = ''
+
+
 	def delete(self):
 		ewutils.execute_sql_query("DELETE FROM slimeoids WHERE {id_slimeoid} = %s".format(
 			id_slimeoid = ewcfg.col_id_slimeoid
@@ -237,13 +243,16 @@ class EwSlimeoid:
 			destinations = ewcfg.poi_neighbors.get(self.poi).intersection(set(ewcfg.capturable_districts))
 			if len(destinations) > 0:
 				self.poi = random.choice(list(destinations))
-				ch_name = ewcfg.id_to_poi.get(self.poi).channel
+				poi_def = ewcfg.id_to_poi.get(self.poi)
+				ch_name = poi_def.channel
 		
 				response = "The air grows colder and color seems to drain from the streets and buildings around you. {} has arrived.".format(self.name)
 				resp_cont.add_channel_response(ch_name, response)
+				response = "There are reports of a sinister presence in {}.".format(poi_def.str_name)
+				resp_cont.add_channel_response(ewcfg.channel_rowdyroughhouse, response)
+				resp_cont.add_channel_response(ewcfg.channel_copkilltown, response)
 		finally:
 			return resp_cont
-
 
 """ slimeoid model object """
 class EwBody:
@@ -603,12 +612,7 @@ async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrins = ewitem.inventory(
-		id_user = cmd.message.author.id,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_slimepoudrin
-	)
-	poudrins_count = len(poudrins)
+	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
@@ -616,7 +620,7 @@ async def incubateslimeoid(cmd):
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
 
-	elif poudrins_count < 1:
+	elif poudrin is None:
 		response = "You need a slime poudrin."
 
 
@@ -642,7 +646,7 @@ async def incubateslimeoid(cmd):
 
 			else:
 				# delete a slime poudrin from the player's inventory
-				ewitem.item_delete(id_item = poudrins[0].get('id_item'))
+				ewitem.item_delete(id_item = poudrin.get('id_item'))
 
 				level = len(str(value))
 				user_data.change_slimes(n = -value)
@@ -687,6 +691,19 @@ async def dissolveslimeoid(cmd):
 			)
 			response += "{}".format(ewcfg.emote_slimeskull)
 
+			cosmetics = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+
+			# get the cosmetics worn by the slimeoid
+			for item in cosmetics:
+				cos = EwItem(id_item = item.get('id_item'))
+				if cos.item_props.get('slimeoid') == 'true':
+					cos.item_props['slimeoid'] = 'false'
+					cos.persist()
+
 		slimeoid.life_state = ewcfg.slimeoid_state_none
 		slimeoid.body = ""
 		slimeoid.head = ""
@@ -701,6 +718,7 @@ async def dissolveslimeoid(cmd):
 		slimeoid.defense = 0
 		slimeoid.intel = 0
 		slimeoid.level = 0
+		slimeoid.clout = 0
 
 		user_data.persist()
 		slimeoid.persist()
@@ -1538,6 +1556,23 @@ async def slimeoid(cmd):
 
 		response += slimeoid_describe(slimeoid)
 
+		cosmetics = ewitem.inventory(
+			id_user = user_data.id_user,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		# get the cosmetics worn by the slimeoid
+		adorned_cosmetics = []
+		for item in cosmetics:
+			cos = EwItem(id_item = item.get('id_item'))
+			if cos.item_props.get('slimeoid') == 'true':
+				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
+				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cos.item_props.get('cosmetic_name'))
+
+		if len(adorned_cosmetics) > 0:
+			response += "\n\nIt has {} adorned.".format(ewutils.formatNiceList(adorned_cosmetics, "and"))
+
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1769,18 +1804,43 @@ async def negaslimeoidbattle(cmd):
 		if result == -1:
 			# Losing in a nega battle means death
 			district_data = EwDistrict(district = challenger.poi, id_server = cmd.message.server.id)
-			slimes = int(10 ** (challengee_slimeoid.level - 2))
+			slimes = int(2 * 10 ** (challengee_slimeoid.level - 2))
 			district_data.change_slimes(n = slimes)
 			district_data.persist()
 			challengee_slimeoid.delete()
 			response = "The dulled colors become vibrant again, as {} fades back into its own reality.".format(challengee_slimeoid.name)
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 		elif result == 1:
+			# Dedorn all items
+			cosmetics = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+			# get the cosmetics worn by the slimeoid
+			for item in cosmetics:
+				cos = EwItem(id_item = item.get('id_item'))
+				if cos.item_props.get('slimeoid') == 'true':
+					cos.item_props['slimeoid'] = 'false'
+					cos.persist()
 			# Losing in a nega battle means death
-			challenger_slimeoid.delete()
-			response = "{} feasts on {}'s slime and consumes its soul.".format(challengee_slimeoid.name, challenger_slimeoid.name)
+			item_props = {
+				'context': ewcfg.context_slimeoidheart,
+				'subcontext': challenger_slimeoid.id_slimeoid,
+				'item_name': "Heart of {}".format(challenger_slimeoid.name),
+				'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
+			}
+			ewitem.item_create(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type = ewcfg.it_item,
+				item_props = item_props
+			)
+			challenger_slimeoid.die()
+			challenger_slimeoid.persist()
+			response = "{} feasts on {}'s slime. All that remains is a small chunk of crystallized slime.".format(challengee_slimeoid.name, challenger_slimeoid.name)
 			response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
-			if challenger_slimeoid.level >= challengee_slimeoid.level:
+			if challenger_slimeoid.level > challengee_slimeoid.level:
 				challengee_slimeoid.level += 1
 				rand = random.randrange(3)
 				if rand == 0:
@@ -1866,7 +1926,7 @@ async def saturateslimeoid(cmd):
 		hue = ewcfg.hue_map.get(value)
 
 		if hue != None:
-			response = "You saturate your {} with the {} Dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
+			response = "You saturate your {} with the {} dye! {}".format(slimeoid.name, hue.str_name, hue.str_saturate)
 			slimeoid.hue = hue.id_hue
 			slimeoid.persist()
 
@@ -1884,6 +1944,57 @@ async def saturateslimeoid(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def restoreslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
+		response = "You must go to the SlimeCorp Laboratories in Brawlden to restore a Slimeoid."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Ghosts cannot interact with the SlimeCorp Lab apparati."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if slimeoid.life_state != ewcfg.slimeoid_state_none:
+		response = "You already have an active slimeoid."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if item_sought is None:
+		if item_search:
+			response = "You need a slimeoid's heart to restore it to life."
+		else:
+			response = "Restore which slimeoid?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_data = ewitem.EwItem(id_item = item_sought.get('id_item'))
+
+	if item_data.item_props.get('context') != ewcfg.context_slimeoidheart:
+		response = "You need a slimeoid's heart to restore it to life."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	slimeoid = EwSlimeoid(id_slimeoid = item_data.item_props.get('subcontext'))
+	slimes_to_restore = 2 * 10 ** (slimeoid.level - 2) # 1/5 of the original cost
+
+	if user_data.slimes < slimes_to_restore:
+		response = "You need at least {} slime to restore this slimeoid.".format(slimes_to_restore)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+
+	slimeoid.life_state = ewcfg.slimeoid_state_active
+	slimeoid.id_user = user_data.id_user
+	slimeoid.persist()
+
+	ewitem.item_delete(id_item = item_data.id_item)
+
+	response = "You insert the heart of your beloved {} into one of the restoration tanks. A series of clattering sensors analyze the crystalline core. Then, just like when it was first incubated, the needle pricks you and extracts slime from your body, which coalesces around the poudrin-like heart. Bit by bit the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(slimeoid.name, slimeoid.name)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
+		
+
 
 async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
@@ -2061,36 +2172,10 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	s1hue = ewcfg.hue_map.get(challengee_slimeoid.hue)
 	s2hue = ewcfg.hue_map.get(challenger_slimeoid.hue)
 
-	color_matchup = 0
-	if s1hue is None:
-		if challenger_slimeoid.hue == 'rainbow':
-			color_matchup = ewcfg.hue_full_complementary
-	else:
+	color_matchup = ewcfg.hue_neutral
+	# get color matchups
+	if s1hue is not None:
 		color_matchup = s1hue.effectiveness.get(challenger_slimeoid.hue)
-
-	if color_matchup is None:
-		color_matchup = ewcfg.hue_neutral
-
-	if color_matchup < 0:
-		s1grit += 2
-		challengee_analogous = "It's not very effective against {}...".format(challengee_slimeoid.name)
-			
-	elif color_matchup > 0:
-		if color_matchup == ewcfg.hue_atk_complementary:
-			s2moxie += 2
-		elif color_matchup == ewcfg.hue_special_complementary:
-			s2chutzpah += 2
-		elif color_matchup == ewcfg.hue_full_complementary:
-			s2moxie += 2
-			s2chutzpah += 2
-		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
-			
-	color_matchup = 0
-	if s2hue is None:
-		if challengee_slimeoid.hue == 'rainbow':
-			color_matchup = ewcfg.hue_full_complementary
-	else:
-		color_matchup = s2hue.effectiveness.get(challengee_slimeoid.hue)
 
 	if color_matchup is None:
 		color_matchup = ewcfg.hue_neutral
@@ -2109,6 +2194,29 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			s1chutzpah += 2
 		challenger_splitcomplementary = "It's Super Effective against {}!".format(challenger_slimeoid.name)
 
+
+	color_matchup = ewcfg.hue_neutral
+
+	if s2hue is not None:
+		color_matchup = s2hue.effectiveness.get(challengee_slimeoid.hue)
+
+	if color_matchup is None:
+		color_matchup = ewcfg.hue_neutral
+
+	if color_matchup < 0:
+		s1grit += 2
+		challengee_analogous = "It's not very effective against {}...".format(challengee_slimeoid.name)
+			
+	elif color_matchup > 0:
+		if color_matchup == ewcfg.hue_atk_complementary:
+			s2moxie += 2
+		elif color_matchup == ewcfg.hue_special_complementary:
+			s2chutzpah += 2
+		elif color_matchup == ewcfg.hue_full_complementary:
+			s2moxie += 2
+			s2chutzpah += 2
+		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
+			
 
 	s1_active = False
 	in_range = False
@@ -2669,9 +2777,9 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	return result
 
 async def slimeoid_tick_loop(id_server):
-	while True:
-		await slimeoid_tick(id_server)
+	while not ewutils.TERMINATE:
 		await asyncio.sleep(ewcfg.slimeoid_tick_length)
+		await slimeoid_tick(id_server)
 
 async def slimeoid_tick(id_server):
 	data = ewutils.execute_sql_query("SELECT {id_slimeoid} FROM slimeoids WHERE {sltype} = %s AND {id_server} = %s".format(
@@ -2688,10 +2796,68 @@ async def slimeoid_tick(id_server):
 		slimeoid_data = EwSlimeoid(id_slimeoid = row[0])
 		haunt_resp = slimeoid_data.haunt()
 		resp_cont.add_response_container(haunt_resp)
-		if random.random() < 0.2:
+		if random.random() < 0.1:
 			move_resp = slimeoid_data.move()
 			resp_cont.add_response_container(move_resp)
 		slimeoid_data.persist()
 
 	await resp_cont.post()
 
+async def dress_slimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "You'll have to create a slimeoid if you want to play dress up."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	else:
+		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+		cosmetics = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		# get the cosmetics worn by the slimeoid
+		adorned_cosmetics = []
+		for item in cosmetics:
+			cos = EwItem(id_item = item.get('id_item'))
+			if cos.item_props.get('slimeoid') == 'true':
+				adorned_cosmetics.append(cos)
+
+		if item_sought != None and item_sought.get('item_type') == ewcfg.it_cosmetic:
+			cosmetic = EwItem(id_item = item_sought.get('id_item'))
+			response = "You "
+
+			# Remove hat
+			if cosmetic.item_props.get('slimeoid') == 'true':
+				response += "take the {} back from {}".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
+				cosmetic.item_props['slimeoid'] = 'false'
+			# Give hat
+			else:
+				if len(adorned_cosmetics) < slimeoid.level:
+					# Remove hat from player if adorned
+					if cosmetic.item_props.get('adorned') == 'true':
+						cosmetic.item_props['adorned'] = 'false'
+						response += "take off your {} and give it to {}.".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
+					else:
+						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
+					
+					cosmetic.item_props['slimeoid'] = 'true'
+				else:
+					response = 'Your slimeoid is too small to wear any more clothes.'
+					
+			cosmetic.persist()
+		else:
+			response = 'Adorn which cosmetic? Check your **!inventory**.'
+		
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

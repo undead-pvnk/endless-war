@@ -25,7 +25,7 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
-	topdonated = make_userdata_board(server = server, category = ewcfg.col_slime_donations, title = ewcfg.leaderboard_donated)
+	topdonated = make_userdata_board(server = server, category = ewcfg.col_poudrin_donations, title = ewcfg.leaderboard_donated)
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
@@ -56,8 +56,8 @@ def make_slimeoids_top_board(server = None):
 				board += "{} `{:_>3} | {}'s {}`\n".format(
 					ewcfg.emote_blank,
 					row[2],
-					row[0],
-					row[1]
+					row[0].replace("`",""),
+					row[1].replace("`","")
 				)
 	finally:
 		# Clean up the database handles.
@@ -218,7 +218,7 @@ def board_entry(entry, entry_type, divide_by):
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
 			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
-			entry[0]
+			entry[0].replace("`","")
 		)
 
 	elif entry_type == ewcfg.entry_type_districts:
