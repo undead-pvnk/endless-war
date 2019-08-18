@@ -525,6 +525,7 @@ cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
+cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -1087,6 +1088,9 @@ col_enemy_initialslimes = 'initialslimes'
 col_enemy_lifetime = 'lifetime'
 col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
+
+# Database column for the status of districts with locks on them
+col_locked_status = 'locked_status'
 
 # Database columns for user statistics
 col_stat_metric = 'stat_metric'
@@ -1851,10 +1855,10 @@ def wef_bat(ctn = None):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
-				user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 		else:
 			ctn.backfire = True
-			user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
 	elif aim >= (11 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
@@ -2132,6 +2136,7 @@ def wef_grenade(ctn = None):
 def wef_garrote(ctn = None):
 	ctn.slimes_damage *= 15
 
+	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
 	if aim <= (100 * ctn.miss_mod):
 		if mutation_id_sharptoother in user_mutations:
@@ -6903,7 +6908,7 @@ poi_list = [
 		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
-		coord = (67, 8),
+		coord = (64, 6),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_brawlden
@@ -8299,8 +8304,9 @@ poi_list = [
 		role="Assault Flats Beach Outskirts",
 		pvp=True,
 		is_capturable=False
-	)
+	),
 ]
+poi_list += ewdebug.bonusstages
 
 id_to_poi = {}
 coord_to_poi = {}

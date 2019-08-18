@@ -632,8 +632,7 @@ class EwEnemy:
                 self.totaldamage += change
 
         self.persist()
-
-   
+        
 
 # Debug command. Could be used for events, perhaps?
 async def summon_enemy(cmd):

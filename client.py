@@ -299,7 +299,7 @@ cmd_map = {
 	ewcfg.cmd_barter: ewfish.barter,
 	ewcfg.cmd_embiggen: ewfish.embiggen,
 
-	 #scavenging
+	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
@@ -410,6 +410,7 @@ cmd_map = {
 	# debug commands
 	ewcfg.cmd_debug1: ewdebug.debug1,
 	ewcfg.cmd_debug2: ewdebug.debug2,
+	ewcfg.cmd_debug3: ewdebug.debug3,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,
