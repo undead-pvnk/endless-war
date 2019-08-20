@@ -176,6 +176,7 @@ poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
 
+
 poi_id_apt_downtown ="aptdowntown"
 poi_id_apt_smogsburg ="aptsmogsburg"
 poi_id_apt_krakbay = "aptkrakbay"
