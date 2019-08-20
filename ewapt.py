@@ -31,7 +31,7 @@ class EwApartment:
     description = "It's drafty in here! You briefly consider moving out, but your SlimeCoin is desperate to leave your pocket."
     poi = "downtown"
     rent = 200000
-    apt_class = ewcfg.property_class_c
+    apt_class = "c"
 
     def __init__(
             self,
@@ -284,7 +284,7 @@ async def signlease(cmd):
         user_apt.rent = base_cost
         user_apt.persist()
 
-        response += "You signed the lease for an apartment in {} for {:,.2f} SlimeCoin a month.".format(poi.str_name, base_cost)
+        response = "You signed the lease for an apartment in {} for {:,.2f} SlimeCoin a month.".format(poi.str_name, base_cost)
 
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -492,7 +492,7 @@ async def store_item(cmd, dest):
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
         elif item_sought.get('item_type') == ewcfg.it_furniture and (dest != "decorate" and dest != "store"):
-            response = "The fridge and closet don't have huge spaces for furniture storage. Try !decorate or !store instead."
+            response = "The fridge and closet don't have huge spaces for furniture storage. Try !decorate or !stow instead."
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
         elif item_sought.get('item_type') != ewcfg.it_furniture and (dest == "decorate"):
             response = "Are you going to just drop items on the ground like a ruffian? Store them in your fridge or closet instead."
@@ -805,7 +805,7 @@ async def apartment (cmd):
 
 
 async def apt_help(cmd):
-    response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!store <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!take <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description."
+    response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!stow <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!snag <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description."
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
