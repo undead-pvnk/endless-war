@@ -272,7 +272,7 @@ async def signlease(cmd):
     else:
         if (user_data.apt_zone != "empty"):
             response = "The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
-
+            await toss_squatters(user_data.id_user)
         user_data.change_slimecoin(n=-base_cost*4, coinsource=ewcfg.coinsource_spending)
         user_data.apt_zone = poi.id_poi
         user_data.persist()
@@ -616,6 +616,25 @@ async def remove_item(cmd, dest):
     name_string = get_item_str_name(item_sought)
     if item_sought:
         item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+
+        if item_sought.get('item_type') == ewcfg.it_food:
+            food_items = ewitem.inventory(
+                id_user=cmd.message.author.id,
+                id_server=playermodel.id_server,
+                item_type_filter=ewcfg.it_food
+            )
+            if len(food_items) >= usermodel.get_food_capacity():
+                response = "You can't carry any more food."
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+        elif item_sought.get('item_type') == ewcfg.it_weapon:
+            wep_items = ewitem.inventory(
+                id_user=cmd.message.author.id,
+                id_server=playermodel.id_server,
+                item_type_filter=ewcfg.it_weapon
+            )
+            if len(wep_items) >= usermodel.get_weapon_capacity():
+                response = "You can't carry any more weapons."
+                return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
         if item_sought.get('item_type') == ewcfg.it_food and destination == "fridge":
             #the formula is: expire time = expire time + current time - time frozen
