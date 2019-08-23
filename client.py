@@ -17,10 +17,9 @@ import re
 import os
 import shlex
 
-import ewfarm
-
 import ewutils
 import ewcfg
+import ewfarm
 import ewcmd
 import ewcasino
 import ewfood
@@ -39,8 +38,12 @@ import ewleaderboard
 import ewcosmeticitem
 import ewslimeoid
 import ewdistrict
+import ewmutation
 import ewquadrants
 import ewtransport
+import ewsmelting
+import ewfish
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -66,6 +69,7 @@ cmd_map = {
 	ewcfg.cmd_kill: ewwep.attack,
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
+	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Get a weapon into your inventory
@@ -77,6 +81,8 @@ cmd_map = {
 
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
+	ewcfg.cmd_suicide_alt1: ewwep.suicide,
+	ewcfg.cmd_suicide_alt2: ewwep.suicide,
 
 	# Spar with an ally
 	ewcfg.cmd_spar: ewwep.spar,
@@ -91,9 +97,13 @@ cmd_map = {
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
+	ewcfg.cmd_renounce: ewjuviecmd.renounce,
 
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
+
+	# flags a vein as dangerous
+	#ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
@@ -112,9 +122,11 @@ cmd_map = {
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
 
-
 	# Show the total of negative slime in the world.
-	#ewcfg.cmd_negaslime: ewspooky.negaslime,
+	ewcfg.cmd_negaslime: ewspooky.negaslime,
+
+	# Display the progress towards the current Quarterly Goal.
+	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
@@ -122,6 +134,8 @@ cmd_map = {
 	# Ghosts can haunt enlisted players to reduce their slime score.
 	ewcfg.cmd_haunt: ewspooky.haunt,
 
+	# how ghosts leave the sewers
+	ewcfg.cmd_manifest: ewspooky.manifest,
 
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
@@ -165,6 +179,8 @@ cmd_map = {
 
 	# See what's for sale in the Food Court.
 	ewcfg.cmd_menu: ewfood.menu,
+	ewcfg.cmd_menu_alt1: ewfood.menu,
+	ewcfg.cmd_menu_alt2: ewfood.menu,
 
 	# Order refreshing food and drinks!
 	ewcfg.cmd_order: ewfood.order,
@@ -193,6 +209,8 @@ cmd_map = {
 	ewcfg.cmd_exchangerate: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt1: ewmarket.rate,
 	ewcfg.cmd_exchangerate_alt2: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt3: ewmarket.rate,
+	ewcfg.cmd_exchangerate_alt4: ewmarket.rate,
 
 	# show player's current shares in a compant
 	ewcfg.cmd_shares: ewmarket.shares,
@@ -219,12 +237,14 @@ cmd_map = {
 
 	# Release a player from their faction.
 	ewcfg.cmd_pardon: ewkingpin.pardon,
+	ewcfg.cmd_banish: ewkingpin.banish,
 
 
 	# Navigate the world map.
 	ewcfg.cmd_move: ewmap.move,
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
+	ewcfg.cmd_move_alt3: ewmap.move,
 
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
@@ -242,6 +262,10 @@ cmd_map = {
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
+	ewcfg.cmd_scout_alt1: ewmap.scout,
+
+	# Check your current POI capture progress
+	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
@@ -249,20 +273,40 @@ cmd_map = {
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
 	ewcfg.cmd_reap: ewfarm.reap,
+	ewcfg.cmd_check_farm: ewfarm.check_farm,
+	ewcfg.cmd_irrigate: ewfarm.cultivate,
+	ewcfg.cmd_weed: ewfarm.cultivate,
+	ewcfg.cmd_fertilize: ewfarm.cultivate,
+	ewcfg.cmd_pesticide: ewfarm.cultivate,
+	ewcfg.cmd_mill: ewfarm.mill,
 
-        #scavenging
-        ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+	# Fishing
+	ewcfg.cmd_cast: ewfish.cast,
+	ewcfg.cmd_reel: ewfish.reel,
+	ewcfg.cmd_appraise: ewfish.appraise,
+	ewcfg.cmd_barter: ewfish.barter,
+	ewcfg.cmd_embiggen: ewfish.embiggen,
+
+	 #scavenging
+	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
-	ewcfg.cmd_smelt: ewcosmeticitem.smelt,
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
+	ewcfg.cmd_dyecosmetic_alt3: ewcosmeticitem.dye,
+
+	#smelting
+	ewcfg.cmd_smelt: ewsmelting.smelt,
 
 	#give an item to another player
 	ewcfg.cmd_give: ewitem.give,
 
-	#throw away an item
+	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
+	ewcfg.cmd_discard_alt1: ewitem.discard,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -279,6 +323,7 @@ cmd_map = {
 	ewcfg.cmd_harvest: ewcmd.harvest,
 	ewcfg.cmd_salute: ewcmd.salute,
 	ewcfg.cmd_unsalute: ewcmd.unsalute,
+	ewcfg.cmd_hurl: ewcmd.hurl,
 	ewcfg.cmd_news: ewcmd.patchnotes,
 	ewcfg.cmd_patchnotes: ewcmd.patchnotes,
 	ewcfg.cmd_wiki: ewcmd.wiki,
@@ -289,30 +334,43 @@ cmd_map = {
 
 	# Slimeoids
 
-	ewcfg.cmd_incubateslimeoid: ewcmd.incubateslimeoid,
-	ewcfg.cmd_growbody: ewcmd.growbody,
-	ewcfg.cmd_growhead: ewcmd.growhead,
-	ewcfg.cmd_growlegs: ewcmd.growlegs,
-	ewcfg.cmd_growweapon: ewcmd.growweapon,
-	ewcfg.cmd_growarmor: ewcmd.growarmor,
-	ewcfg.cmd_growspecial: ewcmd.growspecial,
-	ewcfg.cmd_growbrain: ewcmd.growbrain,
-	ewcfg.cmd_nameslimeoid: ewcmd.nameslimeoid,
-	ewcfg.cmd_raisemoxie: ewcmd.raisemoxie,
-	ewcfg.cmd_lowermoxie: ewcmd.lowermoxie,
-	ewcfg.cmd_raisegrit: ewcmd.raisegrit,
-	ewcfg.cmd_lowergrit: ewcmd.lowergrit,
-	ewcfg.cmd_raisechutzpah: ewcmd.raisechutzpah,
-	ewcfg.cmd_lowerchutzpah: ewcmd.lowerchutzpah,
-	ewcfg.cmd_spawnslimeoid: ewcmd.spawnslimeoid,
-	ewcfg.cmd_dissolveslimeoid: ewcmd.dissolveslimeoid,
-	ewcfg.cmd_slimeoid: ewcmd.slimeoid,
-	ewcfg.cmd_instructions: ewcmd.instructions,
-	ewcfg.cmd_playfetch: ewcmd.playfetch,
-	ewcfg.cmd_petslimeoid: ewcmd.petslimeoid,
-	ewcfg.cmd_walkslimeoid: ewcmd.walkslimeoid,
-	ewcfg.cmd_observeslimeoid: ewcmd.observeslimeoid,
-	ewcfg.cmd_slimeoidbattle: ewcmd.slimeoidbattle,
+	ewcfg.cmd_incubateslimeoid: ewslimeoid.incubateslimeoid,
+	ewcfg.cmd_growbody: ewslimeoid.growbody,
+	ewcfg.cmd_growhead: ewslimeoid.growhead,
+	ewcfg.cmd_growlegs: ewslimeoid.growlegs,
+	ewcfg.cmd_growweapon: ewslimeoid.growweapon,
+	ewcfg.cmd_growarmor: ewslimeoid.growarmor,
+	ewcfg.cmd_growspecial: ewslimeoid.growspecial,
+	ewcfg.cmd_growbrain: ewslimeoid.growbrain,
+	ewcfg.cmd_nameslimeoid: ewslimeoid.nameslimeoid,
+	ewcfg.cmd_raisemoxie: ewslimeoid.raisemoxie,
+	ewcfg.cmd_lowermoxie: ewslimeoid.lowermoxie,
+	ewcfg.cmd_raisegrit: ewslimeoid.raisegrit,
+	ewcfg.cmd_lowergrit: ewslimeoid.lowergrit,
+	ewcfg.cmd_raisechutzpah: ewslimeoid.raisechutzpah,
+	ewcfg.cmd_lowerchutzpah: ewslimeoid.lowerchutzpah,
+	ewcfg.cmd_spawnslimeoid: ewslimeoid.spawnslimeoid,
+	ewcfg.cmd_dissolveslimeoid: ewslimeoid.dissolveslimeoid,
+	ewcfg.cmd_slimeoid: ewslimeoid.slimeoid,
+	ewcfg.cmd_instructions: ewslimeoid.instructions,
+	ewcfg.cmd_playfetch: ewslimeoid.playfetch,
+	ewcfg.cmd_petslimeoid: ewslimeoid.petslimeoid,
+	ewcfg.cmd_walkslimeoid: ewslimeoid.walkslimeoid,
+	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
+	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
+	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
+	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+
+	# Negaslimeoids
+
+	ewcfg.cmd_negaslimeoid: ewslimeoid.negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid_alt1: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_summonnegaslimeoid_alt2: ewspooky.summon_negaslimeoid,
+	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
+	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -326,8 +384,20 @@ cmd_map = {
 	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
+        # mutations
+        ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+        ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+
+	ewcfg.cmd_teleport: ewmap.teleport,
 	# restores poi roles to their proper names, only usable by admins
-	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames
+	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+
+	# debug commands
+	ewcfg.cmd_debug1: ewdebug.debug1,
+	ewcfg.cmd_debug2: ewdebug.debug2,
+
+	# ban a player from using commands
+	ewcfg.cmd_arrest: ewcmd.arrest,
 }
 
 debug = False
@@ -374,6 +444,8 @@ async def on_ready():
 	ewmap.map_draw()
 
 	# Flatten role names to all lowercase, no spaces.
+	fake_observer = EwUser()
+	fake_observer.life_state = ewcfg.life_state_observer
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
@@ -381,11 +453,10 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			fake_ghost = EwUser()
-			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_ghost)
-		elif poi.id_poi == ewcfg.poi_id_thesewers:
-			neighbors = ewcfg.poi_list
-			
+			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
+		#elif poi.id_poi == ewcfg.poi_id_thesewers:
+		#	neighbors = ewcfg.poi_list
+
 		if neighbors != None:
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
@@ -393,8 +464,19 @@ async def on_ready():
 		ewcfg.poi_neighbors[poi.id_poi] = set(neighbor_ids)
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
+
+	for id_poi in ewcfg.landmark_pois:
+		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
+		poi = ewcfg.id_to_poi.get(id_poi)
+		ewmap.landmarks[id_poi] = ewmap.score_map_from(
+			coord_start = poi.coord,
+			user_data = fake_observer
+		)
+
+	ewutils.logMsg("finished landmark precomputation")
+
 	try:
-		await client.change_presence(game = discord.Game(name = ("dev. by @krak " + ewcfg.version)))
+		await client.change_presence(game = discord.Game(name = "EW " + ewcfg.version))
 	except:
 		ewutils.logMsg("Failed to change_presence!")
 
@@ -406,7 +488,7 @@ async def on_ready():
 	# If no twitch client ID is available, twitch integration will be disabled.
 	# FIXME debug - temporarily disable Twitch integration.
 	if True:
-		twich_client_id = None
+		twitch_client_id = None
 		ewutils.logMsg('Twitch integration disabled.')
 	elif twitch_client_id == None or len(twitch_client_id) == 0:
 		ewutils.logMsg('No twitch_client_id file found. Twitch integration disabled.')
@@ -460,12 +542,16 @@ async def on_ready():
 				resp_cont = dist.change_ownership(new_owner = dist.controlling_faction, actor = "init", client = client)
 				dist.persist()
 				await resp_cont.post()
+
 			except:
 				ewutils.logMsg('Could not change ownership for {} to "{}".'.format(poi, dist.controlling_faction))
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
-		await ewtransport.init_transports(id_server = server.id)
+		if not debug:
+			await ewtransport.init_transports(id_server = server.id)
+		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 
 	try:
 		ewutils.logMsg('Creating message queue directory.')
@@ -489,7 +575,7 @@ async def on_ready():
 	stream_live = None
 
 	ewutils.logMsg('Beginning periodic hook loop.')
-	while True:
+	while not ewutils.TERMINATE:
 		time_now = int(time.time())
 
 		# Periodic message to log that this stuff is still running.
@@ -562,6 +648,7 @@ async def on_ready():
 							market_response = ewmarket.market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
 
+					market_data = EwMarket(id_server = server.id)
 					market_data.time_lasttick = time_now
 
 					# Advance the time and potentially change weather.
@@ -572,11 +659,47 @@ async def on_ready():
 						market_data.day += 1
 
 					if market_data.clock == 6:
-						response = ' The Slime Stock Exchange is now open for business.'
+						# Update the list of available bazaar items by clearing the current list and adding the new items
+						market_data.bazaar_wares.clear()
+
+						bazaar_foods = []
+						bazaar_cosmetics = []
+						bazaar_general_items = []
+
+						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
+							if item in ewcfg.item_names:
+								bazaar_general_items.append(item)
+
+							elif item in ewcfg.food_names:
+								bazaar_foods.append(item)
+
+							elif item in ewcfg.cosmetic_names:
+								bazaar_cosmetics.append(item)
+
+						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
+
+						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
+						# Don't add repeated foods
+						while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == market_data.bazaar_wares['food1']:
+							market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+
+						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
+						# Don't add repeated cosmetics
+						while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == market_data.bazaar_wares['cosmetic1']:
+							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
+						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
+							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+
+					market_data.persist()
+
+					if market_data.clock == 6:
+						response = ' The SlimeCorp Stock Exchange is now open for business.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
-					elif market_data.clock == 18:
-						response = ' The Slime Stock Exchange has closed for the night.'
+					elif market_data.clock == 20:
+						response = ' The SlimeCorp Stock Exchange has closed for the night.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
+
+					market_data = EwMarket(id_server = server.id)
 
 					if random.randrange(30) == 0:
 						pattern_count = len(ewcfg.weather_list)
@@ -603,6 +726,9 @@ async def on_ready():
 
 					# Decrease inebriation for all players above min (0).
 					ewutils.pushdownServerInebriation(id_server = server.id)
+
+					# Remove fish offers which have timed out
+					ewfish.kill_dead_offers(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
@@ -664,12 +790,16 @@ async def on_ready():
 async def on_member_join(member):
 	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
+	ewplayer.player_update(
+		member = member,
+		server = member.server
+	)
 
 @client.event
 async def on_message_delete(message):
 	if message != None and message.server != None and message.author.id != client.user.id and message.content.startswith(ewcfg.cmd_prefix):
 		ewutils.logMsg("deleted message from {}: {}".format(message.author.display_name, message.content))
-		#await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
+		await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, '**I SAW THAT.**'));
 
 @client.event
 async def on_message(message):
@@ -718,6 +848,12 @@ async def on_message(message):
 				user is new/has no roles (len(roles) < 2)
 		"""
 
+		#Ignore users with weird characters in their name
+		try:
+			message.author.display_name[:3].encode('utf-8').decode('ascii')
+		except UnicodeError:
+			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "We don't take kindly to moon runes around here."))
+
 		# tokenize the message. the command should be the first word.
 		try:
 			tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
@@ -764,23 +900,28 @@ async def on_message(message):
 		if len(message.author.roles) < 3:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
+		user_data = EwUser(member = message.author)
+		if user_data.arrested:
+			return
+
+		mutations = user_data.get_mutations()
 		# Scold/ignore offline players.
 		if message.author.status == discord.Status.offline:
 
-			response = "You cannot participate in the ENDLESS WAR while offline."
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+				response = "You cannot participate in the ENDLESS WAR while offline."
+    
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-			return
 
-		user_data = EwUser(member = message.author)
 		if user_data.time_lastoffline > time_now - ewcfg.time_offline:
-			
-			response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			if ewcfg.mutation_id_chameleonskin not in mutations or cmd not in ewcfg.offline_cmds:
+				response = "You are too paralyzed by ENDLESS WAR's judgemental stare to act."
 
-			return
+				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
 
 		# Check the main command map for the requested command.
 		global cmd_map
@@ -814,30 +955,74 @@ async def on_message(message):
 
 		# Creates a poudrin
 		elif debug == True and cmd == '!createpoudrin':
-			item_id = ewitem.item_create(
-				item_type = ewcfg.it_slimepoudrin,
-				id_user = message.author.id,
-				id_server = message.server.id
-			)
-
-			ewutils.logMsg('Created item: {}'.format(item_id))
-			item = EwItem(id_item = item_id)
-			item.persist()
-
-			item = EwItem(id_item = item_id)
+			for item in ewcfg.item_list:
+				if item.context == "poudrin":
+					ewitem.item_create(
+						item_type = ewcfg.it_item,
+						id_user = message.author.id,
+						id_server = message.server.id,
+						item_props = {
+							'id_item': item.id_item,
+							'context': item.context,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					ewutils.logMsg('Created item: {}'.format(item.id_item))
+					item = EwItem(id_item = item.id_item)
+					item.persist()
+			else:
+				pass
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
 		# Gives the user some slime
 		elif debug == True and cmd == '!getslime':
 			user_data = EwUser(member = message.author)
+			user_initial_level = user_data.slimelevel
 
-			user_data.change_slimes(n = 10000)
+			response = "You get 10,000 slime!"
+
+			levelup_response = user_data.change_slimes(n = 10000)
+
+			was_levelup = True if user_initial_level < user_data.slimelevel else False
+
+			if was_levelup:
+				response += " {}".format(levelup_response)
+
 			user_data.persist()
 
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "You receive 10,000 slime."))
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+		# Deletes all items in your inventory.
+		elif debug == True and cmd == '!clearinv':
+			user_data = EwUser(member = message.author)
+			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
+			response = "You destroy every single item in your inventory."
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+		elif debug == True and cmd == '!createapple':
+			item_id = ewitem.item_create(
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_type = ewcfg.it_food,
+				item_props = {
+					'id_food': "direapples",
+					'food_name': "Dire Apples",
+					'food_desc': "This sure is a illegal Dire Apple!",
+					'recover_hunger': 500,
+					'str_eat': "You chomp into this illegal Dire Apple.",
+					'time_expir': time.time() + ewcfg.farm_food_expir
+				}
+			)
+
+			ewutils.logMsg('Created item: {}'.format(item_id))
+			item = EwItem(id_item = item_id)
+			item.item_props['test'] = 'meow'
+			item.persist()
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
 
 		# FIXME debug
 		# Test item deletion
@@ -917,4 +1102,9 @@ if token == None or len(token) == 0:
 	sys.exit(0)
 
 # connect to discord and run indefinitely
-client.run(token)
+try:
+	client.run(token)
+finally:
+	ewutils.TERMINATE = True
+	ewutils.logMsg("main thread terminated.")
+

@@ -1,5 +1,6 @@
 import time
 import random
+import math
 
 # import ewcmd
 import ewitem
@@ -8,6 +9,7 @@ import ewutils
 import ewcfg
 import ewstats
 from ew import EwUser
+from ewplayer import EwPlayer
 
 class EwMarket:
 	id_server = ""
@@ -25,11 +27,17 @@ class EwMarket:
 	time_lasttick = 0
 	negaslime = 0
 	decayed_slimes = 0
+	donated_slimes = 0
+	donated_poudrins = 0
+
+	# Dict of bazaar items available for purchase
+	bazaar_wares = None
 
 	""" Load the market data for this server from the database. """
 	def __init__(self, id_server = None):
 		if(id_server != None):
 			self.id_server = id_server
+			self.bazaar_wares = {}
 
 			try:
 				conn_info = ewutils.databaseConnect()
@@ -37,14 +45,16 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
 					clock = ewcfg.col_clock,
 					weather = ewcfg.col_weather,
 					day = ewcfg.col_day,
-					decayed_slimes = ewcfg.col_decayed_slimes
+					decayed_slimes = ewcfg.col_decayed_slimes,
+					donated_slimes = ewcfg.col_donated_slimes,
+					donated_poudrins = ewcfg.col_donated_poudrins,
 				), (self.id_server, ))
 				result = cursor.fetchone();
 
@@ -57,6 +67,24 @@ class EwMarket:
 					self.weather = result[4]
 					self.day = result[5]
 					self.decayed_slimes = result[6]
+					self.donated_slimes = result[7]
+					self.donated_poudrins = result[8]
+
+					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
+						ewcfg.col_name,
+						ewcfg.col_value,
+						ewcfg.col_id_server,
+					), (
+						self.id_server,
+					))
+
+					for row in cursor:
+						# this try catch is only necessary as long as extraneous props exist in the table
+						try:
+							self.bazaar_wares[row[0]] = row[1]
+						except:
+							ewutils.logMsg("extraneous bazaar item row detected.")
+
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
@@ -75,7 +103,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -83,7 +111,9 @@ class EwMarket:
 				clock = ewcfg.col_clock,
 				weather = ewcfg.col_weather,
 				day = ewcfg.col_day,
-				decayed_slimes = ewcfg.col_decayed_slimes
+				decayed_slimes = ewcfg.col_decayed_slimes,
+				donated_slimes = ewcfg.col_donated_slimes,
+				donated_poudrins = ewcfg.col_donated_poudrins,
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -92,8 +122,22 @@ class EwMarket:
 				self.clock,
 				self.weather,
 				self.day,
-				self.decayed_slimes
+				self.decayed_slimes,
+				self.donated_slimes,
+				self.donated_poudrins,
 			))
+
+			# Write out all current item rows.
+			for name in self.bazaar_wares:
+				cursor.execute("REPLACE INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
+					ewcfg.col_id_server,
+					ewcfg.col_name,
+					ewcfg.col_value,
+				), (
+					self.id_server,
+					name,
+					self.bazaar_wares[name],
+				))
 
 			conn.commit()
 		finally:
@@ -239,17 +283,26 @@ class EwCompany:
 """ player invests slimecoin in the market """
 async def invest(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	time_now = int(time.time())
+	time_now = round(time.time())
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		return
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	if market_data.clock < 6 or market_data.clock >= 20:
+		response = ewcfg.str_exchange_closed
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
 		# Limit frequency of investments.
 		response = ewcfg.str_exchange_busy.format(action = "invest")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		# Disallow invests from ghosts.
+		response = "Your slimebroker can't confirm your identity while you're dead."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
@@ -263,13 +316,11 @@ async def invest(cmd):
 		stock = None
 
 		if cmd.tokens_count > 1:
-			for token in cmd.tokens[1:]:
-				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
-					value = ewutils.getIntToken(cmd.tokens, allow_all = True)
-					break
+			value = ewutils.getIntToken(cmd.tokens, allow_all = True)
+			
 			for token in cmd.tokens[1:]:
 				if token.lower() in ewcfg.stocks:
-					stock = token
+					stock = token.lower()
 					break
 
 
@@ -286,16 +337,16 @@ async def invest(cmd):
 				# basic exchange rate / 1000 = 1 share
 				exchange_rate = (stock.exchange_rate / 1000.0)
 
-				cost_total = int(value * 1.05)
+				cost_total = round(value * 1.05)
 
 				# gets the highest value possible where the player can still pay the fee
 				if value == user_data.slimecoin:
 					while cost_total > user_data.slimecoin:
 						value -= cost_total - value
-						cost_total = int(value * 1.05)
+						cost_total = round(value * 1.05)
 
 				# The user can only buy a whole number of shares, so adjust their cost based on the actual number of shares purchased.
-				net_shares = int(value / exchange_rate)
+				net_shares = round(value / exchange_rate)
 
 				if user_data.slimecoin < cost_total:
 					response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
@@ -307,17 +358,17 @@ async def invest(cmd):
 					response = "You don't have enough SlimeCoin to buy a share in {stock}".format(stock = ewcfg.stock_names.get(stock.id_stock))
 
 				else:
-					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.stat_total_slimecoin_invested)
+					user_data.change_slimecoin(n = -cost_total, coinsource = ewcfg.coinsource_invest)
 					shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 					shares += net_shares
 					updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = shares)
 					user_data.time_lastinvest = time_now
 
 					stock.total_shares += net_shares
-					response = "You invest {coin} SlimeCoin and receive {shares} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
+					response = "You invest {coin:,} SlimeCoin and receive {shares:,} shares in {stock}. Your slimebroker takes his nominal fee of {fee:,} SlimeCoin.".format(coin = value, shares = net_shares, stock = ewcfg.stock_names.get(stock.id_stock), fee = (cost_total - value))
 
 					user_data.persist()
-					stock.timestamp = int(time.time())
+					stock.timestamp = round(time.time())
 					stock.persist()
 
 			else:
@@ -333,11 +384,21 @@ async def invest(cmd):
 """ player withdraws slimecoin from the market """
 async def withdraw(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	time_now = int(time.time())
+	time_now = round(time.time())
+	market_data = EwMarket(id_server = cmd.message.author.server.id)
+
+	if market_data.clock < 6 or market_data.clock >= 20:
+		response = ewcfg.str_exchange_closed
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		# Disallow withdraws from ghosts.
+		response = "Your slimebroker can't confirm your identity while you're dead."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
@@ -345,124 +406,155 @@ async def withdraw(cmd):
 		stock = None
 
 		if cmd.tokens_count > 1:
-			for token in cmd.tokens[1:]:
-				if token.startswith('<@') == False and token.lower() not in ewcfg.stocks:
-					value = ewutils.getIntToken(cmd.tokens, allow_all = True)
-					break
+			value = ewutils.getIntToken(cmd.tokens[1:], allow_all = True)
+
 			for token in cmd.tokens[1:]:
 				if token.lower() in ewcfg.stocks:
-					stock = token
+					stock = token.lower()
 					break
 
-		total_shares = getUserTotalShares(id_server = user_data.id_server, stock = stock, id_user = user_data.id_user)
 
-		if value != None:
-			if value < 0:
-				value = total_shares
-			if value <= 0:
-				value = None
-
-		if value != None:
+		if stock != None:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
 
-			if value <= total_shares:
-				exchange_rate = (stock.exchange_rate / 1000.0)
+			total_shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
 
-				shares = value
-				slimecoin = int(value * exchange_rate)
+			if value != None:
+				if value < 0:
+					value = total_shares 
+				if value <= 0:
+					value = None
 
-				if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
-					# Limit frequency of withdrawals
-					response = ewcfg.str_exchange_busy.format(action = "withdraw")
+			if value != None:
+
+				if value <= total_shares:
+					exchange_rate = (stock.exchange_rate / 1000.0)
+
+					shares = value
+					slimecoin = round(value * exchange_rate)
+
+					if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+						# Limit frequency of withdrawals
+						response = ewcfg.str_exchange_busy.format(action = "withdraw")
+					else:
+						user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.coinsource_withdraw)
+						total_shares -= shares
+						user_data.time_lastinvest = time_now
+						stock.total_shares -= shares
+
+						response = "You exchange {shares:,} shares in {stock} for {coins:,} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+						user_data.persist()
+						stock.timestamp = round(time.time())
+						stock.persist()
+						updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
 				else:
-					user_data.change_slimecoin(n = slimecoin, coinsource = ewcfg.stat_total_slimecoin_withdrawn)
-					total_shares -= shares
-					user_data.time_lastinvest = time_now
-					stock.total_shares -= shares
-
-					response = "You exchange {shares} shares in {stock} for {coins} SlimeCoin.".format(coins = slimecoin, shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
-					user_data.persist()
-					stock.timestamp = int(time.time())
-					stock.persist()
-					updateUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user, shares = total_shares)
+					response = "You don't have that many shares in {stock} to exchange.".format(stock = ewcfg.stock_names.get(stock.id_stock))
 			else:
-				response = "You don't have that many shares in {stock} to exchange.".format(stock = ewcfg.stock_names.get(stock.id_stock))
+				response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
 		else:
-			response = ewcfg.str_exchange_specify.format(currency = "SlimeCoin", action = "withdraw")
+			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(names = ewcfg.stocks))
+
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
-	time_now = int(time.time())
-
-	if cmd.message.channel.name != ewcfg.channel_slimecorphq:
-		# Only allowed in SlimeCorp HQ.
-		response = "You must go to SlimeCorp HQ to donate slime."
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		return
-
 	user_data = EwUser(member = cmd.message.author)
+	market_data = EwMarket(id_server = user_data.id_server)
 
-	value = None
-	if cmd.tokens_count > 1:
-		value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	time_now = round(time.time())
 
-	if value != None:
-		if value < 0:
-			value = user_data.slimes
-		if value <= 0:
-			value = None
+	if user_data.poi == ewcfg.poi_id_slimecorphq:
+		value = None
+		if cmd.tokens_count > 1:
+			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
 
-	if value != None and value < ewcfg.slimecoin_exchangerate:
-		response = "You must volunteer to donate at least %d slime to receive compensation." % ewcfg.slimecoin_exchangerate
+		if value != None:
+			if value < 0:
+				value = user_data.slimes
+			if value <= 0:
+				value = None
 
-	elif value != None:
-		# Amount of slime invested.
-		cost_total = int(value)
-		coin_total = int(value / ewcfg.slimecoin_exchangerate)
+		if value != None and value < ewcfg.slimecoin_exchangerate:
+			response = "You must volunteer to donate at least %d slime to receive compensation." % ewcfg.slimecoin_exchangerate
 
-		if user_data.slimes < cost_total:
-			response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
-			user_data.die(cause = ewcfg.cause_donation)
-			user_data.persist()
-			# Assign the corpse role to the player. He dead.
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-			await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
+		elif value != None:
+			# Amount of slime invested.
+			cost_total = round(value)
+			coin_total = round(value / ewcfg.slimecoin_exchangerate)
+
+			if user_data.slimes < cost_total:
+				response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
+				market_data.donated_slimes += user_data.slimes
+				market_data.persist()
+				user_data.die(cause = ewcfg.cause_donation)
+				user_data.persist()
+				# Assign the corpse role to the player. He dead.
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+				await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
+			else:
+				# Do the transfer if the player can afford it.
+				market_data.donated_slimes += cost_total
+				market_data.persist()
+				user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
+				user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
+				user_data.slime_donations += cost_total
+
+				# Persist changes
+				user_data.persist()
+
+				response = "You stumble out of a Slimecorp HQ vault room in a stupor. You don't remember what happened in there, but your body hurts and you've got {slimecoin:,} shiny new SlimeCoin in your pocket.".format(slimecoin = coin_total)
+
 		else:
-			# Do the transfer if the player can afford it.
-			user_data.change_slimes(n = -cost_total, source = ewcfg.source_spending)
-			user_data.change_slimecoin(n = coin_total, coinsource = ewcfg.coinsource_donation)
-			user_data.time_lastinvest = time_now
+			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
-			# Persist changes
+	elif user_data.poi == ewcfg.poi_id_slimeoidlab:
+		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+
+		if poudrins == None:
+			response = "You have to own a poudrin in order to donate a poudrin. Duh."
+
+		else:
+			ewitem.item_delete(id_item = poudrins.get('id_item'))  # Remove Poudrins
+			market_data.donated_poudrins += 1
+			market_data.persist()
+			user_data.poudrin_donations += 1
 			user_data.persist()
 
-			response = "You stumble out of a Slimecorp HQ vault room in a stupor. You don't remember what happened in there, but your body hurts and you've got {slimecoin:,} shiny new SlimeCoin in your pocket.".format(slimecoin = coin_total)
+			response = "You hand off one of your hard-earned poudrins to the front desk receptionist, who is all too happy to collect it. Pretty uneventful, but at the very least you’re glad donating isn’t physically painful anymore."
 
 	else:
-		response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
+		response = "To donate slime, go to the SlimeCorp HQ in Downtown. To donate poudrins, go to the SlimeCorp Lab in Brawlden."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ transfer slimecoin between players """
 async def xfer(cmd):
-	time_now = int(time.time())
+	time_now = round(time.time())
+	user_data = EwUser(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "transfer")
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		return
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count != 1:
 		# Must have exactly one target to send to.
 		response = "Mention the player you want to send SlimeCoin to."
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		return
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.time_lastinvest + ewcfg.cd_invest > time_now:
+		# Limit frequency of transfers
+		response = ewcfg.str_exchange_busy.format(action = "transfer slimecoin")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		# Disallow transfers from ghosts.
+		response = "Your slimebroker can't confirm your identity while you're dead."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	member = cmd.mentions[0]
 	target_data = EwUser(member = member)
@@ -470,10 +562,8 @@ async def xfer(cmd):
 	if target_data.life_state == ewcfg.life_state_kingpin:
 		# Disallow transfers to RF and CK kingpins.
 		response = "You can't transfer SlimeCoin to a known criminal warlord."
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		return
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
 	if cmd.message.author.id == member.id:
@@ -498,7 +588,7 @@ async def xfer(cmd):
 
 	if value != None:
 		# Cost including the 5% transfer fee.
-		cost_total = int(value * 1.05)
+		cost_total = round(value * 1.05)
 
 		if user_data.slimecoin < cost_total:
 			response = "You don't have enough SlimeCoin. ({:,}/{:,})".format(user_data.slimecoin, cost_total)
@@ -523,6 +613,7 @@ async def xfer(cmd):
 """ show the current market exchange rate """
 async def rate(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	response = ""
 
 	if user_data.poi != ewcfg.poi_id_stockexchange:
 		# Only allowed in the stock exchange.
@@ -530,14 +621,19 @@ async def rate(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		stock = None
+		stock = ""
 
 		if cmd.tokens_count > 0:
-			stock = ewutils.formatNiceList(cmd.tokens[1:])
+			stock = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		if stock in ewcfg.stocks:
 			stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-			response = "The current value of {stock} stocks is {cred} SlimeCoin per Share.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = int(stock.exchange_rate / 1000.0))
+			response = "The current value of {stock} stocks is {cred:,} SlimeCoin per 1000 Shares.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = stock.exchange_rate)
+		elif stock == "":
+			for stock in ewcfg.stocks:
+				stock = EwStock(id_server = cmd.message.server.id, stock = stock)
+				response += "\nThe current value of {stock} stocks is {cred:,} SlimeCoin per 1000 Shares.".format(stock = ewcfg.stock_names.get(stock.id_stock), cred = stock.exchange_rate)
+
 		else:
 			response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
@@ -547,17 +643,20 @@ async def rate(cmd):
 """ show player's shares in a stock """
 async def shares(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	stock = None
+	stock = ""
+	response = ""
 
 	if cmd.tokens_count > 0:
-		stock = ewutils.formatNiceList(cmd.tokens[1:])
+		stock = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	if stock in ewcfg.stocks:
-		stock = EwStock(id_server = cmd.message.server.id, stock = stock)
-		shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
-		shares_value = int(shares * (stock.exchange_rate / 1000.0))
+		response = get_user_shares_str(id_server = user_data.id_server, id_user = user_data.id_user, stock = stock)
 
-		response = "You have {shares} shares in {stock}, currently valued at {coin} SlimeCoin.".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock), coin = shares_value)
+	elif stock == "":
+		for stock in ewcfg.stocks:
+			response += "\n"
+			response += get_user_shares_str(id_server = user_data.id_server, id_user = user_data.id_user, stock = stock)
+
 	else:
 		response = "That's not a valid stock name, please use a proper one, you cunt: {}".format(ewutils.formatNiceList(ewcfg.stocks))
 
@@ -613,7 +712,7 @@ def market_tick(stock_data, id_server):
 
 	# Add profit bonus.
 	profits = company_data.recent_profits
-	profit_bonus = profits / 100 - 1 * ((latest_stock.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2)
+	profit_bonus = profits / 100 #- 1 * ((latest_stock.exchange_rate / ewcfg.default_stock_exchange_rate) ** 0.2)
 	profit_bonus = min(50, max(profit_bonus, -50))
 	market_rate += (profit_bonus / 2)
 
@@ -627,7 +726,7 @@ def market_tick(stock_data, id_server):
 		elif coin_rate < -0.5:
 			coin_rate = -0.5
 
-		coin_rate = int((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
+		coin_rate = round((coin_rate * ewcfg.max_iw_swing) if coin_rate > 0 else (
 					coin_rate * 2 * ewcfg.max_iw_swing))
 
 	market_rate += coin_rate
@@ -667,20 +766,59 @@ def market_tick(stock_data, id_server):
 	#percentage_abs = percentage * -1
 
 
-	exchange_rate_increase = int((market_rate - ewcfg.default_stock_market_rate) * ewcfg.default_stock_exchange_rate / ewcfg.default_stock_market_rate)
+	exchange_rate_increase = round((market_rate - ewcfg.default_stock_market_rate) * min(stock_data.exchange_rate, ewcfg.default_stock_exchange_rate) / ewcfg.default_stock_market_rate)
 
 	percentage = exchange_rate_increase / stock_data.exchange_rate
 	percentage_abs = percentage * -1
 
 
 	# negative exchange rate causes problems, duh
-	exchange_rate_increase = max(exchange_rate_increase, -stock_data.exchange_rate)
+	#exchange_rate_increase = max(exchange_rate_increase, -stock_data.exchange_rate + 1000)
 
-	points = abs(exchange_rate_increase / 1000)
+	points = abs(exchange_rate_increase / 1000.0)
 
 	stock_data.exchange_rate += exchange_rate_increase
 	stock_data.market_rate = market_rate
 
+
+	# Give some indication of how the market is doing to the users.
+	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ' ' + ewcfg.stock_names.get(stock_data.id_stock) + ' '
+
+	if stock_data.exchange_rate < 1000:
+		response += 'has gone bankrupt!'
+		if stock_data.total_shares > 0:
+			majority_shareholder = get_majority_shareholder(stock = stock_data.id_stock, id_server = id_server)
+			player_data = EwPlayer(id_user = majority_shareholder)
+			shares = getUserTotalShares(stock = stock_data.id_stock, id_user = majority_shareholder, id_server = stock_data.id_server)
+			shares_lost = int(shares * 0.9)
+			stock_data.total_shares -= shares_lost
+			updateUserTotalShares(stock = stock_data.id_stock, id_user = majority_shareholder, id_server = stock_data.id_server, shares = shares - shares_lost)
+			response += ' The majority shareholder {} is held responsible. SlimeCorp seizes 90% of their shares in the company to pay for the damages.'.format(player_data.display_name)
+			stock_data.exchange_rate = 10000
+		else:
+			response += ' SlimeCorp pumps several billion slimecoin into bailing the company out and a new image campaign.'
+			stock_data.exchange_rate = ewcfg.default_stock_exchange_rate
+			stock_data.market_rate = ewcfg.default_stock_market_rate
+	else:
+		# Market is up ...
+		if market_rate > 1200:
+			response += 'is skyrocketing!!! Slime stock is up {p:.3g} points!!!'.format(p = points)
+		elif market_rate > 1100:
+			response += 'is booming! Slime stock is up {p:.3g} points!'.format(p = points)
+		elif market_rate > 1000:
+			response += 'is doing well. Slime stock is up {p:.3g} points.'.format(p = points)
+		# Market is down ...
+		elif market_rate < 800:
+			response += 'is plummeting!!! Slime stock is down {p:.3g} points!!!'.format(p = points)
+		elif market_rate < 900:
+			response += 'is stagnating! Slime stock is down {p:.3g} points!'.format(p = points)
+		elif market_rate < 1000:
+			response += 'is a bit sluggish. Slime stock is down {p:.3g} points.'.format(p = points)
+		# Perfectly balanced
+		else:
+			response += 'is holding steady. No change in slime stock value.'
+
+	response += ' ' + ewcfg.stock_emotes.get(stock_data.id_stock)
 
 	stock_data.persist()
 
@@ -688,28 +826,6 @@ def market_tick(stock_data, id_server):
 	company_data.recent_profits = 0
 	company_data.persist()
 
-	# Give some indication of how the market is doing to the users.
-	response = ewcfg.stock_emotes.get(stock_data.id_stock) + ' ' + ewcfg.stock_names.get(stock_data.id_stock) + ' '
-
-	# Market is up ...
-	if market_rate > 1200:
-		response += 'is skyrocketing!!! Slime stock is up {p:.3g} points!!!'.format(p = points)
-	elif market_rate > 1100:
-		response += 'is booming! Slime stock is up {p:.3g} points!'.format(p = points)
-	elif market_rate > 1000:
-		response += 'is doing well. Slime stock is up {p:.3g} points.'.format(p = points)
-	# Market is down ...
-	elif market_rate < 800:
-		response += 'is plummeting!!! Slime stock is down {p:.3g} points!!!'.format(p = points)
-	elif market_rate < 900:
-		response += 'is stagnating! Slime stock is down {p:.3g} points!'.format(p = points)
-	elif market_rate < 1000:
-		response += 'is a bit sluggish. Slime stock is down {p:.3g} points.'.format(p = points)
-	# Perfectly balanced
-	else:
-		response += 'is holding steady. No change in slime stock value.'
-
-	response += ' ' + ewcfg.stock_emotes.get(stock_data.id_stock)
 
 	# Send the announcement.
 	return response
@@ -722,7 +838,7 @@ def getRecentTotalShares(id_server=None, stock=None, count=2):
 
 		try:
 
-			count = int(count)
+			count = round(count)
 			data = ewutils.execute_sql_query("SELECT {total_shares} FROM stocks WHERE {id_server} = %s AND {stock} = %s ORDER BY {timestamp} DESC LIMIT %s".format(
 				stock = ewcfg.col_stock,
 				total_shares = ewcfg.col_total_shares,
@@ -758,7 +874,7 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 
 		try:
 
-			data = ewutils.execute_sql_query("SELECT {shares} FROM {shares} WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {shares} FROM shares WHERE {id_server} = %s AND {id_user} = %s AND {stock} = %s".format(
 				stock = ewcfg.col_stock,
 				shares = ewcfg.col_shares,
 				id_server = ewcfg.col_id_server,
@@ -771,6 +887,7 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 
 			for row in data:
 				values = row[0]
+
 		except:
 			pass
 		finally:
@@ -779,8 +896,6 @@ def getUserTotalShares(id_server=None, stock=None, id_user=None):
 """" updates the total number of shares a player has in a certain stock """
 def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 	if id_server != None and stock != None and id_user != None:
-
-		values = 0
 
 		try:
 
@@ -798,4 +913,83 @@ def updateUserTotalShares(id_server=None, stock=None, id_user=None, shares=0):
 		except:
 			pass
 
+""" used for !shares """
+def get_user_shares_str(id_server = None, stock = None, id_user = None):
+	response = ""
+	if id_server != None and stock != None and id_user != None:
+		user_data = EwUser(id_server = id_server, id_user = id_user)
+		stock = EwStock(id_server = id_server, stock = stock)
+		shares = getUserTotalShares(id_server = user_data.id_server, stock = stock.id_stock, id_user = user_data.id_user)
+		shares_value = round(shares * (stock.exchange_rate / 1000.0))
 
+		response = "You have {shares:,} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
+		if user_data.poi == ewcfg.poi_id_stockexchange:
+			response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
+		else:
+			response += "."
+		
+	return response
+
+""" get user ID of player with most shares in a stock """
+def get_majority_shareholder(id_server = None, stock = None):
+	result = None
+	if id_server is not None and stock is not None:
+		try:
+
+			data = ewutils.execute_sql_query("SELECT {id_user}, {shares} FROM shares WHERE {id_server} = %s AND {stock} = %s ORDER BY {shares} DESC LIMIT 1".format(
+				stock = ewcfg.col_stock,
+				shares = ewcfg.col_shares,
+				id_server = ewcfg.col_id_server,
+				id_user = ewcfg.col_id_user
+			), (
+				id_server,
+				stock,
+			))
+
+			if len(data) > 0:
+				if data[0][1] > 0:
+					result = data[0][0]
+
+		except:
+			pass
+		finally:
+			return result
+
+async def quarterlyreport(cmd):
+	progress = 0
+	objective = 1000
+	goal = "POUDRINS DONATED"
+	completion = False
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		# Display the progress towards the current Quarterly Goal, whatever that may be.
+		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
+			metric = ewcfg.col_donated_poudrins
+		), (cmd.message.server.id, ))
+
+		result = cursor.fetchone();
+
+		if result != None:
+			progress = result[0]
+
+			if progress == None:
+				progress = 0
+
+			if progress >= objective:
+				progress = objective
+				completion = True
+
+	finally:
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	response = "{:,} / {:,} {}.".format(progress, objective, goal)
+
+	if completion == True:
+		response += " THE QUARTERLY GOAL HAS BEEN REACHED. STAY TUNED FOR FURTHER ANNOUNCEMENTS."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

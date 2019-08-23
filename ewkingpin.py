@@ -12,7 +12,6 @@ from ew import EwUser
 	Returns enlisted players to juvenile.
 """
 async def pardon(cmd):
-	response = ""
 	user_data = EwUser(member = cmd.message.author)
 
 	if user_data.life_state != ewcfg.life_state_kingpin:
@@ -28,9 +27,11 @@ async def pardon(cmd):
 			response = "Who?"
 		else:
 			member_data = EwUser(member = member)
+			member_data.unban(faction = user_data.faction)
+			member_data.arrested = False
 
 			if member_data.faction == "":
-				response = "{} isn't enlisted.".format(member.display_name)
+				response = "{} has been allowed to join the {} again.".format(member.display_name, user_data.faction)
 			else:
 				faction_old = member_data.faction
 				member_data.faction = ""
@@ -38,9 +39,38 @@ async def pardon(cmd):
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 
-				member_data.persist()
 				response = "{} has been released from his association with the {}.".format(member.display_name, faction_old)
-				await ewrolemgr.updateRoles(client = cmd.client, member = member)
+			member_data.persist()
+			await ewrolemgr.updateRoles(client = cmd.client, member = member)
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def banish(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.life_state != ewcfg.life_state_kingpin:
+		response = "Only the Rowdy Fucker {} and the Cop Killer {} can do that.".format(ewcfg.emote_rowdyfucker, ewcfg.emote_copkiller)
+	else:
+		member = None
+		if cmd.mentions_count == 1:
+			member = cmd.mentions[0]
+			if member.id == cmd.message.author.id:
+				member = None
+
+		if member == None:
+			response = "Who?"
+		else:
+			member_data = EwUser(member = member)
+			member_data.ban(faction = user_data.faction)
+
+			if member_data.faction == user_data.faction:
+				member_data.faction = ""
+				if member_data.life_state == ewcfg.life_state_enlisted:
+					member_data.life_state = ewcfg.life_state_juvenile
+
+			member_data.persist()
+			response = "{} has been banned from enlisting in the {}".format(member.display_name, user_data.faction)
+			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

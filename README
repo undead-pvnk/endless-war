@@ -20,7 +20,7 @@ CREATE TABLE users (
 	time_lastinvest int NOT NULL DEFAULT '0',
 	slimelevel int NOT NULL DEFAULT '1',
 	hunger int NOT NULL DEFAULT '0',
-	weapon varchar(64) NOT NULL DEFAULT '',
+	weapon int NOT NULL DEFAULT '-1',
 	trauma varchar(64) NOT NULL DEFAULT '',
 	totaldamage bigint NOT NULL DEFAULT '0',
 	weaponskill int NOT NULL DEFAULT '0',
@@ -39,6 +39,10 @@ CREATE TABLE users (
 	time_lastenter int NOT NULL DEFAULT '0',
 	time_lastoffline int NOT NULL DEFAULT '0',
 	time_joined int NOT NULL DEFAULT '0',
+	poi_death varchar(64) NOT NULL default '',
+	donated_slimes bigint NOT NULL DEFAULT '0',
+	donated_poudrins bigint NOT NULL DEFAULT '0',
+	arrested int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -61,7 +65,8 @@ CREATE TABLE markets (
 	weather varchar(32) NOT NULL DEFAULT 'sunny',
 	day int NOT NULL DEFAULT '726',
 	decayed_slimes bigint NOT NULL DEFAULT '0',
-
+	donated_slimes bigint NOT NULL DEFAULT '0',
+	donated_poudrins bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server)
 );
@@ -152,6 +157,11 @@ CREATE TABLE farms (
 	id_user varchar(128) NOT NULL,
 	farm varchar(32) NOT NULL,
 	time_lastsow int NOT NULL DEFAULT '0',
+	phase int NOT NULL DEFAULT '0',
+	time_lastphase int NOT NULL DEFAULT '0',
+	slimes_onreap int NOT NULL DEFAULT '0',
+	action_required int NOT NULL DEFAULT '0',
+	crop varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, farm)
 );
@@ -176,6 +186,8 @@ CREATE TABLE slimeoids (
 	level int NOT NULL DEFAULT '0',
 	time_defeated int NOT NULL DEFAULT '0',
 	clout int NOT NULL DEFAULT '0',
+	hue varchar(32) NOT NULL DEFAULT '',
+	poi varchar(64) NOT NULL DEFAULT '',
 	
 	PRIMARY KEY (id_slimeoid)
 );
@@ -200,6 +212,16 @@ CREATE TABLE roles (
 	PRIMARY KEY (id_server, name)
 );
 
+CREATE TABLE mutations (
+	mutation_counter int NOT NULL AUTO_INCREMENT,
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	mutation varchar(32) NOT NULL,
+	data varchar(64) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (mutation_counter)
+);
+
 CREATE TABLE quadrants (
 	id_server varchar(128) NOT NULL,
 	id_user varchar(128) NOT NULL,
@@ -220,4 +242,30 @@ CREATE TABLE transports (
 	current_stop varchar(64) NOT NULL DEFAULT '',
 
 	PRIMARY KEY(id_server, poi)
+);
+
+CREATE TABLE bans (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	faction varchar(32) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, id_user, faction)
+);
+
+CREATE TABLE bazaar_wares (
+	id_server varchar(128) NOT NULL,
+	name varchar(64) NOT NULL,
+	value varchar(128) NOT NULL,
+	
+	PRIMARY KEY (id_server, name)
+);
+
+CREATE TABLE offers (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	offer_give int NOT NULL,
+	offer_receive varchar(32) NOT NULL DEFAULT '',
+	time_sinceoffer int NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_server, id_user, offer_give)
 );

@@ -12,71 +12,51 @@ from ewitem import EwItem
 	Cosmetic item model object
 """
 class EwCosmeticItem:
-	# The name of the cosmetic item
-	name = ""
+	item_type = "cosmetic"
+
+	# The proper name of the cosmetic item
+	id_cosmetic = ""
+
+	# The string name of the cosmetic item
+	str_name = ""
 
 	# The text displayed when you look at it
-	description = ""
+	str_desc = ""
 
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
 
+	# The ingredients necessary to make this item via it's acquisition method
+	ingredients = ""
+
+	# Cost in SlimeCoin to buy this item.
+	price = 0
+
+	# Names of the vendors selling this item.
+	vendors = []
+
 	def __init__(
 		self,
-		name = "",
-		description = "",
-		rarity = ""
+		id_cosmetic = "",
+		str_name = "",
+		str_desc = "",
+		rarity = "",
+		ingredients = "",
+		acquisition = "",
+		price = 0,
+		vendors = [],
+
 	):
-		self.name = name
-		self.description = description
+		self.item_type = ewcfg.it_cosmetic
+
+		self.id_cosmetic = id_cosmetic
+		self.str_name = str_name
+		self.str_desc = str_desc
 		self.rarity = rarity
-
-"""
-	Smelt command
-"""
-async def smelt(cmd):
-	poudrins = ewitem.inventory(
-		id_user = cmd.message.author.id,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_slimepoudrin
-	)
-
-	if len(poudrins) < 2:
-		response = "You don't have enough poudrins to smelt."
-	else:
-		for i in range(2):
-			ewitem.item_delete(id_item = poudrins[i].get('id_item'))
-
-		patrician_rarity = 20
-		patrician_smelted = random.randint(1, patrician_rarity)
-		patrician = False
-
-		if patrician_smelted == 1:
-			patrician = True
-
-		items = []
-
-		for cosmetic in ewcfg.cosmetic_items_list:
-			if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
-				items.append(cosmetic)
-			elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
-				items.append(cosmetic)
-
-		item = items[random.randint(0, len(items) - 1)]
-
-		ewitem.item_create(
-			item_type = ewcfg.it_cosmetic,
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_props = {
-				'cosmetic_name': item.name,
-				'cosmetic_desc': item.description,
-				'rarity': item.rarity,
-				'adorned': 'false'
-			}
-		)
-		response = "You smelted a {item_name}!".format(item_name = item.name)
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		self.ingredients = ingredients
+		self.acquisition = acquisition
+		self.price = price
+		self.vendors = vendors
 
 async def adorn(cmd):
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -104,7 +84,7 @@ async def adorn(cmd):
 		if item_sought != None:
 			id_item = item_sought.get('id_item')
 			item_def = item_sought.get('item_def')
-			name = item_sought.get('name')
+			name = item_sought.get('id_cosmetic')
 			item_type = item_sought.get('item_type')
 
 			adorned_items = 0
@@ -120,18 +100,75 @@ async def adorn(cmd):
 				item.item_props['adorned'] = 'false'
 				response = "You successfully dedorn your " + item.item_props['cosmetic_name'] + "."
 			else:
-				if adorned_items >= math.ceil(user_data.slimelevel / ewcfg.max_adorn_mod):
+				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
 					response = "You can't adorn anymore cosmetics."
 				else:
 					item.item_props['adorned'] = 'true'
-					response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
+
+					if item.item_props.get('slimeoid') == 'true':
+						item.item_props['slimeoid'] = 'false'
+						response = "You take your {} from your slimeoid and successfully adorn it.".format(item.item_props.get('cosmetic_name'))
+
+					else:
+						response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
 
 			item.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
-			cmd.message.author,
-			'Adorn which cosmetic? Check your **!inventory**.'
-		))
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
 
+async def dye(cmd):
+	first_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+	second_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
+
+	try:
+		first_id_int = int(first_id)
+		second_id_int = int(second_id)
+	except:
+		first_id_int = None
+		second_id_int = None
+
+	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
+		response = "You don't have one."
+
+		items = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+		)
+
+		cosmetic = None
+		dye = None
+		for item in items:
+			if item.get('id_item') in [first_id_int, second_id_int] or first_id in ewutils.flattenTokenListToString(item.get('name')) or second_id in ewutils.flattenTokenListToString(item.get('name')):
+				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
+					cosmetic = item
+
+				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
+					dye = item	
+
+				if cosmetic != None and dye != None:
+					break
+
+		if cosmetic != None:
+			if dye != None:
+				user_data = EwUser(member = cmd.message.author)
+
+				cosmetic_item = EwItem(id_item=cosmetic.get("id_item"))
+				dye_item = EwItem(id_item=dye.get("id_item"))
+
+				hue = ewcfg.hue_map.get(dye_item.item_props.get('id_item'))
+
+				response = "You dye your {} in {} paint!".format(cosmetic_item.item_props.get('cosmetic_name'), hue.str_name)
+				cosmetic_item.item_props['hue'] = hue.id_hue
+
+				cosmetic_item.persist()
+				ewitem.item_delete(id_item=dye.get('id_item'))
+			else:
+				response = 'Use which dye? Check your **!inventory**.'
+		else:
+			response = 'Dye which cosmetic? Check your **!inventory**.'
+		
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You need to specify which cosmetic you want to paint and which dye you want to use! Check your **!inventory**.'))
