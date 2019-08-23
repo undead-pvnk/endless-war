@@ -4934,6 +4934,16 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The lamp is broken.",
 		furniture_place_desc = "You try all sorts of light bulbs, but the lamp is just broken. You defeatedly set it up where it won't attract attention."),
+EwFurniture(
+		id_furniture = "laptopcomputer",
+		str_name = "laptop computer",
+		str_desc = "It's a laptop from 2006, freshly installed with Windows XP. This thing hardly works, but when it's plugged into the wall you can still run Discord.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A laptop sits closed on the floor.",
+		furniture_place_desc = "You place the laptop and plug it in."),
 
 
 ]

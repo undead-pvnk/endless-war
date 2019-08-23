@@ -11,6 +11,7 @@ import ewmap
 import ewrolemgr
 import ewmarket
 import ewitem
+import ewfarm
 import ewsmelting
 import ewcosmeticitem
 from ew import EwUser
@@ -1097,10 +1098,6 @@ async def aptCommands(cmd):
     cmd.message.server = server
     if cmd_text == ewcfg.cmd_use:
         return await ewitem.item_use(cmd=cmd)
-    elif cmd_text == ewcfg.cmd_thrash:
-        return await ewcmd.thrash(cmd=cmd)
-    elif cmd_text == ewcfg.cmd_dab:
-        return await ewcmd.dab(cmd=cmd)
     elif cmd_text == ewcfg.cmd_halt or cmd_text == ewcfg.cmd_halt_alt1:
         return await ewmap.halt(cmd=cmd)
     elif cmd_text == ewcfg.cmd_howl or cmd_text == ewcfg.cmd_howl_alt1:
@@ -1121,11 +1118,19 @@ async def aptCommands(cmd):
         return await ewslimeoid.dress_slimeoid(cmd=cmd)
     elif cmd_text == ewcfg.cmd_annoint or cmd_text == ewcfg.cmd_annoint_alt1:
         return await ewwep.annoint(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_petslimeoid:
+        return await ewslimeoid.petslimeoid(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_playfetch:
+        return await ewslimeoid.playfetch(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_observeslimeoid:
+        return await ewslimeoid.observeslimeoid(cmd=cmd)
+    elif cmd_text == ewcfg.cmd_walkslimeoid:
+        return await ewslimeoid.walkslimeoid(cmd=cmd)
     elif cmd_text == ewcfg.cmd_wiki:
         return await ewcmd.wiki(cmd=cmd)
     elif cmd_text == ewcfg.cmd_unsalute:
         return await ewcmd.unsalute(cmd=cmd)
-    elif cmd_text == ewcfg.cmd_time:
+    elif cmd_text == ewcfg.cmd_time or cmd_text == ewcfg.cmd_clock or cmd_text == ewcfg.cmd_weather:
         return await ewcmd.weather(cmd=cmd)
     elif cmd_text == ewcfg.cmd_add_quadrant:
         return await ewquadrants.add_quadrant(cmd=cmd)
@@ -1143,7 +1148,7 @@ async def aptCommands(cmd):
         return await ewcmd.hurl(cmd=cmd)
     elif ewcfg.cmd_map == cmd_text:
         return await ewcmd.map(cmd=cmd)
-    elif ewcfg.cmd_news == cmd_text:
+    elif ewcfg.cmd_news == cmd_text or ewcfg.cmd_patchnotes == cmd_text:
         return await ewcmd.patchnotes(cmd=cmd)
     elif ewcfg.cmd_petslimeoid == cmd_text:
         return await ewslimeoid.petslimeoid(cmd=cmd)
@@ -1163,6 +1168,8 @@ async def aptCommands(cmd):
         return await ewquadrants.get_quadrants(cmd=cmd)
     elif ewcfg.cmd_harvest == cmd_text:
         return await ewcmd.harvest(cmd=cmd)
+    elif ewcfg.cmd_check_farm == cmd_text:
+        return await ewfarm.check_farm(cmd=cmd)
     #elif cmd_text == "~bazaarupdate":
      #   return await bazaar_update(cmd)
     elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
