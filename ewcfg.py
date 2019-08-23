@@ -462,6 +462,7 @@ cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_move_alt3 = cmd_prefix + 'sny'
+cmd_move_alt4 = cmd_prefix + 'descend'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
 cmd_embark = cmd_prefix + 'embark'
@@ -474,6 +475,7 @@ cmd_inspect_alt1 = cmd_prefix + 'examine'
 cmd_look = cmd_prefix + 'look'
 cmd_scout = cmd_prefix + 'scout'
 cmd_scout_alt1 = cmd_prefix + 'sniff'
+cmd_scrutinize= cmd_prefix + 'scrutinize'
 cmd_map = cmd_prefix + 'map'
 cmd_wiki = cmd_prefix + 'wiki'
 cmd_booru = cmd_prefix + 'booru'
@@ -526,6 +528,10 @@ cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
+cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
+debug5 = ewdebug.debug5
+cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
+cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -579,6 +585,7 @@ offline_cmds = [
 	cmd_move_alt1,
 	cmd_move_alt2,
 	cmd_move_alt3,
+	cmd_move_alt4,
 	cmd_halt,
 	cmd_halt_alt1,
 	cmd_embark,
@@ -587,7 +594,8 @@ offline_cmds = [
 	cmd_disembark_alt1,
 	cmd_look,
 	cmd_scout,
-	cmd_scout_alt1
+	cmd_scout_alt1,
+	cmd_scrutinize
 ]
 		
 # Slime costs/values
@@ -1044,6 +1052,7 @@ col_time_joined = 'time_joined'
 col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
+col_caught_fish = 'caught_fish'
 col_arrested = 'arrested'
 
 #Database columns for bartering
@@ -1692,6 +1701,9 @@ item_list = [
 		context = 60,
 	),
 ]
+item_list += ewdebug.debugitem_set
+
+debugitem = ewdebug.debugitem
 
 # A map of id_item to EwGeneralItem objects.
 item_map = {}
@@ -2772,6 +2784,29 @@ def atf_tusks(ctn = None):
 	if aim >= 9:
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+		
+def atf_molotovbreath(ctn = None):
+	# Reskin of molotov
+	
+	dmg = ctn.slimes_damage
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
+	ctn.slimes_spent *= 2
+
+	aim = (random.randrange(10) + 1)
+
+	ctn.bystander_damage = dmg * 0.5
+
+	if aim <= 2:
+		ctn.backfire = True
+		ctn.user_data.change_slimes(n=-dmg, source=source_self_damage)
+
+	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
+		ctn.miss = True
+
+	else:
+		if aim >= (10 - (10 * ctn.crit_mod)):
+			ctn.crit = True
+			ctn.slimes_damage *= 2
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -2825,11 +2860,23 @@ enemy_attack_type_list = [
 		str_miss = "**{name_enemy} missed!** Their tusks strike the ground, causing it to quake underneath!",
 		str_trauma_self = "You have two large scarred-over holes on your upper body.",
 		str_trauma = "They have two large scarred-over holes on their upper body.",
-		str_kill = "**SHINK!!** {name_enemy}'s tusks ram right into your chest, impaling you right through your back! Moments later, you're thrusted out on to the ground, left to bleed profusely. {emote_skull}",
-		str_killdescriptor = "bashed",
+		str_kill = "**SHINK!!** {name_enemy}'s tusk rams right into your chest, impaling you right through your back! Moments later, you're thrusted out on to the ground, left to bleed profusely. {emote_skull}",
+		str_killdescriptor = "pierced",
 		str_damage = "{name_target} has tusks slammed into their {hitzone}!!",
 		fn_effect = atf_tusks
-	)
+	),
+	EwAttackType( # 6
+		id_type = "molotov breath",
+		str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
+		str_crit = "**Critical hit!!** {name_target} is char grilled by {name_enemy}'s barrage of molotov breath!",
+		str_miss = "**{name_enemy} missed!** Their shot hits the ground instead, causing embers to shoot out in all directions!",
+		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
+		str_kill = "In a last ditch effort, {name_enemy} breathes in deeply for an extra powerful shot of fire. Before you know it, what's left of your body is nothing more than the tip of a matchstick, fully blackened and yet still burning. {emote_skull}",
+		str_killdescriptor = "exploded",
+		str_damage = "{name_target} is hit by a blast of fire on their {hitzone}!!",
+		fn_effect = atf_molotovbreath
+	),
 ]
 
 # A map of id_type to EwAttackType objects.
@@ -6905,7 +6952,7 @@ poi_list = [
 			"slimeoid"
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
-		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
+		str_desc = "Huh, this is weird.\n\nUsually, this lobby is full of researchers scurrying about every which way, with some unpaid intern roleplaying receptionist. But… everything is quiet and dark, not a soul in sight. Where’d everybody go?\n\nIt looks like the elevator is working, at least. Alas, it requires you to enter an identification number, presumably to confirm you really work for SlimeCorp and aren’t a random juvenile who teleported into this place while it was closed. You’re pretty sure you remember getting your hands on an identification card a long, long time ago. Wonder if it’ll work?\n\n*Use the !verify command followed by the correct identification number to activate the elevator.*",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
 		coord = (64, 6),
@@ -8306,7 +8353,13 @@ poi_list = [
 		is_capturable=False
 	),
 ]
-poi_list += ewdebug.bonusstages
+poi_list += ewdebug.debugpois
+
+debugroom1 = ewdebug.debugroom1
+debugroom2 = ewdebug.debugroom2
+debugroom_short = ewdebug.debugroom_short
+debugpiers = ewdebug.debugpiers
+debugfish_response = ewdebug.debugfish_response
 
 id_to_poi = {}
 coord_to_poi = {}
@@ -9375,6 +9428,7 @@ smelting_recipe_list = [
 		products = ['fishingrod']
 	),
 ]
+smelting_recipe_list += ewdebug.debugrecipes
 
 # A map of id_recipe to EwSmeltingRecipe objects.
 smelting_recipe_map = {}
@@ -11224,6 +11278,7 @@ enemy_attacktype_talons = 'talons'
 enemy_attacktype_tusks = 'tusks'
 enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
+enemy_attacktype_molotovbreath = 'molotov breath'
 
 # Enemy types
 # Common enemies
@@ -11238,6 +11293,7 @@ enemy_type_microslime = 'microslime'
 # Raid bosses
 enemy_type_megaslime = 'megaslime'
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
+enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
 
 # Enemy ai types
 enemy_ai_coward = 'Coward'
@@ -11254,12 +11310,13 @@ enemy_displayname_mammoslime = "Mammoslime"
 enemy_displayname_microslime = "Microslime"
 enemy_displayname_megaslime = "Megaslime"
 enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
+enemy_displayname_greeneyesslimedragon = "Green Eyes Slime Dragon"
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime]
-raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex]
+raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon]
 
 # Shorthand names the player can refer to enemies as.
 # Left side is shorthand, right side is display name, in lowercase
@@ -11272,10 +11329,11 @@ enemy_aliases = {
 	"mammoth":enemy_displayname_mammoslime.lower(),
     "mega":enemy_displayname_megaslime.lower(),
 	"rex":enemy_displayname_slimeasaurusrex.lower(),
+	"dragon":enemy_displayname_greeneyesslimedragon.lower(),
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = [enemy_displayname_megaslime, enemy_displayname_slimeasaurusrex]
+raid_boss_names = [enemy_displayname_megaslime, enemy_displayname_slimeasaurusrex, enemy_displayname_greeneyesslimedragon]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

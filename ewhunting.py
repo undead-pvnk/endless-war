@@ -324,6 +324,7 @@ class EwEnemy:
 
             miss = False
             crit = False
+            backfire = False
             strikes = 0
 
             # maybe enemies COULD have weapon skills? could punishes players who die to the same enemy without mining up beforehand
@@ -384,6 +385,7 @@ class EwEnemy:
                         # Build effect container
                         ctn = EwEnemyEffectContainer(
                             miss=miss,
+                            backfire=backfire,
                             crit=crit,
                             slimes_damage=slimes_damage,
                             enemy_data=enemy_data,
@@ -395,6 +397,7 @@ class EwEnemy:
 
                         # Apply effects for non-reference values
                         miss = ctn.miss
+                        backfire = ctn.backfire
                         crit = ctn.crit
                         slimes_damage = ctn.slimes_damage
                         strikes = ctn.strikes
@@ -521,6 +524,11 @@ class EwEnemy:
                                 response = "{}".format(used_attacktype.str_miss.format(
                                     name_enemy=enemy_data.display_name,
                                     name_target=member.display_name
+                                ))
+                            elif backfire:
+                                response = "{}".format(used_attacktype.str_backfire.format(
+                                    name_enemy = enemy_data.display_name,
+                                    name_target = member.display_name
                                 ))
                             else:
                                 response = used_attacktype.str_damage.format(
@@ -653,16 +661,20 @@ async def summon_enemy(cmd):
     enemytype = None
     enemy_location = None
     poi = None
+    enemy_slimes = None
+    enemy_displayname = None
 
     if len(cmd.tokens) > 2:
         enemytype = cmd.tokens[1]
         enemy_location = cmd.tokens[2]
-        enemy_slimes = cmd.tokens[3]
-        enemy_displayname = cmd.tokens[4]
+        if len(cmd.tokens) > 3:
+            enemy_slimes = cmd.tokens[3]
+            enemy_displayname = cmd.tokens[4]
+    
         poi = ewcfg.id_to_poi.get(enemy_location)
 
 
-    if enemytype != None and poi != None and enemy_slimes != None and enemy_displayname != None:
+    if enemytype != None and poi != None:
 
         enemy = get_enemy_data(enemytype)
 
@@ -670,11 +682,13 @@ async def summon_enemy(cmd):
         enemy.id_server = user_data.id_server
         enemy.poi = poi.id_poi
         enemy.level = level_byslime(enemy.slimes)
-        enemy.initialslimes = enemy_slimes
-        enemy.slimes = enemy_slimes
-        enemy.display_name = enemy_displayname
         enemy.lifetime = time_now
         enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
+        
+        if enemy_slimes != None and enemy_displayname != None:
+            enemy.initialslimes = enemy_slimes
+            enemy.slimes = enemy_slimes
+            enemy.display_name = enemy_displayname
 
         enemy.persist()
 
@@ -969,7 +983,8 @@ def drop_enemy_loot(enemy_data, district_data):
                 patr_amount = 2
 
     elif enemy_data.enemytype == ewcfg.enemy_type_megaslime \
-    or enemy_data.enemytype == ewcfg.enemy_type_slimeasaurusrex:
+    or enemy_data.enemytype == ewcfg.enemy_type_slimeasaurusrex \
+    or enemy_data.enemytype == ewcfg.enemy_type_greeneyesslimedragon:
 
         poudrin_dropped = True
         pleb_dropped = True
@@ -1181,6 +1196,9 @@ class EwAttackType:
     # Displayed when a non-lethal hit occurs.
     str_damage = ""
 
+    # Displayed when an attack backfires
+    str_backfire = ""
+
     # Function that applies the special effect for this weapon.
     fn_effect = None
 
@@ -1201,6 +1219,7 @@ class EwAttackType:
             fn_effect=None,
             str_crit="",
             str_miss="",
+            str_backfire = "",
     ):
         self.id_type = id_type
         self.str_kill = str_kill
@@ -1208,6 +1227,7 @@ class EwAttackType:
         self.str_trauma = str_trauma
         self.str_trauma_self = str_trauma_self
         self.str_damage = str_damage
+        self.str_backfire = str_backfire
         self.fn_effect = fn_effect
         self.str_crit = str_crit
         self.str_miss = str_miss
@@ -1215,6 +1235,7 @@ class EwAttackType:
 # Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:
     miss = False
+    backfire = False
     crit = False
     strikes = 0
     slimes_damage = 0
@@ -1224,8 +1245,9 @@ class EwEnemyEffectContainer:
     # Debug method to dump out the members of this object.
     def dump(self):
         print(
-            "effect:\nmiss: {miss}\ncrit: {crit}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
+            "effect:\nmiss: {miss}\ncrit: {crit}\nbackfire: {backfire}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
                 miss=self.miss,
+                backfire=self.backfire,
                 crit=self.crit,
                 strikes=self.strikes,
                 slimes_damage=self.slimes_damage,
@@ -1235,6 +1257,7 @@ class EwEnemyEffectContainer:
     def __init__(
             self,
             miss=False,
+            backfire=False,
             crit=False,
             strikes=0,
             slimes_damage=0,
@@ -1243,6 +1266,7 @@ class EwEnemyEffectContainer:
             target_data=None
     ):
         self.miss = miss
+        self.backfire = backfire
         self.crit = crit
         self.strikes = strikes
         self.slimes_damage = slimes_damage
@@ -1319,6 +1343,13 @@ def get_enemy_data(enemy_type):
         enemy.life_state = ewcfg.enemy_lifestate_unactivated
         enemy.attacktype = ewcfg.enemy_attacktype_fangs
         enemy.raidtimer = int(time.time())
+        
+    elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
+        enemy.ai = ewcfg.enemy_ai_attacker_a
+        enemy.display_name = ewcfg.enemy_displayname_greeneyesslimedragon
+        enemy.life_state = ewcfg.enemy_lifestate_unactivated
+        enemy.attacktype = ewcfg.enemy_attacktype_molotovbreath
+        enemy.raidtimer = int(time.time())
 
     return enemy
 
@@ -1340,7 +1371,9 @@ def get_enemy_slime(enemy_type):
     elif enemy_type == ewcfg.enemy_type_megaslime:
         slime = 1000000
     elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
-        slime = 1500000
+        slime = ((random.randrange(500000) + 1000000) + 1)
+    elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
+        slime = ((random.randrange(500000) + 1500000) + 1)
     return slime
 
 # Selects which non-ghost user to attack based on certain parameters.

@@ -55,6 +55,7 @@ from ewmarket import EwStock
 from ewdistrict import EwDistrict
 from ewstatuseffects import EwStatusEffect
 
+
 ewutils.logMsg('Starting up...')
 
 client = discord.Client()
@@ -257,6 +258,7 @@ cmd_map = {
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
 	ewcfg.cmd_move_alt3: ewmap.move,
+	ewcfg.cmd_move_alt4: ewmap.move,
 
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
@@ -271,6 +273,9 @@ cmd_map = {
 
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
+	
+	# Inspect objects in a POI
+	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
@@ -411,6 +416,10 @@ cmd_map = {
 	ewcfg.cmd_debug1: ewdebug.debug1,
 	ewcfg.cmd_debug2: ewdebug.debug2,
 	ewcfg.cmd_debug3: ewdebug.debug3,
+	ewcfg.cmd_debug4: ewdebug.debug4,
+	ewcfg.debug5: ewdebug.debug5,
+	ewcfg.cmd_debug6: ewdebug.debug6,
+	ewcfg.cmd_debug7: ewdebug.debug7,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,
