@@ -14,7 +14,7 @@ from ewtransport import EwTransportLine
 from ewfarm import EwFarmAction
 from ewfish import EwFish
 from ewapt import EwFurniture
-#import ewdebug
+import ewdebug
 
 # Global configuration options.
 version = "v3.5e"
@@ -595,8 +595,8 @@ apartment_s_multiplier = 6000000000
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
-#cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
-#cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
+cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
+cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -1605,7 +1605,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = item_id_forbidden111,
 		str_name = "The Forbidden {}".format(emote_111),
-		#str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
+		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
@@ -3908,8 +3908,8 @@ food_list = [
 		],
 		recover_hunger = 340282366920938463463374607431768211455,
 		str_name = "The Forbidden Stuffed Crust Pizza",
-		#str_eat = ewdebug.forbiddenstuffedcrust_eat,
-		#str_desc = ewdebug.forbiddenstuffedcrust_desc,
+		str_eat = ewdebug.forbiddenstuffedcrust_eat,
+		str_desc = ewdebug.forbiddenstuffedcrust_desc,
 		acquisition = acquisition_smelting
 	),
 ]
@@ -4944,8 +4944,76 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A laptop sits closed on the floor.",
 		furniture_place_desc = "You place the laptop and plug it in."),
-
-
+EwFurniture(
+		id_furniture = "rainbowdashfigurine",
+		str_name = "rainbow dash figurine",
+		str_desc = "It's one of those little pony figures from MLP: Friendship is Magic. It's in pretty good condition.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies."),
+EwFurniture(
+		id_furniture = "diploma",
+		str_name = "framed diploma",
+		str_desc = "It's a diploma from a NLACakaNM college. You're not sure you earned this.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 2000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A diploma hangs on the wall.",
+		furniture_place_desc = "You think about all the memories you had back in college: drinking, skipping class, killing everyone in University Parking Services, and maybe even a little learning along the way. You lower your head sentimentally and hang the diploma on your wall."),
+EwFurniture(
+		id_furniture = "racecarbed",
+		str_name = "race car bed",
+		str_desc = "VROOM VROOM! NNNNEEEEEEOOOOOOWWWWWW SKRRT! NEEEEEEEOOOOOOOOW BEEP BEEP! SCREEECH! CRASH!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1330000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a racecar bed in the bedroom.",
+		furniture_place_desc = "You assemble the bed and place it in your vroom."),
+EwFurniture(
+		id_furniture = "padlockset",
+		str_name = "set of padlocks",
+		str_desc = "You have a standard deadbolt lock, a steel door guard, a second password protected deadbolt, one of those chain thingies, reinforced hinges, and one of those dungeon-style full-length door guards. Also a chair to prop against it for good measure.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 750000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The door is really, REALLY locked.",
+		furniture_place_desc = "You meticulously attach your various locks to your front door until you're satisfied with the craftsmanship. Maybe now you'll finally sleep soundly at night."),
+EwFurniture(
+		id_furniture = "butler",
+		str_name = "butler",
+		str_desc = "You don't know this man's real name, but he responds to Jeeves so you've been going with that. He does whatever you tell him to do, but for some reason he's useless at gang warfare.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 8000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A butler stands up straight against the wall, awaiting your instructions.",
+		furniture_place_desc = "You clap twice, and your butler comes running. You point to the floor in the corner. \"Jeeves,\" you say, \"You'll be sleeping here from now on.\" He nods, and begins to get comfy there on the cold floor."),
+EwFurniture(
+		id_furniture = "crib",
+		str_name = "crib",
+		str_desc = "Awwww. I bet your kid looks adorable sleeping in this. You do have a kid, right?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 650000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a crib in the bedroom.",
+		furniture_place_desc = "You build the crib from the little box it came in, spinning the mobile a couple of times to make sure it works."),
+EwFurniture(
+		id_furniture = "unhealthylivingbook",
+		str_name = "Guide to Unhealthy Living: Cowritten by the Rift Cafe",
+		str_desc = "It's a book about how to transition to living a sedentary, unhygenic lifestyle in less than 20 days.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "This place smells awful.",
+		furniture_place_desc = "You carefully study brony habit-forming patterns and embrace mediocrity. Your life slowly begins to fall apart, and the junk food you eat permeates the room and makes everything smell like piss and negaslime. You can't believe a product of the Rift Cafe actually accomplished something."),
 ]
 
 

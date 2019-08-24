@@ -44,7 +44,7 @@ import ewtransport
 import ewsmelting
 import ewfish
 import ewapt
-#import ewdebug
+import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
@@ -408,8 +408,8 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	#ewcfg.cmd_debug1: ewdebug.debug1,
-	#ewcfg.cmd_debug2: ewdebug.debug2,
+	ewcfg.cmd_debug1: ewdebug.debug1,
+	ewcfg.cmd_debug2: ewdebug.debug2,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,

@@ -18,11 +18,6 @@ from ew import EwUser
 import ewslimeoid
 import ewwep
 import ewquadrants
-import ewweather
-from ewmarket import EwMarket
-import os
-import discord
-import discord.server
 
 class EwApartment:
     id_user = ""
@@ -39,7 +34,7 @@ class EwApartment:
             id_user=None,
             id_server=None
     ):
-        if (id_user != None):
+        if (id_user != None and id_server != None):
             self.id_user = id_user
             self.id_server = id_server
 
@@ -49,21 +44,19 @@ class EwApartment:
                 cursor = conn.cursor()
 
                 # Retrieve object
-                cursor.execute("SELECT {}, {}, {}, {}, {}, {} FROM apartment WHERE id_user = %s".format(
-                    ewcfg.col_id_server,
+                cursor.execute("SELECT {}, {}, {}, {}, {} FROM apartment WHERE id_user = %s and id_server = %s".format(
                     ewcfg.col_apt_name,
                     ewcfg.col_apt_description,
                     ewcfg.col_poi,
                     ewcfg.col_rent,
                     ewcfg.col_apt_class,
 
-                    ewcfg.col_display_name
-                ), (self.id_user,))
+                ), (self.id_user,
+                    self.id_server))
                 result = cursor.fetchone();
 
                 if result != None:
                     # Record found: apply the data to this object.
-                    self.id_server = result[0]
                     self.name = result[1]
                     self.description = result[2]
                     self.poi = result[3]
@@ -176,8 +169,12 @@ async def consult(cmd):
     if poi == None:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That place doesn't exist. The stupidity of the question drives the realtor to down another bottle."))
 
+    elif poi.id_poi in ewcfg.transports:
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
+
     elif poi.id_poi == ewcfg.poi_id_rowdyroughhouse or poi.id_poi == ewcfg.poi_id_copkilltown or poi.id_poi == ewcfg.poi_id_juviesrow:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
+
 
     elif poi.is_subzone:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
@@ -202,7 +199,7 @@ async def consult(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
     if ewcfg.consult_responses[poi.id_poi]:
         response = "You ask the realtor what he thinks of {}.\n\n\"".format(poi.str_name) + ewcfg.consult_responses[poi.id_poi] + "\"\n\n"
-        response += "The cost per month is {:,.2f} SC. \n\n The down payment is four times that, {:,.2f} SC.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
+        response += "The cost per month is {:,} SC. \n\n The down payment is four times that, {:,} SC.".format(multiplier * getPriceBase(cmd=cmd), multiplier * 4 * getPriceBase(cmd=cmd))
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -212,7 +209,6 @@ async def signlease(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What region would you like to rent?"))
 
     user_data = EwUser(member=cmd.message.author)
-    user_apt = EwApartment(id_user = user_data.id_user, id_server = user_data.id_server)
 
 
     if user_data.poi != ewcfg.poi_id_realestate:
@@ -224,6 +220,9 @@ async def signlease(cmd):
 
     elif poi == ewcfg.poi_id_rowdyroughhouse or poi == ewcfg.poi_id_copkilltown or poi == ewcfg.poi_id_juviesrow:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "\"We don't have apartments in such...urban places,\" your consultant mutters under his breath."))
+
+    elif poi.id_poi in ewcfg.transports:
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "As much as the realtor would like to charge you for being homeless, you can't pay rent for sleeping on public transport."))
 
     elif poi.is_subzone:
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't find it on the list of properties. Try something that isn't a subzone."))
@@ -251,7 +250,7 @@ async def signlease(cmd):
     if(user_data.slimecoin < base_cost*4):
         return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, "You can't afford it."))
 
-    response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,.2f} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,.2f} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. SLIMECORP IS NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(cmd.message.author.display_name, base_cost, base_cost*4)
+    response = "The receptionist slides you a contract. It reads:\n\n THE TENANT, {},  WILL HERETO SUBMIT {:,} SLIMECOIN EACH MONTH UNTIL THEY INEVITABLY HIT ROCK BOTTOM. THEY MUST ALSO PROVIDE A DOWN PAYMENT OF {:,} TO INSURE THE PROPERTY FROM THEIR GREASY JUVENILE HANDS. SLIMECORP IS NOT RESPONSIBLE FOR ANY INJURY OR PROPERTY DAMAGE THAT MAY OCCUR ON THE PREMISES. THEY'RE ALSO NOT RESPONSIBLE IN GENERAL. YOU ARE. BITCH. \n\nDo you !sign the document, or do you !rip it into a million pieces?".format(cmd.message.author.display_name, base_cost, base_cost*4)
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     try:
@@ -274,6 +273,10 @@ async def signlease(cmd):
         if (user_data.apt_zone != "empty"):
             response = "The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
             await toss_squatters(user_data.id_user)
+
+        user_data = EwUser(member=cmd.message.author)
+        user_apt = EwApartment(id_user=user_data.id_user, id_server=user_data.id_server)
+
         user_data.change_slimecoin(n=-base_cost*4, coinsource=ewcfg.coinsource_spending)
         user_data.apt_zone = poi.id_poi
         user_data.persist()
@@ -285,7 +288,7 @@ async def signlease(cmd):
         user_apt.rent = base_cost
         user_apt.persist()
 
-        response = "You signed the lease for an apartment in {} for {:,.2f} SlimeCoin a month.".format(poi.str_name, base_cost)
+        response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(poi.str_name, base_cost)
 
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -293,7 +296,7 @@ async def signlease(cmd):
 async def retire(cmd):
     user_data = EwUser(member=cmd.message.author)
     poi = ewcfg.id_to_poi.get(user_data.poi)
-    poi_dest = ewcfg.id_to_poi.get("apt"+user_data.apt_zone)
+    poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone)
 
     if user_data.apt_zone != poi.id_poi and user_data.visiting:
         response = "You don't own an apartment here."
@@ -303,6 +306,7 @@ async def retire(cmd):
         ewutils.moves_active[cmd.message.author.id] = 0
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
         await asyncio.sleep(20)
+        user_data = EwUser(member=cmd.message.author)
         user_data.poi = poi_dest.id_poi
         user_data.persist()
         await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -333,6 +337,7 @@ async def depart(cmd=None, isGoto = False):
             await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You exit the apartment."))
 
         await asyncio.sleep(20)
+        user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
         user_data.poi = poi_dest.id_poi
         user_data.visiting = "empty"
         user_data.persist()
@@ -357,13 +362,13 @@ def getPriceBase(cmd):
 
 
 async def rent_time(id_server = None):
-    if id_server != None:
-        try:
-            conn_info = ewutils.databaseConnect()
-            conn = conn_info.get('conn')
-            cursor = conn.cursor();
-            client = ewutils.get_client()
 
+    try:
+        conn_info = ewutils.databaseConnect()
+        conn = conn_info.get('conn')
+        cursor = conn.cursor();
+        client = ewutils.get_client()
+        if id_server != None:
             #get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
             cursor.execute("SELECT apartment.rent, users.id_user FROM users INNER JOIN apartment ON users.id_user=apartment.id_user WHERE users.id_server = %s AND apartment.rent > 0".format(
 
@@ -375,23 +380,29 @@ async def rent_time(id_server = None):
 
             for landowner in landowners:
                 user_data = EwUser(id_user=landowner[1], id_server=id_server)
-                user_apt = EwApartment(id_user = landowner[1], id_server = id_server)
                 poi = ewcfg.id_to_poi.get(user_data.apt_zone)
                 #landowner[0] refers to the rent price the user currently has
                 if landowner[0] > user_data.slimecoin:
 
                     if(user_data.poi == ewcfg.poi_id_apt + user_data.apt_zone):
                         user_data.poi = user_data.apt_zone #toss out player
+                        user_data.persist()
                         server = ewcfg.server_list[user_data.id_server]
                         member_object = server.get_member(landowner[1])
-                        await toss_squatters(cmd_id = user_data.id_user)
+
                         await ewrolemgr.updateRoles(client = client, member=member_object)
                         player = EwPlayer(id_user = landowner[1])
                         response = "{} just got evicted. Point and laugh, everyone.".format(player.display_name)
                         await ewutils.send_message(client, ewutils.get_channel(server, poi.channel), response)
-                    await toss_items(id_user=user_data.id_user + 'closet', id_server=user_data.id_server, poi = poi)
-                    await toss_items(id_user=user_data.id_user + 'fridge', id_server=user_data.id_server, poi = poi)
-                    await toss_items(id_user=user_data.id_user + 'decorate', id_server=user_data.id_server, poi = poi)
+
+
+                    user_data = EwUser(id_user=landowner[1], id_server=id_server)
+                    user_apt = EwApartment(id_user=landowner[1], id_server=id_server)
+                    poi = ewcfg.id_to_poi.get(user_data.apt_zone)
+
+                    toss_items(id_user=user_data.id_user + 'closet', id_server=user_data.id_server, poi = poi)
+                    toss_items(id_user=user_data.id_user + 'fridge', id_server=user_data.id_server, poi = poi)
+                    toss_items(id_user=user_data.id_user + 'decorate', id_server=user_data.id_server, poi = poi)
 
                     user_data.apt_zone = "empty"
                     user_data.persist()
@@ -399,12 +410,14 @@ async def rent_time(id_server = None):
                     user_apt.poi = " "
                     user_apt.persist()
 
+                    await toss_squatters(user_id=user_data.id_user, server_id=id_server)
+
                 else:
                     user_data.change_slimecoin(n=-landowner[0], coinsource=ewcfg.coinsource_spending)
                     user_data.persist()
-        finally:
-            cursor.close()
-            ewutils.databaseClose(conn_info)
+    finally:
+        cursor.close()
+        ewutils.databaseClose(conn_info)
 
 
 #async def rent_cycle(cmd):
@@ -591,8 +604,6 @@ async def remove_item(cmd, dest):
         recipient = cmd.message.author.id
     item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
-    if item_search == "slimeoid" and dest == "store":
-        await freeze(cmd)
 
     #if the command is "take", we need to determine where the item might be
     if dest == "apartment":
@@ -668,7 +679,7 @@ async def upgrade(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     else:
-        response = "Are you sure? The upgrade cost is {:,.2f} SC, and rent goes up to {:,.2f} SC per month. To you !accept the deal, or do you !refuse it?".format(apt_model.rent*8, apt_model.rent*2)
+        response = "Are you sure? The upgrade cost is {:,} SC, and rent goes up to {:,} SC per month. To you !accept the deal, or do you !refuse it?".format(apt_model.rent*8, apt_model.rent*2)
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
         accepted = False
 
@@ -688,6 +699,9 @@ async def upgrade(cmd):
             return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
 
         else:
+            usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+            apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+
             usermodel.change_slimecoin(n=apt_model.rent * -8, coinsource= ewcfg.coinsource_spending)
 
             apt_model.rent *= 2
@@ -888,6 +902,7 @@ async def knock(cmd = None):
                 if user_data.rr_challenger == target_data.apt_zone:
                     return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
                 else:
+                    user_data = EwUser(member=cmd.message.author)
                     user_data.rr_challenger = target_data.apt_zone
                     user_data.persist()
                     message = await cmd.client.wait_for_message(timeout=30, author=target, check=ewslimeoid.check)
@@ -898,10 +913,12 @@ async def knock(cmd = None):
                         if message.content.lower() == ewcfg.cmd_refuse:
                             accepted = False
                     else:
+                        user_data = EwUser(member=cmd.message.author)
                         if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
                             user_data.persist()
             except:
                 accepted = False
+            user_data = EwUser(member=cmd.message.author)
             if accepted:
                 user_data.poi = "apt" + user_data.poi
                 user_data.visiting = target_data.id_user
@@ -925,6 +942,7 @@ async def cancel(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
     aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
     if usermodel.poi != ewcfg.poi_id_realestate:
         response = "You can only null your lease at the Real Estate Agency."
     elif usermodel.apt_zone == "empty":
@@ -933,7 +951,7 @@ async def cancel(cmd):
         response = "You can't afford the lease separation. Time to take your eviction like a champ."
     else:
         poi = ewcfg.id_to_poi.get(usermodel.apt_zone)
-        response = "The separation will cost {} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
+        response = "The separation will cost {:,} SlimeCoin. Do you !accept the termination, or !refuse it?".format(aptmodel.rent * 4)
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
         try:
             accepted = False
@@ -951,14 +969,16 @@ async def cancel(cmd):
             return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
 
         else:
+            usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
+            aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-            response = "You cancel your {} apartment for {} SlimeCoin.".format(poi.str_name , aptmodel.rent * 4)
+            response = "You cancel your {} apartment for {:,} SlimeCoin.".format(poi.str_name , aptmodel.rent * 4)
             inv_toss_closet = ewitem.inventory(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server)
 
-            await toss_items(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server, poi=poi)
-            await toss_items(id_user=usermodel.id_user + "fridge", id_server=playermodel.id_server, poi=poi)
-            await toss_items(id_user=usermodel.id_user + "decorate", id_server=playermodel.id_server, poi=poi)
-            await toss_squatters(cmd.message.author.id)
+            toss_items(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server, poi=poi)
+            toss_items(id_user=usermodel.id_user + "fridge", id_server=playermodel.id_server, poi=poi)
+            toss_items(id_user=usermodel.id_user + "decorate", id_server=playermodel.id_server, poi=poi)
+
             usermodel.apt_zone = "empty"
             usermodel.change_slimecoin(n=aptmodel.rent * -4, coinsource=ewcfg.coinsource_spending)
             aptmodel.rent = 0
@@ -966,11 +986,13 @@ async def cancel(cmd):
             aptmodel.apt_class = ewcfg.property_class_c
             usermodel.persist()
             aptmodel.persist()
+
+            await toss_squatters(cmd.message.author.id, cmd.message.server.id)
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-async def toss_squatters(cmd_id):
-    player_info = EwPlayer(id_user=cmd_id)
+async def toss_squatters(user_id = None, server_id = None):
+    player_info = EwPlayer(id_user=user_id)
     if player_info.id_server != None:
         conn_info = ewutils.databaseConnect()
         conn = conn_info.get('conn')
@@ -979,10 +1001,13 @@ async def toss_squatters(cmd_id):
 
         # get all players visiting an evicted apartment and kick them out
         cursor.execute(
-            "SELECT {} FROM users WHERE users.visiting = %s".format(
-                ewcfg.col_id_user
+            "SELECT {} FROM users WHERE {} = %s AND {} = %s".format(
+                ewcfg.col_id_user,
+                ewcfg.col_visiting,
+                ewcfg.col_id_server
             ), (
                 player_info.id_user,
+                server_id
             ))
 
         squatters = cursor.fetchall()
@@ -992,12 +1017,12 @@ async def toss_squatters(cmd_id):
             server = ewcfg.server_list[sqt_data.id_server]
             member_object = server.get_member(squatter[0])
             sqt_data.poi = sqt_data.poi[3:]
-            await ewrolemgr.updateRoles(client=client, member=member_object)
             sqt_data.visiting = "empty"
             sqt_data.persist()
+            await ewrolemgr.updateRoles(client=client, member=member_object)
 
 
-async def toss_items(id_user = None, id_server = None, poi = None):
+def toss_items(id_user = None, id_server = None, poi = None):
     if id_user != None and id_server != None and poi != None:
         inv_toss = ewitem.inventory(id_user=id_user, id_server=id_server)
         for stuff in inv_toss:  # toss all items out
