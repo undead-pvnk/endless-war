@@ -270,9 +270,7 @@ async def signlease(cmd):
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     else:
-        if (user_data.apt_zone != "empty"):
-            response = "The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
-            await toss_squatters(user_data.id_user)
+
 
         user_data = EwUser(member=cmd.message.author)
         user_apt = EwApartment(id_user=user_data.id_user, id_server=user_data.id_server)
@@ -289,7 +287,9 @@ async def signlease(cmd):
         user_apt.persist()
 
         response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(poi.str_name, base_cost)
-
+        if (user_data.apt_zone != "empty"):
+            response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
+            await toss_squatters(user_data.id_user)
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -358,8 +358,13 @@ def getPriceBase(cmd):
     kfc = ewmarket.EwStock(stock='kfc', id_server = user_data.id_server)
     tcb = ewmarket.EwStock(stock='tacobell', id_server=user_data.id_server)
     hut = ewmarket.EwStock(stock='pizzahut', id_server=user_data.id_server)
-    return (kfc.market_rate+tcb.market_rate+hut.market_rate)*67
-
+    if abs(kfc.market_rate - 1000) > abs(tcb.market_rate - 1000) and abs(kfc.market_rate - 1000) > abs(hut.market_rate - 1000):
+        return kfc.market_rate * 201
+    elif abs(tcb.market_rate - 1000) > abs(hut.market_rate - 1000):
+        return tcb.market_rate * 201
+    else:
+        return hut.market_rate * 201
+ #returns a price based on the stock with the biggest change
 
 async def rent_time(id_server = None):
 
