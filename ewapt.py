@@ -57,11 +57,11 @@ class EwApartment:
 
                 if result != None:
                     # Record found: apply the data to this object.
-                    self.name = result[1]
-                    self.description = result[2]
-                    self.poi = result[3]
-                    self.rent = result[4]
-                    self.apt_class = result[5]
+                    self.name = result[0]
+                    self.description = result[1]
+                    self.poi = result[2]
+                    self.rent = result[3]
+                    self.apt_class = result[4]
                 elif id_server != None:
                     # Create a new database entry if the object is missing.
                     cursor.execute("REPLACE INTO apartment({}, {}) VALUES(%s, %s)".format(
