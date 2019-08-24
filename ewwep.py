@@ -205,6 +205,7 @@ async def attack(cmd):
 		else:
 			shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
+		shootee_name = member.display_name
 
 		user_mutations = user_data.get_mutations()
 		shootee_mutations = shootee_data.get_mutations()
@@ -506,6 +507,19 @@ async def attack(cmd):
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
+					
+					# Drop shootee scalp
+					ewitem.item_create(
+						item_type = ewcfg.it_cosmetic,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = {
+							'id_cosmetic': 'scalp',
+							'cosmetic_name': "{}'s scalp".format(shootee_name),
+							'cosmetic_desc': "A scalp.{}".format(scalp_text(weapon)),
+							'adorned': 'false'
+						}
+					)
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
 					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
@@ -1178,3 +1192,32 @@ async def divorce(cmd):
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+def scalp_text(id_weapon):
+	response = ""
+	if id_weapon == 'gun':
+		response = " It has a couple bullet holes in it."
+	elif id_weapon == 'rifle':
+		response = " It more resembles a slice of swiss cheese than a scalp."
+	elif id_weapon == 'nun-chucks':
+		response = " It looks quite bruised."
+	elif id_weapon == 'katana':
+		response = " It was removed with precision."
+	elif id_weapon == 'bat':
+		response = " It has a couple nails stuck in it."
+	elif id_weapon == 'garrote':
+		response = " It's a deep shade of blue."
+	elif id_weapon == 'brassknuckles':
+		response = " It has fragments of bone stuck in it."
+	elif id_weapon == 'molotov':
+		response = " It's burnt to a crisp."
+	elif id_weapon == 'knives':
+		response = " It has about a half dozen stab holes."
+	elif id_weapon == 'scythe':
+		response = " It's split in two pieces."
+	elif id_weapon == 'pickaxe':
+		response = " It reeks of dirt and poudrins. How embarrassing!"
+	elif id_weapon == 'fishingrod':
+		response = " It has a fishing hook stuck in it. How embarrassing!"
+	elif id_weapon == 'bass':
+		response = " If you listen closely, you can still hear the echoes of a sick bassline."
+	return response
