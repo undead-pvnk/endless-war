@@ -1019,6 +1019,7 @@ async def on_message(message):
 				response += " {}".format(levelup_response)
 
 			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		elif debug == True and cmd == '!getcoin':
 			user_data = EwUser(member=message.author)
 			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)

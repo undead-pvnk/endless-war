@@ -176,7 +176,7 @@ poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
 
-
+#Apartment subzones
 poi_id_apt_downtown ="aptdowntown"
 poi_id_apt_smogsburg ="aptsmogsburg"
 poi_id_apt_krakbay = "aptkrakbay"
@@ -207,9 +207,10 @@ poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 
-
-
-
+compartment_id_closet = "closet"
+compartment_id_fridge = "fridge"
+compartment_id_decorate = "decorate"
+location_id_empty = "empty"
 
 # Transport types
 transport_type_ferry = "ferry"
@@ -7833,7 +7834,6 @@ EwPoi( # realestate
 EwPoi( # apt
 		id_poi = poi_id_apt,
 		alias = [
-			"apt",
 		],
 		str_name = "an apartment",
 		str_desc = "",

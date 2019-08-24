@@ -287,7 +287,7 @@ async def signlease(cmd):
         user_apt.persist()
 
         response = "You signed the lease for an apartment in {} for {:,} SlimeCoin a month.".format(poi.str_name, base_cost)
-        if (user_data.apt_zone != "empty"):
+        if (user_data.apt_zone != ewcfg.location_id_empty):
             response += " The receptionist calls up a moving crew, who quickly move your stuff to your new place. "
             await toss_squatters(user_data.id_user)
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -325,12 +325,12 @@ async def depart(cmd=None, isGoto = False):
     server = ewcfg.server_list[user_data.id_server]
     member_object = server.get_member(player.id_user)
 
-    if user_data.poi != "apt"+user_data.apt_zone and user_data.visiting == "empty":
+    if user_data.poi != "apt"+user_data.apt_zone and user_data.visiting == ewcfg.location_id_empty:
         response = "You're not in an apartment."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     else:
-        if user_data.visiting != "empty":
+        if user_data.visiting != ewcfg.location_id_empty:
             poi_dest = ewcfg.id_to_poi.get(user_data.poi[3:]) #if the user is visiting another apartment, correct the exit zone
 
         if not isGoto:
@@ -339,7 +339,7 @@ async def depart(cmd=None, isGoto = False):
         await asyncio.sleep(20)
         user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
         user_data.poi = poi_dest.id_poi
-        user_data.visiting = "empty"
+        user_data.visiting = ewcfg.location_id_empty
         user_data.persist()
         await ewrolemgr.updateRoles(client=client, member=member_object)
 
@@ -409,7 +409,7 @@ async def rent_time(id_server = None):
                     toss_items(id_user=user_data.id_user + 'fridge', id_server=user_data.id_server, poi = poi)
                     toss_items(id_user=user_data.id_user + 'decorate', id_server=user_data.id_server, poi = poi)
 
-                    user_data.apt_zone = "empty"
+                    user_data.apt_zone = ewcfg.location_id_empty
                     user_data.persist()
                     user_apt.rent = 0
                     user_apt.poi = " "
@@ -438,7 +438,7 @@ async def apt_look(cmd):
     lookObject = cmd.message.author.id
     isVisiting = False
 
-    if usermodel.visiting != "empty":
+    if usermodel.visiting != ewcfg.location_id_empty:
         apt_model = EwApartment(id_user=usermodel.visiting, id_server=playermodel.id_server)
         poi = ewcfg.id_to_poi.get(apt_model.poi)
         lookObject = usermodel.visiting
@@ -449,7 +449,7 @@ async def apt_look(cmd):
     if isVisiting:
         response = response.replace("your", "a")
 
-    furns = ewitem.inventory(id_user= lookObject+"decorate", id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
+    furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
     for furn in furns:
         i = ewitem.EwItem(furn.get('id_item'))
@@ -457,7 +457,7 @@ async def apt_look(cmd):
 
     response += " "
     iterate = 0
-    frids = ewitem.inventory(id_user=lookObject + "fridge", id_server=playermodel.id_server)
+    frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
     if(len(frids) > 0):
         response += "The fridge contains: "
@@ -468,7 +468,7 @@ async def apt_look(cmd):
 
             iterate += 1
         response = response[:-2] + '.'
-    closets = ewitem.inventory(id_user=lookObject + "closet", id_server=playermodel.id_server)
+    closets = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
     if (len(closets) > 0):
         response += "The closet contains: "
@@ -497,7 +497,7 @@ async def store_item(cmd, dest):
     item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
 
-    if usermodel.visiting != "empty":
+    if usermodel.visiting != ewcfg.location_id_empty:
         recipient = usermodel.visiting
         apt_model = EwApartment(id_server=playermodel.id_server, id_user=usermodel.visiting)
 
@@ -510,22 +510,22 @@ async def store_item(cmd, dest):
             response = "You can't just put away soulbound items. You have to keep them in your pants at least until the Rapture hits."
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-        elif item_sought.get('item_type') == ewcfg.it_furniture and (dest != "decorate" and dest != "store"):
+        elif item_sought.get('item_type') == ewcfg.it_furniture and (dest != ewcfg.compartment_id_decorate and dest != "store"):
             response = "The fridge and closet don't have huge spaces for furniture storage. Try !decorate or !stow instead."
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-        elif item_sought.get('item_type') != ewcfg.it_furniture and (dest == "decorate"):
+        elif item_sought.get('item_type') != ewcfg.it_furniture and (dest == ewcfg.compartment_id_decorate):
             response = "Are you going to just drop items on the ground like a ruffian? Store them in your fridge or closet instead."
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
         if destination == "store":
             if item_sought.get('item_type') == ewcfg.it_food:
-                destination = "fridge"
+                destination = ewcfg.compartment_id_fridge
 
             elif item_sought.get('item_type') == ewcfg.it_furniture:
-                destination = "decorate"
+                destination = ewcfg.compartment_id_decorate
 
             else:
-                destination = "closet"
+                destination = ewcfg.compartment_id_closet
 
         storage_limit_base = 4
         if apt_model.apt_class == ewcfg.property_class_b:
@@ -566,26 +566,26 @@ async def store_item(cmd, dest):
 
 
         items_stored = ewitem.inventory(id_user=recipient+destination, id_server=playermodel.id_server)
-        if len(items_stored) >= storage_limit_base * 2 and destination == "closet":
+        if len(items_stored) >= storage_limit_base * 2 and destination == ewcfg.compartment_id_closet:
             response = "The closet is bursting at the seams. Fearing the consequences of opening the door, you decide to hold on to the {}.".format(name_string)
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-        elif len(items_stored) >= storage_limit_base and destination == "fridge":
+        elif len(items_stored) >= storage_limit_base and destination == ewcfg.compartment_id_fridge:
             response = "The fridge is so full it's half open, leaking 80's era CFCs into the flat. You decide to hold on to the {}.".format(name_string)
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-        elif len(items_stored) >= int(storage_limit_base*1.5) and destination == "decorate":
+        elif len(items_stored) >= int(storage_limit_base*1.5) and destination == ewcfg.compartment_id_decorate:
             response = "You have a lot of furniture here already. Hoarding is unladylike, so you decide to hold on to the {}.".format(name_string)
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-        if item_sought.get('item_type') == ewcfg.it_food and destination == "fridge" :
+        if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge :
             item.item_props["time_fridged"] = time.time()
             item.persist()
 
         ewitem.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
 
-        if(destination == "decorate"):
+        if(destination == ewcfg.compartment_id_decorate):
             response = name_string = item.item_props['furniture_place_desc']
 
         else:
@@ -602,7 +602,7 @@ async def remove_item(cmd, dest):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-    if usermodel.visiting != "empty":
+    if usermodel.visiting != ewcfg.location_id_empty:
         recipient = usermodel.visiting
 
     else:
@@ -612,22 +612,22 @@ async def remove_item(cmd, dest):
 
     #if the command is "take", we need to determine where the item might be
     if dest == "apartment":
-        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "fridge", id_server=playermodel.id_server)
+        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
         if not item_sought:
-            item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "closet", id_server=playermodel.id_server)
+            item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
             if not item_sought:
-                item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "decorate", id_server=playermodel.id_server)
+                item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
         else:
-            destination = "fridge"
+            destination = ewcfg.compartment_id_fridge
 
-    elif dest == "fridge":
-        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "fridge", id_server=playermodel.id_server)
+    elif dest == ewcfg.compartment_id_fridge:
+        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
-    elif dest == "closet":
-        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "closet", id_server=playermodel.id_server)
+    elif dest == ewcfg.compartment_id_closet:
+        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
-    elif dest == "decorate":
-        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + "decorate", id_server=playermodel.id_server)
+    elif dest == ewcfg.compartment_id_decorate:
+        item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
         destination = "apartment"
 
     name_string = get_item_str_name(item_sought)
@@ -653,7 +653,7 @@ async def remove_item(cmd, dest):
                 response = "You can't carry any more weapons."
                 return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-        if item_sought.get('item_type') == ewcfg.it_food and destination == "fridge":
+        if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
             #the formula is: expire time = expire time + current time - time frozen
             item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
             item.item_props['time_fridged'] = '0'
@@ -775,11 +775,11 @@ async def freeze(cmd):
     usermodel = EwUser(id_server= playermodel.id_server, id_user=cmd.message.author.id)
     ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-    if usermodel.visiting != "empty" and ew_slime_model.name != "":
+    if usermodel.visiting != ewcfg.location_id_empty and ew_slime_model.name != "":
         response = "Your slimeoid, sensing you're trying to abandon them in someone else's freezer, begins to pout. Dammit, you can't refuse a face like that."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-    elif usermodel.visiting != "empty":
+    elif usermodel.visiting != ewcfg.location_id_empty:
         response = "You don't have a slimeoid on you."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -812,7 +812,7 @@ async def unfreeze(cmd):
     ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id+"freeze", slimeoid_name=slimeoid_search , id_server=playermodel.id_server)
     yourslimeoid = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-    if usermodel.visiting != "empty":
+    if usermodel.visiting != ewcfg.location_id_empty:
         response = "The freezer's stuck! Well you're a guest, anyhow. You probably shouldn't steal any slimeoids."
 
     elif yourslimeoid.name != "":
@@ -833,7 +833,7 @@ async def unfreeze(cmd):
 
 async def apartment (cmd):
     usermodel = EwUser(member=cmd.message.author)
-    if usermodel.apt_zone == "empty":
+    if usermodel.apt_zone == ewcfg.location_id_empty:
         response = "You don't have an apartment."
 
     else:
@@ -862,7 +862,7 @@ async def customize(cmd = None, isDesc = False):
         property = "description"
         namechange = cmd.message.content[(len(ewcfg.cmd_aptdesc)):].strip()
 
-    if usermodel.visiting != "empty":
+    if usermodel.visiting != ewcfg.location_id_empty:
         response = "This apartment isn't yours."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -950,7 +950,7 @@ async def cancel(cmd):
 
     if usermodel.poi != ewcfg.poi_id_realestate:
         response = "You can only null your lease at the Real Estate Agency."
-    elif usermodel.apt_zone == "empty":
+    elif usermodel.apt_zone == ewcfg.location_id_empty:
         response = "You don't have an apartment."
     elif aptmodel.rent * 4 > usermodel.slimecoin:
         response = "You can't afford the lease separation. Time to take your eviction like a champ."
@@ -978,13 +978,13 @@ async def cancel(cmd):
             aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
             response = "You cancel your {} apartment for {:,} SlimeCoin.".format(poi.str_name , aptmodel.rent * 4)
-            inv_toss_closet = ewitem.inventory(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server)
+            inv_toss_closet = ewitem.inventory(id_user=usermodel.id_user + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
-            toss_items(id_user=usermodel.id_user + "closet", id_server=playermodel.id_server, poi=poi)
-            toss_items(id_user=usermodel.id_user + "fridge", id_server=playermodel.id_server, poi=poi)
-            toss_items(id_user=usermodel.id_user + "decorate", id_server=playermodel.id_server, poi=poi)
+            toss_items(id_user=usermodel.id_user + ewcfg.compartment_id_closet, id_server=playermodel.id_server, poi=poi)
+            toss_items(id_user=usermodel.id_user + ewcfg.compartment_id_fridge, id_server=playermodel.id_server, poi=poi)
+            toss_items(id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, poi=poi)
 
-            usermodel.apt_zone = "empty"
+            usermodel.apt_zone = ewcfg.location_id_empty
             usermodel.change_slimecoin(n=aptmodel.rent * -4, coinsource=ewcfg.coinsource_spending)
             aptmodel.rent = 0
             aptmodel.poi = ""
@@ -1022,7 +1022,7 @@ async def toss_squatters(user_id = None, server_id = None):
             server = ewcfg.server_list[sqt_data.id_server]
             member_object = server.get_member(squatter[0])
             sqt_data.poi = sqt_data.poi[3:]
-            sqt_data.visiting = "empty"
+            sqt_data.visiting = ewcfg.location_id_empty
             sqt_data.persist()
             await ewrolemgr.updateRoles(client=client, member=member_object)
 
@@ -1033,7 +1033,7 @@ def toss_items(id_user = None, id_server = None, poi = None):
         for stuff in inv_toss:  # toss all items out
             stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
             stuffing.id_owner = poi.id_poi
-            if stuff.get('item_type') == ewcfg.it_food and id_user[-5:] == "fridge":
+            if stuff.get('item_type') == ewcfg.it_food and id_user[-5:] == ewcfg.compartment_id_fridge:
                 stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
                 stuffing.item_props['time_fridged'] = '0'
             stuffing.persist()
@@ -1090,21 +1090,21 @@ async def aptCommands(cmd):
     if cmd_text == ewcfg.cmd_depart or cmd_text == ewcfg.cmd_retire:
         return await depart(cmd)
     elif cmd_text == ewcfg.cmd_fridge:
-        return await store_item(cmd=cmd, dest="fridge")
+        return await store_item(cmd=cmd, dest=ewcfg.compartment_id_fridge)
     elif cmd_text == ewcfg.cmd_store:
         return await store_item(cmd=cmd, dest="store")
     elif cmd_text == ewcfg.cmd_closet:
-        return await store_item(cmd=cmd, dest="closet")
+        return await store_item(cmd=cmd, dest=ewcfg.compartment_id_closet)
     elif cmd_text == ewcfg.cmd_take:
         return await remove_item(cmd=cmd, dest="apartment")
     elif cmd_text == ewcfg.cmd_uncloset:
-        return await remove_item(cmd=cmd, dest="closet")
+        return await remove_item(cmd=cmd, dest=ewcfg.compartment_id_closet)
     elif cmd_text == ewcfg.cmd_unfridge:
-        return await remove_item(cmd=cmd, dest="fridge")
+        return await remove_item(cmd=cmd, dest=ewcfg.compartment_id_fridge)
     elif cmd_text == ewcfg.cmd_decorate:
-        return await store_item(cmd=cmd, dest="decorate")
+        return await store_item(cmd=cmd, dest=ewcfg.compartment_id_decorate)
     elif cmd_text == ewcfg.cmd_undecorate:
-        return await remove_item(cmd=cmd, dest="decorate")
+        return await remove_item(cmd=cmd, dest=ewcfg.compartment_id_decorate)
     elif cmd_text == ewcfg.cmd_upgrade:
         return await upgrade(cmd = cmd)
     elif cmd_text == ewcfg.cmd_breaklease:
