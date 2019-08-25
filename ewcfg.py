@@ -715,7 +715,7 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 5 # Five minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 3
+enemy_attack_tick_length = 2
 
 # how often to burn
 burn_tick_length = 1
@@ -11381,7 +11381,7 @@ raid_boss_names = [
 	rare_display_names[enemy_displayname_megaslime],
 	rare_display_names[enemy_displayname_slimeasaurusrex],
 	rare_display_names[enemy_displayname_greeneyesslimedragon],
-	rare_display_names[enemy_displayname_unnervingfightingoperator],
+	rare_display_names[enemy_displayname_unnervingfightingoperator]
 ]
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
@@ -11395,7 +11395,7 @@ enemy_drop_tables = {
     enemy_type_megaslime: [{"poudrin": [100, 6, 10]}, {"pleb": [100, 2, 4]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 10]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 1]},  {"meat": [100, 2, 3]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 8, 12]}, {"patrician": [100, 1, 2]}],
-	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}],
+	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.

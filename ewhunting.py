@@ -300,14 +300,14 @@ class EwEnemy:
 
                 last_messages = await resp_cont.post()
 
-            #Once it exits the loop, delete the final countdown message
+            # Once it exits the loop, delete the final countdown message
             try:
                 await asyncio.sleep(ewcfg.enemy_attack_tick_length)
                 await client.delete_message(last_messages[len(last_messages) - 1])
             except:
                 pass
 
-            # Don't make an attempt post resp_cont, since it should be emptied out after the loop exit
+            # Don't make an attempt to post resp_cont, since it should be emptied out after the loop exit
             should_post_resp_cont = False
 
 
@@ -347,6 +347,17 @@ class EwEnemy:
             if enemy_data.enemytype == ewcfg.enemy_type_microslime:
                 slimes_damage *= 20  # specific to microslime
 
+            # Organic Fursuit
+            if ewcfg.mutation_id_organicfursuit in target_mutations and (
+                    (market_data.day % 31 == 0 and market_data.clock >= 20)
+                    or (market_data.day % 31 == 1 and market_data.clock < 6)
+            ):
+                slimes_damage *= 0.1
+
+            # Fat chance
+            if ewcfg.mutation_id_fatchance in target_mutations and target_data.hunger / target_data.get_hunger_max() > 0.5:
+                slimes_damage *= 0.75
+
             slimes_dropped = target_data.totaldamage + target_data.slimes
 
             target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
@@ -372,9 +383,7 @@ class EwEnemy:
                 was_killed = False
                 was_hurt = False
 
-                if target_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile,
-                                              ewcfg.life_state_lucky,
-                                              ewcfg.life_state_executive]:
+                if target_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
 
                     # If a target is being attacked by an enemy with the defender ai, check to make sure it can be hit.
                     if (enemy_data.ai == ewcfg.enemy_ai_defender) and (ewutils.check_defender_targets(target_data, enemy_data) == False):
