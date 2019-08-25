@@ -902,7 +902,10 @@ async def attack(cmd):
 		#TODO - Move this to it's own function in ewhunting or merge it into the previous code block somehow
 		
 		# Enemy has been targeted rather than a player
-		await attackEnemy(cmd, user_data, weapon)
+		await attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now)
+		
+	else:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ player kills themself """
 async def suicide(cmd):
@@ -1685,21 +1688,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	crit_mod = 0
 	dmg_mod = 0
 
-	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss,
-										target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data,
-																									desired_type=ewcfg.status_effect_type_miss,
-																									target=ewcfg.status_effect_target_other),
-					  2)
-	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit,
-										target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data,
-																									desired_type=ewcfg.status_effect_type_crit,
-																									target=ewcfg.status_effect_target_other),
-					  2)
-	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage,
-									   target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data,
-																								   desired_type=ewcfg.status_effect_type_damage,
-																								   target=ewcfg.status_effect_target_other),
-					 2)
+	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_other), 2)
+	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_other), 2)
+	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_other), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
@@ -1772,11 +1763,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 			user_data = EwUser(member=cmd.message.author)
 
+			# TODO - Make enemies able to be strangled
 			# One of the players/enemies died in the meantime
 			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.life_state_corpse:
 				return
-			# TODO - Make enemies able to be strangled
-			elif True:
+			else:
 				return
 		# else:
 		# pass
@@ -2088,7 +2079,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		await resp_cont.post()
 
 	else:
-		resp_cont.add_channel_response(cmd.message.channel.name, response)
 		resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 	
 		await resp_cont.post()

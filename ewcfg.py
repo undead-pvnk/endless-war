@@ -2790,23 +2790,34 @@ def atf_molotovbreath(ctn = None):
 	
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 2
 
 	aim = (random.randrange(10) + 1)
 
-	ctn.bystander_damage = dmg * 0.5
+	#ctn.bystander_damage = dmg * 0.5
 
 	if aim <= 2:
 		ctn.backfire = True
-		ctn.user_data.change_slimes(n=-dmg, source=source_self_damage)
+		ctn.enemy_data.change_slimes(n=-dmg, source=source_self_damage)
 
-	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
+	elif aim == 3:
 		ctn.miss = True
+		ctn.slimes_damage = 0
 
-	else:
-		if aim >= (10 - (10 * ctn.crit_mod)):
+	elif aim == 10:
 			ctn.crit = True
 			ctn.slimes_damage *= 2
+			
+def atf_raiderrifle(ctn = None):
+	dmg = ctn.slimes_damage
+
+	aim = (random.randrange(20) + 1)
+	
+	if aim <= 2:
+		ctn.miss = True
+		
+	if aim == 20:
+		ctn.crit = True
+		ctn.slimes_damage *= 3
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -2858,8 +2869,8 @@ enemy_attack_type_list = [
 		id_type = "tusks",
 		str_crit = "**Critical hit!!** {name_target} is smashed hard by {name_enemy}'s tusks!",
 		str_miss = "**{name_enemy} missed!** Their tusks strike the ground, causing it to quake underneath!",
-		str_trauma_self = "You have two large scarred-over holes on your upper body.",
-		str_trauma = "They have two large scarred-over holes on their upper body.",
+		str_trauma_self = "You have one large scarred-over hole on your upper body.",
+		str_trauma = "They have one large scarred-over hole on their upper body.",
 		str_kill = "**SHINK!!** {name_enemy}'s tusk rams right into your chest, impaling you right through your back! Moments later, you're thrusted out on to the ground, left to bleed profusely. {emote_skull}",
 		str_killdescriptor = "pierced",
 		str_damage = "{name_target} has tusks slammed into their {hitzone}!!",
@@ -2870,12 +2881,23 @@ enemy_attack_type_list = [
 		str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
 		str_crit = "**Critical hit!!** {name_target} is char grilled by {name_enemy}'s barrage of molotov breath!",
 		str_miss = "**{name_enemy} missed!** Their shot hits the ground instead, causing embers to shoot out in all directions!",
-		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
-		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
-		str_kill = "In a last ditch effort, {name_enemy} breathes in deeply for an extra powerful shot of fire. Before you know it, what's left of your body is nothing more than the tip of a matchstick, fully blackened and yet still burning. {emote_skull}",
+		str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		str_kill = "In a last ditch effort, {name_enemy} breathes in deeply for an extra powerful shot of fire. Before you know it, your body is cooked alive like a rotisserie chicken. {emote_skull}",
 		str_killdescriptor = "exploded",
 		str_damage = "{name_target} is hit by a blast of fire on their {hitzone}!!",
 		fn_effect = atf_molotovbreath
+	),
+	EwAttackType( # 7
+		id_type = "sniper rifle",
+		str_crit = "**Critical hit!!** {name_target} has a clean hole shot through their chest by {name_enemy}'s bullet!",
+		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
+		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
+		str_trauma = "There's a deep bruising right in the middle of their forehead.",
+		str_kill = "{name_enemy} readies their crosshairs right for your head and pulls the trigger. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
+		str_killdescriptor = "sniped",
+		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
+		fn_effect = atf_raiderrifle
 	),
 ]
 
@@ -8355,11 +8377,11 @@ poi_list = [
 ]
 poi_list += ewdebug.debugpois
 
-debugroom1 = ewdebug.debugroom1
-debugroom2 = ewdebug.debugroom2
+debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
 debugpiers = ewdebug.debugpiers
 debugfish_response = ewdebug.debugfish_response
+debugfish_goal = ewdebug.debugfish_goal
 
 id_to_poi = {}
 coord_to_poi = {}
@@ -11279,6 +11301,7 @@ enemy_attacktype_tusks = 'tusks'
 enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
 enemy_attacktype_molotovbreath = 'molotov breath'
+enemy_attacktype_raiderrifle = 'sniper rifle'
 
 # Enemy types
 # Common enemies
@@ -11294,6 +11317,7 @@ enemy_type_microslime = 'microslime'
 enemy_type_megaslime = 'megaslime'
 enemy_type_slimeasaurusrex = 'slimeasaurusrex'
 enemy_type_greeneyesslimedragon = 'greeneyesslimedragon'
+enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 
 # Enemy ai types
 enemy_ai_coward = 'Coward'
@@ -11311,29 +11335,49 @@ enemy_displayname_microslime = "Microslime"
 enemy_displayname_megaslime = "Megaslime"
 enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
 enemy_displayname_greeneyesslimedragon = "Green Eyes Slime Dragon"
+enemy_displayname_unnervingfightingoperator = "Unnerving Fighting Operator"
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime]
-raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon]
+raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
 # Shorthand names the player can refer to enemies as.
-# Left side is shorthand, right side is display name, in lowercase
 enemy_aliases = {
-    "juvie":enemy_displayname_juvie.lower(),
-    "dino":enemy_displayname_dinoslime.lower(),
-    "bird":enemy_displayname_slimeadactyl.lower(),
-    "micro":enemy_displayname_microslime.lower(),
-    "raider":enemy_displayname_desertraider.lower(),
-	"mammoth":enemy_displayname_mammoslime.lower(),
-    "mega":enemy_displayname_megaslime.lower(),
-	"rex":enemy_displayname_slimeasaurusrex.lower(),
-	"dragon":enemy_displayname_greeneyesslimedragon.lower(),
+    enemy_type_juvie: ["juvie","greenman","lostjuvie"],
+    enemy_type_dinoslime: ["dino","slimeasaur"],
+    enemy_type_slimeadactyl: ["bird","dactyl"],
+    enemy_type_microslime: ["micro","pinky"],
+    enemy_type_desertraider: ["raider","scytheboy"],
+	enemy_type_mammoslime: ["mammoth","brunswick"],
+    enemy_type_megaslime: ["mega","smooze"],
+	enemy_type_slimeasaurusrex: ["rex","trex"],
+	enemy_type_greeneyesslimedragon: ["dragon","greeneyes"],
+	enemy_type_unnervingfightingoperator: ["ufo", "alien"]
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = [enemy_displayname_megaslime, enemy_displayname_slimeasaurusrex, enemy_displayname_greeneyesslimedragon]
+raid_boss_names = [
+	enemy_displayname_megaslime, 
+	enemy_displayname_slimeasaurusrex, 
+	enemy_displayname_greeneyesslimedragon, 
+	enemy_displayname_unnervingfightingoperator
+]
+
+# Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
+enemy_drop_tables = {
+	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 3, 4]}, {"pleb": [40, 1, 2]},  {"meat":[33, 1, 1]}],
+    enemy_type_slimeadactyl: [{"poudrin": [100, 4, 5]}, {"pleb": [40, 1, 2]}],
+    enemy_type_microslime: [{"patrician": [100, 1, 1]}],
+    enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
+	enemy_type_mammoslime: [{"poudrin": [50, 1, 2]},  {"patrician": [50, 1, 2]}],
+    enemy_type_megaslime: [{"poudrin": [100, 6, 10]}, {"pleb": [100, 2, 4]}, {"patrician": [33, 1, 1]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 10]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 1]},  {"meat":[100, 2, 3]}],
+	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 8, 12]}, {"patrician": [100, 1, 2]}],
+	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat":[100, 1, 1]}, {"card": [100, 1, 1]}],
+}
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

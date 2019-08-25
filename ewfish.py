@@ -651,7 +651,7 @@ async def reel(cmd):
 					response += levelup_response
 
 				market_data = EwMarket(id_server=user_data.id_server)
-				if market_data.caught_fish == 2 and fisher.pier in ewcfg.debugpiers:
+				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
 					
 					item = ewcfg.debugitem
 					
@@ -674,7 +674,7 @@ async def reel(cmd):
 					market_data.caught_fish += 1
 					market_data.persist()
 		
-				elif market_data.caught_fish < 2 and fisher.pier in ewcfg.debugpiers:
+				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
 					market_data.caught_fish += 1
 					market_data.persist()
 

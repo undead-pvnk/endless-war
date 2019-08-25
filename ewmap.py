@@ -694,7 +694,7 @@ async def move(cmd):
 	poi = ewcfg.id_to_poi.get(target_name)
 	movement_method = ""
 	
-	if user_data.poi == ewcfg.debugroom1:
+	if user_data.poi == ewcfg.debugroom:
 		movement_method = "descending"
 		try:
 			if poi.id_poi == ewcfg.poi_id_slimeoidlab:
@@ -704,9 +704,9 @@ async def move(cmd):
 	else:
 		movement_method = "walking"
 
-	if user_data.poi == ewcfg.debugroom1 and cmd.tokens[0] != (ewcfg.cmd_move_alt4) and poi.id_poi != ewcfg.poi_id_slimeoidlab:
+	if user_data.poi == ewcfg.debugroom and cmd.tokens[0] != (ewcfg.cmd_move_alt4) and poi.id_poi != ewcfg.poi_id_slimeoidlab:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move forwards or backwards in an {}, bitch.".format(ewcfg.debugroom_short)))
-	elif user_data.poi != ewcfg.debugroom1 and cmd.tokens[0] == (ewcfg.cmd_move_alt4):
+	elif user_data.poi != ewcfg.debugroom and cmd.tokens[0] == (ewcfg.cmd_move_alt4):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move downwards on a solid surface, bitch."))
 
 	if poi == None:

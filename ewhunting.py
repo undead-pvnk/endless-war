@@ -653,26 +653,22 @@ async def summon_enemy(cmd):
     response = ""
     user_data = EwUser(member=cmd.message.author)
 
-    #if user_data.poi not in ewcfg.capturable_districts:
-    #   response = "**DEBUG**: MUST SUMMON IN CAPTURABLE DISTRICT."
-    #    return await ewutils.send_message(cmd.client, cmd.message.channel,
-    #                                      ewutils.formatMessage(cmd.message.author, response))
-
     enemytype = None
     enemy_location = None
     poi = None
     enemy_slimes = None
     enemy_displayname = None
+    enemy_level = None
 
-    if len(cmd.tokens) > 2:
+    if len(cmd.tokens) >= 3:
         enemytype = cmd.tokens[1]
         enemy_location = cmd.tokens[2]
-        if len(cmd.tokens) > 3:
+        if len(cmd.tokens) == 6:
             enemy_slimes = cmd.tokens[3]
             enemy_displayname = cmd.tokens[4]
+            enemy_level = cmd.tokens[5]
     
         poi = ewcfg.id_to_poi.get(enemy_location)
-
 
     if enemytype != None and poi != None:
 
@@ -685,10 +681,11 @@ async def summon_enemy(cmd):
         enemy.lifetime = time_now
         enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
         
-        if enemy_slimes != None and enemy_displayname != None:
+        if enemy_slimes != None and enemy_displayname != None and enemy_level != None:
             enemy.initialslimes = enemy_slimes
             enemy.slimes = enemy_slimes
             enemy.display_name = enemy_displayname
+            enemy.level = enemy_level
 
         enemy.persist()
 
@@ -698,8 +695,9 @@ async def summon_enemy(cmd):
             enemy.slimes,
             enemy.poi
         )
+        
     else:
-        response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION / SLIME / DISPLAY NAME"
+        response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / DISPLAYNAME / LEVEL"
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -798,13 +796,15 @@ def find_enemy(enemy_search=None, user_data=None):
 
     if enemy_search != None:
 
-        if enemy_search in ewcfg.enemy_aliases:
-            enemy_search_alias = ewcfg.enemy_aliases[enemy_search]
+        for enemy_type in ewcfg.enemy_aliases:
+            if enemy_search.lower() in ewcfg.enemy_aliases[enemy_type]:
+                enemy_search_alias = enemy_type
+                continue
 
         enemy_search_tokens = enemy_search.split(' ')
 
         if enemy_search_tokens[len(enemy_search_tokens) - 1].upper() in identifier_letters:
-            # user passed in an identifier for a distirct specific enemy
+            # user passed in an identifier for a district specific enemy
 
             searched_identifier = enemy_search_tokens[len(enemy_search_tokens) - 1]
 
@@ -837,7 +837,7 @@ def find_enemy(enemy_search=None, user_data=None):
             # find the first (i.e. the oldest) item that matches the search
             for row in enemydata:
                 enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
-                if (enemy.display_name.lower() == enemy_search) or (enemy.display_name.lower() == enemy_search_alias):
+                if (enemy.display_name.lower() == enemy_search) or (enemy.enemytype == enemy_search_alias):
                     enemy_found = enemy
                     break
 
@@ -859,158 +859,137 @@ def drop_enemy_loot(enemy_data, district_data):
     item_counter = 0
 
     poudrin_dropped = False
-    poudrin_range = 0
     poudrin_amount = 0
 
     pleb_dropped = False
-    pleb_range = 0
     pleb_amount = 0
 
-    patr_dropped = False
-    patr_range = 0
-    patr_amount = 0
+    patrician_dropped = False
+    patrician_amount = 0
 
     crop_dropped = False
-    crop_range = 0
     crop_amount = 0
 
     meat_dropped = False
+    meat_amount = 0
 
-    cards_dropped = False
-
-    # Determines what items should be dropped based on enemy type.
-    if enemy_data.enemytype == ewcfg.enemy_type_juvie:
-
-        poudrin_dropped = random.randrange(2) == 0
-        pleb_dropped = random.randrange(10) == 0
-        crop_dropped = random.randrange(10) <= 2
-        cards_dropped = random.randrange(10) <= 1
-
+    card_dropped = False
+    card_amount = 0
+    
+    drop_chance = None
+    drop_min = None
+    drop_max = None
+    drop_range = None
+    
+    poudrin_values = None
+    pleb_values = None
+    patrician_values = None
+    crop_values = None
+    meat_values = None
+    card_values = None
+    
+    drop_table = ewcfg.enemy_drop_tables[enemy_data.enemytype]
+    
+    # Go through all the possible drops in the drop table and catch exceptions when necessary
+    for item in drop_table:
+        try:
+            if item["poudrin"]:
+                poudrin_values = item["poudrin"]
+        except:
+            pass
+        try:
+            if item["pleb"]:
+                pleb_values = item["pleb"]
+        except:
+            pass
+        try:
+            if item["patrician"]:
+                patrician_values = item["patrician"]
+        except:
+            pass
+        try:
+            if item["crop"]:
+                crop_values = item["crop"]
+        except:
+            pass
+        try:
+            if item["meat"]:
+                meat_values = item["meat"]
+        except:
+            pass
+        try:
+            if item["card"]:
+                card_values = item["card"]
+        except:
+            pass
+        
+    if poudrin_values != None:
+        drop_chance = poudrin_values[0]
+        drop_min = poudrin_values[1]
+        drop_max = poudrin_values[2]
+        
+        poudrin_dropped = random.randrange(101) < drop_chance
+        
         if poudrin_dropped:
-            poudrin_range = random.randrange(2)
-            if poudrin_range == 0:
-                poudrin_amount = 1
-            else:
-                poudrin_amount = 2
+            drop_range = list(range(drop_min, drop_max+1))
+            poudrin_amount = random.choice(drop_range)
+            
+    if pleb_values != None:
+        drop_chance = pleb_values[0]
+        drop_min = pleb_values[1]
+        drop_max = pleb_values[2]
+        
+        pleb_dropped = random.randrange(101) < drop_chance
+        
         if pleb_dropped:
-            pleb_amount = 1
-        if crop_dropped:
-            crop_amount = 1
+            drop_range = list(range(drop_min, drop_max + 1))
+            pleb_amount = random.choice(drop_range)
 
-    elif enemy_data.enemytype == ewcfg.enemy_type_microslime:
-        patr_dropped = True
-        patr_amount = 1
+    if patrician_values != None:
+        drop_chance = patrician_values[0]
+        drop_min = patrician_values[1]
+        drop_max = patrician_values[2]
 
-    elif enemy_data.enemytype == ewcfg.enemy_type_dinoslime:
+        patrician_dropped = random.randrange(101) < drop_chance
 
-        poudrin_dropped = True
-        pleb_dropped = random.randrange(10) <= 3
-        meat_dropped = random.randrange(3) != 0
+        if patrician_dropped:
+            drop_range = list(range(drop_min, drop_max + 1))
+            patrician_amount = random.choice(drop_range)
 
-        poudrin_range = random.randrange(2)
+    if crop_values != None:
+        drop_chance = crop_values[0]
+        drop_min = crop_values[1]
+        drop_max = crop_values[2]
 
-        if poudrin_range == 0:
-            poudrin_amount = 3
-        else:
-            poudrin_amount = 4
-
-        if pleb_dropped:
-            pleb_range = random.randrange(2)
-            if pleb_range == 0:
-                pleb_amount = 1
-            else:
-                pleb_amount = 2
-
-    elif enemy_data.enemytype == ewcfg.enemy_type_slimeadactyl:
-
-        poudrin_dropped = True
-        pleb_dropped = random.randrange(10) <= 3
-
-        poudrin_range = random.randrange(2)
-
-        if poudrin_range == 0:
-            poudrin_amount = 3
-        else:
-            poudrin_amount = 4
-
-        if pleb_dropped:
-            pleb_range = random.randrange(2)
-            if pleb_range == 0:
-                pleb_amount = 1
-            else:
-                pleb_amount = 2
-
-    elif enemy_data.enemytype == ewcfg.enemy_type_desertraider:
-
-        poudrin_dropped = True
-        pleb_dropped = True
-        pleb_amount = 1
-        crop_dropped = random.randrange(2) == 0
-
-        poudrin_range = random.randrange(2) == 0
-
-        if poudrin_range == 0:
-            poudrin_amount = 1
-        else:
-            poudrin_amount = 2
+        crop_dropped = random.randrange(101) < drop_chance
 
         if crop_dropped:
-            crop_range = random.randrange(4)
-            if crop_range == 0:
-                crop_amount = 3
-            elif crop_range == 1:
-                crop_amount = 4
-            elif crop_range == 2:
-                crop_amount = 5
-            else:
-                crop_amount = 6
+            drop_range = list(range(drop_min, drop_max + 1))
+            crop_amount = random.choice(drop_range)
 
-    elif enemy_data.enemytype == ewcfg.enemy_type_mammoslime:
-        patr_dropped = random.randrange(3) == 0
-        poudrin_dropped = random.randrange(10) <= 6
+    if meat_values != None:
+        drop_chance = meat_values[0]
+        drop_min = meat_values[1]
+        drop_max = meat_values[2]
 
-        if poudrin_dropped:
-            poudrin_range = random.randrange(2)
-            if poudrin_range == 0:
-                poudrin_amount = 1
-            else:
-                poudrin_amount = 2
-        if patr_dropped:
-            patr_range = random.randrange(2)
-            if patr_range == 0:
-                patr_amount = 1
-            else:
-                patr_amount = 2
+        meat_dropped = random.randrange(101) < drop_chance
 
-    elif enemy_data.enemytype == ewcfg.enemy_type_megaslime \
-    or enemy_data.enemytype == ewcfg.enemy_type_slimeasaurusrex \
-    or enemy_data.enemytype == ewcfg.enemy_type_greeneyesslimedragon:
+        if meat_dropped:
+            drop_range = list(range(drop_min, drop_max + 1))
+            meat_amount = random.choice(drop_range)
 
-        poudrin_dropped = True
-        pleb_dropped = True
-        patr_dropped = random.randrange(3) == 0
+    if card_values != None:
+        drop_chance = card_values[0]
+        drop_min = card_values[1]
+        drop_max = card_values[2]
 
-        poudrin_range = random.randrange(3)
-        if poudrin_range == 0:
-            poudrin_amount = 8
-        elif poudrin_range == 1:
-            poudrin_amount = 9
-        else:
-            poudrin_amount = 10
+        card_dropped = random.randrange(101) < drop_chance
 
-        pleb_range = random.randrange(3)
-        if pleb_range == 0:
-            pleb_amount = 2
-        elif pleb_range == 1:
-            pleb_amount = 3
-        else:
-            pleb_amount = 4
+        if card_dropped:
+            drop_range = list(range(drop_min, drop_max + 1))
+            card_amount = random.choice(drop_range)
 
-        if patr_dropped:
-            patr_amount = 1
-
-    # Drops items one-by-one
-    if pleb_dropped or patr_dropped:
+    if pleb_dropped or patrician_dropped:
         cosmetics_list = []
 
         for result in ewcfg.cosmetic_items_list:
@@ -1019,6 +998,7 @@ def drop_enemy_loot(enemy_data, district_data):
             else:
                 pass
 
+    # Drops items one-by-one
     if poudrin_dropped:
         item_counter = 0
 
@@ -1070,10 +1050,10 @@ def drop_enemy_loot(enemy_data, district_data):
 
             item_counter += 1
 
-    if patr_dropped:
+    if patrician_dropped:
         item_counter = 0
 
-        while item_counter < patr_amount:
+        while item_counter < patrician_amount:
             items = []
 
             for cosmetic in cosmetics_list:
@@ -1125,48 +1105,56 @@ def drop_enemy_loot(enemy_data, district_data):
     # Drop dinoslime meat
     if meat_dropped:
         meat = None
+        item_counter = 0
 
         for food in ewcfg.food_list:
             if food.id_food == ewcfg.item_id_dinoslimemeat:
                 meat = food
-        ewitem.item_create(
-            id_user=district_data.name,
-            id_server=district_data.id_server,
-            item_type=ewcfg.it_food,
-            item_props={
-                'id_food': meat.id_food,
-                'food_name': meat.str_name,
-                'food_desc': meat.str_desc,
-                'recover_hunger': meat.recover_hunger,
-                'str_eat': meat.str_eat,
-                'time_expir': time.time() + ewcfg.std_food_expir
-            }
-        )
-        response += "They dropped a piece of meat!\n"
-
-    if cards_dropped:
+                
+        while item_counter < meat_amount:  
+            ewitem.item_create(
+                id_user=district_data.name,
+                id_server=district_data.id_server,
+                item_type=ewcfg.it_food,
+                item_props={
+                    'id_food': meat.id_food,
+                    'food_name': meat.str_name,
+                    'food_desc': meat.str_desc,
+                    'recover_hunger': meat.recover_hunger,
+                    'str_eat': meat.str_eat,
+                    'time_expir': time.time() + ewcfg.std_food_expir
+                }
+            )
+            response += "They dropped a piece of meat!\n"
+            
+            item_counter += 1
+    
+    # Drop trading cards
+    if card_dropped:
         cards = None
-
+        item_counter = 0
+        
         for item in ewcfg.item_list:
             if item.id_item == ewcfg.item_id_tradingcardpack:
                 cards = item
 
-        #print(cards)
+        while item_counter < card_amount:
+            ewitem.item_create(
+                id_user=district_data.name,
+                id_server=district_data.id_server,
+                item_type=ewcfg.it_item,
+                item_props={
+                    'id_item': cards.id_item,
+                    'context': cards.context,
+                    'item_name': cards.str_name,
+                    'item_desc': cards.str_desc,
+                }
+            )
+            response += "They dropped a pack of trading cards!\n"
+            
+            item_counter += 1
 
-        ewitem.item_create(
-            id_user=district_data.name,
-            id_server=district_data.id_server,
-            item_type=ewcfg.it_item,
-            item_props={
-                'id_item': cards.id_item,
-                'context': cards.context,
-                'item_name': cards.str_name,
-                'item_desc': cards.str_desc,
-            }
-        )
-        response += "They dropped a pack of trading cards!\n"
-
-    if not poudrin_dropped and not pleb_dropped and not patr_dropped and not crop_dropped and not meat_dropped and not cards_dropped:
+    if not poudrin_dropped and not pleb_dropped and not patrician_dropped and not crop_dropped and not meat_dropped and not card_dropped:
         response = "They didn't drop anything...\n"
 
     return response
@@ -1333,22 +1321,25 @@ def get_enemy_data(enemy_type):
     elif enemy_type == ewcfg.enemy_type_megaslime:
         enemy.ai = ewcfg.enemy_ai_attacker_a
         enemy.display_name = ewcfg.enemy_displayname_megaslime
-        enemy.life_state = ewcfg.enemy_lifestate_unactivated
         enemy.attacktype = ewcfg.enemy_attacktype_gunkshot
-        enemy.raidtimer = int(time.time())
 
     elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
         enemy.ai = ewcfg.enemy_ai_attacker_b
         enemy.display_name = ewcfg.enemy_displayname_slimeasaurusrex
-        enemy.life_state = ewcfg.enemy_lifestate_unactivated
         enemy.attacktype = ewcfg.enemy_attacktype_fangs
-        enemy.raidtimer = int(time.time())
         
     elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
         enemy.ai = ewcfg.enemy_ai_attacker_a
         enemy.display_name = ewcfg.enemy_displayname_greeneyesslimedragon
-        enemy.life_state = ewcfg.enemy_lifestate_unactivated
         enemy.attacktype = ewcfg.enemy_attacktype_molotovbreath
+        
+    elif enemy_type == ewcfg.enemy_type_unnervingfightingoperator:
+        enemy.ai = ewcfg.enemy_ai_attacker_b
+        enemy.display_name = ewcfg.enemy_displayname_unnervingfightingoperator
+        enemy.attacktype = ewcfg.enemy_attacktype_raiderrifle
+        
+    if enemy_type in ewcfg.raid_bosses:
+        enemy.life_state = ewcfg.enemy_lifestate_unactivated
         enemy.raidtimer = int(time.time())
 
     return enemy
@@ -1373,7 +1364,9 @@ def get_enemy_slime(enemy_type):
     elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
         slime = ((random.randrange(500000) + 1000000) + 1)
     elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
-        slime = ((random.randrange(500000) + 1500000) + 1)
+        slime = ((random.randrange(500000) + 1250000) + 1)
+    elif enemy_type ==  ewcfg.enemy_type_unnervingfightingoperator:
+        slime = (random.randrange(2000000) + 1)
     return slime
 
 # Selects which non-ghost user to attack based on certain parameters.
