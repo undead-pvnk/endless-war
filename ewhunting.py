@@ -72,6 +72,9 @@ class EwEnemy:
 
     # Used by raid bosses to determine when they should activate
     raidtimer = 0
+    
+    # Determines if an enemy should use its rare variant or not
+    rare_status = 0
 
     """ Load the enemy data from the database. """
 
@@ -95,7 +98,7 @@ class EwEnemy:
 
                 # Retrieve object
                 cursor.execute(
-                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+                    "SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
                         ewcfg.col_id_enemy,
                         ewcfg.col_id_server,
                         ewcfg.col_enemy_slimes,
@@ -114,6 +117,7 @@ class EwEnemy:
                         ewcfg.col_enemy_lifetime,
                         ewcfg.col_enemy_id_target,
                         ewcfg.col_enemy_raidtimer,
+                        ewcfg.col_enemy_rare_status,
                         query_suffix
                     ))
                 result = cursor.fetchone();
@@ -138,6 +142,7 @@ class EwEnemy:
                     self.lifetime = result[15]
                     self.id_target = result[16]
                     self.raidtimer = result[17]
+                    self.rare_status = result[18]
 
             finally:
                 # Clean up the database handles.
@@ -154,7 +159,7 @@ class EwEnemy:
 
             # Save the object.
             cursor.execute(
-                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+                "REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
                     ewcfg.col_id_enemy,
                     ewcfg.col_id_server,
                     ewcfg.col_enemy_slimes,
@@ -173,6 +178,7 @@ class EwEnemy:
                     ewcfg.col_enemy_lifetime,
                     ewcfg.col_enemy_id_target,
                     ewcfg.col_enemy_raidtimer,
+                    ewcfg.col_enemy_rare_status,
                 ), (
                     self.id_enemy,
                     self.id_server,
@@ -192,6 +198,7 @@ class EwEnemy:
                     self.lifetime,
                     self.id_target,
                     self.raidtimer,
+                    self.rare_status,
                 ))
 
             conn.commit()
@@ -997,6 +1004,15 @@ def drop_enemy_loot(enemy_data, district_data):
                 cosmetics_list.append(result)
             else:
                 pass
+            
+    # Multiply the amount of loot if an enemy is its rare variant
+    if enemy_data.rare_status == 1:
+        poudrin_amount = math.ceil(poudrin_amount * 1.5)
+        pleb_amount = math.ceil(pleb_amount * 1.5)
+        patrician_amount = math.ceil(patrician_amount * 1.5)
+        crop_amount = math.ceil(crop_amount * 1.5)
+        meat_amount = math.ceil(meat_amount * 1.5)
+        card_amount = math.ceil(card_amount * 1.5)
 
     # Drops items one-by-one
     if poudrin_dropped:
@@ -1273,6 +1289,10 @@ def check_death(enemy_data):
 # Assigns enemies most of their necessary attributes based on their type.
 def get_enemy_data(enemy_type):
     enemy = EwEnemy()
+    
+    rare_status = 0
+    if random.randrange(10) == 0:
+       rare_status = 1
 
     enemy.id_server = ""
     enemy.slimes = get_enemy_slime(enemy_type)
@@ -1285,6 +1305,7 @@ def get_enemy_data(enemy_type):
     enemy.initialslimes = 0
     enemy.id_target = ""
     enemy.raidtimer = 0
+    enemy.rare_status = rare_status
 
     # Normal enemies
     if enemy_type == ewcfg.enemy_type_juvie:
@@ -1341,6 +1362,10 @@ def get_enemy_data(enemy_type):
     if enemy_type in ewcfg.raid_bosses:
         enemy.life_state = ewcfg.enemy_lifestate_unactivated
         enemy.raidtimer = int(time.time())
+        
+    if rare_status == 1:
+        enemy.display_name = ewcfg.rare_display_names[enemy.display_name]
+        enemy.slimes *= 2
 
     return enemy
 

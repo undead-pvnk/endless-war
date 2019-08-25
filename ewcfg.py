@@ -1097,6 +1097,7 @@ col_enemy_initialslimes = 'initialslimes'
 col_enemy_lifetime = 'lifetime'
 col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
+col_enemy_rare_status = 'rare_status'
 
 # Database column for the status of districts with locks on them
 col_locked_status = 'locked_status'
@@ -11337,6 +11338,20 @@ enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
 enemy_displayname_greeneyesslimedragon = "Green Eyes Slime Dragon"
 enemy_displayname_unnervingfightingoperator = "Unnerving Fighting Operator"
 
+# Display names for rare variants of enemies
+rare_display_names = {
+	enemy_displayname_juvie: "Shellshocked Juvie",
+	enemy_displayname_dinoslime: "Verocious Dinoslime",
+	enemy_displayname_slimeadactyl: "Predatory Slimeadactyl",
+	enemy_displayname_desertraider: "Desert Warlord",
+	enemy_displayname_mammoslime: "Territorial Mammoslime",
+	enemy_displayname_microslime: "Irridescent Microslime",
+	enemy_displayname_megaslime: "Rampaging Megaslime",
+	enemy_displayname_slimeasaurusrex: "Sex Rex",
+	enemy_displayname_greeneyesslimedragon: "Green Eyes JPEG Dragon",
+	enemy_displayname_unnervingfightingoperator: "Unyielding Fierce Operator",
+}
+
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
@@ -11349,12 +11364,12 @@ enemy_aliases = {
     enemy_type_dinoslime: ["dino","slimeasaur"],
     enemy_type_slimeadactyl: ["bird","dactyl"],
     enemy_type_microslime: ["micro","pinky"],
-    enemy_type_desertraider: ["raider","scytheboy"],
+    enemy_type_desertraider: ["raider","scytheboy","desertraider"],
 	enemy_type_mammoslime: ["mammoth","brunswick"],
-    enemy_type_megaslime: ["mega","smooze"],
-	enemy_type_slimeasaurusrex: ["rex","trex"],
-	enemy_type_greeneyesslimedragon: ["dragon","greeneyes"],
-	enemy_type_unnervingfightingoperator: ["ufo", "alien"]
+    enemy_type_megaslime: ["mega","smooze","muk"],
+	enemy_type_slimeasaurusrex: ["rex","trex","slimeasaurusrex"],
+	enemy_type_greeneyesslimedragon: ["dragon","greeneyes","greeneyesslimedragon"],
+	enemy_type_unnervingfightingoperator: ["ufo", "alien","unnervingfightingoperator"]
 }
 
 # Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
@@ -11362,21 +11377,25 @@ raid_boss_names = [
 	enemy_displayname_megaslime, 
 	enemy_displayname_slimeasaurusrex, 
 	enemy_displayname_greeneyesslimedragon, 
-	enemy_displayname_unnervingfightingoperator
+	enemy_displayname_unnervingfightingoperator,
+	rare_display_names[enemy_displayname_megaslime],
+	rare_display_names[enemy_displayname_slimeasaurusrex],
+	rare_display_names[enemy_displayname_greeneyesslimedragon],
+	rare_display_names[enemy_displayname_unnervingfightingoperator],
 ]
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
 	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 3, 4]}, {"pleb": [40, 1, 2]},  {"meat":[33, 1, 1]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 3, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
     enemy_type_slimeadactyl: [{"poudrin": [100, 4, 5]}, {"pleb": [40, 1, 2]}],
     enemy_type_microslime: [{"patrician": [100, 1, 1]}],
     enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [50, 1, 2]},  {"patrician": [50, 1, 2]}],
     enemy_type_megaslime: [{"poudrin": [100, 6, 10]}, {"pleb": [100, 2, 4]}, {"patrician": [33, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 10]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 1]},  {"meat":[100, 2, 3]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 10]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 1]},  {"meat": [100, 2, 3]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 8, 12]}, {"patrician": [100, 1, 2]}],
-	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat":[100, 1, 1]}, {"card": [100, 1, 1]}],
+	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}],
 }
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
