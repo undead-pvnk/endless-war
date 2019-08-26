@@ -641,7 +641,7 @@ async def attack(cmd):
 						adorned_items += 1
 
 				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-					slimes_damage *= 2
+					slimes_damage *= 1.5
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
