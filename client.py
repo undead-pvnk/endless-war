@@ -420,6 +420,7 @@ cmd_map = {
 	ewcfg.debug5: ewdebug.debug5,
 	ewcfg.cmd_debug6: ewdebug.debug6,
 	ewcfg.cmd_debug7: ewdebug.debug7,
+	ewcfg.cmd_debug8: ewdebug.debug8,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,

@@ -532,6 +532,7 @@ cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
 debug5 = ewdebug.debug5
 cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
+cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
 
 cmd_reroll_mutation = cmd_prefix + 'rerollmutation'
 cmd_clear_mutations = cmd_prefix + 'sterilizemutations'
@@ -11341,7 +11342,7 @@ enemy_displayname_unnervingfightingoperator = "Unnerving Fighting Operator"
 # Display names for rare variants of enemies
 rare_display_names = {
 	enemy_displayname_juvie: "Shellshocked Juvie",
-	enemy_displayname_dinoslime: "Verocious Dinoslime",
+	enemy_displayname_dinoslime: "Voracious Dinoslime",
 	enemy_displayname_slimeadactyl: "Predatory Slimeadactyl",
 	enemy_displayname_desertraider: "Desert Warlord",
 	enemy_displayname_mammoslime: "Territorial Mammoslime",
