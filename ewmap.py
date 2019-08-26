@@ -586,7 +586,7 @@ def landmark_heuristic(path, coord_end):
 			scores.append(abs(score_path - score_goal))
 
 		return max(scores)
-			
+		    
 	
 
 def replace_with_inf(n):
@@ -965,7 +965,7 @@ async def teleport(cmd):
 		else:
 			time_lastuse = 0
 
-		if time_lastuse + 30*60 > time_now:
+		if time_lastuse + 180*60 > time_now:
 			response = "You can't do that again yet."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			

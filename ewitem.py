@@ -745,14 +745,9 @@ async def inventory_print(cmd):
 		response = "You are holding:"
 
 	try:
-		msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+		await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
-
-	if msg_handle is None:
-		can_message_user = False
-
-	if not can_message_user:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if len(items) > 0:
@@ -872,6 +867,7 @@ async def item_use(cmd):
 	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id)
 
 	if item_sought:		
+		# Load the user before the item so that the right item props are used
 		user_data = EwUser(member = author)
 
 		item = EwItem(id_item = item_sought.get('id_item'))

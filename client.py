@@ -575,7 +575,7 @@ async def on_ready():
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
-		#asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		
@@ -694,9 +694,9 @@ async def on_ready():
 						# Update the list of available bazaar items by clearing the current list and adding the new items
 						market_data.bazaar_wares.clear()
 
-						bazaar_general_items = []
 						bazaar_foods = []
 						bazaar_cosmetics = []
+						bazaar_general_items = []
 
 						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
 							if item in ewcfg.item_names:

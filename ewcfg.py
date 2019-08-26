@@ -21,7 +21,7 @@ from ewfish import EwFish
 import ewdebug
 
 # Global configuration options.
-version = "v3.6 - Prefix is /"
+version = "v3.6"
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -356,7 +356,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '/'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -4860,8 +4860,8 @@ fish_list  =  [
 	),
 	EwFish(
 		id_fish = "stunfisk",
-		str_name = fish_rarity_rare,
-		rarity = "Stunfisk",
+		str_name = "Stunfisk",
+		rarity = fish_rarity_rare,
 		catch_time = None,
 		catch_weather = fish_catchtime_rain,
 		str_desc = "Its hide is so tough it can be stepped on by Connor without being injured.",
@@ -9451,6 +9451,18 @@ smelting_recipe_list = [
 		},
 		products = ['fishingrod']
 	),
+        EwSmeltingRecipe(
+		id_recipe = "bass",
+		str_name = "a Bass Guitar",
+		alias = [
+			"bassguitar"
+		],
+		ingredients = {
+			'thebassedgod' : 1,
+			'string':4
+		},
+		products = ['bass']
+        )       
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -11267,6 +11279,39 @@ for bait in food_list:
 	else:
 		pass
 
+# If a fish doesn't bite, send one of these.
+nobite_text = [
+	"You patiently wait...",
+	"This is so fucking boring...",
+	"You watch your hook bob...",
+	"You grow impatient and kick the rotted wooden guard rails...",
+	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
+	"You begin to zone-out a bit...",
+	"Shouldn't you be doing something productive?",
+	"You sit patiently, eagerly awaiting a fish to bit...",
+	"You begin to daydream about fish sex... Gross...",
+	"You begin to daydream about fish sex... Hot...",
+	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
+	"You make direct eye contact with a fish, only to quickly look away...",
+	"♪ Fishing for Fishies! ♪",
+	"♪ That Captain Albert Alexander! ♪",
+	"You get the urge to jump in and try to grab a fish, but then you remember that you can't swim...",
+	"You hum some sea shanties...",
+	"You start to develop an existential crisis...",
+	"You jitter as other seamen catch fish before you. Fuck fishing...",
+	"You shake your head as a young seaman hooks a perfectly good slice of pizza on his hook... What a cretin...",
+	"You wonder if the Space Navy has been formed yet...",
+	"Man... Why were you excited for this shit?",
+	"Still better than Minesweeper...",
+	"Maybe one day your wife will pardon you...",
+	"Fuck fish...",
+	"You let out a deep sigh, in doing so, you scare away a fish...",
+	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
+	"You see a bird carry off a Plebefish in the distance... Good riddance...",
+	"You spot a stray bullet in the distance...",
+	"You see a dead body float up to the surface of the Slime...",
+	"Fish..."
+]
 
 # Dict of all help responses linked to their associated topics
 help_responses = {

@@ -905,7 +905,10 @@ async def attack(cmd):
 		await attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now)
 		
 	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+		resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+		
+		await resp_cont.post()
 
 """ player kills themself """
 async def suicide(cmd):
