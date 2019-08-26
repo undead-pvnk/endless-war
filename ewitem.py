@@ -745,9 +745,14 @@ async def inventory_print(cmd):
 		response = "You are holding:"
 
 	try:
-		await ewutils.send_message(cmd.client, cmd.message.author, response)
+		msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
+
+	if msg_handle is None:
+		can_message_user = False
+
+	if not can_message_user:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if len(items) > 0:

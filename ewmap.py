@@ -1170,8 +1170,6 @@ async def scout(cmd):
 			scoutee_data = EwUser(id_user = player, id_server = user_data.id_server)
 			scoutee_player = EwPlayer(id_user = player)
 			scoutee_mutations = scoutee_data.get_mutations()
-			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
-				continue
 			if ewcfg.mutation_id_whitenationalist in scoutee_mutations and market_data.weather == "snow":
 				continue
 			if ewcfg.mutation_id_threesashroud in scoutee_mutations and scoutee_data.life_state == ewcfg.life_state_enlisted:

@@ -22,6 +22,7 @@ import ewdebug
 
 # Global configuration options.
 version = "v3.6"
+
 dir_msgqueue = 'msgqueue'
 
 discord_message_length_limit = 2000
@@ -2191,12 +2192,32 @@ def wef_tool(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
+# weapon effect function for "bass"
+def wef_bass(ctn = None):
+	aim = (random.randrange(21) - 10)
+	user_mutations = ctn.user_data.get_mutations()
+	if aim <= -9:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+				ctn.slimes_damage = 0
+		else:
+			ctn.miss = True
+			ctn.slimes_damage = 0
+
+	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
+
+	if aim >= 9:
+		ctn.crit = True
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
 weapon_class_jammable = "jammable"
+
 
 # All weapons in the game.
 weapon_list = [
@@ -2711,6 +2732,27 @@ weapon_list = [
 		str_description = "It's a super fishing rod",
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills
+	),
+        EwWeapon(  # 13
+		id_weapon = "bass",
+		alias = [
+			"bass",
+		],
+		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharply strike {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
+		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck.",
+		str_weapon = "a bass guitar.",
+		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
+		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
+		str_trauma_self = "There is a large concave dome in the side of your head.",
+		str_trauma = "There is a large concave dome in the side of their head.",
+		str_kill = "*CRASSHHH* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
+		str_killdescriptor = "smashed to pieces",
+		str_damage = "{name_target} is wacked across the {hitzone}!!",
+		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
+		fn_effect = wef_bass,
+		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
+		acquisition = acquisition_smelting
 	)
 ]
 
