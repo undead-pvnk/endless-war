@@ -324,8 +324,8 @@ class EwEnemy:
             # print(server)
 
             # member = discord.utils.get(channel.server.members, name=target_player.display_name)
-            member = server.get_member(target_data.id_user)
             # print(member)
+					
 
             target_mutations = target_data.get_mutations()
 
@@ -426,7 +426,8 @@ class EwEnemy:
                         slimes_damage = 0
 
                     enemy_data.persist()
-                    target_data = EwUser(member=member)
+                    target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
+
 
                     if slimes_damage >= target_data.slimes - target_data.bleed_storage:
                         was_killed = True
@@ -483,7 +484,7 @@ class EwEnemy:
                         if used_attacktype != ewcfg.enemy_attacktype_unarmed:
                             response = used_attacktype.str_damage.format(
                                 name_enemy=enemy_data.display_name,
-                                name_target=member.display_name,
+                                name_target=target_player.display_name,
                                 hitzone=randombodypart,
                                 strikes=strikes
                             )
@@ -491,19 +492,19 @@ class EwEnemy:
                             if crit:
                                 response += " {}".format(used_attacktype.str_crit.format(
                                     name_enemy=enemy_data.display_name,
-                                    name_target=member.display_name
+                                    name_target=target_player.display_name
                                 ))
 
                             response += "\n\n{}".format(used_attacktype.str_kill.format(
                                 name_enemy=enemy_data.display_name,
-                                name_target=member.display_name,
+                                name_target=target_player.display_name,
                                 emote_skull=ewcfg.emote_slimeskull
                             ))
                             target_data.trauma = used_attacktype.id_type
 
                         else:
                             response = "{name_target} is hit!!\n\n{name_target} has died.".format(
-                                name_target=member.display_name)
+                                name_target=target_player.display_name)
 
                             target_data.trauma = ""
 
@@ -513,7 +514,7 @@ class EwEnemy:
 
                         deathreport = "You were {} by {}. {}".format(kill_descriptor, enemy_data.display_name,
                                                                      ewcfg.emote_slimeskull)
-                        deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member, deathreport)
+                        deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target_player, deathreport)
 
                         target_data.persist()
                         enemy_data.persist()
@@ -522,7 +523,7 @@ class EwEnemy:
                         if ewcfg.mutation_id_spontaneouscombustion in target_mutations:
                             import ewwep
                             explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
-                                member.display_name)
+                                target_player.display_name)
                             resp_cont.add_channel_response(ch_name, explode_resp)
                             explosion = ewutils.explode(damage=explode_damage, district_data=district_data)
                             resp_cont.add_response_container(explosion)
@@ -531,7 +532,7 @@ class EwEnemy:
                         if check_death(enemy_data) == False:
                             enemy_data = EwEnemy(id_enemy=self.id_enemy)
 
-                        target_data = EwUser(member=member)
+                        target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
                     else:
                         # A non-lethal blow!
 
@@ -539,41 +540,41 @@ class EwEnemy:
                             if miss:
                                 response = "{}".format(used_attacktype.str_miss.format(
                                     name_enemy=enemy_data.display_name,
-                                    name_target=member.display_name
+                                    name_target=target_player.display_name
                                 ))
                             elif backfire:
                                 response = "{}".format(used_attacktype.str_backfire.format(
                                     name_enemy = enemy_data.display_name,
-                                    name_target = member.display_name
+                                    name_target = target_player.display_name
                                 ))
                             else:
                                 response = used_attacktype.str_damage.format(
                                     name_enemy=enemy_data.display_name,
-                                    name_target=member.display_name,
+                                    name_target=target_player.display_name,
                                     hitzone=randombodypart,
                                     strikes=strikes
                                 )
                                 if crit:
                                     response += " {}".format(used_attacktype.str_crit.format(
                                         name_enemy=enemy_data.display_name,
-                                        name_target=member.display_name
+                                        name_target=target_player.display_name
                                     ))
                                 response += " {target_name} loses {damage} slime!".format(
-                                    target_name=member.display_name,
+                                    target_name=target_player.display_name,
                                     damage=damage
                                 )
                         else:
                             if miss:
                                 response = "{target_name} dodges the {enemy_name}'s strike.".format(
-                                    target_name=member.display_name, enemy_name=enemy_data.display_name)
+                                    target_name=target_player.display_name, enemy_name=enemy_data.display_name)
                             else:
                                 response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
-                                    target_name=member.display_name,
+                                    target_name=target_player.display_name,
                                     damage=damage
                                 )
                         resp_cont.add_channel_response(ch_name, response)
                 else:
-                    response = '{} is unable to attack {}.'.format(enemy_data.display_name, member.display_name)
+                    response = '{} is unable to attack {}.'.format(enemy_data.display_name, target_player.display_name)
                     resp_cont.add_channel_response(ch_name, response)
 
                 # Persist user and enemy data.
@@ -585,6 +586,7 @@ class EwEnemy:
 
                 # Assign the corpse role to the newly dead player.
                 if was_killed:
+					member = server.get_member(target_data.id_user)
                     await ewrolemgr.updateRoles(client=client, member=member)
                     # announce death in kill feed channel
                     # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
