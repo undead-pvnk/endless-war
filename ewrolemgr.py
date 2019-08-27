@@ -134,6 +134,9 @@ async def updateRoles(
 
 	user_data = EwUser(member = member, id_server = server_default)
 	id_server = user_data.id_server
+	
+	if member == None:
+		return ewutils.logMsg("error: member was not supplied for updateRoles")
 
 	#roles_map = ewutils.getRoleMap(member.server.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
