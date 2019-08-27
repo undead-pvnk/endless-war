@@ -609,3 +609,7 @@ async def arrest(cmd):
 		response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement cells.".format(member.display_name)
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" !piss """
+async def piss(cmd):
+	pass

@@ -678,6 +678,14 @@ def retrieve_locked_districts(id_server):
 	return locked_districts_list
 
 
+async def descend(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if user_data.poi == ewcfg.debugroom:
+		return move(cmd)
+	
+	else:
+		pass
+	
 """
 	Player command to move themselves from one place to another.
 """
@@ -704,9 +712,9 @@ async def move(cmd):
 	else:
 		movement_method = "walking"
 
-	if user_data.poi == ewcfg.debugroom and cmd.tokens[0] != (ewcfg.cmd_move_alt4) and poi.id_poi != ewcfg.poi_id_slimeoidlab:
+	if user_data.poi == ewcfg.debugroom and cmd.tokens[0] != (ewcfg.cmd_descend) and poi.id_poi != ewcfg.poi_id_slimeoidlab:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move forwards or backwards in an {}, bitch.".format(ewcfg.debugroom_short)))
-	elif user_data.poi != ewcfg.debugroom and cmd.tokens[0] == (ewcfg.cmd_move_alt4):
+	elif user_data.poi != ewcfg.debugroom and cmd.tokens[0] == (ewcfg.cmd_descend):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move downwards on a solid surface, bitch."))
 
 	if poi == None:

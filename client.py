@@ -258,7 +258,9 @@ cmd_map = {
 	ewcfg.cmd_move_alt1: ewmap.move,
 	ewcfg.cmd_move_alt2: ewmap.move,
 	ewcfg.cmd_move_alt3: ewmap.move,
-	ewcfg.cmd_move_alt4: ewmap.move,
+
+	# go down
+	ewcfg.cmd_descend: ewmap.descend,
 
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
@@ -410,12 +412,15 @@ cmd_map = {
 
 	ewcfg.cmd_teleport: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+
+	ewcfg.cmd_piss: ewcmd.piss,
+
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	ewcfg.cmd_debug1: ewdebug.debug1,
-	ewcfg.cmd_debug2: ewdebug.debug2,
+	#ewcfg.cmd_debug1: ewdebug.debug1,
+	#ewcfg.cmd_debug2: ewdebug.debug2,
 	ewcfg.cmd_debug3: ewdebug.debug3,
 	ewcfg.cmd_debug4: ewdebug.debug4,
 	ewcfg.debug5: ewdebug.debug5,

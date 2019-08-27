@@ -463,7 +463,7 @@ cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
 cmd_move_alt3 = cmd_prefix + 'sny'
-cmd_move_alt4 = cmd_prefix + 'descend'
+cmd_descend = cmd_prefix + 'descend'
 cmd_halt = cmd_prefix + 'halt'
 cmd_halt_alt1 = cmd_prefix + 'stop'
 cmd_embark = cmd_prefix + 'embark'
@@ -524,6 +524,7 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
+cmd_piss = cmd_prefix + 'piss'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
@@ -588,7 +589,7 @@ offline_cmds = [
 	cmd_move_alt1,
 	cmd_move_alt2,
 	cmd_move_alt3,
-	cmd_move_alt4,
+	cmd_descend,
 	cmd_halt,
 	cmd_halt_alt1,
 	cmd_embark,
