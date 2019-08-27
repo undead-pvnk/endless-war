@@ -1767,7 +1767,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = item_id_forbidden111,
 		str_name = "The Forbidden {}".format(emote_111),
-		str_desc = theforbiddenoneoneone_desc.format(emote_111 = emote_111),
+		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
@@ -9141,7 +9141,7 @@ EwPoi( # apt-dreadford
 		coord = (0, 12),
 		pvp = False,
 		is_subzone = False,
-	)
+	),
 
 	EwPoi(  # Outskirts - 1
 		id_poi=poi_id_wreckington_outskirts,

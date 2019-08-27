@@ -564,7 +564,7 @@ class EwUser:
 					self.slime_donations = result[28]
 					self.poudrin_donations = result[29]
 					self.arrested = (result[30] == 1)
-          self.apt_zone = result[31]
+					self.apt_zone = result[31]
 					self.visiting = result[32]
 
 				else:

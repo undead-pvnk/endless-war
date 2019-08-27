@@ -851,8 +851,8 @@ async def move(cmd = None, isApt = False):
 				(" and {} seconds".format(seconds) if seconds > 4 else "")
 			) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 30 else ""))
 		)))
-    if isApt:
-		    await ewapt.depart(cmd=cmd, isGoto=True)
+		if isApt:
+			await ewapt.depart(cmd=cmd, isGoto=True)
 
 
 	life_state = user_data.life_state

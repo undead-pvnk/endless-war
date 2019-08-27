@@ -189,7 +189,7 @@ async def order(cmd):
 			item_type = ewcfg.it_cosmetic
 			if item != None:
 				item_id = item.id_cosmetic
-        name = item.str_name
+		name = item.str_name
 
 		if item == None:
 			item = ewcfg.furniture_map.get(value)
