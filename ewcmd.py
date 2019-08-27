@@ -612,4 +612,13 @@ async def arrest(cmd):
 
 """ !piss """
 async def piss(cmd):
-	pass
+	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
+
+	if ewcfg.mutation_id_enlargedbladder in mutations:
+		response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+
+	else:
+		response = "You lack the moral fiber necessary for urination."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

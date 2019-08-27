@@ -678,13 +678,82 @@ def retrieve_locked_districts(id_server):
 	return locked_districts_list
 
 
+"""
+	Go down the rabbit hole
+"""
 async def descend(cmd):
+	can_message_user = True
+	user = EwPlayer(id_user = cmd.message.author.id)
 	user_data = EwUser(member = cmd.message.author)
-	if user_data.poi == ewcfg.debugroom:
-		return move(cmd)
-	
+
+	if user_data.poi not in [ewcfg.poi_id_tt_mines, ewcfg.poi_id_cv_mines, ewcfg.poi_id_mine]:
+		return await move(cmd)
+
 	else:
-		pass
+		response = "Huh? What's this? There is a small, secluded crevice in the ground beneath you. This is extremely weird, you've never encountered anything like this before in all your days mining. Further investigation is required, obviously..."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		await asyncio.sleep(3)
+
+		if user_data.poi == ewcfg.poi_id_tt_mines:
+			response = "You enter the crevice hesitantly..."
+
+		if user_data.poi == ewcfg.poi_id_cv_mines:
+			response = "You enter the crevice hesitantly..."
+
+		if user_data.poi == ewcfg.poi_id_mine:
+			response = "You enter the crevice hesitantly..."
+
+		try:
+			await ewutils.send_message(cmd.client, cmd.message.author, response)
+		except:
+			can_message_user = False
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(6)
+		if user_data.poi == ewcfg.poi_id_tt_mines:
+			response = "You splash down into a shallow pool of, what you can only assume, is slime. It is " \
+					   "pitch-black, you struggle to make out even the waves lapping at your knees. The air " \
+					   "is thick with a dense fog of toxic fumes. Nothing you haven't encountered before in " \
+					   "Toxington, yet this fog feels strangely foreign. You whip out your smartphone and " \
+					   "illuminate your surroundings."
+			response += "\nhttps://ew.krakissi.net/img/sc/tt1temnbnmwrwnek.png"
+			response += "\nhttps://ew.krakissi.net/img/sc/tt23z83eu38e8u.png"
+
+		if user_data.poi == ewcfg.poi_id_cv_mines:
+			response = "You crawl for a few moments until you reach a small opening. It is extremely dark, " \
+					   "you struggle to make out what exactly you’ve just entered. However, whatever it is, " \
+					   "it has clearly been inhabited by humans. How recently you cannot ascertain. Fragments of " \
+					   "clay pots and tablets lay all across the unnaturally smooth cave floor. You whip out " \
+					   "your smartphone and illuminate your surroundings."
+			response += "\nhttps://ew.krakissi.net/img/sc/cv1jioijlkn.png"
+			response += "\nhttps://ew.krakissi.net/img/sc/cv2bnbjkuwefd.png"
+
+		if user_data.poi == ewcfg.poi_id_mine:
+			response = "You drop several feet into… well, you quite frankly have no idea. It is so pitch-black " \
+					   "that you cannot make out any surroundings. All you know that is dark and damp. " \
+					   "It seems like someone was just here, recently… You whip out your smartphone and " \
+					   "illuminate your surroundings."
+			response += "\nhttps://ew.krakissi.net/img/sc/jr1zcugbtownn.png"
+			response += "\nhttps://ew.krakissi.net/img/sc/jr23b5nv4bv53n4.png"
+
+			if can_message_user:
+				await ewutils.send_message(cmd.client, cmd.message.author, response)
+			else:
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			await asyncio.sleep(6)
+			response = "There seems to be someone's lost identification card laying on the ground."
+			response += "\nhttps://ew.krakissi.net/img/sc/N6CARDpibkjwheuidcw.png"
+
+		if can_message_user:
+			await ewutils.send_message(cmd.client, cmd.message.author, response)
+		else:
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		await asyncio.sleep(12)
+		response = "You return to the Mines..."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 """
 	Player command to move themselves from one place to another.

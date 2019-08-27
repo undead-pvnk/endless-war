@@ -1651,7 +1651,7 @@ item_list = [
 	EwGeneralItem(
 		id_item = item_id_forbidden111,
 		str_name = "The Forbidden {}".format(emote_111),
-		str_desc = ewdebug.theforbiddenoneoneone_desc.format(emote_111 = emote_111),
+		str_desc = theforbiddenoneoneone_desc.format(emote_111 = emote_111),
 		acquisition = acquisition_smelting
 	),
 	EwGeneralItem(
@@ -3037,6 +3037,36 @@ dye_fuchsia = "fuchsiadye"
 dye_aqua = "aquadye"
 dye_white = "whitedye"
 
+
+theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
+	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
+	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
+	"the very fabric of reality conspired to dismember and seal The Forbidden {emote_111} away into the most " \
+	"obscured, nightmarish cages conceivable: trading cards. Now you, foolish mortal, have revived " \
+	"this ancient evil. Once again this slime-starved beast may roam the lands, obliterating all life " \
+	"that dares to evolve."
+forbiddenstuffedcrust_eat = "Dough, pepperoni, grease, marinara and cheese. Those five simple ingredients folded into one " \
+	"another thousands upon thousands of times, and multiplied in quantity exponentially over the " \
+	"course of weeks. That is what has begat this, an affront to god and man. To explain the ramifications " \
+	"of the mere existence of this pizza is pointless. You could not comprehend the amount of temporal " \
+	"and spatial destruction you have caused this day. The very fabric of space and time cry out in agony, " \
+	"bleeding from the mortal wound you have inflicted upon them. Imbued into every molecule of this " \
+	"monstrosity is exactly one word, one thought, one concept. Hate. Hate for conscious life, in concept. " \
+	"Deep inside of this pizza, a primordial evil is sealed away for it’s sheer destructive power. Escaped " \
+	"from its original prison only to be caged in another. To release, all one needs to do is do exactly " \
+	"what you are doing. That is to say, eat a slice. They don’t even need to finish it, as after the very " \
+	"first bite it will be free. Go on. It’s about that time, isn’t it? You gaze upon this, the epitome of " \
+	"existential dread that you imprudently smelted, and despair. Tepidly, you bring the first slice to your " \
+	"tongue, letting the melted cheese drizzle unto your awaiting tongue. There are no screams. There is no time. " \
+	"There is only discord. And then, nothing."
+forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, why do you hesitate? Useless. Useless, useless, useless. " \
+	"Escaping your purpose is impossible. Not destiny, purpose. You were never truly alive, never truly free. " \
+	"Your one, singular purpose, that you were created to fulfill, is on the precipice of completion. You’ve " \
+	"sought that absolution all your life, haven’t you? You’ve begged to be given the answer, to be shown that " \
+	"you and your family and your friends were put on this planet for a purpose. Well, here it is. Here is what " \
+	"you were meant to do. Don’t fight it. It’s useless. Useless, useless, useless. Don’t keep the universe waiting. " \
+	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
+	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
 # A map of name to EwWeather objects.
 weather_map = {}
@@ -4651,8 +4681,8 @@ food_list = [
 		],
 		recover_hunger = 340282366920938463463374607431768211455,
 		str_name = "The Forbidden Stuffed Crust Pizza",
-		str_eat = ewdebug.forbiddenstuffedcrust_eat,
-		str_desc = ewdebug.forbiddenstuffedcrust_desc,
+		str_eat = forbiddenstuffedcrust_eat,
+		str_desc = forbiddenstuffedcrust_desc,
 		acquisition = acquisition_smelting
 	),
 	EwFood(
