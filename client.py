@@ -41,16 +41,21 @@ import ewdistrict
 import ewmutation
 import ewquadrants
 import ewtransport
+import ewstatuseffects
 import ewsmelting
+import ewhunting
 import ewfish
 import ewapt
 import ewdebug
 
 from ewitem import EwItem
 from ew import EwUser
+from ewplayer import EwPlayer
 from ewmarket import EwMarket
 from ewmarket import EwStock
 from ewdistrict import EwDistrict
+from ewstatuseffects import EwStatusEffect
+
 
 ewutils.logMsg('Starting up...')
 
@@ -63,7 +68,6 @@ last_helped_times = {}
 # Map of server ID to a map of active users on that server.
 active_users_map = {}
 
-
 # Map of all command words in the game to their implementing function.
 cmd_map = {
 	# Attack another player
@@ -71,11 +75,20 @@ cmd_map = {
 	ewcfg.cmd_shoot: ewwep.attack,
 	ewcfg.cmd_shoot_alt1: ewwep.attack,
 	ewcfg.cmd_shoot_alt2: ewwep.attack,
+	ewcfg.cmd_shoot_alt3: ewwep.attack,
+	ewcfg.cmd_shoot_alt4: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
+	# Reload
+	ewcfg.cmd_reload: ewwep.reload,
+	ewcfg.cmd_reload_alt1: ewwep.reload,
+	
+	# Fix your jammed gun
+	ewcfg.cmd_unjam: ewwep.unjam,
+
 	# Get a weapon into your inventory
-	ewcfg.cmd_arm: ewwep.arm,
-	ewcfg.cmd_arsenalize: ewwep.arm,
+	#ewcfg.cmd_arm: ewwep.arm,
+	#ewcfg.cmd_arsenalize: ewwep.arm,
 
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
@@ -167,23 +180,23 @@ cmd_map = {
 	# Play slime baccarat!
 	ewcfg.cmd_slimebaccarat: ewcasino.baccarat,
 
-        # Play slime skat!
-        ewcfg.cmd_slimeskat: ewcasino.skat,
-        ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
-        ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
-        ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
-        ewcfg.cmd_slimeskat_call: ewcasino.skat_call,
-        ewcfg.cmd_slimeskat_pass: ewcasino.skat_pass,
-        ewcfg.cmd_slimeskat_play: ewcasino.skat_play,
-        ewcfg.cmd_slimeskat_hearts: ewcasino.skat_hearts,
-        ewcfg.cmd_slimeskat_slugs: ewcasino.skat_slugs,
-        ewcfg.cmd_slimeskat_hats: ewcasino.skat_hats,
-        ewcfg.cmd_slimeskat_shields: ewcasino.skat_shields,
-        ewcfg.cmd_slimeskat_grand: ewcasino.skat_grand,
-        ewcfg.cmd_slimeskat_null: ewcasino.skat_null,
-        ewcfg.cmd_slimeskat_take: ewcasino.skat_take,
-        ewcfg.cmd_slimeskat_hand: ewcasino.skat_hand,
-        ewcfg.cmd_slimeskat_choose: ewcasino.skat_choose,
+	# Play slime skat!
+	ewcfg.cmd_slimeskat: ewcasino.skat,
+	ewcfg.cmd_slimeskat_join: ewcasino.skat_join,
+	ewcfg.cmd_slimeskat_decline: ewcasino.skat_decline,
+	ewcfg.cmd_slimeskat_bid: ewcasino.skat_bid,
+	ewcfg.cmd_slimeskat_call: ewcasino.skat_call,
+	ewcfg.cmd_slimeskat_pass: ewcasino.skat_pass,
+	ewcfg.cmd_slimeskat_play: ewcasino.skat_play,
+	ewcfg.cmd_slimeskat_hearts: ewcasino.skat_hearts,
+	ewcfg.cmd_slimeskat_slugs: ewcasino.skat_slugs,
+	ewcfg.cmd_slimeskat_hats: ewcasino.skat_hats,
+	ewcfg.cmd_slimeskat_shields: ewcasino.skat_shields,
+	ewcfg.cmd_slimeskat_grand: ewcasino.skat_grand,
+	ewcfg.cmd_slimeskat_null: ewcasino.skat_null,
+	ewcfg.cmd_slimeskat_take: ewcasino.skat_take,
+	ewcfg.cmd_slimeskat_hand: ewcasino.skat_hand,
+	ewcfg.cmd_slimeskat_choose: ewcasino.skat_choose,
 
 
 	# Russian Roulette
@@ -261,6 +274,9 @@ cmd_map = {
 	ewcfg.cmd_move_alt2: ewmap.move,
 	ewcfg.cmd_move_alt3: ewmap.move,
 
+	# go down
+	ewcfg.cmd_descend: ewmap.descend,
+
 	# Cancel all moves in progress.
 	ewcfg.cmd_halt: ewmap.halt,
 	ewcfg.cmd_halt_alt1: ewmap.halt,
@@ -274,6 +290,9 @@ cmd_map = {
 
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
+	
+	# Inspect objects in a POI
+	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
@@ -302,7 +321,7 @@ cmd_map = {
 	ewcfg.cmd_barter: ewfish.barter,
 	ewcfg.cmd_embiggen: ewfish.embiggen,
 
-	 #scavenging
+	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
 
 	#cosmetics
@@ -387,6 +406,9 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid: ewslimeoid.negaslimeoidbattle,
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
+	# Enemies
+	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
+
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
@@ -399,17 +421,27 @@ cmd_map = {
 	ewcfg.cmd_get_ashen: ewquadrants.get_ashen,
 	ewcfg.cmd_get_ashen_alt1: ewquadrants.get_ashen,
 
-        # mutations
-        ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
-        ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
+	# mutations
+	ewcfg.cmd_reroll_mutation: ewmutation.reroll_last_mutation,
+	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
 	ewcfg.cmd_teleport: ewmap.teleport,
+	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+
+	ewcfg.cmd_piss: ewcmd.piss,
+
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	ewcfg.cmd_debug1: ewdebug.debug1,
-	ewcfg.cmd_debug2: ewdebug.debug2,
+	#ewcfg.cmd_debug1: ewdebug.debug1,
+	#ewcfg.cmd_debug2: ewdebug.debug2,
+	ewcfg.cmd_debug3: ewdebug.debug3,
+	ewcfg.cmd_debug4: ewdebug.debug4,
+	ewcfg.debug5: ewdebug.debug5,
+	ewcfg.cmd_debug6: ewdebug.debug6,
+	ewcfg.cmd_debug7: ewdebug.debug7,
+	ewcfg.cmd_debug8: ewdebug.debug8,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,
@@ -563,6 +595,11 @@ async def on_ready():
 
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
+		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
+		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
@@ -648,6 +685,7 @@ async def on_ready():
 		# Adjust the exchange rate of slime for the market.
 		try:
 			for server in client.servers:
+
 				# Load market data from the database.
 				market_data = EwMarket(id_server = server.id)
 
@@ -711,9 +749,14 @@ async def on_ready():
 						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
 							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
 
+
 						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
 						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
 							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
+
+						if random.random() == 0.1:
+							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
+
 
 					market_data.persist()
 
@@ -854,6 +897,7 @@ async def on_message(message):
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
 	if message.server != None:
+
 		try:
 			ewutils.execute_sql_query("UPDATE users SET {time_last_action} = %s WHERE id_user = %s AND id_server = %s".format(
 				time_last_action = ewcfg.col_time_last_action
@@ -864,6 +908,17 @@ async def on_message(message):
 			))
 		except:
 			ewutils.logMsg('server {}: failed to update time_last_action for {}'.format(message.server.id, message.author.id))
+		
+		user_data = EwUser(member = message.author)
+		
+		statuses = user_data.getStatusEffects()
+
+		if ewcfg.status_strangled_id in statuses:
+			strangle_effect = EwStatusEffect(id_status=ewcfg.status_strangled_id, user_data=user_data)
+			source = EwPlayer(id_user=strangle_effect.source, id_server=message.server.id)
+			response = "You manage to break {}'s garrote wire!".format(source.display_name)
+			user_data.clear_status(ewcfg.status_strangled_id)			
+			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
 		"""
@@ -950,6 +1005,9 @@ async def on_message(message):
 
 				return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+		# Ignore stunned players
+		if ewcfg.status_stunned_id in statuses:
+			return
 
 		# Check the main command map for the requested command.
 		global cmd_map
@@ -961,7 +1019,7 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item creation
-		elif debug == True and cmd == '!createtestitem':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
 				id_user = message.author.id,
@@ -982,7 +1040,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, ewitem.item_look(item)))
 
 		# Creates a poudrin
-		elif debug == True and cmd == '!createpoudrin':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createpoudrin'):
 			for item in ewcfg.item_list:
 				if item.context == "poudrin":
 					ewitem.item_create(
@@ -1005,13 +1063,13 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
 		# Gives the user some slime
-		elif debug == True and cmd == '!getslime':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getslime'):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 10,000 slime!"
+			response = "You get 100,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 10000)
+			levelup_response = user_data.change_slimes(n = 100000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 
@@ -1037,7 +1095,7 @@ async def on_message(message):
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-		elif debug == True and cmd == '!createapple':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createapple'):
 			item_id = ewitem.item_create(
 				id_user = message.author.id,
 				id_server = message.server.id,
@@ -1061,7 +1119,7 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item deletion
-		elif debug == True and cmd == '!delete':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'delete'):
 			items = ewitem.inventory(
 				id_user = message.author.id,
 				id_server = message.server.id
