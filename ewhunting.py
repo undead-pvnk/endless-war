@@ -525,7 +525,7 @@ class EwEnemy:
                             explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
                                 target_player.display_name)
                             resp_cont.add_channel_response(ch_name, explode_resp)
-                            explosion = ewutils.explode(damage=explode_damage, district_data=district_data)
+                            explosion = await ewutils.explode(damage=explode_damage, district_data=district_data)
                             resp_cont.add_response_container(explosion)
 
                         # don't recreate enemy data if enemy was killed in explosion
