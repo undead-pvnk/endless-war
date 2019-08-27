@@ -586,7 +586,7 @@ class EwEnemy:
 
                 # Assign the corpse role to the newly dead player.
                 if was_killed:
-					member = server.get_member(target_data.id_user)
+                    member = server.get_member(target_data.id_user)
                     await ewrolemgr.updateRoles(client=client, member=member)
                     # announce death in kill feed channel
                     # killfeed_channel = ewutils.get_channel(enemy_data.id_server, ewcfg.channel_killfeed)
