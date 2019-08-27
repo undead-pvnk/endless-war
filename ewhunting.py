@@ -679,10 +679,10 @@ async def summon_enemy(cmd):
     if len(cmd.tokens) >= 3:
         enemytype = cmd.tokens[1]
         enemy_location = cmd.tokens[2]
-        if len(cmd.tokens) == 6:
+        if len(cmd.tokens) >= 6:
             enemy_slimes = cmd.tokens[3]
-            enemy_displayname = cmd.tokens[4]
-            enemy_level = cmd.tokens[5]
+            enemy_level = cmd.tokens[4]
+            enemy_displayname = " ".join(cmd.tokens[5:])
     
         poi = ewcfg.id_to_poi.get(enemy_location)
 
@@ -697,6 +697,9 @@ async def summon_enemy(cmd):
         enemy.lifetime = time_now
         enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
         
+        # Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
+        enemy.rare_status = 0
+        
         if enemy_slimes != None and enemy_displayname != None and enemy_level != None:
             enemy.initialslimes = enemy_slimes
             enemy.slimes = enemy_slimes
@@ -705,15 +708,16 @@ async def summon_enemy(cmd):
 
         enemy.persist()
 
-        response = "**DEBUG**: You have summoned **{}**, a level {} enemy. It has {} slime. It spawned in {}.".format(
+        response = "**DEBUG**: You have summoned **{}**, a level {} enemy of type **{}**. It has {} slime. It spawned in {}.".format(
             enemy.display_name,
             enemy.level,
+            enemy.enemytype,
             enemy.slimes,
             enemy.poi
         )
         
     else:
-        response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / DISPLAYNAME / LEVEL"
+        response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / DISPLAYNAME"
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -809,6 +813,7 @@ async def spawn_enemy(id_server):
 def find_enemy(enemy_search=None, user_data=None):
     enemy_found = None
     enemy_search_alias = None
+    
 
     if enemy_search != None:
 
@@ -853,6 +858,7 @@ def find_enemy(enemy_search=None, user_data=None):
             # find the first (i.e. the oldest) item that matches the search
             for row in enemydata:
                 enemy = EwEnemy(id_enemy=row[0], id_server=user_data.id_server)
+                
                 if (enemy.display_name.lower() == enemy_search) or (enemy.enemytype == enemy_search_alias):
                     enemy_found = enemy
                     break
@@ -873,6 +879,7 @@ def drop_enemy_loot(enemy_data, district_data):
     response = ""
 
     item_counter = 0
+    loot_multiplier = 1
 
     poudrin_dropped = False
     poudrin_amount = 0
@@ -1015,13 +1022,24 @@ def drop_enemy_loot(enemy_data, district_data):
                 pass
             
     # Multiply the amount of loot if an enemy is its rare variant
+    # Loot is also multiplied for the UFO raid boss, since it's a special case with the increased variety of slime it can have.
     if enemy_data.rare_status == 1:
-        poudrin_amount = math.ceil(poudrin_amount * 1.5)
-        pleb_amount = math.ceil(pleb_amount * 1.5)
-        patrician_amount = math.ceil(patrician_amount * 1.5)
-        crop_amount = math.ceil(crop_amount * 1.5)
-        meat_amount = math.ceil(meat_amount * 1.5)
-        card_amount = math.ceil(card_amount * 1.5)
+        loot_multiplier *= 1.5
+        
+    if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
+        if enemy_data.slimes >= 1500000:
+            loot_multiplier *= 5
+        elif enemy_data.slimes >= 1000000:
+            loot_multiplier *= 4
+        else:
+            loot_multiplier *= 3
+        
+    poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
+    pleb_amount = math.ceil(pleb_amount * loot_multiplier)
+    patrician_amount = math.ceil(patrician_amount * loot_multiplier)
+    crop_amount = math.ceil(crop_amount * loot_multiplier)
+    meat_amount = math.ceil(meat_amount * loot_multiplier)
+    card_amount = math.ceil(card_amount * loot_multiplier)
 
     # Drops items one-by-one
     if poudrin_dropped:
@@ -1400,7 +1418,7 @@ def get_enemy_slime(enemy_type):
     elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
         slime = ((random.randrange(500000) + 1250000) + 1)
     elif enemy_type ==  ewcfg.enemy_type_unnervingfightingoperator:
-        slime = (random.randrange(2000000) + 1)
+        slime = ((random.randrange(1500000) + 500000) + 1)
     return slime
 
 # Selects which non-ghost user to attack based on certain parameters.

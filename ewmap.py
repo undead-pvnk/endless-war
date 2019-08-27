@@ -994,7 +994,34 @@ async def teleport(cmd):
 		response = "You don't have any toilet paper."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def teleport_player(cmd):
+	author = cmd.message.author
+	user_data = EwUser(member=author)
 	
+	if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+		pass
+	else:
+		return
+	
+	if cmd.mentions_count == 1:
+		target = cmd.mentions[0]
+	else:
+		return
+	
+	destination = cmd.tokens[2]
+	
+	new_poi = ewcfg.id_to_poi.get(destination)
+	
+	if target != None and new_poi != None:
+		target_user = EwUser(member=target)
+		target_player = EwPlayer(id_user=target_user.id_user)
+		
+		target_user.poi = new_poi.id_poi
+		target_user.persist()
+		
+		response = "{} has been teleported to {}".format(target_player.display_name, new_poi.id_poi)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 """
 	Dump out the visual description of the area you're in.

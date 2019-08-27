@@ -409,6 +409,7 @@ cmd_map = {
 	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
 	ewcfg.cmd_teleport: ewmap.teleport,
+	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
