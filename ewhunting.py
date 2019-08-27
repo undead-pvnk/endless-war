@@ -524,7 +524,7 @@ class EwEnemy:
                             explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
                                 member.display_name)
                             resp_cont.add_channel_response(ch_name, explode_resp)
-                            explosion = ewwep.explode(damage=explode_damage, district_data=district_data)
+                            explosion = ewutils.explode(damage=explode_damage, district_data=district_data)
                             resp_cont.add_response_container(explosion)
 
                         # don't recreate enemy data if enemy was killed in explosion
@@ -656,7 +656,48 @@ class EwEnemy:
                 self.totaldamage += change
 
         self.persist()
-        
+
+# Reskinned version of effect container from ewwep.
+class EwEnemyEffectContainer:
+    miss = False
+    backfire = False
+    crit = False
+    strikes = 0
+    slimes_damage = 0
+    enemy_data = None
+    target_data = None
+
+    # Debug method to dump out the members of this object.
+    def dump(self):
+        print(
+            "effect:\nmiss: {miss}\ncrit: {crit}\nbackfire: {backfire}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
+                miss=self.miss,
+                backfire=self.backfire,
+                crit=self.crit,
+                strikes=self.strikes,
+                slimes_damage=self.slimes_damage,
+                slimes_spent=self.slimes_spent
+            ))
+
+    def __init__(
+            self,
+            miss=False,
+            backfire=False,
+            crit=False,
+            strikes=0,
+            slimes_damage=0,
+            slimes_spent=0,
+            enemy_data=None,
+            target_data=None
+    ):
+        self.miss = miss
+        self.backfire = backfire
+        self.crit = crit
+        self.strikes = strikes
+        self.slimes_damage = slimes_damage
+        self.slimes_spent = slimes_spent
+        self.enemy_data = enemy_data
+        self.target_data = target_data
 
 # Debug command. Could be used for events, perhaps?
 async def summon_enemy(cmd):
@@ -777,7 +818,7 @@ async def spawn_enemy(id_server):
 
     while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-        potential_chosen_poi = random.choice(outskirts_districts)
+        potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
         # potential_chosen_poi = 'cratersvilleoutskirts'
         potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
         enemies_list = potential_chosen_district.get_enemies_in_district()
@@ -824,7 +865,7 @@ def find_enemy(enemy_search=None, user_data=None):
 
         enemy_search_tokens = enemy_search.split(' ')
 
-        if enemy_search_tokens[len(enemy_search_tokens) - 1].upper() in identifier_letters:
+        if enemy_search_tokens[len(enemy_search_tokens) - 1].upper() in ewcfg.identifier_letters:
             # user passed in an identifier for a district specific enemy
 
             searched_identifier = enemy_search_tokens[len(enemy_search_tokens) - 1]
@@ -1262,48 +1303,7 @@ class EwAttackType:
         self.fn_effect = fn_effect
         self.str_crit = str_crit
         self.str_miss = str_miss
-
-# Reskinned version of effect container from ewwep.
-class EwEnemyEffectContainer:
-    miss = False
-    backfire = False
-    crit = False
-    strikes = 0
-    slimes_damage = 0
-    enemy_data = None
-    target_data = None
-
-    # Debug method to dump out the members of this object.
-    def dump(self):
-        print(
-            "effect:\nmiss: {miss}\ncrit: {crit}\nbackfire: {backfire}\nstrikes: {strikes}\nslimes_damage: {slimes_damage}\nslimes_spent: {slimes_spent}".format(
-                miss=self.miss,
-                backfire=self.backfire,
-                crit=self.crit,
-                strikes=self.strikes,
-                slimes_damage=self.slimes_damage,
-                slimes_spent=self.slimes_spent
-            ))
-
-    def __init__(
-            self,
-            miss=False,
-            backfire=False,
-            crit=False,
-            strikes=0,
-            slimes_damage=0,
-            slimes_spent=0,
-            enemy_data=None,
-            target_data=None
-    ):
-        self.miss = miss
-        self.backfire = backfire
-        self.crit = crit
-        self.strikes = strikes
-        self.slimes_damage = slimes_damage
-        self.slimes_spent = slimes_spent
-        self.enemy_data = enemy_data
-        self.target_data = target_data
+        
 
 # Check if an enemy is dead. Implemented to prevent enemy data from being recreated when not necessary.
 def check_death(enemy_data):
@@ -1502,7 +1502,7 @@ def set_identifier(poi, id_server):
     # A list of identifiers from enemies in a district
     enemy_identifiers = []
 
-    new_identifier = identifier_letters[0]
+    new_identifier = ewcfg.identifier_letters[0]
 
     if len(enemies_list) > 0:
         for enemy_id in enemies_list:
@@ -1516,38 +1516,11 @@ def set_identifier(poi, id_server):
             # If the new identifier matches one from the list of enemy identifiers, give it the next applicable letter
             # Repeat until a unique identifier is given
             if new_identifier == checked_enemy_identifier:
-                next_letter = (identifier_letters.index(checked_enemy_identifier) + 1)
-                new_identifier = identifier_letters[next_letter]
+                next_letter = (ewcfg.identifier_letters.index(checked_enemy_identifier) + 1)
+                new_identifier = ewcfg.identifier_letters[next_letter]
             else:
                 continue
 
     return new_identifier
 
-# List of outskirt districts for spawning purposes
-outskirts_districts = [
-    "wreckingtonoutskirts",
-    "cratersvilleoutskirts",
-    "oozegardensoutskirts",
-    "southsleezeboroughoutskirts",
-    "crooklineoutskirts",
-    "dreadfordoutskirts",
-    "jaywalkerplainoutskirts",
-    "westglocksburyoutskirts",
-    "poloniumhilloutskirts",
-    "charcoalparkoutskirts",
-    "toxingtonoutskirts",
-    "astatineheightsoutskirts",
-    "arsonbrookoutskirts",
-    "brawldenoutskirts",
-    "newnewyonkersoutskirts",
-    "assaultflatsbeachoutskirts"
-]
 
-# Letters that an enemy can identify themselves with
-identifier_letters = [
-    'A', 'B', 'C', 'D', 'E',
-    'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O',
-    'P', 'Q', 'R', 'S', 'T',
-    'U', 'V', 'W', 'X', 'Y', 'Z'
-]

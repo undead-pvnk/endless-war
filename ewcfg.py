@@ -2197,14 +2197,17 @@ def wef_tool(ctn = None):
 def wef_bass(ctn = None):
 	aim = (random.randrange(21) - 10)
 	user_mutations = ctn.user_data.get_mutations()
-	if aim <= -9:
+
+	# Increased miss chance if attacking within less than two seconds after last attack
+	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 5
+
+	if aim <= (-10 + int(21 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
-				ctn.slimes_damage = 0
 		else:
 			ctn.miss = True
-			ctn.slimes_damage = 0
 
 	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
 
@@ -11501,6 +11504,35 @@ coward_responses_hurt = [
 	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
 	"\nThe {} cries out in pain!: *You MONSTER!*",
 	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
+]
+
+# List of outskirt districts for spawning purposes
+outskirts_districts = [
+    poi_id_wreckington_outskirts,
+    poi_id_cratersville_outskirts,
+    poi_id_oozegardens_outskirts,
+    poi_id_southsleezeborough_outskirts,
+    poi_id_crookline_outskirts,
+    poi_id_dreadford_outskirts,
+    poi_id_jaywalkerplain_outskirts,
+    poi_id_westglocksbury_outskirts,
+    poi_id_poloniumhill_outskirts,
+    poi_id_charcoalpark_outskirts,
+    poi_id_toxington_outskirts,
+    poi_id_astatineheights_outskirts,
+    poi_id_arsonbrook_outskirts,
+    poi_id_brawlden_outskirts,
+    poi_id_newnewyonkers_outskirts,
+    poi_id_assaultflatsbeach_outskirts
+]
+
+# Letters that an enemy can identify themselves with
+identifier_letters = [
+    'A', 'B', 'C', 'D', 'E',
+    'F', 'G', 'H', 'I', 'J',
+    'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T',
+    'U', 'V', 'W', 'X', 'Y', 'Z'
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id

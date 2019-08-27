@@ -680,9 +680,6 @@ async def removeExpiredStatuses(id_server = None):
 						if int(status_effect.value) < time_now:
 							user_data.clear_status(id_status=status)
 
-			await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
-
-
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
 def getIntToken(tokens = [], allow_all = False, negate = False):
 	value = None
@@ -1126,3 +1123,92 @@ def get_move_speed(user_data):
 		move_speed *= 1.33
 
 	return move_speed
+
+""" Damage all players in a district """
+async def explode(damage = 0, district_data = None):
+	id_server = district_data.id_server
+	poi = district_data.name
+
+	client = get_client()
+	server = client.get_server(id_server)
+
+	resp_cont = EwResponseContainer(id_server = id_server)
+	response = ""
+	channel = ewcfg.id_to_poi.get(poi).channel
+
+	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
+	users = district_data.get_players_in_district(life_states = life_states)
+
+	enemies = district_data.get_enemies_in_district()
+
+	# damage players
+	for user in users:
+		user_data = EwUser(id_user = user, id_server = id_server)
+		mutations = user_data.get_mutations()
+
+		if True:
+			player_data = EwPlayer(id_user = user_data.id_user)
+			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(player_data.display_name, damage)
+			resp_cont.add_channel_response(channel, response)
+			slimes_damage = damage
+			if user_data.slimes < slimes_damage + user_data.bleed_storage:
+				# die in the explosion
+				district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
+				district_data.persist()
+				slimes_dropped = user_data.totaldamage + user_data.slimes
+				explode_damage = slime_bylevel(user_data.slimelevel)
+
+				user_data.die(cause = ewcfg.cause_killing)
+				user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+				user_data.persist()
+
+				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
+				resp_cont.add_channel_response(channel, response)
+
+				if ewcfg.mutation_id_spontaneouscombustion in mutations:
+					sub_explosion = await explode(explode_damage, district_data)
+					resp_cont.add_response_container(sub_explosion)
+
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+			else:
+				# survive
+				slime_splatter = 0.5 * slimes_damage
+				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+				district_data.persist()
+				slimes_damage -= slime_splatter
+				user_data.bleed_storage += slimes_damage
+				user_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
+				user_data.persist()
+
+	# damage enemies
+	for enemy in enemies:
+		enemy_data = EwEnemy(id_enemy = enemy, id_server = id_server)
+
+		if True:
+			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
+			resp_cont.add_channel_response(channel, response)
+			slimes_damage = damage
+			if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
+				# die in the explosion
+				district_data.change_slimes(n = enemy_data.slimes, source = ewcfg.source_killing)
+				district_data.persist()
+				# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
+
+				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
+				response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
+				resp_cont.add_channel_response(channel, response)
+
+				enemy_data.life_state = ewcfg.enemy_lifestate_dead
+				enemy_data.persist()
+
+			else:
+				# survive
+				slime_splatter = 0.5 * slimes_damage
+				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+				district_data.persist()
+				slimes_damage -= slime_splatter
+				enemy_data.bleed_storage += slimes_damage
+				enemy_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
+				enemy_data.persist()
+	return resp_cont
