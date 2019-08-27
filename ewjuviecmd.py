@@ -16,7 +16,6 @@ from ewitem import EwItem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
-from ewitem import EwItem
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
 # exceeds 3 in 5 seconds, you die.

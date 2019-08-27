@@ -656,7 +656,7 @@ def inaccessible(user_data = None, poi = None):
 		set(poi.factions).issubset(set(bans))
 	):
 		return True
-	elif poi.id_poi in locked_districts_list and user_data.life_state != ewcfg.life_state_executive:
+	elif poi.id_poi in locked_districts_list and (user_data.life_state != ewcfg.life_state_executive or user_data.life_state != ewcfg.life_state_lucky):
 		return True
 	else:
 		return False
