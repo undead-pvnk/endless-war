@@ -2053,7 +2053,7 @@ def wef_scythe(ctn = None):
 	aim = (random.randrange(10) + 1)
 
 	if aim <= (1 + (10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations():
+		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
