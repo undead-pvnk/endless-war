@@ -764,21 +764,33 @@ async def summon_enemy(cmd):
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-# Gathers all enemies from the database and has them perform an action
+# Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):
-    enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-	id_enemy = ewcfg.col_id_enemy
-    ), (
-	id_server,
-    ))
+    
+    despawn_timenow = int(time.time()) - ewcfg.time_despawn
+
+    enemydata = ewutils.execute_sql_query(
+        "SELECT {id_enemy} FROM users, enemies WHERE (users.poi = enemies.poi and users.life_state != %s AND enemies.id_server = {id_server} AND users.id_server = {id_server}) OR (enemies.enemytype IN %s AND enemies.id_server = {id_server}) OR (enemies.lifestate = %s OR enemies.lifetime < %s)".format(
+            id_enemy=ewcfg.col_id_enemy,
+            id_server=id_server
+        ), (
+            ewcfg.life_state_corpse,
+            ewcfg.raid_bosses,
+            ewcfg.enemy_lifestate_dead,
+            despawn_timenow
+        ))
+    
+    # Remove duplicates from SQL query
+    enemydata = list(dict.fromkeys(enemydata))
+
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
 
         # If an enemy is marked for death or has been alive too long, delete it
-        if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < (int(time.time()) - ewcfg.time_despawn)):
+        if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < despawn_timenow):
             delete_enemy(enemy)
         else:
-            # If an enemy is an activated raid boss, it has a 1/10 chance to move between districts.
+            # If an enemy is an activated raid boss, it has a 1/20 chance to move between districts.
             if enemy.enemytype in ewcfg.raid_bosses and enemy.life_state == ewcfg.enemy_lifestate_alive and check_raidboss_movecooldown(enemy):
                 if random.randrange(20) == 0:
                     resp_cont = enemy.move()
@@ -802,13 +814,13 @@ async def spawn_enemy(id_server):
 
     rarity_choice = random.randrange(10000)
 
-    if rarity_choice <= 5000:
+    if rarity_choice <= 4500:
         # common enemies
         enemytype = random.choice(ewcfg.common_enemies)
-    elif rarity_choice <= 7500:
+    elif rarity_choice <= 7200:
         # uncommon enemies
         enemytype = random.choice(ewcfg.uncommon_enemies)
-    elif rarity_choice <= 9500:
+    elif rarity_choice <= 9000:
         # rare enemies
         enemytype = random.choice(ewcfg.rare_enemies)
     else:
@@ -994,7 +1006,7 @@ def drop_enemy_loot(enemy_data, district_data):
         drop_min = poudrin_values[1]
         drop_max = poudrin_values[2]
         
-        poudrin_dropped = random.randrange(101) < drop_chance
+        poudrin_dropped = random.randrange(100) <= (drop_chance - 1)
         
         if poudrin_dropped:
             drop_range = list(range(drop_min, drop_max+1))
@@ -1070,12 +1082,20 @@ def drop_enemy_loot(enemy_data, district_data):
         loot_multiplier *= 1.5
         
     if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
-        if enemy_data.slimes >= 1500000:
-            loot_multiplier *= 5
-        elif enemy_data.slimes >= 1000000:
-            loot_multiplier *= 4
-        else:
-            loot_multiplier *= 3
+        if enemy_data.rare_status == 0:
+            if enemy_data.slimes >= 2000000:
+                loot_multiplier *= 6
+            elif enemy_data.slimes >= 1500000:
+                loot_multiplier *= 5
+            else:
+                loot_multiplier *= 4
+        elif enemy_data.rare_status == 1:
+            if enemy_data.slimes >= 4000000:
+                loot_multiplier *= 6
+            elif enemy_data.slimes >= 3000000:
+                loot_multiplier *= 5
+            else:
+                loot_multiplier *= 4
         
     poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
     pleb_amount = math.ceil(pleb_amount * loot_multiplier)
@@ -1401,26 +1421,41 @@ def get_enemy_data(enemy_type):
 # Returns a randomized amount of slime based on enemy type
 def get_enemy_slime(enemy_type):
     slime = 0
+    minslime = 0
+    maxslime = 0
+    
     if enemy_type == ewcfg.enemy_type_juvie:
-        slime = ((random.randrange(40000) + 10000) + 1)
+        minslime = 10000
+        maxslime = 50000
     elif enemy_type == ewcfg.enemy_type_microslime:
-        slime = 10000
+        minslime = 10000
+        maxslime = 50000
     elif enemy_type == ewcfg.enemy_type_dinoslime:
-        slime = ((random.randrange(250000) + 250000) + 1)
+        minslime = 250000
+        maxslime = 500000
     elif enemy_type == ewcfg.enemy_type_slimeadactyl:
-        slime = ((random.randrange(250000) + 500000) + 1)
+        minslime = 500000
+        maxslime = 750000
     elif enemy_type == ewcfg.enemy_type_desertraider:
-        slime = ((random.randrange(500000) + 250000) + 1)
+        minslime = 250000
+        maxslime = 750000
     elif enemy_type == ewcfg.enemy_type_mammoslime:
-        slime = ((random.randrange(300000) + 600000) + 1)
+        minslime = 600000
+        maxslime = 900000
     elif enemy_type == ewcfg.enemy_type_megaslime:
-        slime = 1000000
+        minslime = 1000000
+        maxslime = 1000000
     elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
-        slime = ((random.randrange(500000) + 1000000) + 1)
+        minslime = 1000000
+        maxslime = 1500000
     elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
-        slime = ((random.randrange(500000) + 1250000) + 1)
+        minslime = 1250000
+        maxslime = 1750000
     elif enemy_type ==  ewcfg.enemy_type_unnervingfightingoperator:
-        slime = ((random.randrange(1500000) + 500000) + 1)
+        minslime = 1000000
+        maxslime = 2500000
+    
+    slime = random.randrange(minslime, (maxslime + 1))    
     return slime
 
 # Selects which non-ghost user to attack based on certain parameters.
