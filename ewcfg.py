@@ -1328,6 +1328,7 @@ stat_grenade_kills = 'grenade_kills'
 stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
+stat_bass_kills = 'bass_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2041,7 +2042,11 @@ def wef_scythe(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.25)
 	user_mutations = ctn.user_data.get_mutations()
 
-	target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
+	try:
+		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
+	except:
+		target_kills = 4
+
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
 
 	# Decreased damage if attacking within less than two seconds after last attack
@@ -2788,7 +2793,8 @@ weapon_list = [
 		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
-		acquisition = acquisition_smelting
+		acquisition = acquisition_smelting,
+		stat = stat_bass_kills
 	)
 ]
 
