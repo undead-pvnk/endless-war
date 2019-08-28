@@ -814,13 +814,13 @@ async def spawn_enemy(id_server):
 
     rarity_choice = random.randrange(10000)
 
-    if rarity_choice <= 5000:
+    if rarity_choice <= 4500:
         # common enemies
         enemytype = random.choice(ewcfg.common_enemies)
-    elif rarity_choice <= 7500:
+    elif rarity_choice <= 7200:
         # uncommon enemies
         enemytype = random.choice(ewcfg.uncommon_enemies)
-    elif rarity_choice <= 9500:
+    elif rarity_choice <= 9000:
         # rare enemies
         enemytype = random.choice(ewcfg.rare_enemies)
     else:
@@ -1082,12 +1082,20 @@ def drop_enemy_loot(enemy_data, district_data):
         loot_multiplier *= 1.5
         
     if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
-        if enemy_data.slimes >= 1500000:
-            loot_multiplier *= 5
-        elif enemy_data.slimes >= 1000000:
-            loot_multiplier *= 4
-        else:
-            loot_multiplier *= 3
+        if enemy_data.rare_status == 0:
+            if enemy_data.slimes >= 2000000:
+                loot_multiplier *= 6
+            elif enemy_data.slimes >= 1500000:
+                loot_multiplier *= 5
+            else:
+                loot_multiplier *= 4
+        elif enemy_data.rare_status == 1:
+            if enemy_data.slimes >= 4000000:
+                loot_multiplier *= 6
+            elif enemy_data.slimes >= 3000000:
+                loot_multiplier *= 5
+            else:
+                loot_multiplier *= 4
         
     poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
     pleb_amount = math.ceil(pleb_amount * loot_multiplier)
@@ -1444,8 +1452,8 @@ def get_enemy_slime(enemy_type):
         minslime = 1250000
         maxslime = 1750000
     elif enemy_type ==  ewcfg.enemy_type_unnervingfightingoperator:
-        minslime = 500000
-        maxslime = 2000000
+        minslime = 1000000
+        maxslime = 2500000
     
     slime = random.randrange(minslime, (maxslime + 1))    
     return slime
