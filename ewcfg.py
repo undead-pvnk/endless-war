@@ -721,10 +721,10 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 5 # Five minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 3
+enemy_attack_tick_length = 5
 
 # how often to burn
-burn_tick_length = 3
+burn_tick_length = 4
 
 # how often to check for statuses to be removed
 removestatus_tick_length = 5
