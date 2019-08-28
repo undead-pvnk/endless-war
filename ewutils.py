@@ -1215,5 +1215,6 @@ async def explode(damage = 0, district_data = None):
 	return resp_cont
 
 def is_otp(user_data):
-	return user_data.poi in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse] and user_data.poi[:3] != ewcfg.poi_id_apt
+	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse] and user_data.poi[:3] != ewcfg.poi_id_apt
+
 
