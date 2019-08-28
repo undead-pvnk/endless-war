@@ -237,7 +237,7 @@ def gen_fish(x, cmd, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
-	if cmd.message.channel.name in ["slimes-end-pier", "ferry"]:
+	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "vagrants-corner-pier", "ferry"]:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
 				fish_pool.remove(fish)
@@ -306,17 +306,6 @@ def gen_bite_text(size):
 	text += " **!REEL NOW!!!!!**"
 	return text
 
-# If a fish doesn't bite, send one of these.
-nobite_text = [
-	"You patiently wait...",
-	"You look towards the green Slime Sea horizon...",
-	"This is so fucking boring...",
-	"You watch your hook bob...",
-	"You grow impatient and kick the rotted wooden guard rails...",
-	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
-	"You begin to zone-out a bit..."
-]
-
 """ Casts a line into the Slime Sea """
 async def cast(cmd):
 	time_now = round(time.time())
@@ -367,38 +356,39 @@ async def cast(cmd):
 				if item.item_type == ewcfg.it_food:
 
 					str_name = item.item_props['food_name']
+					id_food = item.item_props.get('id_food')
 					fisher.bait = True
 
-					if item in ewcfg.plebe_bait:
+					if id_food in ewcfg.plebe_bait:
 						fisher.current_fish = "plebefish"
 
-					elif item == "doublestuffedcrust":
+					elif id_food == "doublestuffedcrust":
 						if random.randrange(5) == 3:
 							fisher.current_fish = "doublestuffedflounder"
 
-					elif item in ["chickenbucket", "familymeal"]:
+					elif id_food in ["chickenbucket", "familymeal"]:
 						if random.randrange(5) == 3:
 							fisher.current_fish = "seacolonel"
 
-					elif item in ["steakvolcanoquesomachorito", "nachosupreme"]:
+					elif id_food in ["steakvolcanoquesomachorito", "nachosupreme"]:
 						if random.randrange(5) == 3:
 							fisher.current_fish = "marlinsupreme"
 
-					elif item in ["blacklimes", "blacklimesour"]:
+					elif id_food in ["blacklimes", "blacklimesour"]:
 						if random.randrange(2) == 1:
 							fisher.current_fish = "blacklimesalmon"
 
-					elif item in ["pinkrowddishes", "pinkrowdatouille"]:
+					elif id_food in ["pinkrowddishes", "pinkrowdatouille"]:
 						if random.randrange(2) == 1:
 							fisher.current_fish = "thrash"
 
-					elif item in ["purplekilliflowercrustpizza", "purplekilliflower"]:
+					elif id_food in ["purplekilliflowercrustpizza", "purplekilliflower"]:
 						if random.randrange(2) == 1:
 							fisher.current_fish = "dab"
 
-					elif item == "kingpincrab":
+					elif id_food == "kingpincrab":
 						if random.randrange(5) == 1:
-							fisher.current_fish = "kingpincrab"
+							fisher.current_fish = "uncookedkingpincrab"
 
 					elif float(item.time_expir if item.time_expir is not None else 0) < time.time():
 						if random.randrange(2) == 1:
@@ -444,22 +434,20 @@ async def cast(cmd):
 				else:
 					damp = random.randrange(fun)
 					
-				timer = 0
-				while timer <= 60:
-					await asyncio.sleep(1)
-					user_data = EwUser(member = cmd.message.author)
+				await asyncio.sleep(60)
+				user_data = EwUser(member = cmd.message.author)
 
-					if user_data.poi != fisher.pier:
-						fisher.fishing = False
-						return
-					if user_data.life_state == ewcfg.life_state_corpse:
-						fisher.fishing = False
-						return
-					if fisher.fishing == False:
-						return
-					timer += 1
+				if user_data.poi != fisher.pier:
+					fisher.fishing = False
+					return
+				if user_data.life_state == ewcfg.life_state_corpse:
+					fisher.fishing = False
+					return
+				if fisher.fishing == False:
+					return
+
 				if damp > 10:
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(nobite_text)))
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.nobite_text)))
 					fun -= 2
 					bun += 1
 					if bun >= 5:
@@ -649,12 +637,42 @@ async def reel(cmd):
 				if was_levelup:
 					response += levelup_response
 
+				market_data = EwMarket(id_server=user_data.id_server)
+				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
+					
+					item = ewcfg.debugitem
+					
+					ewitem.item_create(
+						item_type=ewcfg.it_item,
+						id_user=user_data.id_user,
+						id_server=user_data.id_server,
+						item_props={
+							'id_item': item.id_item,
+							'context': item.context,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					ewutils.logMsg('Created item: {}'.format(item.id_item))
+					item = EwItem(id_item=item.id_item)
+					item.persist()
+					
+					response += ewcfg.debugfish_response
+					market_data.caught_fish += 1
+					market_data.persist()
+		
+				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
+					market_data.caught_fish += 1
+					market_data.persist()
+
 				fisher.fishing = False
 				fisher.bite = False
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.pier = ""
+				
 				user_data.persist()
+				
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
 
