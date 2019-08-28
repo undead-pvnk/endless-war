@@ -1068,7 +1068,7 @@ async def decrease_food_multiplier(id_user):
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
-	if random.randrange(3) == 2:
+	if random.randrange(3) == 0:
 		resp_cont = EwResponseContainer(id_server=id_server)
 		response, channel = await ewhunting.spawn_enemy(id_server)
 
