@@ -127,7 +127,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think?"
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif ewutils.is_otp(haunted_data):
+		elif not ewutils.is_otp(haunted_data):
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
