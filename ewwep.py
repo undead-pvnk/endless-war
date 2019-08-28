@@ -721,19 +721,6 @@ async def attack(cmd):
 						
 					# Collect bounty
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
-          
-					# Drop shootee scalp
-					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
-						item_props = {
-							'id_cosmetic': 'scalp',
-							'cosmetic_name': "{}'s scalp".format(shootee_name),
-							'cosmetic_desc': "A scalp.{}".format(scalp_text(weapon)),
-							'adorned': 'false'
-						}
-					)
 					
 					if shootee_data.slimes >= 0:
 						user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
@@ -744,11 +731,11 @@ async def attack(cmd):
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
           
-          # Scalp text
-          if weapon != None:
-            scalp_text = weapon.str_scalp
-          else:
-            scalp_text = ""
+					# Scalp text
+					if weapon != None:
+						scalp_text = weapon.str_scalp
+					else:
+						scalp_text = ""
 					
 					# Drop shootee scalp
 					ewitem.item_create(
