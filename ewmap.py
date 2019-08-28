@@ -678,6 +678,7 @@ def retrieve_locked_districts(id_server):
 	return locked_districts_list
 
 
+
 """
 	Go down the rabbit hole
 """

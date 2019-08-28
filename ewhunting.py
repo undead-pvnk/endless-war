@@ -478,7 +478,7 @@ class EwEnemy:
                         enemy_data.id_target = ""
                         target_data.id_killer = enemy_data.id_enemy
                         target_data.die(cause=ewcfg.cause_enemy_killing)
-                        target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
+                        #target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
 
                         kill_descriptor = "beaten to death"
                         if used_attacktype != ewcfg.enemy_attacktype_unarmed:

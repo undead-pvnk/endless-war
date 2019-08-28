@@ -1074,7 +1074,7 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 
 					target_data.id_killer = user_data.id_user
 					target_data.die(cause = ewcfg.cause_killing)
-					target_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+					#target_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 					target_data.persist()
 
 					response += "{} was killed by an explosion during your fight with {}!".format(target_player.display_name, shootee_player.display_name)

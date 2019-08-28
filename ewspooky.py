@@ -127,7 +127,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think?"
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif ewmap.poi_is_pvp(haunted_data.poi) == False:
+		elif ewutils.is_otp(haunted_data):
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -139,13 +139,13 @@ async def haunt(cmd):
 		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile:
 			# Target can be haunted by the player.
 			haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
-			if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
-				haunted_slimes *= 2
-			elif haunted_slimes > ewcfg.slimes_hauntmax:
+			#if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
+			#	haunted_slimes *= 2
+			if haunted_slimes > ewcfg.slimes_hauntmax:
 				haunted_slimes = ewcfg.slimes_hauntmax
 
-			if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
-				haunted_slimes = -user_data.slimes
+			#if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
+			#	haunted_slimes = -user_data.slimes
 
 			haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
 			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
@@ -220,10 +220,10 @@ async def summon_negaslimeoid(cmd):
 		if market_data.negaslime >= 0:
 			response = "The dead haven't amassed any negaslime yet."
 		else:
-			max_level = min(len(str(user_data.slimes)), len(str(market_data.negaslime)) - 1)
+			max_level = min(len(str(user_data.slimes)) - 1, len(str(market_data.negaslime)) - 1)
 			level = random.randint(1, max_level)
 			value = 10 ** (level - 1)
-			user_data.change_slimes(n = int(value/10))
+			#user_data.change_slimes(n = int(value/10))
 			market_data.negaslime += value
 			slimeoid.sltype = ewcfg.sltype_nega
 			slimeoid.life_state = ewcfg.slimeoid_state_active
@@ -306,6 +306,10 @@ async def manifest(cmd):
 	
 	if user_data.poi != ewcfg.poi_id_thesewers:
 		response = "You've already manifested in the city."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.slimes > ewcfg.slimes_tomanifest:
+		response = "You are too weak to manifest. You need to gather more negative slime."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi_death)

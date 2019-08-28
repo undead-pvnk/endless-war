@@ -616,6 +616,7 @@ slimecoin_exchangerate = 100
 slimes_permill = 75000
 slimes_invein = 4000
 slimes_pertile = 50
+slimes_tomanifest = -100000
 
 # hunger
 min_stamina = 100
