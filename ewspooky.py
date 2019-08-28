@@ -40,7 +40,7 @@ async def revive(cmd):
 			
 			# Preserve negaslime
 			if player_data.slimes < 0:
-				market_data.negaslime += player_data.slimes
+				#market_data.negaslime += player_data.slimes
 				player_data.change_slimes(n = -player_data.slimes) # set to 0
 
 			# Give player some initial slimes.
