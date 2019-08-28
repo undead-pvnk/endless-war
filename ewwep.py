@@ -746,7 +746,7 @@ async def attack(cmd):
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
 					shootee_data.die(cause = ewcfg.cause_killing)
-					shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
