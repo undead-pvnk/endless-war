@@ -604,6 +604,7 @@ cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 
+
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
 cmd_consult = cmd_prefix + 'consult'
@@ -630,6 +631,9 @@ apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
+
+
+cmd_promote = cmd_prefix + 'promote'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
@@ -718,8 +722,9 @@ slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
 slimes_permill = 75000
-slimes_invein = 2000
-slimes_pertile = 25
+slimes_invein = 4000
+slimes_pertile = 50
+slimes_tomanifest = -100000
 
 # hunger
 min_stamina = 100
@@ -824,10 +829,10 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 5 # Five minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 2
+enemy_attack_tick_length = 5
 
 # how often to burn
-burn_tick_length = 1
+burn_tick_length = 4
 
 # how often to check for statuses to be removed
 removestatus_tick_length = 5
@@ -1443,6 +1448,7 @@ stat_grenade_kills = 'grenade_kills'
 stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
+stat_bass_kills = 'bass_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1568,6 +1574,36 @@ weapon_id_molotov = 'molotov'
 weapon_id_grenades = 'grenades'
 weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
+
+theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
+	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
+	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
+	"the very fabric of reality conspired to dismember and seal The Forbidden {emote_111} away into the most " \
+	"obscured, nightmarish cages conceivable: trading cards. Now you, foolish mortal, have revived " \
+	"this ancient evil. Once again this slime-starved beast may roam the lands, obliterating all life " \
+	"that dares to evolve."
+forbiddenstuffedcrust_eat = "Dough, pepperoni, grease, marinara and cheese. Those five simple ingredients folded into one " \
+	"another thousands upon thousands of times, and multiplied in quantity exponentially over the " \
+	"course of weeks. That is what has begat this, an affront to god and man. To explain the ramifications " \
+	"of the mere existence of this pizza is pointless. You could not comprehend the amount of temporal " \
+	"and spatial destruction you have caused this day. The very fabric of space and time cry out in agony, " \
+	"bleeding from the mortal wound you have inflicted upon them. Imbued into every molecule of this " \
+	"monstrosity is exactly one word, one thought, one concept. Hate. Hate for conscious life, in concept. " \
+	"Deep inside of this pizza, a primordial evil is sealed away for it’s sheer destructive power. Escaped " \
+	"from its original prison only to be caged in another. To release, all one needs to do is do exactly " \
+	"what you are doing. That is to say, eat a slice. They don’t even need to finish it, as after the very " \
+	"first bite it will be free. Go on. It’s about that time, isn’t it? You gaze upon this, the epitome of " \
+	"existential dread that you imprudently smelted, and despair. Tepidly, you bring the first slice to your " \
+	"tongue, letting the melted cheese drizzle unto your awaiting tongue. There are no screams. There is no time. " \
+	"There is only discord. And then, nothing."
+forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, why do you hesitate? Useless. Useless, useless, useless. " \
+	"Escaping your purpose is impossible. Not destiny, purpose. You were never truly alive, never truly free. " \
+	"Your one, singular purpose, that you were created to fulfill, is on the precipice of completion. You’ve " \
+	"sought that absolution all your life, haven’t you? You’ve begged to be given the answer, to be shown that " \
+	"you and your family and your friends were put on this planet for a purpose. Well, here it is. Here is what " \
+	"you were meant to do. Don’t fight it. It’s useless. Useless, useless, useless. Don’t keep the universe waiting. " \
+	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
+	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
 # List of normal items.
 item_list = [
@@ -2126,7 +2162,11 @@ def wef_scythe(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.25)
 	user_mutations = ctn.user_data.get_mutations()
 
-	target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
+	try:
+		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
+	except:
+		target_kills = 4
+
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
 
 	# Decreased damage if attacking within less than two seconds after last attack
@@ -2138,7 +2178,7 @@ def wef_scythe(ctn = None):
 	aim = (random.randrange(10) + 1)
 
 	if aim <= (1 + (10 * ctn.miss_mod)):
-		if mutation_id_sharptoother in user_mutations():
+		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
@@ -2873,7 +2913,8 @@ weapon_list = [
 		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
-		acquisition = acquisition_smelting
+		acquisition = acquisition_smelting,
+		stat = stat_bass_kills
 	)
 ]
 
@@ -3153,36 +3194,6 @@ dye_fuchsia = "fuchsiadye"
 dye_aqua = "aquadye"
 dye_white = "whitedye"
 
-
-theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
-	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
-	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
-	"the very fabric of reality conspired to dismember and seal The Forbidden {emote_111} away into the most " \
-	"obscured, nightmarish cages conceivable: trading cards. Now you, foolish mortal, have revived " \
-	"this ancient evil. Once again this slime-starved beast may roam the lands, obliterating all life " \
-	"that dares to evolve."
-forbiddenstuffedcrust_eat = "Dough, pepperoni, grease, marinara and cheese. Those five simple ingredients folded into one " \
-	"another thousands upon thousands of times, and multiplied in quantity exponentially over the " \
-	"course of weeks. That is what has begat this, an affront to god and man. To explain the ramifications " \
-	"of the mere existence of this pizza is pointless. You could not comprehend the amount of temporal " \
-	"and spatial destruction you have caused this day. The very fabric of space and time cry out in agony, " \
-	"bleeding from the mortal wound you have inflicted upon them. Imbued into every molecule of this " \
-	"monstrosity is exactly one word, one thought, one concept. Hate. Hate for conscious life, in concept. " \
-	"Deep inside of this pizza, a primordial evil is sealed away for it’s sheer destructive power. Escaped " \
-	"from its original prison only to be caged in another. To release, all one needs to do is do exactly " \
-	"what you are doing. That is to say, eat a slice. They don’t even need to finish it, as after the very " \
-	"first bite it will be free. Go on. It’s about that time, isn’t it? You gaze upon this, the epitome of " \
-	"existential dread that you imprudently smelted, and despair. Tepidly, you bring the first slice to your " \
-	"tongue, letting the melted cheese drizzle unto your awaiting tongue. There are no screams. There is no time. " \
-	"There is only discord. And then, nothing."
-forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, why do you hesitate? Useless. Useless, useless, useless. " \
-	"Escaping your purpose is impossible. Not destiny, purpose. You were never truly alive, never truly free. " \
-	"Your one, singular purpose, that you were created to fulfill, is on the precipice of completion. You’ve " \
-	"sought that absolution all your life, haven’t you? You’ve begged to be given the answer, to be shown that " \
-	"you and your family and your friends were put on this planet for a purpose. Well, here it is. Here is what " \
-	"you were meant to do. Don’t fight it. It’s useless. Useless, useless, useless. Don’t keep the universe waiting. " \
-	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
-	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
 # A map of name to EwWeather objects.
 weather_map = {}
@@ -12259,10 +12270,12 @@ status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 
+time_expire_burn = 12
+
 status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_burning_id,
-		time_expire = 10,
+		time_expire = time_expire_burn,
 		str_acquire = '{name_player}\'s body is engulfed in flames.',
 		str_describe = 'They are burning.',
 		str_describe_self = 'You are burning.'

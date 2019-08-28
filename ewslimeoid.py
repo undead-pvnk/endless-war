@@ -725,6 +725,7 @@ async def dissolveslimeoid(cmd):
 		slimeoid.intel = 0
 		slimeoid.level = 0
 		slimeoid.clout = 0
+		slimeoid.hue = ""
 
 		user_data.persist()
 		slimeoid.persist()

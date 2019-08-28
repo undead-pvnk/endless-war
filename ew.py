@@ -144,10 +144,11 @@ class EwUser:
 	def die(self, cause = None):
 		if cause == ewcfg.cause_busted:
 			self.busted = True
-			self.slimes = int(self.slimes * 0.9)
+			#self.slimes = int(self.slimes * 0.9)
 		else:
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
+			self.slimelevel = 1
 			self.life_state = ewcfg.life_state_corpse
 			self.poi_death = self.poi
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
@@ -161,7 +162,6 @@ class EwUser:
 		self.bounty = 0
 		self.totaldamage = 0
 		self.bleed_storage = 0
-		self.slimelevel = 1
 		self.hunger = 0
 		self.inebriation = 0
 		# Clear weapon and weaponskill.
