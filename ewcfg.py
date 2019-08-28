@@ -720,10 +720,10 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 5 # Five minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 2
+enemy_attack_tick_length = 3
 
 # how often to burn
-burn_tick_length = 1
+burn_tick_length = 3
 
 # how often to check for statuses to be removed
 removestatus_tick_length = 5
@@ -11315,10 +11315,12 @@ status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 
+time_expire_burn = 12
+
 status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_burning_id,
-		time_expire = 10,
+		time_expire = time_expire_burn,
 		str_acquire = '{name_player}\'s body is engulfed in flames.',
 		str_describe = 'They are burning.',
 		str_describe_self = 'You are burning.'

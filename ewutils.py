@@ -594,7 +594,7 @@ async def burnSlimes(id_server = None):
 			slimes_dropped = user_data.totaldamage + user_data.slimes
 
 			# Deal 10% of total slime to burn every second
-			slimes_to_burn = math.ceil(int(float(result[1])) * 0.1)
+			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
 
 			killer_data = EwUser(id_server = id_server, id_user=result[2])
 
@@ -634,11 +634,12 @@ async def burnSlimes(id_server = None):
 
 				user_data.trauma = weapon.id_weapon
 
+				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 			else:
 				user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
+				user_data.persist()
 				
-			user_data.persist()
 
 		await resp_cont.post()	
 
