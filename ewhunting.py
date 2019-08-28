@@ -338,7 +338,7 @@ class EwEnemy:
             # slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
 
             # since enemies dont use up slime or hunger, this is only used for damage calculation
-            slimes_spent = int(ewutils.slime_bylevel(enemy_data.level) / 20)
+            slimes_spent = int(ewutils.slime_bylevel(enemy_data.level) / 20 * ewcfg.enemy_attack_tick_length / 2)
 
             slimes_damage = int(slimes_spent * 4)
 
