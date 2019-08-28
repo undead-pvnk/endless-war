@@ -298,23 +298,28 @@ async def retire(cmd):
     poi = ewcfg.id_to_poi.get(user_data.poi)
     poi_dest = ewcfg.id_to_poi.get(ewcfg.poi_id_apt + user_data.apt_zone)
 
-    if user_data.apt_zone != poi.id_poi and user_data.visiting:
+    if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+        return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+    elif user_data.apt_zone != poi.id_poi and user_data.visiting:
         response = "You don't own an apartment here."
         return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
     else:
-        ewutils.moves_active[cmd.message.author.id] = 0
+        ewmap.move_counter += 1
+        move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking toward your apartment."))
         await asyncio.sleep(20)
-        user_data = EwUser(member=cmd.message.author)
-        user_data.poi = poi_dest.id_poi
-        user_data.persist()
-        await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-        response = "You're in your apartment."
-        await ewutils.send_message(cmd.client, cmd.message.author, response)
+
+        if move_current == ewutils.moves_active[cmd.message.author.id]:
+            user_data = EwUser(member=cmd.message.author)
+            user_data.poi = poi_dest.id_poi
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+            response = "You're in your apartment."
+            await ewutils.send_message(cmd.client, cmd.message.author, response)
 
 
-async def depart(cmd=None, isGoto = False):
+async def depart(cmd=None, isGoto = False, movecurrent=None):
     player = EwPlayer(id_user = cmd.message.author.id)
     user_data = EwUser(id_user = player.id_user, id_server = player.id_server)
     poi_dest = ewcfg.id_to_poi.get(user_data.apt_zone)
@@ -336,20 +341,26 @@ async def depart(cmd=None, isGoto = False):
         if not isGoto:
             await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You exit the apartment."))
 
-        await asyncio.sleep(20)
-        user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
-        user_data.poi = poi_dest.id_poi
-        user_data.visiting = ewcfg.location_id_empty
-        user_data.persist()
-        await ewrolemgr.updateRoles(client=client, member=member_object)
-
         if isGoto:
-            response = "You arrive in {}.".format(poi_dest.str_name)
-
+            move_current = movecurrent
         else:
-            response = "Here we are. The outside world."
+            ewmap.move_counter += 1
+            move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
+        await asyncio.sleep(20)
+        if move_current == ewutils.moves_active[cmd.message.author.id]:
+            user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
+            user_data.poi = poi_dest.id_poi
+            user_data.visiting = ewcfg.location_id_empty
+            user_data.persist()
+            await ewrolemgr.updateRoles(client=client, member=member_object)
 
-        return await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+            if isGoto:
+                response = "You arrive in {}.".format(poi_dest.str_name)
+
+            else:
+                response = "Here we are. The outside world."
+
+            return await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
 
 def getPriceBase(cmd):
@@ -1200,6 +1211,8 @@ async def aptCommands(cmd):
         return await ewcmd.harvest(cmd=cmd)
     elif ewcfg.cmd_check_farm == cmd_text:
         return await ewfarm.check_farm(cmd=cmd)
+    elif ewcfg.cmd_piss == cmd_text:
+        return await ewcmd.piss(cmd=cmd)
     #elif cmd_text == "~bazaarupdate":
      #   return await bazaar_update(cmd)
     elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
