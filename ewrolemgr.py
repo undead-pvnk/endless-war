@@ -132,6 +132,9 @@ async def updateRoles(
 ):
 	user_data = EwUser(member = member)
 	id_server = user_data.id_server
+	
+	if member == None:
+		return ewutils.logMsg("error: member was not supplied for updateRoles")
 
 	#roles_map = ewutils.getRoleMap(member.server.roles)
 	roles_map_user = ewutils.getRoleIdMap(member.roles)
@@ -166,7 +169,7 @@ async def updateRoles(
 
 	pvp_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
-		if user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_juviesrow]:
+		if ewutils.is_otp(user_data):
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
