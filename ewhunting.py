@@ -450,6 +450,8 @@ class EwEnemy:
                     slimes_directdamage = slimes_damage - slimes_tobleed
                     slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
 
+                    market_data.splattered_slimes += slimes_damage
+                    market_data.persist()
                     district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
                     target_data.bleed_storage += slimes_tobleed
                     target_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
