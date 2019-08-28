@@ -89,6 +89,9 @@ class EwWeapon:
 
 	# Displayed when the weapon is unjammed
 	str_unjam = ""
+	
+	# Displayed in a scalp's description.
+	str_scalp = ""
 
 	# Clip size
 	clip_size = 0
@@ -134,6 +137,7 @@ class EwWeapon:
 		str_reload = "",
 		str_reload_warning = "",
 		str_unjam = "",
+		str_scalp = "",
 		clip_size = 0,
 		price = 0,
 		cooldown = 0,
@@ -166,6 +170,7 @@ class EwWeapon:
 		self.str_reload = str_reload
 		self.str_reload_warning = str_reload_warning
 		self.str_unjam = str_unjam
+		self.str_scalp = str_scalp
 		self.clip_size = clip_size
 		self.price = price
 		self.cooldown = cooldown
