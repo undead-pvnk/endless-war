@@ -1006,6 +1006,6 @@ async def quarterlyreport(cmd):
 	response = "{:,} / {:,} {}.".format(progress, objective, goal)
 
 	if completion == True:
-		response += " THE QUARTERLY GOAL HAS BEEN REACHED. STAY TUNED FOR FURTHER ANNOUNCEMENTS."
+		response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
