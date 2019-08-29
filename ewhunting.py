@@ -771,19 +771,24 @@ async def enemy_perform_action(id_server):
     
     despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
-    enemydata = ewutils.execute_sql_query(
-        "SELECT {id_enemy} FROM users, enemies WHERE (users.poi = enemies.poi AND users.life_state != %s AND enemies.id_server = '{id_server}' AND users.id_server = '{id_server}') OR (enemies.enemytype IN %s AND enemies.id_server = '{id_server}') OR (enemies.life_state = %s OR enemies.lifetime < %s)".format(
-            id_enemy=ewcfg.col_id_enemy,
-            id_server=id_server
-        ), (
-            ewcfg.life_state_corpse,
-            ewcfg.raid_bosses,
-            ewcfg.enemy_lifestate_dead,
-            despawn_timenow
-        ))
-    
+#	enemydata = ewutils.execute_sql_query(
+#       "SELECT {id_enemy} FROM users, enemies WHERE (users.poi = enemies.poi AND users.life_state != %s AND enemies.id_server = '{id_server}' AND users.id_server = '{id_server}') OR (enemies.enemytype IN %s AND enemies.id_server = '{id_server}') OR (enemies.life_state = %s OR enemies.lifetime < %s)".format(
+#           id_enemy=ewcfg.col_id_enemy,
+#           id_server=id_server
+#       ), (
+#           ewcfg.life_state_corpse,
+#           ewcfg.raid_bosses,
+#           ewcfg.enemy_lifestate_dead,
+#           despawn_timenow
+#       ))
+    enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+        id_enemy = ewcfg.col_id_enemy
+    ),(
+        id_server,
+    ))
+
     # Remove duplicates from SQL query
-    enemydata = list(dict.fromkeys(enemydata))
+#enemydata = list(dict.fromkeys(enemydata))
 
     for row in enemydata:
         enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
