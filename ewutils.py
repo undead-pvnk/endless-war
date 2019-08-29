@@ -1088,9 +1088,9 @@ async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
 	# Causes hostile enemies to attack every tick.
 	while not TERMINATE:
+		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		await ewhunting.enemy_perform_action(id_server)
-		await asyncio.sleep(interval)
 
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
