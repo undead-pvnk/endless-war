@@ -718,7 +718,7 @@ bleed_half_life = 60 * 5 #five minutes
 bleed_tick_length = 10
 
 # how often to decide whether or not to spawn an enemy
-enemy_spawn_tick_length = 60 * 5 # Five minutes
+enemy_spawn_tick_length = 60 * 2 # Two minutes
 
 # how often it takes for hostile enemies to attack
 enemy_attack_tick_length = 5
@@ -2286,6 +2286,7 @@ weapon_list = [
 		str_description = "It's a revolver",
 		str_reload = "You swing out the revolver’s chamber, knocking out the used shells onto the floor before hastily slamming fresh bullets back into it.",
 		str_reload_warning = "**BANG--** *tk tk...* **SHIT!!** {name_player} just spent the last of the ammo in their revolver’s chamber, it’s out of bullets!!",
+		str_scalp = " It has a bullet hole in it.",
 		fn_effect = wef_revolver,
 		clip_size = 6,
 		vendors = [vendor_dojo],
@@ -2314,6 +2315,7 @@ weapon_list = [
 		str_description = "They're dual pistols",
 		str_reload = "You swing out the chamber on both of your dual pistols, knocking out the used shells onto the floor before hastily slamming fresh bullets back into them.",
 		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s chambers, they’re out of bullets!!",
+		str_scalp = " It has a couple bullet holes in it.",
 		fn_effect = wef_dualpistols,
 		clip_size = 12,
 		price = 10000,
@@ -2343,6 +2345,7 @@ weapon_list = [
 		str_description = "It's a shotgun.",
 		str_reload = "You tilt your shotgun and pop shell after shell into it’s chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
+		str_scalp = " It has a gaping hole in the center.",
 		fn_effect = wef_shotgun,
 		clip_size = 2,
 		price = 10000,
@@ -2372,6 +2375,7 @@ weapon_list = [
 		str_description = "It's a rifle",
 		str_reload = "You hastily rip the spent magazine out of your assault rifle, before slamming a fresh one back into it.",
 		str_reload_warning = "**RAT-TAT-TAT--** *ttrrr...* **SHIT!!** {name_player}’s rifle just chewed up the last of it’s magazine, it’s out of bullets!!",
+		str_scalp = " It has a shit-load of holes in it.",
 		fn_effect = wef_rifle,
 		clip_size = 4,
 		price = 10000,
@@ -2402,6 +2406,7 @@ weapon_list = [
 		str_reload = "You hastily rip the spent magazine out of your SMG, before slamming a fresh one back into it.",
         str_reload_warning = "**RATTA TATTA--** *tk tk tk tk…* **SHIT!!** {name_player}’s SMG just chewed up the last of it’s magazine, it’s out of bullets!!",
         str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
+		str_scalp = " It has a bunch of holes strewn throughout it.",
 		fn_effect = wef_smg,
 		clip_size = 4,
 		price = 10000,
@@ -2430,6 +2435,7 @@ weapon_list = [
         str_description = "It's a minigun",
 		#str_reload = "You curse under your breath, before pulling a fresh belt of bullets from hammerspace and jamming it into your minigun’s hungry feed.",
         #str_reload_warning = "**TKTKTKTKTKTK--** *wrrrrrr…* **SHIT!!** {name_player}’s minigun just inhaled the last of it’s belt, it’s out of bullets!!",
+		str_scalp = " It looks more like a thick slice of swiss cheese than a scalp.",
 		fn_effect = wef_minigun,
 		price = 1000000,
 		vendors = [vendor_bazaar],
@@ -2457,6 +2463,7 @@ weapon_list = [
 		str_backfire = "{name_player} recklessly budgens themselves with a particularly overzealous swing! Man, how the hell could they fuck up so badly?",
 		str_duel = "**SMASHH! CRAASH!!** {name_player} and {name_target} run through the neighborhood, breaking windshields, crushing street signs, and generally having a hell of a time.",
 		str_description = "It's a nailbat",
+		str_scalp = " It has a couple nails in it.",
 		fn_effect = wef_bat,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2482,6 +2489,7 @@ weapon_list = [
 		str_damage = "{name_target} is socked in the {hitzone}!!",
 		str_duel = "**POW! BIFF!!** {name_player} and {name_target} take turns punching each other in the abs. It hurts so good.",
 		str_description = "They're brass knuckles",
+		str_scalp = " It has bone fragments in it.",
 		fn_effect = wef_brassknuckles,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2508,6 +2516,7 @@ weapon_list = [
 		str_damage = "{name_target} is slashed across the {hitzone}!!",
 		str_duel = "**CRACK!! THWACK!! CRACK!!** {name_player} and {name_target} duel with bamboo swords, viciously striking at head, wrist and belly.",
 		str_description = "It's a katana",
+		str_scalp = " It seems to have been removed with some precision.",
 		fn_effect = wef_katana,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2537,6 +2546,7 @@ weapon_list = [
 		str_description = "It's a broadsword",
 		str_reload = "You summon strength and muster might from every muscle on your body to hoist your broadsword up for another swing.",
 		str_reload_warning = "**THUD...** {name_player}’s broadsword is too heavy, it’s blade has fallen to the ground!!",
+		str_scalp = " It was sloppily lopped off.",
 		fn_effect = wef_broadsword,
 		clip_size = 1,
 		price = 10000,
@@ -2566,6 +2576,7 @@ weapon_list = [
 		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
 		str_duel = "**HII-YA! HOOOAAAAAHHHH!!** {name_player} and {name_target} twirl wildly around one another, lashing out with kung-fu precision.",
 		str_description = "They're nunchucks",
+		str_scalp = " It looks very bruised.",
 		fn_effect = wef_nunchucks,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2588,7 +2599,8 @@ weapon_list = [
 		str_killdescriptor = "sliced in twain",
 		str_damage = "{name_target} is cleaved through the {hitzone}!!",
 		str_duel = "**WHOOSH, WHOOSH** {name_player} and {name_target} swing their blades in wide arcs, dodging one another's deadly slashes.",
-		str_description = "It's a scythe",		
+		str_description = "It's a scythe",
+		str_scalp = " It's cut in two pieces.",
 		fn_effect = wef_scythe,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2611,9 +2623,10 @@ weapon_list = [
         str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
         str_kill = "{name_player} performs a modified Kwyjibo, effortlessly nailing each step before killing their opponent just ahead of the dismount.",
         str_killdescriptor = "amazed",
-        str_damage = "{name_target} used {name_target}'s {hitzone} as a counterweight!!",
+        str_damage = "{name_player} used {name_target}'s {hitzone} as a counterweight!!",
         str_duel = "whhzzzzzz {name_player} and {name_target} practice trying to Walk the Dog for hours. It never clicks.",
-		str_description = "It's a yo-yo",		
+		str_description = "It's a yo-yo",
+		str_scalp = " It has a ball bearing hidden inside it. You can spin it like a fidget spinner.",
 		fn_effect = wef_yoyo,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2640,7 +2653,8 @@ weapon_list = [
 		str_killdescriptor = "knifed",
 		str_damage = "{name_target} is stuck by a knife in the {hitzone}!!",
 		str_duel = "**TING! TING!!** {name_player} and {name_target} take turns hitting one another's knives out of the air.",
-		str_description = "They're throwing knives",		
+		str_description = "They're throwing knives",
+		str_scalp = " It has about a half dozen stab holes in it.",
 		fn_effect = wef_knives,
 		price = 500,
 		vendors = [vendor_dojo],
@@ -2669,6 +2683,7 @@ weapon_list = [
 		str_damage = "{name_target} dodges a bottle, but is singed on the {hitzone} by the blast!!",
 		str_duel = "{name_player} and {name_target} compare notes on frontier chemistry, seeking the optimal combination of combustibility and fuel efficiency.",
 		str_description = "They're molotov bottles",
+		str_scalp = " It's burnt to a crisp!",
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
@@ -2694,6 +2709,7 @@ weapon_list = [
         str_damage = "{name_player}’s grenade explodes, sending {name_target}’s {hitzone} flying off their body!!",
         str_duel = "**KA-BOOM!!** {name_player} and {name_target} pull the pin out of their grenades and hold it in their hands to get a feel for how long it takes for them to explode. They lose a few body parts in the process.",
 		str_description = "A stack of grenades.",
+		str_scalp = " It's covered in metallic shrapnel.",
 		fn_effect = wef_grenade,
 		price = 500,
 		vendors = [vendor_dojo],
@@ -2720,6 +2736,7 @@ weapon_list = [
 		str_damage = "{name_target} is ensnared by {name_player}'s wire!!",
 		str_duel = "{name_player} and {name_target} compare their dexterity by playing Cat's Cradle with deadly wire.",
 		str_description = "It's a garrote wire.",
+		str_scalp = " It's a deep shade of blue.",
 		fn_effect = wef_garrote,
 		price = 10000,
 		vendors = [vendor_dojo],
@@ -2744,6 +2761,7 @@ weapon_list = [
 		str_killdescriptor = "!mined",
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
 		str_duel = "**THWACK, THWACK** {name_player} and {name_target} spend some quality time together, catching up and discussing movies they recently watched or food they recently ate.",
+		str_scalp = " It reeks of dirt and poudrins. How embarrassing!",
 		fn_effect = wef_tool,
 		str_description = "It's a pickaxe",
 		acquisition = acquisition_smelting,
@@ -2771,6 +2789,7 @@ weapon_list = [
 		str_killdescriptor = "!reeled",
 		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
 		str_duel = "**whsssh, whsssh** {name_player} and {name_target} spend some quality time together,discussing fishing strategy and preferred types of bait.",
+		str_scalp = " It has a fishing hook stuck in it. How embarrassing!",
 		fn_effect = wef_tool,
 		str_description = "It's a super fishing rod",
 		acquisition = acquisition_smelting,
@@ -2793,6 +2812,7 @@ weapon_list = [
 		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is wacked across the {hitzone}!!",
 		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
+		str_scalp = " If you listen closely, you can still hear the echoes of a sick bassline from yesteryear.",
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
@@ -7375,7 +7395,7 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach_pier
+		mother_district = poi_id_assaultflatsbeach
 	),
 	EwPoi(  # Vagrant's Corner Pier
 		id_poi = poi_id_vagrantscorner_pier,
@@ -8235,7 +8255,8 @@ poi_list = [
 		channel="wreckington-outskirts",
 		role="Wreckington Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 2
 		id_poi=poi_id_cratersville_outskirts,
@@ -8250,7 +8271,8 @@ poi_list = [
 		channel="cratersville-outskirts",
 		role="Cratersville Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 3
 		id_poi=poi_id_oozegardens_outskirts,
@@ -8265,7 +8287,8 @@ poi_list = [
 		channel="ooze-gardens-outskirts",
 		role="Ooze Gardens Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 4
 		id_poi=poi_id_southsleezeborough_outskirts,
@@ -8280,7 +8303,8 @@ poi_list = [
 		channel="south-sleezeborough-outskirts",
 		role="South Sleezeborough Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 5
 		id_poi=poi_id_crookline_outskirts,
@@ -8295,7 +8319,8 @@ poi_list = [
 		channel="crookline-outskirts",
 		role="Crookline Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 6
 		id_poi=poi_id_dreadford_outskirts,
@@ -8310,7 +8335,8 @@ poi_list = [
 		channel="dreadford-outskirts",
 		role="Dreadford Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 7
 		id_poi=poi_id_jaywalkerplain_outskirts,
@@ -8325,7 +8351,8 @@ poi_list = [
 		channel="jaywalker-plain-outskirts",
 		role="Jaywalker Plain Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 8
 		id_poi=poi_id_westglocksbury_outskirts,
@@ -8340,7 +8367,8 @@ poi_list = [
 		channel="west-glocksbury-outskirts",
 		role="West Glocksbury Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 9
 		id_poi=poi_id_poloniumhill_outskirts,
@@ -8355,7 +8383,8 @@ poi_list = [
 		channel="polonium-hill-outskirts",
 		role="Polonium Hill Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 10
 		id_poi=poi_id_charcoalpark_outskirts,
@@ -8370,7 +8399,8 @@ poi_list = [
 		channel="charcoal-park-outskirts",
 		role="Charcoal Park Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 11
 		id_poi=poi_id_toxington_outskirts,
@@ -8385,7 +8415,8 @@ poi_list = [
 		channel="toxington-outskirts",
 		role="Toxington Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 12
 		id_poi=poi_id_astatineheights_outskirts,
@@ -8400,7 +8431,8 @@ poi_list = [
 		channel="astatine-heights-outskirts",
 		role="Astatine Heights Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 13
 		id_poi=poi_id_arsonbrook_outskirts,
@@ -8415,7 +8447,8 @@ poi_list = [
 		channel="arsonbrook-outskirts",
 		role="Arsonbrook Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 14
 		id_poi=poi_id_brawlden_outskirts,
@@ -8430,7 +8463,8 @@ poi_list = [
 		channel="brawlden-outskirts",
 		role="Brawlden Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 15
 		id_poi=poi_id_newnewyonkers_outskirts,
@@ -8445,7 +8479,8 @@ poi_list = [
 		channel="new-new-yonkers-outskirts",
 		role="New New Yonkers Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 16
 		id_poi=poi_id_assaultflatsbeach_outskirts,
@@ -8460,7 +8495,8 @@ poi_list = [
 		channel="assault-flats-beach-outskirts",
 		role="Assault Flats Beach Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 ]
 poi_list += ewdebug.debugpois
@@ -11370,35 +11406,36 @@ for bait in food_list:
 # If a fish doesn't bite, send one of these.
 nobite_text = [
 	"You patiently wait...",
-	"This is so fucking boring...",
-	"You watch your hook bob...",
-	"You grow impatient and kick the rotted wooden guard rails...",
-	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
-	"You begin to zone-out a bit...",
-	"Shouldn't you be doing something productive?",
-	"You sit patiently, eagerly awaiting a fish to bit...",
-	"You begin to daydream about fish sex... Gross...",
-	"You begin to daydream about fish sex... Hot...",
-	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
-	"You make direct eye contact with a fish, only to quickly look away...",
-	"♪ Fishing for Fishies! ♪",
-	"♪ That Captain Albert Alexander! ♪",
-	"You get the urge to jump in and try to grab a fish, but then you remember that you can't swim...",
-	"You hum some sea shanties...",
-	"You start to develop an existential crisis...",
-	"You jitter as other seamen catch fish before you. Fuck fishing...",
-	"You shake your head as a young seaman hooks a perfectly good slice of pizza on his hook... What a cretin...",
-	"You wonder if the Space Navy has been formed yet...",
-	"Man... Why were you excited for this shit?",
-	"Still better than Minesweeper...",
-	"Maybe one day your wife will pardon you...",
-	"Fuck fish...",
-	"You let out a deep sigh, in doing so, you scare away a fish...",
-	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
-	"You see a bird carry off a Plebefish in the distance... Good riddance...",
-	"You spot a stray bullet in the distance...",
-	"You see a dead body float up to the surface of the Slime...",
-	"Fish..."
+    	"This is so fucking boring...",
+    	"You watch your hook bob...",
+    	"You grow impatient and kick the rotted wooden guard rails...",
+    	"AUUUUUGH JUST BITE THE FUCKING HOOK ALREADY...",
+    	"You begin to zone-out a bit...",
+    	"Shouldn't you be doing something productive?",
+   	"You sit patiently, eagerly awaiting a fish to bite. Thanks to your concentration, this descriptive contradiction does not occur to you.",
+    	"You begin to daydream about fish sex... Gross...",
+    	"You begin to daydream about fish sex... Hot...",
+    	"You see a fish about to bite your hook, but you shout in elation, scaring it away...",
+    	"You make direct eye contact with a fish, only to quickly look away...",
+    	"♪ Fishing for Fishies! ♪",
+    	"♪ That Captain Albert Alexander! ♪",
+    	"You get the urge to jump in and try to grab a fish, before remembering that you can't swim...",
+    	"You hum some sea shanties...",
+    	"You start to slip into an existential crisis...",
+    	"You jitter as other seamen catch fish before you. Fuck fishing...",
+    	"You feel the oncoming downward spiral...",
+    	"You shake your head as a young seaman baits a perfectly good slice of pizza on his hook... What a cretin...",
+    	"You wonder if the Space Navy has been formed yet...",
+    	"Man... Why were you excited for this shit?",
+    	"Still better than Minesweeper...",
+    	"Maybe one day your wife will pardon you...",
+    	"Fuck fish...",
+    	"You let out a deep sigh, scaring away a fish...",
+    	"Wouldn't it be funny if you just reached into the sea and grabbed one? Haha, yeah, that'd be funny...",
+    	"You see a bird carry off a Plebefish in the distance... Good riddance...",
+    	"You spot a stray bullet in the distance...",
+    	"You see a dead body float up to the surface of the Slime...",
+    	"Fish..." 
 ]
 
 # Dict of all help responses linked to their associated topics

@@ -1068,7 +1068,7 @@ async def decrease_food_multiplier(id_user):
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
-	if random.randrange(3) == 2:
+	if random.randrange(3) == 0:
 		resp_cont = EwResponseContainer(id_server=id_server)
 		response, channel = await ewhunting.spawn_enemy(id_server)
 
@@ -1080,18 +1080,18 @@ async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
 	while not TERMINATE:
+		await asyncio.sleep(interval)
 		await spawn_enemies(id_server = id_server)
 
-		await asyncio.sleep(interval)
 
 async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
 	# Causes hostile enemies to attack every tick.
 	while not TERMINATE:
+		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		await ewhunting.enemy_perform_action(id_server)
 
-		await asyncio.sleep(interval)
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
 def check_defender_targets(user_data, enemy_data):
