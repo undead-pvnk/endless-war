@@ -772,7 +772,7 @@ async def enemy_perform_action(id_server):
     despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
     enemydata = ewutils.execute_sql_query(
-        "SELECT {id_enemy} FROM users, enemies WHERE (users.poi = enemies.poi and users.life_state != %s AND enemies.id_server = {id_server} AND users.id_server = {id_server}) OR (enemies.enemytype IN %s AND enemies.id_server = {id_server}) OR (enemies.lifestate = %s OR enemies.lifetime < %s)".format(
+        "SELECT {id_enemy} FROM users, enemies WHERE (users.poi = enemies.poi AND users.life_state != %s AND enemies.id_server = {id_server} AND users.id_server = {id_server}) OR (enemies.enemytype IN %s AND enemies.id_server = {id_server}) OR (enemies.life_state = %s OR enemies.lifetime < %s)".format(
             id_enemy=ewcfg.col_id_enemy,
             id_server=id_server
         ), (

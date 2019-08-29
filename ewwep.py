@@ -700,6 +700,8 @@ async def attack(cmd):
 
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
+				user_data.splattered_slimes += slimes_damage
+				user_data.persist()
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
