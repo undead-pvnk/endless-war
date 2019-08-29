@@ -665,6 +665,11 @@ async def attack(cmd):
 
 			if was_shot:
 
+				if was_juvenile == True:
+					# Flag the shooter for PvP no matter what happens next.
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (time_now + ewcfg.time_pvp_kill))
+					user_data.persist()
+
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
 					if ewcfg.mutation_id_thickerthanblood in user_mutations:

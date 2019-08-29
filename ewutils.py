@@ -1217,3 +1217,10 @@ async def explode(damage = 0, district_data = None):
 def is_otp(user_data):
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse]
 
+""" Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
+def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
+	if desired_time_expirpvp > current_time_expirpvp:
+		return desired_time_expirpvp
+
+	return current_time_expirpvp
+
