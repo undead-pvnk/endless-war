@@ -30,6 +30,7 @@ class EwMarket:
 	donated_slimes = 0
 	donated_poudrins = 0
 	caught_fish = 0
+	splattered_slimes = 0
 
 	# Dict of bazaar items available for purchase
 	bazaar_wares = None
@@ -46,7 +47,7 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
@@ -57,6 +58,7 @@ class EwMarket:
 					donated_slimes = ewcfg.col_donated_slimes,
 					donated_poudrins = ewcfg.col_donated_poudrins,
 					caught_fish = ewcfg.col_caught_fish,
+					splattered_slimes = ewcfg.col_splattered_slimes,
 				), (self.id_server, ))
 				result = cursor.fetchone();
 
@@ -72,6 +74,7 @@ class EwMarket:
 					self.donated_slimes = result[7]
 					self.donated_poudrins = result[8]
 					self.caught_fish = result[9]
+					self.splattered_slimes = result[10]
 
 					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
 						ewcfg.col_name,
@@ -106,7 +109,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -118,6 +121,7 @@ class EwMarket:
 				donated_slimes = ewcfg.col_donated_slimes,
 				donated_poudrins = ewcfg.col_donated_poudrins,
 				caught_fish = ewcfg.col_caught_fish,
+				splattered_slimes = ewcfg.col_splattered_slimes,
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -130,6 +134,7 @@ class EwMarket:
 				self.donated_slimes,
 				self.donated_poudrins,
 				self.caught_fish,
+				self.splattered_slimes,
 			))
 
 			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
@@ -968,8 +973,8 @@ def get_majority_shareholder(id_server = None, stock = None):
 
 async def quarterlyreport(cmd):
 	progress = 0
-	objective = 1000
-	goal = "POUDRINS DONATED"
+	objective = 2000000000
+	goal = "SLIME SPLATTERED"
 	completion = False
 
 	try:
@@ -979,7 +984,7 @@ async def quarterlyreport(cmd):
 
 		# Display the progress towards the current Quarterly Goal, whatever that may be.
 		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
-			metric = ewcfg.col_donated_poudrins
+			metric = ewcfg.col_splattered_slimes
 		), (cmd.message.server.id, ))
 
 		result = cursor.fetchone();
@@ -1001,6 +1006,6 @@ async def quarterlyreport(cmd):
 	response = "{:,} / {:,} {}.".format(progress, objective, goal)
 
 	if completion == True:
-		response += " THE QUARTERLY GOAL HAS BEEN REACHED. STAY TUNED FOR FURTHER ANNOUNCEMENTS."
+		response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

@@ -126,6 +126,8 @@ class EwPoi:
 	# which transport lines stop here
 	transport_lines = set()
 
+	# if this zone belongs to the outskirts
+	is_outskirts = False
 
 	def __init__(
 		self,
@@ -154,7 +156,8 @@ class EwPoi:
 		default_line = "",
 		default_stop = "",
 		is_transport_stop = False,
-		transport_lines = None
+		transport_lines = None,
+		is_outskirts = False
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -182,6 +185,7 @@ class EwPoi:
 		self.default_stop = default_stop
 		self.is_transport_stop = is_transport_stop
 		self.transport_lines = transport_lines
+		self.is_outskirts = is_outskirts
 
 # New map as of 7/19/19
 

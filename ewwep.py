@@ -89,6 +89,9 @@ class EwWeapon:
 
 	# Displayed when the weapon is unjammed
 	str_unjam = ""
+	
+	# Displayed in a scalp's description.
+	str_scalp = ""
 
 	# Clip size
 	clip_size = 0
@@ -134,6 +137,7 @@ class EwWeapon:
 		str_reload = "",
 		str_reload_warning = "",
 		str_unjam = "",
+		str_scalp = "",
 		clip_size = 0,
 		price = 0,
 		cooldown = 0,
@@ -166,6 +170,7 @@ class EwWeapon:
 		self.str_reload = str_reload
 		self.str_reload_warning = str_reload_warning
 		self.str_unjam = str_unjam
+		self.str_scalp = str_scalp
 		self.clip_size = clip_size
 		self.price = price
 		self.cooldown = cooldown
@@ -391,6 +396,7 @@ async def attack(cmd):
 		else:
 			shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
+		shootee_name = member.display_name
 
 		user_mutations = user_data.get_mutations()
 		shootee_mutations = shootee_data.get_mutations()
@@ -692,6 +698,10 @@ async def attack(cmd):
 				slimes_directdamage = slimes_damage - slimes_tobleed
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
+				market_data.splattered_slimes += slimes_damage
+				market_data.persist()
+				user_data.splattered_slimes += slimes_damage
+				user_data.persist()
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
@@ -724,6 +734,25 @@ async def attack(cmd):
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
+          
+					# Scalp text
+					if weapon != None:
+						scalp_text = weapon.str_scalp
+					else:
+						scalp_text = ""
+					
+					# Drop shootee scalp
+					ewitem.item_create(
+						item_type = ewcfg.it_cosmetic,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = {
+							'id_cosmetic': 'scalp',
+							'cosmetic_name': "{}'s scalp".format(shootee_name),
+							'cosmetic_desc': "A scalp.{}".format(scalp_text),
+							'adorned': 'false'
+						}
+					)
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
 					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:

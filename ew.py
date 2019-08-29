@@ -37,6 +37,7 @@ class EwUser:
 	time_last_action = 0
 	weaponmarried = False
 	arrested = False
+	splattered_slimes = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -489,7 +490,8 @@ class EwUser:
 
 				# Retrieve object
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -524,7 +526,7 @@ class EwUser:
 					ewcfg.col_arrested,
 					ewcfg.col_apt_zone,
 					ewcfg.col_visiting,
-
+					ewcfg.col_splattered_slimes
 				), (
 					id_user,
 					id_server
@@ -566,7 +568,7 @@ class EwUser:
 					self.arrested = (result[30] == 1)
 					self.apt_zone = result[31]
 					self.visiting = result[32]
-
+					self.splattered_slimes = result[33]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -623,7 +625,7 @@ class EwUser:
 
 			# Save the object.
 
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -659,7 +661,8 @@ class EwUser:
 				ewcfg.col_poudrin_donations,
 				ewcfg.col_arrested,
 				ewcfg.col_apt_zone,
-				ewcfg.col_visiting
+				ewcfg.col_visiting,
+				ewcfg.col_splattered_slimes
 			), (
 				self.id_user,
 				self.id_server,
@@ -697,7 +700,7 @@ class EwUser:
 				(1 if self.arrested else 0),
 				self.apt_zone,
 				self.visiting,
-
+				self.splattered_slimes,
 			))
 
 			conn.commit()

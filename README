@@ -44,6 +44,8 @@ CREATE TABLE users (
 	arrested int NOT NULL DEFAULT '0',
 	apt_zone varchar(64) NOT NULL default 'empty'
 	visiting varchar(64) NOT NULL default 'empty'
+	splattered_slimes bigint NOT NULL DEFAULT '0',
+
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -69,6 +71,7 @@ CREATE TABLE markets (
 	donated_slimes bigint NOT NULL DEFAULT '0',
 	donated_poudrins bigint NOT NULL DEFAULT '0',
 	caught_fish int NOT NULL DEFAULT '0',
+	splattered_slimes bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server)
 );

@@ -6,3 +6,4 @@ vcs.xml
 ewdebug.py
 .idea
 .idea/workspace.xml
+.vscode/launch.json
