@@ -837,29 +837,29 @@ async def item_look(cmd):
 			if item.item_type == ewcfg.it_weapon:
 				response += "\n\n"
 
-			if item.item_props.get("married") != "":
-				player = EwPlayer(id_user = item.item_props.get("married"), id_server = server.id)
+				if item.item_props.get("married") != "":
+					player = EwPlayer(id_user = item.item_props.get("married"), id_server = server.id)
 
-			if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
-				response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(player.display_name, name)
-			else:
-				response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
+				if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
+					response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(player.display_name, name)
+				else:
+					response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
 
-			weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+				weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
 
-			if ewcfg.weapon_class_ammo in weapon.classes:
-				response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
+				if ewcfg.weapon_class_ammo in weapon.classes:
+					response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
 
-			totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
+				totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
 
-			if totalkills < 10:
-				response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed {} people.\n".format(totalkills))
-			elif totalkills < 100:
-				response += "There's some noticeable wear and tear on it. It has killed {} people.\n".format(totalkills)
-			else:
-				response += "A true legend in the battlefield, it has killed {} people.\n".format(totalkills)
+				if totalkills < 10:
+					response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed {} people.\n".format(totalkills))
+				elif totalkills < 100:
+					response += "There's some noticeable wear and tear on it. It has killed {} people.\n".format(totalkills)
+				else:
+					response += "A true legend in the battlefield, it has killed {} people.\n".format(totalkills)
 
-			response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)
+				response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)
 
 			if item.item_type == ewcfg.it_cosmetic:
 				hue = ewcfg.hue_map.get(item.item_props.get('hue'))

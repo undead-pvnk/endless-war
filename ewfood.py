@@ -5,6 +5,7 @@ import asyncio
 import ewcfg
 import ewitem
 import ewutils
+import random
 import ewrolemgr
 import ewstatuseffects
 from ew import EwUser
@@ -189,7 +190,7 @@ async def order(cmd):
 			item_type = ewcfg.it_cosmetic
 			if item != None:
 				item_id = item.id_cosmetic
-		name = item.str_name
+				name = item.str_name
 
 		if item == None:
 			item = ewcfg.furniture_map.get(value)
@@ -301,7 +302,10 @@ async def order(cmd):
 						company_data.persist()
 
 					item_props = ewitem.gen_item_props(item)
-
+					print(item.str_name)
+					if item.str_name == "arcade cabinet":
+						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
+						print("imin")
 
 					ewitem.item_create(
 						item_type = item_type,

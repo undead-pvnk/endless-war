@@ -3,6 +3,7 @@ import random
 import ewutils
 import ewstats
 import ewitem
+import random
 from ewcosmeticitem import EwCosmeticItem
 from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
@@ -5558,6 +5559,19 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+cabinets_list = [
+"This is a Zoombinis Logical Journey arcade cabinet.\nWait. This is an old PC game. Why the fuck would they port this to cabinet? Now you have to use the stick to move the mouse around. Oh well. Buyers remorse, you suppose. \nhttps://classicreload.com/win3x-logical-journey-of-the-zoombinis.html",
+"This is a Cookie Clicker arcade cabinet.\n The huge cookie button on the front is pretty neat, but running it forever seems like it would crank your electricity bill. You know, if you had one.\nhttps://orteil.dashnet.org/cookieclicker/",
+"This is a Poptropica arcade cabinet.\nI don't know who thought point and click platforming was a good idea, but this new control scheme is a godsend. \nhttps://www.poptropica.com/",
+"This is a Frog Fractions arcade cabinet.\nThis cabinet's been lightly used. Looks like a remnant of some bar in Ponyville, what with all the ponytuber signatures on it. Eh, we can leave those well alone for now.\nhttps://kbhgames.com/game/frog-fractions",
+"This is a Pokemon Showdown arcade cabinet.\nSouls, hearts, and eons of slime were won and lost on this legendary little number. Playing it on this rickety old thing somehow doesn't seem as suspenseful, though.\n https://pokemonshowdown.com/",
+"This is a Madness: Accelerant arcade cabinet.\n If you've been to West Glocksbury the violence in here is a little old hat, but a lot of people have a soft spot for it.\nhttps://www.newgrounds.com/portal/view/512407",
+"This is a Flanders Killer 6 arcade cabinet.\nClearly this is the greatest game the world has ever conceived.\nhttps://www.silvergames.com/en/flanders-killer-6",
+"This is a Peasant's Quest arcade cabinet.\nThe struggles of the main guy here are a lot like what juvies go through: a rise to greatness, false hope, and inevitable worthless destruction. Onward!\nhttp://homestarrunner.com/disk4of12.html",
+"This is a Super Mario 63 arcade cabinet.\nSince Reggie Fils-Amie is too fucking cowardly to set foot in NLACakaNM, we have to resort to bootleg merchandise. Relatively good bootlegs, but bootlegs nonetheless.\nhttps://www.newgrounds.com/portal/view/498969",
+"This is a World's Hardest Game arcade cabinet.\nThere were countless stories of moms getting bankrupted because their kids dumped their money into these.\nhttps://www.coolmathgames.com/0-worlds-hardest-game "
+]
+
 furniture_list = [
 EwFurniture(
 		id_furniture = "interrogationchair",
@@ -5727,7 +5741,7 @@ EwFurniture(
 		acquisition = acquisition_bartering,
 		price = 40000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "A haunted chair stands in the middle of the room",
+		furniture_look_desc = "A creepy chair stands in the middle of the room",
 		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide."),
 EwFurniture(
 		id_furniture = "haunteddesk",
@@ -5902,7 +5916,7 @@ EwFurniture(
 EwFurniture(
 		id_furniture = "padlockset",
 		str_name = "set of padlocks",
-		str_desc = "You have a standard deadbolt lock, a steel door guard, a second password protected deadbolt, one of those chain thingies, reinforced hinges, and one of those dungeon-style full-length door guards. Also a chair to prop against it for good measure.",
+		str_desc = "You have a standard deadbolt lock, a steel door guard, a second password protected deadbolt, one of those chain thingies, reinforced hinges, and one of those dungeon-style full-length door guards. Also a chair to prop against the door for good measure.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 750000,
@@ -5913,7 +5927,7 @@ EwFurniture(
 		id_furniture = "butler",
 		str_name = "butler",
 		str_desc = "You don't know this man's real name, but he responds to Jeeves so you've been going with that. He does whatever you tell him to do, but for some reason he's useless at gang warfare.",
-		rarity = rarity_plebeian,
+		rarity = rarity_patrician,
 		acquisition = acquisition_bartering,
 		price = 8000000,
 		vendors = [vendor_bazaar],
@@ -5939,6 +5953,28 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "This place smells awful.",
 		furniture_place_desc = "You carefully study brony habit-forming patterns and embrace mediocrity. Your life slowly begins to fall apart, and the junk food you eat permeates the room and makes everything smell like piss and negaslime. You can't believe a product of the Rift Cafe actually accomplished something."),
+EwFurniture(
+		id_furniture = "singingfishplaque",
+		str_name = "singing fish plaque",
+		str_desc = "You press the button on the plaque. \n\n:notes:Here's a little tip I know:notes:\n:notes:Take with !snag and store with !stow:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:The little miners were upset:notes:\n:notes:So they went and fished me up instead:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:WEEEEEEEEEEEEEEEEEEEEEHEEEEEEEEEEEHEEEEEEEEEEEEEHEEHAOOHEEHEHEHOOHAHAHAAAA\n\nFuck, this thing is annoying. You smack it in the face before it finishes its song.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a fake fish mounted on the wall",
+		furniture_place_desc = "You put a nail in the wall and hang up your fish. Slimecorp probably doesn't want you knocking holes in the walls, but fuck 'em."),
+EwFurniture(
+		id_furniture = "arcadecabinet",
+		str_name = "arcade cabinet",
+		str_desc = "It's broken. Shit.", #the description gets replaced with a game link when the buy function trips
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's an arcade cabinet set up.",
+		furniture_place_desc = "It's been forever since you've played a real video game. Finally, the moment you've been waiting for. You plug this bitch in and gaze at its splendor."),
+
+
 ]
 
 
