@@ -435,7 +435,7 @@ cmd_map = {
 	ewcfg.cmd_promote: ewcmd.promote,
 }
 
-debug = True
+debug = False
 while sys.argv:
 	if sys.argv[0].lower() == '--debug':
 		debug = True
