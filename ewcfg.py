@@ -1122,6 +1122,7 @@ col_day = 'day'
 col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
+col_splattered_slimes = 'splattered_slimes'
 
 # Database columns for stocks
 col_stock = 'stock'
