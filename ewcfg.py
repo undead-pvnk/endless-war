@@ -8255,7 +8255,8 @@ poi_list = [
 		channel="wreckington-outskirts",
 		role="Wreckington Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 2
 		id_poi=poi_id_cratersville_outskirts,
@@ -8270,7 +8271,8 @@ poi_list = [
 		channel="cratersville-outskirts",
 		role="Cratersville Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 3
 		id_poi=poi_id_oozegardens_outskirts,
@@ -8285,7 +8287,8 @@ poi_list = [
 		channel="ooze-gardens-outskirts",
 		role="Ooze Gardens Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 4
 		id_poi=poi_id_southsleezeborough_outskirts,
@@ -8300,7 +8303,8 @@ poi_list = [
 		channel="south-sleezeborough-outskirts",
 		role="South Sleezeborough Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 5
 		id_poi=poi_id_crookline_outskirts,
@@ -8315,7 +8319,8 @@ poi_list = [
 		channel="crookline-outskirts",
 		role="Crookline Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 6
 		id_poi=poi_id_dreadford_outskirts,
@@ -8330,7 +8335,8 @@ poi_list = [
 		channel="dreadford-outskirts",
 		role="Dreadford Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 7
 		id_poi=poi_id_jaywalkerplain_outskirts,
@@ -8345,7 +8351,8 @@ poi_list = [
 		channel="jaywalker-plain-outskirts",
 		role="Jaywalker Plain Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 8
 		id_poi=poi_id_westglocksbury_outskirts,
@@ -8360,7 +8367,8 @@ poi_list = [
 		channel="west-glocksbury-outskirts",
 		role="West Glocksbury Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 9
 		id_poi=poi_id_poloniumhill_outskirts,
@@ -8375,7 +8383,8 @@ poi_list = [
 		channel="polonium-hill-outskirts",
 		role="Polonium Hill Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 10
 		id_poi=poi_id_charcoalpark_outskirts,
@@ -8390,7 +8399,8 @@ poi_list = [
 		channel="charcoal-park-outskirts",
 		role="Charcoal Park Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 11
 		id_poi=poi_id_toxington_outskirts,
@@ -8405,7 +8415,8 @@ poi_list = [
 		channel="toxington-outskirts",
 		role="Toxington Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 12
 		id_poi=poi_id_astatineheights_outskirts,
@@ -8420,7 +8431,8 @@ poi_list = [
 		channel="astatine-heights-outskirts",
 		role="Astatine Heights Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 13
 		id_poi=poi_id_arsonbrook_outskirts,
@@ -8435,7 +8447,8 @@ poi_list = [
 		channel="arsonbrook-outskirts",
 		role="Arsonbrook Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 14
 		id_poi=poi_id_brawlden_outskirts,
@@ -8450,7 +8463,8 @@ poi_list = [
 		channel="brawlden-outskirts",
 		role="Brawlden Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 15
 		id_poi=poi_id_newnewyonkers_outskirts,
@@ -8465,7 +8479,8 @@ poi_list = [
 		channel="new-new-yonkers-outskirts",
 		role="New New Yonkers Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 16
 		id_poi=poi_id_assaultflatsbeach_outskirts,
@@ -8480,7 +8495,8 @@ poi_list = [
 		channel="assault-flats-beach-outskirts",
 		role="Assault Flats Beach Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts=True
 	),
 ]
 poi_list += ewdebug.debugpois
