@@ -104,9 +104,12 @@ cmd_map = {
 	ewcfg.cmd_annoint: ewwep.annoint,
 	ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
-	#Marry and divorce your current wepaon.
+	# Marry and divorce your current weapon.
 	ewcfg.cmd_marry: ewwep.marry,
 	ewcfg.cmd_divorce: ewwep.divorce,
+	
+	# Crush a poudrin to get some slime.
+	ewcfg.cmd_crush: ewjuviecmd.crush,
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
