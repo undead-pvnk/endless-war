@@ -500,7 +500,7 @@ async def apt_look(cmd):
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def store_item(cmd, dest):
-    destination = dest
+    destination = dest #used to separate the compartment keyword from the string displayed to the user.
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
     apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
@@ -540,43 +540,18 @@ async def store_item(cmd, dest):
 
         storage_limit_base = 4
         if apt_model.apt_class == ewcfg.property_class_b:
-            storage_limit_base *= 2;
+            storage_limit_base *= 2
 
         elif apt_model.apt_class == ewcfg.property_class_a:
-            storage_limit_base *= 3;
+            storage_limit_base *= 3
 
         elif apt_model.apt_class == ewcfg.property_class_s:
-            storage_limit_base *= 5;
+            storage_limit_base *= 5
 
-        if item_sought.get('item_type') == ewcfg.it_food:
-            name_string = item.item_props['food_name']
-
-        elif item_sought.get('item_type') == ewcfg.it_weapon:
-            name_string = item.item_props['weapon_type']
-
-        elif item_sought.get('item_type') == ewcfg.it_cosmetic:
-            name_string = item.item_props['cosmetic_name']
-            item.item_props['slimeoid'] = 'false'
-            item.item_props["adorned"] = 'false'
-            item.persist()
-
-        elif item_sought.get('item_type') == ewcfg.it_medal:
-            name_string = item.item_props['medal_name']
-
-        elif item_sought.get('item_type') == ewcfg.it_questitem:
-            name_string = item.item_props['qitem_name']
-
-        elif item_sought.get('item_type') == ewcfg.it_furniture:
-            name_string = item.item_props['furniture_name']
-
-        elif item_sought.get('item_type') == ewcfg.it_item:
-            name_string = item.item_props['item_name']
-
-        else:
-            name_string = "thing"
-
+        name_string = get_item_str_name(item_sought=item_sought)
 
         items_stored = ewitem.inventory(id_user=recipient+destination, id_server=playermodel.id_server)
+
         if len(items_stored) >= storage_limit_base * 2 and destination == ewcfg.compartment_id_closet:
             response = "The closet is bursting at the seams. Fearing the consequences of opening the door, you decide to hold on to the {}.".format(name_string)
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -589,7 +564,6 @@ async def store_item(cmd, dest):
             response = "You have a lot of furniture here already. Hoarding is unladylike, so you decide to hold on to the {}.".format(name_string)
             return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
         if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge :
             item.item_props["time_fridged"] = time.time()
             item.persist()
@@ -597,7 +571,7 @@ async def store_item(cmd, dest):
         ewitem.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
 
         if(destination == ewcfg.compartment_id_decorate):
-            response = name_string = item.item_props['furniture_place_desc']
+            response = item.item_props['furniture_place_desc']
 
         else:
             response = "You store the {} in the {}.".format(name_string, destination)
@@ -608,7 +582,7 @@ async def store_item(cmd, dest):
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def remove_item(cmd, dest):
-    destination = dest
+    destination = dest #used to separate the compartment keyword from the string displayed to the user.
 
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
@@ -855,7 +829,7 @@ async def apartment (cmd):
 
 
 async def apt_help(cmd):
-    response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!stow <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!snag <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description."
+    response = "This is your apartment, your home away from home. You can store items here, but if you can't pay rent they will be ejected to the curb. You can store slimeoids here, too, but eviction sends them back to the real estate agency. You can only access them once you rent another apartment. Rent is charged every two IRL days, and if you can't afford the charge, you are evicted. \n\nHere's a command list. \n!depart: Leave your apartment. !goto commands work also.\n!look: look at your apartment, including all its items.\n!inspect <item>: Examine an item in the room or in your inventory.\n!stow <item>: Place an item in the room.\n!fridge/!closet/!decorate <item>: Place an item in a specific spot.\n!snag <item>: Take an item from storage.\n!unfridge/!uncloset/!undecorate <item>: Take an item from a specific spot.\n!freeze/!unfreeze <slimeoid name>: Deposit and withdraw your slimeoids. You can have 3 created at a time.\n!aptname <new name>:Change the apartment's name.\n!aptdesc <new name>: Change the apartment's base description."
     return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -954,6 +928,8 @@ async def knock(cmd = None):
     else:
         response = "One door at a time, please."
         return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def cancel(cmd):
     playermodel = EwPlayer(id_user=cmd.message.author.id)
     usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
@@ -1010,32 +986,37 @@ async def cancel(cmd):
 async def toss_squatters(user_id = None, server_id = None):
     player_info = EwPlayer(id_user=user_id)
     if player_info.id_server != None:
-        conn_info = ewutils.databaseConnect()
-        conn = conn_info.get('conn')
-        cursor = conn.cursor();
-        client = ewutils.get_client()
+        try:
+            conn_info = ewutils.databaseConnect()
+            conn = conn_info.get('conn')
+            cursor = conn.cursor();
+            client = ewutils.get_client()
 
-        # get all players visiting an evicted apartment and kick them out
-        cursor.execute(
-            "SELECT {} FROM users WHERE {} = %s AND {} = %s".format(
-                ewcfg.col_id_user,
-                ewcfg.col_visiting,
-                ewcfg.col_id_server
-            ), (
-                player_info.id_user,
-                server_id
-            ))
+            # get all players visiting an evicted apartment and kick them out
+            cursor.execute(
+                "SELECT {} FROM users WHERE {} = %s AND {} = %s".format(
+                    ewcfg.col_id_user,
+                    ewcfg.col_visiting,
+                    ewcfg.col_id_server
+                ), (
+                    player_info.id_user,
+                    server_id
+                ))
 
-        squatters = cursor.fetchall()
+            squatters = cursor.fetchall()
 
-        for squatter in squatters:
-            sqt_data = EwUser(id_user=squatter[0], id_server=player_info.id_server)
-            server = ewcfg.server_list[sqt_data.id_server]
-            member_object = server.get_member(squatter[0])
-            sqt_data.poi = sqt_data.poi[3:]
-            sqt_data.visiting = ewcfg.location_id_empty
-            sqt_data.persist()
-            await ewrolemgr.updateRoles(client=client, member=member_object)
+            for squatter in squatters:
+                sqt_data = EwUser(id_user=squatter[0], id_server=player_info.id_server)
+                server = ewcfg.server_list[sqt_data.id_server]
+                member_object = server.get_member(squatter[0])
+                sqt_data.poi = sqt_data.poi[3:]
+                sqt_data.visiting = ewcfg.location_id_empty
+                sqt_data.persist()
+                await ewrolemgr.updateRoles(client=client, member=member_object)
+        finally:
+            # Clean up the database handles.
+            cursor.close()
+            ewutils.databaseClose(conn_info)
 
 
 def toss_items(id_user = None, id_server = None, poi = None):
@@ -1044,7 +1025,7 @@ def toss_items(id_user = None, id_server = None, poi = None):
         for stuff in inv_toss:  # toss all items out
             stuffing = ewitem.EwItem(id_item=stuff.get('id_item'))
             stuffing.id_owner = poi.id_poi
-            if stuff.get('item_type') == ewcfg.it_food and id_user[-5:] == ewcfg.compartment_id_fridge:
+            if stuff.get('item_type') == ewcfg.it_food and id_user[-6:] == ewcfg.compartment_id_fridge:
                 stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
                 stuffing.item_props['time_fridged'] = '0'
             stuffing.persist()

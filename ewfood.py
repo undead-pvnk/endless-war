@@ -302,10 +302,10 @@ async def order(cmd):
 						company_data.persist()
 
 					item_props = ewitem.gen_item_props(item)
-					print(item.str_name)
+
 					if item.str_name == "arcade cabinet":
 						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
-						print("imin")
+
 
 					ewitem.item_create(
 						item_type = item_type,
