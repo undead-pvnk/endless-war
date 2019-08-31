@@ -758,33 +758,29 @@ async def summon_enemy(cmd):
 async def enemy_perform_action(id_server):
 	
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
-	
-	print("TEST")
 
-	enemydata = ewutils.execute_sql_query(
-	  "SELECT {id_enemy} FROM users, enemies WHERE ((users.poi = enemies.poi AND (users.life_state != %s OR users.life_state != %s) AND users.id_server = '{id_server}') OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s)) AND enemies.id_server = '{id_server}'".format(
-		  id_enemy=ewcfg.col_id_enemy,
-		  id_server=id_server
-	  ), (
-		  ewcfg.life_state_corpse,
-		  ewcfg.life_state_kingpin,
-		  ewcfg.raid_bosses,
-		  ewcfg.enemy_lifestate_dead,
-		  despawn_timenow
-	  ))
-	# enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-	#     id_enemy = ewcfg.col_id_enemys
-	# ),(
-	#     id_server,
-	# ))
+	# enemydata = ewutils.execute_sql_query(
+	#   "SELECT {id_enemy} FROM users, enemies WHERE ((users.poi = enemies.poi AND (users.life_state != %s OR users.life_state != %s) AND users.id_server = '{id_server}') OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s)) AND enemies.id_server = '{id_server}'".format(
+	# 	  id_enemy=ewcfg.col_id_enemy,
+	# 	  id_server=id_server
+	#   ), (
+	# 	  ewcfg.life_state_corpse,
+	# 	  ewcfg.life_state_kingpin,
+	# 	  ewcfg.raid_bosses,
+	# 	  ewcfg.enemy_lifestate_dead,
+	# 	  despawn_timenow
+	#   ))
+	enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+		id_enemy = ewcfg.col_id_enemy
+	),(
+		id_server,
+	))
 
 	# Remove duplicates from SQL query
-	enemydata = list(dict.fromkeys(enemydata))
-	print("ENEMYDATA: {}".format(enemydata))
+	#enemydata = set(enemydata)
 
 	for row in enemydata:
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
-		#print(enemy.enemytype)
 
 		# If an enemy is marked for death or has been alive too long, delete it
 		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < despawn_timenow):
