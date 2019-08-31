@@ -100,17 +100,17 @@ async def adorn(cmd):
 				item.item_props['adorned'] = 'false'
 				response = "You successfully dedorn your " + item.item_props['cosmetic_name'] + "."
 			else:
-				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-					response = "You can't adorn anymore cosmetics."
+				#if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
+				#	response = "You can't adorn anymore cosmetics."
+				#else:
+				item.item_props['adorned'] = 'true'
+
+				if item.item_props.get('slimeoid') == 'true':
+					item.item_props['slimeoid'] = 'false'
+					response = "You take your {} from your slimeoid and successfully adorn it.".format(item.item_props.get('cosmetic_name'))
+
 				else:
-					item.item_props['adorned'] = 'true'
-
-					if item.item_props.get('slimeoid') == 'true':
-						item.item_props['slimeoid'] = 'false'
-						response = "You take your {} from your slimeoid and successfully adorn it.".format(item.item_props.get('cosmetic_name'))
-
-					else:
-						response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
+					response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
 
 			item.persist()
 

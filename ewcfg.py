@@ -225,14 +225,18 @@ transport_line_blimp_afb_to_df = "blimpafbtodf"
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
 role_juvenile_pvp = "juvenilepvp"
+role_juvenile_active = "juvenileotp"
 role_rowdyfucker = "rowdyfucker"
 role_rowdyfuckers = "rowdys"
-role_rowdyfuckers_pvp = "rowdypvp"
+role_rowdyfuckers_pvp = "rowdywanted"
+role_rowdyfuckers_active = "rowdyotp"
 role_copkiller = "copkiller"
 role_copkillers = "killers"
-role_copkillers_pvp = "killerpvp"
+role_copkillers_pvp = "killerwanted"
+role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsepvp"
+role_corpse_active = "corpseotp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -240,14 +244,18 @@ role_slimecorp = "slimecorp"
 faction_roles = [
 	role_juvenile,
 	role_juvenile_pvp,
+	role_juvenile_active,
 	role_rowdyfucker,
 	role_rowdyfuckers,
 	role_rowdyfuckers_pvp,
+	role_rowdyfuckers_active,
 	role_copkiller,
 	role_copkillers,
 	role_copkillers_pvp,
+	role_copkillers_active,
 	role_corpse,
 	role_corpse_pvp,
+	role_corpse_active,
 	role_kingpin,
 	role_grandfoe,
 	role_slimecorp
@@ -258,6 +266,13 @@ role_to_pvp_role = {
 	role_rowdyfuckers : role_rowdyfuckers_pvp,
 	role_copkillers : role_copkillers_pvp,
 	role_corpse : role_corpse_pvp
+	}
+
+role_to_active_role = {
+	role_juvenile : role_juvenile_active,
+	role_rowdyfuckers : role_rowdyfuckers_active,
+	role_copkillers : role_copkillers_active,
+	role_corpse : role_corpse_active
 	}
 
 # Faction names and bases
@@ -814,18 +829,18 @@ cd_slimeoiddefeated = 900
 cd_scavenge = 0
 
 # PvP timer pushouts
-time_pvp_kill = 600
-time_pvp_mine = 180
-time_pvp_haunt = 600
-time_pvp_invest_withdraw = 180
-time_pvp = 1800
+time_pvp_kill = 60 * 60 # 1 hour
+
+#time_pvp_mine = 180
+#time_pvp_haunt = 600
+#time_pvp_invest_withdraw = 180
+#time_pvp = 1800
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
 
 # time after coming online before you can act
 time_offline = 10
-
 
 # time for an enemy to despawn
 time_despawn = 60 * 180 # 3 hours
@@ -1060,6 +1075,7 @@ col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
 col_arrested = 'arrested'
+col_time_expirpvp = 'time_expirpvp'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1221,8 +1237,9 @@ control_topics = {
 # district control actors
 actor_decay = "decay"
 
-# The highest level your weaponskill may be on revive. All skills over this level reset to this level.
-weaponskill_max_onrevive = 3
+# The highest and lowest level your weaponskill may be on revive. All skills over this level reset to these.
+weaponskill_max_onrevive = 6
+weaponskill_min_onrevive = 0
 
 # Places you might get !shot
 hitzone_list = [
@@ -1371,7 +1388,9 @@ cause_drowning = 7
 cause_falling = 8
 cause_bleeding = 9
 cause_burning = 10
-cause_enemy_killing = 11
+cause_killing_enemy = 11
+cause_killing_wanted = 12
+cause_killing_innocent = 13
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [

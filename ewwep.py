@@ -672,9 +672,13 @@ async def attack(cmd):
 			if was_shot:
 
 				if was_juvenile == True:
-					# Flag the shooter for PvP no matter what happens next.
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (time_now + ewcfg.time_pvp_kill))
+					# Flag the shooter as Wanted no matter what happens next.
+					user_data.time_expirpvp = time_now + ewcfg.time_pvp_kill + int(user_data.bounty)
+
 					user_data.persist()
+
+					# Add the PvP flag role.
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
@@ -779,7 +783,10 @@ async def attack(cmd):
 
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
-					shootee_data.die(cause = ewcfg.cause_killing)
+					if user_data.time_expirpvp >= time_now:
+						shootee_data.die(cause = ewcfg.cause_killing_wanted)
+					else:
+						shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 					kill_descriptor = "beaten to death"
@@ -947,6 +954,7 @@ async def attack(cmd):
 
 """ player kills themself """
 async def suicide(cmd):
+	time_now = int(time.time())
 	response = ""
 	deathreport = ""
 
@@ -971,6 +979,8 @@ async def suicide(cmd):
 			response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
+		elif user_data.time_expirpvp >= time_now:
+			response = "*Tsk, tsk...* Trying to take the coward's way out, I see. All those WANTED get what's coming to them."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
@@ -1107,7 +1117,11 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 					levelup_resp = user_data.change_slimes(n = target_data.slimes/2, source = ewcfg.source_killing)
 
 					target_data.id_killer = user_data.id_user
-					target_data.die(cause = ewcfg.cause_killing)
+
+					if target_data.time_expirpvp >= time_now:
+						target_data.die(cause = ewcfg.cause_killing_wanted)
+					else:
+						target_data.die(cause = ewcfg.cause_killing)
 					#target_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 					target_data.persist()
 
@@ -1434,8 +1448,8 @@ async def marry(cmd):
 	elif weapon is None:
 		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	#Makes sure you have a displayed rank 6 or higher weapon.
-	elif user_data.weaponskill < 10:
+	#Makes sure you have a displayed rank 4 or higher weapon.
+	elif user_data.weaponskill < 8:
 		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.

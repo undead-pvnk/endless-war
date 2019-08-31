@@ -605,6 +605,7 @@ async def on_ready():
 		Set up for infinite loop to perform periodic tasks.
 	"""
 	time_now = int(time.time())
+	time_last_pvp = time_now
 
 	time_last_twitch = time_now
 	time_twitch_downed = 0
@@ -669,6 +670,38 @@ async def on_ready():
 			except:
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
+
+		# Clear PvP roles from players who are no longer flagged.
+		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
+			time_last_pvp = time_now
+
+			try:
+				for server in client.servers:
+					roles_map = ewutils.getRoleMap(server.roles)
+
+					role_rowdyfuckers_pvp = roles_map[ewcfg.role_rowdyfuckers_pvp]
+					role_copkillers_pvp = roles_map[ewcfg.role_copkillers_pvp]
+
+					# Monitor all user roles and update if a user is no longer flagged for PvP.
+					for member in server.members:
+						pvp_role = None
+
+						if role_copkillers_pvp in member.roles:
+							pvp_role = role_copkillers_pvp
+						elif role_rowdyfuckers_pvp in member.roles:
+							pvp_role = role_rowdyfuckers_pvp
+
+						if pvp_role != None:
+							# Retrieve user data from the database.
+							user_data = EwUser(member=member)
+
+							# If the user's PvP expire time is historical, remove the PvP role.
+							if user_data.time_expirpvp < int(time.time()):
+								await client.remove_roles(member, pvp_role)
+
+			except:
+				ewutils.logMsg('An error occurred in the scheduled role update task:')
+				traceback.print_exc(file=sys.stdout)
 
 		# Adjust the exchange rate of slime for the market.
 		try:
@@ -766,7 +799,7 @@ async def on_ready():
 					ewutils.decaySlimes(id_server = server.id)
 
 					# Increase hunger for all players below the max.
-					ewutils.pushupServerHunger(id_server = server.id)
+					#ewutils.pushupServerHunger(id_server = server.id)
 
 					# Decrease inebriation for all players above min (0).
 					ewutils.pushdownServerInebriation(id_server = server.id)
@@ -1082,6 +1115,68 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
+			patrician_rarity = 20
+			patrician_smelted = random.randint(1, patrician_rarity)
+			patrician = False
+
+			if patrician_smelted == 1:
+				patrician = True
+
+			items = []
+
+			for cosmetic in ewcfg.cosmetic_items_list:
+				if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
+					items.append(cosmetic)
+				elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
+					items.append(cosmetic)
+
+			item = items[random.randint(0, len(items) - 1)]
+
+			item_id = ewitem.item_create(
+				item_type = ewcfg.it_cosmetic,
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_props = {
+					'id_cosmetic': item.id_cosmetic,
+					'cosmetic_name': item.str_name,
+					'cosmetic_desc': item.str_desc,
+					'rarity': item.rarity,
+					'adorned': 'false'
+				}
+			)
+
+			ewutils.logMsg('Created item: {}'.format(item_id))
+			item = EwItem(id_item = item_id)
+			item.item_props['test'] = 'meow'
+			item.persist()
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Hat created."))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createfood'):
+			item = ewcfg.food_list[random.randint(0, len(ewcfg.food_list) - 1)]
+
+			item_id = ewitem.item_create(
+				item_type = ewcfg.it_food,
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_props = {
+					'id_food': item.id_food,
+					'food_name': item.str_name,
+					'food_desc': item.str_desc,
+					'recover_hunger': item.recover_hunger,
+					'str_eat': item.str_eat,
+					'time_expir': item.time_expir
+				}
+			)
+
+			ewutils.logMsg('Created item: {}'.format(item_id))
+			item = EwItem(id_item = item_id)
+			item.item_props['test'] = 'meow'
+			item.persist()
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Food created."))
 
 		# FIXME debug
 		# Test item deletion

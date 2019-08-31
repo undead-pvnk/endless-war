@@ -357,6 +357,49 @@ def item_dropall(
 	except:
 		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
+"""
+	Drop some of a player's non-soulbound items into their district.
+"""
+def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None):
+	try:
+		user_data = EwUser(id_server = id_server, id_user = id_user)
+		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+
+		drop_candidates = []
+
+		# Filter out Soulbound items.
+		for item in items:
+			if item.get('soulbound') == False:
+				drop_candidates.append(item)
+
+		filtered_items = []
+
+		if item_type_filter == ewcfg.it_cosmetic:
+			for item in drop_candidates:
+				cosmetic = EwItem(item.get('id_item'))
+				if cosmetic.item_props['adorned'] == "false" or cosmetic.item_props['slimeoid'] == "false":
+					filtered_items.append(cosmetic)
+		if item_type_filter == ewcfg.it_weapon:
+			for item in drop_candidates:
+				if item.get('id_item') != user_data.weapon:
+					filtered_items.append(item)
+		else:
+			filtered_items = drop_candidates
+
+		number_of_filtered_items = len(filtered_items)
+
+		number_of_items_to_drop = int(number_of_filtered_items / fraction)
+
+		if number_of_items_to_drop >= 2:
+			for drop in range(number_of_items_to_drop):
+				for item in filtered_items:
+					id_item = item.get('id_item')
+					give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
+					items.pop(0)
+					break
+
+	except:
+		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
 """
 	Dedorn all of a player's cosmetics
@@ -368,7 +411,7 @@ def item_dedorn_cosmetics(
 	try:
 		
 		ewutils.execute_sql_query(
-			"UPDATE items_prop SET value = 'false' WHERE (name = 'adorned' or name = 'slimeoid') AND {id_item} IN (\
+			"UPDATE items_prop SET value = 'false' WHERE (name = 'adorned') AND {id_item} IN (\
 				SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
 			)".format(
 				id_item = ewcfg.col_id_item,

@@ -1,4 +1,5 @@
 import asyncio
+import time
 
 import ewcfg
 import ewutils
@@ -130,6 +131,7 @@ async def updateRoles(
 	client = None,
 	member = None
 ):
+	time_now = int(time.time())
 	user_data = EwUser(member = member)
 	id_server = user_data.id_server
 	
@@ -143,6 +145,7 @@ async def updateRoles(
 		# Fix the life_state of kingpins, if somehow it wasn't set.
 		user_data.life_state = ewcfg.life_state_kingpin
 		user_data.persist()
+
 	elif user_data.life_state != ewcfg.life_state_grandfoe and ewcfg.role_grandfoe in roles_map_user:
 		# Fix the life_state of a grand foe.
 		user_data.life_state = ewcfg.life_state_grandfoe
@@ -150,16 +153,20 @@ async def updateRoles(
 
 	faction_roles_remove = [
 		ewcfg.role_juvenile,
+		ewcfg.role_juvenile_active,
 		ewcfg.role_juvenile_pvp,
 		ewcfg.role_rowdyfuckers,
 		ewcfg.role_rowdyfuckers_pvp,
+		ewcfg.role_rowdyfuckers_active,
 		ewcfg.role_copkillers,
 		ewcfg.role_copkillers_pvp,
+		ewcfg.role_copkillers_active,
 		ewcfg.role_corpse,
 		ewcfg.role_corpse_pvp,
+		ewcfg.role_corpse_active,
 		ewcfg.role_kingpin,
 		ewcfg.role_grandfoe,
-                ewcfg.role_slimecorp
+		ewcfg.role_slimecorp,
 	]
 
 	# Manage faction roles.
@@ -168,13 +175,18 @@ async def updateRoles(
 	faction_roles_remove.remove(faction_role)
 
 	pvp_role = None
+	active_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
-		if ewutils.is_otp(user_data):
+
+		if user_data.time_expirpvp >= time_now:
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
-	# Manage location roles.
+		if ewutils.is_otp(user_data):
+			active_role = ewcfg.role_to_active_role.get(faction_role)
+			faction_roles_remove.remove(active_role)
 
+	# Manage location roles.
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if poi != None:
 		poi_role = poi.role
@@ -212,6 +224,14 @@ async def updateRoles(
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(pvp_role))
+
+	try:
+		role_data = EwRole(id_server = id_server, name = active_role)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(active_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = poi_role)

@@ -764,6 +764,7 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd):
+	time_now = int(time.time())
 	if channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
@@ -799,6 +800,12 @@ async def move(cmd):
 
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+
+	if user_data.time_expirpvp >= time_now:
+		if poi.is_subzone == True:
+			if poi.id_poi in [ewcfg.poi_id_vagrantscorner_pier, ewcfg.poi_id_slimesend_pier, ewcfg.poi_id_assaultflatsbeach_pier, ewcfg.poi_id_crookline_pier, ewcfg.poi_id_jaywalkerplain_pier, ewcfg.poi_id_toxington_pier]:
+				onlookers = "fishermen" #todo more
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The {} there would definitely call the cops on a WANTED such as yourself, better keep a low profile.".format(onlookers)))
 
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
@@ -1039,6 +1046,8 @@ async def teleport(cmd):
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
+	if user_data.time_expirpvp >= time_now:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Better not, teleporting attracts more attention than you can afford to attract while WANTED."))
 
 	if ewcfg.mutation_id_quantumlegs in mutations:
 		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
@@ -1080,10 +1089,10 @@ async def teleport_player(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 	
-	if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
-		pass
-	else:
-		return
+	#if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+	#	pass
+	#else:
+	#	return
 	
 	if cmd.mentions_count == 1:
 		target = cmd.mentions[0]

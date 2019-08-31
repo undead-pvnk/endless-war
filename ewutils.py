@@ -771,7 +771,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 			databaseClose(conn_info)
 
 """ Clear all weapon skills for a player (probably called on death). """
-def weaponskills_clear(id_server = None, id_user = None, member = None):
+def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
 	if member != None:
 		id_server = member.server.id
 		id_user = member.id
@@ -788,8 +788,8 @@ def weaponskills_clear(id_server = None, id_user = None, member = None):
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
 			), (
-				ewcfg.weaponskill_max_onrevive,
-				ewcfg.weaponskill_max_onrevive,
+				weaponskill,
+				weaponskill,
 				id_server,
 				id_user
 			))
@@ -799,7 +799,6 @@ def weaponskills_clear(id_server = None, id_user = None, member = None):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
-
 
 re_flattener = re.compile("[ '\"!@#$%^&*().,/?{}\[\];:]")
 
@@ -1106,6 +1105,7 @@ def check_defender_targets(user_data, enemy_data):
 		return True
 
 def get_move_speed(user_data):
+	time_now = int(time.time())
 	mutations = user_data.get_mutations()
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
@@ -1122,6 +1122,9 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+
+	if user_data.time_expirpvp >= time_now:
+		move_speed = move_speed / 2 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
 
 	return move_speed
 
@@ -1216,11 +1219,3 @@ async def explode(damage = 0, district_data = None):
 
 def is_otp(user_data):
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse]
-
-""" Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
-def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
-	if desired_time_expirpvp > current_time_expirpvp:
-		return desired_time_expirpvp
-
-	return current_time_expirpvp
-
