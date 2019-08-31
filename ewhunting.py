@@ -238,12 +238,13 @@ class EwEnemy:
 
 		if enemy_data.ai == ewcfg.enemy_ai_coward:
 			users = ewutils.execute_sql_query(
-				"SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT {life_state} = {life_state_corpse}".format(
+				"SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
 					id_user=ewcfg.col_id_user,
 					life_state=ewcfg.col_life_state,
 					poi=ewcfg.col_poi,
 					id_server=ewcfg.col_id_server,
-					life_state_corpse=ewcfg.life_state_corpse
+					life_state_corpse=ewcfg.life_state_corpse,
+					life_state_kingpin=ewcfg.life_state_kingpin,
 				), (
 					enemy_data.poi,
 					enemy_data.id_server
@@ -283,33 +284,20 @@ class EwEnemy:
 
 			target_data = None
 
-			while check_raidboss_countdown(enemy_data) == False:
-				timer = (enemy_data.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
+			timer = (enemy_data.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
 
-				if timer < ewcfg.enemy_attack_tick_length and timer != 0:
-					timer = ewcfg.enemy_attack_tick_length
+			if timer < ewcfg.enemy_attack_tick_length and timer != 0:
+				timer = ewcfg.enemy_attack_tick_length
 
-				countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
-				resp_cont.add_channel_response(ch_name, countdown_response)
+			countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
+			resp_cont.add_channel_response(ch_name, countdown_response)
 
-				try:
-					await asyncio.sleep(ewcfg.enemy_attack_tick_length)
-					await client.delete_message(last_messages[len(last_messages)-1])
-				except:
-					pass
-
-				last_messages = await resp_cont.post()
-
-			# Once it exits the loop, delete the final countdown message
-			try:
-				await asyncio.sleep(ewcfg.enemy_attack_tick_length)
-				await client.delete_message(last_messages[len(last_messages) - 1])
-			except:
-				pass
-
-			# Don't make an attempt to post resp_cont, since it should be emptied out after the loop exit
+			#TODO: Edit the countdown message instead of deleting and reposting
+			last_messages = await resp_cont.post()
+			asyncio.ensure_future(ewutils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
+			
+			# Don't post resp_cont a second time while the countdown is going on.
 			should_post_resp_cont = False
-
 
 		if target_data != None:
 
@@ -771,15 +759,17 @@ async def enemy_perform_action(id_server):
 	
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
-	#enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM users, enemies WHERE (users.poi = enemies.poi AND users.life_state != %s AND enemies.id_server = {id_server} AND users.id_server = {id_server}) OR (enemies.enemytype IN %s AND enemies.id_server = {id_server}) OR (enemies.life_state = %s OR enemies.lifetime < %s)".format(
-	#	id_enemy=ewcfg.col_id_enemy,
-	#	id_server=id_server
-	#), (
-	#	ewcfg.life_state_corpse,
-	#	ewcfg.raid_bosses,
-	#	ewcfg.enemy_lifestate_dead,
-	#	despawn_timenow
-	#))
+	# enemydata = ewutils.execute_sql_query(
+	#   "SELECT {id_enemy} FROM users, enemies WHERE ((users.poi = enemies.poi AND (users.life_state != %s OR users.life_state != %s) AND users.id_server = '{id_server}') OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s)) AND enemies.id_server = '{id_server}'".format(
+	# 	  id_enemy=ewcfg.col_id_enemy,
+	# 	  id_server=id_server
+	#   ), (
+	# 	  ewcfg.life_state_corpse,
+	# 	  ewcfg.life_state_kingpin,
+	# 	  ewcfg.raid_bosses,
+	# 	  ewcfg.enemy_lifestate_dead,
+	# 	  despawn_timenow
+	#   ))
 	enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
 		id_enemy = ewcfg.col_id_enemy
 	),(
@@ -814,6 +804,8 @@ async def spawn_enemy(id_server):
 	response = ""
 	ch_name = ""
 	chosen_poi = ""
+	threat_level = ""
+	boss_choices = []
 
 	enemies_count = ewcfg.max_enemies
 	try_count = 0
@@ -831,7 +823,21 @@ async def spawn_enemy(id_server):
 		enemytype = random.choice(ewcfg.rare_enemies)
 	else:
 		# raid bosses
-		enemytype = random.choice(ewcfg.raid_bosses)
+		threat_level_choice = random.randrange(1000)
+		
+		if threat_level_choice <= 450:
+			threat_level = "Micro"
+		elif threat_level_choice <= 720:
+			threat_level = "Monstrous"
+		elif threat_level_choice <= 900:
+			threat_level = "Mega"
+		else:
+			threat_level = "Mega"
+			#threat_level = "Nega"
+		
+		boss_choices = ewcfg.raid_boss_tiers[threat_level]
+		enemytype = random.choice(boss_choices)
+		
 
 	# debug manual reassignment
 	# enemytype = 'juvie'
@@ -888,7 +894,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		if enemy_search_tokens[len(enemy_search_tokens) - 1].upper() in ewcfg.identifier_letters:
 			# user passed in an identifier for a district specific enemy
 
-			searched_identifier = enemy_search_tokens[len(enemy_search_tokens) - 1]
+			searched_identifier = enemy_search_tokens[len(enemy_search_tokens) - 1].upper()
 
 			enemydata = ewutils.execute_sql_query(
 				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {identifier} = %s AND {life_state} = 1".format(
@@ -1088,20 +1094,7 @@ def drop_enemy_loot(enemy_data, district_data):
 		loot_multiplier *= 1.5
 		
 	if enemy_data.enemytype == ewcfg.enemy_type_unnervingfightingoperator:
-		if enemy_data.rare_status == 0:
-			if enemy_data.slimes >= 2000000:
-				loot_multiplier *= 6
-			elif enemy_data.slimes >= 1500000:
-				loot_multiplier *= 5
-			else:
-				loot_multiplier *= 4
-		elif enemy_data.rare_status == 1:
-			if enemy_data.slimes >= 4000000:
-				loot_multiplier *= 6
-			elif enemy_data.slimes >= 3000000:
-				loot_multiplier *= 5
-			else:
-				loot_multiplier *= 4
+		loot_multiplier *= math.ceil(enemy_data.slimes / 1000000)
 		
 	poudrin_amount = math.ceil(poudrin_amount * loot_multiplier)
 	pleb_amount = math.ceil(pleb_amount * loot_multiplier)
@@ -1412,7 +1405,7 @@ def get_enemy_data(enemy_type):
 	elif enemy_type == ewcfg.enemy_type_unnervingfightingoperator:
 		enemy.ai = ewcfg.enemy_ai_attacker_b
 		enemy.display_name = ewcfg.enemy_displayname_unnervingfightingoperator
-		enemy.attacktype = ewcfg.enemy_attacktype_raiderrifle
+		enemy.attacktype = ewcfg.enemy_attacktype_armcannon
 		
 	if enemy_type in ewcfg.raid_bosses:
 		enemy.life_state = ewcfg.enemy_lifestate_unactivated
@@ -1452,14 +1445,14 @@ def get_enemy_slime(enemy_type):
 		minslime = 1000000
 		maxslime = 1000000
 	elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
-		minslime = 1000000
-		maxslime = 1500000
+		minslime = 1750000
+		maxslime = 3000000
 	elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
-		minslime = 1250000
-		maxslime = 1750000
+		minslime = 3500000
+		maxslime = 5000000
 	elif enemy_type ==  ewcfg.enemy_type_unnervingfightingoperator:
 		minslime = 1000000
-		maxslime = 2500000
+		maxslime = 3000000
 	
 	slime = random.randrange(minslime, (maxslime + 1))	
 	return slime
@@ -1473,6 +1466,7 @@ def get_target_by_ai(enemy_data):
 
 	# If a player's time_lastenter is less than this value, it can be attacked.
 	targettimer = time_now - ewcfg.time_enemyaggro
+	raidbossaggrotimer = time_now - ewcfg.time_raidbossaggro
 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		if enemy_data.id_target != "":
@@ -1480,14 +1474,15 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT {life_state} = {life_state_corpse} ORDER BY {time_lastenter} ASC".format(
+			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {time_lastenter} ASC".format(
 				id_user=ewcfg.col_id_user,
 				life_state=ewcfg.col_life_state,
 				time_lastenter=ewcfg.col_time_lastenter,
 				poi=ewcfg.col_poi,
 				id_server=ewcfg.col_id_server,
 				targettimer=targettimer,
-				life_state_corpse=ewcfg.life_state_corpse
+				life_state_corpse=ewcfg.life_state_corpse,
+				life_state_kingpin=ewcfg.life_state_kingpin,
 			), (
 				enemy_data.poi,
 				enemy_data.id_server
@@ -1497,7 +1492,7 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT {life_state} = {life_state_corpse} ORDER BY {slimes} DESC".format(
+			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {slimes} DESC".format(
 				id_user=ewcfg.col_id_user,
 				life_state=ewcfg.col_life_state,
 				slimes=ewcfg.col_slimes,
@@ -1505,13 +1500,18 @@ def get_target_by_ai(enemy_data):
 				id_server=ewcfg.col_id_server,
 				time_lastenter=ewcfg.col_time_lastenter,
 				targettimer=targettimer,
-				life_state_corpse=ewcfg.life_state_corpse
+				life_state_corpse=ewcfg.life_state_corpse,
+				life_state_kingpin=ewcfg.life_state_kingpin,
 			), (
 				enemy_data.poi,
 				enemy_data.id_server
 			))
 		if len(users) > 0:
 			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
+			
+	# If an enemy is a raidboss, don't let it attack until 3 seconds have passed when entering a new district.
+	if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
+		target_data = None
 
 	return target_data
 

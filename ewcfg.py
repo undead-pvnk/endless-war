@@ -452,6 +452,7 @@ cmd_menu_alt2 = cmd_prefix + 'catalogue'
 cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
+cmd_crush = cmd_prefix + 'crushpoudrin'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -651,6 +652,9 @@ std_food_expir = 12 * 3600  # 12 hours
 farm_food_expir = 12 * 3600 * 4 # 2 days
 milled_food_expir = 12 * 3600 * 28 # 2 weeks
 
+# amount of slime you get from crushing a poudrin
+crush_slimes = 10000
+
 # minimum amount of slime needed to capture territory
 min_slime_to_cap = 50000
 
@@ -832,6 +836,9 @@ time_despawn = 60 * 180 # 3 hours
 
 # time for a player to be targeted by an enemy after entering a district
 time_enemyaggro = 3
+
+# time for a raid boss to target a player after moving to a new district
+time_raidbossaggro = 3
 
 # time for a raid boss to activate
 time_raidcountdown = 60
@@ -2808,10 +2815,10 @@ weapon_list = [
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		str_trauma_self = "There is a large concave dome in the side of your head.",
 		str_trauma = "There is a large concave dome in the side of their head.",
-		str_kill = "*CRASSHHH* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
+		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is wacked across the {hitzone}!!",
-		str_duel = "**SMASHHH** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
+		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		str_scalp = " If you listen closely, you can still hear the echoes of a sick bassline from yesteryear.",
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
@@ -2915,7 +2922,7 @@ def atf_molotovbreath(ctn = None):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 			
-def atf_raiderrifle(ctn = None):
+def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
 
 	aim = (random.randrange(20) + 1)
@@ -2997,15 +3004,15 @@ enemy_attack_type_list = [
 		fn_effect = atf_molotovbreath
 	),
 	EwAttackType( # 7
-		id_type = "sniper rifle",
+		id_type = "arm cannon",
 		str_crit = "**Critical hit!!** {name_target} has a clean hole shot through their chest by {name_enemy}'s bullet!",
 		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
 		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
 		str_trauma = "There's a deep bruising right in the middle of their forehead.",
-		str_kill = "{name_enemy} readies their crosshairs right for your head and pulls the trigger. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
+		str_kill = "{name_enemy} readies their crosshair right for your head fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
 		str_killdescriptor = "sniped",
 		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
-		fn_effect = atf_raiderrifle
+		fn_effect = atf_armcannon
 	),
 ]
 
@@ -11473,7 +11480,7 @@ enemy_attacktype_tusks = 'tusks'
 enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
 enemy_attacktype_molotovbreath = 'molotov breath'
-enemy_attacktype_raiderrifle = 'sniper rifle'
+enemy_attacktype_armcannon = 'arm cannon'
 
 # Enemy types
 # Common enemies
@@ -11529,6 +11536,15 @@ uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type
 rare_enemies = [enemy_type_microslime]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
+# List of raid bosses sorted by their spawn rarity.
+raid_boss_tiers = {
+	"Micro": [enemy_type_megaslime],
+	"Monstrous": [enemy_type_slimeasaurusrex, enemy_type_unnervingfightingoperator],
+	"Mega": [enemy_type_greeneyesslimedragon],
+	# This can be left empty until we get more raid boss ideas.
+	#"Nega": [],
+}
+
 # Shorthand names the player can refer to enemies as.
 enemy_aliases = {
     enemy_type_juvie: ["juvie","greenman","lostjuvie"],
@@ -11558,14 +11574,14 @@ raid_boss_names = [
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
 	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 3, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
-    enemy_type_slimeadactyl: [{"poudrin": [100, 4, 5]}, {"pleb": [40, 1, 2]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
+    enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
     enemy_type_microslime: [{"patrician": [100, 1, 1]}],
     enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [50, 1, 2]},  {"patrician": [50, 1, 2]}],
-    enemy_type_megaslime: [{"poudrin": [100, 6, 10]}, {"pleb": [100, 2, 4]}, {"patrician": [33, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 10]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 1]},  {"meat": [100, 2, 3]}],
-	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 8, 12]}, {"patrician": [100, 1, 2]}],
+    enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
+	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 

@@ -1217,3 +1217,7 @@ async def explode(damage = 0, district_data = None):
 def is_otp(user_data):
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse]
 
+async def delete_last_message(client, last_messages, tick_length):
+	await asyncio.sleep(tick_length)
+	await client.delete_message(last_messages[len(last_messages) - 1])
+

@@ -701,3 +701,24 @@ def get_cell_symbol(cell):
 	else:
 		cell_str = "X"
 	return cell_str
+
+async def crush(cmd):
+	member = cmd.message.author
+	user_data = EwUser(member=member)
+	response = ""
+	
+	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+	
+	if poudrin is None:
+		response = "You need a slime poudrin."
+	else:
+		# delete a slime poudrin from the player's inventory
+		ewitem.item_delete(id_item=poudrin.get('id_item'))
+		
+		user_data.slimes += ewcfg.crush_slimes
+		user_data.persist()
+		
+		response = "You crush the hardened slime crystal with your bare hands.\nYou gain 10,000 slime. Sick, dude!!"
+		
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
