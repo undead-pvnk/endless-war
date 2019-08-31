@@ -1110,9 +1110,6 @@ def get_move_speed(user_data):
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 0.5
-
 	if ewcfg.mutation_id_organicfursuit in mutations and (
 		(market_data.day % 31 == 0 and market_data.clock >= 20)
 		or (market_data.day % 31 == 1 and market_data.clock < 6)
