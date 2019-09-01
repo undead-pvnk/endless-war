@@ -58,6 +58,7 @@ from ewstatuseffects import EwStatusEffect
 
 
 ewutils.logMsg('Starting up...')
+init_complete = False
 
 client = discord.Client()
 
@@ -105,9 +106,12 @@ cmd_map = {
 	ewcfg.cmd_annoint: ewwep.annoint,
 	ewcfg.cmd_annoint_alt1: ewwep.annoint,
 
-	#Marry and divorce your current wepaon.
+	# Marry and divorce your current weapon.
 	ewcfg.cmd_marry: ewwep.marry,
 	ewcfg.cmd_divorce: ewwep.divorce,
+	
+	# Crush a poudrin to get some slime.
+	ewcfg.cmd_crush: ewjuviecmd.crush,
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
@@ -426,6 +430,7 @@ cmd_map = {
 	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
 	ewcfg.cmd_teleport: ewmap.teleport,
+	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 
 	ewcfg.cmd_piss: ewcmd.piss,
@@ -487,6 +492,10 @@ async def on_member_update(before, after):
 
 @client.event
 async def on_ready():
+	global init_complete
+	if init_complete:
+		return
+	init_complete = True
 	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
 

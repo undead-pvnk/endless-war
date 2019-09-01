@@ -646,40 +646,42 @@ async def burnSlimes(id_server = None):
 async def remove_status_loop(id_server):
 	interval = ewcfg.removestatus_tick_length
 	while not TERMINATE:
-		await removeExpiredStatuses(id_server = id_server)
+		removeExpiredStatuses(id_server = id_server)
 		await asyncio.sleep(interval)
 
 """ Decay slime totals for all users """
-async def removeExpiredStatuses(id_server = None):
+def removeExpiredStatuses(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 
-		client = get_client()
-		server = client.get_server(id_server)
+		#client = get_client()
+		#server = client.get_server(id_server)
 
-		users = execute_sql_query("SELECT id_user FROM users WHERE id_server = %s".format(
+		statuses = execute_sql_query("SELECT {id_status},{id_user} FROM status_effects WHERE id_server = %s AND {time_expire} < %s".format(
+			id_status = ewcfg.col_id_status,
+			id_user = ewcfg.col_id_user,
+			time_expire = ewcfg.col_time_expir
 		), (
 			id_server,
+			time_now
 		))
 
-		for user in users:
-			user_data = EwUser(id_user = user[0], id_server = id_server)
-			
-			statuses = user_data.getStatusEffects()
-
-			for status in statuses:
-				status_def = ewcfg.status_effects_def_map.get(status)
-				status_effect = EwStatusEffect(id_status=status, user_data=user_data)
+		for row in statuses:
+			status = row[0]
+			id_user = row[1]
+			user_data = EwUser(id_user = id_user, id_server = id_server)
+			status_def = ewcfg.status_effects_def_map.get(status)
+			status_effect = EwStatusEffect(id_status=status, user_data = user_data)
 	
-				if status_def.time_expire > 0:
-					if status_effect.time_expire < time_now:
-						user_data.clear_status(id_status=status)
+			if status_def.time_expire > 0:
+				if status_effect.time_expire < time_now:
+					user_data.clear_status(id_status=status)
 
-				# Status that expire under special conditions
-				else:
-					if status == ewcfg.status_stunned_id:
-						if int(status_effect.value) < time_now:
-							user_data.clear_status(id_status=status)
+			# Status that expire under special conditions
+			else:
+				if status == ewcfg.status_stunned_id:
+					if int(status_effect.value) < time_now:
+						user_data.clear_status(id_status=status)
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
 def getIntToken(tokens = [], allow_all = False, negate = False):
@@ -1110,9 +1112,6 @@ def get_move_speed(user_data):
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 0.5
-
 	if ewcfg.mutation_id_organicfursuit in mutations and (
 		(market_data.day % 31 == 0 and market_data.clock >= 20)
 		or (market_data.day % 31 == 1 and market_data.clock < 6)
@@ -1217,4 +1216,10 @@ async def explode(damage = 0, district_data = None):
 def is_otp(user_data):
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse] and user_data.poi[:3] != ewcfg.poi_id_apt
 
+
+async def delete_last_message(client, last_messages, tick_length):
+	if len(last_messages) == 0:
+	    return
+	await asyncio.sleep(tick_length)
+	await client.delete_message(last_messages[-1])
 

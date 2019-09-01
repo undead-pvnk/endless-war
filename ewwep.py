@@ -1980,6 +1980,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					damage=damage
 				)
 
+				if enemy_data.ai == ewcfg.enemy_ai_coward:
+					response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
+				elif enemy_data.ai == ewcfg.enemy_ai_defender:
+					enemy_data.id_target = user_data.id_user
+					enemy_data.persist()
+
 			if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 				response += "\n" + weapon.str_reload_warning.format(
 					name_player=cmd.message.author.display_name)
@@ -1992,6 +1998,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					target_name=enemy_data.display_name,
 					damage=damage
 				)
+
+				if enemy_data.ai == ewcfg.enemy_ai_coward:
+					response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
+				elif enemy_data.ai == ewcfg.enemy_ai_defender:
+					enemy_data.id_target = user_data.id_user
+					enemy_data.persist()
 
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
 
@@ -2011,8 +2023,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if was_killed and enemy_data.enemytype in ewcfg.raid_bosses:
 		# announce raid boss kill in kill feed channel
 
-		killfeed_resp = "*{}*: {}\n\n".format(cmd.message.author.display_name, old_response)
-		killfeed_resp += "`-------------------------`"
+		killfeed_resp = "*{}*: {}".format(cmd.message.author.display_name, old_response)
+		killfeed_resp += "\n`-------------------------`{}".format(ewcfg.emote_megaslime)
 
 		killfeed_resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
 		killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, killfeed_resp)

@@ -1031,11 +1031,19 @@ async def halt(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You {} dead in your tracks.".format(cmd.cmd[1:])))
 
 async def teleport(cmd):
+	
+	blj_used = False
+	if cmd.tokens[0] == '!blj':
+		blj_used = True
+	
 	if channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	if cmd.tokens_count < 2:
+	if cmd.tokens_count < 2 and not blj_used:
 		response = "Teleport where?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif cmd.tokens_count < 2 and blj_used:
+		response = "Backwards Long Jump where?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	time_now = int(time.time())
@@ -1083,14 +1091,29 @@ async def teleport(cmd):
 		user_data.poi = poi.id_poi
 		user_data.time_lastenter = int(time.time())
 		user_data.persist()
-		response = "WHOOO-"
+		
+		if not blj_used:
+			response = "WHOOO-"
+		else:
+			response = "YAHOO! YAHOO! Y-Y-Y-Y-Y-"
+			
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-		response = "-OOOP!"
+		
+		if not blj_used:
+			response = "-OOOP!"
+		else:
+			response = "-AHOO!"
+			
 		resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
 		return await resp_cont.post()
 	else:
-		response = "You don't have any toilet paper."
+		
+		if not blj_used:
+			response = "You don't have any toilet paper."
+		else:
+			response = "You don't even know what that MEANS."
+			
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def teleport_player(cmd):
