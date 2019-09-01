@@ -1215,6 +1215,8 @@ def is_otp(user_data):
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse]
 
 async def delete_last_message(client, last_messages, tick_length):
+	if len(last_messages) == 0:
+	    return
 	await asyncio.sleep(tick_length)
-	await client.delete_message(last_messages[len(last_messages) - 1])
+	await client.delete_message(last_messages[-1])
 
