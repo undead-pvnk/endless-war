@@ -466,16 +466,28 @@ async def help(cmd):
 
 	# help only checks for districts while in game channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+		response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'The guide might be a bit outdated though, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
 	else:
 		# checks if user is in a college
 		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
 			if not len(cmd.tokens) > 1:
+				topic_counter = 0
+				topic_total = 0
 				# list off help topics to player at college
-				response = 'What would you like to learn about? Topics include: \n' \
-						   '**gangs**, **mining**, **food**, **capturing**, **transportation**, **death**, \n' \
-						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **ghosts**, **scouting**, \n' \
-						   '**cosmetics**, **sparring**, **bleeding**, **stocks**, **casino**, and **offline**.'
+				response = 'What would you like to learn about? Topics include: \n' 
+				
+				topics = ewcfg.help_responses.keys()
+				for topic in topics:
+					topic_counter += 1
+					topic_total += 1
+					response += "**{}**".format(topic)
+					if topic_total != len(topics):
+						response += ", "
+					
+					if topic_counter == 4:
+						topic_counter = 0
+						response += "\n"
+					
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				if topic in ewcfg.help_responses:
@@ -491,7 +503,7 @@ async def help(cmd):
 			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 				# mine help
 				response = ewcfg.help_responses['mining']
-			elif (len(poi.vendors) >= 1):
+			elif (len(poi.vendors) >= 1) and not user_data.poi in ewcfg.poi_id_dojo:
 				# food help
 				response = ewcfg.help_responses['food']
 			elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
@@ -523,9 +535,23 @@ async def help(cmd):
 			elif user_data.poi in ewcfg.poi_id_thesewers:
 				# death help
 				response = ewcfg.help_responses['death']
+			elif user_data.poi in [
+				ewcfg.poi_id_toxington_pier,
+				ewcfg.poi_id_assaultflatsbeach_pier,
+				ewcfg.poi_id_vagrantscorner_pier,
+				ewcfg.poi_id_crookline_pier,
+				ewcfg.poi_id_slimesend_pier,
+				ewcfg.poi_id_jaywalkerplain_pier,
+				ewcfg.poi_id_ferry
+			]:
+				# fishing help
+				response = ewcfg.help_responses['fishing']
+			elif user_data.poi in ewcfg.outskirts_districts:
+				# hunting help
+				response = ewcfg.help_responses['hunting']
 			else:
 				# catch-all response for when user isn't in a sub-zone with a help response
-				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'The guide might be a bit outdated though, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

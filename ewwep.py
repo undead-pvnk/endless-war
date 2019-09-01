@@ -1981,7 +1981,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				)
 
 				if enemy_data.ai == ewcfg.enemy_ai_coward:
-					response += random.choice(ewcfg.coward_responses_hurt)
+					response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
 				elif enemy_data.ai == ewcfg.enemy_ai_defender:
 					enemy_data.id_target = user_data.id_user
 					enemy_data.persist()

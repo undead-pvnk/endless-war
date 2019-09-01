@@ -756,6 +756,7 @@ async def summon_enemy(cmd):
 
 # Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):
+	#time_start = time.time()
 	
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
@@ -770,14 +771,14 @@ async def enemy_perform_action(id_server):
 		ewcfg.enemy_lifestate_dead,
 		despawn_timenow
 	))
-#	enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-#		id_enemy = ewcfg.col_id_enemy
-#	),(
-#		id_server,
-#	))
+	#enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+	#	id_enemy = ewcfg.col_id_enemy
+	#),(
+	#	id_server,
+	#))
 
 	# Remove duplicates from SQL query
-	enemydata = set(enemydata)
+	#enemydata = set(enemydata)
 
 	for row in enemydata:
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
@@ -797,6 +798,9 @@ async def enemy_perform_action(id_server):
 			resp_cont = await enemy.kill()
 			if resp_cont != None:
 				await resp_cont.post()
+
+	#time_end = time.time()
+	#ewutils.logMsg("time spent on performing enemy actions: {}".format(time_end - time_start))
 
 # Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
 async def spawn_enemy(id_server):

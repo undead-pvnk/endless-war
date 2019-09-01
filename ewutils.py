@@ -1110,9 +1110,6 @@ def get_move_speed(user_data):
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
 
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 0.5
-
 	if ewcfg.mutation_id_organicfursuit in mutations and (
 		(market_data.day % 31 == 0 and market_data.clock >= 20)
 		or (market_data.day % 31 == 1 and market_data.clock < 6)
@@ -1218,6 +1215,8 @@ def is_otp(user_data):
 	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse]
 
 async def delete_last_message(client, last_messages, tick_length):
+	if len(last_messages) == 0:
+	    return
 	await asyncio.sleep(tick_length)
-	await client.delete_message(last_messages[len(last_messages) - 1])
+	await client.delete_message(last_messages[-1])
 
