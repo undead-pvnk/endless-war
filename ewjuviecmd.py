@@ -709,6 +709,10 @@ async def crush(cmd):
 	
 	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
 	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Alas, you try to shatter the hardened slime crystal, but your ghostly form cannot firmly grasp it."
+		return 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 	if poudrin is None:
 		response = "You need a slime poudrin."
 	else:
