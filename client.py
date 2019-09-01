@@ -57,6 +57,7 @@ from ewstatuseffects import EwStatusEffect
 
 
 ewutils.logMsg('Starting up...')
+init_complete = False
 
 client = discord.Client()
 
@@ -475,6 +476,10 @@ async def on_member_update(before, after):
 
 @client.event
 async def on_ready():
+	global init_complete
+	if init_complete:
+		return
+	init_complete = True
 	ewcfg.set_client(client)
 	ewutils.logMsg('Logged in as {} ({}).'.format(client.user.name, client.user.id))
 
