@@ -415,6 +415,7 @@ cmd_map = {
 	ewcfg.cmd_clear_mutations: ewmutation.clear_mutations,
 
 	ewcfg.cmd_teleport: ewmap.teleport,
+	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 
 	ewcfg.cmd_piss: ewcmd.piss,
