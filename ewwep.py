@@ -2023,8 +2023,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if was_killed and enemy_data.enemytype in ewcfg.raid_bosses:
 		# announce raid boss kill in kill feed channel
 
-		killfeed_resp = "*{}*: {}\n".format(cmd.message.author.display_name, old_response)
-		killfeed_resp += "`-------------------------`{}".format(ewcfg.emote_megaslime)
+		killfeed_resp = "*{}*: {}".format(cmd.message.author.display_name, old_response)
+		killfeed_resp += "\n`-------------------------`{}".format(ewcfg.emote_megaslime)
 
 		killfeed_resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
 		killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, killfeed_resp)
