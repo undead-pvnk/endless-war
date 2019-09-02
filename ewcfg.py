@@ -372,7 +372,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '*'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -1389,8 +1389,6 @@ cause_falling = 8
 cause_bleeding = 9
 cause_burning = 10
 cause_killing_enemy = 11
-cause_killing_wanted = 12
-cause_killing_innocent = 13
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [

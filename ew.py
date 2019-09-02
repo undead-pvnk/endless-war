@@ -141,6 +141,7 @@ class EwUser:
 
 		
 	def die(self, cause = None):
+		time_now = int(time.time())
 		if cause == ewcfg.cause_busted:
 			self.busted = True
 			#self.slimes = int(self.slimes * 0.9)
@@ -158,7 +159,6 @@ class EwUser:
 			self.hunger = 0
 			self.inebriation = 0
 			self.bounty = 0
-			self.time_expirpvp = 0
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
@@ -168,14 +168,14 @@ class EwUser:
 			if cause == ewcfg.cause_killing_enemy: # If your killer was an Enemy. Duh.
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
-			if cause == ewcfg.cause_killing_wanted: # If you were Wanted.
+			if self.time_expirpvp >= time_now: # If you were Wanted.
 				ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
 
 				slimecoin_fee = 1 # 00%. Meaning, you loose ALL of your SlimeCoin.
 
 			else:
-				if cause == ewcfg.cause_killing_innocent: # If you were a Juvenile and your killer was Enlisted.
+				if self.faction == None: # If you were a Juvenile and your killer was Enlisted.
 					item_fraction = 4
 					food_fraction = 4
 					cosmetic_fraction = 4
@@ -195,7 +195,8 @@ class EwUser:
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
 			self.weapon = -1  # Unequip your weapon
-			self.slimecoin = self.slimecoin - (int(self.slimecoin) / slimecoin_fee)
+			self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / slimecoin_fee)
+			self.time_expirpvp = 0
 
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
