@@ -1510,6 +1510,8 @@ def slimeoid_describe(slimeoid):
 			response += " A **BRUTAL CHAMPION** on the arena."
 		elif clout >= 15:
 			response += " This slimeoid has proven itself on the arena."
+		elif clout >= 1:
+			response += " This slimeoid has some clout, but has not yet realized its potential."
 		elif clout == 0:
 			response += " A pitiable baby, this slimeoid has no clout whatsoever."
 
