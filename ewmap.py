@@ -817,7 +817,7 @@ async def move(cmd):
 
 	# If you're WANTED, you can't enter sub-zones.
 	if user_data.time_expirpvp >= time_now:
-		if poi.is_subzone == True:
+		if poi.is_pvp == False:
 			if poi.id_poi in [ewcfg.poi_id_vagrantscorner_pier, ewcfg.poi_id_slimesend_pier, ewcfg.poi_id_assaultflatsbeach_pier, ewcfg.poi_id_crookline_pier, ewcfg.poi_id_jaywalkerplain_pier, ewcfg.poi_id_toxington_pier]:
 				onlookers = "fishermen" #todo
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The onlookers there would definitely call the cops on a WANTED such as yourself, better keep a low profile."))

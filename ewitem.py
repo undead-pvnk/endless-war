@@ -395,7 +395,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 				for item in filtered_items:
 					id_item = item.get('id_item')
 					give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
-					items.pop(0)
+					filtered_items.pop(0)
 					break
 
 	except:
