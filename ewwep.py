@@ -951,9 +951,15 @@ async def attack(cmd):
 
 				#If the shooter is WANTED, post their slime amount, level, weapon, weaponskill level, location, and hunger #kill-feed, and their opposing gangbase.
 				if user_data.time_expirpvp >= time_now:
-					response = "@here BREAKING NEWS: {} has {} {} in {}! ".format(cmd.message.author.display_name, weapon.str_killdescriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
 
-					response += "{} is a level {} slimeboi, they are currently in possession of {} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
+					if user_data.weapon >= 0:
+						weapon_item = EwItem(id_item = user_data.weapon)
+						weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+						response = "@here BREAKING NEWS: {} has {} {} in {}! ".format(cmd.message.author.display_name, weapon.str_killdescriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+					else:
+						response = "@here BREAKING NEWS: {} has killed {} in {}! ".format(cmd.message.author.display_name, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+
+					response += "{} is a level {} slimeboi, they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
 
 					if user_data.hunger > 0:
 						response += "They are {}% hungry. ".format(round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1))
@@ -1003,11 +1009,11 @@ async def attack(cmd):
 						response += "\n\n" + response_block
 
 					if user_data.faction == ewcfg.faction_rowdys:
-						gangbase = ewcfg.poi_id_copkilltown
+						gangbase = ewcfg.channel_copkilltown
 					elif user_data.faction == ewcfg.faction_killers:
-						gangbase = ewcfg.poi_id_rowdyroughhouse
+						gangbase = ewcfg.channel_rowdyroughhouse
 					else:
-						gangbase = ewcfg.poi_id_juviesrow
+						gangbase = ewcfg.channel_juviesrow
 
 					resp_cont.add_channel_response(gangbase, response)
 
