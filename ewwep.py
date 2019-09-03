@@ -955,9 +955,9 @@ async def attack(cmd):
 					if user_data.weapon >= 0:
 						weapon_item = EwItem(id_item = user_data.weapon)
 						weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-						response = "@here BREAKING NEWS: {} has {} {} in {}! ".format(cmd.message.author.display_name, weapon.str_killdescriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+						response = "BREAKING NEWS: {} has {} {} in {}! ".format(cmd.message.author.display_name, weapon.str_killdescriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
 					else:
-						response = "@here BREAKING NEWS: {} has killed {} in {}! ".format(cmd.message.author.display_name, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+						response = "BREAKING NEWS: {} has killed {} in {}! ".format(cmd.message.author.display_name, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
 
 					response += "{} is a level {} slimeboi, they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
 

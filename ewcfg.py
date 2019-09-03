@@ -322,6 +322,7 @@ channel_cl_pier = "crookline-pier"
 channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
+channel_juviesrow = "juvies-row"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
