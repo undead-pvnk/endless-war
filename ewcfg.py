@@ -637,7 +637,7 @@ slimes_tomanifest = -100000
 # hunger
 min_stamina = 100
 hunger_pershot = 10
-hunger_perspar = 30
+hunger_perspar = 10
 hunger_perfarm = 50
 hunger_permine = 1
 hunger_perminereset = 10
@@ -819,7 +819,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 
 # Cooldowns
 cd_kill = 5
-cd_spar = 300
+cd_spar = 60
 cd_haunt = 600
 cd_invest = 1200
 cd_boombust = 22

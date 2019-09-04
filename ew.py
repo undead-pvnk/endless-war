@@ -163,16 +163,13 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 
-			slimecoin_fee = 10 # %. Meaning, you'll loose 10% of your SlimeCoin.
-
 			if cause == ewcfg.cause_killing_enemy: # If your killer was an Enemy. Duh.
 				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
 			if self.time_expirpvp >= time_now: # If you were Wanted.
 				ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
-
-				slimecoin_fee = 1 # 00%. Meaning, you loose ALL of your SlimeCoin.
+				self.slimecoin = 0
 
 			else:
 				if self.faction == None: # If you were a Juvenile and your killer was Enlisted.
@@ -184,6 +181,7 @@ class EwUser:
 					item_fraction = 2
 					food_fraction = 2
 					cosmetic_fraction = 2
+					self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 10)
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction) # Drop a random fraction of your items on the ground.
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction) # Drop a random fraction of your food on the ground.
@@ -195,7 +193,6 @@ class EwUser:
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
 			self.weapon = -1  # Unequip your weapon
-			self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / slimecoin_fee)
 			self.time_expirpvp = 0
 
 		ewutils.moves_active[self.id_user] = 0
