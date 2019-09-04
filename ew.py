@@ -172,16 +172,16 @@ class EwUser:
 				self.slimecoin = 0
 
 			else:
-				if self.faction == None: # If you were a Juvenile and your killer was Enlisted.
-					item_fraction = 4
-					food_fraction = 4
-					cosmetic_fraction = 4
+			#	if self.faction == None: # If you were a Juvenile and your killer was Enlisted.
+			#		item_fraction = 4
+			#		food_fraction = 4
+			#		cosmetic_fraction = 4
 
-				else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
-					item_fraction = 2
-					food_fraction = 2
-					cosmetic_fraction = 2
-					self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 10)
+			#	else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
+				item_fraction = 2
+				food_fraction = 2
+				cosmetic_fraction = 2
+				self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 10)
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction) # Drop a random fraction of your items on the ground.
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction) # Drop a random fraction of your food on the ground.
@@ -333,7 +333,7 @@ class EwUser:
 					self.id_server,
 					self.id_user
 				))
-    
+
 			for mutation_data in mutations:
 				result.append(mutation_data[0])
 		except:
