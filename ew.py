@@ -49,6 +49,7 @@ class EwUser:
 	time_lastoffline = 0
 	time_joined = 0
 	time_expirpvp = 0
+	time_lastenlist = 0
 
 	move_speed = 1 # not a database column
 
@@ -535,7 +536,7 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -569,6 +570,7 @@ class EwUser:
 					ewcfg.col_arrested,
 					ewcfg.col_splattered_slimes,
 					ewcfg.col_time_expirpvp,
+					ewcfg.col_time_lastenlist,
 				), (
 					id_user,
 					id_server
@@ -610,6 +612,7 @@ class EwUser:
 					self.arrested = (result[30] == 1)
 					self.splattered_slimes = result[31]
 					self.time_expirpvp = result[32]
+					self.time_lastenlist = result[33]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -665,7 +668,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -702,6 +705,7 @@ class EwUser:
 				ewcfg.col_arrested,
 				ewcfg.col_splattered_slimes,
 				ewcfg.col_time_expirpvp,
+				ewcfg.col_time_lastenlist,
 			), (
 				self.id_user,
 				self.id_server,
@@ -739,6 +743,7 @@ class EwUser:
 				(1 if self.arrested else 0),
 				self.splattered_slimes,
 				self.time_expirpvp,
+				self.time_lastenlist,
 			))
 
 			conn.commit()

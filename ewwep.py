@@ -271,6 +271,8 @@ def canAttack(cmd):
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
+	elif user_data.weapon == -1:
+		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 		# user is going after enemies rather than players
@@ -1441,7 +1443,10 @@ async def spar(cmd):
 """ equip a weapon """
 async def equip(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	response = ""
+	time_now = int(time.time())
+
+	if user_data.time_lastenlist > time_now:
+		response = "You've enlisted way too recently! You can't equip any weapons just yet."
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 

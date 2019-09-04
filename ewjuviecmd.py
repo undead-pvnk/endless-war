@@ -57,6 +57,7 @@ class EwMineGrid:
 async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	user_slimes = user_data.slimes
+	time_now = int(time.time())
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
@@ -96,6 +97,7 @@ async def enlist(cmd):
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
 
 		if desired_faction == ewcfg.faction_rowdys:
@@ -114,6 +116,7 @@ async def enlist(cmd):
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

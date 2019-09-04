@@ -828,6 +828,7 @@ cd_rr = 600
 #slimeoid downtime after a defeat
 cd_slimeoiddefeated = 900
 cd_scavenge = 0
+cd_enlist = 60
 
 # PvP timer pushouts
 time_pvp_kill = 60 * 60 # 1 hour
@@ -1077,6 +1078,7 @@ col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
 col_arrested = 'arrested'
 col_time_expirpvp = 'time_expirpvp'
+col_time_lastenlist = 'time_lastenlist'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
