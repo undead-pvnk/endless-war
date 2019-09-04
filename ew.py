@@ -149,9 +149,6 @@ class EwUser:
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
-			self.life_state = ewcfg.life_state_corpse
-			self.poi_death = self.poi
-			self.poi = ewcfg.poi_id_thesewers
 			self.clear_mutations()
 			self.clear_allstatuses()
 			self.totaldamage = 0
@@ -172,16 +169,16 @@ class EwUser:
 				self.slimecoin = 0
 
 			else:
-			#	if self.faction == None: # If you were a Juvenile and your killer was Enlisted.
-			#		item_fraction = 4
-			#		food_fraction = 4
-			#		cosmetic_fraction = 4
+				if self.faction == None: # If you were a Juvenile.
+					item_fraction = 4
+					food_fraction = 4
+					cosmetic_fraction = 4
 
-			#	else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
-				item_fraction = 2
-				food_fraction = 2
-				cosmetic_fraction = 2
-				self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 10)
+				else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
+					item_fraction = 2
+					food_fraction = 2
+					cosmetic_fraction = 2
+					self.slimecoin = int(self.slimecoin) - (int(self.slimecoin) / 10)
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_item, fraction = item_fraction) # Drop a random fraction of your items on the ground.
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_food, fraction = food_fraction) # Drop a random fraction of your food on the ground.
@@ -192,7 +189,10 @@ class EwUser:
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
 
-			self.weapon = -1  # Unequip your weapon
+			self.life_state = ewcfg.life_state_corpse
+			self.poi_death = self.poi
+			self.poi = ewcfg.poi_id_thesewers
+			self.weapon = -1
 			self.time_expirpvp = 0
 
 		ewutils.moves_active[self.id_user] = 0

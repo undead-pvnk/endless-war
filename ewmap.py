@@ -820,7 +820,7 @@ async def move(cmd):
 		if poi.is_pvp == False:
 			if poi.id_poi in [ewcfg.poi_id_vagrantscorner_pier, ewcfg.poi_id_slimesend_pier, ewcfg.poi_id_assaultflatsbeach_pier, ewcfg.poi_id_crookline_pier, ewcfg.poi_id_jaywalkerplain_pier, ewcfg.poi_id_toxington_pier]:
 				onlookers = "fishermen" #todo
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The onlookers there would definitely call the cops on a WANTED such as yourself, better keep a low profile."))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What the hell are you thinking? As soon as the {} there catch a glimpse of a WANTED, they’re going straight to the cops. You better keep a low profile.".format(onlookers)))
 
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
@@ -1062,7 +1062,7 @@ async def teleport(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
 	if user_data.time_expirpvp >= time_now:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Better not, teleporting attracts more attention than you can afford to attract while WANTED."))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That’s probably not a good idea, teleporting draws way more attention than you can afford right now as a WANTED. You better keep a low profile."))
 
 	if ewcfg.mutation_id_quantumlegs in mutations:
 		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
@@ -1252,7 +1252,7 @@ async def scout(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.time_expirpvp >= time_now:
-		response = "You can't really get a whole lot of information about your surrounding districts while you're sneaking around through alleyways. Man, being WANTED sucks!"
+		response = "Police sirens drown out whatever useful auditory reconnaissance you could normally glean. Oh shit, it sounds like they’re getting closer. You better get out of here, dude. Man, being WANTED fucking sucks."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# if no arguments given, scout own location

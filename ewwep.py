@@ -370,7 +370,7 @@ def canAttack(cmd):
 		# If you're on the same team as a WANTED player and you try to put them out of their misery
 		# (or, kill them to give them back their items after they revive) then you can't do that dude!
 		if same_faction == True and shootee_data.time_expirpvp >= time_now:
-			response = "They've dug their grave, now they have to sleep in it. Thus always to WANTED."
+			response = "There’s no putting them out of their misery, WANTED deserve a harsher fate. They’ve dug their grave, now they have to sleep in it."
 
 	return response
 
@@ -952,17 +952,22 @@ async def attack(cmd):
 				#If the shooter is WANTED, post their slime amount, level, weapon, weaponskill level, location, and hunger #kill-feed, and their opposing gangbase.
 				if user_data.time_expirpvp >= time_now:
 
+					response = "@here A busted-up, old police walkie-talkie taped to the wall starts crackling, as if about to receive input…\n*BZZ-KT!* “Attention all units, attention all units…"
+
 					if user_data.weapon >= 0:
 						weapon_item = EwItem(id_item = user_data.weapon)
 						weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-						response = "BREAKING NEWS: {} has {} {} in {}! ".format(cmd.message.author.display_name, weapon.str_killdescriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
-					else:
-						response = "BREAKING NEWS: {} has killed {} in {}! ".format(cmd.message.author.display_name, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+						descriptor = weapon.str_killdescriptor
 
-					response += "{} is a level {} slimeboi, they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
+					else:
+						descriptor = "killed"
+
+					response += "wanted criminal {} has {} {} in {}! ".format(cmd.message.author.display_name, descriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+
+					response += "{} are a level {} slimeboi, and they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
 
 					if user_data.hunger > 0:
-						response += "They are {}% hungry. ".format(round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1))
+						response += "They appear to be about {}% hungry. ".format(round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1))
 
 					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
@@ -1017,10 +1022,6 @@ async def attack(cmd):
 
 					resp_cont.add_channel_response(gangbase, response)
 
-					resp_cont.add_channel_response(ewcfg.channel_killfeed, response)
-
-					resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-
 			#await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
 			# Send the response to the player.
@@ -1067,7 +1068,7 @@ async def suicide(cmd):
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
 		elif user_data.time_expirpvp >= time_now:
-			response = "*Tsk, tsk...* Trying to take the coward's way out, I see. All those WANTED get what's coming to them."
+			response = "*Tsk, tsk.* Trying to take the coward’s way out, I see. Don’t worry, all WANTED get what’s coming to them eventually."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":

@@ -622,7 +622,7 @@ offline_cmds = [
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
-slimes_toenlist = 50000
+slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
 slimes_hauntmax = 20000
