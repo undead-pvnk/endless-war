@@ -954,7 +954,7 @@ async def attack(cmd):
 				#If the shooter is WANTED, post their slime amount, level, weapon, weaponskill level, location, and hunger #kill-feed, and their opposing gangbase.
 				if user_data.time_expirpvp >= time_now:
 
-					response = "@here A busted-up, old police walkie-talkie taped to the wall starts crackling, as if about to receive input…\n*BZZ-KT!* “Attention all units, attention all units…"
+					response = "@here A busted-up, old hotwired police walkie-talkie begins crackling, as if about to receive input…\n*BZZ-KT!* “Attention all units, attention all units…"
 
 					if user_data.weapon >= 0:
 						weapon_item = EwItem(id_item = user_data.weapon)
@@ -964,9 +964,9 @@ async def attack(cmd):
 					else:
 						descriptor = "killed"
 
-					response += "wanted criminal {} has {} {} in {}! ".format(cmd.message.author.display_name, descriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+					response += "*'WANTED criminal {} has {} {} in {}! ".format(cmd.message.author.display_name, descriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
 
-					response += "{} are a level {} slimeboi, and they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
+					response += "{} is a level {} slimeboi, and they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
 
 					if user_data.hunger > 0:
 						response += "They appear to be about {}% hungry. ".format(round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1))
@@ -1014,6 +1014,8 @@ async def attack(cmd):
 
 					if len(response_block) > 0:
 						response += "\n\n" + response_block
+
+					response += "'*"
 
 					if user_data.faction == ewcfg.faction_rowdys:
 						gangbase = ewcfg.channel_copkilltown
@@ -1540,7 +1542,7 @@ async def marry(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you have a displayed rank 4 or higher weapon.
 	elif user_data.weaponskill < 8:
-		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
+		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 4 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
 	elif user_data.weaponmarried == True:

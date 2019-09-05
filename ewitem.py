@@ -365,15 +365,12 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	user_data = EwUser(id_server = id_server, id_user = id_user)
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
-	print("Items = {}".format(items))
-
 	drop_candidates = []
 
 	# Filter out Soulbound items.
 	for item in items:
 		if item.get('soulbound') == False:
 			drop_candidates.append(item)
-			print("Drop Candidates = {}".format(drop_candidates))
 
 	filtered_items = []
 
@@ -383,12 +380,9 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 		for item in drop_candidates:
 			cosmetic_id = item.get('id_item')
 			cosmetic_item = EwItem(id_item = cosmetic_id)
-			print("Adorned = {}".format(cosmetic_item.item_props['adorned']))
 			if cosmetic_item.item_props['adorned'] == "false":
 				filtered_items.append(item)
-				print("Filtered Items = {}".format(filtered_items))
-
-			if hasattr(cosmetic_item.item_props, 'slimeoid'):
+			elif cosmetic_item.item_props.get('slimeoid') != None:
 				if cosmetic_item.item_props['slimeoid'] == "false":
 					filtered_items.append(item)
 			else:
@@ -397,7 +391,6 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 		for item in drop_candidates:
 			if item.get('id_item') != user_data.weapon:
 				filtered_items.append(item)
-				print("Filtered Items = {}".format(filtered_items))
 			else:
 				pass
 
@@ -412,7 +405,6 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 				id_item = item.get('id_item')
 				give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
 				filtered_items.pop(0)
-				print("Filtered Items = {}".format(filtered_items))
 				break
 	#except:
 	#	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))

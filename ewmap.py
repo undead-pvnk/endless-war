@@ -28,7 +28,6 @@ move_counter = 0
 """
 def poi_is_pvp(poi_name = None):
 	poi = ewcfg.id_to_poi.get(poi_name)
-	poi = ewcfg.id_to_poi.get(poi_name)
 
 	if poi != None:
 		return poi.pvp
@@ -817,7 +816,7 @@ async def move(cmd):
 
 	# If you're WANTED, you can't enter sub-zones.
 	if user_data.time_expirpvp >= time_now:
-		if poi.is_pvp == False:
+		if poi.is_subzone == False:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What the hell are you thinking? As soon as the onlookers there catch a glimpse of a WANTED, they’re going straight to the cops. You better keep a low profile."))
 
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:

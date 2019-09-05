@@ -77,44 +77,42 @@ async def enlist(cmd):
 	if desired_faction == ewcfg.faction_killers:
 		if ewcfg.faction_killers in bans:
 			response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
-			return await ewutils.send_message(cmd.client, cmd.message.channel,
-											  ewutils.formatMessage(cmd.message.author, response))
-
-		if user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers:
-			response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(
-				user_data.faction)
-			return await ewutils.send_message(cmd.client, cmd.message.channel,
-											  ewutils.formatMessage(cmd.message.author, response))
-
-		if user_data.faction == ewcfg.faction_rowdys:
-			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(
-				ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		response = "Enlisting in the {}.".format(ewcfg.faction_killers)
-		user_data.life_state = ewcfg.life_state_enlisted
-		user_data.faction = ewcfg.faction_killers
-		user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-		user_data.persist()
+		elif user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers:
+			response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(user_data.faction)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif user_data.faction == ewcfg.faction_rowdys:
+			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_killers
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.persist()
 
 		if desired_faction == ewcfg.faction_rowdys:
 			if ewcfg.faction_rowdys in bans:
 				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys:
+			elif user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys:
 				response = "You are already enlisted in the {}! Look, your name is pink! Get a clue, idiot.".format(user_data.faction)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if user_data.faction == ewcfg.faction_killers:
+			elif user_data.faction == ewcfg.faction_killers:
 				response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
-			user_data.life_state = ewcfg.life_state_enlisted
-			user_data.faction = ewcfg.faction_rowdys
-			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.persist()
+			else:
+				response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
+				user_data.life_state = ewcfg.life_state_enlisted
+				user_data.faction = ewcfg.faction_rowdys
+				user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+				user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -138,13 +136,13 @@ async def renounce(cmd):
 		response = "To turn in your badge, you must return to your soon-to-be former gang base."
 
 	else:
-		renounce_fee = user_data.slimes / 2
+		renounce_fee = int(user_data.slimes) / 2
+		user_data.change_slimes(n = -renounce_fee)
 		faction = user_data.faction
 		user_data.life_state = ewcfg.life_state_juvenile
 		user_data.weapon = -1
 		user_data.persist()
-		user_data.slimes = user_data.slimes - renounce_fee
-		response = "You are no longer enlisted in the {}, but you are not free of association with them. Your former teammates immediately begin to beat the shit out of you up, knocking {} slime out of you before you're able to get away.".format(faction, renounce_fee)
+		response = "You are no longer enlisted in the {}, but you are not free of association with them. Your former teammates immediately begin to beat the shit out of you, knocking {} slime out of you before you're able to get away.".format(faction, renounce_fee)
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

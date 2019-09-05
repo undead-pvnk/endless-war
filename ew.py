@@ -145,6 +145,7 @@ class EwUser:
 		time_now = int(time.time())
 		if cause == ewcfg.cause_busted:
 			self.busted = True
+			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
@@ -160,9 +161,6 @@ class EwUser:
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
-
-			if cause == ewcfg.cause_killing_enemy: # If your killer was an Enemy. Duh.
-				ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
 			if self.time_expirpvp >= time_now: # If you were Wanted.
 				ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
@@ -195,6 +193,9 @@ class EwUser:
 			self.poi = ewcfg.poi_id_thesewers
 			self.weapon = -1
 			self.time_expirpvp = 0
+
+		if cause == ewcfg.cause_killing_enemy:  # If your killer was an Enemy. Duh.
+			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
