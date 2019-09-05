@@ -42,8 +42,8 @@ CREATE TABLE users (
 	donated_slimes bigint NOT NULL DEFAULT '0',
 	donated_poudrins bigint NOT NULL DEFAULT '0',
 	arrested int NOT NULL DEFAULT '0',
-	apt_zone varchar(64) NOT NULL default 'empty'
-	visiting varchar(64) NOT NULL default 'empty'
+	apt_zone varchar(64) NOT NULL default 'empty',
+	visiting varchar(64) NOT NULL default 'empty',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
 	time_expirpvp int NOT NULL DEFAULT '0',
 	time_lastenlist int NOT NULL DEFAULT '0',
