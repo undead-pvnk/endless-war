@@ -29,11 +29,17 @@ class EwMarket:
 	decayed_slimes = 0
 	donated_slimes = 0
 	donated_poudrins = 0
+	caught_fish = 0
+	splattered_slimes = 0
+
+	# Dict of bazaar items available for purchase
+	bazaar_wares = None
 
 	""" Load the market data for this server from the database. """
 	def __init__(self, id_server = None):
 		if(id_server != None):
 			self.id_server = id_server
+			self.bazaar_wares = {}
 
 			try:
 				conn_info = ewutils.databaseConnect()
@@ -41,7 +47,7 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
@@ -51,6 +57,8 @@ class EwMarket:
 					decayed_slimes = ewcfg.col_decayed_slimes,
 					donated_slimes = ewcfg.col_donated_slimes,
 					donated_poudrins = ewcfg.col_donated_poudrins,
+					caught_fish = ewcfg.col_caught_fish,
+					splattered_slimes = ewcfg.col_splattered_slimes,
 				), (self.id_server, ))
 				result = cursor.fetchone();
 
@@ -65,6 +73,24 @@ class EwMarket:
 					self.decayed_slimes = result[6]
 					self.donated_slimes = result[7]
 					self.donated_poudrins = result[8]
+					self.caught_fish = result[9]
+					self.splattered_slimes = result[10]
+
+					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
+						ewcfg.col_name,
+						ewcfg.col_value,
+						ewcfg.col_id_server,
+					), (
+						self.id_server,
+					))
+
+					for row in cursor:
+						# this try catch is only necessary as long as extraneous props exist in the table
+						try:
+							self.bazaar_wares[row[0]] = row[1]
+						except:
+							ewutils.logMsg("extraneous bazaar item row detected.")
+
 				else:
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO markets(id_server) VALUES(%s)", (id_server, ))
@@ -83,7 +109,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -94,6 +120,8 @@ class EwMarket:
 				decayed_slimes = ewcfg.col_decayed_slimes,
 				donated_slimes = ewcfg.col_donated_slimes,
 				donated_poudrins = ewcfg.col_donated_poudrins,
+				caught_fish = ewcfg.col_caught_fish,
+				splattered_slimes = ewcfg.col_splattered_slimes,
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -105,7 +133,27 @@ class EwMarket:
 				self.decayed_slimes,
 				self.donated_slimes,
 				self.donated_poudrins,
+				self.caught_fish,
+				self.splattered_slimes,
 			))
+
+			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
+				ewcfg.col_id_server,
+			), (
+				self.id_server,
+			))
+
+			# Write out all current item rows.
+			for name in self.bazaar_wares:
+				cursor.execute("INSERT INTO bazaar_wares({}, {}, {}) VALUES(%s, %s, %s)".format(
+					ewcfg.col_id_server,
+					ewcfg.col_name,
+					ewcfg.col_value,
+				), (
+					self.id_server,
+					name,
+					self.bazaar_wares[name],
+				))
 
 			conn.commit()
 		finally:
@@ -273,8 +321,7 @@ async def invest(cmd):
 		response = "Your slimebroker can't confirm your identity while you're dead."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
-	if ewcfg.role_rowdyfucker in roles_map_user or ewcfg.role_copkiller in roles_map_user:
+	if user_data.life_state == ewcfg.life_state_kingpin:
 		# Disallow investments by RF and CK kingpins.
 		response = "You need that money to buy more videogames."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -925,8 +972,8 @@ def get_majority_shareholder(id_server = None, stock = None):
 
 async def quarterlyreport(cmd):
 	progress = 0
-	objective = 1000
-	goal = "POUDRINS DONATED"
+	objective = 2000000000
+	goal = "SLIME SPLATTERED"
 	completion = False
 
 	try:
@@ -936,7 +983,7 @@ async def quarterlyreport(cmd):
 
 		# Display the progress towards the current Quarterly Goal, whatever that may be.
 		cursor.execute("SELECT {metric} FROM markets WHERE id_server = %s".format(
-			metric = ewcfg.col_donated_poudrins
+			metric = ewcfg.col_splattered_slimes
 		), (cmd.message.server.id, ))
 
 		result = cursor.fetchone();
@@ -958,6 +1005,6 @@ async def quarterlyreport(cmd):
 	response = "{:,} / {:,} {}.".format(progress, objective, goal)
 
 	if completion == True:
-		response += " THE QUARTERLY GOAL HAS BEEN REACHED. STAY TUNED FOR FURTHER ANNOUNCEMENTS."
+		response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

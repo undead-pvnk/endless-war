@@ -28,7 +28,6 @@ async def pardon(cmd):
 		else:
 			member_data = EwUser(member = member)
 			member_data.unban(faction = user_data.faction)
-			member_data.arrested = False
 
 			if member_data.faction == "":
 				response = "{} has been allowed to join the {} again.".format(member.display_name, user_data.faction)

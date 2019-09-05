@@ -12,6 +12,8 @@ from ewitem import EwItem
 	Cosmetic item model object
 """
 class EwCosmeticItem:
+	item_type = "cosmetic"
+
 	# The proper name of the cosmetic item
 	id_cosmetic = ""
 
@@ -45,6 +47,8 @@ class EwCosmeticItem:
 		vendors = [],
 
 	):
+		self.item_type = ewcfg.it_cosmetic
+
 		self.id_cosmetic = id_cosmetic
 		self.str_name = str_name
 		self.str_desc = str_desc
@@ -100,10 +104,72 @@ async def adorn(cmd):
 					response = "You can't adorn anymore cosmetics."
 				else:
 					item.item_props['adorned'] = 'true'
-					response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
+
+					if item.item_props.get('slimeoid') == 'true':
+						item.item_props['slimeoid'] = 'false'
+						response = "You take your {} from your slimeoid and successfully adorn it.".format(
+							item.item_props.get('cosmetic_name'))
+
+					else:
+						response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
 
 			item.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
+
+async def dye(cmd):
+	first_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+	second_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
+
+	try:
+		first_id_int = int(first_id)
+		second_id_int = int(second_id)
+	except:
+		first_id_int = None
+		second_id_int = None
+
+	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
+		response = "You don't have one."
+
+		items = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+		)
+
+		cosmetic = None
+		dye = None
+		for item in items:
+			if item.get('id_item') in [first_id_int, second_id_int] or first_id in ewutils.flattenTokenListToString(item.get('name')) or second_id in ewutils.flattenTokenListToString(item.get('name')):
+				if item.get('item_type') == ewcfg.it_cosmetic and cosmetic is None:
+					cosmetic = item
+
+				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
+					dye = item	
+
+				if cosmetic != None and dye != None:
+					break
+
+		if cosmetic != None:
+			if dye != None:
+				user_data = EwUser(member = cmd.message.author)
+
+				cosmetic_item = EwItem(id_item=cosmetic.get("id_item"))
+				dye_item = EwItem(id_item=dye.get("id_item"))
+
+				hue = ewcfg.hue_map.get(dye_item.item_props.get('id_item'))
+
+				response = "You dye your {} in {} paint!".format(cosmetic_item.item_props.get('cosmetic_name'), hue.str_name)
+				cosmetic_item.item_props['hue'] = hue.id_hue
+
+				cosmetic_item.persist()
+				ewitem.item_delete(id_item=dye.get('id_item'))
+			else:
+				response = 'Use which dye? Check your **!inventory**.'
+		else:
+			response = 'Dye which cosmetic? Check your **!inventory**.'
+		
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You need to specify which cosmetic you want to paint and which dye you want to use! Check your **!inventory**.'))

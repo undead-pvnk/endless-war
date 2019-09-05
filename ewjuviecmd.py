@@ -12,10 +12,10 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
+from ewitem import EwItem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
-from ewitem import EwItem
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
 # exceeds 3 in 5 seconds, you die.
@@ -57,50 +57,64 @@ class EwMineGrid:
 async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	user_slimes = user_data.slimes
+	time_now = int(time.time())
+	bans = user_data.get_bans()
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-	elif user_data.life_state == ewcfg.life_state_enlisted:
-			if user_data.faction == ewcfg.faction_killers:
-				color = "purple"
-			else:
-				color = "pink"
-			response = "You are already enlisted in the {}! Look, your name is {}! Get a clue, idiot.".format(user_data.faction, color)
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
-		# Only allowed to !enlist at a gang base.
-		response = "Which faction? If you want to join a gang, you have to {} at their homebase. Dumbass.\nTo join the hot blooded and reckless {}, {} in {}.\nTo join the hardboiled and calculating {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_slimes < ewcfg.slimes_toenlist:
 		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif user_data.life_state == ewcfg.life_state_juvenile:
-		bans = user_data.get_bans()
+	if cmd.tokens_count > 1:
+		desired_faction = cmd.tokens[1].lower()
+	else:
+		response = "Which faction? Say '{} {}' or '{} {}'.".format(ewcfg.cmd_enlist, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.faction_rowdys)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if user_data.poi == ewcfg.poi_id_copkilltown:
-			if ewcfg.faction_killers in bans:
-				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if desired_faction == ewcfg.faction_killers:
+		if ewcfg.faction_killers in bans:
+			response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers:
+			response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(user_data.faction)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif user_data.faction == ewcfg.faction_rowdys:
+			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
 			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
+	elif desired_faction == ewcfg.faction_rowdys:
+		if ewcfg.faction_rowdys in bans:
+			response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys:
+			response = "You are already enlisted in the {}! Look, your name is pink! Get a clue, idiot.".format(user_data.faction)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif user_data.faction == ewcfg.faction_killers:
+			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		else:
-			if ewcfg.faction_rowdys in bans:
-				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			response = "Enlisting in the {}.".format(ewcfg.faction_rowdys)
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
-
-		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		response = "You can't do that right now, bitch."
@@ -116,17 +130,19 @@ async def renounce(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_data.life_state != ewcfg.life_state_enlisted:
-		response = "What exactly are you renouncing? Your lackadaisical, idyllic life free of vice and violence? You aren't currently enlisted in any gang, retard!"
+		response = "What exactly are you renouncing? Your lackadaisical, idyllic life free of vice and violence? You aren't actually currently enlisted in any gang, retard."
 
 	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
 		response = "To turn in your badge, you must return to your soon-to-be former gang base."
 
 	else:
+		renounce_fee = int(user_data.slimes) / 2
+		user_data.change_slimes(n = -renounce_fee)
 		faction = user_data.faction
 		user_data.life_state = ewcfg.life_state_juvenile
 		user_data.weapon = -1
 		user_data.persist()
-		response = "You are no longer enlisted in the {}, but you are not free of association with them.".format(faction)
+		response = "You are no longer enlisted in the {}, but you are not free of association with them. Your former teammates immediately begin to beat the shit out of you, knocking {} slime out of you before you're able to get away.".format(faction, renounce_fee)
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -163,104 +179,106 @@ async def mine(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 
 		else:
+			printgrid = False
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
+
 			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif user_data.id_server not in mines_map.get(user_data.poi):
 				init_grid(user_data.poi, user_data.id_server)
+				printgrid = True
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
+			#minesweeper = False
 			if cmd.tokens_count < 2:
 				response = "Please specify which vein to mine."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
-
-			grid_multiplier = grid_cont.cells_mined ** 0.4
-			flag = False
-			row = -1
-			col = -1
-			for token in cmd.tokens[1:]:
+			else:
+				#minesweeper = True
+				#grid_multiplier = grid_cont.cells_mined ** 0.4
+				#flag = False
+				row = -1
+				col = -1
+				for token in cmd.tokens[1:]:
 				
-				if token.lower() == "reset":
-					init_grid(user_data.poi, user_data.id_server)
+					if token.lower() == "reset":
+						user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
+						if random.random() < extra:
+							user_data.hunger += ewcfg.hunger_perminereset
+						user_data.persist()
+						init_grid(user_data.poi, user_data.id_server)
+						return await print_grid(cmd)
+
+					if row < 1 or col < 1:
+						coords = token.lower()
+					
+						for char in coords:
+							if char in ewcfg.alphabet:
+								col = ewcfg.alphabet.index(char)
+								coords = coords.replace(char, "")
+
+
+						try:
+							row = int(coords)
+						except:
+							row = -1
+
+				row -= 1
+			
+				if row not in range(len(grid)) or col not in range(len(grid[row])):
+					response = "Invalid vein."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
 
-				if token.lower() == "flag":
-					flag = True
+				mining_yield = 0
+				mining_accident = False
 				
+				slimes_pertile = ewcfg.slimes_pertile
+				for current_row in range(max(0,row-1), min(row+2, len(grid))):
+					for current_col in range(max(0,col-1), min(col+2, len(grid[current_row]))):
+						symbol_prev = get_cell_symbol(grid[current_row][current_col])
+						slimes_fromtile = slimes_pertile
+						if current_row == row and current_col == col:
+							slimes_fromtile *= 2
+						mining_yield += max(0, min(slimes_fromtile, grid[current_row][current_col]))
+						grid[current_row][current_col] -= slimes_fromtile
+						if grid[current_row][current_col] < -60 * ewcfg.slimes_pertile:
+							mining_accident = True
+						if get_cell_symbol(grid[current_row][current_col]) != symbol_prev:
+							printgrid = True
 
-				if row < 1 or col < 1:
-					coords = token.lower()
-					
-					for char in coords:
-						if char in ewcfg.alphabet:
-							col = ewcfg.alphabet.index(char)
-							coords = coords.replace(char, "")
-
-
-					try:
-						row = int(coords)
-					except:
-						row = -1
-
-			row -= 1
-			
-			if row not in range(len(grid)):
-				response = "Invalid vein."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-			if col not in range(len(grid[row])):
-				response = "Invalid vein."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-
-			if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
-				if flag:
-					if grid[row][col] == ewcfg.cell_empty_marked:
-						grid[row][col] = ewcfg.cell_empty
-					elif grid[row][col] == ewcfg.cell_mine_marked:
-						grid[row][col] = ewcfg.cell_mine
-				else:
-					response = "This vein has been flagged as dangerous. Remove the flag to mine here."
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-			if grid[row][col] == ewcfg.cell_empty_open:
-				response = "This vein has already been mined dry."
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-
-			if grid[row][col] == ewcfg.cell_mine:
-				if flag:
-					grid[row][col] = ewcfg.cell_mine_marked
-				else:
-					user_data.change_slimes(n = -(user_data.slimes * 0.01 * grid_multiplier))
+				if mining_accident:
+					user_data.change_slimes(n = -(user_data.slimes * 0.5))
 					user_data.persist()
 
-					if grid_multiplier > 0:
-						response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
-					else:
-						response = "You have barely avoided getting caught in a mining accident."
+					init_grid(user_data.poi, user_data.id_server)
+					response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					grid[row][col] = ewcfg.cell_mine_open
-					await print_grid(cmd)
-					init_grid(user_data.poi, user_data.id_server)
-				return await print_grid(cmd)
+					return await print_grid(cmd)
 
-			if flag:
-				grid[row][col] = ewcfg.cell_empty_marked
-				return await print_grid(cmd)
-			else:
-				grid[row][col] = ewcfg.cell_empty_open
+				if mining_yield == 0:
+					user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
+					user_data.persist()
+					response = "This vein has already been mined dry."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					if printgrid:
+						return await print_grid(cmd)
+					else:
+						return
+
 
 			has_pickaxe = False
 
 			if user_data.weapon >= 0:
 				weapon_item = EwItem(id_item = user_data.weapon)
 				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-				if weapon.id_weapon == "pickaxe":
+				if weapon.id_weapon == ewcfg.weapon_id_pickaxe:
 					has_pickaxe = True
 
 			# Determine if an item is found.
@@ -276,7 +294,6 @@ async def mine(cmd):
 			if ewcfg.mutation_id_lucky in mutations:
 				unearthed_item_chance *= 1.33
 
-			unearthed_item_chance *= grid_multiplier
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -286,51 +303,15 @@ async def mine(cmd):
 				# If there are multiple possible products, randomly select one.
 				item = random.choice(ewcfg.mine_results)
 
-				if hasattr(item, 'id_item'):
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = ewcfg.it_item,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_item': item.id_item,
-								'context': item.context,
-								'item_name': item.str_name,
-								'item_desc': item.str_desc,
-							}
-						),
+				item_props = ewitem.gen_item_props(item)
 
-				elif hasattr(item, 'id_food'):
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = ewcfg.it_food,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_food': item.id_food,
-								'food_name': item.str_name,
-								'food_desc': item.str_desc,
-								'recover_hunger': item.recover_hunger,
-								'inebriation': item.inebriation,
-								'str_eat': item.str_eat,
-								'time_expir': time.time() + ewcfg.farm_food_expir
-							}
-						),
-
-				elif hasattr(item, 'id_cosmetic'):
-					for creation in range(unearthed_item_amount):
-						ewitem.item_create(
-							item_type = ewcfg.it_cosmetic,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_cosmetic': item.id_cosmetic,
-								'cosmetic_name': item.str_name,
-								'cosmetic_desc': item.str_desc,
-								'rarity': item.rarity,
-								'adorned': 'false'
-							}
-						),
+				for creation in range(unearthed_item_amount):
+					ewitem.item_create(
+						item_type = item.item_type,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = item_props
+					)
 
 				if unearthed_item_amount == 1:
 					response = "You unearthed a {}! ".format(item.str_name)
@@ -347,18 +328,15 @@ async def mine(cmd):
 			# Add mined slime to the user.
 			slime_bylevel = ewutils.slime_bylevel(user_data.slimelevel)
 
-			mining_yield = math.floor((slime_bylevel / 10) + 1)
-			alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
+			#mining_yield = math.floor((slime_bylevel / 10) + 1)
+			#alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
-			mining_yield = min(mining_yield, alternate_yield)
-			mining_yield *= grid_multiplier
+			#mining_yield = min(mining_yield, alternate_yield)
 
 			if has_pickaxe == True:
 				mining_yield *= 2
 
 			# Fatigue the miner.
-			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
-			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
 			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
 			if extra > 0:  # if hunger_cost_mod is not an integer
@@ -376,10 +354,8 @@ async def mine(cmd):
 
 			user_data.persist()
 
-			grid_cont.cells_mined += 1
-			
-
-			await print_grid(cmd)
+			if printgrid:
+				await print_grid(cmd)
 
 	else:
 		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -422,14 +398,14 @@ async def flag(cmd):
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif user_data.id_server not in mines_map.get(user_data.poi):
-				init_grid(user_data.poi, user_data.id_server)
+				init_grid_ms(user_data.poi, user_data.id_server)
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
 			if cmd.tokens_count < 2:
 				response = "Please specify which vein to mine."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+				return await print_grid_ms(cmd)
 
 
 			grid_multiplier = grid_cont.cells_mined ** 0.4
@@ -456,29 +432,29 @@ async def flag(cmd):
 			if row not in range(len(grid)):
 				response = "Invalid vein."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+				return await print_grid_ms(cmd)
 			if col not in range(len(grid[row])):
 				response = "Invalid vein."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+				return await print_grid_ms(cmd)
 
 			if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
 				if grid[row][col] == ewcfg.cell_empty_marked:
 					grid[row][col] = ewcfg.cell_empty
 				elif grid[row][col] == ewcfg.cell_mine_marked:
 					grid[row][col] = ewcfg.cell_mine
-				return await print_grid(cmd)
+				return await print_grid_ms(cmd)
 			if grid[row][col] == ewcfg.cell_empty_open:
 				response = "This vein has already been mined dry."
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
+				return await print_grid_ms(cmd)
 
 			if grid[row][col] == ewcfg.cell_mine:
 				grid[row][col] = ewcfg.cell_mine_marked
-				return await print_grid(cmd)
+				return await print_grid_ms(cmd)
 
 			grid[row][col] = ewcfg.cell_empty_marked
-			return await print_grid(cmd)
+			return await print_grid_ms(cmd)
 
 
 	else:
@@ -571,6 +547,9 @@ async def scavenge(cmd):
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
 
+			if ewcfg.mutation_id_whitenationalist in mutations and market_data.weather == "snow":
+				scavenge_mod *= 1.5
+
 			if ewcfg.mutation_id_webbedfeet in mutations:
 				district_slimelevel = len(str(district_data.slimes))
 				scavenge_mod *= max(1, min(district_slimelevel - 3, 4))
@@ -598,7 +577,7 @@ async def scavenge(cmd):
 				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
 				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
 				if ewcfg.mutation_id_dumpsterdiver in mutations:
-					loot_chance *= 2
+					loot_chance *= 10
 				if random.random() < loot_chance:
 					loot_resp = ewitem.item_lootrandom(
 						id_server = user_data.id_server,
@@ -628,15 +607,21 @@ async def scavenge(cmd):
 
 def init_grid(poi, id_server):
 	grid = []
-	num_rows = 13
-	num_cols = 13
+	slime_grid = []
+	num_rows = 15
+	num_cols = 15
 	for i in range(num_rows):
 		row = []
+		slime_row = []
 		for j in range(num_cols):
-			row.append(-1)
+			row.append(0)
+			slime_row.append(0)
 		grid.append(row)
+		slime_grid.append(slime_row)
 
-	num_mines = 30
+	num_mines = 5
+
+	base_slime = ewcfg.slimes_invein
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
@@ -645,9 +630,17 @@ def init_grid(poi, id_server):
 			row = random.randrange(num_rows)
 			col = random.randrange(num_cols)
 		grid[row][col] = 1
+		
+	
+		for i in range(len(grid)):
+			for j in range(len(grid[i])):
+				distance = abs(row - i) + abs(col - j)
+				slime = base_slime * 0.7 ** distance
+				slime_grid[i][j] += slime
+
 			
 	if poi in mines_map:
-		grid_cont = EwMineGrid(grid = grid)
+		grid_cont = EwMineGrid(grid = slime_grid)
 		mines_map.get(poi)[id_server] = grid_cont
 
 async def print_grid(cmd):
@@ -659,7 +652,7 @@ async def print_grid(cmd):
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
 		if id_server not in grid_map:
-			init_grid(poi, id_server)
+			init_grid_ms(poi, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -676,18 +669,7 @@ async def print_grid(cmd):
 			grid_str += "{} ".format(i+1)
 			for j in range(len(row)):
 				cell = row[j]
-				cell_str = ""
-				if cell == ewcfg.cell_empty_open:
-					neighbor_mines = 0
-					for ci in range(max(0, i-1), min(len(grid), i+2)):
-						for cj in range(max(0, j-1), min(len(row), j+2)):
-							if grid[ci][cj] > 0:
-								neighbor_mines += 1
-					cell_str = str(neighbor_mines)
-					#cell_str = ewcfg.number_emote_map.get(neighbor_mines)
-
-				else:
-					cell_str = ewcfg.symbol_map.get(cell)
+				cell_str = get_cell_symbol(cell)
 				grid_str += cell_str + " "
 			grid_str += "{}".format(i+1)
 			grid_str += "\n"
@@ -715,3 +697,48 @@ async def print_grid(cmd):
 			grid_cont.wall_message = msg_handles[0]
 		else:
 			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
+
+def get_cell_symbol(cell):
+	cell_str = " "
+	#if cell > 2 * ewcfg.slimes_invein:
+	#	cell_str = "&"
+	#elif cell > 1.5 * ewcfg.slimes_invein:
+	#	cell_str = "S"
+	if cell > 0.4 * ewcfg.slimes_invein:
+		cell_str = "~"
+	#elif cell > 0.5 * ewcfg.slimes_invein:
+	#	cell_str = ";"
+	elif cell > 0:
+		cell_str = ";"
+	elif cell > -40 * ewcfg.slimes_pertile:
+		cell_str = " "
+	#elif cell > -40 * ewcfg.slimes_pertile:
+	#	cell_str = "+"
+	else:
+		cell_str = "X"
+	return cell_str
+
+async def crush(cmd):
+	member = cmd.message.author
+	user_data = EwUser(member=member)
+	response = ""
+	
+	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Alas, you try to shatter the hardened slime crystal, but your ghostly form cannot firmly grasp it."
+		return 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if poudrin is None:
+		response = "You need a slime poudrin."
+	else:
+		# delete a slime poudrin from the player's inventory
+		ewitem.item_delete(id_item=poudrin.get('id_item'))
+		
+		user_data.slimes += ewcfg.crush_slimes
+		user_data.persist()
+		
+		response = "You crush the hardened slime crystal with your bare hands.\nYou gain 10,000 slime. Sick, dude!!"
+		
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
