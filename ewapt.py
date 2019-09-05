@@ -343,9 +343,9 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 
     else:
         if isGoto:
-            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You exit the apartment."))
             move_current = movecurrent
         else:
+            await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You exit the apartment."))
             ewmap.move_counter += 1
             move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
         await asyncio.sleep(20)

@@ -5991,7 +5991,7 @@ EwFurniture(
 		acquisition = acquisition_bartering,
 		price = 500000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "There's a fake fish mounted on the wall",
+		furniture_look_desc = "There's a fake fish mounted on the wall.",
 		furniture_place_desc = "You put a nail in the wall and hang up your fish. Slimecorp probably doesn't want you knocking holes in the walls, but fuck 'em."),
 EwFurniture(
 		id_furniture = "arcadecabinet",
