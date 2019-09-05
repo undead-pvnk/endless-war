@@ -522,6 +522,48 @@ class EwUser:
 		return bans
 
 
+	def vouch(self, faction = None):
+		if faction is None:
+			return
+		ewutils.execute_sql_query("REPLACE INTO vouchers ({id_user}, {id_server}, {faction}) VALUES (%s,%s,%s)".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server,
+			faction
+		))
+
+	def unvouch(self, faction = None):
+		if faction is None:
+			return
+		ewutils.execute_sql_query("DELETE FROM vouchers WHERE {id_user} = %s AND {id_server} = %s AND {faction} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server,
+			faction
+		))
+
+	def get_vouchers(self):
+		vouchers = []
+		data = ewutils.execute_sql_query("SELECT {faction} FROM vouchers WHERE {id_user} = %s AND {id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			faction = ewcfg.col_faction
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+		for row in data:
+			vouchers.append(row[0])
+
+		return vouchers
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 		if(id_user == None) and (id_server == None):

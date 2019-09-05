@@ -45,6 +45,7 @@ import ewstatuseffects
 import ewsmelting
 import ewhunting
 import ewfish
+import ewfaction
 import ewapt
 import ewdebug
 
@@ -116,6 +117,7 @@ cmd_map = {
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
 	ewcfg.cmd_renounce: ewjuviecmd.renounce,
+	ewcfg.cmd_vouch: ewfaction.vouch,
 
 	# gives slime to the miner (message.author)
 	ewcfg.cmd_mine: ewjuviecmd.mine,
