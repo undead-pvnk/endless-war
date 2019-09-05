@@ -46,7 +46,7 @@ class EwSlimeoid:
 	#slimeoid = EwSlimeoid(id_slimeoid = 12)
 
 	""" Load the slimeoid data for this user from the database. """
-	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = "Lab"):
+	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = "Lab", slimeoid_name = None):
 		query_suffix = ""
 
 		if id_slimeoid != None:
@@ -62,6 +62,9 @@ class EwSlimeoid:
 					query_suffix += " AND life_state = '{}'".format(life_state)
 				if sltype != None:
 					query_suffix += " AND type = '{}'".format(sltype)
+				if slimeoid_name != None:
+					query_suffix += " AND name = '{}'".format(slimeoid_name)
+
 
 		if query_suffix != "":
 			try:
@@ -613,7 +616,7 @@ async def incubateslimeoid(cmd):
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
 	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
-
+	slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.message.server.id)
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
 
@@ -622,6 +625,9 @@ async def incubateslimeoid(cmd):
 
 	elif poudrin is None:
 		response = "You need a slime poudrin."
+
+	elif slimeoid_count >= 3:
+		response = "You have too many slimeoids."
 
 
 	else:
@@ -725,6 +731,7 @@ async def dissolveslimeoid(cmd):
 		slimeoid.persist()
 
 	# Send the response to the player.
+
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # shape your slimeoid's body
@@ -1383,6 +1390,7 @@ async def spawnslimeoid(cmd):
 				slimeoid.life_state = ewcfg.slimeoid_state_active
 				response = "You press the big red button labelled 'SPAWN'. The console lights up and there is a rush of mechanical noise as the fluid drains rapidly out of the gestation tube. The newly born Slimeoid within writhes in confusion before being sucked down an ejection chute and spat out messily onto the laboratory floor at your feet. Happy birthday, {} the Slimeoid!! {}".format(slimeoid.name, ewcfg.emote_slimeheart)
 
+
 				response += "\n\n{} is a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 				response += slimeoid_describe(slimeoid)
 
@@ -1510,6 +1518,8 @@ def slimeoid_describe(slimeoid):
 			response += " A **BRUTAL CHAMPION** on the arena."
 		elif clout >= 15:
 			response += " This slimeoid has proven itself on the arena."
+		elif clout >= 1:
+			response += " This slimeoid has some clout, but has not yet realized its potential."
 		elif clout == 0:
 			response += " A pitiable baby, this slimeoid has no clout whatsoever."
 
@@ -2862,3 +2872,63 @@ async def dress_slimeoid(cmd):
 		
 	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+def get_slimeoid_count(user_id = None, server_id = None):
+	if user_id != None and server_id != None:
+		count = 0
+		slimeoid_data = EwSlimeoid(id_user=user_id, id_server=server_id)
+		secondary_user = user_id + "freeze"
+		name_list = []
+		if slimeoid_data.name != "":
+			count += 1
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			sql = "SELECT {} FROM slimeoids WHERE {} = %s"
+			cursor.execute(sql.format(ewcfg.col_name, ewcfg.col_id_user), [secondary_user])
+
+			count += cursor.rowcount
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+			return count
+
+def get_slimeoid_look_string(user_id = None, server_id = None):
+	if user_id != None and server_id != None:
+		finalString = ""
+		slimeoid_data = EwSlimeoid(id_user=user_id, id_server=server_id)
+
+		if slimeoid_data:
+
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor()
+
+				sql = "SELECT {} FROM slimeoids WHERE {} = %s"
+				cursor.execute(sql.format(ewcfg.col_name, ewcfg.col_id_user), [user_id])
+				if cursor.rowcount > 0:
+					iterate = 0
+					finalString += " In the freezer, you hear "
+					for sloid in cursor:
+						if iterate > 0:
+							finalString += ", "
+						if iterate >= cursor.rowcount - 1 and cursor.rowcount > 1:
+							finalString += "and "
+						finalString += sloid[0]
+						iterate+=1
+					finalString += " cooing to themselves."
+
+
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
+				return finalString
+
+

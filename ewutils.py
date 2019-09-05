@@ -283,7 +283,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck", db = "rfck", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -437,7 +437,7 @@ async def bleedSlimes(id_server = None):
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
 					if user_data.slimes < 0:
 						user_data.die(cause = ewcfg.cause_bleeding)
-						user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
 						deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
 						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
@@ -626,7 +626,7 @@ async def burnSlimes(id_server = None):
 				# Kill player
 				user_data.id_killer = killer_data.id_user
 				user_data.die(cause = ewcfg.cause_burning)
-				user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 			
 				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer.display_name, ewcfg.emote_slimeskull)
 				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(server.get_member(user_data.id_user), deathreport)
@@ -646,40 +646,42 @@ async def burnSlimes(id_server = None):
 async def remove_status_loop(id_server):
 	interval = ewcfg.removestatus_tick_length
 	while not TERMINATE:
-		await removeExpiredStatuses(id_server = id_server)
+		removeExpiredStatuses(id_server = id_server)
 		await asyncio.sleep(interval)
 
 """ Decay slime totals for all users """
-async def removeExpiredStatuses(id_server = None):
+def removeExpiredStatuses(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
 
-		client = get_client()
-		server = client.get_server(id_server)
+		#client = get_client()
+		#server = client.get_server(id_server)
 
-		users = execute_sql_query("SELECT id_user FROM users WHERE id_server = %s".format(
+		statuses = execute_sql_query("SELECT {id_status},{id_user} FROM status_effects WHERE id_server = %s AND {time_expire} < %s".format(
+			id_status = ewcfg.col_id_status,
+			id_user = ewcfg.col_id_user,
+			time_expire = ewcfg.col_time_expir
 		), (
 			id_server,
+			time_now
 		))
 
-		for user in users:
-			user_data = EwUser(id_user = user[0], id_server = id_server)
-			
-			statuses = user_data.getStatusEffects()
-
-			for status in statuses:
-				status_def = ewcfg.status_effects_def_map.get(status)
-				status_effect = EwStatusEffect(id_status=status, user_data=user_data)
+		for row in statuses:
+			status = row[0]
+			id_user = row[1]
+			user_data = EwUser(id_user = id_user, id_server = id_server)
+			status_def = ewcfg.status_effects_def_map.get(status)
+			status_effect = EwStatusEffect(id_status=status, user_data = user_data)
 	
-				if status_def.time_expire > 0:
-					if status_effect.time_expire < time_now:
-						user_data.clear_status(id_status=status)
+			if status_def.time_expire > 0:
+				if status_effect.time_expire < time_now:
+					user_data.clear_status(id_status=status)
 
-				# Status that expire under special conditions
-				else:
-					if status == ewcfg.status_stunned_id:
-						if int(status_effect.value) < time_now:
-							user_data.clear_status(id_status=status)
+			# Status that expire under special conditions
+			else:
+				if status == ewcfg.status_stunned_id:
+					if int(status_effect.value) < time_now:
+						user_data.clear_status(id_status=status)
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
 def getIntToken(tokens = [], allow_all = False, negate = False):
@@ -771,7 +773,7 @@ def weaponskills_set(id_server = None, id_user = None, member = None, weapon = N
 			databaseClose(conn_info)
 
 """ Clear all weapon skills for a player (probably called on death). """
-def weaponskills_clear(id_server = None, id_user = None, member = None):
+def weaponskills_clear(id_server = None, id_user = None, member = None, weaponskill = None):
 	if member != None:
 		id_server = member.server.id
 		id_user = member.id
@@ -788,8 +790,8 @@ def weaponskills_clear(id_server = None, id_user = None, member = None):
 				id_server = ewcfg.col_id_server,
 				id_user = ewcfg.col_id_user
 			), (
-				ewcfg.weaponskill_max_onrevive,
-				ewcfg.weaponskill_max_onrevive,
+				weaponskill,
+				weaponskill,
 				id_server,
 				id_user
 			))
@@ -799,7 +801,6 @@ def weaponskills_clear(id_server = None, id_user = None, member = None):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
-
 
 re_flattener = re.compile("[ '\"!@#$%^&*().,/?{}\[\];:]")
 
@@ -1068,7 +1069,7 @@ async def decrease_food_multiplier(id_user):
 		food_multiplier[id_user] = max(0, food_multiplier.get(id_user) - 1)
 
 async def spawn_enemies(id_server = None):
-	if random.randrange(3) == 2:
+	if random.randrange(3) == 0:
 		resp_cont = EwResponseContainer(id_server=id_server)
 		response, channel = await ewhunting.spawn_enemy(id_server)
 
@@ -1080,18 +1081,18 @@ async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
 	# Causes the possibility of an enemy spawning every 10 seconds
 	while not TERMINATE:
+		await asyncio.sleep(interval)
 		await spawn_enemies(id_server = id_server)
 
-		await asyncio.sleep(interval)
 
 async def enemy_action_tick_loop(id_server):
 	interval = ewcfg.enemy_attack_tick_length
 	# Causes hostile enemies to attack every tick.
 	while not TERMINATE:
+		await asyncio.sleep(interval)
 		# resp_cont = EwResponseContainer(id_server=id_server)
 		await ewhunting.enemy_perform_action(id_server)
 
-		await asyncio.sleep(interval)
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
 def check_defender_targets(user_data, enemy_data):
@@ -1106,12 +1107,10 @@ def check_defender_targets(user_data, enemy_data):
 		return True
 
 def get_move_speed(user_data):
+	time_now = int(time.time())
 	mutations = user_data.get_mutations()
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
-
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 0.5
 
 	if ewcfg.mutation_id_organicfursuit in mutations and (
 		(market_data.day % 31 == 0 and market_data.clock >= 20)
@@ -1122,6 +1121,9 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+
+	if user_data.time_expirpvp >= time_now:
+		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
 
 	return move_speed
 
@@ -1160,7 +1162,7 @@ async def explode(damage = 0, district_data = None):
 				explode_damage = slime_bylevel(user_data.slimelevel)
 
 				user_data.die(cause = ewcfg.cause_killing)
-				user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 				user_data.persist()
 
 				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
@@ -1213,3 +1215,15 @@ async def explode(damage = 0, district_data = None):
 				enemy_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
 				enemy_data.persist()
 	return resp_cont
+
+def is_otp(user_data):
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse] and (not poi.is_apartment)
+
+
+async def delete_last_message(client, last_messages, tick_length):
+	if len(last_messages) == 0:
+		return
+	await asyncio.sleep(tick_length)
+	await client.delete_message(last_messages[-1])
+

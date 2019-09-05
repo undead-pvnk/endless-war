@@ -19,6 +19,7 @@ from ewslimeoid import EwSlimeoid
 from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
 from ewhunting import EwEnemy
+from ewstatuseffects import EwStatusEffect
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -89,6 +90,9 @@ class EwWeapon:
 
 	# Displayed when the weapon is unjammed
 	str_unjam = ""
+	
+	# Displayed in a scalp's description.
+	str_scalp = ""
 
 	# Clip size
 	clip_size = 0
@@ -134,6 +138,7 @@ class EwWeapon:
 		str_reload = "",
 		str_reload_warning = "",
 		str_unjam = "",
+		str_scalp = "",
 		clip_size = 0,
 		price = 0,
 		cooldown = 0,
@@ -166,6 +171,7 @@ class EwWeapon:
 		self.str_reload = str_reload
 		self.str_reload_warning = str_reload_warning
 		self.str_unjam = str_unjam
+		self.str_scalp = str_scalp
 		self.clip_size = clip_size
 		self.price = price
 		self.cooldown = cooldown
@@ -265,6 +271,8 @@ def canAttack(cmd):
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
+	elif user_data.weapon == -1:
+		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 		# user is going after enemies rather than players
@@ -354,6 +362,18 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
+		# Identify if the shooter and the shootee are on the same team.
+		same_faction = False
+		if user_iskillers and shootee_data.faction == ewcfg.faction_killers:
+			same_faction = True
+		if user_isrowdys and shootee_data.faction == ewcfg.faction_rowdys:
+			same_faction = True
+
+		# If you're on the same team as a WANTED player and you try to put them out of their misery
+		# (or, kill them to give them back their items after they revive) then you can't do that dude!
+		if same_faction == True and shootee_data.time_expirpvp >= time_now:
+			response = "There’s no putting them out of their misery, WANTED deserve a harsher fate. They’ve dug their grave, now they have to sleep in it."
+
 	return response
 
 """ Player deals damage to another player. """
@@ -391,6 +411,7 @@ async def attack(cmd):
 		else:
 			shootee_data = EwUser(member = member)
 		shootee_slimeoid = EwSlimeoid(member = member)
+		shootee_name = member.display_name
 
 		user_mutations = user_data.get_mutations()
 		shootee_mutations = shootee_data.get_mutations()
@@ -423,6 +444,11 @@ async def attack(cmd):
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
+
+		# Determine if the shootee is WANTED.
+		shootee_wanted = False
+		if shootee_data.time_expirpvp >= time_now:
+			shootee_wanted = True
 
 		if shootee_data.life_state == ewcfg.life_state_corpse:
 			# Attack a ghostly target
@@ -665,6 +691,15 @@ async def attack(cmd):
 
 			if was_shot:
 
+				if was_juvenile == True:
+					# Flag the shooter as WANTED no matter what happens next.
+					user_data.time_expirpvp = time_now + ewcfg.time_pvp_kill + int(user_data.bounty)
+
+					user_data.persist()
+
+					# Add the PvP flag role.
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
 					if ewcfg.mutation_id_thickerthanblood in user_mutations:
@@ -692,6 +727,10 @@ async def attack(cmd):
 				slimes_directdamage = slimes_damage - slimes_tobleed
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
+				market_data.splattered_slimes += slimes_damage
+				market_data.persist()
+				user_data.splattered_slimes += slimes_damage
+				user_data.persist()
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
@@ -720,10 +759,29 @@ async def attack(cmd):
 						user_data.change_slimecoin(n = coinbounty, coinsource = ewcfg.coinsource_bounty)
 
 					# Steal items
-					ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
+					#ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
+          
+					# Scalp text
+					if weapon != None:
+						scalp_text = weapon.str_scalp
+					else:
+						scalp_text = ""
+					
+					# Drop shootee scalp
+					ewitem.item_create(
+						item_type = ewcfg.it_cosmetic,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = {
+							'id_cosmetic': 'scalp',
+							'cosmetic_name': "{}'s scalp".format(shootee_name),
+							'cosmetic_desc': "A scalp.{}".format(scalp_text),
+							'adorned': 'false'
+						}
+					)
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
 					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
@@ -744,9 +802,8 @@ async def attack(cmd):
 						user_data.hunger = 0
 
 					# Player was killed.
-					shootee_data.id_killer = user_data.id_user
 					shootee_data.die(cause = ewcfg.cause_killing)
-					shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -893,7 +950,83 @@ async def attack(cmd):
 					resp_cont.add_channel_response(ewcfg.channel_killfeed, r)
 				resp_cont.format_channel_response(ewcfg.channel_killfeed, cmd.message.author)
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
-				#await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
+
+				#If the shooter is WANTED, post their slime amount, level, weapon, weaponskill level, location, and hunger #kill-feed, and their opposing gangbase.
+				if user_data.time_expirpvp >= time_now:
+
+					response = "@here A busted-up, old hotwired police walkie-talkie begins crackling, as if about to receive input…\n*BZZ-KT!* “Attention all units, attention all units…"
+
+					if user_data.weapon >= 0:
+						weapon_item = EwItem(id_item = user_data.weapon)
+						weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+						descriptor = weapon.str_killdescriptor
+
+					else:
+						descriptor = "killed"
+
+					response += "*'WANTED criminal {} has {} {} in {}! ".format(cmd.message.author.display_name, descriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
+
+					response += "{} is a level {} slimeboi, and they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
+
+					if user_data.hunger > 0:
+						response += "They appear to be about {}% hungry. ".format(round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1))
+
+					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
+
+					weapon_item = EwItem(id_item = user_data.weapon)
+					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
+					if weapon != None:
+						response += " {} {}{}.".format(
+							ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding,
+							("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+								weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
+						if user_data.weaponskill >= 5:
+							response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
+
+					mutations = user_data.get_mutations()
+
+					response_block = ""
+					for mutation in mutations:
+						mutation_flavor = ewcfg.mutations_map[mutation]
+						response_block += "{} ".format(mutation_flavor.str_describe_other)
+
+					if len(response_block) > 0:
+						response += "\n\n" + response_block
+
+					response_block = ""
+					user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
+
+					if user_kills > 0:
+						response_block += "They have {:,} confirmed kills. ".format(user_kills)
+
+					if coinbounty != 0:
+						response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
+
+					statuses = user_data.getStatusEffects()
+
+					for status in statuses:
+						status_effect = EwStatusEffect(id_status = status, user_data = user_data)
+						if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+							status_flavor = ewcfg.status_effects_def_map.get(status)
+							if status_flavor is not None:
+								response_block += status_flavor.str_describe + " "
+
+					if len(response_block) > 0:
+						response += "\n\n" + response_block
+
+					response += "'*"
+
+					if user_data.faction == ewcfg.faction_rowdys:
+						gangbase = ewcfg.channel_copkilltown
+					elif user_data.faction == ewcfg.faction_killers:
+						gangbase = ewcfg.channel_rowdyroughhouse
+					else:
+						gangbase = ewcfg.channel_juviesrow
+
+					resp_cont.add_channel_response(gangbase, response)
+
+			#await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
 			# Send the response to the player.
 			resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
@@ -913,6 +1046,7 @@ async def attack(cmd):
 
 """ player kills themself """
 async def suicide(cmd):
+	time_now = int(time.time())
 	response = ""
 	deathreport = ""
 
@@ -937,6 +1071,8 @@ async def suicide(cmd):
 			response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
+		elif user_data.time_expirpvp >= time_now:
+			response = "*Tsk, tsk.* Trying to take the coward’s way out, I see. Don’t worry, all WANTED get what’s coming to them eventually."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
@@ -1073,8 +1209,9 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 					levelup_resp = user_data.change_slimes(n = target_data.slimes/2, source = ewcfg.source_killing)
 
 					target_data.id_killer = user_data.id_user
+
 					target_data.die(cause = ewcfg.cause_killing)
-					target_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+					#target_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 					target_data.persist()
 
 					response += "{} was killed by an explosion during your fight with {}!".format(target_player.display_name, shootee_player.display_name)
@@ -1308,7 +1445,10 @@ async def spar(cmd):
 """ equip a weapon """
 async def equip(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	response = ""
+	time_now = int(time.time())
+
+	if user_data.time_lastenlist > time_now:
+		response = "You've enlisted way too recently! You can't equip any weapons just yet."
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
@@ -1400,9 +1540,9 @@ async def marry(cmd):
 	elif weapon is None:
 		response = "How do you plan to get married to your weapon if you aren’t holding any weapon? Goddamn, think these things through, I have to spell out everything for you."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	#Makes sure you have a displayed rank 6 or higher weapon.
-	elif user_data.weaponskill < 10:
-		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 8 mastery or higher to get married.".format(weapon_name)
+	#Makes sure you have a displayed rank 4 or higher weapon.
+	elif user_data.weaponskill < 8:
+		response = "Slow down, Casanova. You do not nearly have a close enough bond with your {} to engage in holy matrimony with it. You’ll need to reach rank 4 mastery or higher to get married.".format(weapon_name)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Makes sure you aren't trying to farm the extra weapon mastery ranks by marrying over and over again.
 	elif user_data.weaponmarried == True:
@@ -1951,6 +2091,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					damage=damage
 				)
 
+				if enemy_data.ai == ewcfg.enemy_ai_coward:
+					response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
+				elif enemy_data.ai == ewcfg.enemy_ai_defender:
+					enemy_data.id_target = user_data.id_user
+					enemy_data.persist()
+
 			if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 				response += "\n" + weapon.str_reload_warning.format(
 					name_player=cmd.message.author.display_name)
@@ -1963,6 +2109,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					target_name=enemy_data.display_name,
 					damage=damage
 				)
+
+				if enemy_data.ai == ewcfg.enemy_ai_coward:
+					response += random.choice(ewcfg.coward_responses_hurt).format(enemy_data.display_name)
+				elif enemy_data.ai == ewcfg.enemy_ai_defender:
+					enemy_data.id_target = user_data.id_user
+					enemy_data.persist()
 
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
 
@@ -1982,8 +2134,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if was_killed and enemy_data.enemytype in ewcfg.raid_bosses:
 		# announce raid boss kill in kill feed channel
 
-		killfeed_resp = "*{}*: {}\n\n".format(cmd.message.author.display_name, old_response)
-		killfeed_resp += "`-------------------------`"
+		killfeed_resp = "*{}*: {}".format(cmd.message.author.display_name, old_response)
+		killfeed_resp += "\n`-------------------------`{}".format(ewcfg.emote_megaslime)
 
 		killfeed_resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
 		killfeed_resp_cont.add_channel_response(ewcfg.channel_killfeed, killfeed_resp)

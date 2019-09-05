@@ -357,6 +357,58 @@ def item_dropall(
 	except:
 		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
+"""
+	Drop some of a player's non-soulbound items into their district.
+"""
+def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None):
+	#try:
+	user_data = EwUser(id_server = id_server, id_user = id_user)
+	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+
+	drop_candidates = []
+
+	# Filter out Soulbound items.
+	for item in items:
+		if item.get('soulbound') == False:
+			drop_candidates.append(item)
+
+	filtered_items = []
+
+	if item_type_filter == ewcfg.it_item or item_type_filter == ewcfg.it_food:
+		filtered_items = drop_candidates
+	if item_type_filter == ewcfg.it_cosmetic:
+		for item in drop_candidates:
+			cosmetic_id = item.get('id_item')
+			cosmetic_item = EwItem(id_item = cosmetic_id)
+			if cosmetic_item.item_props['adorned'] == "false":
+				filtered_items.append(item)
+
+			elif cosmetic_item.item_props.get('slimeoid') != None:
+				if cosmetic_item.item_props['slimeoid'] == "false":
+					filtered_items.append(item)
+			else:
+				pass
+	if item_type_filter == ewcfg.it_weapon:
+		for item in drop_candidates:
+			if item.get('id_item') != user_data.weapon:
+				filtered_items.append(item)
+			else:
+				pass
+
+	number_of_filtered_items = len(filtered_items)
+
+	number_of_items_to_drop = int(number_of_filtered_items / fraction)
+
+	if number_of_items_to_drop >= 2:
+		random.shuffle(filtered_items)
+		for drop in range(number_of_items_to_drop):
+			for item in filtered_items:
+				id_item = item.get('id_item')
+				give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
+				filtered_items.pop(0)
+				break
+	#except:
+	#	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
 """
 	Dedorn all of a player's cosmetics
@@ -368,7 +420,7 @@ def item_dedorn_cosmetics(
 	try:
 		
 		ewutils.execute_sql_query(
-			"UPDATE items_prop SET value = 'false' WHERE (name = 'adorned' or name = 'slimeoid') AND {id_item} IN (\
+			"UPDATE items_prop SET value = 'false' WHERE (name = 'adorned') AND {id_item} IN (\
 				SELECT {id_item} FROM items WHERE {id_user} = %s AND {id_server} = %s\
 			)".format(
 				id_item = ewcfg.col_id_item,
@@ -625,6 +677,7 @@ def inventory(
 	id_user = None,
 	id_server = None,
 	item_type_filter = None,
+	item_sorting_method = None,
 ):
 	items = []
 
@@ -639,6 +692,11 @@ def inventory(
 			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
 		if item_type_filter != None:
 			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
+		if item_sorting_method != None:
+			if item_sorting_method == 'type':
+				sql += " ORDER BY {}".format(ewcfg.col_item_type)
+			if item_sorting_method == 'id':
+				sql += " ORDER BY {}".format(ewcfg.col_id_item)
 
 		if id_server != None:
 			cursor.execute(sql.format(
@@ -731,13 +789,40 @@ def inventory(
 """
 async def inventory_print(cmd):
 	can_message_user = True
+	
+	sort_by_type = False
+	sort_by_name = False
+	sort_by_id = False
+
+	if cmd.tokens_count > 1:
+		sorting_method = cmd.tokens[1].lower()
+
+		if sorting_method == 'type':
+			sort_by_type = True
+		elif sorting_method == 'name':
+			sort_by_name = True
+		elif sorting_method == 'id':
+			sort_by_id = True
 
 	player = EwPlayer(id_user = cmd.message.author.id)
 
-	items = inventory(
-		id_user = cmd.message.author.id,
-		id_server = player.id_server
-	)
+	if sort_by_id:
+		items = inventory(
+			id_user = cmd.message.author.id,
+			id_server = player.id_server,
+			item_sorting_method='id'
+		)
+	elif sort_by_type:
+		items = inventory(
+			id_user=cmd.message.author.id,
+			id_server=player.id_server,
+			item_sorting_method='type'
+		)
+	else:
+		items = inventory(
+			id_user=cmd.message.author.id,
+			id_server=player.id_server,
+		)
 
 	if len(items) == 0:
 		response = "You don't have anything."
@@ -755,7 +840,11 @@ async def inventory_print(cmd):
 	if not can_message_user:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if sort_by_name:
+		items = sorted(items, key=lambda item: item.get('name').lower())
+
 	if len(items) > 0:
+		
 		response = ""
 
 		for item in items:
@@ -790,78 +879,101 @@ async def inventory_print(cmd):
 async def item_look(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
-	server = cmd.message.server
-	user_data = EwUser(member = author)
+	player = EwPlayer(id_user=cmd.message.author.id)
+	server = player.id_server
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	mutations = user_data.get_mutations()
 
-	item_sought = find_item(item_search = item_search, id_user = author.id, id_server = server.id if server is not None else None)
+	if user_data.visiting != ewcfg.location_id_empty:
+		user_data = EwUser(id_user=user_data.visiting, id_server=server)
 
-	if item_sought:
-		item = EwItem(id_item = item_sought.get('id_item'))
+	item_dest = []
 
-		id_item = item.id_item
-		name = item_sought.get('name')
-		response = item_sought.get('item_def').str_desc
+	item_sought_inv = find_item(item_search=item_search, id_user=author.id, id_server=server)
+	item_dest.append(item_sought_inv)
 
-		# Replace up to two levels of variable substitutions.
-		if response.find('{') >= 0:
-			response = response.format_map(item.item_props)
+	iterate = 0
+	response = ""
 
+	if poi.is_apartment:
+		item_sought_closet = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_closet, id_server=server)
+		item_sought_fridge = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_fridge, id_server=server)
+		item_sought_decorate = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_decorate, id_server=server)
+
+		item_dest.append(item_sought_closet)
+		item_dest.append(item_sought_fridge)
+		item_dest.append(item_sought_decorate)
+
+	for item_sought in item_dest:
+		iterate+=1
+		if item_sought:
+			item = EwItem(id_item = item_sought.get('id_item'))
+
+			id_item = item.id_item
+			name = item_sought.get('name')
+			response = item_sought.get('item_def').str_desc
+
+			# Replace up to two levels of variable substitutions.
 			if response.find('{') >= 0:
 				response = response.format_map(item.item_props)
 
-		if item.item_type == ewcfg.it_food:
-			if float(item.item_props.get('time_expir') if not None else 0) < time.time():
-				response += " This food item is rotten"
-				if ewcfg.mutation_id_spoiledappetite in mutations:
-					response += ". Yummy!"
-				else:
-					response += ", so you decide to throw it away."
-					item_drop(id_item)
-		
-		if item.item_type == ewcfg.it_cosmetic:
-			hue = ewcfg.hue_map.get(item.item_props.get('hue'))
-			if hue != None:
-				response += " It's been dyed in {} paint.".format(hue.str_name)
+				if response.find('{') >= 0:
+					response = response.format_map(item.item_props)
 
-		if item.item_type == ewcfg.it_weapon:
-			response += "\n\n"
 
-			if item.item_props.get("married") != "":
-				player = EwPlayer(id_user = item.item_props.get("married"), id_server = server.id)
+			if item.item_type == ewcfg.it_food:
+				if float(item.item_props.get('time_expir') if not None else 0) < time.time() and item.id_owner[-6:] != ewcfg.compartment_id_fridge:
+					response += " This food item is rotten"
+					if ewcfg.mutation_id_spoiledappetite in mutations:
+						response += ". Yummy!"
+					else:
+						response += ", so you decide to throw it away."
+						item_drop(id_item)
+
+			if item.item_type == ewcfg.it_weapon:
+				response += "\n\n"
+
+				if item.item_props.get("married") != "":
+					player = EwPlayer(id_user = item.item_props.get("married"), id_server = server.id)
 
 				if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
 					response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(player.display_name, name)
 				else:
 					response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
 
-			weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+				weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
 
-			if ewcfg.weapon_class_ammo in weapon.classes:
-				response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
+				if ewcfg.weapon_class_ammo in weapon.classes:
+					response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
 
-			totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
+				totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
 
-			if totalkills < 10:
-				response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed {} people.\n".format(totalkills))
-			elif totalkills < 100:
-				response += "There's some noticeable wear and tear on it. It has killed {} people.\n".format(totalkills)
-			else:
-				response += "A true legend in the battlefield, it has killed {} people.\n".format(totalkills)
-			
-			response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)			
+				if totalkills < 10:
+					response += "It looks brand new" + (".\n" if totalkills == 0 else ", having only killed {} people.\n".format(totalkills))
+				elif totalkills < 100:
+					response += "There's some noticeable wear and tear on it. It has killed {} people.\n".format(totalkills)
+				else:
+					response += "A true legend in the battlefield, it has killed {} people.\n".format(totalkills)
 
-		response = name + "\n\n" + response
+				response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if item.item_type == ewcfg.it_cosmetic:
+				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+				if hue != None:
+					response += " It's been dyed in {} paint.".format(hue.str_name)
 
-	else:
-		if item_search:  # if they didnt forget to specify an item and it just wasn't found
-			response = "You don't have one."
+			response = name + "\n\n" + response
+
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
-			response = "Inspect which item? (check **!inventory**)"
+			if iterate == len(item_dest) and response == "":
+				if item_search:  # if they didnt forget to specify an item and it just wasn't found
+					response = "You don't have one."
+				else:
+					response = "Inspect which item? (check **!inventory**)"
 
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
@@ -1159,6 +1271,7 @@ def gen_item_props(item):
 			'inebriation': item.inebriation,
 			'str_eat': item.str_eat,
 			'time_expir': int(time.time()) + item.time_expir,
+			'time_fridged': item.time_fridged,
 		}
 	elif item.item_type == ewcfg.it_item:
 		item_props = {
@@ -1185,6 +1298,16 @@ def gen_item_props(item):
 			'cosmetic_desc': item.str_desc,
 			'rarity': item.rarity,
 			'adorned': 'false'
+		}
+	elif item.item_type == ewcfg.it_furniture:
+		item_props = {
+			'id_furniture': item.id_furniture,
+			'furniture_name': item.str_name,
+			'furniture_desc': item.str_desc,
+			'rarity': item.rarity,
+			'furniture_place_desc': item.furniture_place_desc,
+			'furniture_look_desc': item.furniture_look_desc,
+			'acquisition': item.acquisition
 		}
 
 	return item_props
