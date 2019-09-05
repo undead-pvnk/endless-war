@@ -793,21 +793,29 @@ async def item_look(cmd):
 	player = EwPlayer(id_user=cmd.message.author.id)
 	server = player.id_server
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	mutations = user_data.get_mutations()
+
 	if user_data.visiting != ewcfg.location_id_empty:
 		user_data = EwUser(id_user=user_data.visiting, id_server=server)
+
 	item_dest = []
+
 	item_sought_inv = find_item(item_search=item_search, id_user=author.id, id_server=server)
 	item_dest.append(item_sought_inv)
+
 	iterate = 0
 	response = ""
-	if user_data.poi == "apt"+user_data.apt_zone:
+
+	if poi.is_apartment:
 		item_sought_closet = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_closet, id_server=server)
 		item_sought_fridge = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_fridge, id_server=server)
 		item_sought_decorate = find_item(item_search=item_search, id_user=user_data.id_user + ewcfg.compartment_id_decorate, id_server=server)
+
 		item_dest.append(item_sought_closet)
 		item_dest.append(item_sought_fridge)
 		item_dest.append(item_sought_decorate)
+
 	for item_sought in item_dest:
 		iterate+=1
 		if item_sought:

@@ -132,7 +132,7 @@ async def updateRoles(
 	server_default = None
 ):
 
-	user_data = EwUser(member = member, id_server = server_default)
+	user_data = EwUser(id_user=member.id, id_server = server_default)
 	id_server = user_data.id_server
 	
 	if member == None:

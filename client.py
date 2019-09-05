@@ -724,6 +724,7 @@ async def on_ready():
 						market_data.day += 1
 						if market_data.day % 2 == 0:
 							await ewapt.rent_time()
+							market_data = EwMarket(id_server=server.id)
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
@@ -973,12 +974,13 @@ async def on_message(message):
 		if message.server == None:
 			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
 			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
+			poi = ewcfg.id_to_poi.get(usermodel.poi)
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
-			elif usermodel.poi[:3] == ewcfg.poi_id_apt:
+			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:
 				time_last = last_helped_times.get(message.author.id, 0)
