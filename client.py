@@ -688,27 +688,17 @@ async def on_ready():
 
 			try:
 				for server in client.servers:
-					roles_map = ewutils.getRoleMap(server.roles)
-
-					role_rowdyfuckers_pvp = roles_map[ewcfg.role_rowdyfuckers_pvp]
-					role_copkillers_pvp = roles_map[ewcfg.role_copkillers_pvp]
+					role_ids = []
+					for pvp_role in ewcfg.role_to_pvp_role.values():
+						role = ewrolemgr.EwRole(id_server = server.id, name = pvp_role)
+						role_ids.append(role.id_role)
 
 					# Monitor all user roles and update if a user is no longer flagged for PvP.
 					for member in server.members:
-						pvp_role = None
-
-						if role_copkillers_pvp in member.roles:
-							pvp_role = role_copkillers_pvp
-						elif role_rowdyfuckers_pvp in member.roles:
-							pvp_role = role_rowdyfuckers_pvp
-
-						if pvp_role != None:
-							# Retrieve user data from the database.
-							user_data = EwUser(member=member)
-
-							# If the user's PvP expire time is historical, remove the PvP role.
-							if user_data.time_expirpvp < int(time.time()):
-								await client.remove_roles(member, pvp_role)
+						for role in member.roles:
+							if role.id in role_ids:
+								await ewrolemgr.updateRoles(client = client, member = member)
+								break
 
 			except:
 				ewutils.logMsg('An error occurred in the scheduled role update task:')

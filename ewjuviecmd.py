@@ -95,7 +95,7 @@ async def enlist(cmd):
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-	if desired_faction == ewcfg.faction_rowdys:
+	elif desired_faction == ewcfg.faction_rowdys:
 		if ewcfg.faction_rowdys in bans:
 			response = "You are banned from enlisting in the {}.".format(ewcfg.faction_rowdys)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
