@@ -283,7 +283,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck", db = "rfck", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -1217,11 +1217,13 @@ async def explode(damage = 0, district_data = None):
 	return resp_cont
 
 def is_otp(user_data):
-	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse]
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	return user_data.poi not in [ewcfg.poi_id_thesewers, ewcfg.poi_id_juviesrow, ewcfg.poi_id_copkilltown, ewcfg.poi_id_rowdyroughhouse] and (not poi.is_apartment)
+
 
 async def delete_last_message(client, last_messages, tick_length):
 	if len(last_messages) == 0:
-	    return
+		return
 	await asyncio.sleep(tick_length)
 	await client.delete_message(last_messages[-1])
 

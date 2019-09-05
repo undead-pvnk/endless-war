@@ -3,6 +3,7 @@ import random
 import ewutils
 import ewstats
 import ewitem
+import random
 from ewcosmeticitem import EwCosmeticItem
 from ewsmelting import EwSmeltingRecipe
 from ewwep import EwWeapon
@@ -18,6 +19,7 @@ from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
 from ewfarm import EwFarmAction
 from ewfish import EwFish
+from ewapt import EwFurniture
 import ewdebug
 
 # Global configuration options.
@@ -70,6 +72,7 @@ battle_type_nega = 1
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
+poi_id_realestate = "realestateagency"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -107,6 +110,7 @@ poi_id_subway_white01 = "subwaywhite01"
 poi_id_subway_blue01 = "subwayblue01"
 poi_id_subway_blue02 = "subwayblue02"
 poi_id_blimp = "blimp"
+poi_id_apt = "apt"
 
 # ferry ports
 poi_id_wt_port = "wreckingtonport"
@@ -178,6 +182,45 @@ poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
 
+
+#Apartment subzones
+
+
+poi_id_apt_downtown ="aptdowntown"
+poi_id_apt_smogsburg ="aptsmogsburg"
+poi_id_apt_krakbay = "aptkrakbay"
+poi_id_apt_poudrinalley = "aptpoudrinalley"
+poi_id_apt_greenlightdistrict = "aptgreenlightdistrict"
+poi_id_apt_oldnewyonkers = "aptoldnewyonkers"
+poi_id_apt_littlechernobyl = "aptlittlechernobyl"
+poi_id_apt_arsonbrook = "aptarsonbrook"
+poi_id_apt_astatineheights = "aptastatineheights"
+poi_id_apt_gatlingsdale = "aptgatlingsdale"
+poi_id_apt_vandalpark = "aptvandalpark"
+poi_id_apt_glocksbury = "aptglocksbury"
+poi_id_apt_northsleezeborough = "aptnorthsleezeborough"
+poi_id_apt_southsleezeborough = "aptsouthsleezeborough"
+poi_id_apt_oozegardens = "aptoozegardens"
+poi_id_apt_cratersville = "aptcratersville"
+poi_id_apt_wreckington = "aptwreckington"
+poi_id_apt_slimesend = "aptslimesend"
+poi_id_apt_vagrantscorner = "aptvagrantscorner"
+poi_id_apt_assaultflatsbeach = "aptassaultflatsbeach"
+poi_id_apt_newnewyonkers = "aptnewnewyonkers"
+poi_id_apt_brawlden = "aptbrawlden"
+poi_id_apt_toxington = "apttoxington"
+poi_id_apt_charcoalpark = "aptcharcoalpark"
+poi_id_apt_poloniumhill = "aptpoloniumhill"
+poi_id_apt_westglocksbury = "aptwestglocksbury"
+poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
+poi_id_apt_crookline = "aptcrookline"
+poi_id_apt_dreadford = "aptdreadford"
+
+compartment_id_closet = "closet"
+compartment_id_fridge = "fridge"
+compartment_id_decorate = "decorate"
+location_id_empty = "empty"
+
 # Outskirts
 poi_id_wreckington_outskirts = "wreckingtonoutskirts"
 poi_id_cratersville_outskirts = "cratersvilleoutskirts"
@@ -195,6 +238,7 @@ poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
 
 # Transport types
 transport_type_ferry = "ferry"
@@ -323,6 +367,7 @@ channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
 channel_juviesrow = "juvies-row"
+channel_apt = "apartment"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -365,6 +410,38 @@ channel_killfeed = "kill-feed"
 channel_jrmineswall = "the-mines-wall"
 channel_ttmineswall = "toxington-mines-wall"
 channel_cvmineswall = "cratersville-mines-wall"
+
+channel_apt_downtown = "downtown-apartments"
+channel_apt_smogsburg ="smogsburg-apartments"
+channel_apt_krakbay ="krak-bay-apartments"
+channel_apt_poudrinalley ="poudrin-alley-apartments"
+channel_apt_greenlightdistrict ="green-light-district-apartments"
+channel_apt_oldnewyonkers ="old-new-yonkers-apartments"
+channel_apt_littlechernobyl ="little-chernobyl-apartments"
+channel_apt_arsonbrook ="arsonbrook-apartments"
+channel_apt_astatineheights ="astatine-heights-apartments"
+channel_apt_gatlingsdale ="gatlingsdale-apartments"
+channel_apt_vandalpark ="vandal-park-apartments"
+channel_apt_glocksbury ="glocksbury-apartments"
+channel_apt_northsleezeborough ="north-sleezeborough-apartments"
+channel_apt_southsleezeborough ="south-sleezeborough-apartments"
+channel_apt_oozegardens ="ooze-gardens-apartments"
+channel_apt_cratersville ="cratersville-apartments"
+channel_apt_wreckington ="wreckington-apartments"
+channel_apt_slimesend ="slimes-end-apartments"
+channel_apt_vagrantscorner ="vagrants-corner-apartments"
+channel_apt_assaultflatsbeach ="assault-flats-beach-apartments"
+channel_apt_newnewyonkers ="new-new-yonkers-apartments"
+channel_apt_brawlden ="brawlden-apartments"
+channel_apt_toxington ="toxington-apartments"
+channel_apt_charcoalpark ="charcoal-park-apartments"
+channel_apt_poloniumhill ="polonium-hill-apartments"
+channel_apt_westglocksbury ="west-glocksbury-apartments"
+channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
+channel_apt_crookline ="crookline-apartments"
+channel_apt_dreadford ="dreadford-apartments"
+
+
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -508,6 +585,8 @@ cmd_dab = cmd_prefix + 'dab'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
+cmd_sign = cmd_prefix + 'sign'
+cmd_rip = cmd_prefix + 'rip'
 cmd_reap = cmd_prefix + 'reap'
 cmd_sow = cmd_prefix + 'sow'
 cmd_check_farm = cmd_prefix + 'checkfarm'
@@ -544,7 +623,37 @@ cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 
+
+cmd_retire = cmd_prefix + 'retire'
+cmd_depart = cmd_prefix + 'depart'
+cmd_consult = cmd_prefix + 'consult'
+cmd_sign_lease = cmd_prefix + 'signlease'
+#cmd_rent_cycle = cmd_prefix + 'rentcycle'
+cmd_fridge = cmd_prefix + 'fridge'
+cmd_closet = cmd_prefix + 'closet'
+cmd_store = cmd_prefix + 'stow' #was originally !store, that honestly would be a easier command to remember
+cmd_unfridge = cmd_prefix + 'unfridge'
+cmd_uncloset = cmd_prefix + 'uncloset'
+cmd_take = cmd_prefix + 'snag' #same as above, but with !take
+cmd_decorate = cmd_prefix + 'decorate'
+cmd_undecorate = cmd_prefix + 'undecorate'
+cmd_freeze = cmd_prefix + 'freeze'
+cmd_unfreeze = cmd_prefix + 'unfreeze'
+cmd_apartment = cmd_prefix + 'apartment'
+cmd_aptname = cmd_prefix + 'aptname'
+cmd_aptdesc = cmd_prefix + 'aptdesc'
+cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
+cmd_knock = cmd_prefix + 'knock'
+cmd_breaklease = cmd_prefix + 'breaklease'
+
+apartment_b_multiplier = 1500
+apartment_a_multiplier = 2000000
+apartment_dt_multiplier = 3000000000
+apartment_s_multiplier = 6000000000
+
+
 cmd_promote = cmd_prefix + 'promote'
+
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_release = cmd_prefix + 'release'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
@@ -1043,6 +1152,13 @@ col_stack_max = 'stack_max'
 col_stack_size = 'stack_size'
 col_soulbound = 'soulbound'
 
+#Database columns for apartments
+col_apt_name = 'apt_name'
+col_apt_description = 'apt_description'
+col_rent = 'rent'
+col_apt_class = 'apt_class'
+
+
 # Database columns for server
 col_icon = "icon"
 
@@ -1089,6 +1205,9 @@ col_caught_fish = 'caught_fish'
 col_arrested = 'arrested'
 col_time_expirpvp = 'time_expirpvp'
 col_time_lastenlist = 'time_lastenlist'
+col_apt_zone = 'apt_zone'
+col_visiting = "visiting"
+
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1216,6 +1335,7 @@ it_questitem = "questitem"
 it_food = "food"
 it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
+it_furniture = 'furniture'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -5491,6 +5611,428 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+cabinets_list = [
+"This is a Zoombinis Logical Journey arcade cabinet.\nWait. This is an old PC game. Why the fuck would they port this to cabinet? Now you have to use the stick to move the mouse around. Oh well. Buyers remorse, you suppose. \nhttps://classicreload.com/win3x-logical-journey-of-the-zoombinis.html",
+"This is a Cookie Clicker arcade cabinet.\n The huge cookie button on the front is pretty neat, but running it forever seems like it would crank your electricity bill. You know, if you had one.\nhttps://orteil.dashnet.org/cookieclicker/",
+"This is a Poptropica arcade cabinet.\nI don't know who thought point and click platforming was a good idea, but this new control scheme is a godsend. \nhttps://www.poptropica.com/",
+"This is a Frog Fractions arcade cabinet.\nThis cabinet's been lightly used. Looks like a remnant of some bar in Ponyville, what with all the ponytuber signatures on it. Eh, we can leave those well alone for now.\nhttps://kbhgames.com/game/frog-fractions",
+"This is a Pokemon Showdown arcade cabinet.\nSouls, hearts, and eons of slime were won and lost on this legendary little number. Playing it on this rickety old thing somehow doesn't seem as suspenseful, though.\n https://pokemonshowdown.com/",
+"This is a Madness: Accelerant arcade cabinet.\n If you've been to West Glocksbury the violence in here is a little old hat, but a lot of people have a soft spot for it.\nhttps://www.newgrounds.com/portal/view/512407",
+"This is a Flanders Killer 6 arcade cabinet.\nClearly this is the greatest game the world has ever conceived.\nhttps://www.silvergames.com/en/flanders-killer-6",
+"This is a Peasant's Quest arcade cabinet.\nThe struggles of the main guy here are a lot like what juvies go through: a rise to greatness, false hope, and inevitable worthless destruction. Onward!\nhttp://homestarrunner.com/disk4of12.html",
+"This is a Super Mario 63 arcade cabinet.\nSince Reggie Fils-Amie is too fucking cowardly to set foot in NLACakaNM, we have to resort to bootleg merchandise. Relatively good bootlegs, but bootlegs nonetheless.\nhttps://www.newgrounds.com/portal/view/498969",
+"This is a World's Hardest Game arcade cabinet.\nThere were countless stories of moms getting bankrupted because their kids dumped their money into these.\nhttps://www.coolmathgames.com/0-worlds-hardest-game "
+]
+
+furniture_list = [
+EwFurniture(
+		id_furniture = "interrogationchair",
+		str_name = "interrogation chair",
+		str_desc = "This is the kind of chair shitty cops use to question their victims. Sitting in it gives you war flashbacks to when you were arrested, so you'll probably only whip it out for special occasions.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 100000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's an interrogation chair here for some reason.",
+		furniture_place_desc = "You place the chair in the middle of the room, trying not to think about police."),
+EwFurniture(
+		id_furniture = "brokenclock",
+		str_name = "broken clock",
+		str_desc = "You can't believe you own and treasure a broken clock. The bazaar sells these by convincing idiotic juvies they can fix it. They can't.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The broken clock says it's 2:33.",
+		furniture_place_desc = "You hang the clock on the wall."),
+EwFurniture(
+		id_furniture = "bevanssnot",
+		str_name = "Bevan's snot",
+		str_desc = "This stuff is actually pretty useful. It's a way to decorate your house with slime, without actually having to give up your own.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 2000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The walls are smeared with slime.",
+		furniture_place_desc = "You gently smear the slime facsimile on the walls."),
+EwFurniture(
+		id_furniture = "chair",
+		str_name = "chair",
+		str_desc = "It's a normal wooden chair. A sign of your entry into the rat race that is the economy.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 40000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a chair in the room.",
+		furniture_place_desc = "You set the chair where you think it's appropriate. How exciting."),
+EwFurniture(
+		id_furniture = "desk",
+		str_name = "desk",
+		str_desc = "A normal wooden desk. You can almost hear your soul breaking under your monotonous career.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 80000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You see a desk in the corner.",
+		furniture_place_desc = "You set up the desk in the corner of the room."),
+EwFurniture(
+		id_furniture = "couch",
+		str_name = "couch",
+		str_desc = "This one's a pull-out couch. The upholstery is pretty new, yet somehow looks worn out already.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 120000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a comfy couch up against the wall.",
+		furniture_place_desc = "You get some friend or another to help you move the couch in. They pretended like they were happy to do it, but you know they weren't."),
+EwFurniture(
+		id_furniture = "lamp",
+		str_name = "lamp",
+		str_desc = "A normal lamp. Good for reading, if your juvenile delinquent ass could actually read.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 10000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The lamp casts a warm light throughout the room.",
+		furniture_place_desc = "You set up the lamp, plug it in, and watch the one-light light show."),
+EwFurniture(
+		id_furniture = "lgbtqdesk",
+		str_name = "LGBTQ+ desk",
+		str_desc = "It's like a regular desk, but the drawers are all different colors of the rainbow.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 160000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A gaudy rainbow desk is in the corner of the room.",
+		furniture_place_desc = "You drag the desk into position. You feel gayer already."),
+EwFurniture(
+		id_furniture = "lgbtqchair",
+		str_name = "LGBTQ+ chair",
+		str_desc = "A rainbow striped chair. I'll bet you could give some pretty good man-on-man lap dances with this.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 40000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a rainbow chair set up.",
+		furniture_place_desc = "You place the chair in the best place you can think of."),
+EwFurniture(
+		id_furniture = "lgbtqcouch",
+		str_name = "LGBTQ+ couch",
+		str_desc = "There's no need for this couch to pull out.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 240000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A colorful couch sits against the wall",
+		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful."),
+EwFurniture(
+		id_furniture = "lgbtqlamp",
+		str_name = "LGBTQ+ lamp",
+		str_desc = "It's not actually the lamp that's LGBTQ. It's the bulb.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 10000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The fancy lamp flashes rainbow everywhere.",
+		furniture_place_desc = "You plug in the lamp and watch the pretty colors for awhile."),
+EwFurniture(
+		id_furniture = "lgbtqbed",
+		str_name = "LGBTQ+ bed",
+		str_desc = "This is where the magic happens.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 300000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a rainbow bed in the bedroom.",
+		furniture_place_desc = "You set up your bed, dreaming of all the same-sex poon you're gonna slam."),
+EwFurniture(
+		id_furniture = "bed",
+		str_name = "bed",
+		str_desc = "A standard-issue bed, ready-made for crying yourself to sleep.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 150000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a bed in the bedroom.",
+		furniture_place_desc = "The IKEA instructions are confusing, so it takes a few attempts to make the bed."),
+EwFurniture(
+		id_furniture = "hauntedbed",
+		str_name = "haunted bed",
+		str_desc = "This bed was owned by a long-gone staydead, way back in Season 1. You can still feel the negaslime residue on it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 300000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You hear ghostly moaning from the bedroom.",
+		furniture_place_desc = "You're about to place the mattress when a dozen spiders crawl out of it. Better be careful with this one."),
+EwFurniture(
+		id_furniture = "hauntedcouch",
+		str_name = "haunted couch",
+		str_desc = "Every person who sat on this couch was supposedly cursed to die the day after. That doesn't mean much in NLACakaNM, though.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 240000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The rustic couch against the wall looks old and haunted.",
+		furniture_place_desc = "You were going to ask some of your buds to help move this in, but you walked into the apartment and it was already there..."),
+EwFurniture(
+		id_furniture = "hauntedlamp",
+		str_name = "haunted lamp",
+		str_desc = "When you turn on this lamp it somehow makes the room darker.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 20000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The lighting in here is ominous, thanks to your lamp.",
+		furniture_place_desc = "You set up the old lamp. The light flickers."),
+EwFurniture(
+		id_furniture = "hauntedchair",
+		str_name = "haunted chair",
+		str_desc = "This chair doesn't seem to go well with other furniture, unless it's below a noose.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 40000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A creepy chair stands in the middle of the room",
+		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide."),
+EwFurniture(
+		id_furniture = "haunteddesk",
+		str_name = "haunted desk",
+		str_desc = "It just looks like an old desk. What did the store clerk mean by 'haunted'?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 160000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An old desk(haunted, apparently) is in the corner.",
+		furniture_place_desc = "You move the desk into the corner. Scary."),
+EwFurniture(
+		id_furniture = "armageddonspritzer",
+		str_name = "Armageddon Spritzer",
+		str_desc = "You look at the automatic scent spritzer, filled to the top with a sinister red liquid. You wonder to yourself why you bought this. All of a sudden, it sprays a puff directly into your face, and you begin to hallucinate.\n\nThe light begins to fade from your eyes as you're bombarded with cacophanous mental static. The buzzing and echoey clanging drives you to scream, but your body no longer exists. You try to clutch your face in desperation and all you feel is liquid. You feel burning. Burning everywhere. The sky flashes a dissonant dark orange, as though the sun was setting on reality itself, and although nobody is speaking, you feel it all calling to you. But you don't want this. Whatever memories haven't escaped you want this all to stop. You don't know your own name and you wish to remember it. And it all hurts. It hurts so much. Please stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop. Stop.\n\nWhen you wake up, your face is bleeding and 2 hours have passed. Well, shit. Guess you better prepare for when this goes off again in an hour.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 10000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The spritzer in here makes you feel the sicknasty feelings.",
+		furniture_place_desc = "You set up the spritzer high up on the wall. Gulp."),
+EwFurniture(
+		id_furniture = "beanbagchair",
+		str_name = "beanbag chair",
+		str_desc = "A cushy chair. You were told Digibro has one just like it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A beanbag chair is plopped just wherever.",
+		furniture_place_desc = "You plop the beanbag chair just wherever."),
+EwFurniture(
+		id_furniture = "slimebagchair",
+		str_name = "slimebag chair",
+		str_desc = "A squishy slime-based chair. It's nice and viscous, for your tired bottom.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A bright green slimebag chair is plopped just wherever.",
+		furniture_place_desc = "You plop the slimebag chair just wherever."),
+EwFurniture(
+		id_furniture = "bodypillow",
+		str_name = "body pillow",
+		str_desc = "A dakimakura with pillowcase. It's got your favorite slime waifu on it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 400000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a body pillow in the bedroom.",
+		furniture_place_desc = "You gently place the pillow in your room, being careful not to damage your waifu."),
+EwFurniture(
+		id_furniture = "futon",
+		str_name = "futon",
+		str_desc = "Every tenant's best friend. Foldable, holdable, lovable.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 199999,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a futon against the wall.",
+		furniture_place_desc = "You get your friends to help you set up the futon. It's so light and convenient that they treat you to KFC at the end of it."),
+EwFurniture(
+		id_furniture = "vaporsposter",
+		str_name = "The Vapors poster",
+		str_desc = "It's a poster for The Cop Killer's comic. There's Magda. Yep. \npatreon.com/bensaint\nsaintcomix.com",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 180000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a Vapors poster on the wall.",
+		furniture_place_desc = "You roll out your fullbody Magda poster and place it on the wall. You wonder if it's considered a betrayal if Rowdys own these."),
+EwFurniture(
+		id_furniture = "burgerprintwallpaper",
+		str_name = "burger print wallpaper",
+		str_desc = "This wallpaper is a dead ringer for that burger jumpsuit the Rowdy Fucker always wears. Just having it makes you feel rancorous.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 180000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The walls are papered with burgers.",
+		furniture_place_desc = "You start by taking all your furniture out of your house. You buy a paintroller, some adhesive, and some tarp for the floor. You toil for a day sticking the adhesive and applying the wallpaper, then stay at someone else's flat for another day so it dries. And... dammit, the burgers aren't aligned correctly on the seams. Guess we'll just deal."),
+EwFurniture(
+		id_furniture = "highclassbed",
+		str_name = "high class bed",
+		str_desc = "This offensively comfortable little number is filled with grade A down feathers hand-picked by NASA. You can get such good sleep on it that it almost lets you forget your sins. Almost.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 40000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You glimpse the high class bed in the bedroom and feel the urge to lie down.",
+		furniture_place_desc = "You walk outside and give a stern nod to the lower-class peons running about. They give a melancholy look when they see you point to your new bed, but they know they must do as told. Four of the stronger looking street urchins hoist your bed in their arms and carry it to your abode, with you sitting atop it like the emperor you are. They set you down with the gentleness of skilled servants, and you flip them several million SlimeCoin just to get out of your sight. Boy. You can't wait to sleep on this."),
+EwFurniture(
+		id_furniture = "highclassthrone",
+		str_name = "high class throne",
+		str_desc = "A golden throne adorned with red velvet. Jewel encrusted, regal, and fucking stupid expensive.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 45000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You see the throne. It beckons.",
+		furniture_place_desc = "As you place the throne, you picture the kings that came before you. Marc Antony. Nero. All six Georges. Or seven, if you count Maddox. Thinking on it, you decide your reign will be different from those idiots."),
+EwFurniture(
+		id_furniture = "highclasscouch",
+		str_name = "high class couch",
+		str_desc = "It's a luxury hardwood sofa with huge gemstones in the armrests. As stiff as it looks, it's comfier than anything you've sat in before.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 20000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A high class couch is against the wall.",
+		furniture_place_desc = "You hire some people to help you move your couch in. They were way too slow for your busy schedule."),
+EwFurniture(
+		id_furniture = "highclassdesk",
+		str_name = "high class desk",
+		str_desc = "They say some old politician signed a bunch of sick ass documents on this. The vendor never told you who, though.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 15000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A high class desk is in the corner.",
+		furniture_place_desc = "You place the desk near a window, allowing the serfs outside to bask in your radiance."),
+EwFurniture(
+		id_furniture = "highclasslamp",
+		str_name = "high class lamp",
+		str_desc = "It's a lamp. It looks just like the regular lamp, but it doesn't actually work. You got suckered, dude.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 150000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The lamp is broken.",
+		furniture_place_desc = "You try all sorts of light bulbs, but the lamp is just broken. You defeatedly set it up where it won't attract attention."),
+EwFurniture(
+		id_furniture = "laptopcomputer",
+		str_name = "laptop computer",
+		str_desc = "It's a laptop from 2006, freshly installed with Windows XP. This thing hardly works, but when it's plugged into the wall you can still run Discord.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A laptop sits closed on the floor.",
+		furniture_place_desc = "You place the laptop and plug it in."),
+EwFurniture(
+		id_furniture = "rainbowdashfigurine",
+		str_name = "rainbow dash figurine",
+		str_desc = "It's one of those little pony figures from MLP: Friendship is Magic. It's in pretty good condition.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies."),
+EwFurniture(
+		id_furniture = "diploma",
+		str_name = "framed diploma",
+		str_desc = "It's a diploma from a NLACakaNM college. You're not sure you earned this.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 2000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A diploma hangs on the wall.",
+		furniture_place_desc = "You think about all the memories you had back in college: drinking, skipping class, killing everyone in University Parking Services, and maybe even a little learning along the way. You lower your head sentimentally and hang the diploma on your wall."),
+EwFurniture(
+		id_furniture = "racecarbed",
+		str_name = "race car bed",
+		str_desc = "VROOM VROOM! NNNNEEEEEEOOOOOOWWWWWW SKRRT! NEEEEEEEOOOOOOOOW BEEP BEEP! SCREEECH! CRASH!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1330000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a racecar bed in the bedroom.",
+		furniture_place_desc = "You assemble the bed and place it in your vroom."),
+EwFurniture(
+		id_furniture = "padlockset",
+		str_name = "set of padlocks",
+		str_desc = "You have a standard deadbolt lock, a steel door guard, a second password protected deadbolt, one of those chain thingies, reinforced hinges, and one of those dungeon-style full-length door guards. Also a chair to prop against the door for good measure.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 750000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The door is really, REALLY locked.",
+		furniture_place_desc = "You meticulously attach your various locks to your front door until you're satisfied with the craftsmanship. Maybe now you'll finally sleep soundly at night."),
+EwFurniture(
+		id_furniture = "butler",
+		str_name = "butler",
+		str_desc = "You don't know this man's real name, but he responds to Jeeves so you've been going with that. He does whatever you tell him to do, but for some reason he's useless at gang warfare.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 8000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A butler stands up straight against the wall, awaiting your instructions.",
+		furniture_place_desc = "You clap twice, and your butler comes running. You point to the floor in the corner. \"Jeeves,\" you say, \"You'll be sleeping here from now on.\" He nods, and begins to get comfy there on the cold floor."),
+EwFurniture(
+		id_furniture = "crib",
+		str_name = "crib",
+		str_desc = "Awwww. I bet your kid looks adorable sleeping in this. You do have a kid, right?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 650000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a crib in the bedroom.",
+		furniture_place_desc = "You build the crib from the little box it came in, spinning the mobile a couple of times to make sure it works."),
+EwFurniture(
+		id_furniture = "unhealthylivingbook",
+		str_name = "Guide to Unhealthy Living: Cowritten by the Rift Cafe",
+		str_desc = "It's a book about how to transition to living a sedentary, unhygenic lifestyle in less than 20 days.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "This place smells awful.",
+		furniture_place_desc = "You carefully study brony habit-forming patterns and embrace mediocrity. Your life slowly begins to fall apart, and the junk food you eat permeates the room and makes everything smell like piss and negaslime. You can't believe a product of the Rift Cafe actually accomplished something."),
+EwFurniture(
+		id_furniture = "singingfishplaque",
+		str_name = "singing fish plaque",
+		str_desc = "You press the button on the plaque. \n\n:notes:Here's a little tip I know:notes:\n:notes:Take with !snag and store with !stow:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:The little miners were upset:notes:\n:notes:So they went and fished me up instead:notes:\n:notes:Don't worry:notes:\n:notes:Stay slimy:notes:\n:notes:WEEEEEEEEEEEEEEEEEEEEEHEEEEEEEEEEEHEEEEEEEEEEEEEHEEHAOOHEEHEHEHOOHAHAHAAAA\n\nFuck, this thing is annoying. You smack it in the face before it finishes its song.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a fake fish mounted on the wall.",
+		furniture_place_desc = "You put a nail in the wall and hang up your fish. Slimecorp probably doesn't want you knocking holes in the walls, but fuck 'em."),
+EwFurniture(
+		id_furniture = "arcadecabinet",
+		str_name = "arcade cabinet",
+		str_desc = "It's broken. Shit.", #the description gets replaced with a game link when the buy function trips
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's an arcade cabinet set up.",
+		furniture_place_desc = "It's been forever since you've played a real video game. Finally, the moment you've been waiting for. You plug this bitch in and gaze at its splendor."),
+
+
+]
+
+
+furniture_map = {}
+furniture_names = []
+
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**5 6 7 0 9**',
@@ -5570,6 +6112,7 @@ item_def_list = [
 			'vendor': None,
 			'str_eat': 'You eat the food item.',
 			'time_expir': std_food_expir,
+			'time_fridged': 0,
 		}
 	),
 
@@ -5601,6 +6144,20 @@ item_def_list = [
 			'cosmetic_desc': 'Cosmetic Item.',
 			'rarity': rarity_plebeian,
 			'hue': "",
+		}
+	),
+EwItemDef(
+		item_type = it_furniture,
+		str_name = "{furniture_name}",
+		str_desc = "{furniture_desc}",
+		soulbound = False,
+		item_props = {
+			'furniture_name': 'Furniture Item',
+			'furniture_place_desc': 'placed',
+			'furniture_look_desc': 'it\'s there',
+			'rarity': rarity_plebeian,
+			'vendor': None,
+
 		}
 	),
 ]
@@ -8133,6 +8690,27 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
+EwPoi( # realestate
+		id_poi = poi_id_realestate,
+		alias = [
+			"realestate",
+			"rea",
+			"realtor",
+			"landlord",
+			"scre",
+			"apartmentagency",
+			"realestateagent"
+		],
+		str_name = "SlimeCorp Real Estate Agency",
+		str_desc = "You stand in Slimecorp Real Estate Agency. The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
+		coord = (78, 21),
+		pvp = False,
+		channel = "slimecorp-real-estate-agency",
+		role = "Real Estate Agency",
+		mother_district = poi_id_oldnewyonkers,
+		is_subzone = True
+
+	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
 		alias = [
@@ -8273,6 +8851,425 @@ poi_list = [
 		default_line = transport_line_blimp_df_to_afb,
 		default_stop = poi_id_df_blimp_tower
 	),
+
+EwPoi( # apt
+		id_poi = poi_id_apt,
+		alias = [
+		],
+		str_name = "an apartment",
+		str_desc = "",
+		channel = channel_apt,
+		role = "Apartments",
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-downtown
+		id_poi = poi_id_apt_downtown,
+		alias = [
+			"apt",
+		],
+		str_name = "a Downtown apartment",
+		str_desc = "",
+		channel = channel_apt_downtown,
+		role = "Downtown Apartments",
+		is_apartment = True,
+		mother_district = poi_id_downtown,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-smogsburg
+		id_poi = poi_id_apt_smogsburg,
+		alias = [
+			"apt",
+		],
+		str_name = "a Smogsburg apartment",
+		str_desc = "",
+		channel = channel_apt_smogsburg,
+		role = "Smogsburg Apartments",
+		is_apartment = True,
+		mother_district = poi_id_smogsburg,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-krakbay
+		id_poi = poi_id_apt_krakbay,
+		alias = [
+			"apt",
+		],
+		str_name = "a Krak Bay apartment",
+		str_desc = "",
+		channel = channel_apt_krakbay,
+		role = "Krak Bay Apartments",
+		is_apartment = True,
+		mother_district = poi_id_krakbay,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-poudrinalley
+		id_poi = poi_id_apt_poudrinalley,
+		alias = [
+			"apt",
+		],
+		str_name = "a Poudrin Alley apartment",
+		str_desc = "",
+		channel = channel_apt_poudrinalley,
+		role = "Poudrin Alley Apartments",
+		is_apartment = True,
+		mother_district = poi_id_poudrinalley,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-green-light-district
+		id_poi = poi_id_apt_poudrinalley,
+		alias = [
+
+		],
+		str_name = "a Green Light District apartment",
+		str_desc = "",
+		channel = channel_apt_greenlightdistrict,
+		role = "Green Light District Apartments",
+		is_apartment = True,
+		mother_district = poi_id_greenlightdistrict,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-old-new-yonkers
+		id_poi = poi_id_apt_oldnewyonkers,
+		alias = [
+
+		],
+		str_name = "an Old New Yonkers apartment",
+		str_desc = "",
+		channel = channel_apt_oldnewyonkers,
+		role = "Old New Yonkers Apartments",
+		is_apartment = True,
+		mother_district = poi_id_oldnewyonkers,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-little-chernobyl
+		id_poi = poi_id_apt_littlechernobyl,
+		alias = [
+
+		],
+		str_name = "a Little Chernobyl apartment",
+		str_desc = "",
+		channel = channel_apt_littlechernobyl,
+		role = "Little Chernobyl Apartments",
+		is_apartment = True,
+		mother_district = poi_id_littlechernobyl,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-arsonbrook
+		id_poi = poi_id_apt_arsonbrook,
+		alias = [
+
+		],
+		str_name = "an Arsonbrook apartment",
+		str_desc = "",
+		channel = channel_apt_oldnewyonkers,
+		role = "Arsonbrook Apartments",
+		is_apartment = True,
+		mother_district = poi_id_arsonbrook,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-astatine-heights
+		id_poi = poi_id_apt_astatineheights,
+		alias = [
+
+		],
+		str_name = "an Astatine Heights apartment",
+		str_desc = "",
+		channel = channel_apt_astatineheights,
+		role = "Astatine Heights Apartments",
+		is_apartment = True,
+		mother_district = poi_id_astatineheights,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-gatlingsdale
+		id_poi = poi_id_apt_gatlingsdale,
+		alias = [
+
+		],
+		str_name = "a Gatlingsdale apartment",
+		str_desc = "",
+		channel = channel_apt_gatlingsdale,
+		role = "Gatlingsdale Apartments",
+		is_apartment = True,
+		mother_district = poi_id_gatlingsdale,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-vandal-park
+		id_poi = poi_id_apt_vandalpark,
+		alias = [
+
+		],
+		str_name = "a Vandal Park apartment",
+		str_desc = "",
+		channel = channel_apt_vandalpark,
+		role = "Vandal Park Apartments",
+		is_apartment = True,
+		mother_district = poi_id_vandalpark,
+		pvp = False,
+		is_subzone = False,
+	),
+	EwPoi(  # apt-glocksbury
+		id_poi=poi_id_apt_glocksbury,
+		alias=[
+
+		],
+		str_name="your Glocksbury apartment",
+		str_desc="",
+		channel=channel_apt_glocksbury,
+		role="Glocksbury Apartments",
+		is_apartment = True,
+		mother_district = poi_id_glocksbury,
+		pvp=False,
+		is_subzone=False,
+	),
+	EwPoi(  # apt-north-sleezeborough
+		id_poi=poi_id_apt_northsleezeborough,
+		alias=[
+
+		],
+		str_name="your North Sleezeborough apartment",
+		str_desc="",
+		channel=channel_apt_northsleezeborough,
+		role="North Sleezeborough Apartments",
+		is_apartment=True,
+		mother_district = poi_id_northsleezeborough,
+		pvp=False,
+		is_subzone=False,
+	),
+EwPoi( # apt-south-sleezeborough
+		id_poi = poi_id_apt_southsleezeborough,
+		alias = [
+
+		],
+		str_name = "a South Sleezeborough apartment",
+		str_desc = "",
+		channel = channel_apt_southsleezeborough,
+		role = "South Sleezeborough Apartments",
+		is_apartment=True,
+		mother_district = poi_id_southsleezeborough,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # ooze-gardens
+		id_poi = poi_id_apt_oozegardens,
+		alias = [
+
+		],
+		str_name = "an Ooze Gardens apartment",
+		str_desc = "",
+		channel = channel_apt_oozegardens,
+		role = "Ooze Gardens Apartments",
+		is_apartment=True,
+		mother_district = poi_id_oozegardens,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-cratersville
+		id_poi = poi_id_apt_cratersville,
+		alias = [
+
+		],
+		str_name = "a Cratersville apartment",
+		str_desc = "",
+		channel = channel_apt_cratersville,
+		role = "Cratersville Apartments",
+		is_apartment=True,
+		mother_district = poi_id_cratersville,
+		pvp = False,
+		is_subzone = False,
+	),
+	EwPoi(  # apt-wreckington
+		id_poi=poi_id_apt_wreckington,
+		alias=[
+
+		],
+		str_name="your Wreckington apartment",
+		str_desc="",
+		channel=channel_apt_wreckington,
+		role="Wreckington Apartments",
+		is_apartment=True,
+		mother_district = poi_id_wreckington,
+		pvp=False,
+		is_subzone=False,
+	),
+EwPoi( # apt-slimes-end
+		id_poi = poi_id_apt_slimesend,
+		alias = [
+
+		],
+		str_name = "a Slime's End apartment",
+		str_desc = "",
+		channel = channel_apt_slimesend,
+		role = "Slime's End Apartments",
+		is_apartment=True,
+		mother_district = poi_id_slimesend,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-vagrants-corner
+		id_poi = poi_id_apt_vagrantscorner,
+		alias = [
+
+		],
+		str_name = "a Vagrant's Corner apartment",
+		str_desc = "",
+		channel = channel_apt_vagrantscorner,
+		role = "Vagrant's Corner Apartments",
+		is_apartment=True,
+		mother_district = poi_id_vagrantscorner,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi(  # apt-afbr
+		id_poi=poi_id_apt_assaultflatsbeach,
+		alias=[
+
+		],
+		str_name="your Assault Flats Beach apartment",
+		str_desc="",
+		channel=channel_apt_assaultflatsbeach,
+		role="Assault Flats Beach Apartments",
+		is_apartment=True,
+		mother_district = poi_id_assaultflatsbeach,
+		pvp=False,
+		is_subzone=False,
+	),
+	EwPoi(  # apt-new-new-yonkers
+		id_poi=poi_id_apt_newnewyonkers,
+		alias=[
+
+		],
+		str_name="your New New Yonkers apartment",
+		str_desc="",
+		channel=channel_apt_newnewyonkers,
+		role="New New Yonkers Apartments",
+		is_apartment=True,
+		mother_district = poi_id_newnewyonkers,
+		pvp=False,
+		is_subzone=False,
+	),
+EwPoi( # apt-brawlden
+		id_poi = poi_id_apt_brawlden,
+		alias = [
+
+		],
+		str_name = "a Brawlden apartment",
+		str_desc = "",
+		channel = channel_apt_brawlden,
+		role = "Brawlden Apartments",
+		is_apartment=True,
+		mother_district = poi_id_brawlden,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-toxington
+		id_poi = poi_id_apt_toxington,
+		alias = [
+
+		],
+		str_name = "a Toxington apartment",
+		str_desc = "",
+		channel = channel_apt_toxington,
+		role = "Toxington Apartments",
+		is_apartment=True,
+		mother_district = poi_id_toxington,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-charcoal-park
+		id_poi = poi_id_apt_charcoalpark,
+		alias = [
+
+		],
+		str_name = "a Charcoal Park apartment",
+		str_desc = "",
+		channel = channel_apt_charcoalpark,
+		role = "Charcoal Park Apartments",
+		is_apartment=True,
+		mother_district = poi_id_charcoalpark,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # polonium-hill
+		id_poi = poi_id_apt_poloniumhill,
+		alias = [
+
+		],
+		str_name = "a Polonium Hill apartment",
+		str_desc = "",
+		channel = channel_apt_poloniumhill,
+		role = "Polonium Hill Apartments",
+		is_apartment=True,
+		mother_district = poi_id_poloniumhill,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-west-glocksbury
+		id_poi = poi_id_apt_westglocksbury,
+		alias = [
+
+		],
+		str_name = "a West Glocksbury apartment",
+		str_desc = "",
+		channel = channel_apt_westglocksbury,
+		role = "West Glocksbury Apartments",
+		is_apartment=True,
+		mother_district = poi_id_westglocksbury,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-jaywalker-plain
+		id_poi = poi_id_apt_jaywalkerplain,
+		alias = [
+
+		],
+		str_name = "a Jaywalker Plain apartment",
+		str_desc = "",
+		channel = channel_apt_jaywalkerplain,
+		role = "Jaywalker Plain Apartments",
+		is_apartment=True,
+		mother_district = poi_id_jaywalkerplain,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-crookline
+		id_poi = poi_id_apt_crookline,
+		alias = [
+
+		],
+		str_name = "a Crookline apartment",
+		str_desc = "",
+		channel = channel_apt_crookline,
+		role = "Crookline Apartments",
+		is_apartment=True,
+		mother_district = poi_id_crookline,
+		pvp = False,
+		is_subzone = False,
+	),
+EwPoi( # apt-dreadford
+		id_poi = poi_id_apt_dreadford,
+		alias = [
+
+		],
+		str_name = "a Dreadford apartment",
+		str_desc = "",
+		channel = channel_apt_dreadford,
+		role = "Dreadford Apartments",
+		is_apartment=True,
+		mother_district = poi_id_dreadford,
+		pvp = False,
+		is_subzone = False,
+	),
+
 	EwPoi(  # Outskirts - 1
 		id_poi=poi_id_wreckington_outskirts,
 		alias=[
@@ -8529,6 +9526,7 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts=True
 	),
+
 ]
 poi_list += ewdebug.debugpois
 
@@ -11257,6 +12255,19 @@ for cosmetic in cosmetic_items_list:
 
 		vendor_list.append(cosmetic.id_cosmetic)
 
+
+for furniture in furniture_list:
+	furniture_map[furniture.id_furniture] = furniture
+	furniture_names.append(furniture.id_furniture)
+
+	for vendor in furniture.vendors:
+		vendor_list.append(furniture.id_furniture)
+		if vendor_list == None:
+			vendor_list = []
+			vendor_inv[vendor] = vendor_list
+		vendor_list.append(furniture.id_furniture)
+
+
 # Populate weapon map, including all aliases.
 for weapon in weapon_list:
 	weapon_map[weapon.id_weapon] = weapon
@@ -11273,6 +12284,7 @@ for weapon in weapon_list:
 
 	for alias in weapon.alias:
 		weapon_map[alias] = weapon
+
 
 # List of items you can obtain via milling.
 mill_results = []
@@ -11494,7 +12506,42 @@ help_responses = {
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime. It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	"casino":"**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
-	"profile":"This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with !consult <district>. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can !signlease <district> to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first. \n\nFinally, if you own an apartment already, you can !aptupgrade it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use !breaklease to end your contract. It'll cost another down payment, though.",
+  "profile":"This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+}
+
+
+
+consult_responses = {
+"downtown":"Our complex in Downtown is a sight to behold, one of our most in-demand properties. The whole complex is 2-story penthouses, with built-in storage facility/fallout shelter, restaraunt sized fridge, and state-of-the-art bulletproof windows. This is an offer you won't want to pass up, believe you me. Now, perhaps you're concerned about the large amount of gang violence in the area. But, uh...shut up. ",
+"smogsburg":"Have you ever wanted wake up to a haze outside your window every morning? Or to fall asleep to the sound of bazaar merchants bickering with one another in foreign languages? I do, too! That's why I live in Smogsburg, where the prices are low and the furniture is close! Seriously, because of how nearby it is to the bazaar, I've been sniping amazing deals on high quality furniture. Wait...why are you looking at me like that? Actually on second thought, don't buy a property here. I don't want you to steal my shit.",
+"krakbay":"Krak Bay is a real social hotspot. Teenagers come from all over to indulge in shopping sprees they can't afford and gorge themselves on fast food with dubious health standards. I say this all as a compliment, of course. Stay here, and you won't have to walk through the city for ages just to get a good taco. As for the apartment quality, you can rest assured that it is definitely an apartment.",
+"poudrinalley":"You know, people point to the labrynthine building structure and the morbid levels of graffiti and say this place is a wreck. I don't think so, though. Graffiti is art, and unlike many districts in NLACakaNM, the densely packed cityscape makes it difficult to get shot through your window. The 7-11's right around the corner, to boot. For that, I'd say we're charging a real bargain.",
+"greenlightdistrict":"Did you just win the lottery? Have you recently made spending decisions that alientated you from your family? Are you TFAAAP? Then the Green Light District Triple Seven Apartments are for you! Gamble, drink, and do whatever they do in brothels to your heart's content, all far beyond the judging eyes of society! Just remember, with rent this high, you should enjoy those luxuries while they last...",
+"oldnewyonkers":"Eh? I guess you must've liked the view outside. I can't blame you. It's a peaceful sight out there. Lots of old folks who just want to live far away from the gang violence and close to people they can understand. They might say some racist shit while you're not looking, but getting called a bustah never hurt anybody. Wait, shit. Don't tell my boss I said the B word. Shit. OK, how about this? We normally charge this property higher, but here's a discount.",
+"littlechernobyl":"You're an adventurous one, choosing the good ol' LC. The place is full of ruins and irradiated to hell. A friend of mine once walked into the place, scrawny and pathetic, and walked out a griseled man, full of testosterone and ready to wrestle another crazed mutant. Of course, his hair had fallen out, but never mind that. I'm sure your stay will be just as exciting. Just sign on the dotted line.",
+"arsonbrook":"Oh, Arsonbrook? Hang on, I actually need to check if that one's available. You know how it is. We have to make sure we're not selling any torched buildings to our customers. I realize how that sounds, but owning an apartment in Arsonbrook is easier than you think. Once you're settled in with a fire extinguisher or three, the local troublemakers will probably start going for emptier flats. And even if your house does get burned down, it'll be one hell of a story.",
+"astatineheights":"If you live with the yuppies in Astatine Heights, people will treat you like a god. When you walk by on the street, they'll say: \"Oh wow! I can't believe such a rich Juvie is able to tolerate my presence! I must fellate him now, such that my breathing is accepted in their presence!\" It has amazing garage space and a walk-in fridge. Trust me, the mere sight of it would make a communist keel over in disgusted envy.",
+"gatlingsdale":"You'll be living above a bookstore, it looks like. We'd have a normal apartment complex set up, but these pretentious small businesses refuse to sell their property. Guess you'll have to settle for living in some hipster's wet dream for now. We here at SlimeCorp are working to resolve the inconvenience as soon as we can. On the upside, you have every liberty to shout loudly below them and disrupt their quiet reading enviornment.",
+"vandalpark":"Did you know that the apartment complex we have for lease was once lived in by the famous Squickey Henderson? That guy hit like 297 home runs in his career, and you better believe he picked up his bat skills from gang violence. What I'm telling you is, if you buy property here, then you're on your way to the major leagues, probably! Besides, the apartment is actually pretty well built.",
+"glocksbury":"There are a lot of police here. I can see the frothing rage in your eyes already, but hear me out. If you want to go do the gang violence, or whatever you kids do these days, then you can go over someplace else and do it there. Then, when you come back, your poudrins and dire apples will still be unstolen. I suppose that still means you're living around cops all the time, but for this price, that may be an atrocity you have to endure.",
+"northsleezeborough":"This place may as well be called Land of the Doomers, for as lively as the citizens are. They're disenfranchised, depressed, and probably voted for Gary Johnson. My suggestion is not to avoid them like the plague. Instead, I think you really ought to liven up their lives a little. Seriously, here you have a group of un-harassed people just waiting for their lives to go from bad to worse! I think a juvenile delinquent like yourself would be right at home. Wait, is that incitement? Forget what I just said.",
+"southsleezeborough":"Ah, I see. Yes, I was a weeb once, too. I always wanted to go to the place where anime is real and everyone can buy swords. Even if the streets smell like fish, the atmosphere is unforgettable. And with this apartment, the place actually reflects that culture. The doors are all sliding, the bathroom is Japanese-style, and your window overlooks to a picturesque view of the Dojo.",
+"oozegardens":"This place has such a lovely counterculture. Everybody makes the community beautiful with their vibrant gardens, and during the night they celebrate their unity with PCP and drum circles. Everybody fucks everybody, and they all have Digibro-level unkempt beards. If you're willing to put gang violence aside and smell the flowers, you'll quickly find your neighbors will become your family. Of course, we all know you're unwilling to do that, so do your best to avoid killing the damn dirty hippies, OK?",
+"cratersville":"OK...what to say about Cratersville? It's cheap, for one. You're not going to get a better deal on housing anywhere else. It's... It has a fridge, and a closet, and everything! I'm pretty sure there aren't holes in any of those objects, either, at least not when you get them. What else? I guess it has less gang violence than Downtown, and cleaner air than Smogsburg. Actually, fuck it. This place sucks. Just buy the property already. ",
+"wreckington":"So you want to eat a lot of really good pancakes. And you also want to live in a place that looks like war-torn Syria. But unfortunately, you can't do both at the same time. Well boy howdy, do I have a solution for you! Wreckington is world famous for its abandoned and demolished properties and its amazing homestyle diner. More than one apartment complex has actually been demolished with people still in it! How's that for a life-enhancing risk?",
+"slimesend":"I like to imagine retiring in Slime's End. To wake up to the sound of gulls and seafoam, to walk out into the sun and lie under a tree for the rest my days, doesn't it sound perfect? Then, when my old age finally creeps up on me, I can just walk off the cliff and skip all those tearful goodbyes at the very end. Er...right, the apartment. It's pretty good,  a nice view. I know you're not quite retiring age, but I'm sure you'll get there.",
+"vagrantscorner":"Hmm. I've never actually been to Vagrant's Corner. And all it says on this description is that it has a lot of pirates. Pirates are pretty cool, though. Like, remember that time when Luffy had Rob Lucci in the tower, and he Gum Gum Gatling-ed the living shit out of him and broke the building? That was sick, dude. OK, Google is telling me that there's a pretty good bar there, so I suppose that would be a perk, too.",
+"assaultflatsbeach":"Sure, the flat has massive storage space in all aspects. Sure, you can ride a blimp to work if you feel like it. Sure, it's the very definition of \"beachhouse on the waterfront\". But do you REALLY know why this is a top piece of real estate? Dinosaurs. They're huge, they attack people, they're just an all around riot. If you catch some of the ones here and sell them to paleontologists, this place will pay itself back in no time.",
+"newnewyonkers":"Let's be real for a second: I don't need to tell you why New New Yonkers is amazing. They have basically everything there: bowling, lazer tag, arcades, if it distracts adolescents, they have it. Don't let the disgusting old people tell you otherwise: this place is only going up from here. Sure, we had to skimp out a bit on the structural integrity of the place, but surely that won't be noticed until vandals eventually start trying to break it down.",
+"brawlden":"Brawlden's not too scary to live in, relatively speaking. Maybe you'll get pummeled by a straggling dad if you look at him funny, but chances are he won't kill you. If the lanky fellows down at Slimecorp Labs are able to live in Brawlden, I'm sure you can too. And think of the money you're saving! A \"quality\" apartment, complete with the best mini-fridge and cupboard this side of the city!",
+"toxington":"Are you really considering living in a place that's completely overrun with deadly gases? It's called TOXINGTON, you idiot! The few people who live there now are miners whose brains were already poisoned into obsolescence. I know we technically sell it as a property, but come on, man! You have so much to live for! Call a suicide hotline or get a therapist or something. Anything but this.",
+"charcoalpark":"It's a po-dunk place with po-dunk people. That is to say, it doesn't matter. Charcoal Park is the equivalent of a flyover state, but its location on the edge of the map prevents even that utility. That's exactly why it's perfect for a juvie like yourself. If you want to go into hiding, I personally guarantee the cops will never find you. Of course, you may end up assimilating with the uninspired fucks that live there, but I think that it still fills a niche here in our fair city.",
+"poloniumhill":"If you live with the wannabes in Polonium Hill, people will treat you like a dog. When you walk by on the street, they'll say: \"Oh damn! I can't believe such a desperate Juvie is able to go on living! I must slit their throat just to put 'em out of their misery!\" It nonetheless has amazing storage space and a big, gaudy-looking fridge. Trust me, the mere sight of it would make a communist keel over from the abject waste of material goods. I'm just being honest, buddy. Go live in Astatine Heights instead.",
+"westglocksbury":"If you ever wanted to turn killing people into a reality show, this is probably where you'd film it. The cops were stationed in Glocksbury in order to deal with this place, but they don't tread here for the same reason most of us don't. The corpses here get mangled. I've seen ripped out spines, chainsaw wounds, and other Mortal Kombat-like lacerations. Our photographer couldn't even take a picture of the property without getting a severed leg in the shot. But, as a delinquent yourself, I imagine that could also be a good thing.",
+"jaywalkerplain":"Are you one of those NMU students? Or maybe you're after the drug culture. Well in either case, Jaywalker Plain's an excellent place to ruin your life. In addition to having lots of like-minded enablers, the countless parks will give you the perfect spot to pace and ruminate on your decisions. You know, this is a sales pitch. I probably shouldn't make the place sound so shitty.",
+"crookline":"Now, we've gotten a lot of complaints about thieves here, stealing our clients' SlimeCoin wallets and relieving them of our rent money. We acknowledge this is a problem, so for every purchase of a property in Crookline, we've included this anti-thievery metal codpiece. Similar to how a chastity belt blocks sexual urges, this covers your pockets, making you invulnerable to petty thieves. Apart from that perk, in Crookline you'll get a lovely high-rise flat with all the essentials, all coated in a neat gloomy neon aesthetic.",
+"dreadford":"Have you ever wanted to suck on the sweet, sweet teat of ultra-decadence? Do you have multiple yachts? Do you buy both versions of Pokemon when they come out, just because you can blow the cash? Ha. Let me introduce you to the next level of opulence. Each apartment is a full-scale mansion, maintained by some of the finest slimebutlers in the industry. In the morning they tickle your feet to get you up, and at night they sing you Sixten ballads to drift you back to restful slumber. The place is bulletproof, fireproof, and doubles as a nuclear bunker if things go south. And it stores...everything. The price, you say? Shit, I was hoping you wouldn't ask."
 }
 
 # Enemy life states

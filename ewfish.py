@@ -615,6 +615,7 @@ async def reel(cmd):
 						'rarity': ewcfg.fish_map[fisher.current_fish].rarity,
 						'size': fisher.current_size,
 						'time_expir': time.time() + ewcfg.std_food_expir,
+						'time_fridged': 0,
 						'acquisition': ewcfg.acquisition_fishing,
 						'value': value
 					}

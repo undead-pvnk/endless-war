@@ -51,6 +51,9 @@ class EwUser:
 	time_expirpvp = 0
 	time_lastenlist = 0
 
+	apt_zone = "empty"
+	visiting = "empty"
+
 	move_speed = 1 # not a database column
 
 	""" fix data in this object if it's out of acceptable ranges """
@@ -537,7 +540,10 @@ class EwUser:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+
+
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -572,6 +578,8 @@ class EwUser:
 					ewcfg.col_splattered_slimes,
 					ewcfg.col_time_expirpvp,
 					ewcfg.col_time_lastenlist,
+					ewcfg.col_apt_zone,
+					ewcfg.col_visiting,
 				), (
 					id_user,
 					id_server
@@ -614,6 +622,8 @@ class EwUser:
 					self.splattered_slimes = result[31]
 					self.time_expirpvp = result[32]
 					self.time_lastenlist = result[33]
+					self.apt_zone = result[34]
+					self.visiting = result[35]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -707,6 +717,8 @@ class EwUser:
 				ewcfg.col_splattered_slimes,
 				ewcfg.col_time_expirpvp,
 				ewcfg.col_time_lastenlist,
+				ewcfg.col_apt_zone,
+				ewcfg.col_visiting,
 			), (
 				self.id_user,
 				self.id_server,
@@ -745,6 +757,8 @@ class EwUser:
 				self.splattered_slimes,
 				self.time_expirpvp,
 				self.time_lastenlist,
+				self.apt_zone,
+				self.visiting,
 			))
 
 			conn.commit()
