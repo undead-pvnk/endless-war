@@ -1369,6 +1369,11 @@ def get_enemy_data(enemy_type):
 		enemy.ai = ewcfg.enemy_ai_defender
 		enemy.display_name = ewcfg.enemy_displayname_microslime
 		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
+		
+	elif enemy_type == ewcfg.enemy_type_slimeofgreed:
+		enemy.ai = ewcfg.enemy_ai_defender
+		enemy.display_name = ewcfg.enemy_displayname_slimeofgreed
+		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
 
 	elif enemy_type == ewcfg.enemy_type_dinoslime:
 		enemy.ai = ewcfg.enemy_ai_attacker_a
@@ -1433,6 +1438,9 @@ def get_enemy_slime(enemy_type):
 	elif enemy_type == ewcfg.enemy_type_microslime:
 		minslime = 10000
 		maxslime = 50000
+	elif enemy_type == ewcfg.enemy_type_slimeofgreed:
+		minslime = 20000
+		maxslime = 100000
 	elif enemy_type == ewcfg.enemy_type_dinoslime:
 		minslime = 250000
 		maxslime = 500000
