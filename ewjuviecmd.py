@@ -93,6 +93,7 @@ async def enlist(cmd):
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	if desired_faction == ewcfg.faction_rowdys:
 		if ewcfg.faction_rowdys in bans:
@@ -113,8 +114,7 @@ async def enlist(cmd):
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
-
-		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
 		response = "You can't do that right now, bitch."
