@@ -530,6 +530,8 @@ cmd_piss = cmd_prefix + 'piss'
 
 cmd_promote = cmd_prefix + 'promote'
 cmd_arrest = cmd_prefix + 'arrest'
+cmd_release = cmd_prefix + 'release'
+cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
