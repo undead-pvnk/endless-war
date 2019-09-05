@@ -436,6 +436,7 @@ cmd_map = {
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,
 	ewcfg.cmd_release: ewcmd.release,
+	ewcfg.cmd_release_alt1: ewcmd.release,
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
