@@ -625,6 +625,7 @@ def inventory(
 	id_user = None,
 	id_server = None,
 	item_type_filter = None,
+	item_sorting_method = None,
 ):
 	items = []
 
@@ -639,6 +640,11 @@ def inventory(
 			sql += " AND {} = '{}'".format(ewcfg.col_id_user, str(id_user))
 		if item_type_filter != None:
 			sql += " AND {} = '{}'".format(ewcfg.col_item_type, item_type_filter)
+		if item_sorting_method != None:
+			if item_sorting_method == 'type':
+				sql += " ORDER BY {}".format(ewcfg.col_item_type)
+			if item_sorting_method == 'id':
+				sql += " ORDER BY {}".format(ewcfg.col_id_item)
 
 		if id_server != None:
 			cursor.execute(sql.format(
@@ -731,13 +737,40 @@ def inventory(
 """
 async def inventory_print(cmd):
 	can_message_user = True
+	
+	sort_by_type = False
+	sort_by_name = False
+	sort_by_id = False
+
+	if cmd.tokens_count > 1:
+		sorting_method = cmd.tokens[1].lower()
+
+		if sorting_method == 'type':
+			sort_by_type = True
+		elif sorting_method == 'name':
+			sort_by_name = True
+		elif sorting_method == 'id':
+			sort_by_id = True
 
 	player = EwPlayer(id_user = cmd.message.author.id)
 
-	items = inventory(
-		id_user = cmd.message.author.id,
-		id_server = player.id_server
-	)
+	if sort_by_id:
+		items = inventory(
+			id_user = cmd.message.author.id,
+			id_server = player.id_server,
+			item_sorting_method='id'
+		)
+	elif sort_by_type:
+		items = inventory(
+			id_user=cmd.message.author.id,
+			id_server=player.id_server,
+			item_sorting_method='type'
+		)
+	else:
+		items = inventory(
+			id_user=cmd.message.author.id,
+			id_server=player.id_server,
+		)
 
 	if len(items) == 0:
 		response = "You don't have anything."
@@ -755,7 +788,11 @@ async def inventory_print(cmd):
 	if not can_message_user:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if sort_by_name:
+		items = sorted(items, key=lambda item: item.get('name').lower())
+
 	if len(items) > 0:
+		
 		response = ""
 
 		for item in items:
