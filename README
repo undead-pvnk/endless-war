@@ -47,6 +47,7 @@ CREATE TABLE users (
 	splattered_slimes bigint NOT NULL DEFAULT '0',
 	time_expirpvp int NOT NULL DEFAULT '0',
 	time_lastenlist int NOT NULL DEFAULT '0',
+	active_slimeoid int NOT NULL DEFAULT '-1',
 
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)

@@ -69,6 +69,11 @@ sltype_wild = 'Wild'
 battle_type_arena = 0
 battle_type_nega = 1
 
+# slimeoid stats
+slimeoid_stat_moxie = 'moxie'
+slimeoid_stat_grit = 'grit'
+slimeoid_stat_chutzpah = 'chutzpah'
+
 # ID tags for points of interest that are needed in code.
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
@@ -701,6 +706,9 @@ cmd_observeslimeoid = cmd_prefix + 'observeslimeoid'
 cmd_slimeoidbattle = cmd_prefix + 'slimeoidbattle'
 cmd_saturateslimeoid = cmd_prefix + 'saturateslimeoid'
 cmd_restoreslimeoid = cmd_prefix + 'restoreslimeoid'
+cmd_bottleslimeoid = cmd_prefix + 'bottleslimeoid'
+cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
+cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
 cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
 cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
 
@@ -1204,6 +1212,7 @@ col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
 col_arrested = 'arrested'
+col_active_slimeoid = 'active_slimeoid'
 col_time_expirpvp = 'time_expirpvp'
 col_time_lastenlist = 'time_lastenlist'
 col_apt_zone = 'apt_zone'
@@ -1536,6 +1545,8 @@ stats_clear_on_death = [
 ]
 
 context_slimeoidheart = 'slimeoidheart'
+context_slimeoidbottle = 'slimeoidbottle'
+context_slimeoidfood = 'slimeoidfood'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger

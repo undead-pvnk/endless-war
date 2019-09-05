@@ -399,7 +399,10 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+        ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+        ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+        ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+        #ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
 
