@@ -382,6 +382,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 			cosmetic_item = EwItem(id_item = cosmetic_id)
 			if cosmetic_item.item_props['adorned'] == "false":
 				filtered_items.append(item)
+
 			elif cosmetic_item.item_props.get('slimeoid') != None:
 				if cosmetic_item.item_props['slimeoid'] == "false":
 					filtered_items.append(item)
