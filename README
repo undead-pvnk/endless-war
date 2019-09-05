@@ -43,6 +43,8 @@ CREATE TABLE users (
 	donated_poudrins bigint NOT NULL DEFAULT '0',
 	arrested int NOT NULL DEFAULT '0',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
+	time_expirpvp int NOT NULL DEFAULT '0',
+	time_lastenlist int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
