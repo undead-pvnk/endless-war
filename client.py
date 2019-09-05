@@ -45,6 +45,7 @@ import ewstatuseffects
 import ewsmelting
 import ewhunting
 import ewfish
+import ewapt
 import ewdebug
 
 from ewitem import EwItem
@@ -144,6 +145,20 @@ cmd_map = {
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
+
+	ewcfg.cmd_retire: ewapt.retire,
+	ewcfg.cmd_depart: ewapt.depart,
+	ewcfg.cmd_consult: ewapt.consult,
+	#ewcfg.cmd_rent_cycle: ewapt.rent_cycle,
+	ewcfg.cmd_sign_lease: ewapt.signlease,
+	ewcfg.cmd_apartment: ewapt.apartment,
+	ewcfg.cmd_rip: ewapt.nothing,
+	ewcfg.cmd_sign: ewapt.nothing,
+	ewcfg.cmd_upgrade: ewapt.upgrade,
+	ewcfg.cmd_knock: ewapt.knock,
+	ewcfg.cmd_breaklease: ewapt.cancel,
+
+
 
 	# revive yourself as a juvenile after having been killed.
 	ewcfg.cmd_revive: ewspooky.revive,
@@ -709,6 +724,9 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
+						if market_data.day % 2 == 0:
+							await ewapt.rent_time()
+							market_data = EwMarket(id_server=server.id)
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
@@ -717,6 +735,7 @@ async def on_ready():
 						bazaar_foods = []
 						bazaar_cosmetics = []
 						bazaar_general_items = []
+						bazaar_furniture = []
 
 						for item in ewcfg.vendor_inv.get(ewcfg.vendor_bazaar):
 							if item in ewcfg.item_names:
@@ -727,6 +746,9 @@ async def on_ready():
 
 							elif item in ewcfg.cosmetic_names:
 								bazaar_cosmetics.append(item)
+
+							elif item in ewcfg.furniture_names:
+								bazaar_furniture.append(item)
 
 						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
 
@@ -742,8 +764,14 @@ async def on_ready():
 						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
 							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
 
+
+						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
+						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
+							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
+
 						if random.random() == 0.1:
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
+
 
 					market_data.persist()
 
@@ -946,12 +974,16 @@ async def on_message(message):
 			Handle direct messages.
 		"""
 		if message.server == None:
+			playermodel = ewplayer.EwPlayer(id_user = message.author.id)
+			usermodel = EwUser(id_user=message.author.id, id_server= playermodel.id_server)
+			poi = ewcfg.id_to_poi.get(usermodel.poi)
 			# Direct message the player their inventory.
 			if ewitem.cmd_is_inventory(cmd):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
-
+			elif poi.is_apartment:
+				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:
 				time_last = last_helped_times.get(message.author.id, 0)
 
@@ -1061,7 +1093,14 @@ async def on_message(message):
 				response += " {}".format(levelup_response)
 
 			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		elif debug == True and cmd == '!getcoin':
+			user_data = EwUser(member=message.author)
+			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)
 
+			response = "You get 1,000,000,000 slimecoin!"
+
+			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		# Deletes all items in your inventory.
@@ -1083,7 +1122,7 @@ async def on_message(message):
 					'food_desc': "This sure is a illegal Dire Apple!",
 					'recover_hunger': 500,
 					'str_eat': "You chomp into this illegal Dire Apple.",
-					'time_expir': time.time() + ewcfg.farm_food_expir
+					'time_expir': int(time.time() + ewcfg.farm_food_expir)
 				}
 			)
 

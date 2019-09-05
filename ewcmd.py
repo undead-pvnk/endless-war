@@ -535,6 +535,10 @@ async def help(cmd):
 			elif user_data.poi in ewcfg.poi_id_thesewers:
 				# death help
 				response = ewcfg.help_responses['death']
+
+			elif user_data.poi in ewcfg.poi_id_realestate:
+				#real estate help
+				response = ewcfg.help_responses['realestate']
 			elif user_data.poi in [
 				ewcfg.poi_id_toxington_pier,
 				ewcfg.poi_id_assaultflatsbeach_pier,

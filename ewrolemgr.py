@@ -128,9 +128,15 @@ async def restoreRoleNames(cmd):
 """
 async def updateRoles(
 	client = None,
-	member = None
+	member = None,
+	server_default = None
 ):
-	user_data = EwUser(member = member)
+
+	if server_default != None:
+		user_data = EwUser(id_user=member.id, id_server = server_default)
+	else:
+		user_data = EwUser(member=member)
+
 	id_server = user_data.id_server
 	
 	if member == None:
@@ -169,7 +175,9 @@ async def updateRoles(
 
 	pvp_role = None
 	if faction_role in ewcfg.role_to_pvp_role:
+
 		if ewutils.is_otp(user_data):
+
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
@@ -178,6 +186,8 @@ async def updateRoles(
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if poi != None:
 		poi_role = poi.role
+	else:
+		poi_role = None
 
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:
