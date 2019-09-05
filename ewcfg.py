@@ -8932,7 +8932,7 @@ EwPoi( # apt-poudrinalley
 		is_subzone = False,
 	),
 EwPoi( # apt-green-light-district
-		id_poi = poi_id_apt_poudrinalley,
+		id_poi = poi_id_apt_greenlightdistrict,
 		alias = [
 
 		],
