@@ -58,47 +58,44 @@ async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	user_slimes = user_data.slimes
 	time_now = int(time.time())
+	bans = user_data.get_bans()
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	elif user_data.poi not in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
-		# Only allowed to !enlist at a gang base.
-		response = "Which faction? If you want to join a gang, you have to {} at their homebase. Dumbass.\nTo join the hot blooded and reckless {}, {} in {}.\nTo join the hardboiled and calculating {}, {} in {}.".format(ewcfg.cmd_enlist, ewcfg.faction_rowdys, ewcfg.cmd_enlist, ewcfg.gangbase_rowdys, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.gangbase_killers)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	elif user_slimes < ewcfg.slimes_toenlist:
 		response = "You need to mine more slime to rise above your lowly station. ({}/{})".format(user_slimes, ewcfg.slimes_toenlist)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif user_data.life_state == ewcfg.life_state_juvenile:
-		bans = user_data.get_bans()
+	if cmd.tokens_count > 1:
+		desired_faction = cmd.tokens[1].lower()
+	else:
+		response = "Which faction? Say '{} {}' or '{} {}'.".format(ewcfg.cmd_enlist, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.faction_rowdys)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if cmd.tokens_count > 1:
-			desired_faction = cmd.tokens[1].lower()
-		else:
-			response = "Which faction? Say '{} {}' or '{} {}'.".format(ewcfg.cmd_enlist, ewcfg.faction_killers, ewcfg.cmd_enlist, ewcfg.faction_rowdys)
+	if desired_faction == ewcfg.faction_killers:
+		if ewcfg.faction_killers in bans:
+			response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
+			return await ewutils.send_message(cmd.client, cmd.message.channel,
+											  ewutils.formatMessage(cmd.message.author, response))
+
+		if user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers:
+			response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(
+				user_data.faction)
+			return await ewutils.send_message(cmd.client, cmd.message.channel,
+											  ewutils.formatMessage(cmd.message.author, response))
+
+		if user_data.faction == ewcfg.faction_rowdys:
+			response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(
+				ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if desired_faction == ewcfg.faction_killers:
-			if ewcfg.faction_killers in bans:
-				response = "You are banned from enlisting in the {}.".format(ewcfg.faction_killers)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-			if user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers:
-				response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(user_data.faction)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-			if user_data.faction == ewcfg.faction_rowdys:
-				response = "Traitor! You can only {} in the {}, you treacherous cretin. Ask for a {} if you're that weak-willed.".format(ewcfg.cmd_enlist, user_data.faction, ewcfg.cmd_pardon)
-				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-			response = "Enlisting in the {}.".format(ewcfg.faction_killers)
-			user_data.life_state = ewcfg.life_state_enlisted
-			user_data.faction = ewcfg.faction_killers
-			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.persist()
+		response = "Enlisting in the {}.".format(ewcfg.faction_killers)
+		user_data.life_state = ewcfg.life_state_enlisted
+		user_data.faction = ewcfg.faction_killers
+		user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+		user_data.persist()
 
 		if desired_faction == ewcfg.faction_rowdys:
 			if ewcfg.faction_rowdys in bans:

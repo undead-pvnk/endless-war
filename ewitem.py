@@ -361,60 +361,61 @@ def item_dropall(
 	Drop some of a player's non-soulbound items into their district.
 """
 def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fraction = None):
-	try:
-		user_data = EwUser(id_server = id_server, id_user = id_user)
-		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
+	#try:
+	user_data = EwUser(id_server = id_server, id_user = id_user)
+	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
-		drop_candidates = []
+	print("Items = {}".format(items))
 
-		# Filter out Soulbound items.
-		for item in items:
-			if item.get('soulbound') == False:
-				drop_candidates.append(item)
+	drop_candidates = []
 
-		filtered_items = []
+	# Filter out Soulbound items.
+	for item in items:
+		if item.get('soulbound') == False:
+			drop_candidates.append(item)
+			print("Drop Candidates = {}".format(drop_candidates))
 
-		if item_type_filter == ewcfg.it_cosmetic:
-			for item in drop_candidates:
-				cosmetic_id = item.get('id_item')
-				cosmetic_item = EwItem(id_item = cosmetic_id)
+	filtered_items = []
 
-				if cosmetic_item.item_props['adorned'] == "false":
+	if item_type_filter == ewcfg.it_item or item_type_filter == ewcfg.it_food:
+		filtered_items = drop_candidates
+	if item_type_filter == ewcfg.it_cosmetic:
+		for item in drop_candidates:
+			cosmetic_id = item.get('id_item')
+			cosmetic_item = EwItem(id_item = cosmetic_id)
+			print("Adorned = {}".format(cosmetic_item.item_props['adorned']))
+			if cosmetic_item.item_props['adorned'] == "false":
+				filtered_items.append(item)
+				print("Filtered Items = {}".format(filtered_items))
+
+			if hasattr(cosmetic_item.item_props, 'slimeoid'):
+				if cosmetic_item.item_props['slimeoid'] == "false":
 					filtered_items.append(item)
+			else:
+				pass
+	if item_type_filter == ewcfg.it_weapon:
+		for item in drop_candidates:
+			if item.get('id_item') != user_data.weapon:
+				filtered_items.append(item)
+				print("Filtered Items = {}".format(filtered_items))
+			else:
+				pass
 
-				if hasattr(cosmetic_item.item_props, 'slimeoid'):
-					if cosmetic_item.item_props['slimeoid'] == "false":
-						filtered_items.append(item)
+	number_of_filtered_items = len(filtered_items)
 
-				else:
-					pass
+	number_of_items_to_drop = int(number_of_filtered_items / fraction)
 
-		if item_type_filter == ewcfg.it_weapon:
-			for item in drop_candidates:
-				if item.get('id_item') != user_data.weapon:
-					filtered_items.append(item)
-
-				else:
-					pass
-
-		else:
-			filtered_items = drop_candidates
-
-		number_of_filtered_items = len(filtered_items)
-
-		number_of_items_to_drop = int(number_of_filtered_items / fraction)
-
-		if number_of_items_to_drop >= 2:
-			random.shuffle(filtered_items)
-			for drop in range(number_of_items_to_drop):
-				for item in filtered_items:
-					id_item = item.get('id_item')
-					give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
-					filtered_items.pop(0)
-					break
-
-	except:
-		ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
+	if number_of_items_to_drop >= 2:
+		random.shuffle(filtered_items)
+		for drop in range(number_of_items_to_drop):
+			for item in filtered_items:
+				id_item = item.get('id_item')
+				give_item(id_user = user_data.poi, id_server = id_server, id_item = id_item)
+				filtered_items.pop(0)
+				print("Filtered Items = {}".format(filtered_items))
+				break
+	#except:
+	#	ewutils.logMsg('Failed to drop items for user with id {}'.format(id_user))
 
 """
 	Dedorn all of a player's cosmetics

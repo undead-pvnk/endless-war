@@ -818,9 +818,7 @@ async def move(cmd):
 	# If you're WANTED, you can't enter sub-zones.
 	if user_data.time_expirpvp >= time_now:
 		if poi.is_pvp == False:
-			if poi.id_poi in [ewcfg.poi_id_vagrantscorner_pier, ewcfg.poi_id_slimesend_pier, ewcfg.poi_id_assaultflatsbeach_pier, ewcfg.poi_id_crookline_pier, ewcfg.poi_id_jaywalkerplain_pier, ewcfg.poi_id_toxington_pier]:
-				onlookers = "fishermen" #todo
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What the hell are you thinking? As soon as the {} there catch a glimpse of a WANTED, they’re going straight to the cops. You better keep a low profile.".format(onlookers)))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What the hell are you thinking? As soon as the onlookers there catch a glimpse of a WANTED, they’re going straight to the cops. You better keep a low profile."))
 
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
@@ -1104,10 +1102,10 @@ async def teleport_player(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 	
-	#if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
-	#	pass
-	#else:
-	#	return
+	if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+		pass
+	else:
+		return
 	
 	if cmd.mentions_count == 1:
 		target = cmd.mentions[0]

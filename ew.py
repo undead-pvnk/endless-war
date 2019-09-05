@@ -170,7 +170,7 @@ class EwUser:
 				self.slimecoin = 0
 
 			else:
-				if self.faction == None: # If you were a Juvenile.
+				if self.life_state == ewcfg.life_state_juvenile: # If you were a Juvenile.
 					item_fraction = 4
 					food_fraction = 4
 					cosmetic_fraction = 4
