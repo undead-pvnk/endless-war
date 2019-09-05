@@ -105,12 +105,13 @@ async def adorn(cmd):
 				else:
 					item.item_props['adorned'] = 'true'
 
-				if item.item_props.get('slimeoid') == 'true':
-					item.item_props['slimeoid'] = 'false'
-					response = "You take your {} from your slimeoid and successfully adorn it.".format(item.item_props.get('cosmetic_name'))
+					if item.item_props.get('slimeoid') == 'true':
+						item.item_props['slimeoid'] = 'false'
+						response = "You take your {} from your slimeoid and successfully adorn it.".format(
+							item.item_props.get('cosmetic_name'))
 
-				else:
-					response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
+					else:
+						response = "You successfully adorn your " + item.item_props['cosmetic_name'] + "."
 
 			item.persist()
 
