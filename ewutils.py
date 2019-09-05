@@ -1225,5 +1225,8 @@ async def delete_last_message(client, last_messages, tick_length):
 	if len(last_messages) == 0:
 		return
 	await asyncio.sleep(tick_length)
-	await client.delete_message(last_messages[-1])
+	try:
+		await client.delete_message(last_messages[-1])
+	except:
+		logMsg("failed to delete last message")
 
