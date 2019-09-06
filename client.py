@@ -722,7 +722,7 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
-						if market_data.day % 2 == 0:
+						if market_data.day % 8 == 0:
 							await ewapt.rent_time()
 							market_data = EwMarket(id_server=server.id)
 

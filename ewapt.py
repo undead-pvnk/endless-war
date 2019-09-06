@@ -546,10 +546,10 @@ async def store_item(cmd, dest):
             storage_limit_base *= 2
 
         elif apt_model.apt_class == ewcfg.property_class_a:
-            storage_limit_base *= 3
+            storage_limit_base *= 4
 
         elif apt_model.apt_class == ewcfg.property_class_s:
-            storage_limit_base *= 5
+            storage_limit_base *= 8
 
         name_string = item_sought.get('name')
 
