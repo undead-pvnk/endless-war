@@ -42,9 +42,12 @@ CREATE TABLE users (
 	donated_slimes bigint NOT NULL DEFAULT '0',
 	donated_poudrins bigint NOT NULL DEFAULT '0',
 	arrested int NOT NULL DEFAULT '0',
-	apt_zone varchar(64) NOT NULL default 'empty'
-	visiting varchar(64) NOT NULL default 'empty'
+	apt_zone varchar(64) NOT NULL default 'empty',
+	visiting varchar(64) NOT NULL default 'empty',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
+	time_expirpvp int NOT NULL DEFAULT '0',
+	time_lastenlist int NOT NULL DEFAULT '0',
+	active_slimeoid int NOT NULL DEFAULT '-1',
 
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
@@ -311,21 +314,29 @@ CREATE TABLE offers (
 	PRIMARY KEY (id_server, id_user, offer_give)
 );
 
+CREATE TABLE vouchers (
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	faction varchar(32) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, id_user, faction)
+);
+	
 
 CREATE TABLE apartment (
     apt_name varchar(64) NOT NULL DEFAULT '',
     apt_description varchar(5000) NOT NULL DEFAULT '',
     poi varchar(64) NOT NULL DEFAULT 'downtown',
     rent BIGINT NOT NULL DEFAULT 0,
-    id_user varchar(64) NOT NULL DEFAULT ''
-    id_server varchar(64) NOT NULL DEFAULT ''
-    apt_class char NOT NULL DEFAULT 'c'
+    id_user varchar(64) NOT NULL DEFAULT '',
+    id_server varchar(64) NOT NULL DEFAULT '',
+    apt_class char NOT NULL DEFAULT 'c',
 
     PRIMARY KEY (id_server, id_user)
 );
 
 CREATE TABLE global_locks (
-    id_server varchar(128) NOT NULL,
+	id_server varchar(128) NOT NULL,
 	district varchar(32) NOT NULL,
 	locked_status varchar(32) NOT NULL DEFAULT '',
 

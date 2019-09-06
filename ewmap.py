@@ -46,6 +46,19 @@ def channel_name_is_poi(channel_name):
 
 	return False
 
+
+"""
+	Returns the fancy display name of the specified POI.
+"""
+
+def poi_id_to_display_name(poi_name = None):
+	poi = ewcfg.id_to_poi.get(poi_name)
+
+	if poi != None:
+		return poi.str_name
+
+	return "the city"
+
 """
 	Point of Interest (POI) data model
 """
@@ -648,12 +661,13 @@ def inaccessible(user_data = None, poi = None):
 		return False
 
 	bans = user_data.get_bans()
+	vouchers = user_data.get_vouchers()
 
 	locked_districts_list = retrieve_locked_districts(user_data.id_server)
 
 	if(
 		len(poi.factions) > 0 and
-		len(user_data.faction) > 0 and
+		set(vouchers).isdisjoint(set(poi.factions)) and
 		user_data.faction not in poi.factions
 	) or (
 		len(poi.life_states) > 0 and
@@ -771,6 +785,7 @@ async def descend(cmd):
 """
 async def move(cmd = None, isApt = False):
 
+	time_now = int(time.time())
 	if channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
@@ -814,6 +829,11 @@ async def move(cmd = None, isApt = False):
 
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+
+	# If you're WANTED, you can't enter sub-zones.
+	if user_data.time_expirpvp >= time_now:
+		if poi.is_subzone == True:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What the hell are you thinking? As soon as the onlookers there catch a glimpse of a WANTED, they’re going straight to the cops. You better keep a low profile."))
 
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
@@ -1069,6 +1089,8 @@ async def teleport(cmd):
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
+	if user_data.time_expirpvp >= time_now:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That’s probably not a good idea, teleporting draws way more attention than you can afford right now as a WANTED. You better keep a low profile."))
 
 	if ewcfg.mutation_id_quantumlegs in mutations:
 		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
@@ -1262,6 +1284,7 @@ async def look(cmd):
 	Get information about an adjacent zone.
 """
 async def scout(cmd):
+	time_now = int(time.time())
 	if channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
@@ -1272,6 +1295,10 @@ async def scout(cmd):
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Who cares? These meatbags all look the same to you."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.time_expirpvp >= time_now:
+		response = "Police sirens drown out whatever useful auditory reconnaissance you could normally glean. Oh shit, it sounds like they’re getting closer. You better get out of here, dude. Man, being WANTED fucking sucks."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# if no arguments given, scout own location
