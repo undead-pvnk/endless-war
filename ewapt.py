@@ -546,10 +546,11 @@ async def store_item(cmd, dest):
 			storage_limit_base *= 2
 
 		elif apt_model.apt_class == ewcfg.property_class_a:
-			storage_limit_base *= 3
+			storage_limit_base *= 4
 
 		elif apt_model.apt_class == ewcfg.property_class_s:
-			storage_limit_base *= 5
+			storage_limit_base *= 8
+
 
 		name_string = item_sought.get('name')
 
@@ -780,6 +781,8 @@ async def freeze(cmd):
 	if ew_slime_model.name != "":
 		ew_slime_model.id_user += "freeze"
 		ew_slime_model.persist()
+		usermodel.active_slimeoid = -1
+		usermodel.persist()
 		response = "You pick up your slimeoid. {} wonders what is going on, but trusts you implicitly. You open the freezer. {} begins to panic. However, you overpower them, shove them in the icebox, and quickly close the door. Whew. You wonder if this is ethical.".format(ew_slime_model.name, ew_slime_model.name)
 
 	else:
@@ -821,6 +824,8 @@ async def unfreeze(cmd):
 	else:
 		ew_slime_model.id_user = cmd.message.author.id
 		ew_slime_model.persist()
+		usermodel.active_slimeoid = ew_slime_model.id_slimeoid
+		usermodel.persist()
 		response = "You open the freezer. Your slimeoid stumbles out, desperately gasping for air. {} isn't sure what it did to deserve cryostasis, but it gives you an apologetic yap in order to earn your forgiveness. \n\n {} is now your slimeoid.".format(ew_slime_model.name, ew_slime_model.name, ew_slime_model.name)
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1172,6 +1177,10 @@ async def aptCommands(cmd):
 		return await ewcmd.harvest(cmd=cmd)
 	elif ewcfg.cmd_check_farm == cmd_text:
 		return await ewfarm.check_farm(cmd=cmd)
+	elif ewcfg.cmd_bottleslimeoid == cmd_text:
+		return await ewslimeoid.bottleslimeoid(cmd=cmd)
+	elif ewcfg.cmd_unbottleslimeoid == cmd_text:
+		return await ewslimeoid.unbottleslimeoid(cmd = cmd)
 	elif ewcfg.cmd_piss == cmd_text:
 		return await ewcmd.piss(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
