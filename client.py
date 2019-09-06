@@ -160,6 +160,17 @@ cmd_map = {
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 
+	ewcfg.cmd_store: ewapt.lobbywarning,
+	ewcfg.cmd_take: ewapt.lobbywarning,
+	ewcfg.cmd_fridge: ewapt.lobbywarning,
+	ewcfg.cmd_closet: ewapt.lobbywarning,
+	ewcfg.cmd_decorate: ewapt.lobbywarning,
+	ewcfg.cmd_unfridge: ewapt.lobbywarning,
+	ewcfg.cmd_uncloset: ewapt.lobbywarning,
+	ewcfg.cmd_undecorate: ewapt.lobbywarning,
+	ewcfg.cmd_freeze: ewapt.lobbywarning,
+	ewcfg.cmd_aptname: ewapt.lobbywarning,
+	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -754,7 +765,7 @@ async def on_ready():
 						market_data.day += 1
 						if market_data.day % 8 == 0:
 							market_data.persist()
-							await ewapt.rent_time()
+							await ewapt.rent_time(id_server=server.id)
 							market_data = EwMarket(id_server=server.id)
 
 					if market_data.clock == 6:

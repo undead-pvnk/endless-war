@@ -1034,6 +1034,16 @@ async def toss_squatters(user_id = None, server_id = None):
 			cursor.close()
 			ewutils.databaseClose(conn_info)
 
+async def lobbywarning(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	if poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "You're not in an apartment."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 
 def toss_items(id_user = None, id_server = None, poi = None):
 	if id_user != None and id_server != None and poi != None:
