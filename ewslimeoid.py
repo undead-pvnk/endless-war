@@ -48,13 +48,20 @@ class EwSlimeoid:
 	""" Load the slimeoid data for this user from the database. """
 	def __init__(self, member = None, id_slimeoid = None, life_state = None, id_user = None, id_server = None, sltype = "Lab", slimeoid_name = None):
 		query_suffix = ""
+		user_data = None
+		if member != None:
+			id_user = member.id
+			id_server = member.server.id
+
+			user_data = EwUser(member = member)
+
+		if user_data != None:
+			if user_data.active_slimeoid > -1:
+				id_slimeoid = user_data.active_slimeoid
 
 		if id_slimeoid != None:
 			query_suffix = " WHERE id_slimeoid = '{}'".format(id_slimeoid)
 		else:
-			if member != None:
-				id_user = member.id
-				id_server = member.server.id
 
 			if id_user != None and id_server != None:
 				query_suffix = " WHERE id_user = '{}' AND id_server = '{}'".format(id_user, id_server)
@@ -256,6 +263,38 @@ class EwSlimeoid:
 				resp_cont.add_channel_response(ewcfg.channel_copkilltown, response)
 		finally:
 			return resp_cont
+
+	def eat(self, food_item):
+		if food_item.item_props.get('context') != ewcfg.context_slimeoidfood:
+			return False
+		
+		if food_item.item_props.get('decrease') == ewcfg.slimeoid_stat_moxie:
+			if self.atk < 1:
+				return False
+			
+			self.atk -= 1
+		elif food_item.item_props.get('decrease') == ewcfg.slimeoid_stat_grit:
+			if self.defense < 1:
+				return False
+			
+			self.defense -= 1
+		elif food_item.item_props.get('decrease') == ewcfg.slimeoid_stat_chutzpah:
+			if self.intel < 1:
+				return False
+			
+			self.intel -= 1
+		if food_item.item_props.get('increase') == ewcfg.slimeoid_stat_moxie:
+			self.atk += 1
+		elif food_item.item_props.get('increase') == ewcfg.slimeoid_stat_grit:
+			self.defense += 1
+		elif food_item.item_props.get('increase') == ewcfg.slimeoid_stat_chutzpah:
+			self.intel += 1
+
+		return True
+
+		
+
+
 
 """ slimeoid model object """
 class EwBody:
@@ -2814,6 +2853,58 @@ async def slimeoid_tick(id_server):
 
 	await resp_cont.post()
 
+async def bottleslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "You do not have a Slimeoid to bottle."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	else:
+		items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+
+		bottles = []
+		for item in items:
+			item_data = EwItem(id_item = item.get('id_item'))
+			if item_data.item_props.get('context') == ewcfg.context_slimeoidbottle:
+				bottles.append(item_data)
+
+		if len(bottles) >= 2:
+			response = "You can't carry any more slimeoid bottles."
+
+		else:
+			slimeoid.life_state = ewcfg.slimeoid_state_stored
+			slimeoid.id_user = ""
+
+			user_data.active_slimeoid = -1
+		
+			slimeoid.persist()
+			user_data.persist()
+
+			item_props = {
+				'context': ewcfg.context_slimeoidbottle,
+				'subcontext': slimeoid.id_slimeoid,
+				'item_name': "Bottle containing {}".format(slimeoid.name),
+				'item_desc': "A slimeoid bottle."
+			}
+			ewitem.item_create(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type = ewcfg.it_item,
+				item_props = item_props
+			)
+
+			response = "You shove {} into a random bottle. It's a tight squeeze, but in the end you manage to make it fit.".format(slimeoid.name)
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 async def dress_slimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
@@ -2873,6 +2964,123 @@ async def dress_slimeoid(cmd):
 	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def unbottleslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.tokens_count < 2:
+		response = "Specify which Slimeoid you want to unbottle."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	slimeoid_search = cmd.message.content[len(cmd.tokens[0]):].lower().strip()
+
+
+	items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+
+	bottles = []
+	for item in items:
+		item_data = EwItem(id_item = item.get('id_item'))
+		if item_data.item_props.get('context') == ewcfg.context_slimeoidbottle:
+			bottles.append(item_data)
+
+	slimeoid = None
+	bottle_data = None
+	for bottle in bottles:
+		slimeoid_data = EwSlimeoid(id_slimeoid = bottle.item_props.get('subcontext'))
+		name = slimeoid_data.name.lower()
+		if slimeoid_search in name or bottle.id_item == slimeoid_search:
+			slimeoid = slimeoid_data
+			bottle_data = bottle
+			break
+
+	if slimeoid is None:
+		response = "You aren't carrying a bottle containing that Slimeoid."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	active_slimeoid = EwSlimeoid(member= cmd.message.author)
+
+	if active_slimeoid.life_state == ewcfg.slimeoid_state_active:
+
+		active_slimeoid.life_state = ewcfg.slimeoid_state_stored
+
+		user_data.active_slimeoid = -1
+		
+		active_slimeoid.persist()
+		user_data.persist()
+
+		item_props = {
+			'context': ewcfg.context_slimeoidbottle,
+			'subcontext': active_slimeoid.id_slimeoid,
+			'item_name': "Bottle containing {}".format(active_slimeoid.name),
+			'item_desc': "A slimeoid bottle."
+		}
+		ewitem.item_create(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type = ewcfg.it_item,
+			item_props = item_props
+		)
+		response += "You shove {} into a random bottle. It's a tight squeeze, but in the end you manage to make it fit.\n\n".format(active_slimeoid.name)
+
+	slimeoid.life_state = ewcfg.slimeoid_state_active
+	slimeoid.id_user = user_data.id_user
+
+	slimeoid.persist()
+
+	user_data.active_slimeoid = slimeoid.id_slimeoid
+	user_data.persist()
+
+	ewitem.item_delete(id_item = bottle_data.id_item)
+
+	response += "You crack open a fresh bottle of Slimeoid. After a bit of shaking {} sits beside you again, fully formed.".format(slimeoid.name)
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def feedslimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+	time_now = int(time.time())
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "You do not have a Slimeoid to feed."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	elif cmd.tokens_count < 2:
+		response = "Specify which item you want to feed to your slimeoid."
+	else:
+		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
+
+		if item_sought:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			if item_data.item_type == ewcfg.it_item and item_data.item_props.get('context') == ewcfg.context_slimeoidfood:
+				feed_success = slimeoid.eat(item_data)
+				if feed_success:
+					slimeoid.persist()
+					ewitem.item_delete(id_item = item_data.id_item)
+					response = "{} eats the {}.".format(slimeoid.name, item_sought.get('name'))
+				else:
+					response = "{} refuses to eat the {}.".format(slimeoid.name, item_sought.get('name'))
+			else:
+				response = "That item is not suitable for slimeoid consumption."
+			
+		else:
+			response = "You don't have an item like that."
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 def get_slimeoid_count(user_id = None, server_id = None):
 	if user_id != None and server_id != None:
@@ -2882,6 +3090,15 @@ def get_slimeoid_count(user_id = None, server_id = None):
 		name_list = []
 		if slimeoid_data.name != "":
 			count += 1
+
+		items = ewitem.inventory(id_user = user_id, id_server = server_id, item_type_filter = ewcfg.it_item)
+
+		bottles = []
+		for item in items:
+			item_data = EwItem(id_item = item.get('id_item'))
+			if item_data.item_props.get('context') == ewcfg.context_slimeoidbottle:
+				count += 1
+		
 		try:
 			conn_info = ewutils.databaseConnect()
 			conn = conn_info.get('conn')

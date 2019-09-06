@@ -321,8 +321,7 @@ async def invest(cmd):
 		response = "Your slimebroker can't confirm your identity while you're dead."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	roles_map_user = ewutils.getRoleMap(cmd.message.author.roles)
-	if ewcfg.role_rowdyfucker in roles_map_user or ewcfg.role_copkiller in roles_map_user:
+	if user_data.life_state == ewcfg.life_state_kingpin:
 		# Disallow investments by RF and CK kingpins.
 		response = "You need that money to buy more videogames."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
