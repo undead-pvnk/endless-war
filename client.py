@@ -766,6 +766,8 @@ async def on_ready():
 						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
 						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
 							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
+						while market_data.bazaar_wares.get('furniture3') is None or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture1'] or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture2']:
+							market_data.bazaar_wares['furniture3'] = random.choice(bazaar_furniture)
 
 						if random.random() == 0.1:
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
