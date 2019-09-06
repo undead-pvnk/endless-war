@@ -935,12 +935,12 @@ async def item_look(cmd):
 				response += "\n\n"
 
 				if item.item_props.get("married") != "":
-					player = EwPlayer(id_user = item.item_props.get("married"), id_server = server.id)
+					previous_partner = EwPlayer(id_user = item.item_props.get("married"), id_server = server)
 
-				if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
-					response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(player.display_name, name)
-				else:
-					response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
+					if item.item_props.get("married") != user_data.id_user or item.id_item != user_data.weapon:
+						response += "There's a barely legible engraving on the weapon that reads *{} :heart: {}*.\n\n".format(previous_partner.display_name, name)
+					else:
+						response += "Your beloved partner. You can't help but give it a little kiss on the handle.\n"
 
 				weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
 
