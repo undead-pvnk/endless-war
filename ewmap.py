@@ -797,7 +797,8 @@ async def move(cmd = None, isApt = False):
 	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server)
 	poi_current = ewcfg.id_to_poi.get(user_data.poi)
 	poi = ewcfg.id_to_poi.get(target_name)
-
+	if poi_current.is_apartment == True:
+		isApt = True
 	server_data = ewcfg.server_list[user_data.id_server]
 	client = ewutils.get_client()
 	member_object = server_data.get_member(player_data.id_user)
@@ -1176,9 +1177,13 @@ async def teleport_player(cmd):
 	Dump out the visual description of the area you're in.
 """
 async def look(cmd):
+
 	user_data = EwUser(member = cmd.message.author)
 	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.is_apartment:
+		return await ewapt.apt_look(cmd=cmd)
 
 	# get information about slime levels in the district
 	slimes = district_data.slimes
