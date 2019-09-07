@@ -5735,7 +5735,7 @@ EwFurniture(
 		acquisition = acquisition_bartering,
 		price = 240000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "A colorful couch sits against the wall",
+		furniture_look_desc = "A colorful couch sits against the wall.",
 		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful."),
 EwFurniture(
 		id_furniture = "lgbtqlamp",
@@ -5805,7 +5805,7 @@ EwFurniture(
 		acquisition = acquisition_bartering,
 		price = 40000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "A creepy chair stands in the middle of the room",
+		furniture_look_desc = "A creepy chair stands in the middle of the room.",
 		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide."),
 EwFurniture(
 		id_furniture = "haunteddesk",

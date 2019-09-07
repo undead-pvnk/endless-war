@@ -469,6 +469,18 @@ async def apt_look(cmd):
 
 	furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
+	furniture_name_list = []
+	for furnName in furns:
+		furniture_name_list.append(furnName.get('name'))
+
+	if "LGBTQ+ desk" in furniture_name_list and "LGBTQ+ chair" in furniture_name_list and "LGBTQ+ couch" in furniture_name_list and "LGBTQ+ lamp" in furniture_name_list and "LGBTQ+ bed" in furniture_name_list:
+		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
+	if "haunted desk" in furniture_name_list and "haunted chair" in furniture_name_list and "haunted couch" in furniture_name_list and "haunted lamp" in furniture_name_list and "haunted bed" in furniture_name_list:
+		response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
+	if "high class desk" in furniture_name_list and "high class throne" in furniture_name_list and "high class couch" in furniture_name_list and "high class bed" in furniture_name_list:
+		response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+
+
 	for furn in furns:
 		i = ewitem.EwItem(furn.get('id_item'))
 		response += "{} ".format(i.item_props['furniture_look_desc'])
