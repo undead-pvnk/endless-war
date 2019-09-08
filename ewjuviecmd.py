@@ -124,7 +124,7 @@ async def enlist(cmd):
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
-		response = "You can't do that right now, bitch."
+		response = "That's not a valid gang you can enlist in, bitch."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

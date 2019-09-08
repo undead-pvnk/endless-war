@@ -693,7 +693,7 @@ async def attack(cmd):
 
 				if was_juvenile == True:
 					# Flag the shooter as WANTED no matter what happens next.
-					user_data.time_expirpvp = time_now + ewcfg.time_pvp_kill + int(user_data.bounty)
+					user_data.time_expirpvp = time_now + ewcfg.time_pvp_kill + int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
 					user_data.persist()
 

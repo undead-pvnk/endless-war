@@ -170,6 +170,7 @@ class EwUser:
 				ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
 				self.slimecoin = 0
+				self.weaponmarried = False
 
 			else:
 				if self.life_state == ewcfg.life_state_juvenile: # If you were a Juvenile.
@@ -367,7 +368,14 @@ class EwUser:
 			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
-			response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(current_weapon.item_props.get("weapon_name") if len(current_weapon.item_props.get("weapon_name")) > 0 else "partner")
+			if weapon_item.item_props.get("married") == self.id_user:
+				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+				self.weapon = weapon_item.id_item
+			else:
+				partner_name = current_weapon.item_props.get("weapon_name")
+				if partner_name in [None, ""]:
+					partner_name = "partner"
+				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
 		else:
 			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 			self.weapon = weapon_item.id_item
