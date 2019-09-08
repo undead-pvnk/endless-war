@@ -12289,11 +12289,11 @@ for furniture in furniture_list:
 	furniture_map[furniture.id_furniture] = furniture
 	furniture_names.append(furniture.id_furniture)
 	if furniture.furn_set == "haunted":
-		furniture_haunted.append(furniture.str_name)
+		furniture_haunted.append(furniture.id_furniture)
 	elif furniture.furn_set == "high class":
-		furniture_highclass.append(furniture.str_name)
+		furniture_highclass.append(furniture.id_furniture)
 	elif furniture.furn_set == "lgbt":
-		furniture_lgbt.append(furniture.str_name)
+		furniture_lgbt.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:

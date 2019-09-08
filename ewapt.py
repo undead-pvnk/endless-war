@@ -476,7 +476,8 @@ async def apt_look(cmd):
 
 	furniture_name_list = []
 	for furnName in furns:
-		furniture_name_list.append(furnName.get('name'))
+		furnObj = ewitem.EwItem(furnName.get('id_item'))
+		furniture_name_list.append(furnObj.item_props['id_furniture'])
 
 	if all(elem in furniture_name_list for elem in ewcfg.furniture_lgbt):
 		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
