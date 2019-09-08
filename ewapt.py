@@ -475,24 +475,22 @@ async def apt_look(cmd):
 
 	furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
-	furniture_name_list = []
-	for furnName in furns:
-		furnObj = ewitem.EwItem(furnName.get('id_item'))
-		furniture_name_list.append(furnObj.item_props['id_furniture'])
+	furniture_id_list = []
+	furn_response = ""
+	for furn in furns:
+		i = ewitem.EwItem(furn.get('id_item'))
+		furn_response += "{} ".format(i.item_props['furniture_look_desc'])
+		furniture_id_list.append(i.item_props['id_furniture'])
 
-	if all(elem in furniture_name_list for elem in ewcfg.furniture_lgbt):
+	if all(elem in furniture_id_list for elem in ewcfg.furniture_lgbt):
 		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
-	if all(elem in furniture_name_list for elem in ewcfg.furniture_haunted):
+	if all(elem in furniture_id_list for elem in ewcfg.furniture_haunted):
 		response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
-	if all(elem in furniture_name_list for elem in ewcfg.furniture_highclass):
+	if all(elem in furniture_id_list for elem in ewcfg.furniture_highclass):
 		response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
 
 
-
-
-	for furn in furns:
-		i = ewitem.EwItem(furn.get('id_item'))
-		response += "{} ".format(i.item_props['furniture_look_desc'])
+	response += furn_response
 
 	response += " "
 	iterate = 0
