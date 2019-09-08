@@ -358,6 +358,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
 			user_data.poi = poi_dest.id_poi
 			user_data.visiting = ewcfg.location_id_empty
+			user_data.time_lastenter = int(time.time())
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
