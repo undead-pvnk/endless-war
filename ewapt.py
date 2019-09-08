@@ -127,6 +127,9 @@ class EwFurniture:
 	#How you received this item
 	acquisition = ""
 
+	#the set that the furniture belongs to
+	furn_set = ""
+
 	def __init__(
 		self,
 		id_furniture = "",
@@ -137,7 +140,8 @@ class EwFurniture:
 		price = 0,
 		vendors = [],
 		furniture_place_desc = "",
-		furniture_look_desc = ""
+		furniture_look_desc = "",
+		furn_set = ""
 
 	):
 		self.item_type = ewcfg.it_furniture
@@ -150,6 +154,7 @@ class EwFurniture:
 		self.vendors = vendors
 		self.furniture_place_desc = furniture_place_desc
 		self.furniture_look_desc = furniture_look_desc
+		self.furn_set = furn_set
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -353,6 +358,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data = EwUser(id_user=player.id_user, id_server=player.id_server)
 			user_data.poi = poi_dest.id_poi
 			user_data.visiting = ewcfg.location_id_empty
+			user_data.time_lastenter = int(time.time())
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
@@ -468,6 +474,21 @@ async def apt_look(cmd):
 		response = response.replace("your", "a")
 
 	furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
+
+	furniture_name_list = []
+	for furnName in furns:
+		furnObj = ewitem.EwItem(furnName.get('id_item'))
+		furniture_name_list.append(furnObj.item_props['id_furniture'])
+
+	if all(elem in furniture_name_list for elem in ewcfg.furniture_lgbt):
+		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
+	if all(elem in furniture_name_list for elem in ewcfg.furniture_haunted):
+		response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
+	if all(elem in furniture_name_list for elem in ewcfg.furniture_highclass):
+		response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+
+
+
 
 	for furn in furns:
 		i = ewitem.EwItem(furn.get('id_item'))
@@ -1193,6 +1214,8 @@ async def aptCommands(cmd):
 		return await ewslimeoid.unbottleslimeoid(cmd = cmd)
 	elif ewcfg.cmd_piss == cmd_text:
 		return await ewcmd.piss(cmd=cmd)
+	elif ewcfg.cmd_scout == cmd_text:
+		return await ewmap.scout(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
 	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:

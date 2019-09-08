@@ -109,9 +109,7 @@ async def menu(cmd):
 				item_item = ewcfg.item_map.get(item_name)
 				food_item = ewcfg.food_map.get(item_name)
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
-
 				furniture_item = ewcfg.furniture_map.get(item_name)
-
 				weapon_item = ewcfg.weapon_map.get(item_name)
 
 
