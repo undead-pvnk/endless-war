@@ -5716,7 +5716,8 @@ EwFurniture(
 		price = 160000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A gaudy rainbow desk is in the corner of the room.",
-		furniture_place_desc = "You drag the desk into position. You feel gayer already."),
+		furniture_place_desc = "You drag the desk into position. You feel gayer already.",
+		set = "lgbt"),
 EwFurniture(
 		id_furniture = "lgbtqchair",
 		str_name = "LGBTQ+ chair",
@@ -5726,7 +5727,8 @@ EwFurniture(
 		price = 40000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a rainbow chair set up.",
-		furniture_place_desc = "You place the chair in the best place you can think of."),
+		furniture_place_desc = "You place the chair in the best place you can think of.",
+		set = "lgbt"),
 EwFurniture(
 		id_furniture = "lgbtqcouch",
 		str_name = "LGBTQ+ couch",
@@ -5736,7 +5738,8 @@ EwFurniture(
 		price = 240000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A colorful couch sits against the wall.",
-		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful."),
+		furniture_place_desc = "You contact the Village People, and they help you move the couch in. Those guys are pretty helpful.",
+		set = "lgbt"),
 EwFurniture(
 		id_furniture = "lgbtqlamp",
 		str_name = "LGBTQ+ lamp",
@@ -5746,7 +5749,8 @@ EwFurniture(
 		price = 10000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The fancy lamp flashes rainbow everywhere.",
-		furniture_place_desc = "You plug in the lamp and watch the pretty colors for awhile."),
+		furniture_place_desc = "You plug in the lamp and watch the pretty colors for awhile.",
+		set = "lgbt"),
 EwFurniture(
 		id_furniture = "lgbtqbed",
 		str_name = "LGBTQ+ bed",
@@ -5756,7 +5760,8 @@ EwFurniture(
 		price = 300000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's a rainbow bed in the bedroom.",
-		furniture_place_desc = "You set up your bed, dreaming of all the same-sex poon you're gonna slam."),
+		furniture_place_desc = "You set up your bed, dreaming of all the same-sex poon you're gonna slam.",
+		set = "lgbt"),
 EwFurniture(
 		id_furniture = "bed",
 		str_name = "bed",
@@ -5776,7 +5781,8 @@ EwFurniture(
 		price = 300000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You hear ghostly moaning from the bedroom.",
-		furniture_place_desc = "You're about to place the mattress when a dozen spiders crawl out of it. Better be careful with this one."),
+		furniture_place_desc = "You're about to place the mattress when a dozen spiders crawl out of it. Better be careful with this one.",
+		set = "haunted"),
 EwFurniture(
 		id_furniture = "hauntedcouch",
 		str_name = "haunted couch",
@@ -5786,7 +5792,8 @@ EwFurniture(
 		price = 240000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The rustic couch against the wall looks old and haunted.",
-		furniture_place_desc = "You were going to ask some of your buds to help move this in, but you walked into the apartment and it was already there..."),
+		furniture_place_desc = "You were going to ask some of your buds to help move this in, but you walked into the apartment and it was already there...",
+		set = "haunted"),
 EwFurniture(
 		id_furniture = "hauntedlamp",
 		str_name = "haunted lamp",
@@ -5796,7 +5803,8 @@ EwFurniture(
 		price = 20000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "The lighting in here is ominous, thanks to your lamp.",
-		furniture_place_desc = "You set up the old lamp. The light flickers."),
+		furniture_place_desc = "You set up the old lamp. The light flickers.",
+		set = "haunted"),
 EwFurniture(
 		id_furniture = "hauntedchair",
 		str_name = "haunted chair",
@@ -5806,7 +5814,8 @@ EwFurniture(
 		price = 40000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A creepy chair stands in the middle of the room.",
-		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide."),
+		furniture_place_desc = "You put the chair out of sight, where you won't be tempted to !suicide.",
+		set = "haunted"),
 EwFurniture(
 		id_furniture = "haunteddesk",
 		str_name = "haunted desk",
@@ -5816,7 +5825,8 @@ EwFurniture(
 		price = 160000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old desk(haunted, apparently) is in the corner.",
-		furniture_place_desc = "You move the desk into the corner. Scary."),
+		furniture_place_desc = "You move the desk into the corner. Scary.",
+		set = "haunted"),
 EwFurniture(
 		id_furniture = "armageddonspritzer",
 		str_name = "Armageddon Spritzer",
@@ -5896,7 +5906,8 @@ EwFurniture(
 		price = 40000000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You glimpse the high class bed in the bedroom and feel the urge to lie down.",
-		furniture_place_desc = "You walk outside and give a stern nod to the lower-class peons running about. They give a melancholy look when they see you point to your new bed, but they know they must do as told. Four of the stronger looking street urchins hoist your bed in their arms and carry it to your abode, with you sitting atop it like the emperor you are. They set you down with the gentleness of skilled servants, and you flip them several million SlimeCoin just to get out of your sight. Boy. You can't wait to sleep on this."),
+		furniture_place_desc = "You walk outside and give a stern nod to the lower-class peons running about. They give a melancholy look when they see you point to your new bed, but they know they must do as told. Four of the stronger looking street urchins hoist your bed in their arms and carry it to your abode, with you sitting atop it like the emperor you are. They set you down with the gentleness of skilled servants, and you flip them several million SlimeCoin just to get out of your sight. Boy. You can't wait to sleep on this.",
+		set = "high class"),
 EwFurniture(
 		id_furniture = "highclassthrone",
 		str_name = "high class throne",
@@ -5906,7 +5917,8 @@ EwFurniture(
 		price = 45000000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You see the throne. It beckons.",
-		furniture_place_desc = "As you place the throne, you picture the kings that came before you. Marc Antony. Nero. All six Georges. Or seven, if you count Maddox. Thinking on it, you decide your reign will be different from those idiots."),
+		furniture_place_desc = "As you place the throne, you picture the kings that came before you. Marc Antony. Nero. All six Georges. Or seven, if you count Maddox. Thinking on it, you decide your reign will be different from those idiots.",
+		set = "high class"),
 EwFurniture(
 		id_furniture = "highclasscouch",
 		str_name = "high class couch",
@@ -5916,7 +5928,8 @@ EwFurniture(
 		price = 20000000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A high class couch is against the wall.",
-		furniture_place_desc = "You hire some people to help you move your couch in. They were way too slow for your busy schedule."),
+		furniture_place_desc = "You hire some people to help you move your couch in. They were way too slow for your busy schedule.",
+		set = "high class"),
 EwFurniture(
 		id_furniture = "highclassdesk",
 		str_name = "high class desk",
@@ -5926,7 +5939,8 @@ EwFurniture(
 		price = 15000000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A high class desk is in the corner.",
-		furniture_place_desc = "You place the desk near a window, allowing the serfs outside to bask in your radiance."),
+		furniture_place_desc = "You place the desk near a window, allowing the serfs outside to bask in your radiance.",
+		set = "high class"),
 EwFurniture(
 		id_furniture = "highclasslamp",
 		str_name = "high class lamp",
@@ -6044,6 +6058,9 @@ EwFurniture(
 
 furniture_map = {}
 furniture_names = []
+furniture_lgbt = []
+furniture_highclass = []
+furniture_haunted = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -12271,6 +12288,13 @@ for cosmetic in cosmetic_items_list:
 for furniture in furniture_list:
 	furniture_map[furniture.id_furniture] = furniture
 	furniture_names.append(furniture.id_furniture)
+	if furniture.set == "haunted":
+		furniture_haunted.append(furniture.str_name)
+	elif furniture.set == "high class":
+		furniture_highclass.append(furniture.str_name)
+	elif furniture.set == "lgbt":
+		furniture_lgbt.append(furniture.str_name)
+
 
 	for vendor in furniture.vendors:
 		vendor_list.append(furniture.id_furniture)

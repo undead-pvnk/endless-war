@@ -127,6 +127,9 @@ class EwFurniture:
 	#How you received this item
 	acquisition = ""
 
+	#the set that the furniture belongs to
+	set = ""
+
 	def __init__(
 		self,
 		id_furniture = "",
@@ -137,7 +140,8 @@ class EwFurniture:
 		price = 0,
 		vendors = [],
 		furniture_place_desc = "",
-		furniture_look_desc = ""
+		furniture_look_desc = "",
+		set = ""
 
 	):
 		self.item_type = ewcfg.it_furniture
@@ -150,6 +154,7 @@ class EwFurniture:
 		self.vendors = vendors
 		self.furniture_place_desc = furniture_place_desc
 		self.furniture_look_desc = furniture_look_desc
+		self.set = set
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -473,12 +478,14 @@ async def apt_look(cmd):
 	for furnName in furns:
 		furniture_name_list.append(furnName.get('name'))
 
-	if "LGBTQ+ desk" in furniture_name_list and "LGBTQ+ chair" in furniture_name_list and "LGBTQ+ couch" in furniture_name_list and "LGBTQ+ lamp" in furniture_name_list and "LGBTQ+ bed" in furniture_name_list:
+	if all(elem in furniture_name_list for elem in ewcfg.furniture_lgbt):
 		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
-	if "haunted desk" in furniture_name_list and "haunted chair" in furniture_name_list and "haunted couch" in furniture_name_list and "haunted lamp" in furniture_name_list and "haunted bed" in furniture_name_list:
+	if all(elem in furniture_name_list for elem in ewcfg.furniture_haunted):
 		response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
-	if "high class desk" in furniture_name_list and "high class throne" in furniture_name_list and "high class couch" in furniture_name_list and "high class bed" in furniture_name_list:
+	if all(elem in furniture_name_list for elem in ewcfg.furniture_highclass):
 		response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+
+
 
 
 	for furn in furns:
@@ -1205,6 +1212,8 @@ async def aptCommands(cmd):
 		return await ewslimeoid.unbottleslimeoid(cmd = cmd)
 	elif ewcfg.cmd_piss == cmd_text:
 		return await ewcmd.piss(cmd=cmd)
+	elif ewcfg.cmd_scout == cmd_text:
+		return await ewmap.scout(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
 	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:

@@ -1339,7 +1339,7 @@ async def scout(cmd):
 		#is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
 		#is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
 
-		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not poi.mother_district == user_poi.id_poi):
+		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not poi.mother_district == user_poi.id_poi) and (not user_poi.mother_district == poi.id_poi):
 			response = "You can't scout that far."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
