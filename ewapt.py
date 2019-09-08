@@ -128,7 +128,7 @@ class EwFurniture:
 	acquisition = ""
 
 	#the set that the furniture belongs to
-	set = ""
+	furn_set = ""
 
 	def __init__(
 		self,
@@ -141,7 +141,7 @@ class EwFurniture:
 		vendors = [],
 		furniture_place_desc = "",
 		furniture_look_desc = "",
-		set = ""
+		furn_set = ""
 
 	):
 		self.item_type = ewcfg.it_furniture
@@ -154,7 +154,7 @@ class EwFurniture:
 		self.vendors = vendors
 		self.furniture_place_desc = furniture_place_desc
 		self.furniture_look_desc = furniture_look_desc
-		self.set = set
+		self.furn_set = furn_set
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
