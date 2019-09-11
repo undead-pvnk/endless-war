@@ -131,8 +131,10 @@ async def score(cmd):
 def gen_data_text(
 	id_user = None,
 	id_server = None,
-	display_name = None
+	display_name = None,
+	channel_name = None
 ):
+	resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 	response = ""
 	user_data = EwUser(
 		id_user = id_user,
@@ -152,7 +154,7 @@ def gen_data_text(
 		cos = EwItem(id_item = cosmetic.get('id_item'))
 		if cos.item_props['adorned'] == 'true':
 			hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
-			adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -160,6 +162,8 @@ def gen_data_text(
 			response = "{} is {} {}.".format(display_name, poi.str_in, poi.str_name)
 		else:
 			response = "You can't discern anything useful about {}.".format(display_name)
+
+		resp_cont.add_channel_response(channel_name, response)
 	else:
 
 		# return somebody's score
@@ -194,7 +198,11 @@ def gen_data_text(
 		if len(response_block) > 0:
 			response += "\n\n" + response_block
 
+		resp_cont.add_channel_response(channel_name, response)
+
+		response = ""
 		response_block = ""
+
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
 
 		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
@@ -205,7 +213,6 @@ def gen_data_text(
 			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
 			response_block += "They have {:,} confirmed hunts. ".format(enemy_kills)
-
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
@@ -225,15 +232,20 @@ def gen_data_text(
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 		if len(response_block) > 0:
-			response += "\n\n" + response_block
+			response += response_block
 
-	return response
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
+
+		resp_cont.add_channel_response(channel_name, response)
+
+	return resp_cont
 
 """ show player information and description """
 async def data(cmd):
 	response = ""
 	user_data = None
 	member = None
+	resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
 
 	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
@@ -247,6 +259,8 @@ async def data(cmd):
 				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level, enemy.slimes)
 		else:
 			response = "ENDLESS WAR didn't understand that name."
+
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
 
 	elif cmd.mentions_count == 0:
 
@@ -264,7 +278,7 @@ async def data(cmd):
 			cos = EwItem(id_item = cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
 				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
-				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
@@ -302,6 +316,9 @@ async def data(cmd):
 		if len(response_block) > 0:
 			response += "\n\n" + response_block
 
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+
+		response = ""
 		response_block = ""
 
 		user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
@@ -342,24 +359,24 @@ async def data(cmd):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 
 		if len(response_block) > 0:
-			response += "\n\n" + response_block
+			response += response_block
 
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
 
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
 	else:
 		member = cmd.mentions[0]
-		response = gen_data_text(
+		resp_cont = gen_data_text(
 			id_user = member.id,
 			id_server = member.server.id,
-			display_name = member.display_name
+			display_name = member.display_name,
+			channel_name = cmd.message.channel.name
 		)
-
-		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
-
-
+	
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+	await resp_cont.post()
 
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	if member != None:
