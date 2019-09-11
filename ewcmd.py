@@ -232,7 +232,7 @@ def gen_data_text(
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 		if len(response_block) > 0:
-			response += response_block
+			response += "\n" + response_block
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
 
@@ -359,7 +359,7 @@ async def data(cmd):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 
 		if len(response_block) > 0:
-			response += response_block
+			response += "\n" + response_block
 
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
