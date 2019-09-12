@@ -450,7 +450,6 @@ cmd_map = {
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 
 	ewcfg.cmd_piss: ewcmd.piss,
-	ewcfg.cmd_fursuit: ewcmd.fursuit,
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
