@@ -1362,11 +1362,9 @@ async def spar(cmd):
 				elif (user_data.time_lastspar + ewcfg.cd_spar) > time_now:
 					# player sparred too recently
 					was_player_tired = True
-					timeuntil_player_spar = ewcfg.cd_spar - (time_now - user_data.time_lastspar)
 				elif (sparred_data.time_lastspar + ewcfg.cd_spar) > time_now:
 					# taret sparred too recently
 					was_target_tired = True
-					timeuntil_target_spar = ewcfg.cd_spar - (time_now - sparred_data.time_lastspar)
 				elif sparred_data.life_state == ewcfg.life_state_juvenile:
 					# Target is a juvenile.
 					was_juvenile = True
@@ -1428,10 +1426,10 @@ async def spar(cmd):
 						response = '{} is already dead.'.format(member.display_name)
 					elif was_target_tired:
 						# target has sparred too recently
-						response = '{} is too tired to spar right now. They\'ll be ready in {} seconds.'.format(member.display_name, int(timeuntil_target_spar))
+						response = '{} is too tired to spar right now.'.format(member.display_name)
 					elif was_player_tired:
 						# player has sparred too recently
-						response = 'You are too tired to spar right now. Try again in {} seconds'.format(int(timeuntil_player_spar))
+						response = 'You are too tired to spar right now.'
 					elif was_enemy:
 						# target and player are different factions
 						response = "You cannot spar with your enemies."
