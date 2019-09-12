@@ -628,6 +628,7 @@ cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
+cmd_fursuit = cmd_prefix + 'fursuit'
 
 
 cmd_retire = cmd_prefix + 'retire'
@@ -951,7 +952,7 @@ cd_boombust = 22
 #For possible time limit on russian roulette
 cd_rr = 600
 #slimeoid downtime after a defeat
-cd_slimeoiddefeated = 900
+cd_slimeoiddefeated = 300
 cd_scavenge = 0
 cd_enlist = 60
 
