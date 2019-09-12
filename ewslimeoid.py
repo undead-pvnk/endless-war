@@ -1670,10 +1670,10 @@ def check(str):
 
 async def slimeoidbattle(cmd):
 
-	# if cmd.message.channel.name != ewcfg.channel_arena:
-	# 	#Only at the arena
-	# 	response = "You can only have Slimeoid Battles at the Battle Arena."
-	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if cmd.message.channel.name != ewcfg.channel_arena:
+		#Only at the arena
+		response = "You can only have Slimeoid Battles at the Battle Arena."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count != 1:
 		#Must mention only one player
@@ -1715,13 +1715,11 @@ async def slimeoidbattle(cmd):
 	time_now = int(time.time())
 
 	if (time_now - challenger_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			time_until = ewcfg.cd_slimeoiddefeated - (time_now - challenger_slimeoid.time_defeated)
-			response = "Your Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(int(time_until))
+			response = "Your Slimeoid is still recovering from its last defeat!"
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	if (time_now - challengee_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			time_until = ewcfg.cd_slimeoiddefeated - (time_now - challengee_slimeoid.time_defeated)
-			response = "{}'s Slimeoid is still recovering from its last defeat! It'll be ready in {} seconds.".format(member.display_name, time_until)
+			response = "{}'s Slimeoid is still recovering from its last defeat!".format(member.display_name)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Players have to be enlisted
