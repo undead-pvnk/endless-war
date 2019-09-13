@@ -715,7 +715,7 @@ async def fursuit(cmd):
 	market_data = EwMarket(id_server=cmd.message.server.id)
 
 	if ewcfg.mutation_id_organicfursuit in mutations:
-		days_until = market_data.day % 31
+		days_until = -market_data.day % 31
 		response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
 
 	else:

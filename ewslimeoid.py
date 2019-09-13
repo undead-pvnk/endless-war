@@ -1670,10 +1670,10 @@ def check(str):
 
 async def slimeoidbattle(cmd):
 
-	# if cmd.message.channel.name != ewcfg.channel_arena:
-	# 	#Only at the arena
-	# 	response = "You can only have Slimeoid Battles at the Battle Arena."
-	# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if cmd.message.channel.name != ewcfg.channel_arena:
+		#Only at the arena
+		response = "You can only have Slimeoid Battles at the Battle Arena."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count != 1:
 		#Must mention only one player
