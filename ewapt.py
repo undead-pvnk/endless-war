@@ -824,8 +824,11 @@ async def unfreeze(cmd):
 			slimeoid_search += token + " "
 
 	slimeoid_search = slimeoid_search[:-1]
-
-	ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id+"freeze", slimeoid_name=slimeoid_search , id_server=playermodel.id_server)
+	id_slimeoid = ewslimeoid.find_slimeoid(id_user=cmd.message.author.id+"freeze", id_server=playermodel.id_server, slimeoid_search=slimeoid_search)
+	if id_slimeoid != None:
+		ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id+"freeze", id_slimeoid=id_slimeoid , id_server=playermodel.id_server)
+	else:
+		ew_slime_model = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id + "freeze", slimeoid_name=slimeoid_search, id_server=playermodel.id_server)
 	yourslimeoid = ewslimeoid.EwSlimeoid(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
 	if usermodel.visiting != ewcfg.location_id_empty:
