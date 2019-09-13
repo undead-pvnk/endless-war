@@ -1244,6 +1244,10 @@ async def aptCommands(cmd):
 		return await ewitem.item_use(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_halt or cmd_text == ewcfg.cmd_halt_alt1:
 		return await ewmap.halt(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_aquarium:
+		return await aquarium(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_propstand:
+		return await propstand(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_howl or cmd_text == ewcfg.cmd_howl_alt1:
 		return await ewcmd.cmd_howl(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_data:
