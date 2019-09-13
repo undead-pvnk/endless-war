@@ -159,6 +159,8 @@ cmd_map = {
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_breaklease: ewapt.cancel,
+	ewcfg.cmd_aquarium: ewapt.aquarium,
+	ewcfg.cmd_propstand:ewapt.propstand,
 
 	ewcfg.cmd_store: ewapt.lobbywarning,
 	ewcfg.cmd_take: ewapt.lobbywarning,
@@ -763,10 +765,6 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
-						if market_data.day % 8 == 0:
-							market_data.persist()
-							await ewapt.rent_time(id_server=server.id)
-							market_data = EwMarket(id_server=server.id)
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
@@ -817,6 +815,12 @@ async def on_ready():
 
 					market_data.persist()
 
+					if market_data.clock == 6 and market_data.day % 8 == 0:
+						await ewapt.rent_time(id_server=server.id)
+
+					market_data = EwMarket(id_server=server.id)
+
+					market_data.persist()
 					if market_data.clock == 6:
 						response = ' The SlimeCorp Stock Exchange is now open for business.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)

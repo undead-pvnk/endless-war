@@ -3149,3 +3149,35 @@ def get_slimeoid_look_string(user_id = None, server_id = None):
 				return finalString
 
 
+def find_slimeoid(slimeoid_search=None, id_user=None, id_server=None):
+	slimeoid_sought = None
+
+	# search for an ID instead of a name
+	slimeoid_list = []
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute( "SELECT {} FROM slimeoids WHERE {} = %s AND {} = %s".format(
+			ewcfg.col_name,
+			ewcfg.col_id_user,
+			ewcfg.col_id_server
+		), (
+			id_user,
+			id_server))
+		#print (sql)
+
+		slimeoid_sought = None
+		for row in cursor:
+			slimeoid_name = row[0]
+			slimeboy = EwSlimeoid(slimeoid_name=slimeoid_name, id_server=id_server, id_user=id_user)
+			if ewutils.flattenTokenListToString(slimeoid_search) in ewutils.flattenTokenListToString(slimeboy.name):
+				slimeoid_sought = slimeboy.id_slimeoid
+				break
+				
+	finally:
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return slimeoid_sought

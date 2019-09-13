@@ -295,6 +295,7 @@ def item_create(
 		cursor = conn.cursor()
 
 		# Create the item in the database.
+
 		cursor.execute("INSERT INTO items({}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s)".format(
 			ewcfg.col_item_type,
 			ewcfg.col_id_user,
