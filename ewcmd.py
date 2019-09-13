@@ -707,3 +707,18 @@ async def piss(cmd):
 		response = "You lack the moral fiber necessary for urination."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""find out how many days are left until the 31st"""
+async def fursuit(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+	market_data = EwMarket(id_server=cmd.message.server.id)
+
+	if ewcfg.mutation_id_organicfursuit in mutations:
+		days_until = -market_data.day % 31
+		response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
+
+	else:
+		response = "You're about as hairless as an egg, my friend."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
