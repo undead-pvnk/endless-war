@@ -514,8 +514,9 @@ async def apt_look(cmd):
 		response = response + '.'
 
 
-		freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
-		response += freezeList
+	freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
+
+	response += freezeList
 
 
 
@@ -666,6 +667,7 @@ async def remove_item(cmd, dest):
 		if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge:
 			#the formula is: expire time = expire time + current time - time frozen
 			item.item_props['time_expir'] = str(int(float(item.item_props.get('time_expir'))) + (int(time.time()) - int(float(item.item_props.get('time_fridged')))))
+			item.time_expir = int(float(item.item_props.get('time_expir')))
 			item.item_props['time_fridged'] = '0'
 			item.persist()
 
@@ -1092,7 +1094,6 @@ async def aquarium(cmd):
 				fdesc = "You look into the tank to admire your {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
 				lookdesc = "A {} tank sits on a shelf.".format(item.item_props.get('food_name'))
 				placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
-			print(lookdesc)
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
 				id_server=cmd.message.server.id,
@@ -1180,6 +1181,7 @@ def toss_items(id_user = None, id_server = None, poi = None):
 			stuffing.id_owner = poi.id_poi
 			if stuff.get('item_type') == ewcfg.it_food and id_user[-6:] == ewcfg.compartment_id_fridge:
 				stuffing.item_props['time_expir'] = str(int(float(stuffing.item_props.get('time_expir'))) + (int(time.time()) - int(float(stuffing.item_props.get('time_fridged')))))
+				stuffing.time_expir = int(float(stuffing.item_props.get('time_expir')))
 				stuffing.item_props['time_fridged'] = '0'
 			stuffing.persist()
 
