@@ -1078,19 +1078,15 @@ async def aquarium(cmd):
 		if item.item_props.get('acquisition') == ewcfg.acquisition_fishing:
 
 			if float(item.item_props.get('time_expir')) < time.time():
-				response = "The fish is foul and rotting, but fuck it. You can just pretend it's a staydead fish. You nonchalantly toss the fish into the aquarium, not really paying mind to its comfort."
-				fname = "an aquarium with a dead fish in it"
-				fdesc = "The dead {} floats atop the water, not at all appreciating the water filtration system you got for it.".format(item.item_props.get('food_name'))
-				lookdesc = "There's a tank with a dead fish on the shelf."
-				placedesc = "You place the tank o' dead fish on your shelf, praying it won't stink up the room."
-
-
+				response = "Uh oh. This thing's been rotting for awhile. You give the fish mouth to mouth in order to revive it. Somehow this works, and a few minutes later it's swimming happily in a tank."
 			else:
-				fname = "{}'s aquarium".format(item.item_props.get('food_name'))
 				response = "You gently pull the flailing, sopping fish from your back pocket, dropping it into an aquarium. It looks a little less than alive after being deprived of oxygen for so long, so you squirt a bit of your slime in the tank to pep it up."
-				fdesc = "You look into the tank to admire your {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
-				lookdesc = "A {} tank sits on a shelf.".format(item.item_props.get('food_name'))
-				placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
+
+
+			fname = "{}'s aquarium".format(item.item_props.get('food_name'))
+			fdesc = "You look into the tank to admire your {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
+			lookdesc = "A {} tank sits on a shelf.".format(item.item_props.get('food_name'))
+			placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
 				id_server=cmd.message.server.id,
@@ -1100,12 +1096,14 @@ async def aquarium(cmd):
 					'id_furniture': "aquarium",
 					'furniture_desc': fdesc,
 					'rarity': ewcfg.rarity_plebeian,
-					'acquisition': ewcfg.acquisition_smelting,
+					'acquisition': "{}".format(item_sought.get('id_item')),
 					'furniture_place_desc': placedesc,
 					'furniture_look_desc': lookdesc
 				}
 			)
-			ewitem.item_delete(id_item=item_sought.get('id_item'))
+
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "aqu", id_server=cmd.message.server.id)
+			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 		else:
 			response = "That's not a fish. You're not going to find a fancy tank with filters and all that just to drop a damn {} in it.".format(item_sought.get('name'))
@@ -1130,8 +1128,6 @@ async def propstand(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if item.soulbound:
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
-		elif item.item_type == ewcfg.it_questitem:
-			response = "That thing's important! Messing with it like that will cause a time paradox or something, I dunno. Use it somewhere else."
 		else:
 			fname = "{} stand".format(item_sought.get('name'))
 			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Oh, god. That's not coming off.".format(item_sought.get('name'))
@@ -1155,12 +1151,13 @@ async def propstand(cmd):
 					'id_furniture': "propstand",
 					'furniture_desc': fdesc,
 					'rarity': ewcfg.rarity_plebeian,
-					'acquisition': ewcfg.acquisition_smelting,
+					'acquisition': "{}".format(item_sought.get('id_item')),
 					'furniture_place_desc': placedesc,
 					'furniture_look_desc': lookdesc
 				}
 			)
-			ewitem.item_delete(id_item=item_sought.get('id_item'))
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "stand", id_server=cmd.message.server.id)
+			#ewitem.item_delete(id_item=item_sought.get('id_item'))
 
 	else:
 		if item_search == "" or item_search == None:
@@ -1168,6 +1165,52 @@ async def propstand(cmd):
 		else:
 			response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def releasefish(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	if item_sought:
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		if item.item_type == ewcfg.it_furniture:
+			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				response = "You let the fish out of its tank."
+				ewitem.item_delete(id_item=item_sought.get('id_item'))
+			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
+				response = "Uh oh. This one's not coming out. "
+			else:
+				response = "Don't try to conjure a fish out of just anything. Find an aquarium."
+		else:
+			response = "Don't try to conjure a fish out of just anything. Find an aquarium."
+	else:
+		response = "Are you sure you have that fish?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def releaseprop(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	if item_sought:
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		if item.item_type == ewcfg.it_furniture:
+			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				response = "After a bit of tugging, you pry the item of its stand."
+				ewitem.item_delete(id_item=item_sought.get('id_item'))
+			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
+				response = "Uh oh. This one's not coming out. "
+			else:
+				response = "Don't try to unstand that which is not a stand."
+		else:
+			response = "Don't try to unstand that which is not a stand."
+	else:
+		response = "Are you sure you have that item?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 
 def toss_items(id_user = None, id_server = None, poi = None):

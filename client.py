@@ -161,6 +161,8 @@ cmd_map = {
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand:ewapt.propstand,
+	ewcfg.cmd_releaseprop:ewapt.releaseprop,
+	ewcfg.cmd_releasefish:ewapt.releasefish,
 
 	ewcfg.cmd_store: ewapt.lobbywarning,
 	ewcfg.cmd_take: ewapt.lobbywarning,
