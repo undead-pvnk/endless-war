@@ -654,6 +654,8 @@ cmd_knock = cmd_prefix + 'knock'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
 cmd_propstand = cmd_prefix + 'propstand'
+cmd_releaseprop = cmd_prefix + 'unstand'
+cmd_releasefish = cmd_prefix + 'releasefish'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
