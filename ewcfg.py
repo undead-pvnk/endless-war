@@ -651,6 +651,8 @@ cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
 cmd_breaklease = cmd_prefix + 'breaklease'
+cmd_aquarium = cmd_prefix + 'aquarium'
+cmd_propstand = cmd_prefix + 'propstand'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000

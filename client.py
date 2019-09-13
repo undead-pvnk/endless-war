@@ -159,6 +159,8 @@ cmd_map = {
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_breaklease: ewapt.cancel,
+	ewcfg.cmd_aquarium: ewapt.aquarium,
+	ewcfg.cmd_propstand:ewapt.propstand,
 
 	ewcfg.cmd_store: ewapt.lobbywarning,
 	ewcfg.cmd_take: ewapt.lobbywarning,
