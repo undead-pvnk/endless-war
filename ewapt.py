@@ -952,13 +952,10 @@ async def knock(cmd = None):
 				user_data.visiting = target_data.id_user
 				user_data.rr_challenger = ""
 				user_data.persist()
-				client = ewutils.get_client()
-				server = ewcfg.server_list[user_data.id_server]
-				member_object = server.get_member(user_id=user_data.id_user)
-				await ewrolemgr.updateRoles(client=client, member=member_object)
+				await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 				response = "You arrive in the abode of {}.".format(target.display_name)
 				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-				response = "{} enters your home.".format(cmd.message.author)
+				response = "{} enters your home.".format(cmd.message.author.display_name)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			else:
 				if user_data.rr_challenger != "":
@@ -1092,7 +1089,6 @@ async def aquarium(cmd):
 				fdesc = "You look into the tank to admire your {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
 				lookdesc = "A {} tank sits on a shelf.".format(item.item_props.get('food_name'))
 				placedesc = "You carefully place the aquarium on your shelf. The {} inside silently heckles you each time your clumsy ass nearly drops it.".format(item.item_props.get('food_name'))
-			print(lookdesc)
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
 				id_server=cmd.message.server.id,
