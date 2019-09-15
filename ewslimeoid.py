@@ -53,11 +53,11 @@ class EwSlimeoid:
 			id_user = member.id
 			id_server = member.server.id
 
-			user_data = EwUser(member = member)
+		#	user_data = EwUser(member = member)
 
-		if user_data != None:
-			if user_data.active_slimeoid > -1:
-				id_slimeoid = user_data.active_slimeoid
+		#if user_data != None:
+		#	if user_data.active_slimeoid > -1:
+		#		id_slimeoid = user_data.active_slimeoid
 
 		if id_slimeoid != None:
 			query_suffix = " WHERE id_slimeoid = '{}'".format(id_slimeoid)
@@ -1842,8 +1842,8 @@ async def negaslimeoidbattle(cmd):
 	time_now = int(time.time())
 
 	if (time_now - challenger_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "Your Slimeoid is still recovering from its last defeat!"
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		response = "Your Slimeoid is still recovering from its last defeat!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged
 	active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = True
@@ -1890,6 +1890,9 @@ async def negaslimeoidbattle(cmd):
 			)
 			challenger_slimeoid.die()
 			challenger_slimeoid.persist()
+			challenger = EwUser(member = author)
+			challenger.active_slimeoid = -1
+			challenger.persist()
 			response = "{} feasts on {}'s slime. All that remains is a small chunk of crystallized slime.".format(challengee_slimeoid.name, challenger_slimeoid.name)
 			response += "\n\n{} is no more. {}".format(challenger_slimeoid.name, ewcfg.emote_slimeskull)
 			if challenger_slimeoid.level > challengee_slimeoid.level:
