@@ -390,7 +390,7 @@ async def rent_time(id_server = None):
 	try:
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 		client = ewutils.get_client()
 		if id_server != None:
 			#get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
@@ -497,7 +497,7 @@ async def apt_look(cmd):
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
 	if(len(frids) > 0):
-		response += "The fridge contains: "
+		response += "\nThe fridge contains: "
 		fridge_pile = []
 		for frid in frids:
 			fridge_pile.append(frid.get('name'))
@@ -506,7 +506,7 @@ async def apt_look(cmd):
 	closets = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
 	if (len(closets) > 0):
-		response += "The closet contains: "
+		response += "\nThe closet contains: "
 		closet_pile = []
 		for closet in closets:
 			closet_pile.append(closet.get('name'))
@@ -1130,7 +1130,7 @@ async def propstand(cmd):
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
 		else:
 			fname = "{} stand".format(item_sought.get('name'))
-			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Oh, god. That's not coming off.".format(item_sought.get('name'))
+			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least unitl you decide to remove it.".format(item_sought.get('name'))
 			lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
 			placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
 			fdesc = item_sought.get('item_def').str_desc
