@@ -3011,6 +3011,7 @@ async def unbottleslimeoid(cmd):
 	if active_slimeoid.life_state == ewcfg.slimeoid_state_active:
 
 		active_slimeoid.life_state = ewcfg.slimeoid_state_stored
+		active_slimeoid.id_user = ""
 
 		user_data.active_slimeoid = -1
 		
