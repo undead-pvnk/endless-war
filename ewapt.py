@@ -803,6 +803,7 @@ async def freeze(cmd):
 
 	if ew_slime_model.name != "":
 		ew_slime_model.id_user += "freeze"
+		ew_slime_model.life_state = ewcfg.slimeoid_state_stored
 		ew_slime_model.persist()
 		usermodel.active_slimeoid = -1
 		usermodel.persist()
@@ -849,6 +850,7 @@ async def unfreeze(cmd):
 
 	else:
 		ew_slime_model.id_user = cmd.message.author.id
+		ew_slime_model.life_state = ewcfg.slimeoid_state_active
 		ew_slime_model.persist()
 		usermodel.active_slimeoid = ew_slime_model.id_slimeoid
 		usermodel.persist()
