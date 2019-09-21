@@ -483,15 +483,17 @@ async def help(cmd):
 
 	# help only checks for districts while in game channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'The guide might be a bit outdated though, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+		response = ewcfg.generic_help_response
 	else:
-		# checks if user is in a college
-		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
+		# checks if user is in a college or if they have a game guide
+		gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+
+		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 			if not len(cmd.tokens) > 1:
 				topic_counter = 0
 				topic_total = 0
 				# list off help topics to player at college
-				response = 'What would you like to learn about? Topics include: \n' 
+				response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
 				
 				topics = ewcfg.help_responses.keys()
 				for topic in topics:
@@ -501,7 +503,7 @@ async def help(cmd):
 					if topic_total != len(topics):
 						response += ", "
 					
-					if topic_counter == 4:
+					if topic_counter == 5:
 						topic_counter = 0
 						response += "\n"
 					
@@ -509,6 +511,10 @@ async def help(cmd):
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				if topic in ewcfg.help_responses:
 					response = ewcfg.help_responses[topic]
+					if topic == 'mymutations':
+						mutations = user_data.get_mutations()
+						for mutation in mutations:
+							response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 				else:
 					response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
 		else:
@@ -537,12 +543,23 @@ async def help(cmd):
 			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 				# farming help
 				response = ewcfg.help_responses['farming']
-			elif user_data.poi in ewcfg.poi_id_slimeoidlab:
-				# slimeoid help (somewhat redundant, but may help by pointing player towards !instructions)
-				response = ewcfg.help_responses['slimeoids']
+			elif user_data.poi in ewcfg.poi_id_slimeoidlab and not len(cmd.tokens) > 1:
+				# labs help
+				response = "For information on slimeoids, do **'!help slimeoids'**. To learn about your current mutations, do **'!help mymutations'**"
+			elif user_data.poi in ewcfg.poi_id_slimeoidlab and len(cmd.tokens) > 1:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic == 'slimeoids':
+					response = ewcfg.help_responses['slimeoids']
+				elif topic == 'mymutations':
+					response = ewcfg.help_responses['mymutations']
+					mutations = user_data.get_mutations()
+					for mutation in mutations:
+						response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+				else:
+					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
 			elif user_data.poi in ewcfg.transport_stops:
 				# transportation help
-				response =  ewcfg.help_responses['transportation']
+				response = ewcfg.help_responses['transportation']
 			elif user_data.poi in ewcfg.poi_id_stockexchange:
 				# stock exchange help
 				response = ewcfg.help_responses['stocks']
@@ -572,8 +589,8 @@ async def help(cmd):
 				response = ewcfg.help_responses['hunting']
 			else:
 				# catch-all response for when user isn't in a sub-zone with a help response
-				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'The guide might be a bit outdated though, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
-
+				response = ewcfg.generic_help_response
+				
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -583,6 +600,13 @@ async def help(cmd):
 """
 async def map(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Online world map: https://ew.krakissi.net/map/'))
+
+"""
+	Link to the subway map
+"""
+async def transportmap(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Map of the subway: https://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png\nPlease note that the white line is currently non-operational, and that there also exists a **blimp** that goes between Dreadford and Assault Flats Beach, as well as a **ferry** that goes between Wreckington and Vagrant's Corner."))
+
 
 """
 	Link to the RFCK wiki.
