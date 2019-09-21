@@ -324,6 +324,7 @@ cmd_map = {
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
+	ewcfg.cmd_transportmap: ewcmd.transportmap,
 
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
@@ -1039,7 +1040,7 @@ async def on_message(message):
 				# Only send the help doc once every thirty seconds. There's no need to spam it.
 				if (time_now - time_last) > 30:
 					last_helped_times[message.author.id] = time_now
-					await ewutils.send_message(client, message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
+					await ewutils.send_message(client, message.channel, ewcfg.generic_help_response)
 
 			# Nothing else to do in a DM.
 			return
