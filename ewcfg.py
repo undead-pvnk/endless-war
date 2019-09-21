@@ -11998,7 +11998,7 @@ mutations = [
 		id_mutation = mutation_id_quantumlegs,
 		str_describe_self = "You’ve got nothing of note below the belt due to Quantum Legs.",
 		str_describe_other = "They’ve got nothing of note below the belt due to Quantum Legs.",
-		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation Quantum Legs. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 30 minutes.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation Quantum Legs. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_chameleonskin,
