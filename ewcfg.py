@@ -12607,7 +12607,7 @@ mutation_descriptions = {
 	mutation_id_enlargedbladder: "You can use the !piss command.",
 	mutation_id_dumpsterdiver: "10x chance to get items while scavenging with just '!scavenge'.",
 	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 30 seconds on scavenging is now reduced to 10 seconds.",
-	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out 400% more slime gained from scavenging, but does stack with the White Nationalist mutation.",
+	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation.",
 }
 
 consult_responses = {
