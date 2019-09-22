@@ -367,6 +367,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
 	drop_candidates = []
+	#safe_items = [ewcfg.item_id_gameguide]
 
 	# Filter out Soulbound items.
 	for item in items:
@@ -794,16 +795,26 @@ async def inventory_print(cmd):
 	sort_by_type = False
 	sort_by_name = False
 	sort_by_id = False
+	
+	stacking = False
+	stacked_message_list = []
 
 	if cmd.tokens_count > 1:
-		sorting_method = cmd.tokens[1].lower()
+		token_list = cmd.tokens[1:]
+		lower_token_list = []
+		for token in token_list:
+			token = token.lower()
+			lower_token_list.append(token)
 
-		if sorting_method == 'type':
+		if 'type' in lower_token_list:
 			sort_by_type = True
-		elif sorting_method == 'name':
+		elif 'name' in lower_token_list:
 			sort_by_name = True
-		elif sorting_method == 'id':
+		elif 'id' in lower_token_list:
 			sort_by_id = True
+			
+		if 'stack' in lower_token_list:
+			stacking = True
 
 	player = EwPlayer(id_user = cmd.message.author.id)
 
@@ -852,12 +863,30 @@ async def inventory_print(cmd):
 			id_item = item.get('id_item')
 			quantity = item.get('quantity')
 
-			response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
-				id_item = item.get('id_item'),
-				name = item.get('name'),
-				soulbound_style = ("**" if item.get('soulbound') else ""),
-				quantity = (" x{:,}".format(quantity) if (quantity > 0) else "")
-			)
+			if not stacking:
+				response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
+					id_item = item.get('id_item'),
+					name = item.get('name'),
+					soulbound_style = ("**" if item.get('soulbound') else ""),
+					quantity = (" x{:,}".format(quantity) if (quantity > 0) else "")
+				)
+			else:
+				item_amount = 0
+				for stackeditem in items:
+					if stackeditem.get('name') == item.get('name'):
+						item_amount += 1
+
+				response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity} **x{amount}**".format(
+					name=item.get('name'),
+					soulbound_style=("**" if item.get('soulbound') else ""),
+					quantity=(" x{:,}".format(quantity) if (quantity > 0) else ""),
+					amount=item_amount
+				)
+				# Avoid sending duplicate responses for stacked items
+				if not (response_part in stacked_message_list):
+					stacked_message_list.append(response_part)
+				
+				
 			if len(response) + len(response_part) > 1492:
 				if can_message_user:
 					await ewutils.send_message(cmd.client, cmd.message.author, response)
@@ -865,8 +894,13 @@ async def inventory_print(cmd):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				response = ""
+				
+			if not stacking:
+				response += response_part
 
-			response += response_part
+		if stacking:
+			for stacked_item_message in stacked_message_list:
+				response += stacked_item_message
 
 		if can_message_user:
 			await ewutils.send_message(cmd.client, cmd.message.author, response)
