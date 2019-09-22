@@ -367,11 +367,11 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
 	drop_candidates = []
-	safe_items = [ewcfg.item_id_gameguide]
+	#safe_items = [ewcfg.item_id_gameguide]
 
-	# Filter out Soulbound items. Filter out items in the safe items list.
+	# Filter out Soulbound items.
 	for item in items:
-		if item.get('soulbound') == False and not (item.get('id_item') in safe_items):
+		if item.get('soulbound') == False:
 			drop_candidates.append(item)
 
 	filtered_items = []
