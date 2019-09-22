@@ -105,6 +105,31 @@ async def take(cmd):
 	item_sought = ewitem.find_item(item_search = item_search, id_user = poi.community_chest, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 	
 	if item_sought:
+		if item_sought.get('item_type') == ewcfg.it_food:
+			food_items = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_food
+			)
+
+			if len(food_items) >= user_data.get_food_capacity():
+				response = "You can't carry any more food items."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if item_sought.get('item_type') == ewcfg.it_weapon:
+			weapons_held = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			if user_data.life_state == ewcfg.life_state_corpse:
+				response = "Ghosts can't hold weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			elif len(weapons_held) >= user_data.get_weapon_capacity():
+				response  = "You can't carry any more weapons."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 		ewitem.give_item(id_item = item_sought.get('id_item'), id_server = user_data.id_server, id_user = user_data.id_user)
 
 		response = "You retrieve a {} from the community chest.".format(item_sought.get("name"))
