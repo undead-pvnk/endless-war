@@ -495,7 +495,8 @@ async def help(cmd):
 				# list off help topics to player at college
 				response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
 				
-				topics = ewcfg.help_responses.keys()
+				# display the list of topics in order
+				topics = ewcfg.help_responses_ordered_keys
 				for topic in topics:
 					topic_counter += 1
 					topic_total += 1
