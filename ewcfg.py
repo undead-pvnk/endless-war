@@ -1580,6 +1580,7 @@ item_id_forbiddenstuffedcrust = "theforbiddenstuffedcrust"
 item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
+item_id_gameguide = "gameguide"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1909,7 +1910,7 @@ item_list = [
 		context = 60,
 	),
 	EwGeneralItem(
-		id_item = "gameguide",
+		id_item = item_id_gameguide,
 		str_name = "The official unofficial ENDLESS WAR Game Guide",
 		str_desc = "A guide on all the game mechanics found in ENDLESS WAR. Use the !help command to crack it open.",
 		vendors = [vendor_college],
