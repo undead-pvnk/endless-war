@@ -790,8 +790,21 @@ def inventory(
 	Dump out a player's inventory.
 """
 async def inventory_print(cmd):
-	can_message_user = True
 	
+	community_chest = False
+	can_message_user = True
+	inventory_source = cmd.message.author.id
+
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
+		if poi.community_chest == None:
+			response = "There is no community chest here."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		community_chest = True
+		can_message_user = False
+		inventory_source = poi.community_chest
+
 	sort_by_type = False
 	sort_by_name = False
 	sort_by_id = False
@@ -820,29 +833,37 @@ async def inventory_print(cmd):
 
 	if sort_by_id:
 		items = inventory(
-			id_user = cmd.message.author.id,
+			id_user = inventory_source,
 			id_server = player.id_server,
 			item_sorting_method='id'
 		)
 	elif sort_by_type:
 		items = inventory(
-			id_user=cmd.message.author.id,
+			id_user=inventory_source,
 			id_server=player.id_server,
 			item_sorting_method='type'
 		)
 	else:
 		items = inventory(
-			id_user=cmd.message.author.id,
+			id_user=inventory_source,
 			id_server=player.id_server,
 		)
 
-	if len(items) == 0:
-		response = "You don't have anything."
+	if community_chest:
+		if len(items) == 0:
+			response = "The community chest is empty."
+		else:
+			response = "The community chest contains:"
 	else:
-		response = "You are holding:"
+		if len(items) == 0:
+			response = "You don't have anything."
+		else:
+			response = "You are holding:"
 
+	msg_handle = None
 	try:
-		msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+		if can_message_user:
+			msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
 

@@ -164,8 +164,8 @@ cmd_map = {
 	ewcfg.cmd_releaseprop:ewapt.releaseprop,
 	ewcfg.cmd_releasefish:ewapt.releasefish,
 
-	ewcfg.cmd_store: ewapt.lobbywarning,
-	ewcfg.cmd_take: ewapt.lobbywarning,
+	ewcfg.cmd_store: ewcmd.store_item,
+	ewcfg.cmd_take: ewcmd.remove_item,
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,
@@ -272,6 +272,7 @@ cmd_map = {
 	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,

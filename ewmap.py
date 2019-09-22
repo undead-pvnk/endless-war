@@ -145,6 +145,9 @@ class EwPoi:
 	# if this zone belongs to the outskirts
 	is_outskirts = False
 
+	# id for the zone's community chest, if it has one
+	community_chest = None
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -174,7 +177,8 @@ class EwPoi:
 		default_stop = "",
 		is_transport_stop = False,
 		transport_lines = None,
-		is_outskirts = False
+		is_outskirts = False,
+		community_chest = None
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -204,6 +208,7 @@ class EwPoi:
 		self.is_transport_stop = is_transport_stop
 		self.transport_lines = transport_lines
 		self.is_outskirts = is_outskirts
+		self.community_chest = community_chest
 
 # New map as of 7/19/19
 

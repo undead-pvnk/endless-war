@@ -245,6 +245,11 @@ poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
 
+# Community Chests
+chest_id_copkilltown = "copkilltownchest"
+chest_id_rowdyroughhouse = "rowdyroughhousechest"
+chest_id_juviesrow = "juviesrowchest"
+chest_id_thesewers = "sewerschest"
 
 # Transport types
 transport_type_ferry = "ferry"
@@ -560,6 +565,7 @@ cmd_inventory = cmd_prefix + 'inventory'
 cmd_inventory_alt1 = cmd_prefix + 'inv'
 cmd_inventory_alt2 = cmd_prefix + 'stuff'
 cmd_inventory_alt3 = cmd_prefix + 'bag'
+cmd_communitychest = cmd_prefix + 'chest'
 cmd_move = cmd_prefix + 'move'
 cmd_move_alt1 = cmd_prefix + 'goto'
 cmd_move_alt2 = cmd_prefix + 'walk'
@@ -6373,7 +6379,8 @@ poi_list = [
 			faction_killers
 		],
 		pvp = False,
-		property_class = property_class_a
+		property_class = property_class_a,
+		community_chest = chest_id_copkilltown
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -6489,7 +6496,8 @@ poi_list = [
 			faction_rowdys
 		],
 		pvp = False,
-		property_class = property_class_c
+		property_class = property_class_c,
+		community_chest = chest_id_rowdyroughhouse
 	),
 	EwPoi( # 7
 		id_poi = poi_id_greenlightdistrict,
@@ -7013,7 +7021,8 @@ poi_list = [
 		channel = "juvies-row",
 		role = "Juvie's Row",
 		pvp = False,
-		property_class = property_class_b
+		property_class = property_class_b,
+		community_chest = chest_id_juviesrow
 	),
 	EwPoi( # 21
 		id_poi = poi_id_slimesend,
@@ -7491,7 +7500,8 @@ poi_list = [
 		life_states = [
 			life_state_corpse
 		],
-		role = "Sewers"
+		role = "Sewers",
+		community_chest = chest_id_thesewers
 	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
