@@ -88,6 +88,7 @@ poi_id_nlacu = "newlosangelescityuniversity"
 poi_id_foodcourt = "thefoodcourt"
 poi_id_cinema = "nlacakanmcinemas"
 poi_id_bazaar = "thebazaar"
+poi_id_recyclingplant = "recyclingplant"
 poi_id_stockexchange = "theslimestockexchange"
 poi_id_endlesswar = "endlesswar"
 poi_id_slimecorphq = "slimecorphq"
@@ -350,6 +351,7 @@ channel_arena = "battle-arena"
 channel_nlacu = "nlac-university"
 channel_cinema = "nlacakanm-cinemas"
 channel_bazaar = "bazaar"
+channel_recyclingplant = "slimecorp-recycling-plant"
 channel_slimecorphq = "slimecorp-hq"
 channel_leaderboard = "leaderboard"
 channel_cv_mines = "cratersville-mines"
@@ -630,7 +632,8 @@ cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
-
+cmd_recycle = cmd_prefix + 'recycle'
+cmd_recycle_alt1 = cmd_prefix + 'incinerate'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1453,6 +1456,7 @@ stat_lifetime_casino_winnings = 'lifetime_casino_winnings'
 stat_lifetime_casino_losses = 'lifetime_casino_losses'
 stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
+stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -1524,6 +1528,7 @@ coinsource_casino = 4
 coinsource_transfer = 5
 coinsource_invest = 6
 coinsource_withdraw = 7
+coinsource_recycle = 8
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -7969,6 +7974,24 @@ poi_list = [
 		],
 		is_subzone = True,
 		mother_district = poi_id_dreadford
+	),
+	EwPoi(  # SlimeCorp Recycling Plant
+		id_poi = poi_id_recyclingplant,
+		alias = [
+			"slimecorprecyclingplant",
+			"recyclingplant",
+			"recycling",
+			"recycle",
+			"burntrash"
+		],
+		str_name = "The SlimeCorp Recycling Plant",
+		str_desc = "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
+		coord = (60, 24),
+		channel = channel_recyclingplant,
+		role = "Recyling Plant",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_smogsburg
 	),
 	EwPoi(  # Toxington Pier
 		id_poi = poi_id_toxington_pier,

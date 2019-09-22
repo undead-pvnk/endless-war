@@ -364,6 +364,10 @@ cmd_map = {
 	ewcfg.cmd_discard: ewitem.discard,
 	ewcfg.cmd_discard_alt1: ewitem.discard,
 
+	# recycle your trash at the slimecorp recycling plant
+	ewcfg.cmd_recycle: ewcmd.recycle,
+	ewcfg.cmd_recycle_alt1: ewcmd.recycle,
+
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
 
