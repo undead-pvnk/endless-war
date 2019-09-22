@@ -6299,7 +6299,7 @@ poi_list = [
 			"sb"
 		],
 		str_name = "Smogsburg",
-		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
+		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
 		coord = (59, 28),
 		coord_alias = [
 			(55, 26),
@@ -7983,7 +7983,9 @@ poi_list = [
 			"recyclingplant",
 			"recycling",
 			"recycle",
-			"burntrash"
+			"burntrash",
+			"scrp",
+			"rp",
 		],
 		str_name = "The SlimeCorp Recycling Plant",
 		str_desc = "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
