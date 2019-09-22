@@ -757,7 +757,7 @@ def inventory(
 				id_item = item.get('id_item')
 				name = item_def.str_name
 
-				quantity = 0
+				quantity = 1
 				if item.get('stack_max') > 0:
 					quantity = item.get('stack_size')
 
@@ -811,6 +811,7 @@ async def inventory_print(cmd):
 	
 	stacking = False
 	stacked_message_list = []
+	stacked_item_map = {}
 
 	if cmd.tokens_count > 1:
 		token_list = cmd.tokens[1:]
@@ -889,26 +890,18 @@ async def inventory_print(cmd):
 					id_item = item.get('id_item'),
 					name = item.get('name'),
 					soulbound_style = ("**" if item.get('soulbound') else ""),
-					quantity = (" x{:,}".format(quantity) if (quantity > 0) else "")
+					quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
 				)
 			else:
-				item_amount = 0
-				for stackeditem in items:
-					if stackeditem.get('name') == item.get('name'):
-						item_amount += 1
 
-				response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity} **x{amount}**".format(
-					name=item.get('name'),
-					soulbound_style=("**" if item.get('soulbound') else ""),
-					quantity=(" x{:,}".format(quantity) if (quantity > 0) else ""),
-					amount=item_amount
-				)
-				# Avoid sending duplicate responses for stacked items
-				if not (response_part in stacked_message_list):
-					stacked_message_list.append(response_part)
+				item_name = item.get('name')
+				if item_name in stacked_item_map:
+					stacked_item = stacked_item_map.get(item_name)
+					stacked_item['quantity'] += item.get('quantity')
+				else:
+					stacked_item_map[item_name] = item
 				
-				
-			if len(response) + len(response_part) > 1492:
+			if not stacking and len(response) + len(response_part) > 1492:
 				if can_message_user:
 					await ewutils.send_message(cmd.client, cmd.message.author, response)
 				else:
@@ -920,8 +913,26 @@ async def inventory_print(cmd):
 				response += response_part
 
 		if stacking:
-			for stacked_item_message in stacked_message_list:
-				response += stacked_item_message
+			item_names = stacked_item_map.keys()
+			if sort_by_name:
+				item_names = sorted(item_names)
+			for item_name in item_names:
+				item = stacked_item_map.get(item_name)
+				quantity = item.get('quantity')
+				response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
+					name=item.get('name'),
+					soulbound_style=("**" if item.get('soulbound') else ""),
+					quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
+				)
+				
+				if len(response) + len(response_part) > 1492:
+					if can_message_user:
+						await ewutils.send_message(cmd.client, cmd.message.author, response)
+					else:
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+					response = ""
+				response += response_part
 
 		if can_message_user:
 			await ewutils.send_message(cmd.client, cmd.message.author, response)
