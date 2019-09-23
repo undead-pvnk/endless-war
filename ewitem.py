@@ -795,7 +795,9 @@ async def inventory_print(cmd):
 	can_message_user = True
 	inventory_source = cmd.message.author.id
 
-	user_data = EwUser(member = cmd.message.author)
+	player = EwPlayer(id_user = cmd.message.author.id)
+
+	user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
 		if poi.community_chest == None:
@@ -829,8 +831,6 @@ async def inventory_print(cmd):
 			
 		if 'stack' in lower_token_list:
 			stacking = True
-
-	player = EwPlayer(id_user = cmd.message.author.id)
 
 	if sort_by_id:
 		items = inventory(
