@@ -1067,12 +1067,12 @@ emote_broken_heart = ":broken_heart:"
 emote_ms_hidden = ":pick:"
 emote_ms_mine = ":x:"
 emote_ms_flagged = ":triangular_flag_on_post:"
-emote_ms_0 = ":zero:"
-emote_ms_1 = ":one:"
-emote_ms_2 = ":two:"
-emote_ms_3 = ":three:"
-emote_ms_4 = ":four:"
-emote_ms_5 = ":five:"
+emote_ms_0 = ":white_circle:"
+emote_ms_1 = ":heart:"
+emote_ms_2 = ":yellow_heart:"
+emote_ms_3 = ":green_heart:"
+emote_ms_4 = ":blue_heart:"
+emote_ms_5 = ":purple_heart:"
 emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
@@ -1082,13 +1082,13 @@ cell_mine = 1
 cell_mine_marked = 2
 cell_mine_open = 3
 
-cell_empty = " "
+cell_empty = "0"
 cell_empty_marked = -2
 cell_empty_open = -3
 
 cell_slime = 0
 
-cell_bubble_0 = "0"
+cell_bubble_0 = "5"
 cell_bubble_1 = "1"
 cell_bubble_2 = "2"
 cell_bubble_3 = "3"

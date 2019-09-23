@@ -533,12 +533,12 @@ async def scavenge(cmd):
 
 def init_grid(poi, id_server):
 	grid = []
-	num_rows = 15
-	num_cols = 15
+	num_rows = 12
+	num_cols = 12
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
-			if i > 10:
+			if i > 8:
 				row.append(ewcfg.cell_empty)
 				continue
 			cell = random.choice(ewcfg.cell_bubbles)
@@ -563,6 +563,7 @@ async def print_grid(cmd):
 	poi = user_data.poi
 	id_server = cmd.message.server.id
 	time_now = int(time.time())
+	use_emotes = False
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
 		if id_server not in grid_map:
@@ -573,7 +574,8 @@ async def print_grid(cmd):
 
 		#grid_str += "   "
 		for j in range(len(grid[0])):
-			grid_str += "{} ".format(ewcfg.alphabet[j])
+			letter = ewcfg.alphabet[j]
+			grid_str += "{} ".format(letter)
 		grid_str += "\n"
 		for i in range(len(grid)):
 			row = grid[i]
@@ -584,6 +586,8 @@ async def print_grid(cmd):
 			for j in range(len(row)):
 				cell = row[j]
 				cell_str = get_cell_symbol(cell)
+				if use_emotes:
+					cell_str = ewcfg.number_emote_map.get(int(cell))
 				grid_str += cell_str + " "
 			#grid_str += "{}".format(i+1)
 			grid_str += "\n"
@@ -591,10 +595,12 @@ async def print_grid(cmd):
 
 		#grid_str += "   "
 		for j in range(len(grid[0])):
-			grid_str += "{} ".format(ewcfg.alphabet[j])
+			letter = ewcfg.alphabet[j]
+			grid_str += "{} ".format(letter)
 
 		grid_edit = "\n```\n{}\n```".format(grid_str)
-		#grid_edit = grid_str
+		if use_emotes:
+			grid_edit = "\n" + grid_str
 		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 8 or grid_cont.message == "":
 			grid_cont.message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, grid_edit))
 			grid_cont.time_last_posted = time_now
@@ -613,6 +619,8 @@ async def print_grid(cmd):
 			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
 
 def get_cell_symbol(cell):
+	if cell == "0":
+		return " "
 	return cell
 	cell_str = " "
 	#if cell > 2 * ewcfg.slimes_invein:
