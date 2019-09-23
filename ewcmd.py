@@ -7,12 +7,18 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
+import ewstatuseffects
 import ewmap
 import ewslimeoid
+import ewfaction
+import ewapt
+
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
+from ewhunting import find_enemy
+from ewstatuseffects import EwStatusEffect
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -128,8 +134,10 @@ async def score(cmd):
 def gen_data_text(
 	id_user = None,
 	id_server = None,
-	display_name = None
+	display_name = None,
+	channel_name = None
 ):
+	resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 	response = ""
 	user_data = EwUser(
 		id_user = id_user,
@@ -149,7 +157,7 @@ def gen_data_text(
 		cos = EwItem(id_item = cosmetic.get('id_item'))
 		if cos.item_props['adorned'] == 'true':
 			hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
-			adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if user_data.life_state == ewcfg.life_state_grandfoe:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -157,6 +165,8 @@ def gen_data_text(
 			response = "{} is {} {}.".format(display_name, poi.str_in, poi.str_name)
 		else:
 			response = "You can't discern anything useful about {}.".format(display_name)
+
+		resp_cont.add_channel_response(channel_name, response)
 	else:
 
 		# return somebody's score
@@ -176,6 +186,10 @@ def gen_data_text(
 				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
+		# if trauma is not gathered from weapon_map, get it from attack_type_map
+		if trauma == None:
+			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
 
@@ -187,10 +201,21 @@ def gen_data_text(
 		if len(response_block) > 0:
 			response += "\n\n" + response_block
 
+		resp_cont.add_channel_response(channel_name, response)
+
+		response = ""
 		response_block = ""
+
 		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-		if user_kills > 0:
+
+		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
+
+		if user_kills > 0 and enemy_kills > 0:
+			response_block += "They have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills, enemy_kills)
+		elif user_kills > 0:
 			response_block += "They have {:,} confirmed kills. ".format(user_kills)
+		elif enemy_kills > 0:
+			response_block += "They have {:,} confirmed hunts. ".format(enemy_kills)
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
@@ -198,20 +223,50 @@ def gen_data_text(
 		if len(adorned_cosmetics) > 0:
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
+		statuses = user_data.getStatusEffects()
+		
+		for status in statuses:
+			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
+			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+				status_flavor = ewcfg.status_effects_def_map.get(status)
+				if status_flavor is not None:
+					response_block += status_flavor.str_describe + " "
+
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
 		if len(response_block) > 0:
-			response += "\n\n" + response_block
+			response += "\n" + response_block
 
-	return response
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
+
+		resp_cont.add_channel_response(channel_name, response)
+
+	return resp_cont
 
 """ show player information and description """
 async def data(cmd):
 	response = ""
 	user_data = None
 	member = None
+	resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
 
-	if cmd.mentions_count == 0:
+	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
+		user_data = EwUser(member = cmd.message.author)
+
+		soughtenemy = " ".join(cmd.tokens[1:]).lower()
+		enemy = find_enemy(soughtenemy, user_data)
+		if enemy != None:
+			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
+				response = "{} is a level {} enemy. They have {} slime, and attack with their {}.".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
+			else:
+				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level, enemy.slimes)
+		else:
+			response = "ENDLESS WAR didn't understand that name."
+
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+
+	elif cmd.mentions_count == 0:
+
 		user_data = EwUser(member = cmd.message.author)
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 		mutations = user_data.get_mutations()
@@ -226,7 +281,7 @@ async def data(cmd):
 			cos = EwItem(id_item = cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
 				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
-				adorned_cosmetics.append((hue.str_name + " colored " if hue != None else "") + cosmetic.get('name'))
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
@@ -249,6 +304,10 @@ async def data(cmd):
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank = (user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
+		# if trauma is not gathered from weapon_map, get it from attack_type_map
+		if trauma == None:
+			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 		
@@ -260,11 +319,21 @@ async def data(cmd):
 		if len(response_block) > 0:
 			response += "\n\n" + response_block
 
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+
+		response = ""
 		response_block = ""
 
-		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-		if user_kills > 0:
+		user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
+		enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
+
+		if user_kills > 0 and enemy_kills > 0:
+			response_block += "You have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills, enemy_kills)
+		elif user_kills > 0:
 			response_block += "You have {:,} confirmed kills. ".format(user_kills)
+		elif enemy_kills > 0:
+			response_block += "You have {:,} confirmed hunts. ".format(enemy_kills)
+
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
@@ -277,34 +346,40 @@ async def data(cmd):
 				round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
 			)
 
-		if user_data.ghostbust:
-			response_block += "The coleslaw in your stomach enables you to bust ghosts. "
-
 		if user_data.busted and user_data.life_state == ewcfg.life_state_corpse:
 			response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
+
+		statuses = user_data.getStatusEffects()
+		
+		for status in statuses:
+			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
+			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+				status_flavor = ewcfg.status_effects_def_map.get(status)
+				if status_flavor is not None:
+					response_block += status_flavor.str_describe_self + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 
 		if len(response_block) > 0:
-			response += "\n\n" + response_block
+			response += "\n" + response_block
 
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
 
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
 	else:
 		member = cmd.mentions[0]
-		response = gen_data_text(
+		resp_cont = gen_data_text(
 			id_user = member.id,
 			id_server = member.server.id,
-			display_name = member.display_name
+			display_name = member.display_name,
+			channel_name = cmd.message.channel.name
 		)
-
-		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
-
-
+	
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+	await resp_cont.post()
 
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	if member != None:
@@ -411,20 +486,39 @@ async def help(cmd):
 
 	# help only checks for districts while in game channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
+		response = ewcfg.generic_help_response
 	else:
-		# checks if user is in a college
-		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu:
+		# checks if user is in a college or if they have a game guide
+		gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+
+		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 			if not len(cmd.tokens) > 1:
+				topic_counter = 0
+				topic_total = 0
 				# list off help topics to player at college
-				response = 'What would you like to learn about? Topics include: \n' \
-						   '**gangs**, **mining**, **food**, **capturing**, **transportation**, **death**, \n' \
-						   '**dojo**, **scavenging**, **farming**, **slimeoids**, **ghosts**, **scouting**, \n' \
-						   '**cosmetics**, **sparring**, **bleeding**, **stocks**, **casino**, and **offline**.'
+				response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
+				
+				# display the list of topics in order
+				topics = ewcfg.help_responses_ordered_keys
+				for topic in topics:
+					topic_counter += 1
+					topic_total += 1
+					response += "**{}**".format(topic)
+					if topic_total != len(topics):
+						response += ", "
+					
+					if topic_counter == 5:
+						topic_counter = 0
+						response += "\n"
+					
 			else:
 				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 				if topic in ewcfg.help_responses:
 					response = ewcfg.help_responses[topic]
+					if topic == 'mymutations':
+						mutations = user_data.get_mutations()
+						for mutation in mutations:
+							response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 				else:
 					response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
 		else:
@@ -436,7 +530,7 @@ async def help(cmd):
 			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 				# mine help
 				response = ewcfg.help_responses['mining']
-			elif (len(poi.vendors) >= 1):
+			elif (len(poi.vendors) >= 1) and not user_data.poi in ewcfg.poi_id_dojo:
 				# food help
 				response = ewcfg.help_responses['food']
 			elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
@@ -453,12 +547,23 @@ async def help(cmd):
 			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
 				# farming help
 				response = ewcfg.help_responses['farming']
-			elif user_data.poi in ewcfg.poi_id_slimeoidlab:
-				# slimeoid help (somewhat redundant, but may help by pointing player towards !instructions)
-				response = ewcfg.help_responses['slimeoids']
+			elif user_data.poi in ewcfg.poi_id_slimeoidlab and not len(cmd.tokens) > 1:
+				# labs help
+				response = "For information on slimeoids, do **'!help slimeoids'**. To learn about your current mutations, do **'!help mymutations'**"
+			elif user_data.poi in ewcfg.poi_id_slimeoidlab and len(cmd.tokens) > 1:
+				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				if topic == 'slimeoids':
+					response = ewcfg.help_responses['slimeoids']
+				elif topic == 'mymutations':
+					response = ewcfg.help_responses['mymutations']
+					mutations = user_data.get_mutations()
+					for mutation in mutations:
+						response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+				else:
+					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
 			elif user_data.poi in ewcfg.transport_stops:
 				# transportation help
-				response =  ewcfg.help_responses['transportation']
+				response = ewcfg.help_responses['transportation']
 			elif user_data.poi in ewcfg.poi_id_stockexchange:
 				# stock exchange help
 				response = ewcfg.help_responses['stocks']
@@ -468,10 +573,28 @@ async def help(cmd):
 			elif user_data.poi in ewcfg.poi_id_thesewers:
 				# death help
 				response = ewcfg.help_responses['death']
+
+			elif user_data.poi in ewcfg.poi_id_realestate:
+				#real estate help
+				response = ewcfg.help_responses['realestate']
+			elif user_data.poi in [
+				ewcfg.poi_id_toxington_pier,
+				ewcfg.poi_id_assaultflatsbeach_pier,
+				ewcfg.poi_id_vagrantscorner_pier,
+				ewcfg.poi_id_crookline_pier,
+				ewcfg.poi_id_slimesend_pier,
+				ewcfg.poi_id_jaywalkerplain_pier,
+				ewcfg.poi_id_ferry
+			]:
+				# fishing help
+				response = ewcfg.help_responses['fishing']
+			elif user_data.poi in ewcfg.outskirts_districts:
+				# hunting help
+				response = ewcfg.help_responses['hunting']
 			else:
 				# catch-all response for when user isn't in a sub-zone with a help response
-				response = 'Check out the guide for help: https://ew.krakissi.net/guide/' + ' \n' + 'You can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work.'
-
+				response = ewcfg.generic_help_response
+				
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -481,6 +604,13 @@ async def help(cmd):
 """
 async def map(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Online world map: https://ew.krakissi.net/map/'))
+
+"""
+	Link to the subway map
+"""
+async def transportmap(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Map of the subway: https://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png\nPlease note that the white line is currently non-operational, and that there also exists a **blimp** that goes between Dreadford and Assault Flats Beach, as well as a **ferry** that goes between Wreckington and Vagrant's Corner."))
+
 
 """
 	Link to the RFCK wiki.
@@ -554,3 +684,154 @@ async def arrest(cmd):
 		response = "{} is thrown into one of the Juvenile Detention Center's high security solitary confinement cells.".format(member.display_name)
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""
+	Allow a player to participate in the game again
+"""
+async def release(cmd):
+
+	author = cmd.message.author
+	
+	if not author.server_permissions.administrator:
+		return
+	
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member)
+		user_data.arrested = False
+		user_data.persist()
+
+		response = "{} is released. But beware, the cops will be keeping an eye on you.".format(member.display_name)
+		await ewrolemgr.updateRoles(client = cmd.client, member = member)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""
+	Grants executive status
+"""
+async def promote(cmd):
+
+	author = cmd.message.author
+	
+	if not author.server_permissions.administrator:
+		return
+	
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member)
+		user_data.life_state = ewcfg.life_state_executive
+		user_data.persist()
+
+		await ewrolemgr.updateRoles(client = cmd.client, member = member)
+
+""" !piss """
+async def piss(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	mutations = user_data.get_mutations()
+
+	if ewcfg.mutation_id_enlargedbladder in mutations:
+		response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+
+	else:
+		response = "You lack the moral fiber necessary for urination."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""find out how many days are left until the 31st"""
+async def fursuit(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	mutations = user_data.get_mutations()
+	market_data = EwMarket(id_server=cmd.message.server.id)
+
+	if ewcfg.mutation_id_organicfursuit in mutations:
+		days_until = -market_data.day % 31
+		response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
+
+	else:
+		response = "You're about as hairless as an egg, my friend."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""recycle your trash at the SlimeCorp Recycling plant"""
+async def recycle(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response = ""
+
+	if user_data.poi != ewcfg.poi_id_recyclingplant:
+		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	
+	if item_sought:
+		item = EwItem(id_item = item_sought.get("id_item"))
+
+		if not item.soulbound:
+			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
+				if user_data.weaponmarried:
+					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					response = "Woah, wow, hold on there! Domestic violence is one thing, but how could you just throw your faithful {} into a glorified incinerator? Look, we all have bad days, but that's no way to treat a weapon. At least get a proper divorce first, you animal.".format(weapon.str_weapon)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					user_data.weapon = -1
+					user_data.persist()
+			
+			ewitem.item_delete(id_item = item.id_item)
+
+			pay = int(random.random() * 10 ** random.randrange(2,5))
+			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
+			if pay == 0:
+				item_reward = random.choice(ewcfg.mine_results)
+
+				item_props = ewitem.gen_item_props(item_reward)
+
+				ewitem.item_create(
+					item_type = item_reward.item_type,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = item_props
+				)
+
+				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = 1)
+
+				response += "\n\nYou receive a {}!".format(item_reward.str_name)
+			else:
+				user_data.change_slimecoin(n=pay, coinsource = ewcfg.coinsource_recycle)
+				user_data.persist()
+
+				response += "\n\nYou receive {:,} SlimeCoin.".format(pay)
+
+		else:
+			response = "You can't {} soulbound items.".format(cmd.tokens[0])
+	else:
+		if item_search:
+			response = "You don't have one"
+		else:
+			response = "{} which item? (check **!inventory**)".format(cmd.tokens[0])
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def store_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.community_chest != None:
+		return await ewfaction.store(cmd)
+	elif poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "There is no storage here, public or private."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def remove_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.community_chest != None:
+		return await ewfaction.take(cmd)
+	elif poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "There is no storage here, public or private."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
