@@ -242,6 +242,11 @@ async def mine(cmd):
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
 
+				if bubble_add == None:
+					response = "Invalid bubble."
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await print_grid(cmd)
+
 				mining_yield = 0
 				mining_accident = False
 
@@ -258,7 +263,7 @@ async def mine(cmd):
 					cells_to_check.append((row,col))
 
 					while len(cells_to_check) > 0:
-						mining_yield += check_and_explode(grid, cells_to_check)
+						mining_yield += slimes_pertile * check_and_explode(grid, cells_to_check)
 						
 						cells_to_check = apply_gravity(grid)
 
@@ -521,9 +526,12 @@ def init_grid(poi, id_server):
 	grid = []
 	num_rows = 15
 	num_cols = 15
-	for i in range(int(num_rows / 2)):
+	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
+			if i > 10:
+				row.append(ewcfg.cell_empty)
+				continue
 			cell = random.choice(ewcfg.cell_bubbles)
 			randomn = random.random()
 			if randomn < 0.25 and j > 0:
@@ -537,7 +545,7 @@ def init_grid(poi, id_server):
 
 			
 	if poi in mines_map:
-		grid_cont = EwMineGrid(grid = slime_grid)
+		grid_cont = EwMineGrid(grid = grid)
 		mines_map.get(poi)[id_server] = grid_cont
 
 async def print_grid(cmd):
@@ -567,7 +575,7 @@ async def print_grid(cmd):
 			for j in range(len(row)):
 				cell = row[j]
 				cell_str = get_cell_symbol(cell)
-				grid_str += cell_str #+ " "
+				grid_str += cell_str + " "
 			#grid_str += "{}".format(i+1)
 			grid_str += "\n"
 
@@ -644,7 +652,7 @@ async def crush(cmd):
 def apply_gravity(grid):
 	cells_to_check = []
 	for row in range(1,len(grid)):
-		for col in range(1,len(grid[row])):
+		for col in range(len(grid[row])):
 			coords = (row, col)
 			new_coords = bubble_fall(grid, (row,col))
 			if coords != new_coords:
@@ -661,8 +669,9 @@ def bubble_fall(grid, coords):
 	falling_bubble = grid[row][col]
 	while row > 0 and grid[row-1][col] == ewcfg.cell_empty:
 		row -= 1
-	grid[row][col] = falling_bubble
 
+	grid[coords[0]][coords[1]] = ewcfg.cell_empty
+	grid[row][col] = falling_bubble
 	return (row,col)
 
 def check_and_explode(grid, cells_to_check):
@@ -674,22 +683,24 @@ def check_and_explode(grid, cells_to_check):
 			continue
 
 		bubble_cluster = [coords]
-		already_checked = []
-		for coord in bubble_cluster:
-			if coord in already_checked:
-				continue
-			already_checked.append(coord)
-			neighs = neighbors(grid, coord)
-			for neigh in neighs:
-				if neigh in bubble_cluster:
-					continue
-				if grid[neigh[0]][neigh[1]] == bubble:
-					bubble_cluster.append(neigh)
+		to_check = [coords]
+		while len(to_check) > 0:
+			to_check_next = []
+			for coord in to_check:
+				neighs = neighbors(grid, coord)
+				for neigh in neighs:
+					if neigh in bubble_cluster:
+						continue
+					if grid[neigh[0]][neigh[1]] == bubble:
+						bubble_cluster.append(neigh)
+						to_check_next.append(neigh)
+			to_check = to_check_next
+						
 
 		if len(bubble_cluster) >= ewcfg.bubbles_to_burst:
 			for coord in bubble_cluster:
 				grid[coord[0]][coord[1]] = ewcfg.cell_empty
-				slime_yield += ewcfg.slimes_per_tile
+				slime_yield += 1
 
 	return slime_yield
 		
@@ -704,6 +715,6 @@ def neighbors(grid, coords):
 		neighs.append((row+1,col))
 	if col-1 > 0:
 		neighs.append((row,col-1))
-	if col+1 > len(grid[row]):
+	if col+1 < len(grid[row]):
 		neighs.append((row,col+1))
 	return neighs
