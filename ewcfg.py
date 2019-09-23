@@ -1082,11 +1082,27 @@ cell_mine = 1
 cell_mine_marked = 2
 cell_mine_open = 3
 
-cell_empty = -1
+cell_empty = " "
 cell_empty_marked = -2
 cell_empty_open = -3
 
 cell_slime = 0
+
+cell_bubble_0 = "0"
+cell_bubble_1 = "1"
+cell_bubble_2 = "2"
+cell_bubble_3 = "3"
+cell_bubble_4 = "4"
+
+cell_bubbles = [
+	cell_bubble_0,
+	cell_bubble_1,
+	cell_bubble_2,
+	cell_bubble_3,
+	cell_bubble_4
+]
+
+bubbles_to_burst = 4
 
 
 symbol_map_ms = {
