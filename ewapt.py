@@ -1134,7 +1134,7 @@ async def propstand(cmd):
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
 		else:
 			fname = "{} stand".format(item_sought.get('name'))
-			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least unitl you decide to remove it.".format(item_sought.get('name'))
+			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
 			lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
 			placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
 			fdesc = item_sought.get('item_def').str_desc
@@ -1239,7 +1239,7 @@ async def wash(cmd):
 					response += " You readorn the {}. Man, this feels comfy.".format(item.item_props.get('cosmetic_name'))
 			else:
 				response = "Don't put a {} in the washing machine. You'll break it. Christ, you spent like 1.6 mega on that fucking thing.".format(item_sought.get('name'))
-		elif slimeoid_search and slimeoid.life_state == 2:
+		elif slimeoid_search and slimeoid.life_state == ewcfg.slimeoid_state_active:
 			if slimeoid.hue == "" or slimeoid.hue is None:
 				response = "You tell {} that there's a poudrin for it in the washer. D'aww. It's so trusting. The moment it enters, you close the lid and crank the spin cycle. You laugh for awhile, but quickly realize you don't know how to pause it and let {} out. Guess you'll have to wait the full 20 minutes. Time passes, and your slimeoid stumbles out, nearly unconscious. Sorry, little buddy.".format(slimeoid.name, slimeoid.name)
 			else:

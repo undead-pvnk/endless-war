@@ -177,13 +177,17 @@ async def dye(cmd):
 
 async def smoke(cmd):
 	usermodel = EwUser(member=cmd.message.author)
-	item_sought = ewitem.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	#item_sought = ewitem.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	item_sought = None
+	item_stash = ewitem.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
+	for item_piece in item_stash:
+		item = EwItem(id_item=item_piece.get('id_item'))
+		if item_piece.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette" and "lit" not in item.item_props.get('cosmetic_desc'):
+			item_sought = item_piece
+
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
-		if item.item_props.get('id_cosmetic') == "cigarette" and "lit" in item.item_props.get('cosmetic_desc'):
-			response = "You're smoking one already, you freak."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette":
+		if item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette":
 			response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
 			item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
 			item.item_props['adorned'] = "true"
@@ -199,9 +203,8 @@ async def smoke(cmd):
 			item.item_props['id_cosmetic'] = "cigarettebutt"
 			item.item_props['cosmetic_name'] = "cigarette butt"
 			item.persist()
-
 		else:
-			response = "As smokeable as some of it looks, there aren't any unused cigarettes in your inventory."
+			response = "There aren't any usable cigarettes in your inventory."
 	else:
-		response = "There aren't any cigarettes in your inventory."
+		response = "There aren't any usable cigarettes in your inventory."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
