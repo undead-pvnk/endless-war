@@ -267,6 +267,14 @@ async def mine(cmd):
 						
 						cells_to_check = apply_gravity(grid)
 
+				grid_cont.cells_mined += 1
+				grid_height = get_height(grid)
+
+				if grid_cont.cells_mined % 15 == 10 or grid_height < 5:
+					if grid_height < len(grid):
+						add_row(grid)
+					else:
+						mining_accident = True
 
 				if mining_accident:
 					user_data.change_slimes(n = -(user_data.slimes * 0.5))
@@ -277,6 +285,7 @@ async def mine(cmd):
 
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					return await print_grid(cmd)
+
 
 				if mining_yield == 0:
 					user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
@@ -534,9 +543,9 @@ def init_grid(poi, id_server):
 				continue
 			cell = random.choice(ewcfg.cell_bubbles)
 			randomn = random.random()
-			if randomn < 0.25 and j > 0:
+			if randomn < 0.15 and j > 0:
 				cell = row[-1]
-			elif randomn < 0.5 and i > 0:
+			elif randomn < 0.3 and i > 0:
 				cell = grid[-1][j]
 
 			row.append(cell)
@@ -709,12 +718,45 @@ def neighbors(grid, coords):
 	neighs = []
 	row = coords[0]
 	col = coords[1]
-	if row-1 > 0:
+	if row-1 >= 0:
 		neighs.append((row-1,col))
 	if row+1 < len(grid):
 		neighs.append((row+1,col))
-	if col-1 > 0:
+	if col-1 >= 0:
 		neighs.append((row,col-1))
 	if col+1 < len(grid[row]):
 		neighs.append((row,col+1))
 	return neighs
+
+def add_row(grid):
+	new_row = []
+	for i in range(len(grid[0])):
+		
+		cell = random.choice(ewcfg.cell_bubbles)
+		randomn = random.random()
+		if randomn < 0.15 and i > 0:
+			cell = new_row[-1]
+		elif randomn < 0.3:
+			cell = grid[0][i]
+		if cell == ewcfg.cell_empty:
+			cell = random.choice(ewcfg.cell_bubbles)
+
+		new_row.append(cell)
+	grid.insert(0, new_row)
+	return grid.pop(-1)
+
+def get_height(grid):
+	row = 0
+
+	while row < len(grid):
+		is_empty = True
+		for cell in grid[row]:
+			if cell != ewcfg.cell_empty:
+				is_empty = False
+				break
+		if is_empty:
+			break
+		row += 1
+
+	return row
+		
