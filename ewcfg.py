@@ -78,6 +78,7 @@ slimeoid_stat_chutzpah = 'chutzpah'
 poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
+poi_id_glocksburycomics = "glocksburycomics"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -1581,7 +1582,8 @@ vendor_beachresort = "Beach Resort" #Just features clones from the Speakeasy and
 vendor_countryclub = "Country Club" #Just features clones from the Speakeasy and Red Mobster
 vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
-vendor_college = "college" #You can buy game guides from either of the colleges
+vendor_college = "College" #You can buy game guides from either of the colleges
+vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1595,6 +1597,9 @@ item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
+item_id_fuckenergybodyspray = "fuckenergybodyspray"
+item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
+item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1670,6 +1675,12 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 	"you were meant to do. Don’t fight it. It’s useless. Useless, useless, useless. Don’t keep the universe waiting. " \
 	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
 	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
+
+repel_item_names = [ # Used to check if a repel is being used in ewitem.item_use()
+	"FUCK ENERGY Body Spray",
+	"Super Duper FUCK ENERGY Body Spray",
+	"G-Max FUCK ENERGY Body Spray"
+]
 
 # List of normal items.
 item_list = [
@@ -1925,11 +1936,61 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = item_id_gameguide,
+		alias = [
+			"gg",
+			"gameguide",
+			"gamergate",
+		],
 		str_name = "The official unofficial ENDLESS WAR Game Guide",
 		str_desc = "A guide on all the game mechanics found in ENDLESS WAR. Use the !help command to crack it open.",
 		vendors = [vendor_college],
 		price = 10000,
-	)
+	),
+	EwGeneralItem(
+		id_item = item_id_fuckenergybodyspray,
+		alias = [
+			"repel",
+			"body spray",
+			"bodyspray",
+			"bs",
+		],
+		str_name = "FUCK ENERGY Body Spray",
+		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. Lasts for three hours.",
+		vendors = [vendor_glocksburycomics],
+		price = 10000,
+	),
+	EwGeneralItem(
+		id_item = item_id_superduperfuckenergybodyspray,
+		alias = [
+			"superrepel",
+			"super repel",
+			"super duper body spray",
+			"superbodyspray",
+			"superduperbodyspray",
+			"sdbs",
+			"super",
+		],
+		str_name = "Super Duper FUCK ENERGY Body Spray",
+		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. Lasts for six hours.",
+		vendors = [vendor_glocksburycomics],
+		price = 20000,
+	),
+	EwGeneralItem(
+		id_item = item_id_gmaxfuckenergybodyspray,
+		alias = [
+			"maxrepel",
+			"max repel",
+			"g-max body spray",
+			"gmaxbodyspray",
+			"gmbs",
+			"gmax",
+			"g-max",
+		],
+		str_name = "G-Max FUCK ENERGY Body Spray",
+		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. Lasts for twelve hours.",
+		vendors = [vendor_glocksburycomics],
+		price = 40000,
+	),
 ]
 item_list += ewdebug.debugitem_set
 
@@ -8864,7 +8925,7 @@ poi_list = [
 		is_transport_stop = True,
 		transport_lines = set()
 	),
-EwPoi( # realestate
+	EwPoi( # realestate
 		id_poi = poi_id_realestate,
 		alias = [
 			"realestate",
@@ -8883,7 +8944,25 @@ EwPoi( # realestate
 		role = "Real Estate Agency",
 		mother_district = poi_id_oldnewyonkers,
 		is_subzone = True
-
+	),
+	EwPoi( # Glocksbury Comics
+		id_poi = poi_id_glocksburycomics,
+		alias = [
+			"gc",
+			"glocksburycomics",
+			"comicstore",
+			"comics",
+			"cardshop",
+			"card shop",
+		],
+		str_name = "Glocksbury Comics",
+		str_desc = "You stand in Glocksbury Comics. The walls and booths are plastered with various Secreature:tm: paraphernalia, ranging from comic books, to music CDs, to cheap plastic figurines, and of course, trading cards. This place has it all, and then some. The store itself seems to have a very labyrinthian structure, with different sections of the store devoted to secreatures merging with each other, like some kind of modern day winchester house. Near the front register, manned by a balding gentleman almost certainly in his early-to-mid 30s, you notice that they're also selling... slimecorp-brand body spray? You dread the thought of what such a thing could smell like.",
+		coord = (25, 38),
+		pvp = False,
+		vendors = [vendor_glocksburycomics],
+		channel = "glocksbury-comics",
+		mother_district = poi_id_glocksbury,
+		is_subzone = True
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -12650,8 +12729,15 @@ status_strangled_id = "strangled"
 status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
+status_repelled_id = "repelled"
+status_superrepelled_id = "superrepelled"
+status_maxrepelled_id = "maxrepelled"
 
 time_expire_burn = 12
+
+time_expire_repel_base = 60 * 60 * 3 # 3 hours
+time_expire_repel_super = 60 * 60 * 6 # 6 hours
+time_expire_repel_max = 60 * 60 * 12 # 12 hours
 
 status_effect_list = [
 	EwStatusEffectDef(
@@ -12674,7 +12760,28 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_stunned_id,
 		str_describe = 'They are stunned.'
-	)
+	),
+	EwStatusEffectDef(
+		id_status = status_repelled_id,
+		time_expire = time_expire_repel_base,
+		str_acquire = 'You spray yourself with the FUCK ENERGY Body Spray. Its effects will last for three hours.',
+		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
+		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
+	),
+	EwStatusEffectDef(
+		id_status = status_superrepelled_id,
+		time_expire = time_expire_repel_super,
+		str_acquire = 'You spray yourself with the Super Duper FUCK ENERGY Body Spray. Its effects will last for six hours.',
+		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
+		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
+	),
+	EwStatusEffectDef(
+		id_status = status_maxrepelled_id,
+		time_expire = time_expire_repel_max,
+		str_acquire = 'You spray yourself with the G-Max FUCK ENERGY Body Spray. Its effects will last for twelve hours.',
+		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
+		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
+	),
 ]
 
 status_effects_def_map = {}
@@ -12683,7 +12790,10 @@ for status in status_effect_list:
 	status_effects_def_map[status.id_status] = status
 
 stackable_status_effects = [
-	status_burning_id
+	status_burning_id,
+	status_repelled_id,
+	status_superrepelled_id,
+	status_maxrepelled_id,
 ]
 # Shitty bait that always yields Plebefish while fishing.
 plebe_bait = []
