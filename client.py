@@ -160,12 +160,14 @@ cmd_map = {
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
-	ewcfg.cmd_propstand:ewapt.propstand,
-	ewcfg.cmd_releaseprop:ewapt.releaseprop,
-	ewcfg.cmd_releasefish:ewapt.releasefish,
+	ewcfg.cmd_propstand: ewapt.propstand,
+	ewcfg.cmd_releaseprop: ewapt.releaseprop,
+	ewcfg.cmd_releasefish: ewapt.releasefish,
+	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,
+
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,

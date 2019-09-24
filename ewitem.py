@@ -1150,6 +1150,7 @@ def find_item(item_search = None, id_user = None, id_server = None):
 	return item_sought
 
 
+
 """
 	Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
 """
@@ -1159,7 +1160,8 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
 		'weapon_type',
 		'id_item',
 		'id_food',
-		'id_cosmetic'
+		'id_cosmetic',
+		'id_furniture'
 	]
 
 

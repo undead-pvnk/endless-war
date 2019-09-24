@@ -379,7 +379,7 @@ async def data(cmd):
 	
 	# Send the response to the player.
 	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-	await resp_cont.post()
+	await resp_cont.post(channel=cmd.message.channel)
 
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	if member != None:

@@ -666,6 +666,9 @@ cmd_aquarium = cmd_prefix + 'aquarium'
 cmd_propstand = cmd_prefix + 'propstand'
 cmd_releaseprop = cmd_prefix + 'unstand'
 cmd_releasefish = cmd_prefix + 'releasefish'
+cmd_wash = cmd_prefix + 'wash'
+cmd_browse = cmd_prefix + 'browse'
+cmd_smoke = cmd_prefix + 'smoke'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -5662,6 +5665,27 @@ cabinets_list = [
 "This is a World's Hardest Game arcade cabinet.\nThere were countless stories of moms getting bankrupted because their kids dumped their money into these.\nhttps://www.coolmathgames.com/0-worlds-hardest-game "
 ]
 
+browse_list = [
+"You found a server slightly out of city limits. Looks like they don't care so much about slime or gang warfare, they just make art about other stuff. Unthinkable, but nonetheless fascinating.\nhttps://discord.gg/TAQukUe",
+"Ah, how we forget the sports. Vandal Park's rec center ads have always felt like a big distraction from shooting rival gang members in the face, but maybe it could be fun! This one's shilling their TF2 and Ace of Spades sections, there seem to be many others.\n https://discord.gg/X6TB5uP",
+"Looks like the Cop Killer has a coven of people someplace outside NLACakaNM, kind of like a summer home or the late stages of a cult operation. Either way, seems interesting.\nhttps://discordapp.com/invite/j6xP5MB ",
+"Pokemon Go doesn't seem like an option in this city without a dedicated support group like this. If people went alone, I'm pretty certain they'd get ganked or eaten by secreatures.\nhttps://discord.gg/QbDqEFU",
+"Wait a minute. This doesn't seem quite right. Let's not click this one. \nhttps://discord.gg/mtSRXek",
+"A young Milwaukee citizen stands in her room. Today is a very important day, though as circumstances would have it, she has momentarily forgotten about the exit. But like hell that's gonna stop her, or her name isn't...\nhttps://discord.gg/EkCMmGn",
+"Gangs with wiki pages. I never thought I'd see the day. This place lets you doxx your friends to the NLACakaNM Police Department by compiling their backgrounds and posting it on the internet. They're always looking for writers, so knock yourself out.\nhttps://discord.gg/z5mvCfS",
+"You stumble across an old ARG server. It's since been abandoned, but it's an interesting little piece of history nonetheless.\nhttps://discord.gg/9nwaMC",
+"You find a group of visionaries who have turned hunting into a business. Personally, you wouldn't have gone with the LARPy high-fantasy branding, but to each their own.\nhttps://discord.gg/Rw2wCYT",
+"Killers weren't supposed to be able to access this place, but all you really have to do to get in these days is convincingly !thrash a few times.\nhttps://discord.gg/JZ2AaJ2",
+"St. Ben's Cathedral is a weird base in that it doesn't really bar rowdys from entry. The killers there generally just sneer and spit at their rival gangsters. \nhttps://discord.gg/xSQQD2M",
+"Look, you ignorant juvenile. You basically don't know anything. The media that you love so much is a brainwashing tool, and its lies pull wool over your weary eyes. Get REAL news from the South Los Angeles News Dog Enquirer Report.\nhttps://discord.gg/FtHKt3B",
+"SUBMIT TO SLIMECORP\nhttps://discord.gg/HK8VEzw",
+"You succumb to your urges and find a rather naughty link. Slimegirls are against God's will, but if you don't care this place might appeal to you.\n https://discord.gg/nN6xtk9",
+"@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\n@everyone\nhttps://discord.gg/b2hP68k",
+"It's the land of the nateheads. You're really opening Pandora's box, fucking with this one. \nhttps://discordapp.com/invite/2Kc7nTA",
+"You used to not be a big fan of hippos, but then you learned they like tearing people limb from limb and you've been in love ever since. Maybe now's your chance to meet one.\nhttps://discordapp.com/invite/6ksZrne",
+"Y'arrr. \nhttps://discord.gg/VFcUmgc"
+]
+
 furniture_list = [
 EwFurniture(
 		id_furniture = "interrogationchair",
@@ -6077,7 +6101,71 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an arcade cabinet set up.",
 		furniture_place_desc = "It's been forever since you've played a real video game. Finally, the moment you've been waiting for. You plug this bitch in and gaze at its splendor."),
-
+EwFurniture(
+		id_furniture="washingmachine",
+		str_name="washing machine",
+		str_desc="It's one of those top-loading machines from ages ago. With this you can !wash <item> to remove the dye from it, but you're not sure you want to. Hygiene doesn't seem very RFCK-core.",
+		rarity=rarity_plebeian,
+		acquisition=acquisition_bartering,
+		price=1600000,
+		vendors=[vendor_bazaar],
+		furniture_look_desc="An old washing machine is hooked up in the other room.",
+		furniture_place_desc="You place the washing machine in a side room. You don't really know how you managed the complex plumbing involved, but there it is."),
+EwFurniture(
+		id_furniture = "leatherdesk",
+		str_name = "leather desk",
+		str_desc = "A desk adorned with scalp leather. Looks nice and fancy, as long as you forget how it was made.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a leathery desk in the corner.",
+		furniture_place_desc = "You place the desk and admire the subtle craftsmanship that was put into it.",
+		furn_set = "leather"),
+EwFurniture(
+		id_furniture = "leathercouch",
+		str_name = "leather couch",
+		str_desc = "It's a leather couch made of human scalps. To be fair, no cow would dare set foot in this city.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "The studded leather couch adds class to the room.",
+		furniture_place_desc = "Moving the couch in was a huge pain. Nobody wanted to help you move it, so you had to manage yourself. Christ, it's like just having a scalp-couch makes everybody think you're a serial killer.",
+		furn_set = "leather"),
+EwFurniture(
+		id_furniture = "leatherbed",
+		str_name = "leather bed",
+		str_desc = "It's a bed upholstered with leather. Demonstrably less comfortable than a regular bed, but you just had to.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a leather bed in the bedroom.",
+		furniture_place_desc = "You set up the bed, slowly spreading the human scalp comforter across its sheets. This isn't as good of an idea as you remember.",
+		furn_set = "leather"),
+EwFurniture(
+		id_furniture = "leatherlamp",
+		str_name = "leather lamp",
+		str_desc = "The leather covering makes you feel a bit more western. Also the fact that you killed 3 cowpokes just to get it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "The lamp is adorned with leather.",
+		furniture_place_desc = "The leather is soft to the touch, giving you that extra bit of comfort as you plug it in.",
+		furn_set = "leather"),
+EwFurniture(
+		id_furniture = "leatherchair",
+		str_name = "leather chair",
+		str_desc = "A minor upgrade to the regular chair. Was this even worth it?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A nice leather chair is set up.",
+		furniture_place_desc = "You set the chair up. You realize you're basically sitting on your enemies' heads and giggle about it.",
+		furn_set = "leather"),
 
 ]
 
@@ -6087,6 +6175,7 @@ furniture_names = []
 furniture_lgbt = []
 furniture_highclass = []
 furniture_haunted = []
+furniture_leather = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -10698,7 +10787,67 @@ smelting_recipe_list = [
 			'string':4
 		},
 		products = ['bass']
-        )       
+        ),
+		EwSmeltingRecipe(
+		id_recipe = "leathercouch",
+		str_name = "a leather couch",
+		alias = [
+			"humancouch"
+		],
+		ingredients = {
+			'couch': 1,
+			'scalp': 10
+		},
+		products = ['leathercouch']
+		),
+		EwSmeltingRecipe(
+		id_recipe = "leatherchair",
+		str_name = "a leather chair",
+		alias = [
+			"humanchair"
+		],
+		ingredients = {
+			'chair': 1,
+			'scalp': 5
+		},
+		products = ['leatherchair']
+		),
+		EwSmeltingRecipe(
+		id_recipe = "leatherlamp",
+		str_name = "a leather coated lamp",
+		alias = [
+			"humanlamp"
+		],
+		ingredients = {
+			'lamp': 1,
+			'scalp': 3
+		},
+		products = ['leatherlamp']
+		),
+		EwSmeltingRecipe(
+		id_recipe = "leatherdesk",
+		str_name = "a leather desk",
+		alias = [
+			"humandesk"
+		],
+		ingredients = {
+			'desk': 1,
+			'scalp': 4
+		},
+		products = ['leatherdesk']
+		),
+		EwSmeltingRecipe(
+		id_recipe = "leatherbed",
+		str_name = "a leather bed",
+		alias = [
+			"humanbed"
+		],
+		ingredients = {
+			'bed': 1,
+			'scalp': 12
+		},
+		products = ['leatherbed']
+		)
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -12350,6 +12499,8 @@ for furniture in furniture_list:
 		furniture_highclass.append(furniture.id_furniture)
 	elif furniture.furn_set == "lgbt":
 		furniture_lgbt.append(furniture.id_furniture)
+	elif furniture.furn_set == "leather":
+		furniture_leather.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
@@ -12445,6 +12596,12 @@ for s in cosmetic_items_list:
 		pass
 
 for s in weapon_list:
+	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	else:
+		pass
+
+for s in furniture_list:
 	if s.acquisition == acquisition_smelting:
 		smelt_results.append(s)
 	else:
