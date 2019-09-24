@@ -448,9 +448,9 @@ class EwEnemy:
 					if was_killed:
 
 						# Dedorn player cosmetics
-						ewitem.item_dedorn_cosmetics(id_server=target_data.id_server, id_user=target_data.id_user)
+						#ewitem.item_dedorn_cosmetics(id_server=target_data.id_server, id_user=target_data.id_user)
 						# Drop all items into district
-						ewitem.item_dropall(id_server=target_data.id_server, id_user=target_data.id_user)
+						#ewitem.item_dropall(id_server=target_data.id_server, id_user=target_data.id_user)
 
 						# Give a bonus to the player's weapon skill for killing a stronger player.
 						# if target_data.slimelevel >= user_data.slimelevel and weapon is not None:
@@ -467,7 +467,7 @@ class EwEnemy:
 						# Player was killed. Remove its id from enemies with defender ai.
 						enemy_data.id_target = ""
 						target_data.id_killer = enemy_data.id_enemy
-						target_data.die(cause=ewcfg.cause_enemy_killing)
+						target_data.die(cause=ewcfg.cause_killing_enemy)
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
 
 						kill_descriptor = "beaten to death"
@@ -756,6 +756,7 @@ async def summon_enemy(cmd):
 
 # Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):
+	#time_start = time.time()
 	
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
@@ -770,14 +771,14 @@ async def enemy_perform_action(id_server):
 		ewcfg.enemy_lifestate_dead,
 		despawn_timenow
 	))
-#	enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
-#		id_enemy = ewcfg.col_id_enemy
-#	),(
-#		id_server,
-#	))
+	#enemydata = ewutils.execute_sql_query("SELECT {id_enemy} FROM enemies WHERE id_server = %s".format(
+	#	id_enemy = ewcfg.col_id_enemy
+	#),(
+	#	id_server,
+	#))
 
 	# Remove duplicates from SQL query
-	enemydata = set(enemydata)
+	#enemydata = set(enemydata)
 
 	for row in enemydata:
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
@@ -797,6 +798,9 @@ async def enemy_perform_action(id_server):
 			resp_cont = await enemy.kill()
 			if resp_cont != None:
 				await resp_cont.post()
+
+	#time_end = time.time()
+	#ewutils.logMsg("time spent on performing enemy actions: {}".format(time_end - time_start))
 
 # Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
 async def spawn_enemy(id_server):
@@ -1365,6 +1369,11 @@ def get_enemy_data(enemy_type):
 		enemy.ai = ewcfg.enemy_ai_defender
 		enemy.display_name = ewcfg.enemy_displayname_microslime
 		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
+		
+	elif enemy_type == ewcfg.enemy_type_slimeofgreed:
+		enemy.ai = ewcfg.enemy_ai_defender
+		enemy.display_name = ewcfg.enemy_displayname_slimeofgreed
+		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
 
 	elif enemy_type == ewcfg.enemy_type_dinoslime:
 		enemy.ai = ewcfg.enemy_ai_attacker_a
@@ -1429,6 +1438,9 @@ def get_enemy_slime(enemy_type):
 	elif enemy_type == ewcfg.enemy_type_microslime:
 		minslime = 10000
 		maxslime = 50000
+	elif enemy_type == ewcfg.enemy_type_slimeofgreed:
+		minslime = 20000
+		maxslime = 100000
 	elif enemy_type == ewcfg.enemy_type_dinoslime:
 		minslime = 250000
 		maxslime = 500000

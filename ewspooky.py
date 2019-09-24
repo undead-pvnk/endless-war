@@ -33,10 +33,10 @@ async def revive(cmd):
 			market_data = EwMarket(id_server = cmd.message.server.id)
 
 			# Endless War collects his fee.
-			fee = (player_data.slimecoin / 10)
-			player_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
-			market_data.slimes_revivefee += fee
-			player_data.busted = False
+			#fee = (player_data.slimecoin / 10)
+			#player_data.change_slimecoin(n = -fee, coinsource = ewcfg.coinsource_revival)
+			#market_data.slimes_revivefee += fee
+			#player_data.busted = False
 			
 			# Preserve negaslime
 			if player_data.slimes < 0:
@@ -124,7 +124,7 @@ async def haunt(cmd):
 			response = "He is too far from the sewers in his ivory tower, and thus cannot be haunted."
 		elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
 			# Disallow haunting if the user has haunted too recently.
-			response = "You're being a little TOO spooky lately, don't you think?"
+			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
 		elif not ewutils.is_otp(haunted_data):
