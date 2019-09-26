@@ -1383,17 +1383,34 @@ def gen_item_props(item):
 	return item_props
 		
 def applyrepel(item, name, user_data):
-
+	
 	item_delete(item.id_item)
 	response = ""
+	statuses = user_data.getStatusEffects()
 	
 	if name == ewcfg.repel_item_names[0]:  # Regular
+		
+		if ewcfg.status_superrepelled_id in statuses:
+			user_data.clear_status(ewcfg.status_superrepelled_id)
+		if ewcfg.status_maxrepelled_id in statuses:
+			user_data.clear_status(ewcfg.status_maxrepelled_id)
+			
 		response = user_data.applyStatus(id_status=ewcfg.status_repelled_id)
 	elif name == ewcfg.repel_item_names[1]:  # Super
+		
+		if ewcfg.status_repelled_id in statuses:
+			user_data.clear_status(ewcfg.status_repelled_id)
+		if ewcfg.status_maxrepelled_id in statuses:
+			user_data.clear_status(ewcfg.status_maxrepelled_id)
+			
 		response = user_data.applyStatus(id_status=ewcfg.status_superrepelled_id)
 	elif name == ewcfg.repel_item_names[2]:  # Max
-		response = user_data.applyStatus(id_status=ewcfg.status_maxrepelled_id)
 		
-	print(name)
+		if ewcfg.status_repelled_id in statuses:
+			user_data.clear_status(ewcfg.status_repelled_id)
+		if ewcfg.status_superrepelled_id in statuses:
+			user_data.clear_status(ewcfg.status_superrepelled_id)
+			
+		response = user_data.applyStatus(id_status=ewcfg.status_maxrepelled_id)
 		
 	return response

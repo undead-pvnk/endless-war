@@ -254,6 +254,8 @@ class EwEnemy:
 					response = random.choice(ewcfg.coward_responses)
 					response = response.format(enemy_data.display_name, enemy_data.display_name)
 					resp_cont.add_channel_response(ch_name, response)
+		if enemy_data.ai == ewcfg.enemy_ai_sandbag:
+			target_data = None
 		else:
 			target_data = get_target_by_ai(enemy_data)
 
@@ -313,7 +315,6 @@ class EwEnemy:
 
 			# member = discord.utils.get(channel.server.members, name=target_player.display_name)
 			# print(member)
-					
 
 			target_mutations = target_data.get_mutations()
 
@@ -614,8 +615,8 @@ class EwEnemy:
 				#new_district = EwDistrict(district=new_poi, id_server=self.id_server)
 				#if len(new_district.get_enemies_in_district() > 0:
 
-				# When a raid boss enters a new district, give it a new identifier
-				self.identifier = set_identifier(new_poi, self.id_server)
+				# When a raid boss enters a new district, give it a blank identifier
+				self.identifier = ''
 
 				new_poi_def = ewcfg.id_to_poi.get(new_poi)
 				new_ch_name = new_poi_def.channel
@@ -794,8 +795,12 @@ async def enemy_perform_action(id_server):
 					if resp_cont != None:
 						await resp_cont.post()
 
-			# If an enemy is alive, make it peform the kill function.
-			resp_cont = await enemy.kill()
+			# If an enemy is alive and not a sandbag, make it peform the kill function.
+			if enemy.enemytype != ewcfg.enemy_type_sandbag:
+				resp_cont = await enemy.kill()
+			else:
+				resp_cont = None
+				
 			if resp_cont != None:
 				await resp_cont.post()
 
@@ -816,13 +821,13 @@ async def spawn_enemy(id_server):
 
 	rarity_choice = random.randrange(10000)
 
-	if rarity_choice <= 4500:
+	if rarity_choice <= 5200:
 		# common enemies
 		enemytype = random.choice(ewcfg.common_enemies)
-	elif rarity_choice <= 7200:
+	elif rarity_choice <= 8000:
 		# uncommon enemies
 		enemytype = random.choice(ewcfg.uncommon_enemies)
-	elif rarity_choice <= 9000:
+	elif rarity_choice <= 9700:
 		# rare enemies
 		enemytype = random.choice(ewcfg.rare_enemies)
 	else:
@@ -848,7 +853,12 @@ async def spawn_enemy(id_server):
 
 	while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-		potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
+		# Sand bags only spawn in the dojo
+		if enemytype == ewcfg.enemy_type_sandbag:
+			potential_chosen_poi = 'thedojo'
+		else:
+			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
+			
 		# potential_chosen_poi = 'cratersvilleoutskirts'
 		potential_chosen_district = EwDistrict(district=potential_chosen_poi, id_server=id_server)
 		enemies_list = potential_chosen_district.get_enemies_in_district()
@@ -876,6 +886,8 @@ async def spawn_enemy(id_server):
 
 		if enemytype not in ewcfg.raid_bosses:
 			response = "**An enemy draws near!!** It's a level {} {}, and has {} slime.".format(enemy.level, enemy.display_name, enemy.slimes)
+			if enemytype == ewcfg.enemy_type_sandbag:
+				response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(enemy.display_name, enemy.level, enemy.slimes)
 		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
 	return response, ch_name
@@ -1360,6 +1372,11 @@ def get_enemy_data(enemy_type):
 	enemy.rare_status = rare_status
 
 	# Normal enemies
+	if enemy_type == ewcfg.enemy_type_sandbag:
+		enemy.ai = ewcfg.enemy_ai_sandbag
+		enemy.display_name = ewcfg.enemy_displayname_sandbag
+		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
+	
 	if enemy_type == ewcfg.enemy_type_juvie:
 		enemy.ai = ewcfg.enemy_ai_coward
 		enemy.display_name = ewcfg.enemy_displayname_juvie
@@ -1429,42 +1446,10 @@ def get_enemy_data(enemy_type):
 # Returns a randomized amount of slime based on enemy type
 def get_enemy_slime(enemy_type):
 	slime = 0
-	minslime = 0
-	maxslime = 0
 	
-	if enemy_type == ewcfg.enemy_type_juvie:
-		minslime = 10000
-		maxslime = 50000
-	elif enemy_type == ewcfg.enemy_type_microslime:
-		minslime = 10000
-		maxslime = 50000
-	elif enemy_type == ewcfg.enemy_type_slimeofgreed:
-		minslime = 20000
-		maxslime = 100000
-	elif enemy_type == ewcfg.enemy_type_dinoslime:
-		minslime = 250000
-		maxslime = 500000
-	elif enemy_type == ewcfg.enemy_type_slimeadactyl:
-		minslime = 500000
-		maxslime = 750000
-	elif enemy_type == ewcfg.enemy_type_desertraider:
-		minslime = 250000
-		maxslime = 750000
-	elif enemy_type == ewcfg.enemy_type_mammoslime:
-		minslime = 600000
-		maxslime = 900000
-	elif enemy_type == ewcfg.enemy_type_megaslime:
-		minslime = 1000000
-		maxslime = 1000000
-	elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
-		minslime = 1750000
-		maxslime = 3000000
-	elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
-		minslime = 3500000
-		maxslime = 5000000
-	elif enemy_type ==  ewcfg.enemy_type_unnervingfightingoperator:
-		minslime = 1000000
-		maxslime = 3000000
+	slimetable = ewcfg.enemy_slime_table[enemy_type]
+	minslime = slimetable[0]
+	maxslime = slimetable[1]
 	
 	slime = random.randrange(minslime, (maxslime + 1))	
 	return slime
@@ -1486,7 +1471,7 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {time_lastenter} ASC".format(
+			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status IN {repel_statuses})) ORDER BY {time_lastenter} ASC".format(
 				id_user=ewcfg.col_id_user,
 				life_state=ewcfg.col_life_state,
 				time_lastenter=ewcfg.col_time_lastenter,
@@ -1495,6 +1480,7 @@ def get_target_by_ai(enemy_data):
 				targettimer=targettimer,
 				life_state_corpse=ewcfg.life_state_corpse,
 				life_state_kingpin=ewcfg.life_state_kingpin,
+				repel_statuses=ewcfg.repel_statuses,
 			), (
 				enemy_data.poi,
 				enemy_data.id_server
@@ -1504,7 +1490,7 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) ORDER BY {slimes} DESC".format(
+			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status IN {repel_statuses})) ORDER BY {slimes} DESC".format(
 				id_user=ewcfg.col_id_user,
 				life_state=ewcfg.col_life_state,
 				slimes=ewcfg.col_slimes,
@@ -1514,6 +1500,7 @@ def get_target_by_ai(enemy_data):
 				targettimer=targettimer,
 				life_state_corpse=ewcfg.life_state_corpse,
 				life_state_kingpin=ewcfg.life_state_kingpin,
+				repel_statuses=ewcfg.repel_statuses,
 			), (
 				enemy_data.poi,
 				enemy_data.id_server
@@ -1521,7 +1508,7 @@ def get_target_by_ai(enemy_data):
 		if len(users) > 0:
 			target_data = EwUser(id_user=users[0][0], id_server=enemy_data.id_server)
 			
-	# If an enemy is a raidboss, don't let it attack until 3 seconds have passed when entering a new district.
+	# If an enemy is a raidboss, don't let it attack until some time has passed when entering a new district.
 	if enemy_data.enemytype in ewcfg.raid_bosses and enemy_data.time_lastenter > raidbossaggrotimer:
 		target_data = None
 

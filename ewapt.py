@@ -498,6 +498,10 @@ async def apt_look(cmd):
 	iterate = 0
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	await resp_cont.post(channel=cmd.message.channel)
+	resp_cont = ewutils.EwResponseContainer(id_server=playermodel.id_server)
+
 	if(len(frids) > 0):
 		response += "\n\nThe fridge contains: "
 		fridge_pile = []
@@ -507,6 +511,10 @@ async def apt_look(cmd):
 		response = response + '.'
 	closets = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	await resp_cont.post(channel=cmd.message.channel)
+	resp_cont = ewutils.EwResponseContainer(id_server=playermodel.id_server)
+
 	if (len(closets) > 0):
 		response += "\n\nThe closet contains: "
 		closet_pile = []
@@ -515,6 +523,9 @@ async def apt_look(cmd):
 		response += ewutils.formatNiceList(closet_pile)
 		response = response + '.'
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	await resp_cont.post(channel=cmd.message.channel)
+	resp_cont = ewutils.EwResponseContainer(id_server=playermodel.id_server)
 
 	freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
 
