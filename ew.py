@@ -228,6 +228,8 @@ class EwUser:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_winnings, n = change)
 			if coinsource == ewcfg.coinsource_withdraw:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_withdrawn, n = change)
+			if coinsource == ewcfg.coinsource_recycle:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_from_recycling, n = change)
 		else:
 			change *= -1
 			if coinsource == ewcfg.coinsource_revival:

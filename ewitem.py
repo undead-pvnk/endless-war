@@ -368,6 +368,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
 	drop_candidates = []
+	#safe_items = [ewcfg.item_id_gameguide]
 
 	# Filter out Soulbound items.
 	for item in items:
@@ -757,7 +758,7 @@ def inventory(
 				id_item = item.get('id_item')
 				name = item_def.str_name
 
-				quantity = 0
+				quantity = 1
 				if item.get('stack_max') > 0:
 					quantity = item.get('stack_size')
 
@@ -790,49 +791,81 @@ def inventory(
 	Dump out a player's inventory.
 """
 async def inventory_print(cmd):
-	can_message_user = True
 	
-	sort_by_type = False
-	sort_by_name = False
-	sort_by_id = False
-
-	if cmd.tokens_count > 1:
-		sorting_method = cmd.tokens[1].lower()
-
-		if sorting_method == 'type':
-			sort_by_type = True
-		elif sorting_method == 'name':
-			sort_by_name = True
-		elif sorting_method == 'id':
-			sort_by_id = True
+	community_chest = False
+	can_message_user = True
+	inventory_source = cmd.message.author.id
 
 	player = EwPlayer(id_user = cmd.message.author.id)
 
+	user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
+		if poi.community_chest == None:
+			response = "There is no community chest here."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		community_chest = True
+		can_message_user = False
+		inventory_source = poi.community_chest
+
+	sort_by_type = False
+	sort_by_name = False
+	sort_by_id = False
+	
+	stacking = False
+	stacked_message_list = []
+	stacked_item_map = {}
+
+	if cmd.tokens_count > 1:
+		token_list = cmd.tokens[1:]
+		lower_token_list = []
+		for token in token_list:
+			token = token.lower()
+			lower_token_list.append(token)
+
+		if 'type' in lower_token_list:
+			sort_by_type = True
+		elif 'name' in lower_token_list:
+			sort_by_name = True
+		elif 'id' in lower_token_list:
+			sort_by_id = True
+			
+		if 'stack' in lower_token_list:
+			stacking = True
+
 	if sort_by_id:
 		items = inventory(
-			id_user = cmd.message.author.id,
+			id_user = inventory_source,
 			id_server = player.id_server,
 			item_sorting_method='id'
 		)
 	elif sort_by_type:
 		items = inventory(
-			id_user=cmd.message.author.id,
+			id_user=inventory_source,
 			id_server=player.id_server,
 			item_sorting_method='type'
 		)
 	else:
 		items = inventory(
-			id_user=cmd.message.author.id,
+			id_user=inventory_source,
 			id_server=player.id_server,
 		)
 
-	if len(items) == 0:
-		response = "You don't have anything."
+	if community_chest:
+		if len(items) == 0:
+			response = "The community chest is empty."
+		else:
+			response = "The community chest contains:"
 	else:
-		response = "You are holding:"
+		if len(items) == 0:
+			response = "You don't have anything."
+		else:
+			response = "You are holding:"
 
+	msg_handle = None
 	try:
-		msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+		if can_message_user:
+			msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
 
@@ -853,21 +886,54 @@ async def inventory_print(cmd):
 			id_item = item.get('id_item')
 			quantity = item.get('quantity')
 
-			response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
-				id_item = item.get('id_item'),
-				name = item.get('name'),
-				soulbound_style = ("**" if item.get('soulbound') else ""),
-				quantity = (" x{:,}".format(quantity) if (quantity > 0) else "")
-			)
-			if len(response) + len(response_part) > 1492:
+			if not stacking:
+				response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
+					id_item = item.get('id_item'),
+					name = item.get('name'),
+					soulbound_style = ("**" if item.get('soulbound') else ""),
+					quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
+				)
+			else:
+
+				item_name = item.get('name')
+				if item_name in stacked_item_map:
+					stacked_item = stacked_item_map.get(item_name)
+					stacked_item['quantity'] += item.get('quantity')
+				else:
+					stacked_item_map[item_name] = item
+				
+			if not stacking and len(response) + len(response_part) > 1492:
 				if can_message_user:
 					await ewutils.send_message(cmd.client, cmd.message.author, response)
 				else:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				response = ""
+				
+			if not stacking:
+				response += response_part
 
-			response += response_part
+		if stacking:
+			item_names = stacked_item_map.keys()
+			if sort_by_name:
+				item_names = sorted(item_names)
+			for item_name in item_names:
+				item = stacked_item_map.get(item_name)
+				quantity = item.get('quantity')
+				response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
+					name=item.get('name'),
+					soulbound_style=("**" if item.get('soulbound') else ""),
+					quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
+				)
+				
+				if len(response) + len(response_part) > 1492:
+					if can_message_user:
+						await ewutils.send_message(cmd.client, cmd.message.author, response)
+					else:
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+					response = ""
+				response += response_part
 
 		if can_message_user:
 			await ewutils.send_message(cmd.client, cmd.message.author, response)

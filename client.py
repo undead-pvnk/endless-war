@@ -165,14 +165,18 @@ cmd_map = {
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
+
 	ewcfg.cmd_frame: ewapt.frame,
 	ewcfg.cmd_extractsoul: ewitem.soulextract,
 	ewcfg.cmd_returnsoul: ewitem.returnsoul,
 	ewcfg.cmd_betsoul: ewcasino.betsoul,
 	ewcfg.cmd_buysoul: ewcasino.buysoul,
 	ewcfg.cmd_squeeze: ewitem.squeeze,
-	ewcfg.cmd_store: ewapt.lobbywarning,
-	ewcfg.cmd_take: ewapt.lobbywarning,
+
+
+	ewcfg.cmd_store: ewcmd.store_item,
+	ewcfg.cmd_take: ewcmd.remove_item,
+
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,
@@ -279,6 +283,7 @@ cmd_map = {
 	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
@@ -331,6 +336,7 @@ cmd_map = {
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
+	ewcfg.cmd_transportmap: ewcmd.transportmap,
 
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
@@ -369,6 +375,10 @@ cmd_map = {
 	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
 	ewcfg.cmd_discard_alt1: ewitem.discard,
+
+	# recycle your trash at the slimecorp recycling plant
+	ewcfg.cmd_recycle: ewcmd.recycle,
+	ewcfg.cmd_recycle_alt1: ewcmd.recycle,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -1046,7 +1056,7 @@ async def on_message(message):
 				# Only send the help doc once every thirty seconds. There's no need to spam it.
 				if (time_now - time_last) > 30:
 					last_helped_times[message.author.id] = time_now
-					await ewutils.send_message(client, message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
+					await ewutils.send_message(client, message.channel, ewcfg.generic_help_response)
 
 			# Nothing else to do in a DM.
 			return
