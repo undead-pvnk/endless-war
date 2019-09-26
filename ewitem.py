@@ -1069,10 +1069,16 @@ async def item_use(cmd):
 
 		if item.item_type == ewcfg.it_item:
 			name = item_sought.get('name')
+			context = item_sought.get('context')
 			if name == "Trading Cards":
 				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
-			elif name in ewcfg.repel_item_names:
-				response = applyrepel(item, name, user_data)
+			elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
+				if context == 'repel':
+					response = user_data.applyStatus(ewcfg.status_repelled_id)
+				elif context == 'superrepel':
+					response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=2)
+				elif context == 'maxrepel':
+					response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1381,36 +1387,3 @@ def gen_item_props(item):
 		}
 
 	return item_props
-		
-def applyrepel(item, name, user_data):
-	
-	item_delete(item.id_item)
-	response = ""
-	statuses = user_data.getStatusEffects()
-	
-	if name == ewcfg.repel_item_names[0]:  # Regular
-		
-		if ewcfg.status_superrepelled_id in statuses:
-			user_data.clear_status(ewcfg.status_superrepelled_id)
-		if ewcfg.status_maxrepelled_id in statuses:
-			user_data.clear_status(ewcfg.status_maxrepelled_id)
-			
-		response = user_data.applyStatus(id_status=ewcfg.status_repelled_id)
-	elif name == ewcfg.repel_item_names[1]:  # Super
-		
-		if ewcfg.status_repelled_id in statuses:
-			user_data.clear_status(ewcfg.status_repelled_id)
-		if ewcfg.status_maxrepelled_id in statuses:
-			user_data.clear_status(ewcfg.status_maxrepelled_id)
-			
-		response = user_data.applyStatus(id_status=ewcfg.status_superrepelled_id)
-	elif name == ewcfg.repel_item_names[2]:  # Max
-		
-		if ewcfg.status_repelled_id in statuses:
-			user_data.clear_status(ewcfg.status_repelled_id)
-		if ewcfg.status_superrepelled_id in statuses:
-			user_data.clear_status(ewcfg.status_superrepelled_id)
-			
-		response = user_data.applyStatus(id_status=ewcfg.status_maxrepelled_id)
-		
-	return response

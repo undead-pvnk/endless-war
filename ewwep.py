@@ -1761,12 +1761,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if ewcfg.status_repelled_id in statuses:
 		user_data.clear_status(ewcfg.status_repelled_id)
 		slimes_damage *= 0.1
-	elif ewcfg.status_superrepelled_id in statuses:
-		user_data.clear_status(ewcfg.status_superrepelled_id)
-		slimes_damage *= 0.1
-	elif ewcfg.status_maxrepelled_id in statuses:
-		user_data.clear_status(ewcfg.status_maxrepelled_id)
-		slimes_damage *= 0.1
 
 	if weapon is None:
 		slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -1783,8 +1777,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 		
 	if sandbag_mode:
-		backfire = False
-		miss = True
 		slimes_spent = 0
 		slimes_dropped = 0
 
@@ -1824,6 +1816,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		strikes = ctn.strikes
 		bystander_damage = ctn.bystander_damage
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
+		
+		if sandbag_mode and backfire:
+			backfire = False
+			miss = True
 
 		weapon_item.item_props['time_lastattack'] = time_now
 		weapon_item.persist()

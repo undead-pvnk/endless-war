@@ -1678,12 +1678,6 @@ forbiddenstuffedcrust_desc = "What are you waiting for? You’ve come this far, 
 	"It’s ready to die. Slather it in some low-quality marinara, toss it up into the air like in the old movies, and " \
 	"shove it into the oven, to teach it the true meaning of heat death. Eat a slice of that motherfucking pizza."
 
-repel_item_names = [ # Used to check if a repel is being used in ewitem.item_use()
-	"FUCK ENERGY Body Spray",
-	"Super Duper FUCK ENERGY Body Spray",
-	"G-Max FUCK ENERGY Body Spray"
-]
-
 # List of normal items.
 item_list = [
 	EwGeneralItem(
@@ -1950,6 +1944,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = item_id_fuckenergybodyspray,
+		context = 'repel',
 		alias = [
 			"repel",
 			"body spray",
@@ -1963,6 +1958,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = item_id_superduperfuckenergybodyspray,
+		context = 'superrepel',
 		alias = [
 			"superrepel",
 			"super repel",
@@ -1979,6 +1975,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = item_id_gmaxfuckenergybodyspray,
+		context = 'maxrepel',
 		alias = [
 			"maxrepel",
 			"max repel",
@@ -12732,17 +12729,10 @@ status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 status_repelled_id = "repelled"
-status_superrepelled_id = "superrepelled"
-status_maxrepelled_id = "maxrepelled"
-
-# used for enemy targeting system
-repel_statuses = (status_repelled_id, status_superrepelled_id, status_maxrepelled_id)
 
 time_expire_burn = 12
 
 time_expire_repel_base = 60 * 60 * 3 # 3 hours
-time_expire_repel_super = 60 * 60 * 6 # 6 hours
-time_expire_repel_max = 60 * 60 * 12 # 12 hours
 
 status_effect_list = [
 	EwStatusEffectDef(
@@ -12769,21 +12759,7 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_repelled_id,
 		time_expire = time_expire_repel_base,
-		str_acquire = 'You spray yourself with the FUCK ENERGY Body Spray. Its effects will last for three hours.',
-		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
-		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
-	),
-	EwStatusEffectDef(
-		id_status = status_superrepelled_id,
-		time_expire = time_expire_repel_super,
-		str_acquire = 'You spray yourself with the Super Duper FUCK ENERGY Body Spray. Its effects will last for six hours.',
-		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
-		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
-	),
-	EwStatusEffectDef(
-		id_status = status_maxrepelled_id,
-		time_expire = time_expire_repel_max,
-		str_acquire = 'You spray yourself with the G-Max FUCK ENERGY Body Spray. Its effects will last for twelve hours.',
+		str_acquire = 'You spray yourself with the FUCK ENERGY Body Spray.',
 		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
 		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
 	),
@@ -12796,9 +12772,7 @@ for status in status_effect_list:
 
 stackable_status_effects = [
 	status_burning_id,
-	status_repelled_id,
-	status_superrepelled_id,
-	status_maxrepelled_id,
+	status_repelled_id
 ]
 # Shitty bait that always yields Plebefish while fishing.
 plebe_bait = []
