@@ -1266,6 +1266,23 @@ async def browse(cmd):
 	else:
 		await apt_look(cmd=cmd)
 
+async def frame(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	namechange = cmd.message.content[(len(ewcfg.cmd_frame)):].strip()
+
+	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server) and len(namechange) >= 3:
+		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server)
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		item.item_props['furniture_desc'] = namechange
+		item.persist()
+		response = "You slip the photo into a frame."
+	elif len(namechange) < 3:
+		response = "You try to put the nothing you have into the frame, but then you realize that's fucking stupid. Put an image link in there"
+	else:
+		response = "You don't have a frame."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 def toss_items(id_user = None, id_server = None, poi = None):
@@ -1343,6 +1360,10 @@ async def aptCommands(cmd):
 	cmd.message.server = server
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_extractsoul:
+		return await ewitem.soulextract(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_returnsoul:
+		return await ewitem.returnsoul(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_releaseprop:
 		return await releaseprop(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_releasefish:
@@ -1433,6 +1454,8 @@ async def aptCommands(cmd):
 		return await ewmap.scout(cmd=cmd)
 	elif ewcfg.cmd_smoke == cmd_text:
 		return await ewcosmeticitem.smoke(cmd=cmd)
+	elif ewcfg.cmd_squeeze == cmd_text:
+		return await ewitem.squeeze(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
 	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:

@@ -290,6 +290,9 @@ async def data(cmd):
 		else:
 			response += "You are a level {} slimeboi.".format(user_data.slimelevel)
 
+		if user_data.has_soul == 0:
+			response += " You have no soul."
+
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
 		weapon_item = EwItem(id_item = user_data.weapon)
