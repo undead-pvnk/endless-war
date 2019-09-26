@@ -1760,7 +1760,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	statuses = user_data.getStatusEffects()
 	if ewcfg.status_repelled_id in statuses:
 		user_data.clear_status(ewcfg.status_repelled_id)
-		slimes_damage *= 0.1
+		slimes_damage /= 1000
+		slimes_damage = math.ceil(slimes_damage)
 
 	if weapon is None:
 		slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
