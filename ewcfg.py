@@ -1609,7 +1609,7 @@ item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
-item_id_fuckenergybodyspray = "fuckenergybodyspray"
+item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 
@@ -1953,7 +1953,7 @@ item_list = [
 		price = 10000,
 	),
 	EwGeneralItem(
-		id_item = item_id_fuckenergybodyspray,
+		id_item = item_id_juviegradefuckenergybodyspray,
 		context = 'repel',
 		alias = [
 			"regular body spray",
