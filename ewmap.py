@@ -1049,7 +1049,7 @@ async def move(cmd = None, isApt = False):
 
 					val_actual = int(val_actual / user_data.move_speed)
 					if val_actual > 0:
-						await asyncio.sleep(0)
+						await asyncio.sleep(val_actual)
 
 		await asyncio.sleep(30)
 		try:

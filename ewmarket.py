@@ -1082,12 +1082,12 @@ async def trade(cmd):
 
 			response = "You both head into a shady allyway nearby to conduct your business."
 
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 		else:
 			ewutils.active_trades[user_data.id_user] = {}
 			ewutils.active_trades[trade_partner.id_user] = {}
-			print("timwout")
+			response = "They didn't respond in time."
+
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def offer_item(cmd):
 	user_data = EwUser(member=cmd.message.author)
@@ -1205,6 +1205,7 @@ async def complete_trade(cmd):
 					elif item.get("item_type") == ewcfg.it_cosmetic:
 						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
 						cosmetic.item_props["adorned"] = False
+						cosmetic.item_props["slimeoid"] = False
 						cosmetic.persist()
 				
 					ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)	
@@ -1216,6 +1217,7 @@ async def complete_trade(cmd):
 					elif item.get("item_type") == ewcfg.it_cosmetic:
 						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
 						cosmetic.item_props["adorned"] = False
+						cosmetic.item_props["slimeoid"] = False
 						cosmetic.persist()
 
 					ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)			
