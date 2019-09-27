@@ -1760,7 +1760,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	statuses = user_data.getStatusEffects()
 	if ewcfg.status_repelled_id in statuses:
 		user_data.clear_status(ewcfg.status_repelled_id)
-		user_data.applyStatus(ewcfg.status_repelaftereffects_id)
+		after_effects_response = user_data.applyStatus(ewcfg.status_repelaftereffects_id)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, after_effects_response))
 		slimes_damage /= 1000
 		slimes_damage = math.ceil(slimes_damage)
 		

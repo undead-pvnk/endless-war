@@ -1946,12 +1946,18 @@ item_list = [
 		id_item = item_id_fuckenergybodyspray,
 		context = 'repel',
 		alias = [
+			"regular body spray",
+			"regbs",
+			"regular repel",
+			"juvie",
+			"juviegrade",
+			"juvie grade",
 			"repel",
 			"body spray",
 			"bodyspray",
 			"bs",
 		],
-		str_name = "FUCK ENERGY Body Spray",
+		str_name = "Juvie Grade FUCK ENERGY Body Spray",
 		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
 		vendors = [vendor_glocksburycomics],
 		price = 10000,
@@ -8947,6 +8953,7 @@ poi_list = [
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
 		alias = [
+			"gbc",
 			"gc",
 			"glocksburycomics",
 			"comicstore",
