@@ -1069,7 +1069,7 @@ async def item_use(cmd):
 
 		if item.item_type == ewcfg.it_item:
 			name = item_sought.get('name')
-			context = item_sought.get('context')
+			context = item.item_props.get('context')
 			if name == "Trading Cards":
 				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
 			elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):

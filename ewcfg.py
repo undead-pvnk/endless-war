@@ -13075,7 +13075,7 @@ enemy_drop_tables = {
 
 # Table of all min and max slime counts for enemies. Min to max, left to right.
 enemy_slime_table = {
-	enemy_type_sandbag: [1000000000, 1000000000], # 1 billion
+	enemy_type_sandbag: [100000000000, 100000000000], # 100 billion
 	enemy_type_juvie: [10000, 50000],
 	enemy_type_microslime: [10000, 50000],
 	enemy_type_slimeofgreed: [20000, 100000],
