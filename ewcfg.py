@@ -8960,6 +8960,7 @@ poi_list = [
 		pvp = False,
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
+		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
