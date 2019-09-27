@@ -8,7 +8,6 @@ import ewitem
 from ewmarket import EwMarket
 from ew import EwUser
 from ewitem import EwItem
-from ewcasino import check
 
 class EwFisher:
 	fishing = False
@@ -915,7 +914,7 @@ async def barter(cmd):
 				accepted = False
 
 				try:
-					message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = check)
+					message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
 
 					if message != None:
 						if message.content.lower() == "!accept":

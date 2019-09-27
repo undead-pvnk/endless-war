@@ -23,7 +23,7 @@ from ewapt import EwFurniture
 import ewdebug
 
 # Global configuration options.
-version = "v3.7c"
+version = "v3.7d"
 
 dir_msgqueue = 'msgqueue'
 
@@ -743,6 +743,11 @@ cmd_get_caliginous_alt1 = cmd_prefix + "kismesis"
 cmd_get_ashen = cmd_prefix + "ashen"
 cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 
+cmd_trade = cmd_prefix + 'trade'
+cmd_offer = cmd_prefix + 'offer'
+cmd_completetrade = cmd_prefix + 'completetrade'
+cmd_canceltrade = cmd_prefix + 'canceltrade'
+
 offline_cmds = [
 	cmd_move,
 	cmd_move_alt1,
@@ -1132,6 +1137,11 @@ mines_wall_map = {
 	poi_id_tt_mines : channel_ttmineswall,
 	poi_id_cv_mines : channel_cvmineswall
 }
+
+# trading
+trade_state_proposed = 0
+trade_state_ongoing = 1
+trade_state_complete = 2
 
 # Common strings.
 str_casino_closed = "The Slime Casino only operates at night."
@@ -8967,6 +8977,7 @@ poi_list = [
 		pvp = False,
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
+		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
@@ -12874,6 +12885,7 @@ help_responses = {
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
   	"profile":"This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+	"trading":"Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Using this command again for the same item removes it from you offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**."
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -12882,7 +12894,7 @@ help_responses_ordered_keys = [
 	"dojo", "subzones", "scouting", "otp", "wanted",
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
-	"casino", "bleeding", "offline", "profile"
+	"casino", "bleeding", "offline", "profile", "trading"
 ]
 
 mutation_descriptions = {

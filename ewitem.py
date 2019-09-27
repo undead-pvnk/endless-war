@@ -251,6 +251,8 @@ def item_delete(
 		# Clean up the database handles.
 		cursor.close()
 		ewutils.databaseClose(conn_info)
+	
+	remove_from_trades(id_item)
 
 
 """
@@ -1121,6 +1123,8 @@ def give_item(
 			)
 		)
 
+		remove_from_trades(id_item)
+
 		item = EwItem(id_item = id_item)
 		# Reset the weapon's damage modifying stats
 		if item.item_type == ewcfg.it_weapon:
@@ -1392,3 +1396,14 @@ def gen_item_props(item):
 		}
 
 	return item_props
+	
+# search and remove the given item from an ongoing trade
+def remove_from_trades(id_item):
+	for trader in ewutils.trading_offers:
+		for item in ewutils.trading_offers.get(trader):
+			if id_item == item.get("id_item"):
+				ewutils.trading_offers.get(trader).remove(item)
+
+				ewutils.active_trades.get(trader)["state"] = ewcfg.trade_state_ongoing 
+				ewutils.active_trades.get(ewutils.active_trades.get(trader).get("trader"))["state"] = ewcfg.trade_state_ongoing
+				return

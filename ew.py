@@ -147,6 +147,9 @@ class EwUser:
 		
 	def die(self, cause = None):
 		time_now = int(time.time())
+
+		ewutils.end_trade(self.id_user)
+
 		if cause == ewcfg.cause_busted:
 			self.busted = True
 			self.poi = ewcfg.poi_id_thesewers
@@ -411,20 +414,18 @@ class EwUser:
 			status = None
 
 			status = ewcfg.status_effects_def_map.get(id_status)
+			time_expire = status.time_expire * multiplier
 
 			if status != None:
 				statuses = self.getStatusEffects()
 
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire=status.time_expire, value=value, source=source)
+				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source)
 				
-				status_effect.time_expire *= multiplier
-				status_effect.persist()
-
 				if id_status in statuses:
 					status_effect.value = value
 
 					if status.time_expire > 0 and id_status in ewcfg.stackable_status_effects:
-						status_effect.time_expire += status.time_expire
+						status_effect.time_expire += time_expire
 						response = status.str_acquire
 
 					status_effect.persist() 
