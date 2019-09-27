@@ -474,6 +474,8 @@ async def apt_look(cmd):
 	if isVisiting:
 		response = response.replace("your", "a")
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+
 	furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
 	furniture_id_list = []
@@ -484,17 +486,17 @@ async def apt_look(cmd):
 		furniture_id_list.append(i.item_props['id_furniture'])
 
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_lgbt):
-		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
+		furn_response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_haunted):
-		response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
+		furn_response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_highclass):
-		response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+		furn_response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_leather):
-		response += "34 innocent lives. 34 lives were taken to build the feng shui in this one room. Are you remorseful about that? Obsessed? Nobody has the base antipathy needed to peer into your mind and pick at your decisions. The leather finish admittedly does look fantastic, however. Nice work.\n\n"
+		furn_response += "34 innocent lives. 34 lives were taken to build the feng shui in this one room. Are you remorseful about that? Obsessed? Nobody has the base antipathy needed to peer into your mind and pick at your decisions. The leather finish admittedly does look fantastic, however. Nice work.\n\n"
 
-	response += furn_response
+	resp_cont.add_channel_response(cmd.message.channel.name, furn_response)
 
-	response += " "
+	response = " "
 	iterate = 0
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
@@ -507,6 +509,9 @@ async def apt_look(cmd):
 		response = response + '.'
 	closets = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	response = ""
+
 	if (len(closets) > 0):
 		response += "\n\nThe closet contains: "
 		closet_pile = []
@@ -515,12 +520,11 @@ async def apt_look(cmd):
 		response += ewutils.formatNiceList(closet_pile)
 		response = response + '.'
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
 
 	freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
 
-	response += freezeList
-
-	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	resp_cont.add_channel_response(cmd.message.channel.name, freezeList)
 	return await resp_cont.post(channel=cmd.message.channel)
 	#return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

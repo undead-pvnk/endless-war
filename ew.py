@@ -405,7 +405,7 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = 0):
+	def applyStatus(self, id_status = None, value = 0, source = 0, multiplier = 1):
 		response = ""
 		if id_status != None:
 			status = None
@@ -416,6 +416,9 @@ class EwUser:
 				statuses = self.getStatusEffects()
 
 				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire=status.time_expire, value=value, source=source)
+				
+				status_effect.time_expire *= multiplier
+				status_effect.persist()
 
 				if id_status in statuses:
 					status_effect.value = value
