@@ -1076,7 +1076,7 @@ async def suicide(cmd):
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
-				response = "You can't do that now"
+				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
 				
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
@@ -1880,38 +1880,39 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# Remove one item from stack
 		if ewcfg.weapon_class_thrown in weapon.classes:
 			weapon_item.stack_size -= 1
+		
+		if not sandbag_mode:
+			if ewcfg.weapon_class_exploding in weapon.classes:
+				user_data.persist()
+				enemy_data.persist()
 
-		if ewcfg.weapon_class_exploding in weapon.classes:
-			user_data.persist()
-			enemy_data.persist()
-
-			if not miss:
-				life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
-				bystander_faction = ""
-				if user_data.faction == "rowdys":
-					bystander_faction = "killers"
-				elif user_data.faction == "killers":
-					bystander_faction = "rowdys"
-				factions = ["", user_data.faction if backfire else bystander_faction]
-				# Burn players in district
-				if weapon.id_weapon == ewcfg.weapon_id_molotov:
-					bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
-					# TODO - Make enemies work with molotovs the same way players do.
-					for bystander in bystander_users:
-						# print(bystander)
-						bystander_user_data = EwUser(id_user=bystander, id_server=user_data.id_server)
-						bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
-						resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id,
-															   value=bystander_damage, source=user_data.id_user).format(
-							name_player=bystander_player_data.display_name)
-						resp_cont.add_channel_response(cmd.message.channel.name, resp)
-				# Damage players/enemies in district
-				else:
-					resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data,
-												  district_data=district_data, life_states=life_states,
-												  factions=factions, slimes_damage=bystander_damage, backfire=backfire,
-												  time_now=time_now, target_enemy=True)
-					resp_cont.add_response_container(resp)
+				if not miss:
+					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+					bystander_faction = ""
+					if user_data.faction == "rowdys":
+						bystander_faction = "killers"
+					elif user_data.faction == "killers":
+						bystander_faction = "rowdys"
+					factions = ["", user_data.faction if backfire else bystander_faction]
+					# Burn players in district
+					if weapon.id_weapon == ewcfg.weapon_id_molotov:
+						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+						# TODO - Make enemies work with molotovs the same way players do.
+						for bystander in bystander_users:
+							# print(bystander)
+							bystander_user_data = EwUser(id_user=bystander, id_server=user_data.id_server)
+							bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
+							resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id,
+																value=bystander_damage, source=user_data.id_user).format(
+								name_player=bystander_player_data.display_name)
+							resp_cont.add_channel_response(cmd.message.channel.name, resp)
+					# Damage players/enemies in district
+					else:
+						resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data,
+													district_data=district_data, life_states=life_states,
+													factions=factions, slimes_damage=bystander_damage, backfire=backfire,
+													time_now=time_now, target_enemy=True)
+						resp_cont.add_response_container(resp)
 
 			user_data = EwUser(member=cmd.message.author)
 
