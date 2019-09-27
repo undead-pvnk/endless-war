@@ -12729,6 +12729,7 @@ status_drunk_id = "drunk"
 status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 status_repelled_id = "repelled"
+status_repelaftereffects_id = "repelaftereffects"
 
 time_expire_burn = 12
 
@@ -12763,6 +12764,13 @@ status_effect_list = [
 		str_describe = 'They smell like shit, much to the displeasure of slime beasts.',
 		str_describe_self = 'You smell like shit, much to the displeasure of slime beasts.'
 	),
+	EwStatusEffectDef(
+		id_status = status_repelaftereffects_id,
+		time_expire = 2,
+		str_acquire = 'You try and shake off the body spray, but its stench still lingers, if only for a brief moment.',
+		str_describe = 'Their surroundings give off a slightly foul odor.',
+		str_describe_self = 'Your surroundings give off a slightly foul odor.'
+	),
 ]
 
 status_effects_def_map = {}
@@ -12772,7 +12780,8 @@ for status in status_effect_list:
 
 stackable_status_effects = [
 	status_burning_id,
-	status_repelled_id
+	status_repelled_id,
+	status_repelaftereffects_id,
 ]
 # Shitty bait that always yields Plebefish while fishing.
 plebe_bait = []

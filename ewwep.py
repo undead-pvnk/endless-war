@@ -1756,11 +1756,17 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
 	
-	# If the player is using a repel, remove the repel, and make the first hit do 90% less damage
+	# If the player is using a repel, remove the repel, and make the first hit do 99.9% less damage, rounded up.
 	statuses = user_data.getStatusEffects()
 	if ewcfg.status_repelled_id in statuses:
 		user_data.clear_status(ewcfg.status_repelled_id)
+		user_data.applyStatus(ewcfg.status_repelaftereffects_id)
 		slimes_damage /= 1000
+		slimes_damage = math.ceil(slimes_damage)
+		
+	# If the player has cancelled a repel by attacking an enemy, make all their hits do 99% less damage for two seconds, rounded up.
+	if ewcfg.status_repelaftereffects_id in statuses:
+		slimes_damage /= 100
 		slimes_damage = math.ceil(slimes_damage)
 
 	if weapon is None:
