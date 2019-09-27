@@ -916,6 +916,8 @@ async def move(cmd = None, isApt = False):
 		user_data.time_lastenter = int(time.time())
 		user_data.persist()
 
+		ewutils.end_trade(user_data.id_user)
+
 		await ewrolemgr.updateRoles(client = client, member = member_object)
 
 		channel = cmd.message.channel
@@ -1009,6 +1011,8 @@ async def move(cmd = None, isApt = False):
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
 					user_data.persist()
+
+					ewutils.end_trade(user_data.id_user)
 
 					await ewrolemgr.updateRoles(client = client, member = member_object)
 
