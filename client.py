@@ -160,12 +160,14 @@ cmd_map = {
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
-	ewcfg.cmd_propstand:ewapt.propstand,
-	ewcfg.cmd_releaseprop:ewapt.releaseprop,
-	ewcfg.cmd_releasefish:ewapt.releasefish,
+	ewcfg.cmd_propstand: ewapt.propstand,
+	ewcfg.cmd_releaseprop: ewapt.releaseprop,
+	ewcfg.cmd_releasefish: ewapt.releasefish,
+	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
-	ewcfg.cmd_store: ewapt.lobbywarning,
-	ewcfg.cmd_take: ewapt.lobbywarning,
+	ewcfg.cmd_store: ewcmd.store_item,
+	ewcfg.cmd_take: ewcmd.remove_item,
+
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,
@@ -272,6 +274,7 @@ cmd_map = {
 	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
@@ -311,6 +314,9 @@ cmd_map = {
 
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
+	
+	# Look around the POI, but do not obtain the district's description (reduces clutter and response time).
+	ewcfg.cmd_survey: ewmap.survey,
 	
 	# Inspect objects in a POI
 	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
@@ -1154,7 +1160,7 @@ async def on_message(message):
 
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
-		elif debug == True and cmd == '!getcoin':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getcoin'):
 			user_data = EwUser(member=message.author)
 			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)
 
@@ -1164,7 +1170,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		# Deletes all items in your inventory.
-		elif debug == True and cmd == '!clearinv':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'clearinv'):
 			user_data = EwUser(member = message.author)
 			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
 			response = "You destroy every single item in your inventory."
@@ -1298,7 +1304,25 @@ async def on_message(message):
 					response = 'Unrecognized role.'
 
 			await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(message.author, response))
-
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getrowdy'):
+			response = "You get rowdy. Fuck. YES!"
+			user_data = EwUser(member=message.author)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_rowdys
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getkiller'):
+			response = "You uh... 'get' killer. Sure."
+			user_data = EwUser(member=message.author)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_killers
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
 		# didn't match any of the command words.
 		else:
 			""" couldn't process the command. bail out!! """

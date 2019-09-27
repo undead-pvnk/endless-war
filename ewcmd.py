@@ -10,6 +10,9 @@ import ewstats
 import ewstatuseffects
 import ewmap
 import ewslimeoid
+import ewfaction
+import ewapt
+
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
@@ -376,7 +379,7 @@ async def data(cmd):
 	
 	# Send the response to the player.
 	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-	await resp_cont.post()
+	await resp_cont.post(channel=cmd.message.channel)
 
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	if member != None:
@@ -807,4 +810,28 @@ async def recycle(cmd):
 		else:
 			response = "{} which item? (check **!inventory**)".format(cmd.tokens[0])
 
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def store_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.community_chest != None:
+		return await ewfaction.store(cmd)
+	elif poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "There is no storage here, public or private."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def remove_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.community_chest != None:
+		return await ewfaction.take(cmd)
+	elif poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "There is no storage here, public or private."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
