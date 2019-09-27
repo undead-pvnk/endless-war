@@ -35,6 +35,11 @@ moves_active = {}
 
 food_multiplier = {}
 
+# Contains who players are trading with and the state of the trades
+active_trades = {}
+# Contains the items being offered by players
+trading_offers = {}
+
 class Message:
 	# Send the message to this exact channel by name.
 	channel = None
@@ -1230,3 +1235,17 @@ async def delete_last_message(client, last_messages, tick_length):
 	except:
 		logMsg("failed to delete last message")
 
+def check_accept_or_refuse(str):
+	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
+		return True
+
+def end_trade(id_user):
+	# Cancel an ongoing trade
+	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
+		trader = active_trades.get(id_user).get("trader")
+		
+		active_trades[id_user] = {}
+		active_trades[trader] = {}
+		
+		trading_offers[trader] = []
+		trading_offers[id_user] = []

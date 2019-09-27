@@ -147,6 +147,9 @@ class EwUser:
 		
 	def die(self, cause = None):
 		time_now = int(time.time())
+
+		ewutils.end_trade(self.id_user)
+
 		if cause == ewcfg.cause_busted:
 			self.busted = True
 			self.poi = ewcfg.poi_id_thesewers

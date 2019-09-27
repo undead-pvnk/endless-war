@@ -1076,7 +1076,7 @@ async def suicide(cmd):
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
-				response = "You can't do that now"
+				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
 				
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)

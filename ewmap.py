@@ -911,6 +911,8 @@ async def move(cmd = None, isApt = False):
 		user_data.time_lastenter = int(time.time())
 		user_data.persist()
 
+		ewutils.end_trade(user_data.id_user)
+
 		await ewrolemgr.updateRoles(client = client, member = member_object)
 
 		channel = cmd.message.channel
@@ -1005,6 +1007,8 @@ async def move(cmd = None, isApt = False):
 					user_data.time_lastenter = int(time.time())
 					user_data.persist()
 
+					ewutils.end_trade(user_data.id_user)
+
 					await ewrolemgr.updateRoles(client = client, member = member_object)
 
 					try:
@@ -1040,7 +1044,7 @@ async def move(cmd = None, isApt = False):
 
 					val_actual = int(val_actual / user_data.move_speed)
 					if val_actual > 0:
-						await asyncio.sleep(val_actual)
+						await asyncio.sleep(0)
 
 		await asyncio.sleep(30)
 		try:

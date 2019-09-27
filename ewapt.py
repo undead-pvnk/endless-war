@@ -360,6 +360,9 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.visiting = ewcfg.location_id_empty
 			user_data.time_lastenter = int(time.time())
 			user_data.persist()
+			
+			ewutils.end_trade(user_data.id_user)
+
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
 			if isGoto:
@@ -705,7 +708,7 @@ async def upgrade(cmd):
 		accepted = False
 
 		try:
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewslimeoid.check)
+			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -937,7 +940,7 @@ async def knock(cmd = None):
 					user_data = EwUser(member=cmd.message.author)
 					user_data.rr_challenger = target_data.apt_zone
 					user_data.persist()
-					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewslimeoid.check)
+					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_accept:
@@ -990,7 +993,7 @@ async def cancel(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewslimeoid.check)
+			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":

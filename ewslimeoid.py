@@ -1664,10 +1664,6 @@ async def negaslimeoid(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-def check(str):
-	if str.content == ewcfg.cmd_accept or str.content == ewcfg.cmd_refuse:
-		return True
-
 async def slimeoidbattle(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_arena:
@@ -1708,10 +1704,11 @@ async def slimeoidbattle(cmd):
 
 	if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
 		response = "You do not have a Slimeoid ready to battle with!"
-
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 	if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
 		response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
-
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		
 	time_now = int(time.time())
 
 	if (time_now - challenger_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
@@ -1748,7 +1745,7 @@ async def slimeoidbattle(cmd):
 	#Wait for an answer
 	accepted = 0
 	try:
-		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = check)
+		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
 
 		if msg != None:
 			if msg.content == "!accept":
@@ -1838,6 +1835,7 @@ async def negaslimeoidbattle(cmd):
 
 	if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
 		response = "You do not have a Slimeoid ready to battle with!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	time_now = int(time.time())
 

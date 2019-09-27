@@ -1008,3 +1008,237 @@ async def quarterlyreport(cmd):
 		response += " THE QUARTERLY GOAL HAS BEEN REACHED. PLEASE STAY TUNED FOR FURTHER ANNOUNCEMENTS."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def trade(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	user_trade = ewutils.active_trades.get(user_data.id_user)
+
+	if user_trade != None and len(user_trade) > 0:
+		if user_trade.get("state") > ewcfg.trade_state_proposed:
+			# print info about the current trade
+			resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+			trade_partner = EwPlayer(id_user=user_trade.get("trader"), id_server=user_data.id_server)
+
+			user_offers = "Your offers:\n"
+			partner_offers = trade_partner.display_name + "'s offers:\n"
+			for item in ewutils.trading_offers.get(user_data.id_user):
+				user_offers += "{id_item}: {name} {quantity}\n".format(id_item=item.get("id_item"), name=item.get("name"), quantity=(" x{:,}".format(item.get("quantity")) if (item.get("quantity") > 0) else ""))
+			
+			for item in ewutils.trading_offers.get(trade_partner.id_user):
+				partner_offers +="{id_item}: {name} {quantity}\n".format(id_item=item.get("id_item"), name=item.get("name"), quantity=(" x{:,}".format(item.get("quantity")) if (item.get("quantity") > 0) else ""))
+		
+			if user_trade.get("state") == ewcfg.trade_state_complete:
+				user_offers += "**You are ready to complete the trade.**\n"
+			if ewutils.active_trades.get(trade_partner.id_user).get("state") == ewcfg.trade_state_complete:
+				partner_offers += "**{} is ready to complete the trade.**".format(trade_partner.display_name)
+
+			resp_cont.add_channel_response(cmd.message.channel.name, user_offers)
+			resp_cont.add_channel_response(cmd.message.channel.name, partner_offers)
+			resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+
+			await resp_cont.post()
+
+	else:
+		if cmd.mentions_count == 0:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Who do you want to trade with?"))
+		
+		if cmd.mentions_count > 1: 
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can only trade with one person at a time."))
+
+		trade_partner = EwUser(member=cmd.mentions[0])
+
+		if user_data.id_user == trade_partner.id_user:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Huh?"))
+
+		if user_data.poi != trade_partner.poi:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must be in the same location as someone to trade with them."))
+		
+		if ewutils.active_trades.get(trade_partner.id_user) != None and len(ewutils.active_trades.get(trade_partner.id_user)) > 0:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Wait for them to finish their business before trying to trade with them."))
+
+		ewutils.active_trades[user_data.id_user] = {"state": ewcfg.trade_state_proposed, "trader": trade_partner.id_user}
+		ewutils.active_trades[trade_partner.id_user] = {"state": ewcfg.trade_state_proposed, "trader": user_data.id_user}
+
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.mentions[0], "{user} wants to trade with you. Do you {accept} or {refuse}?".format(user=cmd.message.author.display_name, accept=ewcfg.cmd_accept, refuse=ewcfg.cmd_refuse)))
+
+		accepted = False
+
+		try:
+			member = cmd.mentions[0]
+			msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
+
+			if msg != None and msg.content.lower() == ewcfg.cmd_accept:
+				accepted = True
+		except:
+			accepted = False
+
+		if accepted:
+			ewutils.active_trades[user_data.id_user] = {"state": ewcfg.trade_state_ongoing, "trader": trade_partner.id_user}
+			ewutils.active_trades[trade_partner.id_user] = {"state": ewcfg.trade_state_ongoing, "trader": user_data.id_user}
+
+			ewutils.trading_offers[user_data.id_user] = []
+
+			ewutils.trading_offers[trade_partner.id_user] = []
+
+			response = "You both head into a shady allyway nearby to conduct your business."
+
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			ewutils.active_trades[user_data.id_user] = {}
+			ewutils.active_trades[trade_partner.id_user] = {}
+			print("timwout")
+
+async def offer_item(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	user_trade = ewutils.active_trades.get(user_data.id_user)
+
+	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
+		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+		item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
+		
+		if item_sought:
+			item = ewitem.EwItem(id_item=item_sought.get("id_item"))
+
+			if not item.soulbound:
+
+				if item.id_item == user_data.weapon and user_data.weaponmarried:
+					response = "Unfortunately for you, the contract you signed before won't let you trade your partner away. You'll have to get your cuckoldry fix from somewhere else."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+				if item_sought in ewutils.trading_offers.get(user_data.id_user):
+					ewutils.trading_offers.get(user_data.id_user).remove(item_sought)
+					response = "You take the {} back.".format(item_sought.get("name"))
+				else:
+					ewutils.trading_offers[user_data.id_user].append(item_sought)
+					response = "You add a {} to your offers.".format(item_sought.get("name"))
+
+				user_trade["state"] = ewcfg.trade_state_ongoing
+				ewutils.active_trades.get(user_trade.get("trader"))["state"] = ewcfg.trade_state_ongoing
+
+			else:
+				response = "You can't trade soulbound items."
+		else:
+			if item_search:
+				response = "You don't have one."
+			else:
+				response = "Offer which item? (check **!inventory**)"
+	else:
+		response = "You need to be trading with someone to offer an item."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def complete_trade(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	user_trade = ewutils.active_trades.get(user_data.id_user)
+
+	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
+		user_trade["state"] = ewcfg.trade_state_complete
+		
+		trader_id = user_trade.get("trader")
+		if ewutils.active_trades.get(trader_id).get("state") != ewcfg.trade_state_complete:
+			partner_player = EwPlayer(id_user=trader_id, id_server=user_data.id_server)
+			response = "You tell {} that you're ready to finish the trade.".format(partner_player.display_name)
+
+		else:
+			trade_partner = EwUser(id_user=trader_id, id_server=user_data.id_server)
+
+			weapons_held = ewitem.inventory(
+				id_user = user_data.id_user,
+				id_server = user_data.id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			food_held = ewitem.inventory(
+				id_user = user_data.id_user,
+				id_server = user_data.id_server,
+				item_type_filter = ewcfg.it_food
+			)
+			#items this player is offering
+			weapons_offered = []
+			food_offered = []
+
+			trader_weapons_held = ewitem.inventory(
+				id_user = trade_partner.id_user,
+				id_server = trade_partner.id_server,
+				item_type_filter = ewcfg.it_weapon
+			)
+
+			trader_food_held = ewitem.inventory(
+				id_user = trade_partner.id_user,
+				id_server = trade_partner.id_server,
+				item_type_filter = ewcfg.it_food
+			)
+			#items the other player is offering
+			trader_weapons_offered = []
+			trader_food_offered = []
+
+			for item in ewutils.trading_offers.get(user_data.id_user):
+				if item.get("item_type") == ewcfg.it_weapon:
+					weapons_offered.append(item)
+				elif item.get("item_type") == ewcfg.it_food:
+					food_offered.append(item)
+
+			for item in ewutils.trading_offers.get(trade_partner.id_user):
+				if item.get("item_type") == ewcfg.it_weapon:
+					trader_weapons_offered.append(item)
+				elif item.get("item_type") == ewcfg.it_food:
+					trader_food_offered.append(item)
+
+			
+			if user_data.get_weapon_capacity() < len(weapons_held) + len(trader_weapons_offered) - len(weapons_offered):
+				response = "You can't carry any more weapons."
+			elif user_data.get_food_capacity() < len(food_held) + len(trader_food_offered) - len(food_offered):
+				response = "You can't carry any more food."
+
+			elif trade_partner.get_weapon_capacity() < len(trader_weapons_held) - len(trader_weapons_offered) + len(weapons_offered):
+				response = "They can't carry any more weapons."
+			elif trade_partner.get_food_capacity() < len(trader_food_held) - len(trader_food_offered) + len(food_offered):
+				response = "They can't carry any more food."
+
+			else:
+				for item in list(ewutils.trading_offers.get(user_data.id_user)):
+					if item.get("id_item") == user_data.weapon:
+						user_data.weapon = -1
+						user_data.persist()
+					elif item.get("item_type") == ewcfg.it_cosmetic:
+						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+						cosmetic.item_props["adorned"] = False
+						cosmetic.persist()
+				
+					ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)	
+
+				for item in list(ewutils.trading_offers.get(trade_partner.id_user)):
+					if item.get("id_item") == trade_partner.weapon:
+						trade_partner.weapon = -1
+						trade_partner.persist()
+					elif item.get("item_type") == ewcfg.it_cosmetic:
+						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
+						cosmetic.item_props["adorned"] = False
+						cosmetic.persist()
+
+					ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)			
+						
+				ewutils.active_trades[user_data.id_user] = {}
+				ewutils.active_trades[trade_partner.id_user] = {}
+
+				ewutils.trading_offers[user_data.id_user] = []
+				ewutils.trading_offers[trade_partner.id_user] = []
+
+				response = "You shake hands to commemorate another successful deal. That is their hand, right?"
+	else:
+		response = "You're not trading with anyone right now."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def cancel_trade(cmd):
+	user_trade = ewutils.active_trades.get(cmd.message.author.id)
+
+	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
+		ewutils.end_trade(cmd.message.author.id)
+		response = "With your finely attuned business senses you realize they're trying to scam you and immediately call off the deal."
+	else:
+		response = "You're not trading with anyone right now."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

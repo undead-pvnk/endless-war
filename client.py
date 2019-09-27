@@ -481,6 +481,12 @@ cmd_map = {
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
+
+	# trading
+	ewcfg.cmd_trade: ewmarket.trade,
+	ewcfg.cmd_offer: ewmarket.offer_item,
+	ewcfg.cmd_completetrade: ewmarket.complete_trade,
+	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
 }
 
 debug = False
