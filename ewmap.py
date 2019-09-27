@@ -251,8 +251,8 @@ map_world = [
 	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 34
 	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, 20, -2, -1, -3, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 35
 	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -3, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1], # 36
-	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, 20, -2, -1, -3, -1, -1, 20, -1, 20, -1, -3, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1], # 37
-	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0,  0, 30, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1], # 38
+	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, 20, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, 20, -2, -1, -3, -1, -1, 20, -1, 20, -1, -3, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1], # 37
+	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0,  0, 30, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1], # 38
 	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, 20, -1, -3, -1, 20, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1], # 39
 	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1], # 40
 	[ -1, -1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1], # 41
@@ -1190,73 +1190,10 @@ async def look(cmd):
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	# get information about slime levels in the district
-	slimes = district_data.slimes
-	slimes_resp = ""
-	if slimes < 10000:
-		slimes_resp += "There are a few specks of slime splattered across the city streets."
-	elif slimes < 100000:
-		slimes_resp += "There are sparse puddles of slime filling potholes in the cracked city streets."
-	elif slimes < 1000000:
-		slimes_resp += "There are good amounts of slime pooling around storm drains and craters in the rundown city streets."
-	else:
-		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
-
-	# don't show low level players
-	min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel)
-
-	life_states = [ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
-	# get information about players in the district
-	players_in_district = district_data.get_players_in_district(min_level = min_level, life_states = life_states)
-	if user_data.id_user in players_in_district:
-		players_in_district.remove(user_data.id_user)
-
-	num_players = len(players_in_district)
-	players_resp = "\n\n"
-	if num_players == 0:
-		players_resp += "You don’t notice any activity from this district."
-	elif num_players == 1:
-		players_resp += "You can hear the occasional spray of a spray can from a gangster in this district."
-	elif num_players <= 5:
-		players_resp += "You can make out a distant conversation between a few gangsters in this district."
-	elif num_players <= 10:
-		players_resp += "You can hear shouting and frequent gunshots from a group of gangsters in this district."
-	else:
-		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
-
-	# lists off enemies in district
-	enemies_in_district = district_data.get_enemies_in_district()
-
-	num_enemies = len(enemies_in_district)
-
-	enemies_resp = "\n\n"
-	numerator = 0
-
-	if num_enemies == 0:
-		enemies_resp = ""
-		# enemies_resp += "You don't find any enemies in this district."
-	elif num_enemies == 1:
-		found_enemy_data = EwEnemy(id_enemy = enemies_in_district[0])
-		enemies_resp += "You look around and find a **{} {}** in this location.".format(found_enemy_data.display_name, found_enemy_data.identifier)
-	else:
-		enemies_resp += "You notice several enemies in this district, such as "
-		while numerator < (len(enemies_in_district)-1):
-			found_enemy_data = EwEnemy(id_enemy = enemies_in_district[numerator])
-			enemies_resp += "**{} {}**, ".format(found_enemy_data.display_name, found_enemy_data.identifier)
-			numerator += 1
-		final_enemy_data = EwEnemy(id_enemy = enemies_in_district[num_enemies-1])
-		enemies_resp += "and **{} {}**.".format(final_enemy_data.display_name, final_enemy_data.identifier)
-
-	players_resp = ""
-	
-	slimeoids_resp = ""
-
-	slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server = cmd.message.server.id, poi = poi.id_poi)
-
-	for id_slimeoid in slimeoids_in_district:
-		slimeoid_data = EwSlimeoid(id_slimeoid = id_slimeoid)
-		if slimeoid_data.sltype == ewcfg.sltype_nega:
-			slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
+	slimes_resp = get_slimes_resp(district_data)
+	players_resp = get_players_look_resp(user_data, district_data)
+	enemies_resp = get_enemies_look_resp(district_data)
+	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
 
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
@@ -1289,7 +1226,40 @@ async def look(cmd):
 			)
 		))
 
+async def survey(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	district_data = EwDistrict(district=user_data.poi, id_server=user_data.id_server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
+	slimes_resp = get_slimes_resp(district_data)
+	players_resp = get_players_look_resp(user_data, district_data)
+	enemies_resp = get_enemies_look_resp(district_data)
+	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
+
+	if slimeoids_resp != "":
+		slimeoids_resp = "\n" + slimeoids_resp
+	if poi.is_apartment:
+		slimes_resp = ""
+		players_resp = ""
+		slimeoids_resp = ""
+
+	# post result to channel
+	if poi != None:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"You stand {} {}.\n\n{}{}{}{}{}".format(
+				poi.str_in,
+				poi.str_name,
+				slimes_resp,
+				players_resp,
+				slimeoids_resp,
+				enemies_resp,
+				("\n\n{}".format(
+					ewcmd.weather_txt(cmd.message.server.id)
+				) if cmd.message.server != None else "")
+			)
+		))
+	
 """
 	Get information about an adjacent zone.
 """
@@ -1386,11 +1356,15 @@ async def scout(cmd):
 
 			num_players += 1
 
-		# filters out low level enemies
-		enemies_in_district = district_data.get_enemies_in_district(min_level=min_level)
+		# No filtering is done on enemies themselves. Enemies that pose a threat to the player are filtered instead.
+		enemies_in_district = district_data.get_enemies_in_district()
+		threats_in_district = district_data.get_enemies_in_district(min_level=min_level)
 
 		num_enemies = 0
 		enemies_resp = ""
+		
+		num_threats = len(threats_in_district)
+		threats_resp = ""
 
 		detailed_enemies_resp = "You pick up the scent of the following enemies:"
 		for enemy in enemies_in_district:
@@ -1412,7 +1386,7 @@ async def scout(cmd):
 		if ewcfg.mutation_id_keensmell in mutations and num_players >= 1:
 			players_resp += " " + detailed_players_resp
 
-		# to avoid visual clutter, no scouting message is sent out for 0 enemies
+		# to avoid visual clutter, no scouting message is sent out for 0 enemies, and by extension, threats.
 		if num_enemies == 0:
 			enemies_resp = ""
 		elif num_enemies == 1:
@@ -1427,18 +1401,33 @@ async def scout(cmd):
 		if ewcfg.mutation_id_keensmell in mutations and num_enemies >= 1:
 			enemies_resp += " " + detailed_enemies_resp
 
+		if num_threats == 0:
+			threats_resp = "The district doesn't really give off any strong sense of radiation."
+		elif num_threats == 1:
+			threats_resp += "You feel a small tingling sensation from nearby radiation."
+		elif num_threats <= 5:
+			threats_resp += "The radiation emanating from the district is giving you a slight headache."
+		elif num_threats <= 10:
+			threats_resp += "The radiation seeping in from the district is overwhelming. You feel like you're gonna puke."
+		else:
+			threats_resp += "Your skin begins to peel like a potato from the sheer amount of radiation close by!"
+
 		if num_players == 0 and num_enemies >= 1:
 			players_resp = ""
 		elif num_players >= 1 and num_enemies == 0:
 			enemies_resp = ""
+			threats_resp = ""			
+		elif num_players == 0 and num_enemies == 0:
+			threats_resp = ""
 
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**:{}\n{}".format(
+			"**{}**:{}\n{} {}".format(
 				poi.str_name,
 				players_resp,
-				enemies_resp
+				enemies_resp,
+				threats_resp,
 			)
 		))
 
@@ -1481,3 +1470,103 @@ async def kick(id_server):
 					await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
 			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))
+
+def get_slimes_resp(district_data):
+	# get information about slime levels in the district
+	
+	slimes_resp = ""
+	
+	slimes = district_data.slimes
+	if slimes < 10000:
+		slimes_resp += "There are a few specks of slime splattered across the city streets."
+	elif slimes < 100000:
+		slimes_resp += "There are sparse puddles of slime filling potholes in the cracked city streets."
+	elif slimes < 1000000:
+		slimes_resp += "There are good amounts of slime pooling around storm drains and craters in the rundown city streets."
+	else:
+		slimes_resp += "There are large heaps of slime shoveled into piles to clear the way for cars and pedestrians on the slime-soaked city streets."
+
+	return slimes_resp
+
+def get_players_look_resp(user_data, district_data):
+	# get information about players in the district
+	
+	# don't show low level players
+	min_level = math.ceil((1 / 10) ** 0.25 * user_data.slimelevel)
+
+	life_states = [ewcfg.life_state_corpse, ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+	
+	players_in_district = district_data.get_players_in_district(min_level=min_level, life_states=life_states)
+	if user_data.id_user in players_in_district:
+		players_in_district.remove(user_data.id_user)
+
+	num_players = len(players_in_district)
+	players_resp = "\n\n"
+	if num_players == 0:
+		players_resp += "You don’t notice any activity from this district."
+	elif num_players == 1:
+		players_resp += "You can hear the occasional spray of a spray can from a gangster in this district."
+	elif num_players <= 5:
+		players_resp += "You can make out a distant conversation between a few gangsters in this district."
+	elif num_players <= 10:
+		players_resp += "You can hear shouting and frequent gunshots from a group of gangsters in this district."
+	else:
+		players_resp += "You feel the ground rumble from a stampeding horde of gangsters in this district."
+	
+	return players_resp
+	
+def get_enemies_look_resp(district_data):
+	# lists off enemies in district
+	enemies_in_district = district_data.get_enemies_in_district()
+
+	num_enemies = len(enemies_in_district)
+
+	enemies_resp = "\n\n"
+	numerator = 0
+
+	if num_enemies == 0:
+		enemies_resp = ""
+	# enemies_resp += "You don't find any enemies in this district."
+	elif num_enemies == 1:
+		found_enemy_data = EwEnemy(id_enemy=enemies_in_district[0])
+
+		if found_enemy_data.identifier != '':
+			identifier_formatter = " {}"
+		else:
+			identifier_formatter = ""
+
+		enemies_resp += ("You look around and find a **{}" + identifier_formatter + "** in this location.").format(found_enemy_data.display_name, found_enemy_data.identifier)
+	else:
+		enemies_resp += "You notice several enemies in this district, such as "
+		while numerator < (len(enemies_in_district) - 1):
+			found_enemy_data = EwEnemy(id_enemy=enemies_in_district[numerator])
+
+			if found_enemy_data.identifier != '':
+				identifier_formatter = " {}"
+			else:
+				identifier_formatter = ""
+
+			enemies_resp += ("**{}" + identifier_formatter + "**, ").format(found_enemy_data.display_name, found_enemy_data.identifier)
+			numerator += 1
+		final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
+
+		if final_enemy_data.identifier != '':
+			identifier_formatter = " {}"
+		else:
+			identifier_formatter = ""
+
+		enemies_resp += ("and **{}" + identifier_formatter + "**.").format(final_enemy_data.display_name, final_enemy_data.identifier)
+	
+	return enemies_resp
+
+def get_slimeoids_resp(id_server, poi):
+	slimeoids_resp = ""
+	
+	slimeoids_in_district = ewutils.get_slimeoids_in_poi(id_server=id_server, poi=poi.id_poi)
+
+	for id_slimeoid in slimeoids_in_district:
+		slimeoid_data = EwSlimeoid(id_slimeoid=id_slimeoid)
+		if slimeoid_data.sltype == ewcfg.sltype_nega:
+			slimeoids_resp += "\n{} is here.".format(slimeoid_data.name)
+			
+	return slimeoids_resp
