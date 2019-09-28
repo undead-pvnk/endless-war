@@ -672,7 +672,7 @@ cmd_smoke = cmd_prefix + 'smoke'
 cmd_frame = cmd_prefix + 'frame'
 cmd_extractsoul = cmd_prefix + 'extractsoul'
 cmd_returnsoul = cmd_prefix + 'returnsoul'
-cmd_squeeze = cmd_prefix + 'squeeze'
+cmd_squeeze = cmd_prefix + 'squeezesoul'
 cmd_betsoul = cmd_prefix + 'betsoul'
 cmd_buysoul = cmd_prefix + 'buysoul'
 
@@ -971,6 +971,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 cd_haunt = 600
+cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
 #For possible time limit on russian roulette

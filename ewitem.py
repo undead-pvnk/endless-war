@@ -11,6 +11,7 @@ import ewrolemgr
 import ewsmelting
 from ew import EwUser
 from ewplayer import EwPlayer
+import re
 
 """
 	EwItemDef is a class used to model base items. These are NOT the items
@@ -1393,7 +1394,7 @@ async def soulextract(cmd):
 			item_props = {
 				'id_cosmetic': "soul",
 				'cosmetic_name': "{}'s soul".format(playermodel.display_name),
-				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.".format(playermodel.display_name),
+				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(playermodel.display_name, cmd.message.author.id),
 				'rarity': ewcfg.rarity_patrician,
 				'adorned': 'false',
 				'user_id': usermodel.id_user
@@ -1415,10 +1416,13 @@ async def returnsoul(cmd):
 	elif soul:
 		soul_item = EwItem(id_item=soul.get('id_item'))
 		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
-			response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
-			item_delete(id_item=soul.get('id_item'))
-			usermodel.has_soul = 1
-			usermodel.persist()
+			if soul_item.item_props.get('user_id') != cmd.message.author.id:
+				response = "That's not your soul. Nice try, though."
+			else:
+				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
+				item_delete(id_item=soul.get('id_item'))
+				usermodel.has_soul = 1
+				usermodel.persist()
 		else:
 			response = "Nice try, but your mortal coil recognizes a fake soul when it sees it."
 	else:
@@ -1437,8 +1441,13 @@ async def squeeze(cmd):
 		target = cmd.mentions[0]
 		targetmodel = EwUser(member = target)
 		playermodel = EwPlayer(id_user=targetmodel.id_user)
-		deathreport = ""
 		receivingreport = "" #the receiver of the squeeze gets this in their channel
+
+		squeezetext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
+		if len(squeezetext) > 500:
+			haunt_message_content = squeezetext[:-500]
+
+
 		poi = None
 		target_item = None
 		for soul in soul_inv:
@@ -1450,36 +1459,34 @@ async def squeeze(cmd):
 			response = "They look pretty soulful right now. You can't do anything to them."
 		elif target_item == None:
 			response = "You don't have their soul."
-		elif targetmodel.life_state == ewcfg.life_state_corpse:
-			response = "Enough already. They're dead."
+		elif (int(time.time()) - usermodel.time_lasthaunt) < ewcfg.cd_squeeze:
+			timeleft = ewcfg.cd_squeeze - (int(time.time()) - usermodel.time_lasthaunt)
+			response = "It's still all rubbery and deflated from the last time you squeezed it. Give it {} seconds.".format(timeleft)
 		else:
-			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.message.server.id)
-			district_data.change_slimes(n=targetmodel.slimes + targetmodel.bleed_storage, source=ewcfg.source_killing)
-			district_data.persist()
+			if squeezetext != "":
+				receivingreport = "A voice in your head screams: \"{}\"\nSuddenly, you feel searing palpitations in your chest. Dammit, {} must be fucking around with your soul.".format(squeezetext, playermodel.display_name)
+			else:
+				receivingreport = "You feel searing palpitations in your chest. Dammit, {} must be fucking with your soul.".format(playermodel.display_name)
 
-			receivingreport = "{} {} just got soul-squeezed. {}".format(ewcfg.emote_slimeskull, playermodel.display_name, ewcfg.emote_slimeskull)
 			poi = ewcfg.id_to_poi.get(targetmodel.poi)
 
-			targetmodel.id_killer = cmd.message.author.id
-			targetmodel.die(cause=ewcfg.cause_killing)
-			targetmodel.persist()
+			usermodel.time_lasthaunt = int(time.time())
+			usermodel.persist()
 
 			server = ewcfg.server_list[targetmodel.id_server]
 			member_object = server.get_member(targetmodel.id_user)
 
-			deathreport = "You soul was squeezed by {}. {}".format(cmd.message.author.display_name, ewcfg.emote_slimeskull)
-			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member_object, deathreport)
+			penalty = (targetmodel.slimes* -0.25)
+			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
+			targetmodel.persist()
 
-			await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+			if receivingreport != "":
+				loc_channel = ewutils.get_channel(cmd.message.server, poi.channel)
+				await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(member_object, receivingreport))
 
-			response = "You tightly squeeze the soul in your hand. Looks like {} is in a better place now. {}".format(playermodel.display_name, ewcfg.emote_slimeskull)
+			response = "You tightly squeeze {}'s soul in your hand, jeering into it as you do so. This thing was worth every penny.".format(playermodel.display_name)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if deathreport != "":
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
-		if receivingreport != "":
-			loc_channel = ewutils.get_channel(cmd.message.server, poi.channel)
-			await ewutils.send_message(cmd.client, loc_channel, receivingreport)
+
 
 
