@@ -354,6 +354,7 @@ cmd_map = {
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
@@ -431,6 +432,8 @@ cmd_map = {
         #ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
+	ewcfg.cmd_undress_slimeoid_alt1: ewslimeoid.undress_slimeoid,
 
 	# Negaslimeoids
 
