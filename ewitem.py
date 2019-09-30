@@ -253,6 +253,8 @@ def item_delete(
 		# Clean up the database handles.
 		cursor.close()
 		ewutils.databaseClose(conn_info)
+	
+	remove_from_trades(id_item)
 
 
 """
@@ -1071,9 +1073,21 @@ async def item_use(cmd):
 
 		if item.item_type == ewcfg.it_item:
 			name = item_sought.get('name')
+			context = item.item_props.get('context')
 			if name == "Trading Cards":
 				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
-
+			elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
+				statuses = user_data.getStatusEffects()
+				if ewcfg.status_repelaftereffects_id in statuses:
+					response = "You need to wait a bit longer before applying more body spray."
+				else:
+					if context == 'repel':
+						response = user_data.applyStatus(ewcfg.status_repelled_id)
+					elif context == 'superrepel':
+						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=2)
+					elif context == 'maxrepel':
+						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
+					item_delete(item.id_item)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1110,6 +1124,8 @@ def give_item(
 				id_item
 			)
 		)
+
+		remove_from_trades(id_item)
 
 		item = EwItem(id_item = id_item)
 		# Reset the weapon's damage modifying stats
@@ -1383,6 +1399,7 @@ def gen_item_props(item):
 
 	return item_props
 
+
 async def soulextract(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
@@ -1504,4 +1521,16 @@ async def squeeze(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+
+	
+# search and remove the given item from an ongoing trade
+def remove_from_trades(id_item):
+	for trader in ewutils.trading_offers:
+		for item in ewutils.trading_offers.get(trader):
+			if id_item == item.get("id_item"):
+				ewutils.trading_offers.get(trader).remove(item)
+
+				ewutils.active_trades.get(trader)["state"] = ewcfg.trade_state_ongoing 
+				ewutils.active_trades.get(ewutils.active_trades.get(trader).get("trader"))["state"] = ewcfg.trade_state_ongoing
+				return
 

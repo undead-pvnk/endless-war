@@ -958,9 +958,6 @@ async def baccarat(cmd):
 			response = "Specify how much SlimeCoin you will wager."
 			await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 
-def check(str):
-	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
-		return True
 
 async def russian_roulette(cmd):
 	time_now = int(time.time())
@@ -1040,7 +1037,7 @@ async def russian_roulette(cmd):
 	#Wait for an answer
 	accepted = 0
 	try:
-		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = check)
+		msg = await cmd.client.wait_for_message(timeout = 30, author = member, check = ewutils.check_accept_or_refuse)
 
 		if msg != None:
 			if msg.content == "!accept":
