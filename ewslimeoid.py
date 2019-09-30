@@ -2043,6 +2043,7 @@ async def restoreslimeoid(cmd):
 
 	ewitem.item_delete(id_item = item_data.id_item)
 
+	user_data.change_slimes(n = -slimes_to_restore, source = ewcfg.source_spending)
 	user_data.persist()
 
 	response = "You insert the heart of your beloved {} into one of the restoration tanks. A series of clattering sensors analyze the crystalline core. Then, just like when it was first incubated, the needle pricks you and extracts slime from your body, which coalesces around the poudrin-like heart. Bit by bit the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(slimeoid.name, slimeoid.name)
