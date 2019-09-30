@@ -1535,6 +1535,7 @@ source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
 source_fishing = 13
+source_squeeze = 14
 
 
 # Categories of events that change your slimecoin total, for statistics tracking
