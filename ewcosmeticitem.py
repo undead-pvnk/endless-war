@@ -92,7 +92,6 @@ async def adorn(cmd):
 					adorned_items += 1
 
 			user_data = EwUser(member = cmd.message.author)
-			#item = EwItem(id_item = id_item)
 
 			if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
 				response = "You can't adorn anymore cosmetics."
@@ -139,9 +138,6 @@ async def dedorn(cmd):
 					break
 
 		if item_sought != None:
-			user_data = EwUser(member = cmd.message.author)
-			#item = EwItem(id_item = id_item)
-
 			item_sought.item_props['adorned'] = 'false'
 
 			response = "You successfully dedorn your " + item_sought.item_props['cosmetic_name'] + "."

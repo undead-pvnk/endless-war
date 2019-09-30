@@ -2918,10 +2918,13 @@ async def dress_slimeoid(cmd):
 		response = "Slimeoids don't fuck with ghosts."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-		response = "You'll have to create a slimeoid if you want to play dress up."
+		response = "You'll have to create a Slimeoid if you want to play dress up."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+	
+	elif slimeoid.life_state != ewcfg.slimeoid_state_active:
+		response = "You don't have a Slimeoid with you."
 
 	else:
 		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -2982,10 +2985,13 @@ async def undress_slimeoid(cmd):
 		response = "Slimeoids don't fuck with ghosts."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-		response = "You'll have to create a slimeoid if you want to play dress up."
+		response = "You'll have to create a Slimeoid if you want to play dress up."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	elif slimeoid.life_state != ewcfg.slimeoid_state_active:
+		response = "You don't have a Slimeoid with you."
 
 	else:
 		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
