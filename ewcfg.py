@@ -618,6 +618,7 @@ cmd_appraise = cmd_prefix + 'appraise'
 cmd_barter = cmd_prefix + 'barter'
 cmd_embiggen = cmd_prefix + 'embiggen'
 cmd_adorn = cmd_prefix + 'adorn'
+cmd_dedorn = cmd_prefix + 'dedorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
@@ -738,6 +739,8 @@ cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
 cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
 cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
 cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
+cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
+cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"

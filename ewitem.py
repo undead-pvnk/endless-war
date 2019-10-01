@@ -1034,7 +1034,7 @@ async def item_look(cmd):
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
 
-			response = name + "\n\n" + response
+			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
