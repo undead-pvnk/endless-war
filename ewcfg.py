@@ -671,12 +671,19 @@ cmd_releasefish = cmd_prefix + 'releasefish'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
+cmd_frame = cmd_prefix + 'frame'
+cmd_extractsoul = cmd_prefix + 'extractsoul'
+cmd_returnsoul = cmd_prefix + 'returnsoul'
+cmd_squeeze = cmd_prefix + 'squeezesoul'
+cmd_betsoul = cmd_prefix + 'betsoul'
+cmd_buysoul = cmd_prefix + 'buysoul'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
 
+soulprice = 500000000
 
 cmd_promote = cmd_prefix + 'promote'
 
@@ -972,6 +979,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 cd_haunt = 600
+cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
 #For possible time limit on russian roulette
@@ -1248,6 +1256,7 @@ col_time_expirpvp = 'time_expirpvp'
 col_time_lastenlist = 'time_lastenlist'
 col_apt_zone = 'apt_zone'
 col_visiting = "visiting"
+col_has_soul = 'has_soul'
 
 
 #Database columns for bartering
@@ -1539,6 +1548,7 @@ source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
 source_fishing = 13
+source_squeeze = 14
 
 
 # Categories of events that change your slimecoin total, for statistics tracking
@@ -6236,6 +6246,16 @@ EwFurniture(
 		furniture_look_desc = "A nice leather chair is set up.",
 		furniture_place_desc = "You set the chair up. You realize you're basically sitting on your enemies' heads and giggle about it.",
 		furn_set = "leather"),
+EwFurniture(
+		id_furniture = "pictureframe",
+		str_name = "picture frame",
+		str_desc = "https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A picture frame hangs on the wall.",
+		furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck."),
 
 ]
 

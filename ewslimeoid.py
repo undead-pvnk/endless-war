@@ -497,6 +497,9 @@ async def playfetch(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
 
+	elif user_data.has_soul == 0:
+		response = "You reel back to throw the stick, but your motivation wears thin halfway through. You drop it on the ground with a sigh."
+
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 			response = "You do not have a Slimeoid to play fetch with."
 
@@ -570,6 +573,9 @@ async def petslimeoid(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
 
+	elif user_data.has_soul == 0:
+		response = "The idea doesn't even occur to you because your soul is missing."
+
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 			response = "You do not have a Slimeoid to pet."
 
@@ -600,6 +606,9 @@ async def walkslimeoid(cmd):
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
+
+	elif user_data.has_soul == 0:
+		response = "Why take it on a walk? It's not like it understands your needs."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 			response = "You do not have a Slimeoid to take for a walk."

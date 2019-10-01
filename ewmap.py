@@ -874,11 +874,16 @@ async def move(cmd = None, isApt = False):
 	minutes = int(path.cost / 60)
 	seconds = path.cost % 60
 
+	if user_data.has_soul == 1:
+		walk_text = "walking"
+	else:
+		walk_text = "hopelessly trudging"
 	
 	if movement_method == "descending":
 		msg_walk_start = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You press the button labeled {}. You will arrive in {} seconds.".format(poi.str_name, seconds)))
 	else:
-		msg_walk_start = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You begin walking to {}.{}".format(
+		msg_walk_start = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You begin {} to {}.{}".format(
+			walk_text,
 			poi.str_name,
 			(" It's {} minute{}{} away.".format(
 				minutes,
@@ -1194,10 +1199,12 @@ async def look(cmd):
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
+
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
 	enemies_resp = get_enemies_look_resp(district_data)
 	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
+
 
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
@@ -1205,6 +1212,8 @@ async def look(cmd):
 		slimes_resp = ""
 		players_resp = ""
 		slimeoids_resp = ""
+	if user_data.has_soul == 0:
+		soul_resp = "\n\nYour soul brought color to the world. Now it all looks so dull."
 
 	# post result to channel
 	if poi != None:
@@ -1219,11 +1228,12 @@ async def look(cmd):
 		await asyncio.sleep(0.1)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"{}{}{}{}{}".format(
+			"{}{}{}{}{}{}".format(
 				slimes_resp,
 				players_resp,
 				slimeoids_resp,
 				enemies_resp,
+				soul_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
