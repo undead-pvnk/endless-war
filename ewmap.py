@@ -1204,7 +1204,7 @@ async def look(cmd):
 	players_resp = get_players_look_resp(user_data, district_data)
 	enemies_resp = get_enemies_look_resp(district_data)
 	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
-
+	soul_resp = ""
 
 	if slimeoids_resp != "":
 		slimeoids_resp = "\n" + slimeoids_resp
