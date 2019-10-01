@@ -1457,11 +1457,14 @@ async def returnsoul(cmd):
 async def squeeze(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
-	target = cmd.mentions[0]
-	targetmodel = EwUser(member=target)
+	
 	if cmd.mentions_count <= 0:
 		response = "Specify a soul you want to squeeze the life out of."
-	elif cmd.mentions_count > 1:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	target = cmd.mentions[0]
+	targetmodel = EwUser(member=target)
+	if cmd.mentions_count > 1:
 		response = "One dehumanizing soul-clutch at a time, please."
 	elif targetmodel.life_state == ewcfg.life_state_corpse:
 		response = "Enough already. They're dead."
