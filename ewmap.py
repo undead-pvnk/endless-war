@@ -148,6 +148,12 @@ class EwPoi:
 	# id for the zone's community chest, if it has one
 	community_chest = None
 
+	# if you can fish in the zone
+	is_pier = False
+
+	# if the pier is in fresh slime or salt slime
+	pier_type = None
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -178,7 +184,9 @@ class EwPoi:
 		is_transport_stop = False,
 		transport_lines = None,
 		is_outskirts = False,
-		community_chest = None
+		community_chest = None,
+		is_pier = False,
+		pier_type = None
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -209,6 +217,8 @@ class EwPoi:
 		self.transport_lines = transport_lines
 		self.is_outskirts = is_outskirts
 		self.community_chest = community_chest
+		self.is_pier = is_pier
+		self.pier_type = pier_type
 
 # New map as of 7/19/19
 

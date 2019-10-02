@@ -8203,7 +8203,9 @@ poi_list = [
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington
+		mother_district = poi_id_toxington,
+		is_pier = True,
+		pier_type = fish_slime_freshwater
 	),
 	EwPoi(  # Jaywalker Plain Pier
 		id_poi = poi_id_jaywalkerplain_pier,
@@ -8219,7 +8221,10 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain
+		mother_district = poi_id_jaywalkerplain,
+		is_pier = True,
+		pier_type = fish_slime_freshwater
+
 	),
 	EwPoi(  # Crookline Pier
 		id_poi = poi_id_crookline_pier,
@@ -8235,7 +8240,10 @@ poi_list = [
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_crookline
+		mother_district = poi_id_crookline,
+		is_pier = True,
+		pier_type = fish_slime_freshwater
+
 	),
 	EwPoi(  # Assault Flats Beach Pier
 		id_poi = poi_id_assaultflatsbeach_pier,
@@ -8251,7 +8259,10 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach
+		mother_district = poi_id_assaultflatsbeach,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi(  # Vagrant's Corner Pier
 		id_poi = poi_id_vagrantscorner_pier,
@@ -8267,7 +8278,10 @@ poi_list = [
 		role = "Vagrant's Corner Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
+		mother_district = poi_id_vagrantscorner,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi(  # Slime's End Pier
 		id_poi = poi_id_slimesend_pier,
@@ -8283,7 +8297,10 @@ poi_list = [
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_slimesend
+		mother_district = poi_id_slimesend,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
@@ -9012,7 +9029,10 @@ poi_list = [
 		is_transport = True,
 		transport_type = transport_type_ferry,
 		default_line = transport_line_ferry_wt_to_vc,
-		default_stop = poi_id_wt_port
+		default_stop = poi_id_wt_port,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red01,
@@ -9829,6 +9849,7 @@ alias_to_coord = {}
 capturable_districts = []
 transports = []
 transport_stops = []
+piers = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -9854,6 +9875,9 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+
+	if poi.is_pier:
+		piers.append(poi.id_poi)
 
 landmark_pois = [
 	poi_id_countryclub,
