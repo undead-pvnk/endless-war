@@ -206,6 +206,9 @@ class EwUser:
 		if cause == ewcfg.cause_killing_enemy:  # If your killer was an Enemy. Duh.
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
 
+		if cause == ewcfg.cause_leftserver:
+			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
+
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 

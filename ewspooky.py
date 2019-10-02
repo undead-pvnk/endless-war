@@ -14,6 +14,7 @@ import ewutils
 import ewmap
 import ewrolemgr
 import ewslimeoid
+import ewitem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewslimeoid import EwSlimeoid
@@ -68,12 +69,15 @@ async def revive(cmd):
 			for poi in ewcfg.capturable_districts:
 				district_data = EwDistrict(district = poi, id_server = cmd.message.server.id)
 
-
 				district_data.change_slimes(n = geyser_amount)
 				sewer_data.change_slimes(n = -1 * geyser_amount)
 
 				district_data.persist()
 				sewer_data.persist()
+
+			sewer_inv = ewitem.inventory(id_user=sewer_data.name, id_server=sewer_data.id_server)
+			for item in sewer_inv:
+				ewitem.give_item(id_item=item.get("id_item"), id_user=random.choice(ewcfg.capturable_districts), id_server=sewer_data.id_server)
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
