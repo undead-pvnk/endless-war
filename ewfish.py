@@ -512,7 +512,7 @@ async def reel(cmd):
 				
 				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)
 				
-				if len(slimesea_inventory) == 0:
+				if len(slimesea_inventory) == 0 or random.random() < 0.5:
 
 					item = random.choice(ewcfg.mine_results)
 				

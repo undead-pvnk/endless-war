@@ -77,7 +77,10 @@ async def revive(cmd):
 
 			sewer_inv = ewitem.inventory(id_user=sewer_data.name, id_server=sewer_data.id_server)
 			for item in sewer_inv:
-				ewitem.give_item(id_item=item.get("id_item"), id_user=random.choice(ewcfg.capturable_districts), id_server=sewer_data.id_server)
+				district = ewcfg.poi_id_slimesea
+				if random.random() < 0.5:
+					district = random.choice(ewcfg.capturable_districts)
+				ewitem.give_item(id_item=item.get("id_item"), id_user=district, id_server=sewer_data.id_server)
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
