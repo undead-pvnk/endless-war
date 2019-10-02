@@ -23,7 +23,7 @@ from ewapt import EwFurniture
 import ewdebug
 
 # Global configuration options.
-version = "v3.7e"
+version = "v3.7f"
 
 dir_msgqueue = 'msgqueue'
 
