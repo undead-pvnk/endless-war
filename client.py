@@ -148,6 +148,7 @@ cmd_map = {
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
+
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
 	ewcfg.cmd_consult: ewapt.consult,
@@ -164,6 +165,14 @@ cmd_map = {
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
+
+	ewcfg.cmd_frame: ewapt.frame,
+	ewcfg.cmd_extractsoul: ewitem.soulextract,
+	ewcfg.cmd_returnsoul: ewitem.returnsoul,
+	ewcfg.cmd_betsoul: ewcasino.betsoul,
+	ewcfg.cmd_buysoul: ewcasino.buysoul,
+	ewcfg.cmd_squeeze: ewitem.squeeze,
+
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,

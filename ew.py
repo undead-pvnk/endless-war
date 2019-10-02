@@ -54,6 +54,7 @@ class EwUser:
 
 	apt_zone = "empty"
 	visiting = "empty"
+	has_soul = 0
 
 	move_speed = 1 # not a database column
 
@@ -414,20 +415,18 @@ class EwUser:
 			status = None
 
 			status = ewcfg.status_effects_def_map.get(id_status)
+			time_expire = status.time_expire * multiplier
 
 			if status != None:
 				statuses = self.getStatusEffects()
 
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire=status.time_expire, value=value, source=source)
+				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source)
 				
-				status_effect.time_expire *= multiplier
-				status_effect.persist()
-
 				if id_status in statuses:
 					status_effect.value = value
 
 					if status.time_expire > 0 and id_status in ewcfg.stackable_status_effects:
-						status_effect.time_expire += status.time_expire
+						status_effect.time_expire += time_expire
 						response = status.str_acquire
 
 					status_effect.persist() 
@@ -596,12 +595,12 @@ class EwUser:
 			try:
 				conn_info = ewutils.databaseConnect()
 				conn = conn_info.get('conn')
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -640,6 +639,7 @@ class EwUser:
 					ewcfg.col_apt_zone,
 					ewcfg.col_visiting,
 					ewcfg.col_active_slimeoid,
+					ewcfg.col_has_soul,
 				), (
 					id_user,
 					id_server
@@ -685,6 +685,7 @@ class EwUser:
 					self.apt_zone = result[34]
 					self.visiting = result[35]
 					self.active_slimeoid = result[36]
+					self.has_soul = result[37]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -740,7 +741,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -781,6 +782,7 @@ class EwUser:
 				ewcfg.col_apt_zone,
 				ewcfg.col_visiting,
 				ewcfg.col_active_slimeoid,
+				ewcfg.col_has_soul,
 			), (
 				self.id_user,
 				self.id_server,
@@ -822,6 +824,7 @@ class EwUser:
 				self.apt_zone,
 				self.visiting,
 				self.active_slimeoid,
+				self.has_soul
 			))
 
 			conn.commit()
