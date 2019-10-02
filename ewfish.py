@@ -509,24 +509,36 @@ async def reel(cmd):
 		# On successful reel.
 		else:
 			if fisher.current_fish == "item":
-				item = random.choice(ewcfg.mine_results)
+				
+				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)
+				
+				if len(slimesea_inventory) == 0:
 
-				unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+					item = random.choice(ewcfg.mine_results)
+				
+					unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
-				item_props = ewitem.gen_item_props(item)
+					item_props = ewitem.gen_item_props(item)
 
-				for creation in range(unearthed_item_amount):
-					ewitem.item_create(
-						item_type = item.item_type,
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
-						item_props = item_props
-					),
+					for creation in range(unearthed_item_amount):
+						ewitem.item_create(
+							item_type = item.item_type,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = item_props
+						)
 
-				if unearthed_item_amount == 1:
-					response = "You reel in a {}!".format(item.str_name)
+					if unearthed_item_amount == 1:
+						response = "You reel in a {}!".format(item.str_name)
+					else:
+						response = "You reel in two {}s!".format(item.str_name)
+
 				else:
-					response = "You reel in two {}s!".format(item.str_name)
+					item = random.choice(slimesea_inventory)
+
+					ewitem.give_item(id_item = item.get('id_item'), member = cmd.message.author)
+
+					response = "You reel in a {}!".format(item.get('name'))
 
 				fisher.fishing = False
 				fisher.bite = False
