@@ -343,6 +343,7 @@ async def disembark(cmd):
 				response = "You try to heave yourself over the railing as you're hit by a sudden case of sea sickness. You puke into the sea and sink back on deck."
 				response = ewutils.formatMessage(cmd.message.author, response)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			user_data.poi = ewcfg.poi_id_slimesea
 			user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
 			deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
@@ -351,6 +352,7 @@ async def disembark(cmd):
 
 			response = "{} jumps over the railing of the ferry and promptly drowns in the slime sea.".format(cmd.message.author.display_name)
 			resp_cont.add_channel_response(channel = ewcfg.channel_slimesea, response = response)
+			resp_cont.add_channel_response(channel = ewcfg.channel_ferry, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		# they also can't fly
 		elif transport_data.transport_type == ewcfg.transport_type_blimp and not stop_poi.is_transport_stop and user_data.life_state != ewcfg.life_state_corpse:
