@@ -494,6 +494,7 @@ cmd_map = {
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,
 	ewcfg.cmd_offer: ewmarket.offer_item,
+	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
 	ewcfg.cmd_completetrade: ewmarket.complete_trade,
 	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
 }
