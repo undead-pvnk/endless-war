@@ -10,6 +10,9 @@ import ewstats
 import ewstatuseffects
 import ewmap
 import ewslimeoid
+import ewfaction
+import ewapt
+
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
@@ -290,6 +293,9 @@ async def data(cmd):
 		else:
 			response += "You are a level {} slimeboi.".format(user_data.slimelevel)
 
+		if user_data.has_soul == 0:
+			response += " You have no soul."
+
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
 		weapon_item = EwItem(id_item = user_data.weapon)
@@ -376,7 +382,7 @@ async def data(cmd):
 	
 	# Send the response to the player.
 	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-	await resp_cont.post()
+	await resp_cont.post(channel=cmd.message.channel)
 
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	if member != None:
@@ -495,7 +501,8 @@ async def help(cmd):
 				# list off help topics to player at college
 				response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
 				
-				topics = ewcfg.help_responses.keys()
+				# display the list of topics in order
+				topics = ewcfg.help_responses_ordered_keys
 				for topic in topics:
 					topic_counter += 1
 					topic_total += 1
@@ -745,4 +752,89 @@ async def fursuit(cmd):
 	else:
 		response = "You're about as hairless as an egg, my friend."
 
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+"""recycle your trash at the SlimeCorp Recycling plant"""
+async def recycle(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response = ""
+
+	if user_data.poi != ewcfg.poi_id_recyclingplant:
+		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	
+	if item_sought:
+		item = EwItem(id_item = item_sought.get("id_item"))
+
+		if not item.soulbound:
+			if item.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item.id_item == user_data.weapon:
+				if user_data.weaponmarried:
+					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					response = "Woah, wow, hold on there! Domestic violence is one thing, but how could you just throw your faithful {} into a glorified incinerator? Look, we all have bad days, but that's no way to treat a weapon. At least get a proper divorce first, you animal.".format(weapon.str_weapon)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					user_data.weapon = -1
+					user_data.persist()
+			
+			ewitem.item_delete(id_item = item.id_item)
+
+			pay = int(random.random() * 10 ** random.randrange(2,5))
+			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
+			if pay == 0:
+				item_reward = random.choice(ewcfg.mine_results)
+
+				item_props = ewitem.gen_item_props(item_reward)
+
+				ewitem.item_create(
+					item_type = item_reward.item_type,
+					id_user = cmd.message.author.id,
+					id_server = cmd.message.server.id,
+					item_props = item_props
+				)
+
+				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = 1)
+
+				response += "\n\nYou receive a {}!".format(item_reward.str_name)
+			else:
+				user_data.change_slimecoin(n=pay, coinsource = ewcfg.coinsource_recycle)
+				user_data.persist()
+
+				response += "\n\nYou receive {:,} SlimeCoin.".format(pay)
+
+		else:
+			response = "You can't {} soulbound items.".format(cmd.tokens[0])
+	else:
+		if item_search:
+			response = "You don't have one"
+		else:
+			response = "{} which item? (check **!inventory**)".format(cmd.tokens[0])
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def store_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.community_chest != None:
+		return await ewfaction.store(cmd)
+	elif poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "There is no storage here, public or private."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def remove_item(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if poi.community_chest != None:
+		return await ewfaction.take(cmd)
+	elif poi.is_apartment:
+		response = "Try that in a DM to ENDLESS WAR."
+	else:
+		response = "There is no storage here, public or private."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

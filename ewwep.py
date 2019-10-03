@@ -257,7 +257,7 @@ def canAttack(cmd):
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
-	elif ewmap.poi_is_pvp(user_data.poi) == False:
+	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
@@ -1076,7 +1076,7 @@ async def suicide(cmd):
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
-				response = "You can't do that now"
+				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
 				
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
@@ -1091,7 +1091,11 @@ async def suicide(cmd):
 			# Assign the corpse role to the player. He dead.
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-			response = '{} has willingly returned to the slime. {}'.format(cmd.message.author.display_name, ewcfg.emote_slimeskull)
+			if user_data.has_soul == 1:
+				response = '{} has willingly returned to the slime. {}'.format(cmd.message.author.display_name, ewcfg.emote_slimeskull)
+			else:
+				response = "Ahh. As it should be. {}".format(ewcfg.emote_slimeskull)
+
 			deathreport = "You arrive among the dead by your own volition. {}".format(ewcfg.emote_slimeskull)
 			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
 		else:
@@ -1730,6 +1734,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Get target's info.
 	huntedenemy = " ".join(cmd.tokens[1:]).lower()
 	enemy_data = ewhunting.find_enemy(huntedenemy, user_data)
+	
+	sandbag_mode = False
+	if enemy_data.enemytype == ewcfg.enemy_type_sandbag:
+		sandbag_mode = True
 
 	user_mutations = user_data.get_mutations()
 
@@ -1751,6 +1759,19 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
+	
+	# If the player is using a repel, remove the repel, and make the first hit do 99.9% less damage, rounded up.
+	statuses = user_data.getStatusEffects()
+	if ewcfg.status_repelled_id in statuses:
+		user_data.clear_status(ewcfg.status_repelled_id)
+		user_data.applyStatus(ewcfg.status_repelaftereffects_id)
+		slimes_damage /= 1000
+		slimes_damage = math.ceil(slimes_damage)
+		
+	# If the player has cancelled a repel by attacking an enemy, make all their hits do 99% less damage for two seconds, rounded up.
+	if ewcfg.status_repelaftereffects_id in statuses:
+		slimes_damage /= 100
+		slimes_damage = math.ceil(slimes_damage)
 
 	if weapon is None:
 		slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -1763,7 +1784,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 
 	# hunger drain
-	user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
+	if not sandbag_mode:
+		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
+		
+	if sandbag_mode:
+		slimes_spent = 0
+		slimes_dropped = 0
 
 	# Weaponized flavor text.
 	randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
@@ -1801,6 +1827,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		strikes = ctn.strikes
 		bystander_damage = ctn.bystander_damage
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
+		
+		if sandbag_mode and backfire:
+			backfire = False
+			miss = True
 
 		weapon_item.item_props['time_lastattack'] = time_now
 		weapon_item.persist()
@@ -1854,38 +1884,39 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# Remove one item from stack
 		if ewcfg.weapon_class_thrown in weapon.classes:
 			weapon_item.stack_size -= 1
+		
+		if not sandbag_mode:
+			if ewcfg.weapon_class_exploding in weapon.classes:
+				user_data.persist()
+				enemy_data.persist()
 
-		if ewcfg.weapon_class_exploding in weapon.classes:
-			user_data.persist()
-			enemy_data.persist()
-
-			if not miss:
-				life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
-				bystander_faction = ""
-				if user_data.faction == "rowdys":
-					bystander_faction = "killers"
-				elif user_data.faction == "killers":
-					bystander_faction = "rowdys"
-				factions = ["", user_data.faction if backfire else bystander_faction]
-				# Burn players in district
-				if weapon.id_weapon == ewcfg.weapon_id_molotov:
-					bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
-					# TODO - Make enemies work with molotovs the same way players do.
-					for bystander in bystander_users:
-						# print(bystander)
-						bystander_user_data = EwUser(id_user=bystander, id_server=user_data.id_server)
-						bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
-						resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id,
-															   value=bystander_damage, source=user_data.id_user).format(
-							name_player=bystander_player_data.display_name)
-						resp_cont.add_channel_response(cmd.message.channel.name, resp)
-				# Damage players/enemies in district
-				else:
-					resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data,
-												  district_data=district_data, life_states=life_states,
-												  factions=factions, slimes_damage=bystander_damage, backfire=backfire,
-												  time_now=time_now, target_enemy=True)
-					resp_cont.add_response_container(resp)
+				if not miss:
+					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+					bystander_faction = ""
+					if user_data.faction == "rowdys":
+						bystander_faction = "killers"
+					elif user_data.faction == "killers":
+						bystander_faction = "rowdys"
+					factions = ["", user_data.faction if backfire else bystander_faction]
+					# Burn players in district
+					if weapon.id_weapon == ewcfg.weapon_id_molotov:
+						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+						# TODO - Make enemies work with molotovs the same way players do.
+						for bystander in bystander_users:
+							# print(bystander)
+							bystander_user_data = EwUser(id_user=bystander, id_server=user_data.id_server)
+							bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
+							resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id,
+																value=bystander_damage, source=user_data.id_user).format(
+								name_player=bystander_player_data.display_name)
+							resp_cont.add_channel_response(cmd.message.channel.name, resp)
+					# Damage players/enemies in district
+					else:
+						resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data,
+													district_data=district_data, life_states=life_states,
+													factions=factions, slimes_damage=bystander_damage, backfire=backfire,
+													time_now=time_now, target_enemy=True)
+						resp_cont.add_response_container(resp)
 
 			user_data = EwUser(member=cmd.message.author)
 
@@ -1944,6 +1975,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 		if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
 			slimes_damage *= 2
+			
+	# Defender enemies take less damage
+	if enemy_data.ai == ewcfg.enemy_ai_defender:
+		slimes_damage *= 0.5
 
 	# Damage stats
 	ewstats.track_maximum(user=user_data, metric=ewcfg.stat_max_hitdealt, value=slimes_damage)
@@ -1972,6 +2007,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	slimes_directdamage = slimes_damage - slimes_tobleed
 	slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+	
+	if sandbag_mode:
+		slimes_drained = 0
+		slimes_tobleed = 0
+		#slimes_directdamage = 0
+		slimes_splatter = 0
 
 	district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 	enemy_data.bleed_storage += slimes_tobleed
@@ -2007,6 +2048,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		else:
 			slimes_todistrict = enemy_data.slimes / 2
 			slimes_tokiller = enemy_data.slimes / 2
+			
+		if sandbag_mode:
+			slimes_todistrict = 0
+			slimes_tokiller = 0
+			
 		district_data.change_slimes(n=slimes_todistrict, source=ewcfg.source_killing)
 		levelup_response = user_data.change_slimes(n=slimes_tokiller, source=ewcfg.source_killing)
 		if ewcfg.mutation_id_fungalfeaster in user_mutations:
@@ -2059,7 +2105,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		user_data = EwUser(member=cmd.message.author)
 	else:
 		# A non-lethal blow!
-
 		if weapon != None:
 			if miss:
 				response = "{}".format(weapon.str_miss.format(
@@ -2132,8 +2177,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	district_data.persist()
 
-	# If an enemy is a raidboss, announce that kill in the killfeed
-	if was_killed and enemy_data.enemytype in ewcfg.raid_bosses:
+	# If an enemy is a raidboss or sandbag, announce that kill in the killfeed
+	if was_killed and ((enemy_data.enemytype in ewcfg.raid_bosses) or (enemy_data.enemytype == ewcfg.enemy_type_sandbag)):
 		# announce raid boss kill in kill feed channel
 
 		killfeed_resp = "*{}*: {}".format(cmd.message.author.display_name, old_response)

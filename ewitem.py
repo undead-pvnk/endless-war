@@ -6,10 +6,12 @@ import asyncio
 import ewutils
 import ewcfg
 import ewstats
+import ewdistrict
 import ewrolemgr
 import ewsmelting
 from ew import EwUser
 from ewplayer import EwPlayer
+import re
 
 """
 	EwItemDef is a class used to model base items. These are NOT the items
@@ -251,6 +253,8 @@ def item_delete(
 		# Clean up the database handles.
 		cursor.close()
 		ewutils.databaseClose(conn_info)
+	
+	remove_from_trades(id_item)
 
 
 """
@@ -367,6 +371,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 	items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 
 	drop_candidates = []
+	#safe_items = [ewcfg.item_id_gameguide]
 
 	# Filter out Soulbound items.
 	for item in items:
@@ -756,7 +761,7 @@ def inventory(
 				id_item = item.get('id_item')
 				name = item_def.str_name
 
-				quantity = 0
+				quantity = 1
 				if item.get('stack_max') > 0:
 					quantity = item.get('stack_size')
 
@@ -789,49 +794,81 @@ def inventory(
 	Dump out a player's inventory.
 """
 async def inventory_print(cmd):
-	can_message_user = True
 	
-	sort_by_type = False
-	sort_by_name = False
-	sort_by_id = False
-
-	if cmd.tokens_count > 1:
-		sorting_method = cmd.tokens[1].lower()
-
-		if sorting_method == 'type':
-			sort_by_type = True
-		elif sorting_method == 'name':
-			sort_by_name = True
-		elif sorting_method == 'id':
-			sort_by_id = True
+	community_chest = False
+	can_message_user = True
+	inventory_source = cmd.message.author.id
 
 	player = EwPlayer(id_user = cmd.message.author.id)
 
+	user_data = EwUser(id_user = cmd.message.author.id, id_server = player.id_server)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	if cmd.tokens[0].lower() == ewcfg.cmd_communitychest:
+		if poi.community_chest == None:
+			response = "There is no community chest here."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		community_chest = True
+		can_message_user = False
+		inventory_source = poi.community_chest
+
+	sort_by_type = False
+	sort_by_name = False
+	sort_by_id = False
+	
+	stacking = False
+	stacked_message_list = []
+	stacked_item_map = {}
+
+	if cmd.tokens_count > 1:
+		token_list = cmd.tokens[1:]
+		lower_token_list = []
+		for token in token_list:
+			token = token.lower()
+			lower_token_list.append(token)
+
+		if 'type' in lower_token_list:
+			sort_by_type = True
+		elif 'name' in lower_token_list:
+			sort_by_name = True
+		elif 'id' in lower_token_list:
+			sort_by_id = True
+			
+		if 'stack' in lower_token_list:
+			stacking = True
+
 	if sort_by_id:
 		items = inventory(
-			id_user = cmd.message.author.id,
+			id_user = inventory_source,
 			id_server = player.id_server,
 			item_sorting_method='id'
 		)
 	elif sort_by_type:
 		items = inventory(
-			id_user=cmd.message.author.id,
+			id_user=inventory_source,
 			id_server=player.id_server,
 			item_sorting_method='type'
 		)
 	else:
 		items = inventory(
-			id_user=cmd.message.author.id,
+			id_user=inventory_source,
 			id_server=player.id_server,
 		)
 
-	if len(items) == 0:
-		response = "You don't have anything."
+	if community_chest:
+		if len(items) == 0:
+			response = "The community chest is empty."
+		else:
+			response = "The community chest contains:"
 	else:
-		response = "You are holding:"
+		if len(items) == 0:
+			response = "You don't have anything."
+		else:
+			response = "You are holding:"
 
+	msg_handle = None
 	try:
-		msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+		if can_message_user:
+			msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
 	except:
 		can_message_user = False
 
@@ -852,21 +889,54 @@ async def inventory_print(cmd):
 			id_item = item.get('id_item')
 			quantity = item.get('quantity')
 
-			response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
-				id_item = item.get('id_item'),
-				name = item.get('name'),
-				soulbound_style = ("**" if item.get('soulbound') else ""),
-				quantity = (" x{:,}".format(quantity) if (quantity > 0) else "")
-			)
-			if len(response) + len(response_part) > 1492:
+			if not stacking:
+				response_part = "\n{id_item}: {soulbound_style}{name}{soulbound_style}{quantity}".format(
+					id_item = item.get('id_item'),
+					name = item.get('name'),
+					soulbound_style = ("**" if item.get('soulbound') else ""),
+					quantity = (" x{:,}".format(quantity) if (quantity > 1) else "")
+				)
+			else:
+
+				item_name = item.get('name')
+				if item_name in stacked_item_map:
+					stacked_item = stacked_item_map.get(item_name)
+					stacked_item['quantity'] += item.get('quantity')
+				else:
+					stacked_item_map[item_name] = item
+				
+			if not stacking and len(response) + len(response_part) > 1492:
 				if can_message_user:
 					await ewutils.send_message(cmd.client, cmd.message.author, response)
 				else:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				response = ""
+				
+			if not stacking:
+				response += response_part
 
-			response += response_part
+		if stacking:
+			item_names = stacked_item_map.keys()
+			if sort_by_name:
+				item_names = sorted(item_names)
+			for item_name in item_names:
+				item = stacked_item_map.get(item_name)
+				quantity = item.get('quantity')
+				response_part = "\n{soulbound_style}{name}{soulbound_style}{quantity}".format(
+					name=item.get('name'),
+					soulbound_style=("**" if item.get('soulbound') else ""),
+					quantity=(" **x{:,}**".format(quantity) if (quantity > 0) else "")
+				)
+				
+				if len(response) + len(response_part) > 1492:
+					if can_message_user:
+						await ewutils.send_message(cmd.client, cmd.message.author, response)
+					else:
+						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+					response = ""
+				response += response_part
 
 		if can_message_user:
 			await ewutils.send_message(cmd.client, cmd.message.author, response)
@@ -964,7 +1034,7 @@ async def item_look(cmd):
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
 
-			response = name + "\n\n" + response
+			response = name + (" x{:,}".format(item.stack_size) if (item.stack_size >= 1) else "") + "\n\n" + response
 
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
@@ -1003,9 +1073,21 @@ async def item_use(cmd):
 
 		if item.item_type == ewcfg.it_item:
 			name = item_sought.get('name')
+			context = item.item_props.get('context')
 			if name == "Trading Cards":
 				response = ewsmelting.unwrap(id_user = author, id_server = server, item = item)
-
+			elif (context == 'repel' or context == 'superrepel' or context == 'maxrepel'):
+				statuses = user_data.getStatusEffects()
+				if ewcfg.status_repelaftereffects_id in statuses:
+					response = "You need to wait a bit longer before applying more body spray."
+				else:
+					if context == 'repel':
+						response = user_data.applyStatus(ewcfg.status_repelled_id)
+					elif context == 'superrepel':
+						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=2)
+					elif context == 'maxrepel':
+						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
+					item_delete(item.id_item)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1042,6 +1124,8 @@ def give_item(
 				id_item
 			)
 		)
+
+		remove_from_trades(id_item)
 
 		item = EwItem(id_item = id_item)
 		# Reset the weapon's damage modifying stats
@@ -1084,6 +1168,7 @@ def find_item(item_search = None, id_user = None, id_server = None):
 	return item_sought
 
 
+
 """
 	Find every item matching the search in the player's inventory (returns a list of (non-EwItem) item)
 """
@@ -1093,7 +1178,8 @@ def find_item_all(item_search = None, id_user = None, id_server = None, item_typ
 		'weapon_type',
 		'id_item',
 		'id_food',
-		'id_cosmetic'
+		'id_cosmetic',
+		'id_furniture'
 	]
 
 
@@ -1312,5 +1398,142 @@ def gen_item_props(item):
 		}
 
 	return item_props
+
+
+async def soulextract(cmd):
+	usermodel = EwUser(member=cmd.message.author)
+	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if usermodel.has_soul == 1:
+		item_create(
+			id_user=cmd.message.author.id,
+			id_server=cmd.message.server.id,
+			item_type=ewcfg.it_cosmetic,
+			item_props = {
+				'id_cosmetic': "soul",
+				'cosmetic_name': "{}'s soul".format(playermodel.display_name),
+				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(playermodel.display_name, cmd.message.author.id),
+				'rarity': ewcfg.rarity_patrician,
+				'adorned': 'false',
+				'user_id': usermodel.id_user
+			}
+		)
+		usermodel.has_soul = 0
+		usermodel.persist()
+		response = "You tremble at the thought of trying this. Nothing ventured, nothing gained, you suppose. With all your mental fortitude you jam your hand deep into your chest and begin to pull out the very essence of your being. Your spirit, aspirations, everything that made you who you are begins to slowly drain from your mortal effigy until you feel absolutely nothing. Your soul flickers about, taunting you from outside your body. You capture it in a jar, almost reflexively.\n\nWow. Your personality must suck now."
+	else:
+		response = "There's nothing left in you to extract. You already spent the soul you had."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-		
+async def returnsoul(cmd):
+	usermodel = EwUser(member=cmd.message.author)
+	#soul = find_item(item_search="soul", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	user_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
+	soul_item = None
+	soul = None
+	for inv_object in user_inv:
+		soul = inv_object
+		soul_item = EwItem(id_item=soul.get('id_item'))
+		if soul_item.item_props.get('user_id') == cmd.message.author.id:
+			break
+
+	if usermodel.has_soul == 1:
+		response = "Your current soul is a little upset you tried to give it a roommate. Only one fits in your body at a time."
+	elif soul:
+
+		if soul.get('item_type') == ewcfg.it_cosmetic and soul_item.item_props.get('id_cosmetic') == "soul":
+			if soul_item.item_props.get('user_id') != cmd.message.author.id:
+				response = "That's not your soul. Nice try, though."
+			else:
+				response = "You open the soul jar and hold the opening to your chest. The soul begins to crawl in, and a warmth returns to your body. Not exactly the warmth you had before, but it's too wonderful to pass up. You feel invigorated and ready to take on the world."
+				item_delete(id_item=soul.get('id_item'))
+				usermodel.has_soul = 1
+				usermodel.persist()
+		else:
+			response = "Nice try, but your mortal coil recognizes a fake soul when it sees it."
+	else:
+		response = "You don't have a soul to absorb. Hopelessness is no fun, but don't get all delusional on us now."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def squeeze(cmd):
+	usermodel = EwUser(member=cmd.message.author)
+	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
+	
+	if cmd.mentions_count <= 0:
+		response = "Specify a soul you want to squeeze the life out of."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	target = cmd.mentions[0]
+	targetmodel = EwUser(member=target)
+	if cmd.mentions_count > 1:
+		response = "One dehumanizing soul-clutch at a time, please."
+	elif targetmodel.life_state == ewcfg.life_state_corpse:
+		response = "Enough already. They're dead."
+	else:
+
+		playermodel = EwPlayer(id_user=targetmodel.id_user)
+		receivingreport = "" #the receiver of the squeeze gets this in their channel
+
+		squeezetext = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
+		if len(squeezetext) > 500:
+			haunt_message_content = squeezetext[:-500]
+
+
+
+		poi = None
+		target_item = None
+		for soul in soul_inv:
+			soul_item = EwItem(id_item=soul.get('id_item'))
+			if soul_item.item_props.get('user_id') == targetmodel.id_user:
+				target_item = soul
+
+		if targetmodel.has_soul == 1:
+			response = "They look pretty soulful right now. You can't do anything to them."
+		elif target_item == None:
+			response = "You don't have their soul."
+		elif (int(time.time()) - usermodel.time_lasthaunt) < ewcfg.cd_squeeze:
+			timeleft = ewcfg.cd_squeeze - (int(time.time()) - usermodel.time_lasthaunt)
+			response = "It's still all rubbery and deflated from the last time you squeezed it. Give it {} seconds.".format(timeleft)
+		else:
+			if squeezetext != "":
+				receivingreport = "A voice in your head screams: \"{}\"\nSuddenly, you feel searing palpitations in your chest, and vomit slime all over the floor. Dammit, {} must be fucking around with your soul.".format(squeezetext, cmd.message.author.display_name)
+			else:
+				receivingreport = "You feel searing palpitations in your chest, and vomit slime all over the floor. Dammit, {} must be fucking with your soul.".format(cmd.message.author.display_name)
+
+			poi = ewcfg.id_to_poi.get(targetmodel.poi)
+
+			usermodel.time_lasthaunt = int(time.time())
+			usermodel.persist()
+
+			server = ewcfg.server_list[targetmodel.id_server]
+			member_object = server.get_member(targetmodel.id_user)
+
+			penalty = (targetmodel.slimes* -0.25)
+			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
+			targetmodel.persist()
+
+			district_data = ewdistrict.EwDistrict(district=targetmodel.poi, id_server=cmd.message.server.id)
+			district_data.change_slimes(n= -penalty, source=ewcfg.source_squeeze)
+			district_data.persist()
+
+			if receivingreport != "":
+				loc_channel = ewutils.get_channel(cmd.message.server, poi.channel)
+				await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(member_object, receivingreport))
+
+			response = "You tightly squeeze {}'s soul in your hand, jeering into it as you do so. This thing was worth every penny.".format(playermodel.display_name)
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+	
+# search and remove the given item from an ongoing trade
+def remove_from_trades(id_item):
+	for trader in ewutils.trading_offers:
+		for item in ewutils.trading_offers.get(trader):
+			if id_item == item.get("id_item"):
+				ewutils.trading_offers.get(trader).remove(item)
+
+				ewutils.active_trades.get(trader)["state"] = ewcfg.trade_state_ongoing 
+				ewutils.active_trades.get(ewutils.active_trades.get(trader).get("trader"))["state"] = ewcfg.trade_state_ongoing
+				return
+
