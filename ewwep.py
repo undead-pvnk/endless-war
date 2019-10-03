@@ -286,7 +286,7 @@ def canAttack(cmd):
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 
-		elif (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
+		if (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
 			# disallow kill if the player has killed recently
 			response = "Take a moment to appreciate your last slaughter."
 
