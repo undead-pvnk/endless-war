@@ -35,6 +35,11 @@ moves_active = {}
 
 food_multiplier = {}
 
+# Contains who players are trading with and the state of the trades
+active_trades = {}
+# Contains the items being offered by players
+trading_offers = {}
+
 class Message:
 	# Send the message to this exact channel by name.
 	channel = None
@@ -96,7 +101,7 @@ class EwResponseContainer:
 			for i in range(len(self.channel_responses[channel])):
 				self.channel_responses[channel][i] = formatMessage(member, self.channel_responses[channel][i])
 
-	async def post(self):
+	async def post(self, channel=None):
 		self.client = get_client()
 		messages = []
 
@@ -110,17 +115,20 @@ class EwResponseContainer:
 			return messages
 
 		for ch in self.channel_responses:
-			channel = get_channel(server = server, channel_name = ch)
+			if channel == None:
+				current_channel = get_channel(server = server, channel_name = ch)
+			else:
+				current_channel = channel
 			try:
 				response = ""
 				while len(self.channel_responses[ch]) > 0:
-					if len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
+					if len(response) == 0 or len("{}\n{}".format(response, self.channel_responses[ch][0])) < ewcfg.discord_message_length_limit:
 						response += "\n" + self.channel_responses[ch].pop(0)
 					else:
-						message = await send_message(self.client, channel, response)
+						message = await send_message(self.client, current_channel, response)
 						messages.append(message)
 						response = ""
-				message = await send_message(self.client, channel, response)
+				message = await send_message(self.client, current_channel, response)
 				messages.append(message)
 			except:
 				logMsg('Failed to send message to channel {}: {}'.format(ch, self.channel_responses[ch]))
@@ -1230,3 +1238,17 @@ async def delete_last_message(client, last_messages, tick_length):
 	except:
 		logMsg("failed to delete last message")
 
+def check_accept_or_refuse(str):
+	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
+		return True
+
+def end_trade(id_user):
+	# Cancel an ongoing trade
+	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
+		trader = active_trades.get(id_user).get("trader")
+		
+		active_trades[id_user] = {}
+		active_trades[trader] = {}
+		
+		trading_offers[trader] = []
+		trading_offers[id_user] = []

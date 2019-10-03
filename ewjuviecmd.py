@@ -645,6 +645,7 @@ async def crush(cmd):
 	member = cmd.message.author
 	user_data = EwUser(member=member)
 	response = ""
+	crush_slimes = ewcfg.crush_slimes
 	
 	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
 	
@@ -658,10 +659,10 @@ async def crush(cmd):
 		# delete a slime poudrin from the player's inventory
 		ewitem.item_delete(id_item=poudrin.get('id_item'))
 		
-		user_data.slimes += ewcfg.crush_slimes
+		user_data.slimes += crush_slimes
 		user_data.persist()
 		
-		response = "You crush the hardened slime crystal with your bare hands.\nYou gain 10,000 slime. Sick, dude!!"
+		response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
 		
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
