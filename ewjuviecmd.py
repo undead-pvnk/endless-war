@@ -33,7 +33,10 @@ mines_map = {
 
 
 class EwMineGrid:
+	grid_type = ""
+	
 	grid = []
+	slime_grid = []
 
 	message = ""
 	wall_message = ""
@@ -44,8 +47,10 @@ class EwMineGrid:
 
 	cells_mined = 0
 
-	def __init__(self, grid):
+	def __init__(self, grid = [], slime_grid = [], grid_type = ""):
 		self.grid = grid
+		self.slime_grid = slime_grid
+		self.grid_type = grid_type
 		self.message = ""
 		self.wall_message = ""
 		self.times_edited = 0
@@ -209,72 +214,16 @@ async def mine(cmd):
 				#minesweeper = True
 				#grid_multiplier = grid_cont.cells_mined ** 0.4
 				#flag = False
-				row = -1
-				col = -1
-				bubble_add = None
-				for token in cmd.tokens[1:]:
-				
-					if token.lower() == "reset":
-						user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
-						if random.random() < extra:
-							user_data.hunger += ewcfg.hunger_perminereset
-						user_data.persist()
-						init_grid(user_data.poi, user_data.id_server)
-						return await print_grid(cmd)
+				mining_yield = get_mining_yield_by_grid_type(cmd, grid_cont)
 
-					if col < 1:
-						char = token.lower()
+				if type(mining_yield) == type(""):
+					response = mining_yield
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					return await print_grid(cmd)
 					
-						if char in ewcfg.alphabet:
-							col = ewcfg.alphabet.index(char)
 
-					if bubble_add == None:
-						bubble = token.lower()
-						if bubble in ewcfg.cell_bubbles:
-							bubble_add = bubble
-
-
-				row = len(grid)
-				row -= 1
-			
-				if col not in range(len(grid[0])):
-					response = "Invalid vein."
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					return await print_grid(cmd)
-
-				if bubble_add == None:
-					response = "Invalid bubble."
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					return await print_grid(cmd)
-
-				mining_yield = 0
-				mining_accident = False
-
-				cells_to_clear = []
-				
-				slimes_pertile = ewcfg.slimes_pertile
-				if grid[row][col] != ewcfg.cell_empty:
+				if mining_yield < 0:
 					mining_accident = True
-				else:
-					grid[row][col] = bubble_add
-
-					cells_to_check = apply_gravity(grid)
-
-					cells_to_check.append((row,col))
-
-					while len(cells_to_check) > 0:
-						mining_yield += slimes_pertile * check_and_explode(grid, cells_to_check)
-						
-						cells_to_check = apply_gravity(grid)
-
-				grid_cont.cells_mined += 1
-				grid_height = get_height(grid)
-
-				if grid_cont.cells_mined % 15 == 10 or grid_height < 5:
-					if grid_height < len(grid):
-						add_row(grid)
-					else:
-						mining_accident = True
 
 				if mining_accident:
 					user_data.change_slimes(n = -(user_data.slimes * 0.5))
@@ -769,3 +718,95 @@ def get_height(grid):
 
 	return row
 		
+def get_mining_yield_by_grid_type(cmd, grid_cont):
+	if grid_cont.grid_type == ewcfg.mine_grid_type_minesweeper:
+		return get_mining_yield_minesweeper(cmd, grid_cont)
+	elif grid_cont.grid_type == ewcfg.mine_grid_type_pokemine:
+		return get_mining_yield_pokemine(cmd, grid_cont)
+	elif grid_cont.grid_type == ewcfg.mine_grid_type_bubblebreaker:
+		return get_mining_yield_bubblebreaker(cmd, grid_cont)
+	else:
+		return get_mining_yield_default(cmd)
+
+def get_mining_yield_minesweeper(cmd, grid_cont):
+	return
+
+def get_mining_yield_pokemine(cmd, grid_cont):
+	return
+
+def get_mining_yield_bubblebreaker(cmd, grid_cont):
+	
+	user_data = EwUser(member = cmd.message.author)
+
+	row = -1
+	col = -1
+	bubble_add = None
+	for token in cmd.tokens[1:]:
+				
+		if token.lower() == "reset":
+			user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
+			if random.random() < extra:
+				user_data.hunger += ewcfg.hunger_perminereset
+			user_data.persist()
+			init_grid(user_data.poi, user_data.id_server)
+			return 0
+
+		if col < 1:
+			char = token.lower()
+		
+			if char in ewcfg.alphabet:
+				col = ewcfg.alphabet.index(char)
+
+		if bubble_add == None:
+			bubble = token.lower()
+			if bubble in ewcfg.cell_bubbles:
+				bubble_add = bubble
+
+
+	row = len(grid)
+	row -= 1
+			
+	if col not in range(len(grid[0])):
+		response = "Invalid vein."
+		return response
+
+	if bubble_add == None:
+		response = "Invalid bubble."
+		return response
+
+	mining_yield = 0
+	mining_accident = False
+
+	cells_to_clear = []
+	
+	slimes_pertile = ewcfg.slimes_pertile
+	if grid[row][col] != ewcfg.cell_empty:
+		mining_accident = True
+	else:
+		grid[row][col] = bubble_add
+
+		cells_to_check = apply_gravity(grid)
+
+		cells_to_check.append((row,col))
+
+		while len(cells_to_check) > 0:
+			mining_yield += slimes_pertile * check_and_explode(grid, cells_to_check)
+			
+			cells_to_check = apply_gravity(grid)
+
+	grid_cont.cells_mined += 1
+	grid_height = get_height(grid)
+
+	if grid_cont.cells_mined % 15 == 10 or grid_height < 5:
+		if grid_height < len(grid):
+			add_row(grid)
+		else:
+			mining_accident = True
+
+	if mining_accident:
+		return -1
+	else:
+		return mining_yield
+
+def get_mining_yield_default(cmd):
+	return 100
