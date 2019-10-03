@@ -315,8 +315,6 @@ def canAttack(cmd):
 			response = "Your bloodlust is appreciated, but ENDLESS WAR couldn't find what you were trying to kill."
 
 	elif cmd.mentions_count == 1:
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
-
 		# Get target's info.
 		member = cmd.mentions[0]
 		shootee_data = EwUser(member = member)
@@ -328,10 +326,6 @@ def canAttack(cmd):
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
 			response = "He is hiding in his ivory tower and playing video games like a retard."
-
-		elif (slimes_spent > user_data.slimes):
-			# Not enough slime to shoot.
-			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
 
 		elif (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
 			# disallow kill if the player has killed recently
@@ -521,6 +515,11 @@ async def attack(cmd):
 				strikes = ctn.strikes
 				bystander_damage = ctn.bystander_damage
 				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
+
+				if (slimes_spent > user_data.slimes):
+					# Not enough slime to shoot.
+					response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				weapon_item.item_props['time_lastattack'] = time_now
 				weapon_item.persist()
@@ -1828,6 +1827,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		bystander_damage = ctn.bystander_damage
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
 		
+		if (slimes_spent > user_data.slimes):
+			# Not enough slime to shoot.
+			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 		if sandbag_mode and backfire:
 			backfire = False
 			miss = True
