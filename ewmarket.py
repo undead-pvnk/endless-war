@@ -1345,8 +1345,8 @@ async def complete_trade(cmd):
 						user_data.persist()
 					elif item.get("item_type") == ewcfg.it_cosmetic:
 						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
-						cosmetic.item_props["adorned"] = False
-						cosmetic.item_props["slimeoid"] = False
+						cosmetic.item_props["adorned"] = 'false'
+						cosmetic.item_props["slimeoid"] = 'false'
 						cosmetic.persist()
 				
 					ewitem.give_item(id_item=item.get("id_item"), id_user=trade_partner.id_user, id_server=trade_partner.id_server)	
@@ -1357,8 +1357,8 @@ async def complete_trade(cmd):
 						trade_partner.persist()
 					elif item.get("item_type") == ewcfg.it_cosmetic:
 						cosmetic = ewitem.EwItem(id_item=item.get("id_item"))
-						cosmetic.item_props["adorned"] = False
-						cosmetic.item_props["slimeoid"] = False
+						cosmetic.item_props["adorned"] = 'false'
+						cosmetic.item_props["slimeoid"] = 'false'
 						cosmetic.persist()
 
 					ewitem.give_item(id_item=item.get("id_item"), id_user=user_data.id_user, id_server=user_data.id_server)			
