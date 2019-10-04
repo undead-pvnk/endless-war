@@ -105,6 +105,7 @@ poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
 
+
 # transports
 poi_id_ferry = "ferry"
 poi_id_subway_red01 = "subwayred01"
@@ -222,6 +223,8 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
+
+poi_id_slimesendcliffs = "slimesendcliffs"
 
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
@@ -454,6 +457,8 @@ channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
 channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
 
+channel_slimesendcliffs = "slimes-end-cliffs"
+
 
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
@@ -678,6 +683,10 @@ cmd_returnsoul = cmd_prefix + 'returnsoul'
 cmd_squeeze = cmd_prefix + 'squeezesoul'
 cmd_betsoul = cmd_prefix + 'betsoul'
 cmd_buysoul = cmd_prefix + 'buysoul'
+cmd_push = cmd_prefix + 'push'
+cmd_push_alt_1 = cmd_prefix + 'bully'
+cmd_jump = cmd_prefix + 'jump'
+cmd_toss = cmd_prefix + 'toss'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -792,6 +801,8 @@ slimes_permill = 75000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_cliffdrop = 200000
+slimes_item_drop = 10000
 
 # hunger
 min_stamina = 100
@@ -1583,6 +1594,7 @@ cause_bleeding = 9
 cause_burning = 10
 cause_killing_enemy = 11
 cause_weather = 12
+cause_cliff = 13
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -5749,6 +5761,20 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+bully_responses = [
+"You push {} into a puddle of sludge, laughing at how hopelessly dirty they are.",
+"You hold {} down and pull their underwear over their head. It looks like their neck's about to snap off, holy shit.",
+"You decide to give {} a slime swirly in a nearby puddle. It's so shallow that they mostly get a faceful of gravel.",
+"You tie {} to a tree and slap them around senselessly. You untie them once their face and belly bruise cherry red.",
+"You flag down a muscle car on the road and shout: \"HEY! {} FUCKED YOUR WIFE!\" The good man parks on the side of the road and starts beating the everloving shit out them. -SLIMEOID- cowers in the corner, now scarred for life and afraid of dads.",
+"You pull on {}'s hair, ripping some out and causing them to cry. They should fucking grow up.",
+"You reach into {}'s shirt and give them a purple nurple. Man, these bullying tactics are getting kind of gay.",
+"You whip out your dick and pee on {}'s wife. Fuck. That's a power move right there.",
+"You scream \"HEY {}! NICE -COSMETIC- YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
+"You grab -SLIMEOID- and give them a noogie. Just when {} thinks this is all fun and games, you throw -SLIMEOID- into the street. They have a panic attack trying to get past all the traffic and back to safety."
+
+]
+
 cabinets_list = [
 "This is a Zoombinis Logical Journey arcade cabinet.\nWait. This is an old PC game. Why the fuck would they port this to cabinet? Now you have to use the stick to move the mouse around. Oh well. Buyers remorse, you suppose. \nhttps://classicreload.com/win3x-logical-journey-of-the-zoombinis.html",
 "This is a Cookie Clicker arcade cabinet.\n The huge cookie button on the front is pretty neat, but running it forever seems like it would crank your electricity bill. You know, if you had one.\nhttps://orteil.dashnet.org/cookieclicker/",
@@ -9588,6 +9614,23 @@ EwPoi( # apt-dreadford
 		mother_district = poi_id_dreadford,
 		pvp = False,
 		is_subzone = False,
+	),
+EwPoi( # slime's end cliffs
+		id_poi = poi_id_slimesendcliffs,
+		alias = [
+			"sec",
+			"cliffs",
+			"secliffs",
+			"cliff"
+		],
+		str_name = "Slime's End Cliffs",
+		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a lesiurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		channel = channel_slimesendcliffs,
+		role = "Dreadford Apartments",
+		mother_district = poi_id_slimesend,
+		pvp = True,
+		is_subzone = True,
+		coord = (98, 42),
 	),
 
 	EwPoi(  # Outskirts - 1

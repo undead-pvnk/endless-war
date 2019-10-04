@@ -9,6 +9,7 @@ import ewrolemgr
 import ewstats
 import ewstatuseffects
 import ewmap
+import ewdistrict
 import ewslimeoid
 import ewfaction
 import ewapt
@@ -838,3 +839,208 @@ async def remove_item(cmd):
 	else:
 		response = "There is no storage here, public or private."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def push(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	districtmodel = ewdistrict.EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
+
+	if cmd.mentions_count == 0:
+		response = "You try to push a nearby building. Nope, still not strong enough to move it."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	elif cmd.mentions_count >= 2:
+		response = "You can't push more than one person at a time."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	target = cmd.mentions[0]
+	targetmodel = EwUser(member=target)
+	target_mutations = targetmodel.get_mutations()
+	user_mutations = user_data.get_mutations()
+
+	server = cmd.message.server
+	member_object = server.get_member(targetmodel.id_user)
+
+	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
+		if targetmodel.poi == user_data.poi:
+			response = random.choice(ewcfg.bully_responses)
+			response = response.format(target.display_name)
+
+			slimeoid_model = EwSlimeoid(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
+			if slimeoid_model.name != "":
+				slimeoid_model = slimeoid_model.name
+			else:
+				slimeoid_model = ""
+
+			cosmetics = ewitem.inventory(id_user=targetmodel.id_user, id_server=targetmodel.id_server, item_type_filter=ewcfg.it_cosmetic)
+			selected_cos = None
+			for cosmetic in cosmetics:
+				cosmetic_item = EwItem(id_item=cosmetic.get('id_item'))
+				if cosmetic_item.item_props.get('adorned') == "true":
+					selected_cos = cosmetic
+					break
+
+			if selected_cos == None:
+				selected_cos = "PANTS"
+			else:
+				selected_cos = id_item = selected_cos.get('name')
+
+			if "-COSMETIC-" in response:
+				response = response.replace("-COSMETIC-", selected_cos.upper())
+
+			if "-SLIMEOID-" in response:
+				if slimeoid_model != "":
+					response = response.replace("-SLIMEOID-", slimeoid_model)
+				elif slimeoid_model == "":
+					response = "You push {} into a puddle of sludge, laughing at how hopelessly dirty they are.".format(target.display_name)
+
+		else:
+			response = "You can't bully them because they aren't here."
+
+	elif user_data.life_state == ewcfg.life_state_corpse:
+		response = "You attempt to push {} off the cliff, but your hand passes through them. If you're going to push someone, make sure you're corporeal.".format(target.display_name)
+
+	elif targetmodel.life_state == ewcfg.life_state_corpse:
+		response = "You try to give ol' {} a shove, but they're a bit too dead to be taking up physical space.".format(target.display_name)
+
+	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and ewcfg.mutation_id_lightasafeather not in target_mutations:
+		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
+
+	elif ewcfg.mutation_id_lightasafeather in target_mutations:
+		response = "You pick {} up with your thumb and index finger, and gently toss them off the cliff. Wow. That was easy.".format(target.display_name)
+		targetmodel.die(cause=ewcfg.cause_cliff)
+		targetmodel.persist()
+		await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+
+	elif ewcfg.mutation_id_lightasafeather in user_mutations:
+		response = "You strain to push {} off the cliff, but your light frame gives you no lifting power.".format(target.display_name)
+
+	else:
+		response = "You push {} off the cliff and watch them scream in agony as they fall. Sea monsters frenzy on their body before they even land, gnawing them to jagged ribbons and gushing slime back to the clifftop.".format(target.display_name)
+
+		slimetotal = targetmodel.slimes * 0.75
+		districtmodel.change_slimes(n=slimetotal)
+		districtmodel.persist()
+
+		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member_object, deathreport)
+
+		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
+		for item in cliff_inventory:
+			item_object = ewitem.EwItem(id_item=item.get('id_item'))
+			if item.get('soulbound') == True:
+				pass
+
+			elif item_object.item_type == ewcfg.it_weapon:
+				if item.get('id_item') == targetmodel.weapon:
+					ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+
+				else:
+					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
+
+
+			elif item_object.item_props.get('adorned') == 'true':
+				ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+
+			else:
+				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
+
+
+
+		targetmodel.die(cause = ewcfg.cause_cliff)
+		targetmodel.persist()
+		await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+		if deathreport != "":
+			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def jump(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
+		response = "You jump. Nope. Still not good at parkour."
+	elif user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're already dead. You'd just ghost hover above the cliff."
+	else:
+		response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
+		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
+
+		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=user_data.id_user)
+		for item in cliff_inventory:
+			item_object = ewitem.EwItem(id_item=item.get('id_item'))
+			if item.get('soulbound') == True:
+				pass
+
+			elif item_object.item_type == ewcfg.it_weapon:
+				if item.get('id_item') == user_data.weapon:
+					ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+
+				else:
+					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
+
+
+			elif item_object.item_props.get('adorned') == 'true':
+				ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+
+			else:
+				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
+
+		user_data.die(cause = ewcfg.cause_cliff)
+		user_data.persist()
+		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+		if deathreport != "":
+			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
+			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def toss_off_cliff(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
+
+	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
+		return await ewitem.discard(cmd=cmd)
+
+	elif item_sought:
+		item_obj = EwItem(id_item=item_sought.get('id_item'))
+		if item_obj.soulbound == True:
+			response = "That's soulbound. You can't get rid of it just because you're in a more dramatic looking place."
+		else:
+			response = item_off(item_sought.get('id_item'), user_data.id_server, item_sought.get('name'))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		response = "You don't have that item."
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+
+def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
+	item_obj = EwItem(id_item=id_item)
+	districtmodel = ewdistrict.EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
+	slimetotal = 0
+
+	if random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
+		response = "You toss the {} off the cliff. It sinks into the ooze disappointingly.".format(item_name)
+		ewitem.give_item(id_item=id_item, id_server=id_server, id_user=ewcfg.poi_id_slimesea)
+
+	elif random.randrange(500) < 498:
+		response = "You toss the {} off the cliff. A nearby kraken swoops in and chomps it down with the cephalapod's equivalent of a smile. Your new friend kicks up some sea slime for you. Sick!".format(item_name)
+		slimetotal = 10000 + random.randrange(50000)
+		ewitem.item_delete(id_item=id_item)
+
+	else:
+		response = "{} Oh fuck. FEEDING FRENZY!!! Sea monsters lurch down on the spoils like it's fucking christmas, and a ridiculous level of slime debris covers the ground. {}".format(ewcfg.emote_slime1, ewcfg.emote_slime1)
+		slimetotal = 100000 + random.randrange(900000)
+
+		ewitem.item_delete(id_item=id_item)
+
+	districtmodel.change_slimes(n=slimetotal)
+	districtmodel.persist()
+	return response
+
+
+
