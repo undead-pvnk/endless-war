@@ -47,6 +47,7 @@ import ewhunting
 import ewfish
 import ewfaction
 import ewapt
+import ewweather
 import ewdebug
 
 from ewitem import EwItem
@@ -664,6 +665,7 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
+		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -863,11 +865,14 @@ async def on_ready():
 
 					market_data = EwMarket(id_server = server.id)
 
-					if random.randrange(30) == 0:
+					if random.randrange(3) == 0:
 						pattern_count = len(ewcfg.weather_list)
 
 						if pattern_count > 1:
 							weather_old = market_data.weather
+
+							if random.random() < 0.4:
+								market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
 							while market_data.weather == weather_old:

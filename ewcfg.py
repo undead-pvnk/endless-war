@@ -916,6 +916,9 @@ scavenge_item_rarity = 1000
 # Lifetimes
 invuln_onrevive = 0
 
+# how often to apply weather effects
+weather_tick_length = 10
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -1553,7 +1556,7 @@ source_scavenging = 11
 source_farming = 12
 source_fishing = 13
 source_squeeze = 14
-
+source_weather = 15
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1579,6 +1582,7 @@ cause_falling = 8
 cause_bleeding = 9
 cause_burning = 10
 cause_killing_enemy = 11
+cause_weather = 12
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -3291,6 +3295,8 @@ attack_type_map = {}
 for attack_type in enemy_attack_type_list:
 	attack_type_map[attack_type.id_type] = attack_type
 
+weather_bicarbonaterain = "bicarbonaterain"
+
 # All weather effects in the game.
 weather_list = [
 	EwWeather(
@@ -3335,13 +3341,20 @@ weather_list = [
 		sunset = "The cold air grows colder as the sky darkens and the snow piles higher in the streets.",
 		night = "Icy winds whip through the city, white snowflakes glittering in the black of night."
 	),
-		EwWeather(
+	EwWeather(
 		name = "foggy",
 		sunrise = "Fog hangs thick in the air, stubbornly refusing to dissipate as the sun clears the horizon.",
 		day = "You can barely see to the next block in the sickly greenish NLAC smog.",
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
-	)
+	),
+	EwWeather(
+		name = weather_bicarbonaterain,
+		sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+		day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+		sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+		night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	),
 ]
 
 # stock ids
@@ -9850,6 +9863,7 @@ capturable_districts = []
 transports = []
 transport_stops = []
 piers = []
+outskirts = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -9878,6 +9892,9 @@ for poi in poi_list:
 
 	if poi.is_pier:
 		piers.append(poi.id_poi)
+
+	if poi.is_outskirts:
+		outskirts.append(poi.id_poi)
 
 landmark_pois = [
 	poi_id_countryclub,
