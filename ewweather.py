@@ -5,12 +5,14 @@ import ewcfg
 import ewutils
 import ewrolemgr
 import ewitem
+import ewhunting
 
 from ew import EwUser
 from ewmarket import EwMarket
 from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
 from ewslimeoid import EwSlimeoid
+from ewhunting import EwEnemy
 
 """ A weather object. Pure flavor. """
 class EwWeather:
@@ -102,6 +104,7 @@ async def weather_tick(id_server = None):
 					#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 					deathreport = "{skull} *{uname}*: You have been cleansed by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
 					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+					resp_cont.add_channel_response(user_poi.channel, deathreport)
 					users_to_update.append(user[0])
 				user_data.persist()
 
@@ -147,7 +150,40 @@ async def weather_tick(id_server = None):
 
 				district_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
 				district_data.persist()
+			
+			enemies = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE id_server = %s AND {poi} IN %s AND {life_state} = %s".format(
+				poi = ewcfg.col_enemy_poi,
+				life_state = ewcfg.col_enemy_life_state
+			), (
+				id_server,
+				exposed_pois,
+				ewcfg.enemy_lifestate_alive
 				
+			))
+
+			for enemy in enemies:
+				enemy_data = EwEnemy(id_enemy = enemy[0])
+				enemy_poi = ewcfg.id_to_poi.get(enemy_data.poi)
+
+				slimes_to_erase = enemy_data.slimes * 0.01 * ewcfg.weather_tick_length
+				slimes_to_erase = max(slimes_to_erase, ewcfg.weather_tick_length * 1000)
+				slimes_to_erase = min(enemy_data.slimes, slimes_to_erase)
+
+				#round up or down, randomly weighted
+				remainder = slimes_to_erase - int(slimes_to_erase)
+				if random.random() < remainder: 
+					slimes_to_erase += 1 
+				slimes_to_erase = int(slimes_to_erase)
+
+				enemy_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
+				enemy_data.persist()
+
+				response = "{name} takes {slimeloss:,} damage from the bicarbonate rain.".format(name = enemy_data.display_name, slimeloss = slimes_to_erase)
+				resp_cont.add_channel_response(enemy_poi.channel, response)
+				if enemy_data.slimes <= 0:
+					ewhunting.delete_enemy(enemy_data)
+					deathreport = "{skull} {name} is dissolved by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, name = enemy_data.display_name)
+					resp_cont.add_channel_response(enemy_poi.channel, deathreport)
 
 			for user in users_to_update:
 
