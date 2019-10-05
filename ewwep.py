@@ -250,9 +250,12 @@ def canAttack(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	weapon_item = None
 	weapon = None
+	captcha = None
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		captcha = weapon_item.item_props.get('captcha')
+
 	statuses = user_data.getStatusEffects()
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
@@ -271,6 +274,9 @@ def canAttack(cmd):
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
+	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha not in cmd.tokens:
+		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
+
 	elif user_data.weapon == -1:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
@@ -398,6 +404,13 @@ async def attack(cmd):
 		shootee_slimeoid = EwSlimeoid(member = member)
 		shootee_name = member.display_name
 
+
+		shootee_weapon = None
+		shootee_weapon_item = None
+		if shootee_data.weapon >= 0:
+			shootee_weapon_item = EwItem(id_item = shootee_data.weapon)
+			shootee_weapon = ewcfg.weapon_map.get(shootee_weapon_item.item_props.get("weapon_type"))
+
 		user_mutations = user_data.get_mutations()
 		shootee_mutations = shootee_data.get_mutations()
 
@@ -476,6 +489,7 @@ async def attack(cmd):
 
 			# Weapon-specific adjustments
 			if weapon != None and weapon.fn_effect != None:
+
 				# Build effect container
 				ctn = EwEffectContainer(
 					miss = miss,
@@ -590,6 +604,7 @@ async def attack(cmd):
 					user_data = EwUser(member = cmd.message.author)
 					shootee_data = EwUser(member = member)
 
+
 			# can't hit lucky lucy
 			if shootee_data.life_state == ewcfg.life_state_lucky:
 				miss = True
@@ -658,6 +673,11 @@ async def attack(cmd):
 
 				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
 					slimes_damage *= 1.5
+
+			# defensive weapon
+			if shootee_weapon != None:
+				if ewcfg.weapon_class_defensive in shootee_weapon.classes:
+					slimes_damage *= 0.5
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -820,6 +840,12 @@ async def attack(cmd):
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 							response += "\n" + weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
+						if ewcfg.weapon_class_captcha in weapon.classes:
+							new_captcha = ewutils.generate_captcha(n = 4)
+							response += "\nNew security code: **{}**".format(new_captcha)
+							weapon_item.item_props['captcha'] = new_captcha
+							weapon_item.persist()
+
 						shootee_data.trauma = weapon.id_weapon
 
 					else:
@@ -881,7 +907,8 @@ async def attack(cmd):
 							if crit:
 								response += " {}".format(weapon.str_crit.format(
 									name_player = cmd.message.author.display_name,
-									name_target = member.display_name
+									name_target = member.display_name,
+									hitzone = randombodypart,
 								))
 							response += " {target_name} loses {damage} slime!".format(
 								target_name = member.display_name,
@@ -891,6 +918,11 @@ async def attack(cmd):
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
+						if ewcfg.weapon_class_captcha in weapon.classes:
+							new_captcha = ewutils.generate_captcha(n = 4)
+							response += "\nNew security code: **{}**".format(new_captcha)
+							weapon_item.item_props['captcha'] = new_captcha
+							weapon_item.persist()
 					else:
 						if miss:
 							response = "{target_name} dodges your strike.".format(target_name = member.display_name)
@@ -2069,7 +2101,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			if crit:
 				response += " {}".format(weapon.str_crit.format(
 					name_player=cmd.message.author.display_name,
-					name_target=enemy_data.display_name
+					name_target=enemy_data.display_name,
+					hitzone = randombodypart,
 				))
 
 			response += "\n\n{}".format(weapon.str_kill.format(
@@ -2082,6 +2115,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				response += "\n" + weapon.str_reload_warning.format(
 					name_player=cmd.message.author.display_name)
 
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				new_captcha = ewutils.generate_captcha(n = 4)
+				response += "\nNew security code: **{}**".format(new_captcha)
+				weapon_item.item_props['captcha'] = new_captcha
+				weapon_item.persist()
 		else:
 			response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 				name_target=enemy_data.display_name)
@@ -2127,7 +2165,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				if crit:
 					response += " {}".format(weapon.str_crit.format(
 						name_player=cmd.message.author.display_name,
-						name_target=enemy_data.display_name
+						name_target=enemy_data.display_name,
+						hitzone = randombodypart,
 					))
 				response += " {target_name} loses {damage} slime!".format(
 					target_name=enemy_data.display_name,
@@ -2143,7 +2182,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 				response += "\n" + weapon.str_reload_warning.format(
 					name_player=cmd.message.author.display_name)
-
+	
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				new_captcha = ewutils.generate_captcha(n = 4)
+				response += "\nNew security code: **{}**".format(new_captcha)
+				weapon_item.item_props['captcha'] = new_captcha
+				weapon_item.persist()
 		else:
 			if miss:
 				response = "{target_name} dodges your strike.".format(target_name=enemy_data.display_name)

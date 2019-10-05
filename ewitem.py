@@ -1018,6 +1018,11 @@ async def item_look(cmd):
 				if ewcfg.weapon_class_ammo in weapon.classes:
 					response += "Ammo: {}/{}".format(item.item_props.get("ammo"), weapon.clip_size) + "\n"
 
+				if ewcfg.weapon_class_captcha in weapon.classes:
+					captcha = item.item_props.get("captcha")
+					if captcha not in [None, ""]:
+						response += "Security Code: **{}**".format(captcha) + "\n"
+
 				totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
 
 				if totalkills < 10:
