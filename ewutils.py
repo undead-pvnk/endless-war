@@ -1252,3 +1252,9 @@ def end_trade(id_user):
 		
 		trading_offers[trader] = []
 		trading_offers[id_user] = []
+
+def generate_captcha(n = 4):
+	captcha = ""
+	for i in range(n):
+		captcha += random.choice(ewcfg.alphabet)
+	return captcha.upper()

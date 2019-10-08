@@ -23,7 +23,7 @@ from ewapt import EwFurniture
 import ewdebug
 
 # Global configuration options.
-version = "v3.7e"
+version = "v3.8a"
 
 dir_msgqueue = 'msgqueue'
 
@@ -916,6 +916,9 @@ scavenge_item_rarity = 1000
 # Lifetimes
 invuln_onrevive = 0
 
+# how often to apply weather effects
+weather_tick_length = 10
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -1552,6 +1555,7 @@ stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
+stat_umbrella_kills = 'umbrella_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1569,7 +1573,7 @@ source_scavenging = 11
 source_farming = 12
 source_fishing = 13
 source_squeeze = 14
-
+source_weather = 15
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1595,6 +1599,7 @@ cause_falling = 8
 cause_bleeding = 9
 cause_burning = 10
 cause_killing_enemy = 11
+cause_weather = 12
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -1687,6 +1692,8 @@ weapon_id_molotov = 'molotov'
 weapon_id_grenades = 'grenades'
 weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
+weapon_id_bass = 'bass'
+weapon_id_umbrella = 'umbrella'
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
@@ -2545,13 +2552,31 @@ def wef_bass(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
 
+# A Weapon Effect Function for "umbrella". Takes an EwEffectContainer as ctn.
+def wef_umbrella(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+			
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
 weapon_class_jammable = "jammable"
-
+weapon_class_captcha = "captcha"
+weapon_class_defensive = "defensive"
 
 # All weapons in the game.
 weapon_list = [
@@ -2832,7 +2857,7 @@ weapon_list = [
         str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
         str_kill = "{name_player} skewers {name_target} through the back to the hilt of their broadsword, before kicking their lifeless corpse onto the street corner in gruseome fashion. {name_player} screams at the top of their lungs. {emote_skull}",
         str_killdescriptor = "slayed",
-        str_damage = "{name_target}'s {hitzone} is seperated from their body!!",
+        str_damage = "{name_target}'s {hitzone} is separated from their body!!",
         str_duel = "SCHWNG SCHWNG! {name_player} and {name_target} scream at the top of their lungs to rehearse their battle cries.",
 		str_description = "It's a broadsword.",
 		str_reload = "You summon strength and muster might from every muscle on your body to hoist your broadsword up for another swing.",
@@ -3058,7 +3083,7 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills
 	),
-	EwWeapon(  # 12
+	EwWeapon(  # 19
 		id_weapon = "fishingrod",
 		alias = [
 			"fish",
@@ -3086,29 +3111,56 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills
 	),
-        EwWeapon(  # 13
-		id_weapon = "bass",
+        EwWeapon(  # 20
+		id_weapon = weapon_id_bass,
 		alias = [
 			"bass",
 		],
 		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharply strike {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
 		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck.",
-		str_weapon = "a bass guitar.",
+		str_weapon = "a bass guitar",
 		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		str_trauma_self = "There is a large concave dome in the side of your head.",
 		str_trauma = "There is a large concave dome in the side of their head.",
 		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
-		str_damage = "{name_target} is wacked across the {hitzone}!!",
+		str_damage = "{name_target} is whacked across the {hitzone}!!",
 		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		str_scalp = " If you listen closely, you can still hear the echoes of a sick bassline from yesteryear.",
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
 		stat = stat_bass_kills
-	)
+	),
+        EwWeapon(  # 21
+		id_weapon = weapon_id_umbrella,
+		alias = [
+			"umbrella",
+			"slimebrella",
+			"slimecorpumbrella"
+		],
+		str_crit = "**Critical hit!!** {name_player} briefly stuns {name_target} by opening their umbrella in their face, using the opportunity to score a devastating blow to their {hitzone}.",
+		str_miss = "**MISS!!** {name_player} fiddles with their umbrella, failing to open it!",
+		str_equip = "You equip the umbrella.",
+		str_weapon = "an umbrella",
+		str_weaponmaster_self = "You are a rank {rank} master of the umbrella.",
+		str_weaponmaster = "They are a rank {rank} master of the umbrella.",
+		str_trauma_self = "You have a large hole in your chest.",
+		str_trauma = "They have a large hole in their chest.",
+		str_kill = "*SPLAT.* {name_player} pierces {name_target} through the chest, hoists them over their head and opens their umbrella, causing them to explode in a rain of blood and slime. {emote_skull}",
+		str_killdescriptor = "umbrella'd",
+		str_damage = "{name_target} is struck in the {hitzone}!!",
+		str_duel = "**THWACK THWACK.** {name_player} and {name_target} practice their fencing technique, before comparing their favorite umbrella patterns.",
+		str_scalp = " At least it didn't get wet.",
+		fn_effect = wef_umbrella,
+		str_description = "It's an umbrella, both stylish and deadly.",
+		price = 100000,
+		vendors = [vendor_bazaar],
+		classes = [weapon_class_captcha, weapon_class_defensive],
+		stat = stat_umbrella_kills
+	),
 ]
 
 weapon_vendors = [
@@ -3307,6 +3359,8 @@ attack_type_map = {}
 for attack_type in enemy_attack_type_list:
 	attack_type_map[attack_type.id_type] = attack_type
 
+weather_bicarbonaterain = "bicarbonaterain"
+
 # All weather effects in the game.
 weather_list = [
 	EwWeather(
@@ -3351,13 +3405,20 @@ weather_list = [
 		sunset = "The cold air grows colder as the sky darkens and the snow piles higher in the streets.",
 		night = "Icy winds whip through the city, white snowflakes glittering in the black of night."
 	),
-		EwWeather(
+	EwWeather(
 		name = "foggy",
 		sunrise = "Fog hangs thick in the air, stubbornly refusing to dissipate as the sun clears the horizon.",
 		day = "You can barely see to the next block in the sickly greenish NLAC smog.",
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
-	)
+	),
+	EwWeather(
+		name = weather_bicarbonaterain,
+		sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+		day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+		sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+		night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	),
 ]
 
 # stock ids
@@ -9866,6 +9927,7 @@ capturable_districts = []
 transports = []
 transport_stops = []
 piers = []
+outskirts = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -9894,6 +9956,9 @@ for poi in poi_list:
 
 	if poi.is_pier:
 		piers.append(poi.id_poi)
+
+	if poi.is_outskirts:
+		outskirts.append(poi.id_poi)
 
 landmark_pois = [
 	poi_id_countryclub,
@@ -10233,6 +10298,7 @@ for line in transport_lines:
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
 
+cosmetic_id_raincoat = "raincoat"
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -10742,6 +10808,15 @@ cosmetic_items_list = [
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_direapples,
+	),
+	EwCosmeticItem(
+		id_cosmetic = cosmetic_id_raincoat,
+		str_name = "Raincoat",
+		str_desc = "A specially engineered piece of personal armor, that protects you from the deadly threat from above.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 ]
 
@@ -11555,7 +11630,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
-		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
+		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
 		str_armor = "It exudes a horrible stench."
 	),
 	EwDefense( # defense 7
@@ -13208,6 +13283,11 @@ identifier_letters = [
     'K', 'L', 'M', 'N', 'O',
     'P', 'Q', 'R', 'S', 'T',
     'U', 'V', 'W', 'X', 'Y', 'Z'
+]
+
+rain_protection = [
+	cosmetic_id_raincoat,
+	weapon_id_umbrella
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id
