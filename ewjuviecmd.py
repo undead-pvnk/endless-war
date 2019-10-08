@@ -210,6 +210,7 @@ async def mine(cmd):
 			elif user_data.id_server not in mines_map.get(user_data.poi):
 				init_grid(user_data.poi, user_data.id_server)
 				printgrid = True
+
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
@@ -297,6 +298,9 @@ async def mine(cmd):
 
 					event_def = ewcfg.event_type_to_def.get(event_data.event_type)
 					response += event_def.str_event_start + "\n"
+				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
+					init_grid(poi = event_data.event_props.get('poi'), id_server = event_data.id_server)
+					printgrid = True
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -523,7 +527,7 @@ def init_grid(poi, id_server):
 		return init_grid_minesweeper(poi, id_server)
 	elif minigame_event == ewcfg.event_type_pokemine:
 		return init_grid_pokemine(poi, id_server)
-	elif minigame_event == ewcfg.event_type_bubblebreaker
+	elif minigame_event == ewcfg.event_type_bubblebreaker:
 		return init_grid_bubblebreaker(poi, id_server)
 	else:
 		return init_grid_none(poi, id_server)
@@ -560,7 +564,7 @@ def init_grid_bubblebreaker(poi, id_server):
 		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_bubblebreaker)
 		mines_map.get(poi)[id_server] = grid_cont
 
-def init_grid_none(poi, id_server)
+def init_grid_none(poi, id_server):
 	if poi in mines_map:
 		grid_cont = EwMineGrid(grid = None, grid_type = None)
 		mines_map.get(poi)[id_server] = grid_cont

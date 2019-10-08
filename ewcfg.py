@@ -20,6 +20,7 @@ from ewstatuseffects import EwStatusEffectDef
 from ewfarm import EwFarmAction
 from ewfish import EwFish
 from ewapt import EwFurniture
+from ewworldevent import EwEventDef
 import ewdebug
 
 # Global configuration options.
@@ -1405,6 +1406,11 @@ col_quadrants_target2 = 'id_target2'
 # Database columns for status effects
 col_id_status = 'id_status'
 col_source = 'source'
+
+# Database columns for world events
+col_id_event = 'id_event'
+col_event_type = 'event_type'
+col_time_activate = 'time_activate'
 
 # Item type names
 it_item = "item"
