@@ -36,7 +36,6 @@ class EwMineGrid:
 	grid_type = ""
 	
 	grid = []
-	slime_grid = []
 
 	message = ""
 	wall_message = ""
@@ -47,9 +46,8 @@ class EwMineGrid:
 
 	cells_mined = 0
 
-	def __init__(self, grid = [], slime_grid = [], grid_type = ""):
+	def __init__(self, grid = [], grid_type = ""):
 		self.grid = grid
-		self.slime_grid = slime_grid
 		self.grid_type = grid_type
 		self.message = ""
 		self.wall_message = ""
@@ -222,6 +220,7 @@ async def mine(cmd):
 					return await print_grid(cmd)
 					
 
+				mining_accident = False
 				if mining_yield < 0:
 					mining_accident = True
 
@@ -503,7 +502,7 @@ def init_grid(poi, id_server):
 
 			
 	if poi in mines_map:
-		grid_cont = EwMineGrid(grid = grid)
+		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_bubblebreaker)
 		mines_map.get(poi)[id_server] = grid_cont
 
 async def print_grid(cmd):
@@ -729,14 +728,15 @@ def get_mining_yield_by_grid_type(cmd, grid_cont):
 		return get_mining_yield_default(cmd)
 
 def get_mining_yield_minesweeper(cmd, grid_cont):
-	return
+	return "TODO"
 
 def get_mining_yield_pokemine(cmd, grid_cont):
-	return
+	return "TODO"
 
 def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	
 	user_data = EwUser(member = cmd.message.author)
+	grid = grid_cont.grid
 
 	row = -1
 	col = -1

@@ -1103,6 +1103,11 @@ emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
 
+# mining grid types
+mine_grid_type_minesweeper = "minesweeper"
+mine_grid_type_pokemine = "pokemining"
+mine_grid_type_bubblebreaker = "bubblebreaker"
+
 # mining sweeper
 cell_mine = 1
 cell_mine_marked = 2
