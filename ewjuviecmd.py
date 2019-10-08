@@ -202,48 +202,41 @@ async def mine(cmd):
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
-			#minesweeper = False
-			if cmd.tokens_count < 2:
-				response = "Please specify which vein to mine."
+			#minesweeper = True
+			#grid_multiplier = grid_cont.cells_mined ** 0.4
+			#flag = False
+			mining_yield = get_mining_yield_by_grid_type(cmd, grid_cont)
+
+			if type(mining_yield) == type(""):
+				response = mining_yield
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				return await print_grid(cmd)
+					
+
+			mining_accident = False
+			if mining_yield < 0:
+				mining_accident = True
+
+			if mining_accident:
+				user_data.change_slimes(n = -(user_data.slimes * 0.5))
+				user_data.persist()
+
+				init_grid(user_data.poi, user_data.id_server)
+				response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 
-			else:
-				#minesweeper = True
-				#grid_multiplier = grid_cont.cells_mined ** 0.4
-				#flag = False
-				mining_yield = get_mining_yield_by_grid_type(cmd, grid_cont)
 
-				if type(mining_yield) == type(""):
-					response = mining_yield
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if mining_yield == 0:
+				user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
+				user_data.persist()
+				#response = "This vein has already been mined dry."
+				#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				if printgrid:
 					return await print_grid(cmd)
-					
-
-				mining_accident = False
-				if mining_yield < 0:
-					mining_accident = True
-
-				if mining_accident:
-					user_data.change_slimes(n = -(user_data.slimes * 0.5))
-					user_data.persist()
-
-					init_grid(user_data.poi, user_data.id_server)
-					response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
-
-					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					return await print_grid(cmd)
-
-
-				if mining_yield == 0:
-					user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
-					user_data.persist()
-					#response = "This vein has already been mined dry."
-					#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-					if printgrid:
-						return await print_grid(cmd)
-					else:
-						return
+				else:
+					return
 
 
 			has_pickaxe = False
@@ -480,6 +473,15 @@ async def scavenge(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
 def init_grid(poi, id_server):
+	return init_grid_bubblebreaker(poi, id_server)
+
+def init_grid_minesweeper(poi, id_server):
+	return # TODO
+
+def init_grid_pokemine(poi,id_server):
+	return # TODO
+
+def init_grid_bubblebreaker(poi, id_server):
 	grid = []
 	num_rows = 12
 	num_cols = 12
@@ -506,6 +508,15 @@ def init_grid(poi, id_server):
 		mines_map.get(poi)[id_server] = grid_cont
 
 async def print_grid(cmd):
+	return await print_grid_bubblebreaker(cmd)
+
+async def print_grid_minesweeper(cmd):
+	return #TODO
+
+async def print_grid_pokemine(cmd):
+	return #TODO
+
+async def print_grid_bubblebreaker(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
@@ -515,7 +526,7 @@ async def print_grid(cmd):
 	if poi in mines_map:
 		grid_map = mines_map.get(poi)
 		if id_server not in grid_map:
-			init_grid_ms(poi, id_server)
+			init_grid(poi, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -741,6 +752,10 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	row = -1
 	col = -1
 	bubble_add = None
+	if cmd.tokens_count < 2:
+		response = "Please specify which vein to mine."
+		return response
+
 	for token in cmd.tokens[1:]:
 				
 		if token.lower() == "reset":
