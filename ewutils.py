@@ -1258,3 +1258,4 @@ def generate_captcha(n = 4):
 	for i in range(n):
 		captcha += random.choice(ewcfg.alphabet)
 	return captcha.upper()
+

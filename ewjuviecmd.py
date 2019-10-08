@@ -12,10 +12,13 @@ import ewitem
 import ewmap
 import ewrolemgr
 import ewstats
+import ewworldevent
+
 from ewitem import EwItem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewdistrict import EwDistrict
+from ewworldevent import EwWorldEvent
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
 # exceeds 3 in 5 seconds, you die.
@@ -193,6 +196,14 @@ async def mine(cmd):
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
 			extra = hunger_cost_mod - int(hunger_cost_mod)  # extra is the fractional part of hunger_cost_mod
 
+			world_events = ewworldevent.get_world_events(id_server = cmd.message.server.id)
+			minigame_event = None
+			for id_event in world_events:
+				if world_events.get(id_event) in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
+					event_data = EwWorldEvent(id_event = id_event)
+					if event_data.event_props.get('poi') == user_data.poi:
+						minigame_event = event_data.event_type
+
 			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -239,6 +250,7 @@ async def mine(cmd):
 					return
 
 
+
 			has_pickaxe = False
 
 			if user_data.weapon >= 0:
@@ -260,6 +272,31 @@ async def mine(cmd):
 			if ewcfg.mutation_id_lucky in mutations:
 				unearthed_item_chance *= 1.33
 
+			# event bonus
+			for id_event in world_events:
+
+				if world_events.get(id_event) == ewcfg.event_type_slimefrenzy:
+					event_data = EwWorldEvent(id_event = id_event)
+					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
+						mining_yield *= 2
+
+				if world_events.get(id_event) == ewcfg.event_type_poudrinfrenzy:
+					event_data = EwWorldEvent(id_event = id_event)
+					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
+						unearthed_item_chance = 1
+
+			if random.random() < 0.05:
+				id_event = create_mining_event(cmd)
+				event_data = EwWorldEvent(id_event = id_event)
+
+				if event_data.event_type == ewcfg.event_type_slimeglob:
+					mining_yield *= 4
+					ewworldevents.delete_world_event(id_event = id_event)
+
+				if event_data.time_activate <= time.time():
+
+					event_def = ewcfg.event_type_to_def.get(event_data.event_type)
+					response += event_def.str_event_start + "\n"
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
@@ -280,9 +317,9 @@ async def mine(cmd):
 					)
 
 				if unearthed_item_amount == 1:
-					response = "You unearthed a {}! ".format(item.str_name)
+					response += "You unearthed a {}! ".format(item.str_name)
 				elif unearthed_item_amount == 2:
-					response = "You unearthed two (2) {}! ".format(item.str_name)
+					response += "You unearthed two (2) {}! ".format(item.str_name)
 
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
@@ -322,6 +359,7 @@ async def mine(cmd):
 
 			if printgrid:
 				await print_grid(cmd)
+
 
 	else:
 		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -473,13 +511,28 @@ async def scavenge(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
 def init_grid(poi, id_server):
-	return init_grid_bubblebreaker(poi, id_server)
+	world_events = ewworldevent.get_world_events(id_server = id_server)
+	minigame_event = None
+	for id_event in world_events:
+		if world_events.get(id_event) in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
+			event_data = EwWorldEvent(id_event = id_event)
+			if event_data.event_props.get('poi') == poi:
+				minigame_event = event_data.event_type
+
+	if minigame_event == ewcfg.event_type_minesweeper:
+		return init_grid_minesweeper(poi, id_server)
+	elif minigame_event == ewcfg.event_type_pokemine:
+		return init_grid_pokemine(poi, id_server)
+	elif minigame_event == ewcfg.event_type_bubblebreaker
+		return init_grid_bubblebreaker(poi, id_server)
+	else:
+		return init_grid_none(poi, id_server)
 
 def init_grid_minesweeper(poi, id_server):
-	return # TODO
+	return init_grid_none(poi, id_server)# TODO
 
 def init_grid_pokemine(poi,id_server):
-	return # TODO
+	return init_grid_none(poi, id_server)# TODO
 
 def init_grid_bubblebreaker(poi, id_server):
 	grid = []
@@ -507,8 +560,29 @@ def init_grid_bubblebreaker(poi, id_server):
 		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_bubblebreaker)
 		mines_map.get(poi)[id_server] = grid_cont
 
+def init_grid_none(poi, id_server)
+	if poi in mines_map:
+		grid_cont = EwMineGrid(grid = None, grid_type = None)
+		mines_map.get(poi)[id_server] = grid_cont
+
 async def print_grid(cmd):
-	return await print_grid_bubblebreaker(cmd)
+	user_data = EwUser(member = cmd.message.author)
+	poi = user_data.poi
+	id_server = cmd.message.server.id
+	if poi in mines_map:
+		grid_map = mines_map.get(poi)
+		if id_server not in grid_map:
+			init_grid(poi, id_server)
+		grid_cont = grid_map.get(id_server)
+
+		grid = grid_cont.grid
+	
+		if grid_cont.grid_type == ewcfg.mine_grid_type_minesweeper:
+			return print_grid_minesweeper(cmd, grid_cont)
+		elif grid_cont.grid_type == ewcfg.mine_grid_type_pokemine:
+			return print_grid_pokemine(cmd, grid_cont)
+		elif grid_cont.grid_type == ewcfg.mine_grid_type_bubblebreaker:
+			return print_grid_bubblebreaker(cmd, grid_cont)
 
 async def print_grid_minesweeper(cmd):
 	return #TODO
@@ -825,3 +899,105 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 
 def get_mining_yield_default(cmd):
 	return 100
+
+def create_mining_event(cmd):
+	randomn = random.random()
+	time_now = time.time()
+	user_data = EwUser(member = cmd.message.author)
+
+	# common event
+	if randomn < 0.6:
+		randomn = random.random()
+		
+		# 4x glob of slime
+		if randomn < 0.5:
+			event_props = {}
+			event_props['id_user'] = cmd.message.author.id
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_slimeglob,
+				time_activate = time_now,
+				event_props = event_props
+			)
+		# 30 seconds slimefrenzy
+		else:
+			event_props = {}
+			event_props['id_user'] = cmd.message.author.id
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_slimefrenzy,
+				time_activate = time_now,
+				time_expir = time_now + 30,
+				event_props = event_props
+			)
+			
+	# uncommon event
+	elif randomn < 0.9:
+		randomn = random.random()
+		randomn = 1 # DEBUG
+
+		# mine shaft collapse
+		if randomn < 0.5:
+			event_props = {}
+			event_props['id_user'] = cmd.message.author.id
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_minecollapse,
+				time_activate = time_now,
+				event_props = event_props
+			)
+		# 10 second poudrin frenzy
+		else:
+			event_props = {}
+			event_props['id_user'] = cmd.message.author.id
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_poudrinfrenzy,
+				time_activate = time_now,
+				event_props = event_props
+			)
+			
+	# rare event
+	else:
+		randomn = random.random()
+		randomn = 1 # DEBUG
+
+		# minesweeper
+		if randomn < 1/3:
+			event_props = {}
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_minesweeper,
+				time_activate = time_now,
+				time_expir = time_now + 60*5,
+				event_props = event_props
+			)
+		
+		# pokemine
+		elif randomn < 2/3:
+			event_props = {}
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_pokemine,
+				time_activate = time_now,
+				time_expir = time_now + 60*5,
+				event_props = event_props
+			)
+
+		# bubblebreaker
+		else:
+			event_props = {}
+			event_props['poi'] = user_data.poi
+			ewworldevent.create_world_event(
+				id_server = cmd.message.server.id,
+				event_type = ewcfg.event_type_bubblebreaker,
+				time_activate = time_now,
+				time_expir = time_now + 60*5,
+				event_props = event_props
+			)
