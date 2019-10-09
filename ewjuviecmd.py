@@ -587,11 +587,11 @@ async def print_grid(cmd):
 		grid = grid_cont.grid
 	
 		if grid_cont.grid_type == ewcfg.mine_grid_type_minesweeper:
-			return print_grid_minesweeper(cmd, grid_cont)
+			return await print_grid_minesweeper(cmd)
 		elif grid_cont.grid_type == ewcfg.mine_grid_type_pokemine:
-			return print_grid_pokemine(cmd, grid_cont)
+			return await print_grid_pokemine(cmd)
 		elif grid_cont.grid_type == ewcfg.mine_grid_type_bubblebreaker:
-			return print_grid_bubblebreaker(cmd, grid_cont)
+			return await print_grid_bubblebreaker(cmd)
 
 async def print_grid_minesweeper(cmd):
 	return #TODO
@@ -914,6 +914,7 @@ def create_mining_event(cmd):
 	time_now = time.time()
 	user_data = EwUser(member = cmd.message.author)
 
+	randomn = 1 #DEBUG
 	# common event
 	if randomn < 0.6:
 		randomn = random.random()
