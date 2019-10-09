@@ -290,13 +290,18 @@ async def mine(cmd):
 				id_event = create_mining_event(cmd)
 				event_data = EwWorldEvent(id_event = id_event)
 
+				if event_data.id_event == -1:
+					return ewutils.logMsg("Error couldn't find world event with id {}".format(id_event))
+
 				if event_data.event_type == ewcfg.event_type_slimeglob:
 					mining_yield *= 4
-					ewworldevents.delete_world_event(id_event = id_event)
+					ewworldevent.delete_world_event(id_event = id_event)
 
 				if event_data.time_activate <= time.time():
 
 					event_def = ewcfg.event_type_to_def.get(event_data.event_type)
+					if event_def == None:
+						return ewutils.logMsg("Error, couldn't find event def for event type {}".format(event_data.event_type))
 					response += event_def.str_event_start + "\n"
 				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
 					init_grid(poi = event_data.event_props.get('poi'), id_server = event_data.id_server)
@@ -918,7 +923,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_slimeglob,
 				time_activate = time_now,
@@ -929,7 +934,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_slimefrenzy,
 				time_activate = time_now,
@@ -947,7 +952,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minecollapse,
 				time_activate = time_now,
@@ -958,10 +963,11 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_poudrinfrenzy,
 				time_activate = time_now,
+				time_expir = time_now + 10,
 				event_props = event_props
 			)
 			
@@ -974,7 +980,7 @@ def create_mining_event(cmd):
 		if randomn < 1/3:
 			event_props = {}
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minesweeper,
 				time_activate = time_now,
@@ -986,7 +992,7 @@ def create_mining_event(cmd):
 		elif randomn < 2/3:
 			event_props = {}
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_pokemine,
 				time_activate = time_now,
@@ -998,7 +1004,7 @@ def create_mining_event(cmd):
 		else:
 			event_props = {}
 			event_props['poi'] = user_data.poi
-			ewworldevent.create_world_event(
+			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_bubblebreaker,
 				time_activate = time_now,
