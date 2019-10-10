@@ -920,6 +920,9 @@ invuln_onrevive = 0
 # how often to apply weather effects
 weather_tick_length = 10
 
+# how often to delete expired world events
+event_tick_length = 5
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -13317,12 +13320,12 @@ world_events = [
 	EwEventDef(
 		event_type = event_type_slimefrenzy,
 		str_event_start = "You hit a dense vein of slime! Double slimegain for the next 30 seconds.",
-		str_event_end = "The vein dried up.",
+		str_event_end = "The double slime vein dried up.",
 	),
 	EwEventDef(
 		event_type = event_type_poudrinfrenzy,
 		str_event_start = "You hit a dense vein of poudrins! Guaranteed poudrin on every {} for the next 10 seconds.".format(cmd_mine),
-		str_event_end = "The vein dried up.",
+		str_event_end = "The poudrin vein dried up.",
 	),
 	EwEventDef(
 		event_type = event_type_minecollapse,

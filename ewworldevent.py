@@ -199,10 +199,52 @@ def create_world_event(
 
 def delete_world_event(id_event):
 	try:
-		ewutils.execute_sql_query("DELETE FROM world_events WHERE {id_event} = %".format(
+		ewutils.execute_sql_query("DELETE FROM world_events WHERE {id_event} = %s".format(
 			id_event = ewcfg.col_id_event,
 		),(
 			id_event,
 		))
 	except:
 		ewutils.logMsg("Error while deleting world event {}".format(id_event))
+
+async def event_tick_loop(id_server):
+	interval = ewcfg.event_tick_length
+	while not ewutils.TERMINATE:
+		await asyncio.sleep(interval)
+		await event_tick(id_server)
+
+async def event_tick(id_server):
+	time_now = int(time.time())
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+	if True:
+		data = ewutils.execute_sql_query("SELECT {id_event} FROM world_events WHERE {time_expir} <= %s AND {time_expir} > 0 AND id_server = %s".format(
+			id_event = ewcfg.col_id_event,
+			time_expir = ewcfg.col_time_expir,
+		),(
+			time_now,
+			id_server,
+		))
+
+		for row in data:
+			event_data = EwWorldEvent(id_event = row[0])
+
+			event_def = ewcfg.event_type_to_def.get(event_data.event_type)
+
+			response = event_def.str_event_end
+			if len(response) > 0:
+				poi = event_data.event_props.get('poi')
+				if poi != None:
+					poi_def = ewcfg.id_to_poi.get(poi)
+					if poi_def != None:
+						resp_cont.add_channel_response(poi_def.channel, response)
+
+				else:
+					for ch in ewcfg.hideout_channels:
+						resp_cont.add_channel_response(ch, response)
+
+			delete_world_event(event_data.id_event)
+
+		await resp_cont.post()
+				
+	else:
+		ewutils.logMsg("Error in event tick for server {}".format(id_server))

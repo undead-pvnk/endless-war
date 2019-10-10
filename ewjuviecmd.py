@@ -914,7 +914,6 @@ def create_mining_event(cmd):
 	time_now = time.time()
 	user_data = EwUser(member = cmd.message.author)
 
-	randomn = 1 #DEBUG
 	# common event
 	if randomn < 0.6:
 		randomn = random.random()

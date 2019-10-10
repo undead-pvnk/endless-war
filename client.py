@@ -48,6 +48,7 @@ import ewfish
 import ewfaction
 import ewapt
 import ewweather
+import ewworldevent
 import ewdebug
 
 from ewitem import EwItem
@@ -666,6 +667,7 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
