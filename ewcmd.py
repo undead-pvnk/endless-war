@@ -857,7 +857,6 @@ async def push(cmd):
 	user_mutations = user_data.get_mutations()
 
 	server = cmd.message.server
-	member_object = server.get_member(targetmodel.id_user)
 
 	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
 		if targetmodel.poi == user_data.poi:
@@ -883,12 +882,12 @@ async def push(cmd):
 			else:
 				selected_cos = id_item = selected_cos.get('name')
 
-			if "-COSMETIC-" in response:
-				response = response.replace("-COSMETIC-", selected_cos.upper())
+			if "{cosmetic}" in response:
+				response = response.format(cosmetic = selected_cos.upper())
 
-			if "-SLIMEOID-" in response:
+			if "{slimeoid}" in response:
 				if slimeoid_model != "":
-					response = response.replace("-SLIMEOID-", slimeoid_model)
+					response = response.foramt(slimeoid = slimeoid_model)
 				elif slimeoid_model == "":
 					response = "You push {} into a puddle of sludge, laughing at how hopelessly dirty they are.".format(target.display_name)
 
@@ -904,11 +903,8 @@ async def push(cmd):
 	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and ewcfg.mutation_id_lightasafeather not in target_mutations:
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
 
-	elif ewcfg.mutation_id_lightasafeather in target_mutations:
-		response = "You pick {} up with your thumb and index finger, and gently toss them off the cliff. Wow. That was easy.".format(target.display_name)
-		targetmodel.die(cause=ewcfg.cause_cliff)
-		targetmodel.persist()
-		await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+	elif targetmodel.life_state == ewcfg.life_state_kingpin:
+		response = "You sneak behind the kingpin and prepare to push. The crime you're about to commit is so heinous that you start snickering to yourself, and {} catches you in the act. Shit, mission failed.".format(target.display_name)
 
 	elif ewcfg.mutation_id_lightasafeather in user_mutations:
 		response = "You strain to push {} off the cliff, but your light frame gives you no lifting power.".format(target.display_name)
@@ -916,12 +912,15 @@ async def push(cmd):
 	else:
 		response = "You push {} off the cliff and watch them scream in agony as they fall. Sea monsters frenzy on their body before they even land, gnawing them to jagged ribbons and gushing slime back to the clifftop.".format(target.display_name)
 
+		if ewcfg.mutation_id_lightasafeather in target_mutations:
+			response = "You pick {} up with your thumb and index finger, and gently toss them off the cliff. Wow. That was easy.".format(target.display_name)
+
 		slimetotal = targetmodel.slimes * 0.75
 		districtmodel.change_slimes(n=slimetotal)
 		districtmodel.persist()
 
 		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member_object, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target, deathreport)
 
 		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
 		for item in cliff_inventory:
@@ -931,14 +930,14 @@ async def push(cmd):
 
 			elif item_object.item_type == ewcfg.it_weapon:
 				if item.get('id_item') == targetmodel.weapon:
-					ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 				else:
 					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
 
 			elif item_object.item_props.get('adorned') == 'true':
-				ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
@@ -947,7 +946,7 @@ async def push(cmd):
 
 		targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
-		await ewrolemgr.updateRoles(client=cmd.client, member=member_object)
+		await ewrolemgr.updateRoles(client=cmd.client, member=target)
 		if deathreport != "":
 			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
 			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
@@ -961,6 +960,8 @@ async def jump(cmd):
 		response = "You jump. Nope. Still not good at parkour."
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're already dead. You'd just ghost hover above the cliff."
+	elif user_data.life_state == ewcfg.life_state_kingpin:
+		response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
 	else:
 		response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
 		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
@@ -974,14 +975,14 @@ async def jump(cmd):
 
 			elif item_object.item_type == ewcfg.it_weapon:
 				if item.get('id_item') == user_data.weapon:
-					ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 				else:
 					item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
 
 			elif item_object.item_props.get('adorned') == 'true':
-				ewitem.give_item(id_item=item_object.id_item, id_user="ocean", id_server=cmd.message.server.id)
+				ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
@@ -1007,6 +1008,16 @@ async def toss_off_cliff(cmd):
 		item_obj = EwItem(id_item=item_sought.get('id_item'))
 		if item_obj.soulbound == True:
 			response = "That's soulbound. You can't get rid of it just because you're in a more dramatic looking place."
+
+		elif item_obj.item_type == ewcfg.it_weapon and user_data.weapon >= 0 and item_obj.id_item == user_data.weapon:
+			if user_data.weaponmarried:
+				weapon = ewcfg.weapon_map.get(item_obj.item_props.get("weapon_type"))
+				response = "You decide not to chuck your betrothed off the cliff because you care about them very very much. See {}? I'm not going to hurt you. You don't have to call that social worker again.".format(weapon.str_weapon)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			else:
+				response = item_off(item_sought.get('id_item'), user_data.id_server, item_sought.get('name'))
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			response = item_off(item_sought.get('id_item'), user_data.id_server, item_sought.get('name'))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1029,7 +1040,7 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 
 	elif random.randrange(500) < 498:
 		response = "You toss the {} off the cliff. A nearby kraken swoops in and chomps it down with the cephalapod's equivalent of a smile. Your new friend kicks up some sea slime for you. Sick!".format(item_name)
-		slimetotal = 10000 + random.randrange(50000)
+		slimetotal = 2000 + random.randrange(10000)
 		ewitem.item_delete(id_item=id_item)
 
 	else:

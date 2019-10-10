@@ -5770,8 +5770,8 @@ bully_responses = [
 "You pull on {}'s hair, ripping some out and causing them to cry. They should fucking grow up.",
 "You reach into {}'s shirt and give them a purple nurple. Man, these bullying tactics are getting kind of gay.",
 "You whip out your dick and pee on {}'s wife. Fuck. That's a power move right there.",
-"You scream \"HEY {}! NICE -COSMETIC- YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
-"You grab -SLIMEOID- and give them a noogie. Just when {} thinks this is all fun and games, you throw -SLIMEOID- into the street. They have a panic attack trying to get past all the traffic and back to safety."
+"You scream \"HEY {}! NICE {cosmetic} YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
+"You grab {slimeoid} and give them a noogie. Just when {} thinks this is all fun and games, you throw {slimeoid} into the street. They have a panic attack trying to get past all the traffic and back to safety."
 
 ]
 
