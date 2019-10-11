@@ -24,7 +24,7 @@ from ewworldevent import EwEventDef
 import ewdebug
 
 # Global configuration options.
-version = "v3.8a"
+version = "v3.8a - ? for prefix"
 
 dir_msgqueue = 'msgqueue'
 
@@ -464,7 +464,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '?'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -1117,12 +1117,14 @@ cell_mine = 1
 cell_mine_marked = 2
 cell_mine_open = 3
 
-cell_empty = "0"
+cell_empty = -1
 cell_empty_marked = -2
 cell_empty_open = -3
 
 cell_slime = 0
 
+# bubble breaker
+cell_bubble_empty = "0"
 cell_bubble_0 = "5"
 cell_bubble_1 = "1"
 cell_bubble_2 = "2"

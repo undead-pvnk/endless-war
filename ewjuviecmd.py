@@ -199,7 +199,7 @@ async def mine(cmd):
 			world_events = ewworldevent.get_world_events(id_server = cmd.message.server.id)
 			minigame_event = None
 			for id_event in world_events:
-				if world_events.get(id_event) in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
+				if world_events.get(id_event) in ewcfg.grid_type_by_mining_event:
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('poi') == user_data.poi:
 						minigame_event = event_data.event_type
@@ -545,7 +545,29 @@ def init_grid(poi, id_server):
 		return init_grid_none(poi, id_server)
 
 def init_grid_minesweeper(poi, id_server):
-	return init_grid_none(poi, id_server)# TODO
+	grid = []
+	num_rows = 13
+	num_cols = 13
+	for i in range(num_rows):
+		row = []
+		for j in range(num_cols):
+			row.append(ewcfg.cell_empty)
+		grid.append(row)
+
+	num_mines = 30
+
+	row = random.randrange(num_rows)
+	col = random.randrange(num_cols)
+	for mine in range(num_mines):
+		while grid[row][col] == ewcfg.cell_mine:
+			row = random.randrange(num_rows)
+			col = random.randrange(num_cols)
+		grid[row][col] = ewcfg.cell_mine
+
+			
+	if poi in mines_map:
+		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_minesweeper)
+		mines_map.get(poi)[id_server] = grid_cont
 
 def init_grid_pokemine(poi,id_server):
 	return init_grid_none(poi, id_server)# TODO
@@ -558,7 +580,7 @@ def init_grid_bubblebreaker(poi, id_server):
 		row = []
 		for j in range(num_cols):
 			if i > 8:
-				row.append(ewcfg.cell_empty)
+				row.append(ewcfg.cell_bubble_empty)
 				continue
 			cell = random.choice(ewcfg.cell_bubbles)
 			randomn = random.random()
@@ -601,7 +623,73 @@ async def print_grid(cmd):
 			return await print_grid_bubblebreaker(cmd)
 
 async def print_grid_minesweeper(cmd):
-	return #TODO
+	grid_str = ""
+	user_data = EwUser(member = cmd.message.author)
+	poi = user_data.poi
+	id_server = cmd.message.server.id
+	time_now = int(time.time())
+	if poi in mines_map:
+		grid_map = mines_map.get(poi)
+		if id_server not in grid_map:
+			init_grid_minesweeper(poi, id_server)
+		grid_cont = grid_map.get(id_server)
+
+		grid = grid_cont.grid
+
+		grid_str += "   "
+		for j in range(len(grid[0])):
+			letter = ewcfg.alphabet[j]
+			grid_str += "{} ".format(letter)
+		grid_str += "\n"
+		for i in range(len(grid)):
+			row = grid[i]
+			if i+1 < 10:
+				grid_str += " "
+
+			grid_str += "{} ".format(i+1)
+			for j in range(len(row)):
+				cell = row[j]
+				cell_str = ""
+				if cell == ewcfg.cell_empty_open:
+					neighbor_mines = 0
+					for ci in range(max(0, i-1), min(len(grid), i+2)):
+						for cj in range(max(0, j-1), min(len(row), j+2)):
+							if grid[ci][cj] > 0:
+								neighbor_mines += 1
+					cell_str = str(neighbor_mines)
+
+				else:
+					cell_str = ewcfg.symbol_map_ms.get(cell)
+				grid_str += cell_str + " "
+
+			grid_str += "{}".format(i+1)
+			grid_str += "\n"
+
+
+		grid_str += "   "
+		for j in range(len(grid[0])):
+			letter = ewcfg.alphabet[j]
+			grid_str += "{} ".format(letter)
+
+		grid_edit = "\n```\n{}\n```".format(grid_str)
+
+		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 8 or grid_cont.message == "":
+			grid_cont.message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, grid_edit))
+			grid_cont.time_last_posted = time_now
+			grid_cont.times_edited = 0
+		else:
+			await ewutils.edit_message(cmd.client, grid_cont.message, ewutils.formatMessage(cmd.message.author, grid_edit))
+			grid_cont.times_edited += 1
+
+		if grid_cont.wall_message == "":
+			wall_channel = ewcfg.mines_wall_map.get(poi)
+			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
+			resp_cont.add_channel_response(wall_channel, grid_edit)
+			msg_handles = await resp_cont.post()
+			grid_cont.wall_message = msg_handles[0]
+		else:
+			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
+	
 
 async def print_grid_pokemine(cmd):
 	return #TODO
@@ -634,7 +722,7 @@ async def print_grid_bubblebreaker(cmd):
 			#grid_str += "{} ".format(i+1)
 			for j in range(len(row)):
 				cell = row[j]
-				cell_str = get_cell_symbol(cell)
+				cell_str = get_cell_symbol_bubblebreaker(cell)
 				if use_emotes:
 					cell_str = ewcfg.number_emote_map.get(int(cell))
 				grid_str += cell_str + " "
@@ -667,10 +755,13 @@ async def print_grid_bubblebreaker(cmd):
 		else:
 			await ewutils.edit_message(cmd.client, grid_cont.wall_message, grid_edit)
 
-def get_cell_symbol(cell):
-	if cell == "0":
+# for pokemining
+def get_cell_symbol_bubblebreaker(cell):
+	if cell == ewcfg.cell_bubble_empty:
 		return " "
 	return cell
+
+def get_cell_symbol_pokemine(cell):
 	cell_str = " "
 	#if cell > 2 * ewcfg.slimes_invein:
 	#	cell_str = "&"
@@ -716,6 +807,7 @@ async def crush(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+# for bubblebreaker
 def apply_gravity(grid):
 	cells_to_check = []
 	for row in range(1,len(grid)):
@@ -727,26 +819,27 @@ def apply_gravity(grid):
 
 	return cells_to_check
 
-
+#for bubblebreaker
 def bubble_fall(grid, coords):
 	row = coords[0]
 	col = coords[1]
-	if grid[row][col] == ewcfg.cell_empty:
+	if grid[row][col] == ewcfg.cell_bubble_empty:
 		return coords
 	falling_bubble = grid[row][col]
-	while row > 0 and grid[row-1][col] == ewcfg.cell_empty:
+	while row > 0 and grid[row-1][col] == ewcfg.cell_bubble_empty:
 		row -= 1
 
-	grid[coords[0]][coords[1]] = ewcfg.cell_empty
+	grid[coords[0]][coords[1]] = ewcfg.cell_bubble_empty
 	grid[row][col] = falling_bubble
 	return (row,col)
 
+# for bubblebreaker
 def check_and_explode(grid, cells_to_check):
 	slime_yield = 0
 
 	for coords in cells_to_check:
 		bubble = grid[coords[0]][coords[1]]
-		if bubble == ewcfg.cell_empty:
+		if bubble == ewcfg.cell_bubble_empty:
 			continue
 
 		bubble_cluster = [coords]
@@ -766,12 +859,12 @@ def check_and_explode(grid, cells_to_check):
 
 		if len(bubble_cluster) >= ewcfg.bubbles_to_burst:
 			for coord in bubble_cluster:
-				grid[coord[0]][coord[1]] = ewcfg.cell_empty
+				grid[coord[0]][coord[1]] = ewcfg.cell_bubble_empty
 				slime_yield += 1
 
 	return slime_yield
 		
-
+# for bubblebreaker
 def neighbors(grid, coords):
 	neighs = []
 	row = coords[0]
@@ -786,6 +879,7 @@ def neighbors(grid, coords):
 		neighs.append((row,col+1))
 	return neighs
 
+# for bubblebreaker
 def add_row(grid):
 	new_row = []
 	for i in range(len(grid[0])):
@@ -796,20 +890,21 @@ def add_row(grid):
 			cell = new_row[-1]
 		elif randomn < 0.3:
 			cell = grid[0][i]
-		if cell == ewcfg.cell_empty:
+		if cell == ewcfg.cell_bubble_empty:
 			cell = random.choice(ewcfg.cell_bubbles)
 
 		new_row.append(cell)
 	grid.insert(0, new_row)
 	return grid.pop(-1)
 
+# for bubblebreaker
 def get_height(grid):
 	row = 0
 
 	while row < len(grid):
 		is_empty = True
 		for cell in grid[row]:
-			if cell != ewcfg.cell_empty:
+			if cell != ewcfg.cell_bubble_empty:
 				is_empty = False
 				break
 		if is_empty:
@@ -829,7 +924,63 @@ def get_mining_yield_by_grid_type(cmd, grid_cont):
 		return get_mining_yield_default(cmd)
 
 def get_mining_yield_minesweeper(cmd, grid_cont):
-	return "TODO"
+	user_data = EwUser(member = cmd.message.author)
+	grid = grid_cont.grid
+	grid_multiplier = grid_cont.cells_mined ** 0.4
+
+	row = -1
+	col = -1
+	if cmd.tokens_count < 2:
+		response = "Please specify which vein to mine."
+		return response
+
+	for token in cmd.tokens[1:]:
+				
+		if row < 1 or col < 1:
+			coords = token.lower()
+		
+			for char in coords:
+				if char in ewcfg.alphabet:
+					col = ewcfg.alphabet.index(char)
+					coords = coords.replace(char, "")
+			try:
+				row = int(coords)
+			except:
+				row = -1
+
+
+
+	row -= 1
+			
+	if row not in range(len(grid)) or col not in range(len(grid[row])):
+		response = "Invalid vein."
+		return response
+
+
+	mining_yield = 0
+	mining_accident = False
+
+
+	if grid[row][col] in [ewcfg.cell_empty_marked, ewcfg.cell_mine_marked]:
+		response = "This vein has been flagged as dangerous. Remove the flag to mine here."
+		return response
+
+	elif grid[row][col] == ewcfg.cell_empty_open:
+		response = "This vein has already been mined dry."
+		return response
+
+	elif grid[row][col] == ewcfg.cell_mine:
+		mining_accident = True
+
+	elif grid[row][col] == ewcfg.cell_empty:
+		grid[row][col] = ewcfg.cell_empty_open
+		grid_cont.cells_mined += 1
+		mining_yield = grid_multiplier * get_mining_yield_default(cmd)
+
+	if mining_accident:
+		return -1
+	else:
+		return mining_yield
 
 def get_mining_yield_pokemine(cmd, grid_cont):
 	return "TODO"
@@ -847,14 +998,6 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		return response
 
 	for token in cmd.tokens[1:]:
-				
-		if token.lower() == "reset":
-			user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
-			if random.random() < extra:
-				user_data.hunger += ewcfg.hunger_perminereset
-			user_data.persist()
-			init_grid(user_data.poi, user_data.id_server)
-			return 0
 
 		if col < 1:
 			char = token.lower()
@@ -885,7 +1028,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	cells_to_clear = []
 	
 	slimes_pertile = ewcfg.slimes_pertile
-	if grid[row][col] != ewcfg.cell_empty:
+	if grid[row][col] != ewcfg.cell_bubble_empty:
 		mining_accident = True
 	else:
 		grid[row][col] = bubble_add
@@ -981,7 +1124,7 @@ def create_mining_event(cmd):
 	# rare event
 	else:
 		randomn = random.random()
-		randomn = 1 # DEBUG
+		randomn = 0 # DEBUG
 
 		# minesweeper
 		if randomn < 1/3:
