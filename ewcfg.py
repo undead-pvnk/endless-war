@@ -13354,6 +13354,12 @@ event_type_to_def = {}
 for event in world_events:
 	event_type_to_def[event.event_type] = event
 
+grid_type_by_mining_event = {
+	event_type_minesweeper: mine_grid_type_minesweeper,
+	event_type_pokemine: mine_grid_type_pokemine,
+	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
+}
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 

@@ -214,6 +214,13 @@ async def mine(cmd):
 			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
 			grid = grid_cont.grid
 
+			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
+			if grid_type != grid_cont.grid_type:
+				init_grid(user_data.poi, user_data.id_server)
+				printgrid = True
+				grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+				grid = grid_cont.grid
+
 			#minesweeper = True
 			#grid_multiplier = grid_cont.cells_mined ** 0.4
 			#flag = False
