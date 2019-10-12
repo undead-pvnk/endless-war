@@ -694,15 +694,15 @@ def init_grid(poi, id_server):
 
 def init_grid_minesweeper(poi, id_server):
 	grid = []
-	num_rows = 13
-	num_cols = 13
+	num_rows = 3
+	num_cols = 3
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
 			row.append(ewcfg.cell_empty)
 		grid.append(row)
 
-	num_mines = 30
+	num_mines = 1
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
@@ -1034,7 +1034,16 @@ def get_height(grid):
 		row += 1
 
 	return row
-		
+	
+def get_unmined_cell_count(grid_cont):
+	grid = grid_cont.grid
+	unmined_cells = 0
+	for row in grid:
+		for cell in row:
+			if cell in [ewcfg.cell_empty, ewcfg.cell_empty_marked]:
+				unmined_cells += 1
+	return unmined_cells
+	
 def get_mining_yield_by_grid_type(cmd, grid_cont):
 	if grid_cont.grid_type == ewcfg.mine_grid_type_minesweeper:
 		return get_mining_yield_minesweeper(cmd, grid_cont)
@@ -1098,6 +1107,11 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 		grid[row][col] = ewcfg.cell_empty_open
 		grid_cont.cells_mined += 1
 		mining_yield = grid_multiplier * get_mining_yield_default(cmd)
+
+	unmined_cells = get_unmined_cell_count(grid_cont)
+
+	if unmined_cells == 0:
+		init_grid_minesweeper(user_data.poi, user_data.id_server)
 
 	if mining_accident:
 		return -1
@@ -1186,6 +1200,7 @@ def create_mining_event(cmd):
 	time_now = time.time()
 	user_data = EwUser(member = cmd.message.author)
 
+	randomn = 1 # DEBUG
 	# common event
 	if randomn < 0.6:
 		randomn = random.random()
