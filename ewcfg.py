@@ -13317,7 +13317,7 @@ event_type_bubblebreaker = "bubblebreaker"
 world_events = [
 	EwEventDef(
 		event_type = event_type_slimeglob,
-		str_event_start = "You mined an extra big glob of slime!",
+		str_event_start = "You mined an extra big glob of slime! {}".format(emote_slime1),
 	),
 	EwEventDef(
 		event_type = event_type_slimefrenzy,
@@ -13326,7 +13326,7 @@ world_events = [
 	),
 	EwEventDef(
 		event_type = event_type_poudrinfrenzy,
-		str_event_start = "You hit a dense vein of poudrins! Guaranteed poudrin on every {} for the next 10 seconds.".format(cmd_mine),
+		str_event_start = "You hit a dense vein of poudrins! Guaranteed poudrin on every {} for the next 5 seconds.".format(cmd_mine),
 		str_event_end = "The poudrin vein dried up.",
 	),
 	EwEventDef(

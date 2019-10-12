@@ -292,7 +292,7 @@ async def mine(cmd):
 					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
 						unearthed_item_chance = 1
 
-			if random.random() < 0.05:
+			if random.random() < 0.03:
 				id_event = create_mining_event(cmd)
 				event_data = EwWorldEvent(id_event = id_event)
 
@@ -821,7 +821,7 @@ async def print_grid_minesweeper(cmd):
 
 		grid_edit = "\n```\n{}\n```".format(grid_str)
 
-		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 8 or grid_cont.message == "":
+		if time_now > grid_cont.time_last_posted + 10 or grid_cont.times_edited > 3 or grid_cont.message == "":
 			grid_cont.message = await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, grid_edit))
 			grid_cont.time_last_posted = time_now
 			grid_cont.times_edited = 0
@@ -1106,7 +1106,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	elif grid[row][col] == ewcfg.cell_empty:
 		grid[row][col] = ewcfg.cell_empty_open
 		grid_cont.cells_mined += 1
-		mining_yield = grid_multiplier * get_mining_yield_default(cmd)
+		mining_yield = grid_multiplier * 5 * get_mining_yield_default(cmd)
 
 	unmined_cells = get_unmined_cell_count(grid_cont)
 
@@ -1163,7 +1163,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 
 	cells_to_clear = []
 	
-	slimes_pertile = get_mining_yield_default(cmd)
+	slimes_pertile = 3 * get_mining_yield_default(cmd)
 	if grid[row][col] != ewcfg.cell_bubble_empty:
 		mining_accident = True
 	else:
@@ -1253,7 +1253,7 @@ def create_mining_event(cmd):
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_poudrinfrenzy,
 				time_activate = time_now,
-				time_expir = time_now + 10,
+				time_expir = time_now + 5,
 				event_props = event_props
 			)
 			
