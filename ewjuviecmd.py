@@ -694,8 +694,8 @@ def init_grid(poi, id_server):
 
 def init_grid_minesweeper(poi, id_server):
 	grid = []
-	num_rows = 3
-	num_cols = 3
+	num_rows = 13
+	num_cols = 13
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
@@ -722,8 +722,8 @@ def init_grid_pokemine(poi,id_server):
 
 def init_grid_bubblebreaker(poi, id_server):
 	grid = []
-	num_rows = 12
-	num_cols = 12
+	num_rows = 13
+	num_cols = 13
 	for i in range(num_rows):
 		row = []
 		for j in range(num_cols):
@@ -1163,7 +1163,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 
 	cells_to_clear = []
 	
-	slimes_pertile = ewcfg.slimes_pertile
+	slimes_pertile = get_mining_yield_default(cmd)
 	if grid[row][col] != ewcfg.cell_bubble_empty:
 		mining_accident = True
 	else:
@@ -1181,7 +1181,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	grid_cont.cells_mined += 1
 	grid_height = get_height(grid)
 
-	if grid_cont.cells_mined % 15 == 10 or grid_height < 5:
+	if grid_cont.cells_mined % 5 == 4 or grid_height < 5:
 		if grid_height < len(grid):
 			add_row(grid)
 		else:
@@ -1200,7 +1200,6 @@ def create_mining_event(cmd):
 	time_now = time.time()
 	user_data = EwUser(member = cmd.message.author)
 
-	randomn = 1 # DEBUG
 	# common event
 	if randomn < 0.6:
 		randomn = random.random()
@@ -1261,32 +1260,19 @@ def create_mining_event(cmd):
 	# rare event
 	else:
 		randomn = random.random()
-		randomn = 0 # DEBUG
 
 		# minesweeper
-		if randomn < 1/3:
+		if randomn < 1/2:
 			event_props = {}
 			event_props['poi'] = user_data.poi
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minesweeper,
 				time_activate = time_now,
-				time_expir = time_now + 60*5,
+				time_expir = time_now + 60*2,
 				event_props = event_props
 			)
 		
-		# pokemine
-		elif randomn < 2/3:
-			event_props = {}
-			event_props['poi'] = user_data.poi
-			return ewworldevent.create_world_event(
-				id_server = cmd.message.server.id,
-				event_type = ewcfg.event_type_pokemine,
-				time_activate = time_now,
-				time_expir = time_now + 60*5,
-				event_props = event_props
-			)
-
 		# bubblebreaker
 		else:
 			event_props = {}
@@ -1295,6 +1281,6 @@ def create_mining_event(cmd):
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_bubblebreaker,
 				time_activate = time_now,
-				time_expir = time_now + 60*5,
+				time_expir = time_now + 60*2,
 				event_props = event_props
 			)
