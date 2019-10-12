@@ -3207,7 +3207,7 @@ def get_slimeoid_look_string(user_id = None, server_id = None):
 				cursor.execute(sql.format(ewcfg.col_name, ewcfg.col_id_user), [user_id])
 				if cursor.rowcount > 0:
 					iterate = 0
-					finalString += " \n\nIn the freezer, you hear "
+					finalString += "In the freezer, you hear "
 					for sloid in cursor:
 						if iterate > 0:
 							finalString += ", "

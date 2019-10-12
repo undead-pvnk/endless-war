@@ -130,6 +130,9 @@ class EwFurniture:
 	#the set that the furniture belongs to
 	furn_set = ""
 
+	#furniture color
+	hue = ""
+
 	def __init__(
 		self,
 		id_furniture = "",
@@ -141,7 +144,8 @@ class EwFurniture:
 		vendors = [],
 		furniture_place_desc = "",
 		furniture_look_desc = "",
-		furn_set = ""
+		furn_set = "",
+		hue=""
 
 	):
 		self.item_type = ewcfg.it_furniture
@@ -155,6 +159,7 @@ class EwFurniture:
 		self.furniture_place_desc = furniture_place_desc
 		self.furniture_look_desc = furniture_look_desc
 		self.furn_set = furn_set
+		self.hue = hue
 
 async def consult(cmd):
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -488,6 +493,17 @@ async def apt_look(cmd):
 		furn_response += "{} ".format(i.item_props['furniture_look_desc'])
 		furniture_id_list.append(i.item_props['id_furniture'])
 
+		hue = ewcfg.hue_map.get(i.item_props.get('hue'))
+		if hue != None and i.item_props.get('furn_set') != "specialhue":
+			furn_response += " It's {}. ".format(hue.str_name)
+		elif i.item_props.get('furn_set') == "specialhue":
+			if hue != None:
+				furn_response.replace("-*HUE*-", hue.str_name)
+			else:
+				furn_response.replace("-*HUE*-", "white")
+
+	furn_response += "\n\n"
+
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_lgbt):
 		furn_response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_haunted):
@@ -496,6 +512,10 @@ async def apt_look(cmd):
 		furn_response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_leather):
 		furn_response += "34 innocent lives. 34 lives were taken to build the feng shui in this one room. Are you remorseful about that? Obsessed? Nobody has the base antipathy needed to peer into your mind and pick at your decisions. The leather finish admittedly does look fantastic, however. Nice work.\n\n"
+	if all(elem in furniture_id_list for elem in ewcfg.furniture_church):
+		furn_response += random.choice(ewcfg.bible_verses) + "\n\n"
+	if all(elem in furniture_id_list for elem in ewcfg.furniture_pony):
+		furn_response += "When the Mane 6 combine their powers, kindness, generosity, loyalty, honesty, magic, and the other one, they combine to form the most powerful force known to creation: friendship. Except for slime. That's still stronger. \nhttps://www.youtube.com/watch?v=ZcBNxuKZyN4\n\n"
 
 	resp_cont.add_channel_response(cmd.message.channel.name, furn_response)
 
@@ -504,7 +524,7 @@ async def apt_look(cmd):
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
 	if(len(frids) > 0):
-		response += "\n\nThe fridge contains: "
+		response += "The fridge contains: "
 		fridge_pile = []
 		for frid in frids:
 			fridge_pile.append(frid.get('name'))
@@ -516,7 +536,7 @@ async def apt_look(cmd):
 	response = ""
 
 	if (len(closets) > 0):
-		response += "\n\nThe closet contains: "
+		response += "The closet contains: "
 		closet_pile = []
 		for closet in closets:
 			closet_pile.append(closet.get('name'))
@@ -704,7 +724,7 @@ async def upgrade(cmd):
 		response = "Fucking hell, man. You're loaded, and we're not upgrading you."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif(usermodel.slimecoin < apt_model.rent*8):
+	elif(usermodel.slimecoin < apt_model.rent * 8):
 		response = "You can't even afford the down payment. We're not entrusting an upgrade to a 99%er like you."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1178,6 +1198,7 @@ async def propstand(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+
 async def releasefish(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
@@ -1291,7 +1312,66 @@ async def frame(cmd):
 		response = "You don't have a frame."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def dyefurniture(cmd):
+	first_id = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+	second_id = ewutils.flattenTokenListToString(cmd.tokens[2:])
 
+	try:
+		first_id_int = int(first_id)
+		second_id_int = int(second_id)
+	except:
+		first_id_int = None
+		second_id_int = None
+
+	if first_id != None and len(first_id) > 0 and second_id != None and len(second_id) > 0:
+		response = "You don't have one."
+
+		items = ewitem.inventory(
+			id_user=cmd.message.author.id,
+			id_server=cmd.message.server.id,
+		)
+
+		furniture = None
+		dye = None
+		for item in items:
+			if item.get('id_item') in [first_id_int, second_id_int] or first_id in ewutils.flattenTokenListToString(
+					item.get('name')) or second_id in ewutils.flattenTokenListToString(item.get('name')):
+				if item.get('item_type') == ewcfg.it_furniture and furniture is None:
+					furniture = item
+
+				if item.get('item_type') == ewcfg.it_item and item.get('name') in ewcfg.dye_map and dye is None:
+					dye = item
+
+				if furniture != None and dye != None:
+					break
+
+		if furniture != None:
+			if dye != None:
+				user_data = EwUser(member=cmd.message.author)
+
+				furniture_item = ewitem.EwItem(id_item=furniture.get("id_item"))
+				dye_item = ewitem.EwItem(id_item=dye.get("id_item"))
+
+				hue = ewcfg.hue_map.get(dye_item.item_props.get('id_item'))
+
+				response = "You dye your {} in {} paint!".format(furniture_item.item_props.get('furniture_name'), hue.str_name)
+				furniture_item.item_props['hue'] = hue.id_hue
+
+				furniture_item.persist()
+				ewitem.item_delete(id_item=dye.get('id_item'))
+			else:
+				response = 'Use which dye? Check your **!inventory**.'
+		else:
+			response = 'Dye which furniture? Check your **!inventory**.'
+
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You need to specify which furniture you want to paint and which dye you want to use! Check your **!inventory**.'))
+
+
+#****************************************************************************
+#ADD NEW FUNCTIONS HERE
+#****************************************************************************
 def toss_items(id_user = None, id_server = None, poi = None):
 	if id_user != None and id_server != None and poi != None:
 		inv_toss = ewitem.inventory(id_user=id_user, id_server=id_server)

@@ -182,7 +182,11 @@ async def order(cmd):
 
 		# Finds the item if it's an EwGeneralItem.
 
+		if value == "mylittleponyfigurine":
+			value = random.choice(ewcfg.furniture_pony)
 		item = ewcfg.item_map.get(value)
+
+
 		item_type = ewcfg.it_item
 		if item != None:
 			item_id = item.id_item
@@ -211,6 +215,8 @@ async def order(cmd):
 				item_id = item.id_furniture
 				name = item.str_name
 
+				item.vendors = [ewcfg.vendor_bazaar]
+
 		if item == None:
 			item = ewcfg.weapon_map.get(value)
 			item_type = ewcfg.it_weapon
@@ -227,10 +233,14 @@ async def order(cmd):
 			except:
 				current_vendor = None
 
+
 			# Check if the item is available in the current bazaar item rotation
 			if current_vendor == ewcfg.vendor_bazaar:
 				if item_id not in market_data.bazaar_wares.values():
-					current_vendor = None
+					if item_id in ewcfg.furniture_pony and "mylittleponyfigurine" in market_data.bazaar_wares.values():
+						pass
+					else:
+						current_vendor = None
 
 			if current_vendor is None or len(current_vendor) < 1:
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)

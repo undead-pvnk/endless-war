@@ -1029,7 +1029,7 @@ async def item_look(cmd):
 
 				response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)
 
-			if item.item_type == ewcfg.it_cosmetic:
+			if item.item_type == ewcfg.it_cosmetic or item.item_type == ewcfg.it_furniture:
 				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)

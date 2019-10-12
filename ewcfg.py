@@ -687,6 +687,7 @@ cmd_push = cmd_prefix + 'push'
 cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
+cmd_dyefurniture = cmd_prefix + 'dyefurniture'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -5809,6 +5810,24 @@ browse_list = [
 "Y'arrr. \nhttps://discord.gg/VFcUmgc"
 ]
 
+bible_verses = [
+"And they said one to another, Go to, let us make brick, and burn them thoroughly. And they had brick for stone, and slime had they for mortar. And they said, !Goto, let us build us a city and a tower, whose top may reach unto heaven; and let us make us a name, lest we be scattered abroad upon the face of the whole earth… Genesis, 11:4 7",
+"Then he went up from there to Bethel; and as he was going up by the way, young lads came out from the city and mocked him and said to him, “Go up, you baldhead; go up, you baldhead!” When he looked behind him and saw them, he cursed them in the name of the LORD. Then two female bears came out of the woods and tore up forty-two lads of their number. And he went from there to Mount Carmel, and from there he returned to Samaria. 2 Kings 2:23-25",
+"Yet she became more and more promiscuous as she recalled the days of her youth, when she was a prostitute in Egypt. There she lusted after her lovers, whose genitals were like those of donkeys and whose emission was like that of horses. So you longed for the lewdness of your youth, when in Egypt your bosom was caressed and your young breasts fondled. Ezekiel 23:19",
+"No one whose testicles are crushed or whose male organ is cut off shall enter the assembly of the Lord. Deuteronomy 23:1",
+"Ye are the light of the world. A city that is set on an hill cannot be hid. Matthew 5:14",
+"But now they desire a better country, that is, an heavenly: wherefore God is not ashamed to be called their God: for he hath prepared for them a city. Hebrews 11:16 ",
+"Seek the prosperity of the city to which I have sent you as exiles. Pray to the LORD on its behalf, for if it prospers, you too will prosper. Jeremiah 29:7",
+"And they went up on the breadth of the earth, and compassed the camp of the saints about, and the beloved city: and fire came down from God out of heaven, and devoured them. Revelation 20:9 ",
+"And I will turn my hand upon thee, and purely purge away thy dross, and take away all thy tin: And I will restore thy judges as at the first, and thy counsellors as at the beginning: afterward thou shalt be called, The city of righteousness, the faithful city. Isaiah 1:25-26 ",
+"David rose up and went, he and his men, and struck down two hundred men among the Philistines Then David brought their foreskins, and they gave them in full number to the king, that he might become the king's son-in-law. So Saul gave him Michal his daughter for a wife. 1 Samuel 18:27 ",
+"Behold, the days come, saith the LORD, that I will punish all them which are circumcised with the uncircumcised. Jeremiah 9:25",
+"Let me gulp down some of that red stuff; I’m starving. Genesis 25:30 ",
+"Would that those who are upsetting you might also castrate themselves! Galatians 5:12",
+"Even the handle sank in after the blade, and his bowels discharged. Ehud did not pull the sword out, and the fat closed in over it. Judges 3:22 ",
+]
+
+
 furniture_list = [
 EwFurniture(
 		id_furniture = "interrogationchair",
@@ -6141,9 +6160,10 @@ EwFurniture(
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 30000,
-		vendors = [vendor_bazaar],
+		vendors = [],
 		furniture_look_desc = "You can sense brony vibes in this room.",
-		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies."),
+		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies.",
+		furn_set = "pony"),
 EwFurniture(
 		id_furniture = "diploma",
 		str_name = "framed diploma",
@@ -6299,7 +6319,187 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A picture frame hangs on the wall.",
 		furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck."),
-
+EwFurniture(
+		id_furniture = "hammock",
+		str_name = "hammock",
+		str_desc = "It's a frayed rope hammock. Kinda looks like the worn-out fishing nets they use down at the piers, but it'll probably work just as well as the real deal.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 370000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An indoor hammock is set up in the bedroom.",
+		furniture_place_desc = "Getting this set up will be tricky. You take some industrial strength railroad spikes and drive them into each side of the wall, then use the supports to wrap the two ends until the hammock is taut. Why the fuck did you set up a hammock indoors, anyway?"),
+EwFurniture(
+		id_furniture = "juggaloposter",
+		str_name = "juggalo poster",
+		str_desc = "Violent J and Shaggy 2 Dope are depicted brutally murdering some juvie with steak knives. Their stabbing form is terrible but you can appreciate their charisma.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 100000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A poster on the wall depicts a Juggalo murder party.",
+		furniture_place_desc = "You don't have any tape to fasten the poster, so you end up using magnets instead. You're not sure how they work, though. "),
+EwFurniture(
+		id_furniture = "television",
+		str_name = "television",
+		str_desc = "It's a CRT, a pretty big one too. A bunch of adapters are frankenstein'd up to it so it takes modern cables.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An old CRT is set up.",
+		furniture_place_desc = "You drop the TV on the floor. Your parents said this stuff turns your brain to mush, but yours is already slime, so no harm done. Time to get !watching!"),
+EwFurniture(
+		id_furniture = "pottedplant",
+		str_name = "potted plant",
+		str_desc = "It's a potted plant. Currently empty.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 10000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A potted plant is on the sill.",
+		furniture_place_desc = "You set the pot where plants in it could get plenty of sunlight."),
+EwFurniture(
+		id_furniture = "airmattress",
+		str_name = "air mattress",
+		str_desc = "A vinyl air mattress. Perfect for sleepovers, or when the homeless crash at your place.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An air matress is blown up in the bedroom.",
+		furniture_place_desc = "You blow a whole bunch until your floppy piece of vinyl is a bouncy piece of vinyl."),
+EwFurniture(
+		id_furniture = "churchpew",
+		str_name = "church pew",
+		str_desc = "A long wooden bench they normally use in church services. To be completely honest, it looks really uncomfortable to sit in.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 240000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A pew is against the wall.",
+		furniture_place_desc = "You set up the pew in your flat, just in case someone wants to hear you preach.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "churchaltar",
+		str_name = "church altar",
+		str_desc = "An old-looking altar with elaborate carving on the sides. Do you do sacrifices on these?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 270000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An altar is fully adorned against the wall.",
+		furniture_place_desc = "You place a fresh tablecloth, some incense, and a bible on the altar. You say a hymn to yourself before standing up to admire the handiwork.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "churchcandles",
+		str_name = "church candles",
+		str_desc = "A 16 pack of beeswax candles and a couple brass candlesticks to go with them.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 110000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The room is dimly lit with candles.",
+		furniture_place_desc = "You arrange the candlesticks with a pleasing symmetry. Someone less pious would call this a fire hazard, but you're determined that God won't let your house burn down.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "confessionbooth",
+		str_name = "confession booth",
+		str_desc = "It's a little pair of rooms you sit in to confess your sins. Living in NLACakaNM you may have a lot of those.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 110000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A confession booth has been installed here.",
+		furniture_place_desc = "Once you get the booth in, you make sure it works by confessing to yourself. It does, that's good.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "abstinencebed",
+		str_name = "abstinence bed",
+		str_desc = "It's like a regular bed, but you're fastened to it to prevent any unneeded fornication. Paradoxically, that's actually sort of kinky.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 300000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An abstinence bed is in the bedroom.",
+		furniture_place_desc = "You place the bed down, dreaming of all that sinful poon you're going to miss out on.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "wallpaper",
+		str_name = "wallpaper",
+		str_desc = "It's a solid color wallpaper. Pretty plain, but dyeable.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The walls are a nice shade of -*HUE*-",
+		furniture_place_desc = "You cover the walls with wallpaper. ",
+		furn_set = "specialhue"),
+EwFurniture(
+		id_furniture = "applejackfigurine",
+		str_name = "apple jack figurine",
+		str_desc = "It's an MLP figure. She's a dirty southerner.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You place Apple Jack up on the windowsill.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "fluttershyfigurine",
+		str_name = "fluttershy figurine",
+		str_desc = "It's an MLP figure. She's a yellow pegasus, very Juvie-core.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "Fluttershy goes right here on the sill.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "rarityfigurine",
+		str_name = "rarity figurine",
+		str_desc = "It's an MLP figure. This one's known for being marginally bitchier than the others.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You set Rarity up by the window. Clearly she's above being on the ground. Fucking ornery cunt.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "pinkiepiefigurine",
+		str_name = "pinkie pie figurine",
+		str_desc = "It's an MLP figure. You may be hallucinating but its voice keeps speaking inside your head.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You sense Ponk in the room.",
+		furniture_place_desc = "You set Pinkie Pie up on the sill and try to suppress the voices in your head.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "twilightsparklefigurine",
+		str_name = "twilight sparkle figurine",
+		str_desc = "It's an MLP figure. This one talks big about friendship but has a dragon indentured servant for like the whole show. What a hypocrite!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You place a horse figurine on the windowsill.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "mylittleponyfigurine",
+		str_name = "my little pony figurine",
+		str_desc = "",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You place a horse figurine on the windowsill."),
 ]
 
 
@@ -6309,6 +6509,8 @@ furniture_lgbt = []
 furniture_highclass = []
 furniture_haunted = []
 furniture_leather = []
+furniture_church = []
+furniture_pony = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -12698,6 +12900,10 @@ for furniture in furniture_list:
 		furniture_lgbt.append(furniture.id_furniture)
 	elif furniture.furn_set == "leather":
 		furniture_leather.append(furniture.id_furniture)
+	elif furniture.furn_set == "church":
+		furniture_church.append(furniture.id_furniture)
+	elif furniture.furn_set == "pony":
+		furniture_pony.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
