@@ -5,12 +5,15 @@ import ewcfg
 import ewutils
 import ewrolemgr
 import ewitem
+import ewhunting
 
 from ew import EwUser
 from ewmarket import EwMarket
 from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
 from ewslimeoid import EwSlimeoid
+from ewhunting import EwEnemy
+from ewitem import EwItem
 
 """ A weather object. Pure flavor. """
 class EwWeather:
@@ -83,56 +86,79 @@ async def weather_tick(id_server = None):
 				user_poi = ewcfg.id_to_poi.get(user_data.poi)
 				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
 
-				slimes_to_erase = user_data.slimes * 0.01 * ewcfg.weather_tick_length
-				slimes_to_erase = max(slimes_to_erase, ewcfg.weather_tick_length * 1000)
-				slimes_to_erase = min(user_data.slimes, slimes_to_erase)
+				protected = False
+				slimeoid_protected = False
 
-				#round up or down, randomly weighted
-				remainder = slimes_to_erase - int(slimes_to_erase)
-				if random.random() < remainder: 
-					slimes_to_erase += 1 
-				slimes_to_erase = int(slimes_to_erase)
+				if user_data.weapon >= 0:
+					weapon_item = EwItem(id_item = user_data.weapon)
+					if weapon_item.item_props.get('weapon_type') in ewcfg.rain_protection:
+						protected = True
 
-				user_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
+				cosmetics = ewitem.inventory(id_user = user_data.id_user, id_server = id_server, item_type_filter = ewcfg.it_cosmetic)
 
-				response = "*{uname}*: The bicarbonate rain dissolves {slimeloss:,} of your slime.".format(uname = player_data.display_name, slimeloss = slimes_to_erase)
-				resp_cont.add_channel_response(user_poi.channel, response)
-				if user_data.slimes <= 0:
-					user_data.die(cause = ewcfg.cause_weather)
-					#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-					deathreport = "{skull} *{uname}*: You have been cleansed by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
-					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
-					users_to_update.append(user[0])
-				user_data.persist()
+				for cosmetic in cosmetics:
+					cosmetic_data = EwItem(id_item = cosmetic.get('id_item'))
+					if cosmetic_data.item_props.get('id_cosmetic') in ewcfg.rain_protection:
+						if cosmetic_data.item_props.get('adorned') == 'true':
+							protected = True
+						elif cosmetic_data.item_props.get('slimeoid') == 'true':
+							slimeoid_protected = True
 
-				slimeoid_data = EwSlimeoid(id_user = user_data.id_user, id_server = id_server)
+				if not protected:
 
-				if slimeoid_data.life_state != ewcfg.slimeoid_state_active:
-					continue
+					slimes_to_erase = user_data.slimes * 0.01 * ewcfg.weather_tick_length
+					slimes_to_erase = max(slimes_to_erase, ewcfg.weather_tick_length * 1000)
+					slimes_to_erase = min(user_data.slimes, slimes_to_erase)
 
-				slimeoid_response = ""
-				if random.randrange(10) < slimeoid_data.level:
-					slimeoid_response = "*{uname}*: {slname} cries out in pain, as it's hit by the bicarbonate rain.".format(uname = player_data.display_name, slname = slimeoid_data.name)
+					#round up or down, randomly weighted
+					remainder = slimes_to_erase - int(slimes_to_erase)
+					if random.random() < remainder: 
+						slimes_to_erase += 1 
+					slimes_to_erase = int(slimes_to_erase)
 
-				else:
-					item_props = {
-						'context': ewcfg.context_slimeoidheart,
-						'subcontext': slimeoid_data.id_slimeoid,
-						'item_name': "Heart of {}".format(slimeoid_data.name),
-						'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
-					}
-					ewitem.item_create(
-						id_user = user_data.id_user,
-						id_server = id_server,
-						item_type = ewcfg.it_item,
-						item_props = item_props
-					)
-					slimeoid_data.die()
-					slimeoid_data.persist()
-					slimeoid_response = "*{uname}*: {slname} lets out a final whimper as it's dissolved by the bicarbonate rain. {skull} You quickly pocket its heart.".format(uname = player_data.display_name, slname = slimeoid_data.name, skull = ewcfg.emote_slimeskull)
+					user_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
+
+					response = "*{uname}*: The bicarbonate rain dissolves {slimeloss:,} of your slime.".format(uname = player_data.display_name, slimeloss = slimes_to_erase)
+					resp_cont.add_channel_response(user_poi.channel, response)
+					if user_data.slimes <= 0:
+						user_data.die(cause = ewcfg.cause_weather)
+						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+						deathreport = "{skull} *{uname}*: You have been cleansed by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
+						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+						resp_cont.add_channel_response(user_poi.channel, deathreport)
+						users_to_update.append(user[0])
+					user_data.persist()
 
 				
-				resp_cont.add_channel_response(user_poi.channel, slimeoid_response)
+				if not slimeoid_protected:
+					slimeoid_data = EwSlimeoid(id_user = user_data.id_user, id_server = id_server)
+
+					if slimeoid_data.life_state != ewcfg.slimeoid_state_active:
+						continue
+
+					slimeoid_response = ""
+					if random.randrange(10) < slimeoid_data.level:
+						slimeoid_response = "*{uname}*: {slname} cries out in pain, as it's hit by the bicarbonate rain.".format(uname = player_data.display_name, slname = slimeoid_data.name)
+
+					else:
+						item_props = {
+							'context': ewcfg.context_slimeoidheart,
+							'subcontext': slimeoid_data.id_slimeoid,
+							'item_name': "Heart of {}".format(slimeoid_data.name),
+							'item_desc': "A poudrin-like crystal. If you listen carefully you can hear something that sounds like a faint heartbeat."
+						}
+						ewitem.item_create(
+							id_user = user_data.id_user,
+							id_server = id_server,
+							item_type = ewcfg.it_item,
+							item_props = item_props
+						)
+						slimeoid_data.die()
+						slimeoid_data.persist()
+						slimeoid_response = "*{uname}*: {slname} lets out a final whimper as it's dissolved by the bicarbonate rain. {skull} You quickly pocket its heart.".format(uname = player_data.display_name, slname = slimeoid_data.name, skull = ewcfg.emote_slimeskull)
+
+				
+					resp_cont.add_channel_response(user_poi.channel, slimeoid_response)
 			for poi in exposed_pois:
 				district_data = EwDistrict(district = poi, id_server = id_server)
 				slimes_to_erase = district_data.slimes * 0.01 * ewcfg.weather_tick_length
@@ -147,7 +173,40 @@ async def weather_tick(id_server = None):
 
 				district_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
 				district_data.persist()
+			
+			enemies = ewutils.execute_sql_query("SELECT id_enemy FROM enemies WHERE id_server = %s AND {poi} IN %s AND {life_state} = %s".format(
+				poi = ewcfg.col_enemy_poi,
+				life_state = ewcfg.col_enemy_life_state
+			), (
+				id_server,
+				exposed_pois,
+				ewcfg.enemy_lifestate_alive
 				
+			))
+
+			for enemy in enemies:
+				enemy_data = EwEnemy(id_enemy = enemy[0])
+				enemy_poi = ewcfg.id_to_poi.get(enemy_data.poi)
+
+				slimes_to_erase = enemy_data.slimes * 0.01 * ewcfg.weather_tick_length
+				slimes_to_erase = max(slimes_to_erase, ewcfg.weather_tick_length * 1000)
+				slimes_to_erase = min(enemy_data.slimes, slimes_to_erase)
+
+				#round up or down, randomly weighted
+				remainder = slimes_to_erase - int(slimes_to_erase)
+				if random.random() < remainder: 
+					slimes_to_erase += 1 
+				slimes_to_erase = int(slimes_to_erase)
+
+				enemy_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
+				enemy_data.persist()
+
+				response = "{name} takes {slimeloss:,} damage from the bicarbonate rain.".format(name = enemy_data.display_name, slimeloss = slimes_to_erase)
+				resp_cont.add_channel_response(enemy_poi.channel, response)
+				if enemy_data.slimes <= 0:
+					ewhunting.delete_enemy(enemy_data)
+					deathreport = "{skull} {name} is dissolved by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, name = enemy_data.display_name)
+					resp_cont.add_channel_response(enemy_poi.channel, deathreport)
 
 			for user in users_to_update:
 

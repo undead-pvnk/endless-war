@@ -306,6 +306,12 @@ class EwEnemy:
 			target_player = EwPlayer(id_user=target_data.id_user)
 			target_slimeoid = EwSlimeoid(id_user=target_data.id_user)
 
+			target_weapon = None
+			target_weapon_item = None
+			if target_data.weapon >= 0:
+				target_weapon_item = EwItem(id_item = target_data.weapon)
+				target_weapon = ewcfg.weapon_map.get(target_weapon_item.item_props.get("weapon_type"))
+			
 			server = client.get_server(target_data.id_server)
 			# server = discord.Server(id=target_data.id_server)
 			# print(target_data.id_server)
@@ -346,6 +352,11 @@ class EwEnemy:
 			# Fat chance
 			if ewcfg.mutation_id_fatchance in target_mutations and target_data.hunger / target_data.get_hunger_max() > 0.5:
 				slimes_damage *= 0.75
+
+			# defensive weapon
+			if target_weapon != None:
+				if ewcfg.weapon_class_defensive in target_weapon.classes:
+					slimes_damage *= 0.5
 
 			slimes_dropped = target_data.totaldamage + target_data.slimes
 
@@ -945,6 +956,11 @@ def find_enemy(enemy_search=None, user_data=None):
 				if (enemy.display_name.lower() == enemy_search) or (enemy.enemytype == enemy_search_alias):
 					enemy_found = enemy
 					break
+
+				if (enemy.display_name.lower() in enemy_search_tokens):
+					enemy_found = enemy
+					break
+
 
 	return enemy_found
 

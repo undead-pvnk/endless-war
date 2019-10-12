@@ -829,26 +829,45 @@ async def on_ready():
 							elif item in ewcfg.furniture_names:
 								bazaar_furniture.append(item)
 
+						market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
+						market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
+
 						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
 
 						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
 						# Don't add repeated foods
-						while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == market_data.bazaar_wares['food1']:
-							market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+						bw_food2 = None
+						while bw_food2 is None or bw_food2 in market_data.bazaar_wares.values():
+							bw_food2 = random.choice(bazaar_foods)
+
+						market_data.bazaar_wares['food2'] = bw_food2
 
 						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
 						# Don't add repeated cosmetics
-						while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == market_data.bazaar_wares['cosmetic1']:
-							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
-						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
-							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+						bw_cosmetic2 = None
+						while bw_cosmetic2 is None or bw_cosmetic2 in market_data.bazaar_wares.values():
+							bw_cosmetic2 = random.choice(bazaar_cosmetics)
 
+						market_data.bazaar_wares['cosmetic2'] = bw_cosmetic2
 
-						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
-						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
-							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
-						while market_data.bazaar_wares.get('furniture3') is None or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture1'] or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture2']:
-							market_data.bazaar_wares['furniture3'] = random.choice(bazaar_furniture)
+						bw_cosmetic3 = None
+						while bw_cosmetic3 is None or bw_cosmetic3 in market_data.bazaar_wares.values():
+							bw_cosmetic3 = random.choice(bazaar_cosmetics)
+
+						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
+
+						bw_furniture2 = None
+						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
+							bw_furniture2 = random.choice(bazaar_furniture)
+
+						market_data.bazaar_wares['furniture2'] = bw_furniture2
+
+						bw_furniture3 = None
+						while bw_furniture3 is None or bw_furniture3 in market_data.bazaar_wares.values():
+							bw_furniture3 = random.choice(bazaar_furniture)
+
+						market_data.bazaar_wares['furniture3'] = bw_furniture3
+
 
 						if random.random() == 0.1:
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
