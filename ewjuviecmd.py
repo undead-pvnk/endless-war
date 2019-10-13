@@ -21,7 +21,7 @@ from ewdistrict import EwDistrict
 from ewworldevent import EwWorldEvent
 
 # Map of user ID to a map of recent miss-mining time to count. If the count
-# exceeds 3 in 5 seconds, you die.
+# exceeds 11 in 20 seconds, you die.
 last_mismined_times = {}
 
 juviesrow_mines = {}
@@ -188,7 +188,8 @@ async def mine(cmd):
 	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
 
 		if user_data.hunger >= user_data.get_hunger_max():
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
+			return await mismine(cmd, user_data, "exhaustion")
+			#return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))
 
 		else:
 			printgrid = True
@@ -292,7 +293,7 @@ async def mine(cmd):
 					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
 						unearthed_item_chance = 1
 
-			if random.random() < 0.03:
+			if random.random() < 0.05:
 				id_event = create_mining_event(cmd)
 				event_data = EwWorldEvent(id_event = id_event)
 
@@ -377,7 +378,8 @@ async def mine(cmd):
 
 
 	else:
-		response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
+		return await mismine(cmd, user_data, "channel")
+		#response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 
 	if len(response) > 0:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -521,7 +523,7 @@ async def mismine(cmd, user_data, cause):
 			'count': 0
 		}
 
-	if time_now - mismined['time'] < 5:
+	if time_now - mismined['time'] < 20:
 		mismined['count'] += 1
 	else:
 		# Reset counter.
@@ -535,7 +537,7 @@ async def mismine(cmd, user_data, cause):
 		last_mismined_times[cmd.message.author.id] = None
 		# user_data.die(cause = ewcfg.cause_mining)
 
-		user_data.change_slimes(n = -(user_data.slimes / 5))
+		user_data.change_slimes(n = -(user_data.slimes / 2))
 		user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have lost an arm and a leg in a mining accident. Tis but a scratch."))
