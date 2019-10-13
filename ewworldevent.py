@@ -4,6 +4,9 @@ import time
 import ewcfg
 import ewutils
 
+from ew import EwUser
+from ewplayer import EwPlayer
+
 class EwEventDef:
 	event_type = ""
 	
@@ -231,6 +234,15 @@ async def event_tick(id_server):
 			event_def = ewcfg.event_type_to_def.get(event_data.event_type)
 
 			response = event_def.str_event_end
+			if event_data.event_type == ewcfg.event_type_minecollapse:
+				user_data = EwUser(id_user = event_data.event_props.get('id_user'), id_server = id_server)
+				if user_data.poi == event_data.event_props.get('poi'):
+					user_data.change_slimes(n = -(user_data.slimes * 0.5))
+					user_data.persist()
+
+					player_data = EwPlayer(id_user = user_data.id_user)
+					response = "*{}*: You have lost an arm and a leg in a mining accident. Tis but a scratch.".format(player_data.display_name)
+					
 			if len(response) > 0:
 				poi = event_data.event_props.get('poi')
 				if poi != None:

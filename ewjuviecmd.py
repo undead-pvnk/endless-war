@@ -203,6 +203,16 @@ async def mine(cmd):
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('poi') == user_data.poi:
 						minigame_event = event_data.event_type
+				if world_events.get(id_event) == ewcfg.event_type_minecollapse:
+					event_data = EwWorldEvent(id_event = id_event)
+					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
+						captcha = event_data.event_props.get('captcha')
+						if captcha in cmd.tokens[1:]:
+							ewworldevent.delete_world_event(id_event = id_event)
+							response = "You escape from the collapsing mineshaft."
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+						else:
+							return await mismine(cmd, user_data, ewcfg.event_type_minecollapse)
 
 			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
@@ -309,7 +319,10 @@ async def mine(cmd):
 					event_def = ewcfg.event_type_to_def.get(event_data.event_type)
 					if event_def == None:
 						return ewutils.logMsg("Error, couldn't find event def for event type {}".format(event_data.event_type))
-					response += event_def.str_event_start + "\n"
+					str_event_start = event_def.str_event_start
+					if event_data.event_type == ewcfg.event_type_minecollapse:
+						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = event_data.event_props.get('captcha'))
+					response += str_event_start + "\n"
 				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
 					init_grid(poi = event_data.event_props.get('poi'), id_server = event_data.id_server)
 					printgrid = True
@@ -477,11 +490,7 @@ async def flag(cmd):
 				response = "Invalid vein."
 
 
-			mining_yield = 0
-			mining_accident = False
-
-
-			if grid[row][col] == ewcfg.cell_empty_marked:
+			elif grid[row][col] == ewcfg.cell_empty_marked:
 				grid[row][col] == ewcfg.cell_empty
 
 			elif grid[row][col] == ewcfg.cell_mine_marked:
@@ -532,7 +541,22 @@ async def mismine(cmd, user_data, cause):
 
 	last_mismined_times[cmd.message.author.id] = mismined
 
+	world_events = ewworldevent.get_world_events(id_server = cmd.message.server.id)
+	event_data = None
+	captcha = None
+	for id_event in world_events:
+		if world_events.get(id_event) == ewcfg.event_type_minecollapse:
+			event_data = EwWorldEvent(id_event = id_event)
+			if event_data.event_props.get('id_user') == user_data.id_user:
+				mine_collapse = True
+				captcha = event_data.event_props.get('captcha')
+	
 	if mismined['count'] >= 11:  # up to 6 messages can be buffered by discord and people have been dying unfairly because of that
+		if cause == ewcfg.event_type_minecollapse:
+			if event_data != None:
+				ewworldevent.delete_world_event(id_event = event_data.id_event)
+			else:
+				return
 		# Lose some slime
 		last_mismined_times[cmd.message.author.id] = None
 		# user_data.die(cause = ewcfg.cause_mining)
@@ -547,6 +571,11 @@ async def mismine(cmd, user_data, cause):
 	else:
 		if cause == "exhaustion":
 			response = "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."
+		elif cause == ewcfg.event_type_minecollapse:
+			if captcha != None:
+				response = "The mineshaft is collapsing around you! Get out of there! ({cmd} {captcha})".format(cmd = ewcfg.cmd_mine, captcha = captcha)
+			else:
+				return
 		else:
 			response = "You can't mine in this channel. Go elsewhere."
 
@@ -704,7 +733,7 @@ def init_grid_minesweeper(poi, id_server):
 			row.append(ewcfg.cell_empty)
 		grid.append(row)
 
-	num_mines = 1
+	num_mines = 30
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
@@ -1199,7 +1228,7 @@ def get_mining_yield_default(cmd):
 
 def create_mining_event(cmd):
 	randomn = random.random()
-	time_now = time.time()
+	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
 
 	# common event
@@ -1233,17 +1262,18 @@ def create_mining_event(cmd):
 	# uncommon event
 	elif randomn < 0.9:
 		randomn = random.random()
-		randomn = 1 # DEBUG
 
 		# mine shaft collapse
 		if randomn < 0.5:
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['captcha'] = ewutils.generate_captcha(n = 8)
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minecollapse,
 				time_activate = time_now,
+				time_expir = time_now + 60,
 				event_props = event_props
 			)
 		# 10 second poudrin frenzy
@@ -1271,7 +1301,7 @@ def create_mining_event(cmd):
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minesweeper,
 				time_activate = time_now,
-				time_expir = time_now + 60*2,
+				time_expir = time_now + 60*3,
 				event_props = event_props
 			)
 		
@@ -1283,6 +1313,6 @@ def create_mining_event(cmd):
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_bubblebreaker,
 				time_activate = time_now,
-				time_expir = time_now + 60*2,
+				time_expir = time_now + 60*3,
 				event_props = event_props
 			)
