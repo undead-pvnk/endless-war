@@ -861,7 +861,9 @@ async def push(cmd):
 	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
 		if targetmodel.poi == user_data.poi:
 			response = random.choice(ewcfg.bully_responses)
-			response = response.format(target.display_name)
+
+			formatMap = {}
+			formatMap["target_name"] = target.display_name
 
 			slimeoid_model = EwSlimeoid(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
 			if slimeoid_model.name != "":
@@ -882,15 +884,15 @@ async def push(cmd):
 			else:
 				selected_cos = id_item = selected_cos.get('name')
 
-			if "{cosmetic}" in response:
-				response = response.format(cosmetic = selected_cos.upper())
+			formatMap["cosmetic"] = selected_cos.upper()
 
 			if "{slimeoid}" in response:
 				if slimeoid_model != "":
-					response = response.foramt(slimeoid = slimeoid_model)
+					formatMap["slimeoid"] = slimeoid_model
 				elif slimeoid_model == "":
-					response = "You push {} into a puddle of sludge, laughing at how hopelessly dirty they are.".format(target.display_name)
-
+					response = "You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are."
+			
+			response = response.format_map(formatMap)
 		else:
 			response = "You can't bully them because they aren't here."
 
