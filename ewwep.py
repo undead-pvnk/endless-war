@@ -478,7 +478,7 @@ async def attack(cmd):
 			if deathreport != "":
 				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.server.get_member(shootee_data.id_user))
+			resp_cont.add_member_to_update(member)
 
 		else:
 			#hunger drain
@@ -598,7 +598,7 @@ async def attack(cmd):
 								resp_cont.add_channel_response(cmd.message.channel.name, resp)
 						#Damage players/enemies in district
 						else:
-							resp = await weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
+							resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
 							resp_cont.add_response_container(resp)
 
 					user_data = EwUser(member = cmd.message.author)
@@ -708,7 +708,7 @@ async def attack(cmd):
 					user_data.persist()
 
 					# Add the PvP flag role.
-					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+					resp_cont.add_member_to_update(cmd.message.author)
 
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
@@ -874,7 +874,7 @@ async def attack(cmd):
 					if ewcfg.mutation_id_spontaneouscombustion in shootee_mutations:
 						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(member.display_name)
 						resp_cont.add_channel_response(cmd.message.channel.name, explode_resp)
-						explosion = await ewutils.explode(damage = explode_damage, district_data = district_data)
+						explosion = ewutils.explode(damage = explode_damage, district_data = district_data)
 						resp_cont.add_response_container(explosion)
 					user_data = EwUser(member = cmd.message.author)
 					shootee_data = EwUser(member = member)
@@ -964,7 +964,7 @@ async def attack(cmd):
 
 			# Assign the corpse role to the newly dead player.
 			if was_killed:
-				await ewrolemgr.updateRoles(client = cmd.client, member = member)
+				resp_cont.add_member_to_update(member)
 				# announce death in kill feed channel
 				#killfeed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_killfeed)
 				killfeed_resp = resp_cont.channel_responses[cmd.message.channel.name]
@@ -1052,6 +1052,7 @@ async def attack(cmd):
 
 			# Send the response to the player.
 			resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
+
 		await resp_cont.post()
 		
 	elif response == ewcfg.enemy_targeted_string:
@@ -1131,7 +1132,7 @@ async def suicide(cmd):
 		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 """ Damage all players in a district; Exploding weapon's effect """
-async def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None):
+def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None):
 	if user_data != None and shootee_data != None and district_data != None:
 		user_player = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 		if target_enemy == False:
@@ -1252,10 +1253,10 @@ async def weapon_explosion(user_data = None, shootee_data = None, district_data 
 						
 						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(user_player.display_name)
 						resp_cont.add_channel_response(channel, explode_resp)
-						explosion = await ewutils.explode(damage = explode_damage, district_data = district_data)
+						explosion = ewutils.explode(damage = explode_damage, district_data = district_data)
 						resp_cont.add_response_container(explosion)
 
-					await ewrolemgr.updateRoles(client = client, member = server.get_member(target_data.id_user))
+					resp_cont.add_member_to_update(server.get_member(target_data.id_user))
 				#Survived the explosion
 				else:
 					response += "{} was caught in an explosion during your fight with {} and lost {} slime".format(target_player.display_name, shootee_player.display_name, damage)
@@ -1940,7 +1941,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 							resp_cont.add_channel_response(cmd.message.channel.name, resp)
 					# Damage players/enemies in district
 					else:
-						resp = await weapon_explosion(user_data=user_data, shootee_data=enemy_data,
+						resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data,
 													district_data=district_data, life_states=life_states,
 													factions=factions, slimes_damage=bystander_damage, backfire=backfire,
 													time_now=time_now, target_enemy=True)
