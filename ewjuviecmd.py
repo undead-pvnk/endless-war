@@ -1229,7 +1229,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		return mining_yield
 
 def get_mining_yield_default(cmd):
-	return 100
+	return 200
 
 def create_mining_event(cmd):
 	randomn = random.random()
