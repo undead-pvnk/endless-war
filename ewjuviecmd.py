@@ -353,7 +353,8 @@ async def mine(cmd):
 
 			if has_pickaxe == True:
 				mining_yield *= 2
-
+			if user_data.life_state == ewcfg.life_state_juvenile:
+				mining_yield *= 2
 			# Fatigue the miner.
 
 			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
