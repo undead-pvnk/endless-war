@@ -242,20 +242,6 @@ async def mine(cmd):
 				return await print_grid(cmd)
 					
 
-			mining_accident = False
-			if mining_yield < 0:
-				mining_accident = True
-
-			if mining_accident:
-				user_data.change_slimes(n = -(user_data.slimes * 0.5))
-				user_data.persist()
-
-				init_grid(user_data.poi, user_data.id_server)
-				response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
-
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-				return await print_grid(cmd)
-
 
 			if mining_yield == 0:
 				user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
@@ -470,13 +456,14 @@ async def flag(cmd):
 
 			for token in cmd.tokens[1:]:
 				
-				if row < 1 or col < 1:
-					coords = token.lower()
+				coords = token.lower()
+				if col < 1:
 		
 					for char in coords:
 						if char in ewcfg.alphabet:
 							col = ewcfg.alphabet.index(char)
 							coords = coords.replace(char, "")
+				if row < 1: 
 					try:
 						row = int(coords)
 					except:
@@ -491,7 +478,7 @@ async def flag(cmd):
 
 
 			elif grid[row][col] == ewcfg.cell_empty_marked:
-				grid[row][col] == ewcfg.cell_empty
+				grid[row][col] = ewcfg.cell_empty
 
 			elif grid[row][col] == ewcfg.cell_mine_marked:
 				grid[row][col] = ewcfg.cell_mine
@@ -1098,13 +1085,14 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 
 	for token in cmd.tokens[1:]:
 				
-		if row < 1 or col < 1:
-			coords = token.lower()
+		coords = token.lower()
+		if col < 1:
 		
 			for char in coords:
 				if char in ewcfg.alphabet:
 					col = ewcfg.alphabet.index(char)
 					coords = coords.replace(char, "")
+		if row < 1:
 			try:
 				row = int(coords)
 			except:
@@ -1145,7 +1133,18 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 		init_grid_minesweeper(user_data.poi, user_data.id_server)
 
 	if mining_accident:
-		return -1
+		slimes_lost = 0.1 * grid_multiplier * user_data.slimes
+		if slimes_lost <= 0:
+			response = "You barely avoided getting into a mining accident."
+		else:
+			user_data.change_slimes(n = -slimes_lost)
+			user_data.persist()
+			response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+
+		init_grid_minesweeper(user_data.poi, user_data.id_server)
+
+		return response
+
 	else:
 		return mining_yield
 
@@ -1165,15 +1164,15 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		return response
 
 	for token in cmd.tokens[1:]:
+		token_lower = token.lower()
 
 		if col < 1:
-			char = token.lower()
-		
-			if char in ewcfg.alphabet:
-				col = ewcfg.alphabet.index(char)
-
+			for char in token_lower:
+				if char in ewcfg.alphabet:
+					col = ewcfg.alphabet.index(char)
+					token_lower = token_lower.replace(char, "")
 		if bubble_add == None:
-			bubble = token.lower()
+			bubble = token_lower
 			if bubble in ewcfg.cell_bubbles:
 				bubble_add = bubble
 
@@ -1212,14 +1211,20 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 	grid_cont.cells_mined += 1
 	grid_height = get_height(grid)
 
-	if grid_cont.cells_mined % 5 == 4 or grid_height < 5:
+	if grid_cont.cells_mined % 4 == 3 or grid_height < 5:
 		if grid_height < len(grid):
 			add_row(grid)
 		else:
 			mining_accident = True
 
 	if mining_accident:
-		return -1
+		user_data.change_slimes(n = -(user_data.slimes * 0.5))
+		user_data.persist()
+		response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
+
+		init_grid_bubblebreaker(user_data.poi, user_data.id_server)
+
+		return response
 	else:
 		return mining_yield
 
