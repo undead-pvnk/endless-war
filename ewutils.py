@@ -1274,3 +1274,32 @@ def generate_captcha(n = 4):
 		captcha += random.choice(ewcfg.alphabet)
 	return captcha.upper()
 
+async def sap_tick_loop(id_server):
+	interval = ewcfg.sap_tick_length
+	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		sap_tick(id_server)
+
+def sap_tick(id_server):
+
+	try:
+		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < {level}".format(
+			id_user = ewcfg.col_id_user,
+			life_state = ewcfg.col_life_state,
+			sap = ewcfg.col_sap,
+			hardened_sap = ewcfg.col_hardened_sap,
+			level = ewcfg.col_slimelevel,
+			id_server = ewcfg.col_id_server,
+		),(
+			id_server,
+		))
+
+		for user in users:
+			user_data = EwUser(id_user = user[0], id_server = id_server)
+			user_data.sap += 5
+			user_data.limit_fix()
+			user_data.persist()
+
+	except:
+		logMsg("An error occured in sap tick for server {}".format(id_server))

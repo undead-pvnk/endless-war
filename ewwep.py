@@ -114,6 +114,9 @@ class EwWeapon:
 	# Statistics metric
 	stat = ""
 	
+	# sap needed to fire
+	sap_cost = 1
+
 	def __init__(
 		self,
 		id_weapon = "",
@@ -145,7 +148,8 @@ class EwWeapon:
 		vendors = [],
 		classes = [],
 		acquisition = "dojo",
-		stat = ""
+		stat = "",
+		sap_cost = 1
 	):
 		self.item_type = ewcfg.it_weapon
 
@@ -179,6 +183,7 @@ class EwWeapon:
 		self.classes = classes
 		self.acquisition = acquisition
 		self.stat = stat
+		self.sap_cost = sap_cost
 
 		self.str_name = self.str_weapon
 
@@ -199,6 +204,7 @@ class EwEffectContainer:
 	bystander_damage = 0
 	miss_mod = 0
 	crit_mod = 0
+	sap_damage = 0
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
@@ -227,7 +233,8 @@ class EwEffectContainer:
 		time_now = 0,
 		bystander_damage = 0,
 		miss_mod = 0,
-		crit_mod = 0
+		crit_mod = 0,
+		sap_damage = 0
 	):
 		self.miss = miss
 		self.crit = crit
@@ -243,6 +250,7 @@ class EwEffectContainer:
 		self.bystander_damage = bystander_damage
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
+		self.sap_damage = sap_damage
 
 def canAttack(cmd):
 	response = ""
@@ -266,6 +274,8 @@ def canAttack(cmd):
 		response = "One shot at a time!"
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
+	elif weapon != None and user_data.sap < weapon.sap_cost:
+		response = "You don't have enough SAP to attack."
 	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
@@ -425,6 +435,7 @@ async def attack(cmd):
 		miss_mod = 0
 		crit_mod = 0
 		dmg_mod = 0
+		sap_damage = 1 #DEBUG
 
 		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other), 2)
 		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other), 2)
@@ -468,8 +479,13 @@ async def attack(cmd):
 			if coinbounty > 0:
 				response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
 
-			#adjust busts
+			# adjust busts
 			ewstats.increment_stat(user = user_data, metric = ewcfg.stat_ghostbusts)
+
+			# pay sap cost
+			if weapon != None:
+				user_data.sap -= weapon.sap_cost
+				user_data.limit_fix()
 
 			# Persist every users' data.
 			user_data.persist()
@@ -484,6 +500,7 @@ async def attack(cmd):
 			#hunger drain
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 			
+
 			# Weaponized flavor text.
 			randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
@@ -504,7 +521,8 @@ async def attack(cmd):
 					time_now = time_now,
 					bystander_damage = bystander_damage,
 					miss_mod = miss_mod,
-					crit_mod = crit_mod
+					crit_mod = crit_mod,
+					sap_damage = sap_damage
 				)
 
 				# Make adjustments
@@ -531,6 +549,9 @@ async def attack(cmd):
 
 				# Spend slimes, to a minimum of zero
 				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
+
+				user_data.sap -= weapon.sap_cost
+				user_data.limit_fix()
 
 				if weapon.id_weapon == ewcfg.weapon_id_garrote:
 					user_data.persist()
@@ -679,6 +700,8 @@ async def attack(cmd):
 				if ewcfg.weapon_class_defensive in shootee_weapon.classes:
 					slimes_damage *= 0.5
 
+
+			slimes_damage *= (1 - 0.01 * shootee_data.hardened_sap)
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
 			ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_damage)
@@ -745,6 +768,8 @@ async def attack(cmd):
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				shootee_data.bleed_storage += slimes_tobleed
 				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
+				shootee_data.hardened_sap -= sap_damage
+				shootee_data.limit_fix()
 				sewer_data.change_slimes(n = slimes_drained)
 				sewer_data.persist()
 

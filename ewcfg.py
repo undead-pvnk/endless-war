@@ -923,6 +923,9 @@ weather_tick_length = 10
 # how often to delete expired world events
 event_tick_length = 5
 
+# how often to refresh sap
+sap_tick_length = 5
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -1291,7 +1294,8 @@ col_time_lastenlist = 'time_lastenlist'
 col_apt_zone = 'apt_zone'
 col_visiting = "visiting"
 col_has_soul = 'has_soul'
-
+col_sap = 'sap'
+col_hardened_sap = 'hardened_sap'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -2622,7 +2626,7 @@ weapon_list = [
 		fn_effect = wef_revolver,
 		clip_size = 6,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_revolver_kills
 	),
 	EwWeapon( # 2
@@ -2652,7 +2656,7 @@ weapon_list = [
 		clip_size = 12,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_dual_pistols_kills
 	),
 	EwWeapon( # 3
@@ -2682,7 +2686,7 @@ weapon_list = [
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_shotgun_kills
 	),	
 	EwWeapon( # 4
@@ -2712,7 +2716,7 @@ weapon_list = [
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_rifle_kills
 	),
 	EwWeapon( # 5
@@ -2743,7 +2747,7 @@ weapon_list = [
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_jammable],
+		classes = [weapon_class_ammo, weapon_class_jammable, weapon_class_captcha],
 		stat = stat_smg_kills
 	),	
 		EwWeapon( # 6
@@ -2771,7 +2775,7 @@ weapon_list = [
 		fn_effect = wef_minigun,
 		price = 1000000,
 		vendors = [vendor_bazaar],
-		#classes= [weapon_class_ammo],
+		classes= [weapon_class_captcha],
 		stat = stat_minigun_kills
 	),	
 	EwWeapon( # 7
@@ -2799,6 +2803,7 @@ weapon_list = [
 		fn_effect = wef_bat,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_bat_kills
 	),	
 	EwWeapon( # 8
@@ -2825,6 +2830,7 @@ weapon_list = [
 		fn_effect = wef_brassknuckles,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_brassknuckles_kills
 	),
 	EwWeapon( # 9
@@ -2852,6 +2858,7 @@ weapon_list = [
 		fn_effect = wef_katana,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_katana_kills
 	),
 	EwWeapon( # 10
@@ -2883,7 +2890,7 @@ weapon_list = [
 		clip_size = 1,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_broadsword_kills
 	),
 	EwWeapon( # 11
@@ -2912,6 +2919,7 @@ weapon_list = [
 		fn_effect = wef_nunchucks,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills
 	),
 	EwWeapon( # 12
@@ -2936,6 +2944,7 @@ weapon_list = [
 		fn_effect = wef_scythe,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_scythe_kills
 	),
 	EwWeapon( # 13	
@@ -2962,6 +2971,7 @@ weapon_list = [
 		fn_effect = wef_yoyo,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_yoyo_kills
 	),
 	EwWeapon( # 14
@@ -2990,7 +3000,7 @@ weapon_list = [
 		fn_effect = wef_knives,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown],
+		classes = [weapon_class_thrown, weapon_class_captcha],
 		stat = stat_knives_kills
 	),
 	EwWeapon( # 15
@@ -3019,7 +3029,7 @@ weapon_list = [
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding],
+		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
 		stat = stat_molotov_kills
 	),
 	EwWeapon( # 16
@@ -3045,7 +3055,7 @@ weapon_list = [
 		fn_effect = wef_grenade,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding],
+		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
 		stat = stat_grenade_kills
 	),
 	EwWeapon( # 17
@@ -3072,6 +3082,7 @@ weapon_list = [
 		fn_effect = wef_garrote,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_garrote_kills
 	),
 	EwWeapon(  # 18
@@ -3097,6 +3108,7 @@ weapon_list = [
 		fn_effect = wef_tool,
 		str_description = "It's a pickaxe.",
 		acquisition = acquisition_smelting,
+		classes= [weapon_class_captcha],
 		stat = stat_pickaxe_kills
 	),
 	EwWeapon(  # 19
@@ -3125,6 +3137,7 @@ weapon_list = [
 		fn_effect = wef_tool,
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
+		classes= [weapon_class_captcha],
 		stat = stat_fishingrod_kills
 	),
         EwWeapon(  # 20
@@ -3148,6 +3161,7 @@ weapon_list = [
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
+		classes= [weapon_class_captcha],
 		stat = stat_bass_kills
 	),
         EwWeapon(  # 21
