@@ -89,7 +89,7 @@ async def enlist(cmd):
 		elif ewcfg.faction_killers not in vouchers and user_data.faction != ewcfg.faction_killers:
 			response = "You need a current gang member's permission to join the {}.".format(ewcfg.faction_killers)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		elif user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers:
+		elif user_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_kingpin] and user_data.faction == ewcfg.faction_killers:
 			response = "You are already enlisted in the {}! Look, your name is purple! Get a clue, idiot.".format(user_data.faction)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -113,7 +113,7 @@ async def enlist(cmd):
 			response = "You need a current gang member's permission to join the {}.".format(ewcfg.faction_rowdys)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		elif user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys:
+		elif user_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_kingpin] and user_data.faction == ewcfg.faction_rowdys:
 			response = "You are already enlisted in the {}! Look, your name is pink! Get a clue, idiot.".format(user_data.faction)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
