@@ -106,6 +106,7 @@ poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
 
+
 # transports
 poi_id_ferry = "ferry"
 poi_id_subway_red01 = "subwayred01"
@@ -223,6 +224,8 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
+
+poi_id_slimesendcliffs = "slimesendcliffs"
 
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
@@ -455,6 +458,8 @@ channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
 channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
 
+channel_slimesendcliffs = "slimes-end-cliffs"
+
 
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
@@ -679,6 +684,10 @@ cmd_returnsoul = cmd_prefix + 'returnsoul'
 cmd_squeeze = cmd_prefix + 'squeezesoul'
 cmd_betsoul = cmd_prefix + 'betsoul'
 cmd_buysoul = cmd_prefix + 'buysoul'
+cmd_push = cmd_prefix + 'push'
+cmd_push_alt_1 = cmd_prefix + 'bully'
+cmd_jump = cmd_prefix + 'jump'
+cmd_toss = cmd_prefix + 'toss'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -793,6 +802,8 @@ slimes_permill = 75000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_cliffdrop = 200000
+slimes_item_drop = 10000
 
 # hunger
 min_stamina = 100
@@ -1616,6 +1627,7 @@ cause_bleeding = 9
 cause_burning = 10
 cause_killing_enemy = 11
 cause_weather = 12
+cause_cliff = 13
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -5829,6 +5841,20 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+bully_responses = [
+	"You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are.",
+	"You hold {target_name} down and pull their underwear over their head. It looks like their neck's about to snap off, holy shit.",
+	"You decide to give {target_name} a slime swirly in a nearby puddle. It's so shallow that they mostly get a faceful of gravel.",
+	"You tie {target_name} to a tree and slap them around senselessly. You untie them once their face and belly bruise cherry red.",
+	"You flag down a muscle car on the road and shout: \"HEY! {target_name} FUCKED YOUR WIFE!\" The good man parks on the side of the road and starts beating the everloving shit out them. {slimeoid} cowers in the corner, now scarred for life and afraid of dads.",
+	"You pull on {target_name}'s hair, ripping some out and causing them to cry. They should fucking grow up.",
+	"You reach into {target_name}'s shirt and give them a purple nurple. Man, these bullying tactics are getting kind of gay.",
+	"You whip out your dick and pee on {target_name}'s wife. Fuck. That's a power move right there.",
+	"You scream \"HEY {target_name}! NICE {cosmetic} YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
+	"You grab {slimeoid} and give them a noogie. Just when {target_name} thinks this is all fun and games, you throw {slimeoid} into the street. They have a panic attack trying to get past all the traffic and back to safety."
+
+]
+
 cabinets_list = [
 "This is a Zoombinis Logical Journey arcade cabinet.\nWait. This is an old PC game. Why the fuck would they port this to cabinet? Now you have to use the stick to move the mouse around. Oh well. Buyers remorse, you suppose. \nhttps://classicreload.com/win3x-logical-journey-of-the-zoombinis.html",
 "This is a Cookie Clicker arcade cabinet.\n The huge cookie button on the front is pretty neat, but running it forever seems like it would crank your electricity bill. You know, if you had one.\nhttps://orteil.dashnet.org/cookieclicker/",
@@ -7789,7 +7815,6 @@ poi_list = [
 			"stockexchange",
 			"slimecorpstockexchange",
 			"sex",  # slime's end is "se"
-			"sec",
 			"sx",
 			"scex",
 			"scx",
@@ -9252,7 +9277,7 @@ poi_list = [
 		default_stop = poi_id_df_blimp_tower
 	),
 
-EwPoi( # apt
+	EwPoi( # apt
 		id_poi = poi_id_apt,
 		alias = [
 		],
@@ -9263,7 +9288,7 @@ EwPoi( # apt
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-downtown
+	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
 			"apt",
@@ -9277,7 +9302,7 @@ EwPoi( # apt-downtown
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-smogsburg
+	EwPoi( # apt-smogsburg
 		id_poi = poi_id_apt_smogsburg,
 		alias = [
 			"apt",
@@ -9291,7 +9316,7 @@ EwPoi( # apt-smogsburg
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-krakbay
+	EwPoi( # apt-krakbay
 		id_poi = poi_id_apt_krakbay,
 		alias = [
 			"apt",
@@ -9305,7 +9330,7 @@ EwPoi( # apt-krakbay
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-poudrinalley
+	EwPoi( # apt-poudrinalley
 		id_poi = poi_id_apt_poudrinalley,
 		alias = [
 			"apt",
@@ -9319,7 +9344,7 @@ EwPoi( # apt-poudrinalley
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-green-light-district
+	EwPoi( # apt-green-light-district
 		id_poi = poi_id_apt_greenlightdistrict,
 		alias = [
 
@@ -9333,7 +9358,7 @@ EwPoi( # apt-green-light-district
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-old-new-yonkers
+	EwPoi( # apt-old-new-yonkers
 		id_poi = poi_id_apt_oldnewyonkers,
 		alias = [
 
@@ -9347,7 +9372,7 @@ EwPoi( # apt-old-new-yonkers
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-little-chernobyl
+	EwPoi( # apt-little-chernobyl
 		id_poi = poi_id_apt_littlechernobyl,
 		alias = [
 
@@ -9361,7 +9386,7 @@ EwPoi( # apt-little-chernobyl
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-arsonbrook
+	EwPoi( # apt-arsonbrook
 		id_poi = poi_id_apt_arsonbrook,
 		alias = [
 
@@ -9375,7 +9400,7 @@ EwPoi( # apt-arsonbrook
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-astatine-heights
+	EwPoi( # apt-astatine-heights
 		id_poi = poi_id_apt_astatineheights,
 		alias = [
 
@@ -9389,7 +9414,7 @@ EwPoi( # apt-astatine-heights
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-gatlingsdale
+	EwPoi( # apt-gatlingsdale
 		id_poi = poi_id_apt_gatlingsdale,
 		alias = [
 
@@ -9403,7 +9428,7 @@ EwPoi( # apt-gatlingsdale
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-vandal-park
+	EwPoi( # apt-vandal-park
 		id_poi = poi_id_apt_vandalpark,
 		alias = [
 
@@ -9445,7 +9470,7 @@ EwPoi( # apt-vandal-park
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-south-sleezeborough
+	EwPoi( # apt-south-sleezeborough
 		id_poi = poi_id_apt_southsleezeborough,
 		alias = [
 
@@ -9459,7 +9484,7 @@ EwPoi( # apt-south-sleezeborough
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # ooze-gardens
+	EwPoi( # ooze-gardens
 		id_poi = poi_id_apt_oozegardens,
 		alias = [
 
@@ -9473,7 +9498,7 @@ EwPoi( # ooze-gardens
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-cratersville
+	EwPoi( # apt-cratersville
 		id_poi = poi_id_apt_cratersville,
 		alias = [
 
@@ -9501,7 +9526,7 @@ EwPoi( # apt-cratersville
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-slimes-end
+	EwPoi( # apt-slimes-end
 		id_poi = poi_id_apt_slimesend,
 		alias = [
 
@@ -9515,7 +9540,7 @@ EwPoi( # apt-slimes-end
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-vagrants-corner
+	EwPoi( # apt-vagrants-corner
 		id_poi = poi_id_apt_vagrantscorner,
 		alias = [
 
@@ -9529,7 +9554,7 @@ EwPoi( # apt-vagrants-corner
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi(  # apt-afbr
+	EwPoi(  # apt-afbr
 		id_poi=poi_id_apt_assaultflatsbeach,
 		alias=[
 
@@ -9557,7 +9582,7 @@ EwPoi(  # apt-afbr
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-brawlden
+	EwPoi( # apt-brawlden
 		id_poi = poi_id_apt_brawlden,
 		alias = [
 
@@ -9571,7 +9596,7 @@ EwPoi( # apt-brawlden
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-toxington
+	EwPoi( # apt-toxington
 		id_poi = poi_id_apt_toxington,
 		alias = [
 
@@ -9585,7 +9610,7 @@ EwPoi( # apt-toxington
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-charcoal-park
+	EwPoi( # apt-charcoal-park
 		id_poi = poi_id_apt_charcoalpark,
 		alias = [
 
@@ -9599,7 +9624,7 @@ EwPoi( # apt-charcoal-park
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # polonium-hill
+	EwPoi( # polonium-hill
 		id_poi = poi_id_apt_poloniumhill,
 		alias = [
 
@@ -9613,7 +9638,7 @@ EwPoi( # polonium-hill
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-west-glocksbury
+	EwPoi( # apt-west-glocksbury
 		id_poi = poi_id_apt_westglocksbury,
 		alias = [
 
@@ -9627,7 +9652,7 @@ EwPoi( # apt-west-glocksbury
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-jaywalker-plain
+	EwPoi( # apt-jaywalker-plain
 		id_poi = poi_id_apt_jaywalkerplain,
 		alias = [
 
@@ -9641,7 +9666,7 @@ EwPoi( # apt-jaywalker-plain
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-crookline
+	EwPoi( # apt-crookline
 		id_poi = poi_id_apt_crookline,
 		alias = [
 
@@ -9655,7 +9680,7 @@ EwPoi( # apt-crookline
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-dreadford
+	EwPoi( # apt-dreadford
 		id_poi = poi_id_apt_dreadford,
 		alias = [
 
@@ -9668,6 +9693,23 @@ EwPoi( # apt-dreadford
 		mother_district = poi_id_dreadford,
 		pvp = False,
 		is_subzone = False,
+	),
+	EwPoi( # slime's end cliffs
+		id_poi = poi_id_slimesendcliffs,
+		alias = [
+			"sec",
+			"cliffs",
+			"secliffs",
+			"cliff"
+		],
+		str_name = "Slime's End Cliffs",
+		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		channel = channel_slimesendcliffs,
+		role = "Slime's End Cliffs",
+		mother_district = poi_id_slimesend,
+		pvp = True,
+		is_subzone = True,
+		coord = (98, 42),
 	),
 
 	EwPoi(  # Outskirts - 1
