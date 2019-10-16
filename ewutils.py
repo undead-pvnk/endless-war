@@ -1297,7 +1297,7 @@ def sap_tick(id_server):
 
 		for user in users:
 			user_data = EwUser(id_user = user[0], id_server = id_server)
-			user_data.sap += 5
+			user_data.sap += 1
 			user_data.limit_fix()
 			user_data.persist()
 

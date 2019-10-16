@@ -115,7 +115,10 @@ class EwWeapon:
 	stat = ""
 	
 	# sap needed to fire
-	sap_cost = 1
+	sap_cost = 0
+
+	# length of captcha you need to solve to fire
+	captcha_length = 0
 
 	def __init__(
 		self,
@@ -149,7 +152,8 @@ class EwWeapon:
 		classes = [],
 		acquisition = "dojo",
 		stat = "",
-		sap_cost = 1
+		sap_cost = 0,
+		captcha_length = 0
 	):
 		self.item_type = ewcfg.it_weapon
 
@@ -184,6 +188,7 @@ class EwWeapon:
 		self.acquisition = acquisition
 		self.stat = stat
 		self.sap_cost = sap_cost
+		self.captcha_length = captcha_length
 
 		self.str_name = self.str_weapon
 
@@ -205,6 +210,7 @@ class EwEffectContainer:
 	miss_mod = 0
 	crit_mod = 0
 	sap_damage = 0
+	sap_ignored = 0
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
@@ -234,7 +240,8 @@ class EwEffectContainer:
 		bystander_damage = 0,
 		miss_mod = 0,
 		crit_mod = 0,
-		sap_damage = 0
+		sap_damage = 0,
+		sap_ignored = 0
 	):
 		self.miss = miss
 		self.crit = crit
@@ -251,6 +258,7 @@ class EwEffectContainer:
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
 		self.sap_damage = sap_damage
+		self.sap_ignored = sap_ignored
 
 def canAttack(cmd):
 	response = ""
@@ -435,7 +443,8 @@ async def attack(cmd):
 		miss_mod = 0
 		crit_mod = 0
 		dmg_mod = 0
-		sap_damage = 1 #DEBUG
+		sap_damage = 0
+		sap_ignored = 0
 
 		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other), 2)
 		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other), 2)
@@ -522,7 +531,8 @@ async def attack(cmd):
 					bystander_damage = bystander_damage,
 					miss_mod = miss_mod,
 					crit_mod = crit_mod,
-					sap_damage = sap_damage
+					sap_damage = sap_damage,
+					sap_ignored = sap_ignored
 				)
 
 				# Make adjustments
@@ -537,6 +547,8 @@ async def attack(cmd):
 				slimes_spent = ctn.slimes_spent
 				strikes = ctn.strikes
 				bystander_damage = ctn.bystander_damage
+				sap_damage = ctn.sap_damage
+				sap_ignored = ctn.sap_ignored
 				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
 				if (slimes_spent > user_data.slimes):
@@ -700,8 +712,11 @@ async def attack(cmd):
 				if ewcfg.weapon_class_defensive in shootee_weapon.classes:
 					slimes_damage *= 0.5
 
+			# apply hardened sap armor
+			effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
+			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel) / 24 * 4
+			slimes_damage = int(max(slimes_damage, 0))
 
-			slimes_damage *= (1 - 0.01 * shootee_data.hardened_sap)
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
 			ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_damage)
