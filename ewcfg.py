@@ -2922,7 +2922,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes= [weapon_class_captcha],
 		stat = stat_katana_kills,
-		sap_cost = 2,
+		sap_cost = 3,
 		captcha_length = 6
 	),
 	EwWeapon( # 10

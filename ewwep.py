@@ -717,6 +717,8 @@ async def attack(cmd):
 			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel)
 			slimes_damage = int(max(slimes_damage, 0))
 
+                        sap_damage = min(sap_damage, shootee_data.hardened_sap)
+
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
 			ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_damage)
@@ -784,7 +786,6 @@ async def attack(cmd):
 				shootee_data.bleed_storage += slimes_tobleed
 				shootee_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
 				shootee_data.hardened_sap -= sap_damage
-				shootee_data.limit_fix()
 				sewer_data.change_slimes(n = slimes_drained)
 				sewer_data.persist()
 
@@ -950,9 +951,15 @@ async def attack(cmd):
 									name_target = member.display_name,
 									hitzone = randombodypart,
 								))
-							response += " {target_name} loses {damage} slime!".format(
+
+                                                        sap_response = ""
+                                                        if sap_damage > 0:
+                                                                sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+
+							response += " {target_name} loses {damage} slime{sap_response}!".format(
 								target_name = member.display_name,
 								damage = damage
+                                                                sap_response = sap_response
 							)
 						
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
