@@ -881,7 +881,7 @@ async def attack(cmd):
 							response += "\n" + weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(n = 4)
+							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 							response += "\nNew security code: **{}**".format(new_captcha)
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
@@ -959,7 +959,7 @@ async def attack(cmd):
 							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(n = 4)
+							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 							response += "\nNew security code: **{}**".format(new_captcha)
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
@@ -2157,7 +2157,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(n = 4)
+				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 				response += "\nNew security code: **{}**".format(new_captcha)
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
@@ -2225,7 +2225,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 	
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(n = 4)
+				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 				response += "\nNew security code: **{}**".format(new_captcha)
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
