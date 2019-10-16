@@ -134,6 +134,11 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
+	# SAP system
+	ewcfg.cmd_view_sap: ewcmd.view_sap,
+	ewcfg.cmd_harden_sap: ewwep.harden_sap,
+	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+
 	#check what time it is, and the weather
 	ewcfg.cmd_time: ewcmd.weather,
 	ewcfg.cmd_clock: ewcmd.weather,

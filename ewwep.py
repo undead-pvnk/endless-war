@@ -2262,3 +2262,61 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
 	
 		await resp_cont.post()
+
+async def harden_sap(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're dead, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	sap_to_harden = ewutils.getIntToken(tokens = cmd.tokens[1:], allow_all = True)
+	
+	if sap_to_harden == None:
+		sap_to_harden = 1
+	
+	if sap_to_harden <= 0:
+		sap_to_harden = user_data.sap
+
+	if sap_to_harden > user_data.sap:
+		response = "You don't have that much SAP to harden."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	user_data.hardened_sap += sap_to_harden
+	user_data.sap -= sap_to_harden
+
+	user_data.persist()
+
+	response = "You harden {} SAP.".format(sap_to_harden)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def liquefy_sap(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You're dead, bitch."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	sap_to_liquefy = ewutils.getIntToken(tokens = cmd.tokens[1:], allow_all = True)
+	
+	if sap_to_liquefy == None:
+		sap_to_liquefy = 1
+	
+	if sap_to_liquefy <= 0:
+		sap_to_liquefy = user_data.hardened_sap
+
+	if sap_to_liquefy > user_data.hardened_sap:
+		response = "You don't have that much hardened SAP."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	user_data.sap += sap_to_liquefy
+	user_data.hardened_sap -= sap_to_liquefy
+
+	user_data.persist()
+
+	response = "You liquefy {} SAP.".format(sap_to_liquefy)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
