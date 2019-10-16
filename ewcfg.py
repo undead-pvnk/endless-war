@@ -24,7 +24,7 @@ from ewworldevent import EwEventDef
 import ewdebug
 
 # Global configuration options.
-version = "v3.9"
+version = "v3.9a"
 
 dir_msgqueue = 'msgqueue'
 
