@@ -2272,7 +2272,7 @@ async def harden_sap(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	sap_to_harden = ewutils.getIntToken(tokens = cmd.tokens[1:], allow_all = True)
+	sap_to_harden = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
 	
 	if sap_to_harden == None:
 		sap_to_harden = 1
@@ -2301,7 +2301,7 @@ async def liquefy_sap(cmd):
 		response = "You're dead, bitch."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	sap_to_liquefy = ewutils.getIntToken(tokens = cmd.tokens[1:], allow_all = True)
+	sap_to_liquefy = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
 	
 	if sap_to_liquefy == None:
 		sap_to_liquefy = 1
