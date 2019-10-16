@@ -176,12 +176,17 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 
+
 			if self.time_expirpvp >= time_now: # If you were Wanted.
-				ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
+				if cause != ewcfg.cause_cliff:
+					ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
+
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
 				self.slimecoin = 0
 				self.weaponmarried = False
 
+			if cause == ewcfg.cause_cliff:
+				pass
 			else:
 				if self.life_state == ewcfg.life_state_juvenile: # If you were a Juvenile.
 					item_fraction = 4

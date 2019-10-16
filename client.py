@@ -180,6 +180,11 @@ cmd_map = {
 	ewcfg.cmd_buysoul: ewcasino.buysoul,
 	ewcfg.cmd_squeeze: ewitem.squeeze,
 
+	ewcfg.cmd_toss: ewcmd.toss_off_cliff,
+	ewcfg.cmd_jump: ewcmd.jump,
+	ewcfg.cmd_push: ewcmd.push,
+	ewcfg.cmd_push_alt_1: ewcmd.push,
+
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,
