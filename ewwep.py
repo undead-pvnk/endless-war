@@ -714,7 +714,7 @@ async def attack(cmd):
 
 			# apply hardened sap armor
 			effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
-			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel) / 24 * 4
+			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel)
 			slimes_damage = int(max(slimes_damage, 0))
 
 			# Damage stats
