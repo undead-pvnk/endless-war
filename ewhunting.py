@@ -76,6 +76,9 @@ class EwEnemy:
 	# Determines if an enemy should use its rare variant or not
 	rare_status = 0
 
+	# sap armor
+	hardened_sap = 0
+
 	""" Load the enemy data from the database. """
 
 	def __init__(self, id_enemy=None, id_server=None, enemytype=None):
@@ -98,7 +101,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -118,6 +121,7 @@ class EwEnemy:
 						ewcfg.col_enemy_id_target,
 						ewcfg.col_enemy_raidtimer,
 						ewcfg.col_enemy_rare_status,
+						ewcfg.col_enemy_hardened_sap,
 						query_suffix
 					))
 				result = cursor.fetchone();
@@ -143,6 +147,7 @@ class EwEnemy:
 					self.id_target = result[16]
 					self.raidtimer = result[17]
 					self.rare_status = result[18]
+					self.hardened_sap = result[19]
 
 			finally:
 				# Clean up the database handles.
@@ -159,7 +164,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -179,6 +184,7 @@ class EwEnemy:
 					ewcfg.col_enemy_id_target,
 					ewcfg.col_enemy_raidtimer,
 					ewcfg.col_enemy_rare_status,
+					ewcfg.col_enemy_hardened_sap,
 				), (
 					self.id_enemy,
 					self.id_server,
@@ -199,6 +205,7 @@ class EwEnemy:
 					self.id_target,
 					self.raidtimer,
 					self.rare_status,
+					self.hardened_sap,
 				))
 
 			conn.commit()
@@ -328,6 +335,8 @@ class EwEnemy:
 			crit = False
 			backfire = False
 			strikes = 0
+			sap_damage = 0
+			sap_ignored = 0
 
 			# maybe enemies COULD have weapon skills? could punishes players who die to the same enemy without mining up beforehand
 			# slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
@@ -358,6 +367,7 @@ class EwEnemy:
 				if ewcfg.weapon_class_defensive in target_weapon.classes:
 					slimes_damage *= 0.5
 
+			
 			slimes_dropped = target_data.totaldamage + target_data.slimes
 
 			target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
@@ -405,7 +415,9 @@ class EwEnemy:
 							crit=crit,
 							slimes_damage=slimes_damage,
 							enemy_data=enemy_data,
-							target_data=target_data
+							target_data=target_data,
+							sap_damage=sap_damage,
+							sap_ignored=sap_ignored,
 						)
 
 						# Make adjustments
@@ -417,6 +429,8 @@ class EwEnemy:
 						crit = ctn.crit
 						slimes_damage = ctn.slimes_damage
 						strikes = ctn.strikes
+						sap_damage = ctn.sap_damage
+						sap_ignored = ctn.sap_ignored
 
 					# can't hit lucky lucy
 					if target_data.life_state == ewcfg.life_state_lucky:
@@ -427,6 +441,13 @@ class EwEnemy:
 
 					enemy_data.persist()
 					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
+
+					# apply hardened sap armor
+					effective_hardened_sap = max(0, target_data.hardened_sap - sap_ignored)
+					slimes_damage -= effective_hardened_sap / target_data.slimelevel * ewutils.slime_bylevel(target_data.slimelevel)
+					slimes_damage = int(max(slimes_damage, 0))
+    
+					sap_damage = min(sap_damage, target_data.hardened_sap)
 
 
 					if slimes_damage >= target_data.slimes - target_data.bleed_storage:
@@ -455,6 +476,7 @@ class EwEnemy:
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 					target_data.bleed_storage += slimes_tobleed
 					target_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
+					target_data.hardened_sap -= sap_damage
 					sewer_data.change_slimes(n=slimes_drained)
 
 					if was_killed:
@@ -561,9 +583,13 @@ class EwEnemy:
 										name_enemy=enemy_data.display_name,
 										name_target=target_player.display_name
 									))
-								response += " {target_name} loses {damage} slime!".format(
+								sap_response = ""
+								if sap_damage > 0:
+									sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+								response += " {target_name} loses {damage} slime{sap_response}!".format(
 									target_name=target_player.display_name,
-									damage=damage
+									damage=damage,
+									sap_response=sap_response
 								)
 						else:
 							if miss:
@@ -670,6 +696,8 @@ class EwEnemyEffectContainer:
 	slimes_damage = 0
 	enemy_data = None
 	target_data = None
+	sap_damage = 0
+	sap_ignored = 0
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
@@ -692,7 +720,9 @@ class EwEnemyEffectContainer:
 			slimes_damage=0,
 			slimes_spent=0,
 			enemy_data=None,
-			target_data=None
+			target_data=None,
+			sap_damage=0,
+			sap_ignored=0
 	):
 		self.miss = miss
 		self.backfire = backfire
@@ -702,6 +732,8 @@ class EwEnemyEffectContainer:
 		self.slimes_spent = slimes_spent
 		self.enemy_data = enemy_data
 		self.target_data = target_data
+		self.sap_damage = sap_damage
+		self.sap_ignored = sap_ignored
 
 # Debug command. Could be used for events, perhaps?
 async def summon_enemy(cmd):
@@ -892,6 +924,7 @@ async def spawn_enemy(id_server):
 		enemy.initialslimes = enemy.slimes
 		enemy.poi = chosen_poi
 		enemy.identifier = set_identifier(chosen_poi, id_server)
+		enemy.hardened_sap = int(enemy.level / 2)
 
 		enemy.persist()
 

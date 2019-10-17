@@ -958,7 +958,7 @@ async def attack(cmd):
 
 							response += " {target_name} loses {damage} slime{sap_response}!".format(
 								target_name = member.display_name,
-								damage = damage
+								damage = damage,
 								sap_response = sap_response
 							)
 						

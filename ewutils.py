@@ -1301,5 +1301,19 @@ def sap_tick(id_server):
 			user_data.limit_fix()
 			user_data.persist()
 
+		enemies = execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {id_server} = %s AND {hardened_sap} < {level} / 2".format(
+			id_enemy = ewcfg.col_id_enemy,
+			hardened_sap = ewcfg.col_enemy_hardened_sap,
+			level = ewcfg.col_enemy_level,
+			id_server = ewcfg.col_id_server,
+		),(
+			id_server,
+		))
+
+		for enemy in enemies:
+			if random.random() < 0.5:
+				enemy_data = EwEnemy(id_enemy = enemy[0])
+				enemy_data.hardened_sap += 1
+				enemy_data.persist()
 	except:
 		logMsg("An error occured in sap tick for server {}".format(id_server))
