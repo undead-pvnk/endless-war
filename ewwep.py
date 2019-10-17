@@ -717,7 +717,7 @@ async def attack(cmd):
 			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel)
 			slimes_damage = int(max(slimes_damage, 0))
 
-                        sap_damage = min(sap_damage, shootee_data.hardened_sap)
+			sap_damage = min(sap_damage, shootee_data.hardened_sap)
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -814,7 +814,7 @@ async def attack(cmd):
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
-          
+	  
 					# Scalp text
 					if weapon != None:
 						scalp_text = weapon.str_scalp
@@ -952,14 +952,14 @@ async def attack(cmd):
 									hitzone = randombodypart,
 								))
 
-                                                        sap_response = ""
-                                                        if sap_damage > 0:
-                                                                sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+							sap_response = ""
+							if sap_damage > 0:
+								sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
 
 							response += " {target_name} loses {damage} slime{sap_response}!".format(
 								target_name = member.display_name,
 								damage = damage
-                                                                sap_response = sap_response
+								sap_response = sap_response
 							)
 						
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
@@ -1822,6 +1822,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	miss_mod = 0
 	crit_mod = 0
 	dmg_mod = 0
+	sap_damage = 0
+	sap_ignored = 0
 
 	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_other), 2)
 	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_other), 2)
@@ -1880,7 +1882,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			time_now=time_now,
 			bystander_damage=bystander_damage,
 			miss_mod=miss_mod,
-			crit_mod=crit_mod
+			crit_mod=crit_mod,
+			sap_damage=sap_damage,
+			sap_ignored=sap_ignored,
 		)
 
 		# Make adjustments
@@ -1896,6 +1900,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		slimes_spent = ctn.slimes_spent
 		strikes = ctn.strikes
 		bystander_damage = ctn.bystander_damage
+		sap_damage = ctn.sap_damage
+		sap_ignored = ctn.sap_ignored
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
 		
 		if (slimes_spent > user_data.slimes):
@@ -1914,6 +1920,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# Spend slimes, to a minimum of zero
 		user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent),
 								source=ewcfg.source_spending)
+
+		# Spend sap
+		user_data.sap -= weapon.sap_cost
+		user_data.limit_fix()
 
 		if weapon.id_weapon == ewcfg.weapon_id_garrote:
 			user_data.persist()
@@ -2056,6 +2066,13 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		slimes_damage *= 0.5
 
+	# apply hardened sap armor
+	effective_hardened_sap = max(0, enemy_data.hardened_sap - sap_ignored)
+	slimes_damage -= effective_hardened_sap / enemy_data.level * ewutils.slime_bylevel(enemy_data.level)
+	slimes_damage = int(max(slimes_damage, 0))
+
+	sap_damage = min(sap_damage, enemy_data.hardened_sap)
+
 	# Damage stats
 	ewstats.track_maximum(user=user_data, metric=ewcfg.stat_max_hitdealt, value=slimes_damage)
 	ewstats.change_stat(user=user_data, metric=ewcfg.stat_lifetime_damagedealt, n=slimes_damage)
@@ -2093,6 +2110,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
 	enemy_data.bleed_storage += slimes_tobleed
 	enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
+	enemy_data.hardened_sap -= sap_damage
 	sewer_data.change_slimes(n=slimes_drained)
 	sewer_data.persist()
 
@@ -2216,9 +2234,15 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 						name_target=enemy_data.display_name,
 						hitzone = randombodypart,
 					))
-				response += " {target_name} loses {damage} slime!".format(
+
+				sap_response = ""
+				if sap_damage > 0:
+					sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+
+				response += " {target_name} loses {damage} slime{sap_response}!".format(
 					target_name=enemy_data.display_name,
-					damage=damage
+					damage=damage,
+					sap_response=sap_response
 				)
 
 				if enemy_data.ai == ewcfg.enemy_ai_coward:

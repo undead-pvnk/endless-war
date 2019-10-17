@@ -222,6 +222,7 @@ CREATE TABLE enemies (
 	id_target varchar(128) NOT NULL DEFAULT '',
 	raidtimer bigint NOT NULL DEFAULT '0',
 	rare_status int NOT NULL DEFAULT '0',
+	hardened_sap int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_enemy)
 );
