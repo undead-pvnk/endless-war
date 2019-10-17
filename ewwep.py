@@ -644,6 +644,7 @@ async def attack(cmd):
 
 			if miss or backfire or jammed:
 				slimes_damage = 0
+				sap_damage = 0
 				weapon_item.item_props["consecutive_hits"] = 0
 
 			# Remove !revive invulnerability.
@@ -714,7 +715,7 @@ async def attack(cmd):
 
 			# apply hardened sap armor
 			effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
-			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel)
+			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel) / 3
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
@@ -2008,6 +2009,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	if miss or backfire or jammed:
 		slimes_damage = 0
+		sap_damage = 0
 		weapon_item.item_props["consecutive_hits"] = 0
 
 	# Remove !revive invulnerability.
@@ -2069,7 +2071,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if not sandbag_mode:
 		# apply hardened sap armor
 		effective_hardened_sap = max(0, enemy_data.hardened_sap - sap_ignored)
-		slimes_damage -= effective_hardened_sap / enemy_data.level * ewutils.slime_bylevel(enemy_data.level)
+		slimes_damage -= effective_hardened_sap / enemy_data.level * ewutils.slime_bylevel(enemy_data.level) / 3
 		slimes_damage = int(max(slimes_damage, 0))
 
 	sap_damage = min(sap_damage, enemy_data.hardened_sap)
