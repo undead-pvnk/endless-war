@@ -2066,10 +2066,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		slimes_damage *= 0.5
 
-	# apply hardened sap armor
-	effective_hardened_sap = max(0, enemy_data.hardened_sap - sap_ignored)
-	slimes_damage -= effective_hardened_sap / enemy_data.level * ewutils.slime_bylevel(enemy_data.level)
-	slimes_damage = int(max(slimes_damage, 0))
+	if not sandbag_mode:
+		# apply hardened sap armor
+		effective_hardened_sap = max(0, enemy_data.hardened_sap - sap_ignored)
+		slimes_damage -= effective_hardened_sap / enemy_data.level * ewutils.slime_bylevel(enemy_data.level)
+		slimes_damage = int(max(slimes_damage, 0))
 
 	sap_damage = min(sap_damage, enemy_data.hardened_sap)
 
