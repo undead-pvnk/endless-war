@@ -2242,10 +2242,10 @@ def wef_bat(ctn = None):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+				ctn.backfire_damage = ctn.slimes_damage
 		else:
 			ctn.backfire = True
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+			ctn.backfire_damage = ctn.slimes_damage
 
 	elif aim <= (-1 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2352,10 +2352,10 @@ def wef_broadsword(ctn = None):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage)
+				ctn.backfire_damage = ctn.slimes_damage
 		else:
 			ctn.backfire = True
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage)
+			ctn.backfire_damage = ctn.slimes_damage
 
 	elif aim <= (3 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2395,7 +2395,7 @@ def wef_nunchucks(ctn = None):
 
 	elif ctn.strikes == 0:
 		ctn.backfire = True
-		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
+		ctn.backfire_damage = dmg * 2
 	
 	ctn.sap_damage = ctn.strikes
 
@@ -2513,10 +2513,10 @@ def wef_molotov(ctn = None):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
-				ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
+				ctn.backfire_damage = dmg
 		else:
 			ctn.backfire = True
-			ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
+			ctn.backfire_damage = dmg
 
 	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2554,10 +2554,10 @@ def wef_grenade(ctn = None):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+				ctn.backfire_damage = ctn.slimes_damage
 		else:
 			ctn.backfire = True
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+			ctn.backfire_damage = ctn.slimes_damage
 
 	elif aim >= (10 - (10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -2629,10 +2629,10 @@ def wef_bass(ctn = None):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+				ctn.backfire_damage = ctn.slimes_damage
 		else:
 			ctn.backfire = True
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+			ctn.backfire_damage = ctn.slimes_damage
 
 	elif aim <= (-1 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -3392,7 +3392,7 @@ def atf_molotovbreath(ctn = None):
 
 	if aim <= 2:
 		ctn.backfire = True
-		ctn.enemy_data.change_slimes(n=-dmg, source=source_self_damage)
+		ctn.backfire_damage = dmg
 
 	elif aim == 3:
 		ctn.miss = True

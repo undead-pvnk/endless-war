@@ -198,6 +198,7 @@ class EwEffectContainer:
 	miss = False
 	crit = False
 	backfire = False
+	backfire_damage = 0
 	jammed = False
 	strikes = 0
 	slimes_damage = 0
@@ -241,7 +242,8 @@ class EwEffectContainer:
 		miss_mod = 0,
 		crit_mod = 0,
 		sap_damage = 0,
-		sap_ignored = 0
+		sap_ignored = 0,
+		backfire_damage = 0
 	):
 		self.miss = miss
 		self.crit = crit
@@ -259,6 +261,7 @@ class EwEffectContainer:
 		self.crit_mod = crit_mod
 		self.sap_damage = sap_damage
 		self.sap_ignored = sap_ignored
+		self.backfire_damage = backfire_damage
 
 def canAttack(cmd):
 	response = ""
@@ -444,6 +447,7 @@ async def attack(cmd):
 		miss = False
 		crit = False
 		backfire = False
+		backfire_damage = 0
 		jammed = False
 		strikes = 0
 		bystander_damage = 0
@@ -542,7 +546,8 @@ async def attack(cmd):
 					miss_mod = miss_mod,
 					crit_mod = crit_mod,
 					sap_damage = sap_damage,
-					sap_ignored = sap_ignored
+					sap_ignored = sap_ignored,
+					backfire_damage = backfire_damage
 				)
 
 				# Make adjustments
@@ -559,6 +564,7 @@ async def attack(cmd):
 				bystander_damage = ctn.bystander_damage
 				sap_damage = ctn.sap_damage
 				sap_ignored = ctn.sap_ignored
+				backfire_damage = ctn.backfire_damage
 				# user_data and shootee_data should be passed by reference, so there's no need to assign them back from the effect container.
 
 				if (slimes_spent > user_data.slimes):
@@ -656,6 +662,8 @@ async def attack(cmd):
 				slimes_damage = 0
 				sap_damage = 0
 				weapon_item.item_props["consecutive_hits"] = 0
+
+					
 
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
@@ -897,6 +905,17 @@ async def attack(cmd):
 								name_player = cmd.message.author.display_name,
 								name_target = member.display_name
 							))
+
+							if user_data.slimes - user_data.bleed_storage <= backfire_damage:
+								district_data.change_slimes(n = user_data.slimes)
+								user_data.die(cause = ewcfg.cause_suicide)
+								resp_cont.add_member_to_update(cmd.message.author)
+								resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_weapon))
+							else:
+								district_data.change_slimes(n = backfire_damage / 2)
+								user_data.change_slimes(n = -backfire_damage / 2,  source = ewcfg.source_self_damage)
+								user_data.bleed_storage += int(backfire_damage / 2)
+
 						elif jammed:
 							response = "{}".format(weapon.str_jammed.format(
 								name_player = cmd.message.author.display_name,
@@ -1818,6 +1837,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	miss = False
 	crit = False
 	backfire = False
+	backfire_damage = 0
 	jammed = False
 	strikes = 0
 	bystander_damage = 0
@@ -1890,6 +1910,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			crit_mod=crit_mod,
 			sap_damage=sap_damage,
 			sap_ignored=sap_ignored,
+			backfire_damage=backfire_damage
 		)
 
 		# Make adjustments
@@ -1907,6 +1928,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		bystander_damage = ctn.bystander_damage
 		sap_damage = ctn.sap_damage
 		sap_ignored = ctn.sap_ignored
+		backfire_damage = ctn.backfire_damage
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
 		
 		if (slimes_spent > user_data.slimes):
@@ -2184,6 +2206,17 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name,
 					name_target=enemy_data.display_name
 				))
+
+				if user_data.slimes - user_data.bleed_storage <= backfire_damage:
+					district_data.change_slimes(n = user_data.slimes)
+					user_data.die(cause = ewcfg.cause_suicide)
+					resp_cont.add_member_to_update(cmd.message.author)
+					resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_weapon))
+				else:
+					district_data.change_slimes(n = backfire_damage / 2)
+					user_data.change_slimes(n = -backfire_damage / 2,  source = ewcfg.source_self_damage)
+					user_data.bleed_storage += int(backfire_damage / 2)
+
 			elif jammed:
 				response = "{}".format(weapon.str_jammed.format(
 					name_player=cmd.message.author.display_name,
