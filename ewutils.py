@@ -1189,7 +1189,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 		slimes_damage_target = int(max(0, slimes_damage_target))
 
 		player_data = EwPlayer(id_user = user_data.id_user)
-		response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(player_data.display_name, slimes_damage_target)
+                response = "{} is blown back by the explosion’s sheer force! They lose {:,} slime!!".format(player_data.display_name, slimes_damage_target)
 		resp_cont.add_channel_response(channel, response)
 		slimes_damage = slimes_damage_target
 		if user_data.slimes < slimes_damage + user_data.bleed_storage:
@@ -1225,7 +1225,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 	for enemy in enemies:
 		enemy_data = EwEnemy(id_enemy = enemy, id_server = id_server)
 
-		response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
+                response = "{} is blown back by the explosion’s sheer force! They lose {:,} slime!!".format(enemy_data.display_name, damage)
 		resp_cont.add_channel_response(channel, response)
 
 		slimes_damage_target = damage

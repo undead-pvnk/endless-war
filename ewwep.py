@@ -920,7 +920,7 @@ async def attack(cmd):
 							if sap_damage > 0:
 								sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
 
-							response += " {target_name} loses {damage} slime{sap_response}!".format(
+							response += " {target_name} loses {damage:,} slime{sap_response}!".format(
 								target_name = member.display_name,
 								damage = damage,
 								sap_response = sap_response
@@ -938,7 +938,7 @@ async def attack(cmd):
 						if miss:
 							response = "{target_name} dodges your strike.".format(target_name = member.display_name)
 						else:
-							response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
+							response = "{target_name} is hit!! {target_name} loses {damage:,} slime!".format(
 								target_name = member.display_name,
 								damage = damage
 							)
@@ -1296,7 +1296,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					if sap_damage_target > 0:
 						sap_response = " and {} hardened SAP".format(sap_damage_target)
 
-					response += "{} was caught in an explosion during your fight with {} and lost {} slime{}".format(target_player.display_name, shootee_player.display_name, damage, sap_response)
+					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime{}".format(target_player.display_name, shootee_player.display_name, damage, sap_response)
 					resp_cont.add_channel_response(channel, response)
 					target_data.persist()
 
@@ -1370,7 +1370,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					sap_response = ""
 					if sap_damage_target > 0:
 						sap_response = " and {} hardened SAP".format(sap_damage_target)
-					response += "{} was caught in an explosion during your fight with {} and lost {} slime{}".format(target_enemy_data.display_name, shootee_player.display_name, damage, sap_response)
+					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime{}".format(target_enemy_data.display_name, shootee_player.display_name, damage, sap_response)
 					resp_cont.add_channel_response(channel, response)
 					target_enemy_data.persist()
 
@@ -2207,7 +2207,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				if sap_damage > 0:
 					sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
 
-				response += " {target_name} loses {damage} slime{sap_response}!".format(
+                                response += " {target_name} loses {damage:,} slime{sap_response}!".format(
 					target_name=enemy_data.display_name,
 					damage=damage,
 					sap_response=sap_response
@@ -2232,7 +2232,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			if miss:
 				response = "{target_name} dodges your strike.".format(target_name=enemy_data.display_name)
 			else:
-				response = "{target_name} is hit!! {target_name} loses {damage} slime!".format(
+				response = "{target_name} is hit!! {target_name} loses {damage:,} slime!".format(
 					target_name=enemy_data.display_name,
 					damage=damage
 				)
