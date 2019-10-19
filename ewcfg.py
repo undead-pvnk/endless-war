@@ -2230,11 +2230,11 @@ def wef_bat(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
-	ctn.sap_damage = 3
+	ctn.sap_damage = 2
 	
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 13 * 10
+	ctn.miss_mod += (2 - min(time_lastattack, 2) **2 / 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
@@ -2315,7 +2315,7 @@ def wef_katana(ctn = None):
 	damage_min = ctn.slimes_damage / 10
 	
 	if time_lastattack > 0:
-		ctn.slimes_damage = ctn.slimes_damage * (min(time_lastattack, 4) * 2.5)
+		ctn.slimes_damage = ctn.slimes_damage * (min(time_lastattack, 4)**2 / 4 * 2.5)
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 	
@@ -2376,7 +2376,7 @@ def wef_nunchucks(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 100 * 55
+	ctn.miss_mod += (2 - min(time_lastattack, 2) ** 2 / 2) / 100 * 55
 
 	for count in range(4):
 		if (random.randrange(100) + 1) > (40 + int(100 * ctn.miss_mod)):
@@ -2417,7 +2417,7 @@ def wef_scythe(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	damage_min = ctn.slimes_damage / 10
 	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * (min(time_lastattack, 2) * 5)
+		ctn.slimes_damage = damage_min * (min(time_lastattack, 2)**2 / 2 * 5)
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 	
@@ -2454,7 +2454,7 @@ def wef_yoyo(ctn = None):
 	damage_min = ctn.slimes_damage / 10
 
 	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * (min(time_lastattack, 1) * 10) 
+		ctn.slimes_damage = damage_min * (min(time_lastattack, 1) ** 2 * 10) 
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
@@ -2621,7 +2621,7 @@ def wef_bass(ctn = None):
 	
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 13 * 10
+	ctn.miss_mod += (2 - min(time_lastattack, 2) ** 2 / 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
