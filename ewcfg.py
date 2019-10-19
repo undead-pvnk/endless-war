@@ -2315,7 +2315,7 @@ def wef_katana(ctn = None):
 	damage_min = ctn.slimes_damage / 10
 	
 	if time_lastattack > 0:
-		ctn.slimes_damage = ctn.slimes_damage * (min(time_lastattack, 4)**2 / 4 * 2.5)
+		ctn.slimes_damage = damage_min * (min(time_lastattack, 4)**2 / 4 * 2.5)
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 	

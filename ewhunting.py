@@ -8,6 +8,7 @@ import ewutils
 import ewitem
 import ewrolemgr
 import ewstats
+import ewwep
 
 from ew import EwUser
 from ewitem import EwItem
@@ -542,7 +543,6 @@ class EwEnemy:
 						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 						resp_cont.add_channel_response(ch_name, response)
 						if ewcfg.mutation_id_spontaneouscombustion in target_mutations:
-							import ewwep
 							explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
 								target_player.display_name)
 							resp_cont.add_channel_response(ch_name, explode_resp)
