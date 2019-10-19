@@ -288,7 +288,7 @@ def canAttack(cmd):
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
 	elif weapon != None and user_data.sap < weapon.sap_cost:
-		response = "You don't have enough SAP to attack."
+		response = "You don't have enough SAP to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
 	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
@@ -392,7 +392,8 @@ def canAttack(cmd):
 
 """ Player deals damage to another player. """
 async def attack(cmd):
-	time_now = int(time.time())
+	time_now_float = time.time()
+	time_now = int(time_now_float)
 	response = ""
 	deathreport = ""
 	levelup_response = ""
@@ -456,7 +457,10 @@ async def attack(cmd):
 		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other), 2)
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
-		slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
+		slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 2)) / 100.0)
+
+		if user_data.weaponskill < 5:
+			miss_mod += (5 - user_data.weaponskill) / 10
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -532,7 +536,7 @@ async def attack(cmd):
 					user_data = user_data,
 					weapon_item = weapon_item,
 					shootee_data = shootee_data,
-					time_now = time_now,
+					time_now = time_now_float,
 					bystander_damage = bystander_damage,
 					miss_mod = miss_mod,
 					crit_mod = crit_mod,
@@ -561,7 +565,7 @@ async def attack(cmd):
 					response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-				weapon_item.item_props['time_lastattack'] = time_now
+				weapon_item.item_props['time_lastattack'] = time_now_float
 				weapon_item.persist()
 
 				# Spend slimes, to a minimum of zero
@@ -655,72 +659,25 @@ async def attack(cmd):
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
 
-			# Lone wolf
-			if ewcfg.mutation_id_lonewolf in user_mutations:
-				allies_in_district = district_data.get_players_in_district(
-					min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
-					life_states = [ewcfg.life_state_enlisted],
-					factions = [user_data.faction]
-				)
-				if user_data.id_user in allies_in_district:
-					allies_in_district.remove(user_data.id_user)
+			# apply attacker damage mods
+			slimes_damage *= damage_mod_attack(
+				user_data = user_data,
+				user_mutations = user_mutations,
+				market_data = market_data,
+				district_data = district_data
+			)
 
-				if len(allies_in_district) == 0:
-					slimes_damage *= 1.5
+			# apply defender damage mods
+			slimes_damage *= damage_mod_defend(
+				shootee_data = shootee_data,
+				shootee_mutations = shootee_mutations,
+				market_data = market_data,
+				shootee_weapon = shootee_weapon
+			)
 			
-			# Organic fursuit
-			if ewcfg.mutation_id_organicfursuit in user_mutations and (
-				(market_data.day % 31 == 0 and market_data.clock >= 20)
-				or (market_data.day % 31 == 1 and market_data.clock < 6)
-			):
-				slimes_damage *= 2
-			if ewcfg.mutation_id_organicfursuit in shootee_mutations and (
-				(market_data.day % 31 == 0 and market_data.clock >= 20)
-				or (market_data.day % 31 == 1 and market_data.clock < 6)
-			):
-				slimes_damage *= 0.1
 
-			# Fat chance
-			if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.5:
-				slimes_damage *= 0.75
-			
-			# Social animal
-			if ewcfg.mutation_id_socialanimal in user_mutations:
-				allies_in_district = district_data.get_players_in_district(
-					min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
-					life_states = [ewcfg.life_state_enlisted],
-					factions = [user_data.faction]
-				)
-				if user_data.id_user in allies_in_district:
-					allies_in_district.remove(user_data.id_user)
-
-				slimes_damage *= 1 + 0.1 * len(allies_in_district)
-				
-			# Dressed to kill
-			if ewcfg.mutation_id_dressedtokill in user_mutations:
-				items = ewitem.inventory(
-					id_user = cmd.message.author.id,
-					id_server = cmd.message.server.id,
-					item_type_filter = ewcfg.it_cosmetic
-				)
-
-				adorned_items = 0
-				for it in items:
-					i = EwItem(it.get('id_item'))
-					if i.item_props['adorned'] == 'true':
-						adorned_items += 1
-
-				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-					slimes_damage *= 1.5
-
-			# defensive weapon
-			if shootee_weapon != None:
-				if ewcfg.weapon_class_defensive in shootee_weapon.classes:
-					slimes_damage *= 0.5
-
-			# apply hardened sap armor
-			effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
-			slimes_damage -= effective_hardened_sap / shootee_data.slimelevel * ewutils.slime_bylevel(shootee_data.slimelevel) / 3
+			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
+			slimes_damage -= sap_armor
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
@@ -1112,7 +1069,7 @@ async def attack(cmd):
 		#TODO - Move this to it's own function in ewhunting or merge it into the previous code block somehow
 		
 		# Enemy has been targeted rather than a player
-		await attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now)
+		await attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now_float)
 		
 	else:
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
@@ -1185,7 +1142,7 @@ async def suicide(cmd):
 		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
 
 """ Damage all players in a district; Exploding weapon's effect """
-def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None):
+def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None, sap_damage = 0, sap_ignored = 0):
 	if user_data != None and shootee_data != None and district_data != None:
 		user_player = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 		if target_enemy == False:
@@ -1232,30 +1189,49 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
 				boss_slimes = 0
 
+				target_weapon = None
+				if target_data.weapon >= 0:
+					target_weapon_item = EwItem(id_item = target_data.weapon)
+					target_weapon = target_weapon_item.item_props.get("weapon_type")
+
+
+				# apply defensive mods
+				slimes_damage_target = slimes_damage * damage_mod_defend(
+					shootee_data = target_data,
+					shootee_mutations = target_data.get_mutations(),
+					shootee_weapon = target_weapon,
+					market_data = market_data,
+				)
+
+				# apply sap armor
+				sap_armor = get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
+				slimes_damage_target -= sap_armor
+				slimes_damage_target = int(max(0, slimes_damage_target))
+
 				slimes_dropped = target_data.totaldamage + target_data.slimes
 
 				was_killed = False
 
-				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
+				if slimes_damage_target >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
 					
 				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
 
 				# move around slime as a result of the shot
 				if target_isjuvenile or user_data.faction == target_data.faction:
-					slimes_drained = int(3 * slimes_damage / 4) # 3/4
+					slimes_drained = int(3 * slimes_damage_target / 4) # 3/4
 					slimes_toboss = 0
 				else:
 					slimes_drained = 0
-					slimes_toboss = int(slimes_damage / 2)
+					slimes_toboss = int(slimes_damage_target / 2)
 
-				damage = str(slimes_damage)
+				damage = str(slimes_damage_target)
 				
 
-				slimes_tobleed = int((slimes_damage - slimes_toboss - slimes_drained) / 2)
+				slimes_tobleed = int((slimes_damage_target - slimes_toboss - slimes_drained) / 2)
 
-				slimes_directdamage = slimes_damage - slimes_tobleed
-				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
+				slimes_directdamage = slimes_damage_target - slimes_tobleed
+				slimes_splatter = slimes_damage_target - slimes_toboss - slimes_tobleed - slimes_drained
 
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
@@ -1263,6 +1239,9 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_data.change_slimes(n = - slimes_directdamage, source = ewcfg.source_damage)
 				sewer_data.change_slimes(n = slimes_drained)
 				sewer_data.persist()
+
+				sap_damage_target = min(sap_damage, target_data.hardened_sap)
+				target_data.hardened_sap -= sap_damage_target
 
 				if was_killed:
 					#adjust statistics
@@ -1312,7 +1291,11 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					resp_cont.add_member_to_update(server.get_member(target_data.id_user))
 				#Survived the explosion
 				else:
-					response += "{} was caught in an explosion during your fight with {} and lost {} slime".format(target_player.display_name, shootee_player.display_name, damage)
+					sap_response = ""
+					if sap_damage_target > 0:
+						sap_response = " and {} hardened SAP".format(sap_damage_target)
+
+					response += "{} was caught in an explosion during your fight with {} and lost {} slime{}".format(target_player.display_name, shootee_player.display_name, damage, sap_response)
 					resp_cont.add_channel_response(channel, response)
 					target_data.persist()
 
@@ -1324,11 +1307,16 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 				target_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
 
+				# apply sap armor
+				sap_armor = get_sap_armor(shootee_data = target_enemy_data, sap_ignored = sap_ignored)
+				slimes_damage_target -= sap_armor
+				slimes_damage_target = int(max(0, slimes_damage_target))
+
 				slimes_dropped = target_enemy_data.totaldamage + target_enemy_data.slimes
 
 				was_killed = False
 
-				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
+				if slimes_damage >= target_enemy_data.slimes - target_enemy_data.bleed_storage:
 					was_killed = True
 
 				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
@@ -1348,6 +1336,9 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
 				sewer_data.change_slimes(n=slimes_drained)
 				sewer_data.persist()
+
+				sap_damage_target = min(sap_damage, target_enemy_data.hardened_sap)
+				target_enemy_data.hardened_sap -= sap_damage_target
 
 				if was_killed:
 					# adjust statistics
@@ -1375,7 +1366,10 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 				# Survived the explosion
 				else:
-					response += "{} was caught in an explosion during your fight with {} and lost {} slime".format(target_enemy_data.display_name, shootee_player.display_name, damage)
+					sap_response = ""
+					if sap_damage_target > 0:
+						sap_response = " and {} hardened SAP".format(sap_damage_target)
+					response += "{} was caught in an explosion during your fight with {} and lost {} slime{}".format(target_enemy_data.display_name, shootee_player.display_name, damage, sap_response)
 					resp_cont.add_channel_response(channel, response)
 					target_enemy_data.persist()
 
@@ -1801,7 +1795,8 @@ def apply_combat_mods(user_data = None, desired_type = None, target = None):
 
 		return modifier
 	
-async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now):
+async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now_float):
+	time_now = int(time_now_float)
 	# Get shooting player's info
 	if user_data.slimelevel <= 0:
 		user_data.slimelevel = 1
@@ -1838,6 +1833,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
 	
+	if user_data.weaponskill < 5:
+		miss_mod += (5 - user_data.weaponskill) / 10
+
 	# If the player is using a repel, remove the repel, and make the first hit do 99.9% less damage, rounded up.
 	statuses = user_data.getStatusEffects()
 	if ewcfg.status_repelled_id in statuses:
@@ -1885,7 +1883,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			user_data=user_data,
 			weapon_item=weapon_item,
 			shootee_data=enemy_data,
-			time_now=time_now,
+			time_now=time_now_float,
 			bystander_damage=bystander_damage,
 			miss_mod=miss_mod,
 			crit_mod=crit_mod,
@@ -1920,7 +1918,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			backfire = False
 			miss = True
 
-		weapon_item.item_props['time_lastattack'] = time_now
+		weapon_item.item_props['time_lastattack'] = time_now_float
 		weapon_item.persist()
 
 		# Spend slimes, to a minimum of zero
@@ -2020,54 +2018,14 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Remove !revive invulnerability.
 	user_data.time_lastrevive = 0
 
-	# Lone wolf
-	if ewcfg.mutation_id_lonewolf in user_mutations:
-		allies_in_district = district_data.get_players_in_district(
-			min_level=math.ceil((1 / 10) ** 0.25 * user_data.slimelevel),
-			life_states=[ewcfg.life_state_enlisted],
-			factions=[user_data.faction]
-		)
-		if user_data.id_user in allies_in_district:
-			allies_in_district.remove(user_data.id_user)
+	# apply attacker damage mods
+	slimes_damage *= damage_mod_attack(
+		user_data = user_data,
+		user_mutations = user_mutations,
+		market_data = market_data,
+		district_data = district_data
+	)
 
-		if len(allies_in_district) == 0:
-			slimes_damage *= 1.5
-
-	# Organic fursuit
-	if ewcfg.mutation_id_organicfursuit in user_mutations and (
-			(market_data.day % 31 == 0 and market_data.clock >= 20)
-			or (market_data.day % 31 == 1 and market_data.clock < 6)
-	):
-		slimes_damage *= 2
-
-	# Social animal
-	if ewcfg.mutation_id_socialanimal in user_mutations:
-		allies_in_district = district_data.get_players_in_district(
-			min_level=math.ceil((1 / 10) ** 0.25 * user_data.slimelevel),
-			life_states=[ewcfg.life_state_enlisted],
-			factions=[user_data.faction]
-		)
-		if user_data.id_user in allies_in_district:
-			allies_in_district.remove(user_data.id_user)
-
-		slimes_damage *= 1 + 0.1 * len(allies_in_district)
-
-	# Dressed to kill
-	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		items = ewitem.inventory(
-			id_user=cmd.message.author.id,
-			id_server=cmd.message.server.id,
-			item_type_filter=ewcfg.it_cosmetic
-		)
-
-		adorned_items = 0
-		for it in items:
-			i = EwItem(it.get('id_item'))
-			if i.item_props['adorned'] == 'true':
-				adorned_items += 1
-
-		if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-			slimes_damage *= 2
 			
 	# Defender enemies take less damage
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
@@ -2075,8 +2033,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	if not sandbag_mode:
 		# apply hardened sap armor
-		effective_hardened_sap = max(0, enemy_data.hardened_sap - sap_ignored)
-		slimes_damage -= effective_hardened_sap / enemy_data.level * ewutils.slime_bylevel(enemy_data.level) / 3
+		sap_armor = get_sap_armor(shootee_data = enemy_data, sap_ignored = sap_ignored)
+		slimes_damage -= sap_armor
 		slimes_damage = int(max(slimes_damage, 0))
 
 	sap_damage = min(sap_damage, enemy_data.hardened_sap)
@@ -2374,3 +2332,83 @@ async def liquefy_sap(cmd):
 
 	response = "You liquefy {} SAP.".format(sap_to_liquefy)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def damage_mod_attack(user_data, market_data, user_mutations, district_data):
+	damage_mod = 1
+	# Lone wolf
+	if ewcfg.mutation_id_lonewolf in user_mutations:
+		allies_in_district = district_data.get_players_in_district(
+			min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
+			life_states = [ewcfg.life_state_enlisted],
+			factions = [user_data.faction]
+		)
+		if user_data.id_user in allies_in_district:
+			allies_in_district.remove(user_data.id_user)
+
+		if len(allies_in_district) == 0:
+			damage_mod *= 1.5
+			
+	# Organic fursuit
+	if ewcfg.mutation_id_organicfursuit in user_mutations and (
+		(market_data.day % 31 == 0 and market_data.clock >= 20)
+		or (market_data.day % 31 == 1 and market_data.clock < 6)
+	):
+		damage_mod *= 2
+
+	# Social animal
+	if ewcfg.mutation_id_socialanimal in user_mutations:
+		allies_in_district = district_data.get_players_in_district(
+			min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
+			life_states = [ewcfg.life_state_enlisted],
+			factions = [user_data.faction]
+		)
+		if user_data.id_user in allies_in_district:
+			allies_in_district.remove(user_data.id_user)
+
+		damage_mod *= 1 + 0.1 * len(allies_in_district)
+				
+	# Dressed to kill
+	if ewcfg.mutation_id_dressedtokill in user_mutations:
+		items = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		adorned_items = 0
+		for it in items:
+			i = EwItem(it.get('id_item'))
+			if i.item_props['adorned'] == 'true':
+				adorned_items += 1
+
+		if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
+			damage_mod *= 1.5
+
+	return damage_mod
+
+def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weapon):
+
+	damage_mod = 1
+	if ewcfg.mutation_id_organicfursuit in shootee_mutations and (
+		(market_data.day % 31 == 0 and market_data.clock >= 20)
+		or (market_data.day % 31 == 1 and market_data.clock < 6)
+	):
+		damage_mod *= 0.1
+
+	# Fat chance
+	if ewcfg.mutation_id_fatchance in shootee_mutations and shootee_data.hunger / shootee_data.get_hunger_max() > 0.5:
+		damage_mod *= 0.75
+			
+
+	# defensive weapon
+	if shootee_weapon != None:
+		if ewcfg.weapon_class_defensive in shootee_weapon.classes:
+			damage_mod *= 0.75
+
+	return damage_mod
+
+def get_sap_armor(shootee_data, sap_ignored):
+	# apply hardened sap armor
+	effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
+	sap_armor = (effective_hardened_sap ** 2) * (shootee_data.slimelevel ** 2)
+	return sap_armor

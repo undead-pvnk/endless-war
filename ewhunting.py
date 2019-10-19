@@ -351,22 +351,6 @@ class EwEnemy:
 			if enemy_data.enemytype == ewcfg.enemy_type_microslime:
 				slimes_damage *= 20  # specific to microslime
 
-			# Organic Fursuit
-			if ewcfg.mutation_id_organicfursuit in target_mutations and (
-					(market_data.day % 31 == 0 and market_data.clock >= 20)
-					or (market_data.day % 31 == 1 and market_data.clock < 6)
-			):
-				slimes_damage *= 0.1
-
-			# Fat chance
-			if ewcfg.mutation_id_fatchance in target_mutations and target_data.hunger / target_data.get_hunger_max() > 0.5:
-				slimes_damage *= 0.75
-
-			# defensive weapon
-			if target_weapon != None:
-				if ewcfg.weapon_class_defensive in target_weapon.classes:
-					slimes_damage *= 0.5
-
 			
 			slimes_dropped = target_data.totaldamage + target_data.slimes
 
@@ -443,9 +427,18 @@ class EwEnemy:
 					enemy_data.persist()
 					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
 
+					# apply defensive mods
+					slimes_damage *= ewwep.damage_mod_defend(
+						shootee_data = target_data,
+						shootee_mutations = target_mutations,
+						shootee_weapon = target_weapon,
+						market_data = market_data
+					)
+
+			
 					# apply hardened sap armor
-					effective_hardened_sap = max(0, target_data.hardened_sap - sap_ignored)
-					slimes_damage -= effective_hardened_sap / target_data.slimelevel * ewutils.slime_bylevel(target_data.slimelevel) / 3
+					sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
+					slimes_damage -= sap_armor
 					slimes_damage = int(max(slimes_damage, 0))
     
 					sap_damage = min(sap_damage, target_data.hardened_sap)
