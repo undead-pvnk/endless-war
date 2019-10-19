@@ -2412,5 +2412,12 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
 	effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
-	sap_armor = (effective_hardened_sap ** 2) * (shootee_data.slimelevel ** 2)
+	level = 0
+
+	if hasattr(shootee_data, "slimelevel"):
+		level = shootee_data.slimelevel
+	elif hasattr(shootee_data, "level"):
+		level = shootee_data.level
+
+	sap_armor = (effective_hardened_sap ** 2) * (level ** 2)
 	return sap_armor
