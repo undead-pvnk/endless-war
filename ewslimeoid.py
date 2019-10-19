@@ -497,6 +497,9 @@ async def playfetch(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
 
+	elif user_data.has_soul == 0:
+		response = "You reel back to throw the stick, but your motivation wears thin halfway through. You drop it on the ground with a sigh."
+
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 			response = "You do not have a Slimeoid to play fetch with."
 
@@ -570,6 +573,9 @@ async def petslimeoid(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
 
+	elif user_data.has_soul == 0:
+		response = "The idea doesn't even occur to you because your soul is missing."
+
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 			response = "You do not have a Slimeoid to pet."
 
@@ -600,6 +606,9 @@ async def walkslimeoid(cmd):
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 			response = "Slimeoids don't fuck with ghosts."
+
+	elif user_data.has_soul == 0:
+		response = "Why take it on a walk? It's not like it understands your needs."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 			response = "You do not have a Slimeoid to take for a walk."
@@ -2043,6 +2052,9 @@ async def restoreslimeoid(cmd):
 
 	ewitem.item_delete(id_item = item_data.id_item)
 
+	user_data.change_slimes(n = -slimes_to_restore, source = ewcfg.source_spending)
+	user_data.persist()
+
 	response = "You insert the heart of your beloved {} into one of the restoration tanks. A series of clattering sensors analyze the crystalline core. Then, just like when it was first incubated, the needle pricks you and extracts slime from your body, which coalesces around the poudrin-like heart. Bit by bit the formless mass starts to assume a familiar shape.\n\n{} has been restored to its former glory!".format(slimeoid.name, slimeoid.name)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			
@@ -2916,55 +2928,116 @@ async def dress_slimeoid(cmd):
 		response = "Slimeoids don't fuck with ghosts."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
-		response = "You'll have to create a slimeoid if you want to play dress up."
+		response = "You'll have to create a Slimeoid if you want to play dress up."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
+		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+	
+	elif slimeoid.life_state != ewcfg.slimeoid_state_active:
+		response = "You don't have a Slimeoid with you."
+
+	else:
+		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		
+		try:
+			item_id_int = int(item_search)
+		except:
+			item_id_int = None
+		
+		if item_search != None and len(item_search) > 0:
+
+			cosmetics = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+
+			item_sought = None
+			for item in cosmetics:
+				if item.get('id_item') == item_id_int or item_search in ewutils.flattenTokenListToString(item.get('name')):
+					cos = EwItem(item.get('id_item'))
+					if cos.item_props.get('slimeoid') != 'true':
+						item_sought = cos
+						break
+
+			if item_sought != None:
+				# get the cosmetics worn by the slimeoid
+				adorned_cosmetics = []
+				for item in cosmetics:
+					cos = EwItem(id_item = item.get('id_item'))
+					if cos.item_props.get('slimeoid') == 'true':
+						adorned_cosmetics.append(cos)
+
+				if len(adorned_cosmetics) < slimeoid.level:
+					# Remove hat from player if adorned
+					if item_sought.item_props.get('adorned') == 'true':
+						item_sought.item_props['adorned'] = 'false'
+						response = "You take off your {} and give it to {}.".format(item_sought.item_props.get('cosmetic_name'), slimeoid.name)
+					else:
+						response = "You give {} a {}.".format(slimeoid.name, item_sought.item_props.get('cosmetic_name'))
+					
+					item_sought.item_props['slimeoid'] = 'true'
+					item_sought.persist()
+				else:
+					response = 'Your slimeoid is too small to wear any more clothes.'
+			else:
+				response = 'You don\'t have one.'
+		else:
+			response = 'Adorn which cosmetic? Check your **!inventory**.'
+		
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def undress_slimeoid(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "Slimeoids don't fuck with ghosts."
+
+	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
+		response = "You'll have to create a Slimeoid if you want to play dress up."
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
+	elif slimeoid.life_state != ewcfg.slimeoid_state_active:
+		response = "You don't have a Slimeoid with you."
+
 	else:
 		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-		item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
 
-		cosmetics = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_cosmetic
-		)
+		try:
+			item_id_int = int(item_search)
+		except:
+			item_id_int = None
 
-		# get the cosmetics worn by the slimeoid
-		adorned_cosmetics = []
-		for item in cosmetics:
-			cos = EwItem(id_item = item.get('id_item'))
-			if cos.item_props.get('slimeoid') == 'true':
-				adorned_cosmetics.append(cos)
+		if item_search != None and len(item_search) > 0:
 
-		if item_sought != None and item_sought.get('item_type') == ewcfg.it_cosmetic:
-			cosmetic = EwItem(id_item = item_sought.get('id_item'))
-			response = "You "
+			cosmetics = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
 
-			# Remove hat
-			if cosmetic.item_props.get('slimeoid') == 'true':
-				response += "take the {} back from {}".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
-				cosmetic.item_props['slimeoid'] = 'false'
-			# Give hat
+			item_sought = None
+			for item in cosmetics:
+				if item.get('id_item') == item_id_int or item_search in ewutils.flattenTokenListToString(item.get('name')):
+					cos = EwItem(item.get('id_item'))
+					if cos.item_props.get('slimeoid') == 'true':
+						item_sought = cos
+						break
+
+			if item_sought != None:
+
+				response = "You take the {} back from {}".format(item_sought.item_props.get('cosmetic_name'), slimeoid.name)
+				item_sought.item_props['slimeoid'] = 'false'
+
+				item_sought.persist()
 			else:
-				if len(adorned_cosmetics) < slimeoid.level:
-					# Remove hat from player if adorned
-					if cosmetic.item_props.get('adorned') == 'true':
-						cosmetic.item_props['adorned'] = 'false'
-						response += "take off your {} and give it to {}.".format(cosmetic.item_props.get('cosmetic_name'), slimeoid.name)
-					else:
-						response += "give {} a {}.".format(slimeoid.name, cosmetic.item_props.get('cosmetic_name'))
-					
-					cosmetic.item_props['slimeoid'] = 'true'
-				else:
-					response = 'Your slimeoid is too small to wear any more clothes.'
-					
-			cosmetic.persist()
+				response = 'You don\'t have one.'
 		else:
-			response = 'Adorn which cosmetic? Check your **!inventory**.'
+			response = 'Dedorn which cosmetic? Check your **!inventory**.'
 		
-	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def unbottleslimeoid(cmd):

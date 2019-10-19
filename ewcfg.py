@@ -20,10 +20,11 @@ from ewstatuseffects import EwStatusEffectDef
 from ewfarm import EwFarmAction
 from ewfish import EwFish
 from ewapt import EwFurniture
+from ewworldevent import EwEventDef
 import ewdebug
 
 # Global configuration options.
-version = "v3.7d"
+version = "v3.9a"
 
 dir_msgqueue = 'msgqueue'
 
@@ -104,6 +105,7 @@ poi_id_neomilwaukeestate = "neomilwaukeestate"
 poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
+
 
 # transports
 poi_id_ferry = "ferry"
@@ -222,6 +224,8 @@ poi_id_apt_westglocksbury = "aptwestglocksbury"
 poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
+
+poi_id_slimesendcliffs = "slimesendcliffs"
 
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
@@ -454,6 +458,8 @@ channel_apt_jaywalkerplain ="jaywalker-plain-apartments"
 channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
 
+channel_slimesendcliffs = "slimes-end-cliffs"
+
 
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
@@ -618,6 +624,7 @@ cmd_appraise = cmd_prefix + 'appraise'
 cmd_barter = cmd_prefix + 'barter'
 cmd_embiggen = cmd_prefix + 'embiggen'
 cmd_adorn = cmd_prefix + 'adorn'
+cmd_dedorn = cmd_prefix + 'dedorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
@@ -671,12 +678,23 @@ cmd_releasefish = cmd_prefix + 'releasefish'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
+cmd_frame = cmd_prefix + 'frame'
+cmd_extractsoul = cmd_prefix + 'extractsoul'
+cmd_returnsoul = cmd_prefix + 'returnsoul'
+cmd_squeeze = cmd_prefix + 'squeezesoul'
+cmd_betsoul = cmd_prefix + 'betsoul'
+cmd_buysoul = cmd_prefix + 'buysoul'
+cmd_push = cmd_prefix + 'push'
+cmd_push_alt_1 = cmd_prefix + 'bully'
+cmd_jump = cmd_prefix + 'jump'
+cmd_toss = cmd_prefix + 'toss'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
 apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
 
+soulprice = 500000000
 
 cmd_promote = cmd_prefix + 'promote'
 
@@ -731,6 +749,8 @@ cmd_unbottleslimeoid = cmd_prefix + 'unbottleslimeoid'
 cmd_feedslimeoid = cmd_prefix + 'feedslimeoid'
 cmd_dress_slimeoid = cmd_prefix + 'dressslimeoid'
 cmd_dress_slimeoid_alt1 = cmd_prefix + 'decorateslimeoid'
+cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
+cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
@@ -745,6 +765,7 @@ cmd_get_ashen_alt1 = cmd_prefix + "auspistice"
 
 cmd_trade = cmd_prefix + 'trade'
 cmd_offer = cmd_prefix + 'offer'
+cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
@@ -781,6 +802,8 @@ slimes_permill = 75000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_cliffdrop = 200000
+slimes_item_drop = 10000
 
 # hunger
 min_stamina = 100
@@ -905,6 +928,12 @@ scavenge_item_rarity = 1000
 # Lifetimes
 invuln_onrevive = 0
 
+# how often to apply weather effects
+weather_tick_length = 10
+
+# how often to delete expired world events
+event_tick_length = 5
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -972,6 +1001,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 cd_haunt = 600
+cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
 #For possible time limit on russian roulette
@@ -1078,15 +1108,20 @@ emote_broken_heart = ":broken_heart:"
 emote_ms_hidden = ":pick:"
 emote_ms_mine = ":x:"
 emote_ms_flagged = ":triangular_flag_on_post:"
-emote_ms_0 = ":zero:"
-emote_ms_1 = ":one:"
-emote_ms_2 = ":two:"
-emote_ms_3 = ":three:"
-emote_ms_4 = ":four:"
-emote_ms_5 = ":five:"
+emote_ms_0 = ":white_circle:"
+emote_ms_1 = ":heart:"
+emote_ms_2 = ":yellow_heart:"
+emote_ms_3 = ":green_heart:"
+emote_ms_4 = ":blue_heart:"
+emote_ms_5 = ":purple_heart:"
 emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
+
+# mining grid types
+mine_grid_type_minesweeper = "minesweeper"
+mine_grid_type_pokemine = "pokemining"
+mine_grid_type_bubblebreaker = "bubblebreaker"
 
 # mining sweeper
 cell_mine = 1
@@ -1098,6 +1133,24 @@ cell_empty_marked = -2
 cell_empty_open = -3
 
 cell_slime = 0
+
+# bubble breaker
+cell_bubble_empty = "0"
+cell_bubble_0 = "5"
+cell_bubble_1 = "1"
+cell_bubble_2 = "2"
+cell_bubble_3 = "3"
+cell_bubble_4 = "4"
+
+cell_bubbles = [
+	cell_bubble_0,
+	cell_bubble_1,
+	cell_bubble_2,
+	cell_bubble_3,
+	cell_bubble_4
+]
+
+bubbles_to_burst = 4
 
 
 symbol_map_ms = {
@@ -1248,6 +1301,7 @@ col_time_expirpvp = 'time_expirpvp'
 col_time_lastenlist = 'time_lastenlist'
 col_apt_zone = 'apt_zone'
 col_visiting = "visiting"
+col_has_soul = 'has_soul'
 
 
 #Database columns for bartering
@@ -1368,6 +1422,11 @@ col_quadrants_target2 = 'id_target2'
 # Database columns for status effects
 col_id_status = 'id_status'
 col_source = 'source'
+
+# Database columns for world events
+col_id_event = 'id_event'
+col_event_type = 'event_type'
+col_time_activate = 'time_activate'
 
 # Item type names
 it_item = "item"
@@ -1523,6 +1582,7 @@ stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
+stat_umbrella_kills = 'umbrella_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1539,7 +1599,8 @@ source_bleeding = 10
 source_scavenging = 11
 source_farming = 12
 source_fishing = 13
-
+source_squeeze = 14
+source_weather = 15
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1565,6 +1626,8 @@ cause_falling = 8
 cause_bleeding = 9
 cause_burning = 10
 cause_killing_enemy = 11
+cause_weather = 12
+cause_cliff = 13
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -1657,6 +1720,8 @@ weapon_id_molotov = 'molotov'
 weapon_id_grenades = 'grenades'
 weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
+weapon_id_bass = 'bass'
+weapon_id_umbrella = 'umbrella'
 
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
@@ -2515,13 +2580,31 @@ def wef_bass(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
 
+# A Weapon Effect Function for "umbrella". Takes an EwEffectContainer as ctn.
+def wef_umbrella(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+			
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
 weapon_class_jammable = "jammable"
-
+weapon_class_captcha = "captcha"
+weapon_class_defensive = "defensive"
 
 # All weapons in the game.
 weapon_list = [
@@ -2802,7 +2885,7 @@ weapon_list = [
         str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
         str_kill = "{name_player} skewers {name_target} through the back to the hilt of their broadsword, before kicking their lifeless corpse onto the street corner in gruseome fashion. {name_player} screams at the top of their lungs. {emote_skull}",
         str_killdescriptor = "slayed",
-        str_damage = "{name_target}'s {hitzone} is seperated from their body!!",
+        str_damage = "{name_target}'s {hitzone} is separated from their body!!",
         str_duel = "SCHWNG SCHWNG! {name_player} and {name_target} scream at the top of their lungs to rehearse their battle cries.",
 		str_description = "It's a broadsword.",
 		str_reload = "You summon strength and muster might from every muscle on your body to hoist your broadsword up for another swing.",
@@ -3028,7 +3111,7 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills
 	),
-	EwWeapon(  # 12
+	EwWeapon(  # 19
 		id_weapon = "fishingrod",
 		alias = [
 			"fish",
@@ -3056,29 +3139,56 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills
 	),
-        EwWeapon(  # 13
-		id_weapon = "bass",
+        EwWeapon(  # 20
+		id_weapon = weapon_id_bass,
 		alias = [
 			"bass",
 		],
 		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharply strike {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
 		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck.",
-		str_weapon = "a bass guitar.",
+		str_weapon = "a bass guitar",
 		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
 		str_trauma_self = "There is a large concave dome in the side of your head.",
 		str_trauma = "There is a large concave dome in the side of their head.",
 		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
-		str_damage = "{name_target} is wacked across the {hitzone}!!",
+		str_damage = "{name_target} is whacked across the {hitzone}!!",
 		str_duel = "**SMASHHH.** {name_player} and {name_target} smash their bass together before admiring eachothers skillful basslines.",
 		str_scalp = " If you listen closely, you can still hear the echoes of a sick bassline from yesteryear.",
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
 		stat = stat_bass_kills
-	)
+	),
+        EwWeapon(  # 21
+		id_weapon = weapon_id_umbrella,
+		alias = [
+			"umbrella",
+			"slimebrella",
+			"slimecorpumbrella"
+		],
+		str_crit = "**Critical hit!!** {name_player} briefly stuns {name_target} by opening their umbrella in their face, using the opportunity to score a devastating blow to their {hitzone}.",
+		str_miss = "**MISS!!** {name_player} fiddles with their umbrella, failing to open it!",
+		str_equip = "You equip the umbrella.",
+		str_weapon = "an umbrella",
+		str_weaponmaster_self = "You are a rank {rank} master of the umbrella.",
+		str_weaponmaster = "They are a rank {rank} master of the umbrella.",
+		str_trauma_self = "You have a large hole in your chest.",
+		str_trauma = "They have a large hole in their chest.",
+		str_kill = "*SPLAT.* {name_player} pierces {name_target} through the chest, hoists them over their head and opens their umbrella, causing them to explode in a rain of blood and slime. {emote_skull}",
+		str_killdescriptor = "umbrella'd",
+		str_damage = "{name_target} is struck in the {hitzone}!!",
+		str_duel = "**THWACK THWACK.** {name_player} and {name_target} practice their fencing technique, before comparing their favorite umbrella patterns.",
+		str_scalp = " At least it didn't get wet.",
+		fn_effect = wef_umbrella,
+		str_description = "It's an umbrella, both stylish and deadly.",
+		price = 100000,
+		vendors = [vendor_bazaar],
+		classes = [weapon_class_captcha, weapon_class_defensive],
+		stat = stat_umbrella_kills
+	),
 ]
 
 weapon_vendors = [
@@ -3277,6 +3387,8 @@ attack_type_map = {}
 for attack_type in enemy_attack_type_list:
 	attack_type_map[attack_type.id_type] = attack_type
 
+weather_bicarbonaterain = "bicarbonaterain"
+
 # All weather effects in the game.
 weather_list = [
 	EwWeather(
@@ -3321,13 +3433,20 @@ weather_list = [
 		sunset = "The cold air grows colder as the sky darkens and the snow piles higher in the streets.",
 		night = "Icy winds whip through the city, white snowflakes glittering in the black of night."
 	),
-		EwWeather(
+	EwWeather(
 		name = "foggy",
 		sunrise = "Fog hangs thick in the air, stubbornly refusing to dissipate as the sun clears the horizon.",
 		day = "You can barely see to the next block in the sickly greenish NLAC smog.",
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
-	)
+	),
+	EwWeather(
+		name = weather_bicarbonaterain,
+		sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+		day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+		sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+		night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	),
 ]
 
 # stock ids
@@ -5722,6 +5841,20 @@ fish_map = {}
 # A list of fish names.
 fish_names = []
 
+bully_responses = [
+	"You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are.",
+	"You hold {target_name} down and pull their underwear over their head. It looks like their neck's about to snap off, holy shit.",
+	"You decide to give {target_name} a slime swirly in a nearby puddle. It's so shallow that they mostly get a faceful of gravel.",
+	"You tie {target_name} to a tree and slap them around senselessly. You untie them once their face and belly bruise cherry red.",
+	"You flag down a muscle car on the road and shout: \"HEY! {target_name} FUCKED YOUR WIFE!\" The good man parks on the side of the road and starts beating the everloving shit out them. {slimeoid} cowers in the corner, now scarred for life and afraid of dads.",
+	"You pull on {target_name}'s hair, ripping some out and causing them to cry. They should fucking grow up.",
+	"You reach into {target_name}'s shirt and give them a purple nurple. Man, these bullying tactics are getting kind of gay.",
+	"You whip out your dick and pee on {target_name}'s wife. Fuck. That's a power move right there.",
+	"You scream \"HEY {target_name}! NICE {cosmetic} YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
+	"You grab {slimeoid} and give them a noogie. Just when {target_name} thinks this is all fun and games, you throw {slimeoid} into the street. They have a panic attack trying to get past all the traffic and back to safety."
+
+]
+
 cabinets_list = [
 "This is a Zoombinis Logical Journey arcade cabinet.\nWait. This is an old PC game. Why the fuck would they port this to cabinet? Now you have to use the stick to move the mouse around. Oh well. Buyers remorse, you suppose. \nhttps://classicreload.com/win3x-logical-journey-of-the-zoombinis.html",
 "This is a Cookie Clicker arcade cabinet.\n The huge cookie button on the front is pretty neat, but running it forever seems like it would crank your electricity bill. You know, if you had one.\nhttps://orteil.dashnet.org/cookieclicker/",
@@ -6236,6 +6369,16 @@ EwFurniture(
 		furniture_look_desc = "A nice leather chair is set up.",
 		furniture_place_desc = "You set the chair up. You realize you're basically sitting on your enemies' heads and giggle about it.",
 		furn_set = "leather"),
+EwFurniture(
+		id_furniture = "pictureframe",
+		str_name = "picture frame",
+		str_desc = "https://cdn11.bigcommerce.com/s-cece8/images/stencil/1280x1280/products/305/1506/010420__10394.1343058001.jpg?c=2&imbypass=on",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A picture frame hangs on the wall.",
+		furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck."),
 
 ]
 
@@ -7192,7 +7335,7 @@ poi_list = [
 			"se"
 		],
 		str_name = "Slime's End",
-		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\n To the North is Vagrant's Corner.",
+		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner.",
 		coord = (98, 38),
 		coord_alias = [
 			(94, 36),
@@ -7672,7 +7815,6 @@ poi_list = [
 			"stockexchange",
 			"slimecorpstockexchange",
 			"sex",  # slime's end is "se"
-			"sec",
 			"sx",
 			"scex",
 			"scx",
@@ -8179,7 +8321,9 @@ poi_list = [
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington
+		mother_district = poi_id_toxington,
+		is_pier = True,
+		pier_type = fish_slime_freshwater
 	),
 	EwPoi(  # Jaywalker Plain Pier
 		id_poi = poi_id_jaywalkerplain_pier,
@@ -8195,7 +8339,10 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain
+		mother_district = poi_id_jaywalkerplain,
+		is_pier = True,
+		pier_type = fish_slime_freshwater
+
 	),
 	EwPoi(  # Crookline Pier
 		id_poi = poi_id_crookline_pier,
@@ -8211,7 +8358,10 @@ poi_list = [
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_crookline
+		mother_district = poi_id_crookline,
+		is_pier = True,
+		pier_type = fish_slime_freshwater
+
 	),
 	EwPoi(  # Assault Flats Beach Pier
 		id_poi = poi_id_assaultflatsbeach_pier,
@@ -8227,7 +8377,10 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach
+		mother_district = poi_id_assaultflatsbeach,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi(  # Vagrant's Corner Pier
 		id_poi = poi_id_vagrantscorner_pier,
@@ -8243,7 +8396,10 @@ poi_list = [
 		role = "Vagrant's Corner Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
+		mother_district = poi_id_vagrantscorner,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi(  # Slime's End Pier
 		id_poi = poi_id_slimesend_pier,
@@ -8259,7 +8415,10 @@ poi_list = [
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_slimesend
+		mother_district = poi_id_slimesend,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi( # Slime Sea
 		id_poi = poi_id_slimesea,
@@ -8988,7 +9147,10 @@ poi_list = [
 		is_transport = True,
 		transport_type = transport_type_ferry,
 		default_line = transport_line_ferry_wt_to_vc,
-		default_stop = poi_id_wt_port
+		default_stop = poi_id_wt_port,
+		is_pier = True,
+		pier_type = fish_slime_saltwater
+
 	),
 	EwPoi(  # Subway train on the red line
 		id_poi = poi_id_subway_red01,
@@ -9115,7 +9277,7 @@ poi_list = [
 		default_stop = poi_id_df_blimp_tower
 	),
 
-EwPoi( # apt
+	EwPoi( # apt
 		id_poi = poi_id_apt,
 		alias = [
 		],
@@ -9126,7 +9288,7 @@ EwPoi( # apt
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-downtown
+	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
 			"apt",
@@ -9140,7 +9302,7 @@ EwPoi( # apt-downtown
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-smogsburg
+	EwPoi( # apt-smogsburg
 		id_poi = poi_id_apt_smogsburg,
 		alias = [
 			"apt",
@@ -9154,7 +9316,7 @@ EwPoi( # apt-smogsburg
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-krakbay
+	EwPoi( # apt-krakbay
 		id_poi = poi_id_apt_krakbay,
 		alias = [
 			"apt",
@@ -9168,7 +9330,7 @@ EwPoi( # apt-krakbay
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-poudrinalley
+	EwPoi( # apt-poudrinalley
 		id_poi = poi_id_apt_poudrinalley,
 		alias = [
 			"apt",
@@ -9182,7 +9344,7 @@ EwPoi( # apt-poudrinalley
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-green-light-district
+	EwPoi( # apt-green-light-district
 		id_poi = poi_id_apt_greenlightdistrict,
 		alias = [
 
@@ -9196,7 +9358,7 @@ EwPoi( # apt-green-light-district
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-old-new-yonkers
+	EwPoi( # apt-old-new-yonkers
 		id_poi = poi_id_apt_oldnewyonkers,
 		alias = [
 
@@ -9210,7 +9372,7 @@ EwPoi( # apt-old-new-yonkers
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-little-chernobyl
+	EwPoi( # apt-little-chernobyl
 		id_poi = poi_id_apt_littlechernobyl,
 		alias = [
 
@@ -9224,7 +9386,7 @@ EwPoi( # apt-little-chernobyl
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-arsonbrook
+	EwPoi( # apt-arsonbrook
 		id_poi = poi_id_apt_arsonbrook,
 		alias = [
 
@@ -9238,7 +9400,7 @@ EwPoi( # apt-arsonbrook
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-astatine-heights
+	EwPoi( # apt-astatine-heights
 		id_poi = poi_id_apt_astatineheights,
 		alias = [
 
@@ -9252,7 +9414,7 @@ EwPoi( # apt-astatine-heights
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-gatlingsdale
+	EwPoi( # apt-gatlingsdale
 		id_poi = poi_id_apt_gatlingsdale,
 		alias = [
 
@@ -9266,7 +9428,7 @@ EwPoi( # apt-gatlingsdale
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-vandal-park
+	EwPoi( # apt-vandal-park
 		id_poi = poi_id_apt_vandalpark,
 		alias = [
 
@@ -9308,7 +9470,7 @@ EwPoi( # apt-vandal-park
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-south-sleezeborough
+	EwPoi( # apt-south-sleezeborough
 		id_poi = poi_id_apt_southsleezeborough,
 		alias = [
 
@@ -9322,7 +9484,7 @@ EwPoi( # apt-south-sleezeborough
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # ooze-gardens
+	EwPoi( # ooze-gardens
 		id_poi = poi_id_apt_oozegardens,
 		alias = [
 
@@ -9336,7 +9498,7 @@ EwPoi( # ooze-gardens
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-cratersville
+	EwPoi( # apt-cratersville
 		id_poi = poi_id_apt_cratersville,
 		alias = [
 
@@ -9364,7 +9526,7 @@ EwPoi( # apt-cratersville
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-slimes-end
+	EwPoi( # apt-slimes-end
 		id_poi = poi_id_apt_slimesend,
 		alias = [
 
@@ -9378,7 +9540,7 @@ EwPoi( # apt-slimes-end
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-vagrants-corner
+	EwPoi( # apt-vagrants-corner
 		id_poi = poi_id_apt_vagrantscorner,
 		alias = [
 
@@ -9392,7 +9554,7 @@ EwPoi( # apt-vagrants-corner
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi(  # apt-afbr
+	EwPoi(  # apt-afbr
 		id_poi=poi_id_apt_assaultflatsbeach,
 		alias=[
 
@@ -9420,7 +9582,7 @@ EwPoi(  # apt-afbr
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-brawlden
+	EwPoi( # apt-brawlden
 		id_poi = poi_id_apt_brawlden,
 		alias = [
 
@@ -9434,7 +9596,7 @@ EwPoi( # apt-brawlden
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-toxington
+	EwPoi( # apt-toxington
 		id_poi = poi_id_apt_toxington,
 		alias = [
 
@@ -9448,7 +9610,7 @@ EwPoi( # apt-toxington
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-charcoal-park
+	EwPoi( # apt-charcoal-park
 		id_poi = poi_id_apt_charcoalpark,
 		alias = [
 
@@ -9462,7 +9624,7 @@ EwPoi( # apt-charcoal-park
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # polonium-hill
+	EwPoi( # polonium-hill
 		id_poi = poi_id_apt_poloniumhill,
 		alias = [
 
@@ -9476,7 +9638,7 @@ EwPoi( # polonium-hill
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-west-glocksbury
+	EwPoi( # apt-west-glocksbury
 		id_poi = poi_id_apt_westglocksbury,
 		alias = [
 
@@ -9490,7 +9652,7 @@ EwPoi( # apt-west-glocksbury
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-jaywalker-plain
+	EwPoi( # apt-jaywalker-plain
 		id_poi = poi_id_apt_jaywalkerplain,
 		alias = [
 
@@ -9504,7 +9666,7 @@ EwPoi( # apt-jaywalker-plain
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-crookline
+	EwPoi( # apt-crookline
 		id_poi = poi_id_apt_crookline,
 		alias = [
 
@@ -9518,7 +9680,7 @@ EwPoi( # apt-crookline
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-dreadford
+	EwPoi( # apt-dreadford
 		id_poi = poi_id_apt_dreadford,
 		alias = [
 
@@ -9531,6 +9693,23 @@ EwPoi( # apt-dreadford
 		mother_district = poi_id_dreadford,
 		pvp = False,
 		is_subzone = False,
+	),
+	EwPoi( # slime's end cliffs
+		id_poi = poi_id_slimesendcliffs,
+		alias = [
+			"sec",
+			"cliffs",
+			"secliffs",
+			"cliff"
+		],
+		str_name = "Slime's End Cliffs",
+		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		channel = channel_slimesendcliffs,
+		role = "Slime's End Cliffs",
+		mother_district = poi_id_slimesend,
+		pvp = True,
+		is_subzone = True,
+		coord = (98, 42),
 	),
 
 	EwPoi(  # Outskirts - 1
@@ -9805,6 +9984,8 @@ alias_to_coord = {}
 capturable_districts = []
 transports = []
 transport_stops = []
+piers = []
+outskirts = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -9830,6 +10011,12 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+
+	if poi.is_pier:
+		piers.append(poi.id_poi)
+
+	if poi.is_outskirts:
+		outskirts.append(poi.id_poi)
 
 landmark_pois = [
 	poi_id_countryclub,
@@ -10169,6 +10356,7 @@ for line in transport_lines:
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
 
+cosmetic_id_raincoat = "raincoat"
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -10678,6 +10866,15 @@ cosmetic_items_list = [
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_direapples,
+	),
+	EwCosmeticItem(
+		id_cosmetic = cosmetic_id_raincoat,
+		str_name = "Raincoat",
+		str_desc = "A specially engineered piece of personal armor, that protects you from the deadly threat from above.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 50000,
+		vendors = [vendor_bazaar],
 	),
 ]
 
@@ -11491,7 +11688,7 @@ defense_list = [
 		],
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
-		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
+		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
 		str_armor = "It exudes a horrible stench."
 	),
 	EwDefense( # defense 7
@@ -12856,7 +13053,7 @@ help_responses = {
 	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. What this means is that you've killed or otherwise attacked a juvenile, causing you to be persued by law enforcement, and your location is revealed to the opposing gang's base to boot. You will be 'wanted' for at least 1 hour, with an additional time of your current bounty converted to seconds (example: A player with a bounty of 3600 slimecoin will be wanted for two hours). While wanted, your movement speed is cut in half, you cannot enter subzones, drop all your slimecoin on death, cannot use !suicide or be killed by teammates, drop all your items on death, as well as drop your current weapon skill level (see !help sparring) down to zero on death. It's a brutal punishment, so try and consider if killing a certain juvie is really worth it beforehand.",
 	# Ways to gain slime
-	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently, mining is done on a board. Choose your coordinate and type '!mine [coordinate]'. To reset the board, use '!mine reset'.\n\nKEY: A '**~**' signifies that a lot of slime is on that tile, a '**;**' signifies that some slime is on that tile, a blank tile will give no slime, and an '**X**' will damage you if you mine it.",
+	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
@@ -12878,7 +13075,7 @@ help_responses = {
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
   	"profile":"This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
-	"trading":"Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Using this command again for the same item removes it from you offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**."
+	"trading":"Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**."
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -13145,6 +13342,67 @@ identifier_letters = [
     'P', 'Q', 'R', 'S', 'T',
     'U', 'V', 'W', 'X', 'Y', 'Z'
 ]
+
+rain_protection = [
+	cosmetic_id_raincoat,
+	weapon_id_umbrella
+]
+
+event_type_slimeglob = "slimeglob"
+event_type_slimefrenzy = "slimefrenzy"
+event_type_poudrinfrenzy = "poudrinfrenzy"
+event_type_minecollapse = "minecollapse"
+event_type_minesweeper = "minesweeper"
+event_type_pokemine = "pokemine"
+event_type_bubblebreaker = "bubblebreaker"
+
+world_events = [
+	EwEventDef(
+		event_type = event_type_slimeglob,
+		str_event_start = "You mined an extra big glob of slime! {}".format(emote_slime1),
+	),
+	EwEventDef(
+		event_type = event_type_slimefrenzy,
+		str_event_start = "You hit a dense vein of slime! Double slimegain for the next 30 seconds.",
+		str_event_end = "The double slime vein dried up.",
+	),
+	EwEventDef(
+		event_type = event_type_poudrinfrenzy,
+		str_event_start = "You hit a dense vein of poudrins! Guaranteed poudrin on every {} for the next 5 seconds.".format(cmd_mine),
+		str_event_end = "The poudrin vein dried up.",
+	),
+	EwEventDef(
+		event_type = event_type_minecollapse,
+		str_event_start = "The mineshaft starts collapsing around you. Get out of there quickly! ({cmd} {captcha})",
+	),
+	EwEventDef(
+		event_type = event_type_minesweeper,
+		str_event_start = "You notice the wall bulging slightly and you can dig into it. ({} coordinates, {} coordinates)".format(cmd_mine, cmd_flag),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_pokemine,
+		str_event_start = "You notice the wall bulging slightly and you can dig into it. ({} coordinates)".format(cmd_mine, cmd_flag),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_bubblebreaker,
+		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
+		str_event_end = "The wall collapses.",
+	),
+	
+]
+
+event_type_to_def = {}
+
+for event in world_events:
+	event_type_to_def[event.event_type] = event
+
+grid_type_by_mining_event = {
+	event_type_minesweeper: mine_grid_type_minesweeper,
+	event_type_pokemine: mine_grid_type_pokemine,
+	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

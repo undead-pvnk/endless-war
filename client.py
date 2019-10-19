@@ -47,6 +47,8 @@ import ewhunting
 import ewfish
 import ewfaction
 import ewapt
+import ewweather
+import ewworldevent
 import ewdebug
 
 from ewitem import EwItem
@@ -123,7 +125,7 @@ cmd_map = {
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
 	# flags a vein as dangerous
-	#ewcfg.cmd_flag: ewjuviecmd.flag,
+	ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
@@ -148,6 +150,7 @@ cmd_map = {
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
 
+
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
 	ewcfg.cmd_consult: ewapt.consult,
@@ -164,6 +167,19 @@ cmd_map = {
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
+
+	ewcfg.cmd_frame: ewapt.frame,
+	ewcfg.cmd_extractsoul: ewitem.soulextract,
+	ewcfg.cmd_returnsoul: ewitem.returnsoul,
+	ewcfg.cmd_betsoul: ewcasino.betsoul,
+	ewcfg.cmd_buysoul: ewcasino.buysoul,
+	ewcfg.cmd_squeeze: ewitem.squeeze,
+
+	ewcfg.cmd_toss: ewcmd.toss_off_cliff,
+	ewcfg.cmd_jump: ewcmd.jump,
+	ewcfg.cmd_push: ewcmd.push,
+	ewcfg.cmd_push_alt_1: ewcmd.push,
+
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,
@@ -354,6 +370,7 @@ cmd_map = {
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
@@ -431,6 +448,8 @@ cmd_map = {
         #ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
+	ewcfg.cmd_undress_slimeoid_alt1: ewslimeoid.undress_slimeoid,
 
 	# Negaslimeoids
 
@@ -491,6 +510,7 @@ cmd_map = {
 	# trading
 	ewcfg.cmd_trade: ewmarket.trade,
 	ewcfg.cmd_offer: ewmarket.offer_item,
+	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
 	ewcfg.cmd_completetrade: ewmarket.complete_trade,
 	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
 }
@@ -651,6 +671,8 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
+		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -808,26 +830,45 @@ async def on_ready():
 							elif item in ewcfg.furniture_names:
 								bazaar_furniture.append(item)
 
+						market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
+						market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
+
 						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
 
 						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
 						# Don't add repeated foods
-						while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == market_data.bazaar_wares['food1']:
-							market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+						bw_food2 = None
+						while bw_food2 is None or bw_food2 in market_data.bazaar_wares.values():
+							bw_food2 = random.choice(bazaar_foods)
+
+						market_data.bazaar_wares['food2'] = bw_food2
 
 						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
 						# Don't add repeated cosmetics
-						while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == market_data.bazaar_wares['cosmetic1']:
-							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
-						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
-							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+						bw_cosmetic2 = None
+						while bw_cosmetic2 is None or bw_cosmetic2 in market_data.bazaar_wares.values():
+							bw_cosmetic2 = random.choice(bazaar_cosmetics)
 
+						market_data.bazaar_wares['cosmetic2'] = bw_cosmetic2
 
-						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
-						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
-							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
-						while market_data.bazaar_wares.get('furniture3') is None or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture1'] or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture2']:
-							market_data.bazaar_wares['furniture3'] = random.choice(bazaar_furniture)
+						bw_cosmetic3 = None
+						while bw_cosmetic3 is None or bw_cosmetic3 in market_data.bazaar_wares.values():
+							bw_cosmetic3 = random.choice(bazaar_cosmetics)
+
+						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
+
+						bw_furniture2 = None
+						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
+							bw_furniture2 = random.choice(bazaar_furniture)
+
+						market_data.bazaar_wares['furniture2'] = bw_furniture2
+
+						bw_furniture3 = None
+						while bw_furniture3 is None or bw_furniture3 in market_data.bazaar_wares.values():
+							bw_furniture3 = random.choice(bazaar_furniture)
+
+						market_data.bazaar_wares['furniture3'] = bw_furniture3
+
 
 						if random.random() == 0.1:
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
@@ -850,11 +891,14 @@ async def on_ready():
 
 					market_data = EwMarket(id_server = server.id)
 
-					if random.randrange(30) == 0:
+					if random.randrange(3) == 0:
 						pattern_count = len(ewcfg.weather_list)
 
 						if pattern_count > 1:
 							weather_old = market_data.weather
+
+							if random.random() < 0.4:
+								market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
 							while market_data.weather == weather_old:
