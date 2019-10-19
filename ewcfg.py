@@ -1609,7 +1609,7 @@ item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
-item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
+item_id_fuckenergybodyspray = "fuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 
@@ -1953,21 +1953,15 @@ item_list = [
 		price = 10000,
 	),
 	EwGeneralItem(
-		id_item = item_id_juviegradefuckenergybodyspray,
+		id_item = item_id_fuckenergybodyspray,
 		context = 'repel',
 		alias = [
-			"regular body spray",
-			"regbs",
-			"regular repel",
-			"juvie",
-			"juviegrade",
-			"juvie grade",
 			"repel",
 			"body spray",
 			"bodyspray",
 			"bs",
 		],
-		str_name = "Juvie Grade FUCK ENERGY Body Spray",
+		str_name = "FUCK ENERGY Body Spray",
 		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
 		vendors = [vendor_glocksburycomics],
 		price = 10000,
@@ -8963,7 +8957,6 @@ poi_list = [
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
 		alias = [
-			"gbc",
 			"gc",
 			"glocksburycomics",
 			"comicstore",
