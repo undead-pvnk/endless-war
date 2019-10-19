@@ -950,7 +950,7 @@ def find_enemy(enemy_search=None, user_data=None):
 		if len(identifiers_found) > 0:
 			# user passed in an identifier for a district specific enemy
 
-			searched_identifier = identifiers_found[0]
+			searched_identifier = identifiers_found.pop()
 
 			enemydata = ewutils.execute_sql_query(
 				"SELECT {id_enemy} FROM enemies WHERE {poi} = %s AND {identifier} = %s AND {life_state} = 1".format(
