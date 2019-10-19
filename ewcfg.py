@@ -612,6 +612,9 @@ cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
 cmd_spook = cmd_prefix + 'spook'
+cmd_makecostume = cmd_prefix + 'makecostume'
+cmd_trick = cmd_prefix + 'trick'
+cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
@@ -677,6 +680,7 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
+cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
 cmd_propstand = cmd_prefix + 'propstand'
@@ -841,6 +845,8 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
+# Double Halloween ONLY
+acquisition_trickortreating = "trickortreating"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1697,6 +1703,8 @@ item_id_doublefaggot = "doublefaggot"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
 
+#candy ids
+item_id_paradoxchocs = "paradoxchocs"
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -5155,7 +5163,19 @@ food_list = [
 		str_eat = "You savour every last bite of your meal, and all the doubt you might have had about sacrificing your sticks washes away.",
 		str_desc = "Through a stroke of genius, a faggot was sacrificed, and fire was made. The result is the meat of a savage beast, seared to perfection.",
 		acquisition = acquisition_smelting
-	)
+	),
+	EwFood(
+		id_food = item_id_paradoxchocs,
+		alias = [
+			"chocs",
+			"crocs",
+		],
+		recover_hunger = 50,
+		str_name = 'Paradox Chocs',
+		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm.",
+		str_desc = "A bag of chocolates, all shaped like the head of Paradox Crocs. Every bag also comes with 1 Koff head and 1 Ackro head.",
+		acquisition = acquisition_trickortreating
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -12971,10 +12991,20 @@ for m in cosmetic_items_list:
 		mine_results.append(m)
 	else:
 		pass
+	
+# Gather all the items that can be the result of trick-or-treating.
+trickortreat_results = []
+
+for t in food_list:
+	if t.acquisition == acquisition_trickortreating:
+		trickortreat_results.append(t)
+	else:
+		pass
+		
 
 slimexodia_parts = []
 
-# Gather all items that can be the result of mining.
+# Gather all parts of slimexodia.
 for slimexodia in item_list:
 	if slimexodia.context == 'slimexodia':
 		slimexodia_parts.append(slimexodia)
@@ -13464,6 +13494,23 @@ grid_type_by_mining_event = {
 	event_type_minesweeper: mine_grid_type_minesweeper,
 	event_type_pokemine: mine_grid_type_pokemine,
 	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
+}
+
+# A list of tricks for Double Halloween
+trick_amounts = [10, 100, 1000, 10000]
+
+halloween_tricks_tricker = {
+	10:"You open the door and give {} a hearty '!BOO'. They lose 10 slime.",
+	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime.",
+	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime.",
+	10000:"You just break down the door and start stomping on {}'s fucking groin. Despite the extreme pain, they only lose 10000 slime.",
+}
+
+halloween_tricks_trickee = {
+	10:"{} opens the door and gives you a hearty '!BOO'. You lose 10 slime.",
+	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime.",
+	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime.",
+	10000:"{} just breaks down the door and starts stomping on your fucking groin. Despite the extreme pain, you only lose 10000 slime.",
 }
 
 # lists of all the discord server objects served by bot, identified by the server id

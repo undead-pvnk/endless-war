@@ -19,6 +19,8 @@ import ewslimeoid
 import ewwep
 import ewquadrants
 
+from ewitem import EwItem
+
 class EwApartment:
 	id_user = ""
 	id_server = ""
@@ -961,7 +963,7 @@ async def knock(cmd = None):
 				accepted = False
 			user_data = EwUser(member=cmd.message.author)
 			if accepted:
-				user_data.poi = target_poi. id_poi
+				user_data.poi = target_poi.id_poi
 				user_data.visiting = target_data.id_user
 				user_data.rr_challenger = ""
 				user_data.persist()
@@ -974,6 +976,103 @@ async def knock(cmd = None):
 				if user_data.rr_challenger != "":
 					user_data.rr_challenger = ""
 					user_data.persist()
+	elif cmd.mentions_count == 0:
+		response = "Whose door are you knocking?"
+		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		response = "One door at a time, please."
+		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+
+# Double Halloween ONLY
+async def trickortreat(cmd = None):
+	user_data = EwUser(member=cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	items = ewitem.inventory(
+		id_user=cmd.message.author.id,
+		id_server=cmd.message.server.id,
+		item_type_filter=ewcfg.it_cosmetic
+	)
+
+	costumes = 0
+	for it in items:
+		i = EwItem(it.get('id_item'))
+		if i.item_props['context'] == 'costume':
+			costumes += 1
+			
+	if costumes == 0:
+		response = "How are you gonna go trick-or-treating without a costume on?"
+		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.mentions_count == 1:
+		target = cmd.mentions[0]
+		target_data = EwUser(member=target)
+		target_poi = ewcfg.id_to_poi.get(target_data.poi)
+		if poi.is_apartment:
+			response = "You're already in an apartment."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif target_data.apt_zone != user_data.poi:
+			response = "You're not anywhere near their apartment."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif (not target_poi.is_apartment) or target_data.visiting != ewcfg.location_id_empty:
+			response = "You knock, but nobody's home."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			response = "{} is all dressed up for Double Halloween, waiting at your doorstep. Do you pull a !trick on them, or !treat them to a piece of candy?".format(cmd.message.author.display_name)
+			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			try:
+				treat = False
+				if user_data.rr_challenger == target_data.apt_zone:
+					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
+				else:
+					user_data = EwUser(member=cmd.message.author)
+					user_data.rr_challenger = target_data.apt_zone
+					user_data.persist()
+					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_trick_or_treat)
+
+					if message != None:
+						if message.content.lower() == ewcfg.cmd_treat:
+							treat = True
+						if message.content.lower() == ewcfg.cmd_trick:
+							treat = False
+					else:
+						user_data = EwUser(member=cmd.message.author)
+						if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
+							user_data.persist()
+			except:
+				treat = False
+			user_data = EwUser(member=cmd.message.author)
+			if treat:
+				user_data.rr_challenger = ""
+				user_data.persist()
+				
+				item = random.choice(ewcfg.mine_results)
+				item_props = ewitem.gen_item_props(item)
+				if item is not None:
+					ewitem.item_create(
+						item_type=item.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.server.id,
+						item_props=item_props
+					)
+				
+				response = "{} gives you a {}. You thank them, and go about your business.".format(target.display_name, item_props['item_name'])
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				response = "You give {} a {}. Happy Double Halloween, you knucklehead!".format(cmd.message.author.display_name, item_props['item_name'])
+				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			else:
+				slime_loss = random.choice(ewcfg.trick_amounts)
+				if user_data.rr_challenger != "":
+					user_data.rr_challenger = ""
+				user_data.change_slimes(n = -slime_loss)
+				user_data.persist()
+				response = ewcfg.halloween_tricks_trickee[slime_loss].format(target.display_name)
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				response = ewcfg.halloween_tricks_tricker[slime_loss].format(cmd.message.author.display_name)
+				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+				
 	elif cmd.mentions_count == 0:
 		response = "Whose door are you knocking?"
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
@@ -1358,6 +1457,8 @@ async def aptCommands(cmd):
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_trickortreat:
+		return await trickortreat(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_wash:
 		return await wash(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_browse:

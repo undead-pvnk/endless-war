@@ -1260,7 +1260,12 @@ async def delete_last_message(client, last_messages, tick_length):
 def check_accept_or_refuse(str):
 	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
 		return True
-
+	
+# Double Halloween ONLY
+def check_trick_or_treat(str):
+	if str.content.lower() == ewcfg.cmd_treat or str.content.lower() == ewcfg.cmd_trick:
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
