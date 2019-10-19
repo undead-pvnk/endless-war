@@ -267,6 +267,11 @@ def canAttack(cmd):
 	weapon_item = None
 	weapon = None
 	captcha = None
+
+	tokens_lower = []
+	for token in cmd.tokens:
+		tokens_lower.append(token.lower())
+
 	if user_data.weapon >= 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -292,7 +297,7 @@ def canAttack(cmd):
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
-	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha not in cmd.tokens:
+	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
 
 	elif user_data.weapon == -1:
