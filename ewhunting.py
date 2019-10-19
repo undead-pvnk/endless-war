@@ -984,7 +984,7 @@ def find_enemy(enemy_search=None, user_data=None):
 					enemy_found = enemy
 					break
 
-				if (enemy.display_name.lower() in enemy_search_tokens):
+				if (enemy.display_name.lower() in enemy_search_tokens) or (enemy.enemytype in enemy_search_tokens):
 					enemy_found = enemy
 					break
 

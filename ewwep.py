@@ -262,7 +262,8 @@ class EwEffectContainer:
 
 def canAttack(cmd):
 	response = ""
-	time_now = int(time.time())
+	time_now_float = time.time()
+	time_now = int(time_now_float)
 	user_data = EwUser(member = cmd.message.author)
 	weapon_item = None
 	weapon = None
@@ -293,7 +294,7 @@ def canAttack(cmd):
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
 		response = "You're out of {}! Go buy more at the {}".format(weapon.str_weapon, ewutils.formatNiceList(names = weapon.vendors, conjunction="or" ))
-	elif weapon != None and weapon.cooldown + (int(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now:
+	elif weapon != None and weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
 		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
@@ -1831,7 +1832,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_other), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
-	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
+	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 2)) / 100.0)
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10
@@ -2077,6 +2078,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	enemy_data.bleed_storage += slimes_tobleed
 	enemy_data.change_slimes(n=- slimes_directdamage, source=ewcfg.source_damage)
 	enemy_data.hardened_sap -= sap_damage
+	enemy_data.persist()
 	sewer_data.change_slimes(n=slimes_drained)
 	sewer_data.persist()
 
@@ -2370,8 +2372,8 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
 		items = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
+			id_user = user_data.id_user,
+			id_server = user_data.id_server,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 

@@ -2236,7 +2236,7 @@ def wef_bat(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
+	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
 	if aim == -2:
 		if mutation_id_sharptoother in user_mutations:
@@ -2623,7 +2623,7 @@ def wef_bass(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
+	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
 	if aim == -2:
 		if mutation_id_sharptoother in user_mutations:
