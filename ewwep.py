@@ -641,7 +641,7 @@ async def attack(cmd):
 								resp_cont.add_channel_response(cmd.message.channel.name, resp)
 						#Damage players/enemies in district
 						else:
-							resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False)
+							resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False, sap_damage = 2)
 							resp_cont.add_response_container(resp)
 
 					user_data = EwUser(member = cmd.message.author)
