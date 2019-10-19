@@ -1385,6 +1385,8 @@ async def aptCommands(cmd):
 		return await ewcmd.cmd_howl(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_data:
 		return await ewcmd.data(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_hunger:
+		return await ewcmd.hunger(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_slimecoin or cmd_text == ewcfg.cmd_slimecoin_alt1 or cmd_text == ewcfg.cmd_slimecoin_alt2 or cmd_text == ewcfg.cmd_slimecoin_alt3:
 		return await ewmarket.slimecoin(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_score or cmd_text == ewcfg.cmd_score_alt1:

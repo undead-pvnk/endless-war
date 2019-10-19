@@ -80,6 +80,7 @@ poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
+poi_id_rpcity = "rpcity"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -300,6 +301,8 @@ role_corpse_active = "corpseotp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
+role_deathfurnace = "deathfurnace"
+role_donor = "terezigang"
 
 faction_roles = [
 	role_juvenile,
@@ -469,7 +472,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -548,8 +551,10 @@ cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
 cmd_negaslime = cmd_prefix + 'negaslime'
+cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
+cmd_hunger = cmd_prefix + 'hunger'
 cmd_clock = cmd_prefix + 'clock'
 cmd_time = cmd_prefix + 'time'
 cmd_weather = cmd_prefix + 'weather'
@@ -605,6 +610,8 @@ cmd_news = cmd_prefix + 'news'
 cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
+cmd_boo = cmd_prefix + 'boo'
+cmd_spook = cmd_prefix + 'spook'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
@@ -794,7 +801,9 @@ slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
-slimes_hauntmax = 20000
+#slimes_hauntmax = 20000
+# Double Halloween ONLY
+slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
@@ -1000,7 +1009,9 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 # Cooldowns
 cd_kill = 5
 cd_spar = 60
-cd_haunt = 600
+#cd_haunt = 600
+# Double Halloween ONLY
+cd_haunt = 180
 cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
@@ -1084,6 +1095,8 @@ emote_slimegun = "<:slimegun:436500203743477760>"
 emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
+emote_srs = "<:srs:631859962519224341>"
+emote_staydead = "<:staydead:506840095714836480>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1659,6 +1672,7 @@ vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
+vendor_rpcity = "RP City" #You can buy costume creation kits here
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1672,9 +1686,10 @@ item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
-item_id_fuckenergybodyspray = "fuckenergybodyspray"
+item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
+item_id_costumekit = "costumekit"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -2018,18 +2033,24 @@ item_list = [
 		price = 10000,
 	),
 	EwGeneralItem(
-		id_item = item_id_fuckenergybodyspray,
-		context = 'repel',
-		alias = [
+		id_item=item_id_juviegradefuckenergybodyspray,
+		context='repel',
+		alias=[
+			"regular body spray",
+			"regbs",
+			"regular repel",
+			"juvie",
+			"juviegrade",
+			"juvie grade",
 			"repel",
 			"body spray",
 			"bodyspray",
 			"bs",
 		],
-		str_name = "FUCK ENERGY Body Spray",
-		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
-		vendors = [vendor_glocksburycomics],
-		price = 10000,
+		str_name="Juvie Grade FUCK ENERGY Body Spray",
+		str_desc="A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
+		vendors=[vendor_glocksburycomics],
+		price=10000,
 	),
 	EwGeneralItem(
 		id_item = item_id_superduperfuckenergybodyspray,
@@ -2064,6 +2085,21 @@ item_list = [
 		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for twelve hours.",
 		vendors = [vendor_glocksburycomics],
 		price = 40000,
+	),
+	EwGeneralItem(
+		id_item = item_id_costumekit,
+		context = 'costumekit',
+		alias = [
+			"costumekit",
+			"ck",
+			"fursuit",
+			"kit",
+			"costume",
+		],
+		str_name = "Double Halloween Costume Kit",
+		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
+		vendors = [vendor_rpcity],
+		price = 50000,
 	),
 ]
 item_list += ewdebug.debugitem_set
@@ -4885,7 +4921,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Khaotic Killiflower FUCK ENERGY',
+		str_name = 'Khaotic Killiflower FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its bitter, low quality artificial Purple Killiflower flavorings remind you of discount children’s cough medicine. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4895,7 +4931,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Rampaging Rowddish FUCK ENERGY',
+		str_name = 'Rampaging Rowddish FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its sickeningly sweet artificial Pink Rowddish flavorings taste like if you mixed about 16 packs of Starburst FaveREDs into a blender. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4905,7 +4941,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Dire Apple Cider FUCK ENERGY',
+		str_name = 'Dire Apple Cider FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its wickedly sour artificial Dire Apple flavorings, mixed with its thick consistency, makes it feel like you’re drinking applesauce mixed with a healthy heaping of malic acid. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4915,7 +4951,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Ultimate Urine FUCK ENERGY',
+		str_name = 'Ultimate Urine FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. It literally just tastes like piss. You’re almost positive you’re literally drinking pee right now. It’s not even carbonated. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any otherr living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4925,7 +4961,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Super Water FUCK ENERGY',
+		str_name = 'Super Water FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -9116,6 +9152,7 @@ poi_list = [
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
 		alias = [
+			"gbc",
 			"gc",
 			"glocksburycomics",
 			"comicstore",
@@ -9131,6 +9168,26 @@ poi_list = [
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
+		is_subzone = True
+	),
+	EwPoi( # RP City
+		id_poi = poi_id_rpcity,
+		alias = [
+			"rp",
+			"rp city",
+			"roleplay city",
+			"rpc",
+			"costume store",
+			"costumestore",
+		],
+		str_name = "RP City",
+		str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
+		coord = (63, 18),
+		pvp = False,
+		vendors = [vendor_rpcity],
+		channel = "rp-city",
+		role = "RP City",
+		mother_district = poi_id_littlechernobyl,
 		is_subzone = True
 	),
 	EwPoi(  # Ferry
@@ -13071,20 +13128,25 @@ help_responses = {
 	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
+	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
+	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
 	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
-  	"profile":"This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
-	"trading":"Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**."
+	# Additional gameplay mechanics, part 4
+	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
 help_responses_ordered_keys = [
 	"gangs", "food", "capturing", "transportation", "death",
 	"dojo", "subzones", "scouting", "otp", "wanted",
+	"mining", "scavenging", "farming", "fishing", "hunting",
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
-	"casino", "bleeding", "offline", "profile", "trading"
+	"trading", "weather", "casino", "bleeding", "offline",
+	"profile",
 ]
 
 mutation_descriptions = {
@@ -13097,7 +13159,7 @@ mutation_descriptions = {
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
 	mutation_id_lightasafeather: "Double movement speed while weather is windy. Use **'!weather'** to check if it's windy.",
-	mutation_id_whitenationalist: "Cannot be scouted regularly and you scavenge 50% more slime while weather is snowy. Use **'!weather'** to check if it's snowing. You can still be scouted by players with the Keen Smell mutation.",
+	mutation_id_whitenationalist: "Cannot be scouted regularly and you scavenge 50% more slime while weather is snowy, which also stacks with the Webbed Feet mutation. Use **'!weather'** to check if it's snowing. You can still be scouted by players with the Keen Smell mutation.",
 	mutation_id_spoiledappetite: "You can eat spoiled food.",
 	mutation_id_bigbones: "The amount of food items you can hold in your inventory is doubled.",
 	mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",

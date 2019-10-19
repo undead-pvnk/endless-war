@@ -1147,6 +1147,10 @@ def get_move_speed(user_data):
 
 	if user_data.time_expirpvp >= time_now:
 		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
+		
+	# Double Halloween ONLY
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 2
 
 	return move_speed
 

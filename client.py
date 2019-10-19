@@ -134,18 +134,27 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
+	# Check how hungry you are.
+	ewcfg.cmd_hunger: ewcmd.hunger,
+
 	#check what time it is, and the weather
 	ewcfg.cmd_time: ewcmd.weather,
 	ewcfg.cmd_clock: ewcmd.weather,
 	ewcfg.cmd_weather: ewcmd.weather,
 
-
 	# Rowdys thrash and Killers dab.
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
+	
+	# Ghosts can BOO (and during Double Halloween, SPOOK)
+	ewcfg.cmd_boo: ewcmd.boo,
+	ewcfg.cmd_spook: ewcmd.spook,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
+	
+	# Show the total of positive slime in the world.
+	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
