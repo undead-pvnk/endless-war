@@ -496,7 +496,7 @@ async def attack(cmd):
 			deathreport = "{} ".format(ewcfg.emote_bustin) + ewutils.formatMessage(member, deathreport)
 			
 			if coinbounty > 0:
-				response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
+				response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
 			# adjust busts
 			ewstats.increment_stat(user = user_data, metric = ewcfg.stat_ghostbusts)
@@ -730,7 +730,7 @@ async def attack(cmd):
 					slimes_drained = 0
 					slimes_toboss = int(slimes_damage / 2)
 
-				damage = str(slimes_damage)
+				damage = slimes_damage
 
 				slimes_tobleed = int((slimes_damage - slimes_toboss - slimes_drained) / 2)
 				if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.clock < 6 or market_data.clock >= 20):
@@ -870,7 +870,7 @@ async def attack(cmd):
 					deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member, deathreport)
 					
 					if coinbounty > 0:
-						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), cmd.message.author.display_name)
+						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
 					shootee_data.persist()
 					user_data.persist()
@@ -1226,7 +1226,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					slimes_drained = 0
 					slimes_toboss = int(slimes_damage_target / 2)
 
-				damage = str(slimes_damage_target)
+				damage = slimes_damage_target
 				
 
 				slimes_tobleed = int((slimes_damage_target - slimes_toboss - slimes_drained) / 2)
@@ -1276,7 +1276,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 					response += "{} was killed by an explosion during your fight with {}!".format(target_player.display_name, shootee_player.display_name)
 					if coinbounty > 0:
-						response += "\n\n SlimeCorp transfers {} SlimeCoin to {}\'s account.".format(str(coinbounty), user_player.display_name)
+						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, user_player.display_name)
 
 					resp_cont.add_channel_response(channel, response)
 
@@ -1325,7 +1325,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				# move around slime as a result of the shot
 				slimes_drained = int(3 * slimes_damage / 4)  # 3/4
 
-				damage = str(slimes_damage)
+				damage = slimes_damage
 
 				slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
 
@@ -2059,7 +2059,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# move around slime as a result of the shot
 	slimes_drained = int(3 * slimes_damage / 4)  # 3/4
 
-	damage = str(slimes_damage)
+	damage = slimes_damage
 
 	slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
 	if ewcfg.mutation_id_nosferatu in user_mutations and (market_data.clock < 6 or market_data.clock >= 20):

@@ -456,7 +456,7 @@ class EwEnemy:
 					else:
 						slimes_drained = 0
 
-					damage = str(slimes_damage)
+					damage = slimes_damage
 
 					slimes_tobleed = int((slimes_damage - slimes_drained) / 2)
 					if ewcfg.mutation_id_bleedingheart in target_mutations:
