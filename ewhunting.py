@@ -335,6 +335,7 @@ class EwEnemy:
 			miss = False
 			crit = False
 			backfire = False
+			backfire_damage = 0
 			strikes = 0
 			sap_damage = 0
 			sap_ignored = 0
@@ -403,6 +404,7 @@ class EwEnemy:
 							target_data=target_data,
 							sap_damage=sap_damage,
 							sap_ignored=sap_ignored,
+							backfire_damage=backfire_damage
 						)
 
 						# Make adjustments
@@ -416,6 +418,7 @@ class EwEnemy:
 						strikes = ctn.strikes
 						sap_damage = ctn.sap_damage
 						sap_ignored = ctn.sap_ignored
+						backfire_damage = ctn.backfire_damage
 
 					# can't hit lucky lucy
 					if target_data.life_state == ewcfg.life_state_lucky:
@@ -565,6 +568,13 @@ class EwEnemy:
 									name_enemy = enemy_data.display_name,
 									name_target = target_player.display_name
 								))
+								if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
+									response += "\n\n" + drop_enemy_loot(enemy_data, district_data)
+									enemy_data.life_state = ewcfg.enemy_lifestate_dead
+									delete_enemy(enemy_data)
+								else:
+									enemy_data.change_slimes(n = -backfire_damage / 2)
+									enemy_data.bleed_storage += int(backfire_damage / 2)
 							else:
 								response = used_attacktype.str_damage.format(
 									name_enemy=enemy_data.display_name,
@@ -685,6 +695,7 @@ class EwEnemy:
 class EwEnemyEffectContainer:
 	miss = False
 	backfire = False
+	backfire_damage = 0
 	crit = False
 	strikes = 0
 	slimes_damage = 0
@@ -716,7 +727,8 @@ class EwEnemyEffectContainer:
 			enemy_data=None,
 			target_data=None,
 			sap_damage=0,
-			sap_ignored=0
+			sap_ignored=0,
+			backfire_damage=0
 	):
 		self.miss = miss
 		self.backfire = backfire
@@ -728,6 +740,7 @@ class EwEnemyEffectContainer:
 		self.target_data = target_data
 		self.sap_damage = sap_damage
 		self.sap_ignored = sap_ignored
+		self.backfire_damage = backfire_damage
 
 # Debug command. Could be used for events, perhaps?
 async def summon_enemy(cmd):
