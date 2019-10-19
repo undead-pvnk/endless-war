@@ -2207,7 +2207,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				if sap_damage > 0:
 					sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
 
-                                response += " {target_name} loses {damage:,} slime{sap_response}!".format(
+				response += " {target_name} loses {damage:,} slime{sap_response}!".format(
 					target_name=enemy_data.display_name,
 					damage=damage,
 					sap_response=sap_response
