@@ -2296,10 +2296,14 @@ def wef_bat(ctn = None):
 	elif aim == -1:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
 	elif aim >= (11 - int(13 * ctn.crit_mod)):
@@ -2390,10 +2394,14 @@ def wef_broadsword(ctn = None):
 	elif aim <= 3:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -ctn.slimes_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -ctn.slimes_damage)
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
@@ -2426,7 +2434,9 @@ def wef_nunchucks(ctn = None):
 		ctn.slimes_damage += dmg * 4
 
 	elif ctn.strikes == 0:
-		ctn.backfire = True
+		ctn.backfire = True if not ctn.sandbag_mode else False
+		if not ctn.backfire:
+			return
 		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
 
 # weapon effect function for "scythe"
@@ -2528,10 +2538,14 @@ def wef_molotov(ctn = None):
 	if aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
 
 	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
@@ -2568,10 +2582,14 @@ def wef_grenade(ctn = None):
 	elif aim > 1 and aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
 	elif aim >= (10 - (10 * ctn.crit_mod)):
@@ -3348,8 +3366,8 @@ def atf_molotovbreath(ctn = None):
 		ctn.slimes_damage = 0
 
 	elif aim == 10:
-			ctn.crit = True
-			ctn.slimes_damage *= 2
+		ctn.crit = True
+		ctn.slimes_damage *= 2
 			
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
