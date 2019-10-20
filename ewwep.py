@@ -48,6 +48,9 @@ class EwWeapon:
 	# Displayed when viewing the !trauma of yourself.
 	str_trauma_self = ""
 	
+	# like str_weapon but without the article
+	str_name = ""
+
 	# Displayed when viewing the !weapon of another player.
 	str_weapon = ""
 
@@ -129,6 +132,7 @@ class EwWeapon:
 		str_killdescriptor = "",
 		str_trauma = "",
 		str_trauma_self = "",
+		str_name = "",
 		str_weapon = "",
 		str_weapon_self = "",
 		str_damage = "",
@@ -164,6 +168,7 @@ class EwWeapon:
 		self.str_killdescriptor = str_killdescriptor
 		self.str_trauma = str_trauma
 		self.str_trauma_self = str_trauma_self
+		self.str_name = str_name
 		self.str_weapon = str_weapon
 		self.str_weapon_self = str_weapon_self
 		self.str_damage = str_damage
@@ -910,7 +915,7 @@ async def attack(cmd):
 								district_data.change_slimes(n = user_data.slimes)
 								user_data.die(cause = ewcfg.cause_suicide)
 								resp_cont.add_member_to_update(cmd.message.author)
-								resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_weapon))
+								resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_name))
 							else:
 								district_data.change_slimes(n = backfire_damage / 2)
 								user_data.change_slimes(n = -backfire_damage / 2,  source = ewcfg.source_self_damage)
@@ -2211,7 +2216,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					district_data.change_slimes(n = user_data.slimes)
 					user_data.die(cause = ewcfg.cause_suicide)
 					resp_cont.add_member_to_update(cmd.message.author)
-					resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_weapon))
+					resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_name))
 				else:
 					district_data.change_slimes(n = backfire_damage / 2)
 					user_data.change_slimes(n = -backfire_damage / 2,  source = ewcfg.source_self_damage)
