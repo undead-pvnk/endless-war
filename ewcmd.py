@@ -406,7 +406,10 @@ async def hunger(cmd):
 
 
 async def endlesswar(cmd):
-	total = ewutils.execute_sql_query("SELECT slimes FROM users WHERE slimes > 0 GROUP BY id_server")
+	user_data = EwUser(member=cmd.message.author)
+	id_server = user_data.id_server
+	
+	total = ewutils.execute_sql_query("SELECT slimes FROM users WHERE slimes > 0 AND id_server = '{}' GROUP BY id_server".format(id_server))
 	totalslimes = total[0][0]
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))

@@ -1570,7 +1570,7 @@ async def makecostume(cmd):
 		"cosmetic_name": item_name,
 		"cosmetic_desc": item_desc,
 		"adorned": "false",
-		"rarity": "plebian",
+		"rarity": "Plebeian",
 		"context": "costume",
 	}
 
