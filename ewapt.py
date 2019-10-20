@@ -983,10 +983,20 @@ async def knock(cmd = None):
 		response = "One door at a time, please."
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
 
-# Double Halloween ONLY
+# TODO: Remove after Double Halloween
 async def trickortreat(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
+
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		response = "There will be neither trick nor treat found in these parts."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "The undead are too wicked and impure for such acts. Seems you can't have your cake and !haunt it too on Double Halloween."
+		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		
 	poi = ewcfg.id_to_poi.get(user_data.poi)
+	reject = False
 
 	items = ewitem.inventory(
 		id_user=cmd.message.author.id,
@@ -997,12 +1007,17 @@ async def trickortreat(cmd = None):
 	costumes = 0
 	for it in items:
 		i = EwItem(it.get('id_item'))
-		if i.item_props['context'] == 'costume':
+		context = i.item_props.get('context')
+		adorned = i.item_props.get('adorned')
+		if context == 'costume' and adorned == 'true':
 			costumes += 1
 			
-	if costumes == 0:
+	if costumes == 0 and cmd.mentions_count >= 1:
 		response = "How are you gonna go trick-or-treating without a costume on?"
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+	elif costumes == 0 and cmd.mentions_count == 0:
+		response = "How are you gonna go trick-or-treating without a costume on?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count == 1:
 		target = cmd.mentions[0]
@@ -1025,6 +1040,10 @@ async def trickortreat(cmd = None):
 			try:
 				treat = False
 				if user_data.rr_challenger == target_data.apt_zone:
+					# For Double Halloween spam knocking isn't really an issue. Just clear up rr_challenger for now.
+					print('DEBUG: Spam knock in trickortreat command.')
+					user_data.rr_challenger = ""
+					user_data.persist()
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
 					user_data = EwUser(member=cmd.message.author)
@@ -1038,17 +1057,29 @@ async def trickortreat(cmd = None):
 						if message.content.lower() == ewcfg.cmd_trick:
 							treat = False
 					else:
+						reject = True
 						user_data = EwUser(member=cmd.message.author)
 						if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
 							user_data.persist()
 			except:
-				treat = False
+				reject = True
 			user_data = EwUser(member=cmd.message.author)
+			
+			if reject:
+				response = "No response. Maybe they're busy?"
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				response = "You just sort of wait in your apartment until they go away."
+				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			user_data.hunger += ewcfg.hunger_pertrickortreat * int(hunger_cost_mod)
+			user_data.persist()
+			
 			if treat:
 				user_data.rr_challenger = ""
 				user_data.persist()
 				
-				item = random.choice(ewcfg.mine_results)
+				item = random.choice(ewcfg.trickortreat_results)
 				item_props = ewitem.gen_item_props(item)
 				if item is not None:
 					ewitem.item_create(
@@ -1057,25 +1088,127 @@ async def trickortreat(cmd = None):
 						id_server=cmd.message.server.id,
 						item_props=item_props
 					)
+				item_name = item_props.get('food_name')
 				
-				response = "{} gives you a {}. You thank them, and go about your business.".format(target.display_name, item_props['item_name'])
+				response = "{} gives you a {}. You thank them, and go about your business.".format(target.display_name, item_name)
 				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-				response = "You give {} a {}. Happy Double Halloween, you knucklehead!".format(cmd.message.author.display_name, item_props['item_name'])
+				response = "You give {} a {}. Happy Double Halloween, you knucklehead!".format(cmd.message.author.display_name, item_name)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			else:
 				slime_loss = random.choice(ewcfg.trick_amounts)
 				if user_data.rr_challenger != "":
 					user_data.rr_challenger = ""
-				user_data.change_slimes(n = -slime_loss)
+				user_data.change_slimes(n = -slime_loss, source=ewcfg.source_damage)
+				if user_data.slimes <= 0:
+					client = ewutils.get_client()
+					server = client.get_server(user_data.id_server)
+					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+					
+					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
+					
+					user_data.die(cause=ewcfg.cause_killing)
+					deathreport = "{skull} *{uname}*: You were tricked to death. {skull}".format(skull=ewcfg.emote_slimeskull, uname=player_data.display_name)
+					
+					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+					resp_cont.add_channel_response(user_poi.channel, deathreport)
+
+					await resp_cont.post()
+					await ewrolemgr.updateRoles(client=client, member=server.get_member(user_data.id_user))
+					
 				user_data.persist()
 				response = ewcfg.halloween_tricks_trickee[slime_loss].format(target.display_name)
 				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
 				response = ewcfg.halloween_tricks_tricker[slime_loss].format(cmd.message.author.display_name)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			
 				
 	elif cmd.mentions_count == 0:
-		response = "Whose door are you knocking?"
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		user_poi = ewcfg.id_to_poi.get(user_data.poi)
+		
+		if user_poi.is_capturable:
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			user_data.hunger += ewcfg.hunger_pertrickortreat * int(hunger_cost_mod)
+			user_data.persist()
+			
+			trick_chance = 10
+			
+			lowtrick = 10
+			mediumtrick = 5
+			hightrick = 3
+			extremetrick = 2
+			
+			property_class = user_poi.property_class
+			
+			if property_class == ewcfg.property_class_c:
+				trick_chance = lowtrick
+			elif property_class == ewcfg.property_class_b:
+				trick_chance = mediumtrick
+			elif property_class == ewcfg.property_class_a:
+				trick_chance = hightrick
+			elif property_class == ewcfg.property_class_s:
+				trick_chance = extremetrick
+			
+			class_based_treats = []
+			for treat in ewcfg.trickortreat_results:
+				if trick_chance == lowtrick and treat.price == 100:
+					class_based_treats.append(treat)
+				elif trick_chance == mediumtrick and treat.price == 1000:
+					class_based_treats.append(treat)
+				elif trick_chance == hightrick and treat.price == 10000:
+					class_based_treats.append(treat)
+				elif trick_chance == extremetrick and treat.price == 100000:
+					class_based_treats.append(treat)
+				
+			
+			response = "You try and go trick-or-treating around various houses in {}.\n".format(user_poi.str_name)
+			
+			if random.randrange(trick_chance) == 0:
+				treat = False
+			else:
+				treat = True
+				
+			if treat:
+				item = random.choice(class_based_treats)
+				item_props = ewitem.gen_item_props(item)
+				if item is not None:
+					ewitem.item_create(
+						item_type=item.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.server.id,
+						item_props=item_props
+					)
+				item_name = item_props.get('food_name')
+
+				response += "A kind resident gives you a {}. You thank them, and go about your business.".format(item_name)
+			else:
+				slime_loss = random.choice(ewcfg.trick_amounts)
+				user_data.change_slimes(n=-slime_loss, source=ewcfg.source_damage)
+				if user_data.slimes <= 0:
+					client = ewutils.get_client()
+					server = client.get_server(user_data.id_server)
+					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
+
+					user_data.die(cause=ewcfg.cause_killing)
+					deathreport = "{skull} *{uname}*: You were tricked to death. {skull}".format(skull=ewcfg.emote_slimeskull, uname=player_data.display_name)
+
+					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+					resp_cont.add_channel_response(user_poi.channel, deathreport)
+
+					await resp_cont.post()
+					await ewrolemgr.updateRoles(client=client, member=server.get_member(user_data.id_user))
+				user_data.persist()
+				response += ewcfg.halloween_tricks_trickee[slime_loss].format("A pranksterous resident")
+				
+			
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			response = "Whose door are you knocking?"
+			return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		
 	else:
 		response = "One door at a time, please."
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
@@ -1571,6 +1704,9 @@ async def aptCommands(cmd):
 	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
 		return await apt_help(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
+		pass
+	# TODO: Remove after Double Halloween
+	elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 		pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text
 		randint = random.randint(1, 3)

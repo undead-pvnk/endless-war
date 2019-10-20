@@ -806,7 +806,7 @@ slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
 #slimes_hauntmax = 20000
-# Double Halloween ONLY
+# TODO: Remove after Double Halloween
 slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
@@ -828,6 +828,8 @@ hunger_perminereset = 10
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
+# TODO: Remove after Double Halloween
+hunger_pertrickortreat = 6
 
 #inebriation
 inebriation_max = 20
@@ -845,7 +847,7 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
-# Double Halloween ONLY
+# TODO: Remove after Double Halloween
 acquisition_trickortreating = "trickortreating"
 
 # standard food expiration in seconds
@@ -1016,7 +1018,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 #cd_haunt = 600
-# Double Halloween ONLY
+# TODO: Remove after Double Halloween
 cd_haunt = 180
 cd_squeeze = 1200
 cd_invest = 1200
@@ -1705,6 +1707,25 @@ item_id_dinoslimesteak = "dinoslimesteak"
 
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"
+item_id_licoricelobsters = "licoricelobsters"
+item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
+item_id_munchies = "munchies"
+item_id_sni = "sni"
+item_id_slimeybears = "slimeybears"
+item_id_marsbar = "marsbar"
+item_id_magickspatchkids = "magickspatchkids"
+item_id_atms = "atms"
+item_id_seanis = "seanis"
+item_id_turstwerthers = "turstwerthers"
+item_id_n3crunch = "n3crunch"
+item_id_juvieranchers = "juvieranchers"
+item_id_krakel = "krakel"
+item_id_swedishbassedgods = "swedishbassedgods"
+item_id_bustahfingers = "bustahfingers"
+item_id_n8heads = "n8heads"
+item_id_strauberryshortcakes = "strauberryshortcakes"
+item_id_chutzpahcherries = "chutzpahcherries"
+item_id_poudrinpops = "poudrinpops"
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -5168,12 +5189,240 @@ food_list = [
 		id_food = item_id_paradoxchocs,
 		alias = [
 			"chocs",
-			"crocs",
 		],
-		recover_hunger = 50,
+		recover_hunger = 120,
+        price = 100,
 		str_name = 'Paradox Chocs',
-		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm.",
-		str_desc = "A bag of chocolates, all shaped like the head of Paradox Crocs. Every bag also comes with 1 Koff head and 1 Ackro head.",
+		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
+		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_sni,
+		alias = [
+			"blatantracism",
+		],
+		recover_hunger = 100,
+		price = 100,
+		str_name = 'SNI-',
+		str_eat = "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
+		str_desc = "A choclate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_slimeybears,
+		alias = [
+			"bears",
+		],
+		recover_hunger = 80,
+		price = 100,
+		str_name = 'Slimey Bears',
+		str_eat = "You stash a fistfull of Slimey Bears right into your gullet, chewing them thoroughly.",
+		str_desc = "A packet of Slimey Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Weird...",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_n8heads,
+		alias = [
+			"n8s",
+		],
+		recover_hunger = 60,
+		price = 100,
+		str_name = 'N8heads',
+		str_eat = "You chew on a N8head. It stop tasting good long before you finished sinking your teeth into it, but you felt committed enough to finish what you started. Fuckin shill.",
+		str_desc = "A N8heads packet. They've all got his signature shades imprinted into them.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_turstwerthers,
+		alias = [
+			"turst",
+		],
+		recover_hunger = 70,
+		price = 100,
+		str_name = 'Turstwerthers',
+		str_eat = "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
+		str_desc = "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_licoricelobsters,
+		alias = [
+			"licorice",
+		],
+		recover_hunger = 150,
+		price = 1000,
+		str_name = 'Licorice Lobsters',
+		str_eat = "You chomp on the Licorice Lobsters. Their slight bittersweetness fills you with memories of days gone by.",
+		str_desc = "Yup. They're lobsters.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_chocolateslimecorpbadges,
+		alias = [
+			"badges",
+		],
+		recover_hunger = 200,
+		price = 1000,
+		str_name = 'Choclate Slimecorp Badges',
+		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
+		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_n3crunch,
+		alias = [
+			"crunch",
+		],
+		recover_hunger = 250,
+		price = 1000,
+		str_name = 'N3 Crunch',
+		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocalate bar, with no outstanding appeal other than the engraving on the front.",
+		str_desc = "A choclate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_atms,
+		alias = [
+			"ATm's",
+		],
+		recover_hunger = 130,
+		price = 1000,
+		str_name = "ATm's",
+		str_eat = "You snack on the packet of ATm's. The hard shell pairs nicely with the milk chocolate on the inside.",
+		str_desc = "A packet of ATm's. They're all small, spherical chocolates with the @ symbol on them.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_seanis,
+		alias = [
+			"seanies",
+		],
+		recover_hunger = 90,
+		price = 1000,
+		str_name = 'Seanis',
+		str_eat = "You chomp on the Seanis, slicing them in twain over and over. By the time you're finished with them, you've developed three cavities.",
+		str_desc = "A packet of hard candies. They're small tablets, colored in fuschia, purple, and seafoam green.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_bustahfingers,
+		alias = [
+			"bustah",
+		],
+		recover_hunger = 300,
+		price = 10000,
+		str_name = 'Bustahfingers',
+		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
+		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of choclate in the middle.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_marsbar,
+		alias = [
+			"mars",
+		],
+		recover_hunger = 300,
+		price = 10000,
+		str_name = 'Mars Bar',
+		str_eat = "You take a bite out of the mars bar. Shockingly, the nicotine on the inside pairs well with the creamy sweetness of the white chocolate shell.",
+		str_desc = "A small cylindrical candy bar, unsurpsrisingly shaped like a cigarette. What is surprisngly, however, is that it contains tiny traces of nicotine on the inside.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_juvieranchers,
+		alias = [
+			"ranchers",
+		],
+		recover_hunger = 30,
+		price = 10000,
+		str_name = 'Juvie Ranchers',
+		str_eat = "You suck on the Juvie Ranchers. The Dire Apple ones are particularly sour. Your tongue feels dried out after you're finished with them.",
+		str_desc = "A bag of hard candies, all flavored after the various crops of the city.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_swedishbassedgods,
+		alias = [
+			"bassedgods",
+		],
+		recover_hunger = 100,
+		price = 10000,
+		str_name = 'Swedish Bassed Gods',
+		str_eat = "You chew through the Swedish Bassed Gods. Despite their unassuming appearance, they taste amazing. Truly a snack worthy of praise. Or would it be 'appraisal', in this case? Ah, forget it.",
+		str_desc = "A packet of gummies shaped like the Bassed God. On the back of the packet, there's an advertisement for the Fishing Guild.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_chutzpahcherries,
+		alias = [
+			"cherries",
+		],
+		recover_hunger = 250,
+		price = 10000,
+		str_name = 'Chutzpah Cherries',
+		str_eat = "You gobble up the Chutzpah Cherries. Who knew euthanasia could taste this good!",
+		str_desc = "A small box of dark red gummies, each one bearing the face of a slimeoid.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_munchies,
+		alias = [
+			"munchys",
+		],
+		recover_hunger = 350,
+		price = 100000,
+		str_name = 'Munchies',
+		str_eat = "You gorge yourself on the Munchies. What seemed like such a basic snack item reveals itself to be incredibly addictive. Before you know it, the bag is empty, leaving you to reflect on your gluttony.",
+		str_desc = "A bag of crackers, with a thin layer of cream in the middle. They're all shaped like jester hats.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_magickspatchkids,
+		alias = [
+			"magicks",
+		],
+		recover_hunger = 100,
+		price = 100000,
+		str_name = 'Magicks Patch Kids',
+		str_eat = "You munch on the Magicks Patch Kids. Sour. Sweet. !dab.",
+		str_desc = "People are rather split on these. Some find them too sour, while others claim it to have an 'acquired taste'.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_krakel,
+		alias = [
+			"krak",
+		],
+		recover_hunger = 320,
+		price = 100000,
+		str_name = 'Krakel',
+		str_eat = "You take a large bite out of the Krakel bar. The rice lining the interior gives it a nice texture, and offsets the bitterness of the dark chocolate a bit.",
+		str_desc = "A thick slab of dark chocolate. An engraving on the back reads 'SLURP SLIME, BUSTERS'. Go figure.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_strauberryshortcakes,
+		alias = [
+			"shortcake",
+		],
+		recover_hunger = 250,
+		price = 100000,
+		str_name = 'Strauberry Shortcakes',
+		str_eat = "You toss the shortcakes into your mouth one at a time, savoring every bite. Even though they're manufactured, somehow you feel like a lot of love went into making them. Maybe it's just because of all the sugar.",
+		str_desc = "A packet containing two small pastries. An anchor symbol made of pink frosting is drawn onto both of them.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_poudrinpops,
+		alias = [
+			"pops",
+		],
+		recover_hunger = 100,
+		price = 100000,
+		str_name = 'Poudrin Pops',
+		str_eat = "You crush the poudrin pops with your teeth alone. You don't gain any slime, but they do taste great.",
+		str_desc = "Hard, green candy, meant to resemble Slime Poudrins. They're placed atop plastic rings, meant to be worn on your finger as you lick away.",
 		acquisition = acquisition_trickortreating
 	),
 ]
@@ -13500,17 +13749,17 @@ grid_type_by_mining_event = {
 trick_amounts = [10, 100, 1000, 10000]
 
 halloween_tricks_tricker = {
-	10:"You open the door and give {} a hearty '!BOO'. They lose 10 slime.",
-	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime.",
-	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime.",
-	10000:"You just break down the door and start stomping on {}'s fucking groin. Despite the extreme pain, they only lose 10000 slime.",
+	10:"You open the door and give {} a hearty '!BOO'. They lose 10 slime!",
+	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime!",
+	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime!",
+	10000:"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose 10000 slime!",
 }
 
 halloween_tricks_trickee = {
-	10:"{} opens the door and gives you a hearty '!BOO'. You lose 10 slime.",
-	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime.",
-	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime.",
-	10000:"{} just breaks down the door and starts stomping on your fucking groin. Despite the extreme pain, you only lose 10000 slime.",
+	10:"{} opens the door and gives you a hearty '!BOO'. You lose 10 slime!",
+	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime!",
+	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime!",
+	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
