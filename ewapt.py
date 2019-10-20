@@ -993,7 +993,11 @@ async def trickortreat(cmd = None):
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "The undead are too wicked and impure for such acts. Seems you can't have your cake and !haunt it too on Double Halloween."
-		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		response = "You're too hungry to trick-or-treat right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 	reject = False
