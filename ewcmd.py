@@ -858,43 +858,43 @@ async def push(cmd):
 
 	server = cmd.message.server
 
-	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
-		if targetmodel.poi == user_data.poi:
-			response = random.choice(ewcfg.bully_responses)
+	if targetmodel.poi != user_data.poi:
+		response = "You can't {} them because they aren't here.".format(cmd.tokens[0])
+		
+	elif user_data.poi != ewcfg.poi_id_slimesendcliffs:
+		response = random.choice(ewcfg.bully_responses)
 
-			formatMap = {}
-			formatMap["target_name"] = target.display_name
+		formatMap = {}
+		formatMap["target_name"] = target.display_name
 
-			slimeoid_model = EwSlimeoid(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
-			if slimeoid_model.name != "":
-				slimeoid_model = slimeoid_model.name
-			else:
-				slimeoid_model = ""
-
-			cosmetics = ewitem.inventory(id_user=targetmodel.id_user, id_server=targetmodel.id_server, item_type_filter=ewcfg.it_cosmetic)
-			selected_cos = None
-			for cosmetic in cosmetics:
-				cosmetic_item = EwItem(id_item=cosmetic.get('id_item'))
-				if cosmetic_item.item_props.get('adorned') == "true":
-					selected_cos = cosmetic
-					break
-
-			if selected_cos == None:
-				selected_cos = "PANTS"
-			else:
-				selected_cos = id_item = selected_cos.get('name')
-
-			formatMap["cosmetic"] = selected_cos.upper()
-
-			if "{slimeoid}" in response:
-				if slimeoid_model != "":
-					formatMap["slimeoid"] = slimeoid_model
-				elif slimeoid_model == "":
-					response = "You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are."
-			
-			response = response.format_map(formatMap)
+		slimeoid_model = EwSlimeoid(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
+		if slimeoid_model.name != "":
+			slimeoid_model = slimeoid_model.name
 		else:
-			response = "You can't bully them because they aren't here."
+			slimeoid_model = ""
+
+		cosmetics = ewitem.inventory(id_user=targetmodel.id_user, id_server=targetmodel.id_server, item_type_filter=ewcfg.it_cosmetic)
+		selected_cos = None
+		for cosmetic in cosmetics:
+			cosmetic_item = EwItem(id_item=cosmetic.get('id_item'))
+			if cosmetic_item.item_props.get('adorned') == "true":
+				selected_cos = cosmetic
+				break
+
+		if selected_cos == None:
+			selected_cos = "PANTS"
+		else:
+			selected_cos = id_item = selected_cos.get('name')
+
+		formatMap["cosmetic"] = selected_cos.upper()
+
+		if "{slimeoid}" in response:
+			if slimeoid_model != "":
+				formatMap["slimeoid"] = slimeoid_model
+			elif slimeoid_model == "":
+				response = "You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are."
+			
+		response = response.format_map(formatMap)
 
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You attempt to push {} off the cliff, but your hand passes through them. If you're going to push someone, make sure you're corporeal.".format(target.display_name)
