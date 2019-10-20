@@ -13378,15 +13378,15 @@ raid_boss_tiers = {
 
 # Shorthand names the player can refer to enemies as.
 enemy_aliases = {
-	enemy_type_sandbag: ["sandbag", "bag o sand", "bag of sand"],
-    enemy_type_juvie: ["juvie","greenman","lostjuvie", "lost"],
-    enemy_type_dinoslime: ["dino","slimeasaur"],
-    enemy_type_slimeadactyl: ["bird","dactyl"],
-    enemy_type_microslime: ["micro","pinky"],
+	enemy_type_sandbag: ["sandbag", "bagosand", "bagofsand"],
+	enemy_type_juvie: ["juvie","greenman","lostjuvie", "lost"],
+	enemy_type_dinoslime: ["dino","slimeasaur"],
+	enemy_type_slimeadactyl: ["bird","dactyl"],
+	enemy_type_microslime: ["micro","pinky"],
 	enemy_type_slimeofgreed: ["slime","slimeofgreed","pot","potofgreed","draw2cards"],
-    enemy_type_desertraider: ["raider","scytheboy","desertraider", "desert"],
+	enemy_type_desertraider: ["raider","scytheboy","desertraider", "desert"],
 	enemy_type_mammoslime: ["mammoth","brunswick"],
-    enemy_type_megaslime: ["mega","smooze","muk"],
+	enemy_type_megaslime: ["mega","smooze","muk"],
 	enemy_type_slimeasaurusrex: ["rex","trex","slimeasaurusrex","slimeasaurus"],
 	enemy_type_greeneyesslimedragon: ["dragon","greeneyes","greeneyesslimedragon","green"],
 	enemy_type_unnervingfightingoperator: ["ufo", "alien","unnervingfightingoperator","unnvering"]
@@ -13409,12 +13409,12 @@ enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
 	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
 	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
-    enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
-    enemy_type_microslime: [{"patrician": [100, 1, 1]}],
-    enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-    enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
+	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
+	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
+	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
+	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
-    enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
+	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
@@ -13454,31 +13454,31 @@ coward_responses_hurt = [
 
 # List of outskirt districts for spawning purposes
 outskirts_districts = [
-    poi_id_wreckington_outskirts,
-    poi_id_cratersville_outskirts,
-    poi_id_oozegardens_outskirts,
-    poi_id_southsleezeborough_outskirts,
-    poi_id_crookline_outskirts,
-    poi_id_dreadford_outskirts,
-    poi_id_jaywalkerplain_outskirts,
-    poi_id_westglocksbury_outskirts,
-    poi_id_poloniumhill_outskirts,
-    poi_id_charcoalpark_outskirts,
-    poi_id_toxington_outskirts,
-    poi_id_astatineheights_outskirts,
-    poi_id_arsonbrook_outskirts,
-    poi_id_brawlden_outskirts,
-    poi_id_newnewyonkers_outskirts,
-    poi_id_assaultflatsbeach_outskirts
+	poi_id_wreckington_outskirts,
+	poi_id_cratersville_outskirts,
+	poi_id_oozegardens_outskirts,
+	poi_id_southsleezeborough_outskirts,
+	poi_id_crookline_outskirts,
+	poi_id_dreadford_outskirts,
+	poi_id_jaywalkerplain_outskirts,
+	poi_id_westglocksbury_outskirts,
+	poi_id_poloniumhill_outskirts,
+	poi_id_charcoalpark_outskirts,
+	poi_id_toxington_outskirts,
+	poi_id_astatineheights_outskirts,
+	poi_id_arsonbrook_outskirts,
+	poi_id_brawlden_outskirts,
+	poi_id_newnewyonkers_outskirts,
+	poi_id_assaultflatsbeach_outskirts
 ]
 
 # Letters that an enemy can identify themselves with
 identifier_letters = [
-    'A', 'B', 'C', 'D', 'E',
-    'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O',
-    'P', 'Q', 'R', 'S', 'T',
-    'U', 'V', 'W', 'X', 'Y', 'Z'
+	'A', 'B', 'C', 'D', 'E',
+	'F', 'G', 'H', 'I', 'J',
+	'K', 'L', 'M', 'N', 'O',
+	'P', 'Q', 'R', 'S', 'T',
+	'U', 'V', 'W', 'X', 'Y', 'Z'
 ]
 
 rain_protection = [
