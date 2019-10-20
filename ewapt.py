@@ -1134,9 +1134,9 @@ async def trickortreat(cmd = None):
 			trick_chance = 10
 			
 			lowtrick = 10
-			mediumtrick = 5
-			hightrick = 3
-			extremetrick = 2
+			mediumtrick = 7
+			hightrick = 4
+			extremetrick = 3
 			
 			property_class = user_poi.property_class
 			

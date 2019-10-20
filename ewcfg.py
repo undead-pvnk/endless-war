@@ -472,7 +472,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '/'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -806,7 +806,7 @@ slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
 #slimes_hauntmax = 20000
-# TODO: Remove after Double Halloween
+# TODO: Change back after Double Halloween
 slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
@@ -1018,7 +1018,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 cd_kill = 5
 cd_spar = 60
 #cd_haunt = 600
-# TODO: Remove after Double Halloween
+# TODO: Change back after Double Halloween
 cd_haunt = 180
 cd_squeeze = 1200
 cd_invest = 1200
