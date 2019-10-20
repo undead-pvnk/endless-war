@@ -13793,14 +13793,14 @@ grid_type_by_mining_event = {
 trick_amounts = [10, 100, 1000, 10000]
 
 halloween_tricks_tricker = {
-	10:"You open the door and give {} a hearty '!BOO'. They lose 10 slime!",
+	10:"You open the door and give {} a hearty '!SPOOK'. They lose 10 slime!",
 	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime!",
 	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime!",
 	10000:"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose 10000 slime!",
 }
 
 halloween_tricks_trickee = {
-	10:"{} opens the door and gives you a hearty '!BOO'. You lose 10 slime!",
+	10:"{} opens the door and gives you a hearty '!SPOOK'. You lose 10 slime!",
 	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime!",
 	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime!",
 	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
