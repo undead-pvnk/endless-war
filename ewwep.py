@@ -199,6 +199,7 @@ class EwEffectContainer:
 	bystander_damage = 0
 	miss_mod = 0
 	crit_mod = 0
+	sandbag_mode = False
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
@@ -227,7 +228,8 @@ class EwEffectContainer:
 		time_now = 0,
 		bystander_damage = 0,
 		miss_mod = 0,
-		crit_mod = 0
+		crit_mod = 0,
+		sandbag_mode = False
 	):
 		self.miss = miss
 		self.crit = crit
@@ -243,6 +245,7 @@ class EwEffectContainer:
 		self.bystander_damage = bystander_damage
 		self.miss_mod = miss_mod
 		self.crit_mod = crit_mod
+		self.sandbag_mode = sandbag_mode
 
 def canAttack(cmd):
 	response = ""
@@ -504,7 +507,8 @@ async def attack(cmd):
 					time_now = time_now,
 					bystander_damage = bystander_damage,
 					miss_mod = miss_mod,
-					crit_mod = crit_mod
+					crit_mod = crit_mod,
+					sandbag_mode = False
 				)
 
 				# Make adjustments
@@ -1787,7 +1791,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	statuses = user_data.getStatusEffects()
 	if ewcfg.status_repelled_id in statuses:
 		user_data.clear_status(ewcfg.status_repelled_id)
-		user_data.applyStatus(ewcfg.status_repelaftereffects_id)
+		after_effects_response = user_data.applyStatus(ewcfg.status_repelaftereffects_id)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, after_effects_response))
 		slimes_damage /= 1000
 		slimes_damage = math.ceil(slimes_damage)
 		
@@ -1833,7 +1838,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			time_now=time_now,
 			bystander_damage=bystander_damage,
 			miss_mod=miss_mod,
-			crit_mod=crit_mod
+			crit_mod=crit_mod,
+			sandbag_mode=sandbag_mode
 		)
 
 		# Make adjustments
@@ -1855,11 +1861,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			# Not enough slime to shoot.
 			response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-		if sandbag_mode and backfire:
-			backfire = False
-			miss = True
 
 		weapon_item.item_props['time_lastattack'] = time_now
 		weapon_item.persist()

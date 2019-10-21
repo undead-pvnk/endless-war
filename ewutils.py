@@ -1147,6 +1147,10 @@ def get_move_speed(user_data):
 
 	if user_data.time_expirpvp >= time_now:
 		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
+		
+	# TODO: Remove after Double Halloween
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 2
 
 	return move_speed
 
@@ -1256,7 +1260,12 @@ async def delete_last_message(client, last_messages, tick_length):
 def check_accept_or_refuse(str):
 	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
 		return True
-
+	
+# TODO: Remove after Double Halloween
+def check_trick_or_treat(str):
+	if str.content.lower() == ewcfg.cmd_treat or str.content.lower() == ewcfg.cmd_trick:
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:

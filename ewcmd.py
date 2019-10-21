@@ -389,6 +389,32 @@ async def data(cmd):
 	if member != None:
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
+
+""" Check how hungry you are. """
+async def hunger(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response = ""
+
+	if user_data.hunger > 0:
+		response = "You are {}% hungry. ".format(
+			round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1)
+		)
+	else:
+		response = "You aren't hungry at all."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def endlesswar(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	id_server = user_data.id_server
+	
+	total = ewutils.execute_sql_query("SELECT slimes FROM users WHERE slimes > 0 AND id_server = '{}' GROUP BY id_server".format(id_server))
+	totalslimes = total[0][0]
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
+
+
 def weather_txt(id_server):
 	response = ""
 	market_data = EwMarket(id_server = id_server)
@@ -475,6 +501,31 @@ async def dab(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n'  + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller  + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck))
 
 """
+	Ghosts BOO
+"""
+async def boo(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	
+	if user_data.life_state == ewcfg.life_state_corpse or user_data.life_state == ewcfg.life_state_grandfoe:
+		resp_cont = ewutils.EwResponseContainer(id_server = user_data.id_server)
+		
+		response = ewutils.formatMessage(cmd.message.author, '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank)
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+		
+		response = ewcfg.emote_ghost + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_ghost + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+		
+		# if user_data.life_state == ewcfg.life_state_corpse or user_data.life_state == ewcfg.life_state_grandfoe:
+		await resp_cont.post()
+	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_ghost + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_ghost + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank))
+
+
+# TODO: Remove after Double Halloween
+async def spook(cmd):
+	#user_data = EwUser(member=cmd.message.author)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n' "***SPOOKED YA!***" + '\n' + "https://www.youtube.com/watch?v=T-dtcIXZo4s"))
+
+"""
 	advertise patch notes
 """
 async def patchnotes(cmd):
@@ -489,115 +540,113 @@ async def help(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# help only checks for districts while in game channels
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = ewcfg.generic_help_response
-	else:
-		# checks if user is in a college or if they have a game guide
-		gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
 
-		if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
-			if not len(cmd.tokens) > 1:
-				topic_counter = 0
-				topic_total = 0
-				# list off help topics to player at college
-				response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
+	# checks if user is in a college or if they have a game guide
+	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+
+	if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
+		if not len(cmd.tokens) > 1:
+			topic_counter = 0
+			topic_total = 0
+			# list off help topics to player at college
+			response = "(Use !help [topic] to learn about a topic. Example: '!help gangs')\n\nWhat would you like to learn about? Topics include: \n"
+			
+			# display the list of topics in order
+			topics = ewcfg.help_responses_ordered_keys
+			for topic in topics:
+				topic_counter += 1
+				topic_total += 1
+				response += "**{}**".format(topic)
+				if topic_total != len(topics):
+					response += ", "
 				
-				# display the list of topics in order
-				topics = ewcfg.help_responses_ordered_keys
-				for topic in topics:
-					topic_counter += 1
-					topic_total += 1
-					response += "**{}**".format(topic)
-					if topic_total != len(topics):
-						response += ", "
-					
-					if topic_counter == 5:
-						topic_counter = 0
-						response += "\n"
-					
-			else:
-				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
-				if topic in ewcfg.help_responses:
-					response = ewcfg.help_responses[topic]
-					if topic == 'mymutations':
-						mutations = user_data.get_mutations()
-						for mutation in mutations:
-							response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
-				else:
-					response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
+				if topic_counter == 5:
+					topic_counter = 0
+					response += "\n"
+				
 		else:
-			# user not in college, check what help message would apply to the subzone they are in
-
-			# poi variable assignment used for checking if player is in a vendor subzone or not
-			poi = ewcfg.id_to_poi.get(user_data.poi)
-
-			if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
-				# mine help
-				response = ewcfg.help_responses['mining']
-			elif (len(poi.vendors) >= 1) and not user_data.poi in ewcfg.poi_id_dojo:
-				# food help
-				response = ewcfg.help_responses['food']
-			elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
-				# dojo help
-				response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**"
-			elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
-				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
-				if topic == 'dojo':
-					response = ewcfg.help_responses['dojo']
-				elif topic == 'sparring':
-					response = ewcfg.help_responses['sparring']
-				else:
-					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
-			elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
-				# farming help
-				response = ewcfg.help_responses['farming']
-			elif user_data.poi in ewcfg.poi_id_slimeoidlab and not len(cmd.tokens) > 1:
-				# labs help
-				response = "For information on slimeoids, do **'!help slimeoids'**. To learn about your current mutations, do **'!help mymutations'**"
-			elif user_data.poi in ewcfg.poi_id_slimeoidlab and len(cmd.tokens) > 1:
-				topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
-				if topic == 'slimeoids':
-					response = ewcfg.help_responses['slimeoids']
-				elif topic == 'mymutations':
-					response = ewcfg.help_responses['mymutations']
+			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+			if topic in ewcfg.help_responses:
+				response = ewcfg.help_responses[topic]
+				if topic == 'mymutations':
 					mutations = user_data.get_mutations()
 					for mutation in mutations:
 						response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
-				else:
-					response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
-			elif user_data.poi in ewcfg.transport_stops:
-				# transportation help
-				response = ewcfg.help_responses['transportation']
-			elif user_data.poi in ewcfg.poi_id_stockexchange:
-				# stock exchange help
-				response = ewcfg.help_responses['stocks']
-			elif user_data.poi in ewcfg.poi_id_thecasino:
-				# casino help
-				response = ewcfg.help_responses['casino']
-			elif user_data.poi in ewcfg.poi_id_thesewers:
-				# death help
-				response = ewcfg.help_responses['death']
-
-			elif user_data.poi in ewcfg.poi_id_realestate:
-				#real estate help
-				response = ewcfg.help_responses['realestate']
-			elif user_data.poi in [
-				ewcfg.poi_id_toxington_pier,
-				ewcfg.poi_id_assaultflatsbeach_pier,
-				ewcfg.poi_id_vagrantscorner_pier,
-				ewcfg.poi_id_crookline_pier,
-				ewcfg.poi_id_slimesend_pier,
-				ewcfg.poi_id_jaywalkerplain_pier,
-				ewcfg.poi_id_ferry
-			]:
-				# fishing help
-				response = ewcfg.help_responses['fishing']
-			elif user_data.poi in ewcfg.outskirts_districts:
-				# hunting help
-				response = ewcfg.help_responses['hunting']
 			else:
-				# catch-all response for when user isn't in a sub-zone with a help response
-				response = ewcfg.generic_help_response
+				response = 'ENDLESS WAR questions your belief in the existence of such a topic. Try referring to the topics list again by using just !help.'
+	else:
+		# user not in college, check what help message would apply to the subzone they are in
+
+		# poi variable assignment used for checking if player is in a vendor subzone or not
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+		if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+			# mine help
+			response = ewcfg.help_responses['mining']
+		elif (len(poi.vendors) >= 1) and not user_data.poi in ewcfg.poi_id_dojo:
+			# food help
+			response = ewcfg.help_responses['food']
+		elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
+			# dojo help
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**"
+		elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
+			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+			if topic == 'dojo':
+				response = ewcfg.help_responses['dojo']
+			elif topic == 'sparring':
+				response = ewcfg.help_responses['sparring']
+			else:
+				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
+		elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+			# farming help
+			response = ewcfg.help_responses['farming']
+		elif user_data.poi in ewcfg.poi_id_slimeoidlab and not len(cmd.tokens) > 1:
+			# labs help
+			response = "For information on slimeoids, do **'!help slimeoids'**. To learn about your current mutations, do **'!help mymutations'**"
+		elif user_data.poi in ewcfg.poi_id_slimeoidlab and len(cmd.tokens) > 1:
+			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
+			if topic == 'slimeoids':
+				response = ewcfg.help_responses['slimeoids']
+			elif topic == 'mymutations':
+				response = ewcfg.help_responses['mymutations']
+				mutations = user_data.get_mutations()
+				for mutation in mutations:
+					response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
+			else:
+				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
+		elif user_data.poi in ewcfg.transport_stops:
+			# transportation help
+			response = ewcfg.help_responses['transportation']
+		elif user_data.poi in ewcfg.poi_id_stockexchange:
+			# stock exchange help
+			response = ewcfg.help_responses['stocks']
+		elif user_data.poi in ewcfg.poi_id_thecasino:
+			# casino help
+			response = ewcfg.help_responses['casino']
+		elif user_data.poi in ewcfg.poi_id_thesewers:
+			# death help
+			response = ewcfg.help_responses['death']
+
+		elif user_data.poi in ewcfg.poi_id_realestate:
+			#real estate help
+			response = ewcfg.help_responses['realestate']
+		elif user_data.poi in [
+			ewcfg.poi_id_toxington_pier,
+			ewcfg.poi_id_assaultflatsbeach_pier,
+			ewcfg.poi_id_vagrantscorner_pier,
+			ewcfg.poi_id_crookline_pier,
+			ewcfg.poi_id_slimesend_pier,
+			ewcfg.poi_id_jaywalkerplain_pier,
+			ewcfg.poi_id_ferry
+		]:
+			# fishing help
+			response = ewcfg.help_responses['fishing']
+		elif user_data.poi in ewcfg.outskirts_districts:
+			# hunting help
+			response = ewcfg.help_responses['hunting']
+		else:
+			# catch-all response for when user isn't in a sub-zone with a help response
+			response = ewcfg.generic_help_response
 				
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1054,6 +1103,8 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	districtmodel.change_slimes(n=slimetotal)
 	districtmodel.persist()
 	return response
+
+
 
 
 
