@@ -1711,11 +1711,13 @@ item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
 item_id_sni = "sni"
+item_id_twixten = "twixten"
 item_id_slimeybears = "slimeybears"
 item_id_marsbar = "marsbar"
 item_id_magickspatchkids = "magickspatchkids"
 item_id_atms = "atms"
 item_id_seanis = "seanis"
+item_id_candybungis = "candybungis"
 item_id_turstwerthers = "turstwerthers"
 item_id_poudrinpops = "poudrinpops"
 item_id_juvieranchers = "juvieranchers"
@@ -5218,6 +5220,18 @@ food_list = [
 		acquisition = acquisition_trickortreating
 	),
 	EwFood(
+		id_food = item_id_twixten,
+		alias = [
+			"twix",
+		],
+		recover_hunger = 150,
+        price = 100,
+		str_name = 'Twixten',
+		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
+		str_desc = "A chocolate bar. It's shaped like a katana.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
 		id_food = item_id_sni,
 		alias = [
 			"blatantracism",
@@ -5263,6 +5277,18 @@ food_list = [
 		str_name = 'Turstwerthers',
 		str_eat = "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
 		str_desc = "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_candybungis,
+		alias = [
+			"bungis",
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Candy (Bungis)',
+		str_eat = "You eat through the Candy (Bungis). Rather than imprint the temporary tattoo, you just shove the whole thing into your mouth and chew through it.",
+		str_desc = "A rolled up fruit snack. An layer of ink it has allows you to imprint an image of Sky (Bungis) onto your tongue.",
 		acquisition = acquisition_trickortreating
 	),
 	EwFood(
