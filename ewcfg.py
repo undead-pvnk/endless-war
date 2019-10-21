@@ -5431,7 +5431,7 @@ food_list = [
 		recover_hunger = 100,
 		price = 100000,
 		str_name = 'Slime Sours',
-		str_eat = "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seeminly have no connection with the death raining from above.",
+		str_eat = "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seemingly have no connection with the death raining from above.",
 		str_desc = "A small plastic bag of gumdrops, each as green as slime itself. Apparently they're made entirely by hand.",
 		acquisition = acquisition_trickortreating
 	),
