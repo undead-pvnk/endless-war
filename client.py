@@ -138,19 +138,31 @@ cmd_map = {
 	ewcfg.cmd_view_sap: ewcmd.view_sap,
 	ewcfg.cmd_harden_sap: ewwep.harden_sap,
 	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+	
+	# Check how hungry you are.
+	ewcfg.cmd_hunger: ewcmd.hunger,
 
 	#check what time it is, and the weather
 	ewcfg.cmd_time: ewcmd.weather,
 	ewcfg.cmd_clock: ewcmd.weather,
 	ewcfg.cmd_weather: ewcmd.weather,
 
-
 	# Rowdys thrash and Killers dab.
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
+	
+	# Ghosts can BOO (and during Double Halloween, SPOOK)
+	ewcfg.cmd_boo: ewcmd.boo,
+	ewcfg.cmd_spook: ewcmd.spook,
+    
+	# Make a costume for Double Halloween
+	ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
+	
+	# Show the total of positive slime in the world.
+	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
@@ -166,6 +178,7 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
+	ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand: ewapt.propstand,
@@ -447,10 +460,10 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-        ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
-        ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
-        ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
-        #ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
+	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+	#ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
