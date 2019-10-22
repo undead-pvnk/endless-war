@@ -958,7 +958,7 @@ def find_enemy(enemy_search=None, user_data=None):
 			if enemy_search.lower() in aliases:
 				enemy_search_alias = enemy_type
 				break
-			if not set(enemy_search_tokens).isdisjoint(set(aliases))
+			if not set(enemy_search_tokens).isdisjoint(set(aliases)):
 				enemy_search_alias = enemy_type
 				break
 
