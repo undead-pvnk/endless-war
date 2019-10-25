@@ -472,7 +472,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -569,7 +569,7 @@ cmd_menu_alt2 = cmd_prefix + 'catalogue'
 cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
-cmd_crush = cmd_prefix + 'crushpoudrin'
+cmd_crush = cmd_prefix + 'crush'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -811,7 +811,7 @@ slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
-slimes_permill = 75000
+slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
@@ -1731,6 +1731,37 @@ item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
 
+# TODO: Remove after Double Halloween
+# A list used to check if certain items can be made into Double Halloween Grist
+candy_ids_list = [
+	item_id_paradoxchocs,
+	item_id_licoricelobsters,
+	item_id_chocolateslimecorpbadges,
+	item_id_munchies,
+	item_id_sni,
+	item_id_twixten,
+	item_id_slimeybears,
+	item_id_marsbar,
+	item_id_magickspatchkids,
+	item_id_atms,
+	item_id_seanis,
+	item_id_candybungis,
+	item_id_turstwerthers,
+	item_id_poudrinpops,
+	item_id_juvieranchers,
+	item_id_krakel,
+	item_id_swedishbassedgods,
+	item_id_bustahfingers,
+	item_id_endlesswarheads,
+	item_id_n8heads,
+	item_id_strauberryshortcakes,
+	item_id_chutzpahcherries,
+	item_id_n3crunch,
+	item_id_slimesours,
+]
+
+item_id_doublehalloweengrist = "doublehalloweengrist"
+
 #vegetable ids
 item_id_poketubers = "poketubers"
 item_id_pulpgourds = "pulpgourds"
@@ -2133,6 +2164,15 @@ item_list = [
 		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
 		vendors = [vendor_rpcity],
 		price = 50000,
+	),
+	EwGeneralItem(
+		id_item = item_id_doublehalloweengrist,
+		context = 'dhgrist',
+		alias = [
+			"grist"
+		],
+		str_name = "Double Halloween Grist",
+		str_desc = "A mush of finely ground candy.",
 	),
 ]
 item_list += ewdebug.debugitem_set
@@ -2995,7 +3035,7 @@ weapon_list = [
 			"nunchucks"
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_backfire = "**Whack!!** {name_player} fucks up his kung-fu routine and whacks himself in the head with his own nun-chucks!!",
+		str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
 		str_equip = "You equip the nun-chucks.",
 		str_weapon = "nun-chucks",
 		str_weaponmaster_self = "You are a rank {rank} kung-fu master.",
@@ -13310,7 +13350,8 @@ for m in cosmetic_items_list:
 		mine_results.append(m)
 	else:
 		pass
-	
+
+# TODO: Remove after Double Halloween
 # Gather all the items that can be the result of trick-or-treating.
 trickortreat_results = []
 
@@ -13319,7 +13360,15 @@ for t in food_list:
 		trickortreat_results.append(t)
 	else:
 		pass
-		
+
+# Gather the Halloween Grist
+grist_results = []
+
+for g in item_list:
+	if g.context == 'dhgrist':
+		grist_results.append(g)
+	else:
+		pass
 
 slimexodia_parts = []
 

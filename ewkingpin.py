@@ -38,7 +38,7 @@ async def pardon(cmd):
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 
-				response = "{} has been released from his association with the {}.".format(member.display_name, faction_old)
+				response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
 			member_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
