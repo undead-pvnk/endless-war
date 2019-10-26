@@ -43,13 +43,13 @@ user_to_tutorial_state = {}
 
 def format_tutorial_response(scene):
 	response = scene.text
-		if scene.dungeon_state:
-			response += "\n\nWhat do you do?\n\n**>options: "
-			options = []
-			for path in scene.options.keys():
-				options.append("{}{}".format(ewcfg.cmd_prefix, path))
-			response += ewutils.formatNiceList(names = options, conjunction = "or")
-			response += "**"
+	if scene.dungeon_state:
+		response += "\n\nWhat do you do?\n\n**>options: "
+		options = []
+		for path in scene.options.keys():
+			options.append("{}{}".format(ewcfg.cmd_prefix, path))
+		response += ewutils.formatNiceList(names = options, conjunction = "or")
+		response += "**"
 
 	return response
 
