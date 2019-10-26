@@ -24,7 +24,7 @@ from ewworldevent import EwEventDef
 import ewdebug
 
 # Global configuration options.
-version = "v3.9a"
+version = "v3.9hwx2"
 
 dir_msgqueue = 'msgqueue'
 
@@ -81,6 +81,7 @@ poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
 poi_id_rpcity = "rpcity"
+poi_id_underworld = "underworld"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -147,6 +148,8 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+
+poi_id_underworld_subway_station = "underworldsubwaystation"
 
 # ferry ports
 poi_id_df_blimp_tower = "dreadfordblimptower"
@@ -1761,6 +1764,7 @@ candy_ids_list = [
 ]
 
 item_id_doublehalloweengrist = "doublehalloweengrist"
+item_id_whitelineticket = "ticket"
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -2172,8 +2176,18 @@ item_list = [
 			"grist"
 		],
 		str_name = "Double Halloween Grist",
-		str_desc = "A mush of finely ground candy.",
+		str_desc = "A mush of finely ground candy. Perhaps it can be forged into something special?",
 	),
+	EwGeneralItem(
+		id_item = item_id_whitelineticket,
+		context = 'wlticket',
+		alias = [
+			"tickettohell"
+		],
+		str_name = "Ticket to the White Line",
+		str_desc = "A large assortment of candy molded into one unholy voucher for access into the underworld. Use it in a White Line subway station... ***IF YOU DARE!!***",
+		acquisition=acquisition_smelting,
+	)
 ]
 item_list += ewdebug.debugitem_set
 
@@ -9549,6 +9563,7 @@ poi_list = [
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
+	# TODO: Remove after Double Halloween
 	EwPoi( # RP City
 		id_poi = poi_id_rpcity,
 		alias = [
@@ -9568,6 +9583,39 @@ poi_list = [
 		role = "RP City",
 		mother_district = poi_id_littlechernobyl,
 		is_subzone = True
+	),
+	EwPoi(  # Underworld Subway Station
+		id_poi = poi_id_underworld_subway_station,
+		alias = [
+			"underworldsubwaystation",
+			"uws",
+			"us"
+		],
+		str_name = "The Underworld Subway Station",
+		str_desc = str_generic_subway_station_description + "\n\nExits into The Underworld.",
+		coord = (63, 44),
+		channel = "underworld-subway-station",
+		role = "Underworld Subway Station",
+		pvp = True,
+		is_subzone = True,
+		mother_district = poi_id_underworld,
+		is_transport_stop = True,
+		transport_lines = set()
+	),
+	EwPoi( # The Underworld
+		id_poi = poi_id_underworld,
+		alias = [
+			"undertale",
+			"underground",
+		],
+		str_name = "The Underworld, last stop of the White Line",
+		str_desc = "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
+		coord = (63, 46),
+		channel = "the-underworld",
+		role = "Underworld",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -9684,18 +9732,19 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	#EwPoi(  # Subway train on the white line
-	#	id_poi = poi_id_subway_white01,
-	#	str_name = "A Subway Train",
-	#	str_desc = generic_subway_description, # TODO: add description
-	#	channel = channel_subway_white01,
-	#	role = "Subway Train W-01",
-	#	pvp = True,
-	#	is_transport = True,
-	#	transport_type = transport_type_subway,
-	#	default_line = transport_line_subway_white_eastbound,
-	#	default_stop = poi_id_dt_subway_station
-	#),
+	# TODO: Comment back in after Double Halloween
+	EwPoi(  # Subway train on the white line
+		id_poi = poi_id_subway_white01,
+		str_name = "A Subway Train",
+		str_desc = str_generic_subway_description, # TODO: add description
+		channel = channel_subway_white01,
+		role = "Subway Train W-01",
+		pvp = True,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_white_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -10404,7 +10453,6 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts=True
 	),
-
 ]
 poi_list += ewdebug.debugpois
 
@@ -10689,43 +10737,46 @@ transport_lines = [
 		    }
 
 		),
-	#EwTransportLine( # white subway line from downtown to juvies row
-	#	id_line = transport_line_subway_white_eastbound,
-	#	alias = [
-	#		"whiteeastline",
-	#		"whiteeast",
-	#		"eastwhite",
-	#		"whitetojuviesrow",
-	#		"whitetojuvies",
-	#		"whitetojr"
-	#	    ],
-	#	first_stop = poi_id_dt_subway_station,
-	#	last_stop = poi_id_jr_subway_station,
-	#	next_line = transport_line_subway_white_westbound,
-	#	str_name = "The white subway line towards Juvie's Row",
-	#	schedule = {
-	#		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-	#	    }
-	#	),
-	#EwTransportLine( # white subway line from juvies row to downtown
-	#	id_line = transport_line_subway_white_westbound,
-	#	alias = [
-	#		"whitewestline",
-	#		"whitewest",
-	#		"westwhite",
-	#		"whitetodowntown",
-	#		"whitetodt"
-	#	    ],
-	#	first_stop = poi_id_jr_subway_station,
-	#	last_stop = poi_id_dt_subway_station,
-	#	next_line = transport_line_subway_white_eastbound,
-	#	str_name = "The white subway line towards Downtown NLACakaNM",
-	#	schedule = {
-	#		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
-	#	    }
-	#	),
+	# TODO: Comment back in after Double Halloween
+	EwTransportLine( # white subway line from downtown to juvies row
+		id_line = transport_line_subway_white_eastbound,
+		alias = [
+			"whiteeastline",
+			"whiteeast",
+			"eastwhite",
+			"whitetojuviesrow",
+			"whitetojuvies",
+			"whitetojr"
+		    ],
+		first_stop = poi_id_underworld_subway_station,
+		last_stop = poi_id_jr_subway_station,
+		next_line = transport_line_subway_white_westbound,
+		str_name = "The white subway line towards Juvie's Row",
+		schedule = {
+			poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+		    }
+		),
+	EwTransportLine( # white subway line from juvies row to downtown
+		id_line = transport_line_subway_white_westbound,
+		alias = [
+			"whitewestline",
+			"whitewest",
+			"westwhite",
+			"whitetounderworld",
+			"whitetouw"
+		    ],
+		first_stop = poi_id_jr_subway_station,
+		last_stop = poi_id_underworld_subway_station,
+		next_line = transport_line_subway_white_eastbound,
+		str_name = "The white subway line towards The Underworld",
+		schedule = {
+			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+		    }
+		),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -11475,7 +11526,7 @@ smelting_recipe_list = [
 		str_name = "a cooked piece of Dinoslime meat",
 		alias = [
 			"cookedmeat",
-			"sss"
+			"dss"
 		],
 		ingredients = {
 			item_id_faggot : 1,
@@ -11498,7 +11549,7 @@ smelting_recipe_list = [
 		},
 		products = ['fishingrod']
 	),
-        EwSmeltingRecipe(
+    EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -11509,8 +11560,8 @@ smelting_recipe_list = [
 			'string':4
 		},
 		products = ['bass']
-        ),
-		EwSmeltingRecipe(
+    ),
+	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
 		alias = [
@@ -11521,8 +11572,8 @@ smelting_recipe_list = [
 			'scalp': 10
 		},
 		products = ['leathercouch']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherchair",
 		str_name = "a leather chair",
 		alias = [
@@ -11533,8 +11584,8 @@ smelting_recipe_list = [
 			'scalp': 5
 		},
 		products = ['leatherchair']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherlamp",
 		str_name = "a leather coated lamp",
 		alias = [
@@ -11545,8 +11596,8 @@ smelting_recipe_list = [
 			'scalp': 3
 		},
 		products = ['leatherlamp']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherdesk",
 		str_name = "a leather desk",
 		alias = [
@@ -11557,8 +11608,8 @@ smelting_recipe_list = [
 			'scalp': 4
 		},
 		products = ['leatherdesk']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherbed",
 		str_name = "a leather bed",
 		alias = [
@@ -11569,7 +11620,20 @@ smelting_recipe_list = [
 			'scalp': 12
 		},
 		products = ['leatherbed']
-		)
+	),
+    # TODO: Remove after Double Halloween
+    EwSmeltingRecipe(
+        id_recipe = "ticket",
+        str_name = "Ticket to the White Line",
+        alias = [
+            "tickettohell",
+        ],
+        ingredients = {
+            #item_id_doublehalloweengrist: 100,
+			item_id_slimepoudrin: 2
+        },
+        products = ['ticket']
+    )
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 

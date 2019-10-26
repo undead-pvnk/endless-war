@@ -1064,7 +1064,7 @@ async def trade(cmd):
 					response += response_part
 					
 			if user_trade.get("state") == ewcfg.trade_state_complete:
-				response_part += "**You are ready to complete the trade.**\n"
+				response_part = "**You are ready to complete the trade.**"
 
 				if len(response) + len(response_part) > 1492:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1077,7 +1077,7 @@ async def trade(cmd):
 			#print partner's offers
 			stacked_item_map = {}
 
-			response = "\n\n" + trade_partner.display_name + "'s offers:\n"
+			response = trade_partner.display_name + "'s offers:\n"
 			items = ewutils.trading_offers.get(trade_partner.id_user) if not sort_by_name else sorted(ewutils.trading_offers.get(trade_partner.id_user), key=lambda item: item.get("name").lower)
 			for item in items:
 				if not stacking:
@@ -1115,6 +1115,8 @@ async def trade(cmd):
 					response += response_part
 
 			if ewutils.active_trades.get(trade_partner.id_user).get("state") == ewcfg.trade_state_complete:
+				response_part = '**They are ready to complete the trade.**'
+
 				if len(response) + len(response_part) > 1492:
 					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					response = ""
@@ -1327,15 +1329,14 @@ async def complete_trade(cmd):
 				elif item.get("item_type") == ewcfg.it_food:
 					trader_food_offered.append(item)
 
-			
-			if user_data.get_weapon_capacity() < len(weapons_held) + len(trader_weapons_offered) - len(weapons_offered):
+			if len(trader_weapons_offered) > 0 and (user_data.get_weapon_capacity() < len(weapons_held) + len(trader_weapons_offered) - len(weapons_offered)):
 				response = "You can't carry any more weapons."
-			elif user_data.get_food_capacity() < len(food_held) + len(trader_food_offered) - len(food_offered):
+			elif len(trader_food_offered) > 0 and (user_data.get_food_capacity() < len(food_held) + len(trader_food_offered) - len(food_offered)):
 				response = "You can't carry any more food."
 
-			elif trade_partner.get_weapon_capacity() < len(trader_weapons_held) - len(trader_weapons_offered) + len(weapons_offered):
+			elif len(weapons_offered) > 0 and (trade_partner.get_weapon_capacity() < len(trader_weapons_held) - len(trader_weapons_offered) + len(weapons_offered)):
 				response = "They can't carry any more weapons."
-			elif trade_partner.get_food_capacity() < len(trader_food_held) - len(trader_food_offered) + len(food_offered):
+			elif len(food_offered) > 0 and (trade_partner.get_food_capacity() < len(trader_food_held) - len(trader_food_offered) + len(food_offered)):
 				response = "They can't carry any more food."
 
 			else:
