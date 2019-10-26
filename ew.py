@@ -695,7 +695,7 @@ class EwUser:
 					self.active_slimeoid = result[36]
 					self.has_soul = result[37]
 				else:
-					self.poi = ewcfg.poi_id_downtown
+					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
