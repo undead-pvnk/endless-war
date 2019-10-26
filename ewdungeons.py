@@ -55,6 +55,28 @@ def format_tutorial_response(scene):
 
 	return response
 
+async def begin_tutorial(member):
+	user_data = EwUser(member = member)
+	user_to_tutorial_state[user_data.id_user] = 0
+	
+	scene = ewcfg.dungeon_tutorial[0]
+
+	if scene.poi != None:
+		user_data.poi = scene.poi
+	if scene.life_state != None:
+		user_data.life_state = scene.life_state
+
+	user_data.persist()
+
+	await ewrolemgr.updateRoles(client = ewutils.get_client(), member = member)
+
+	response = format_tutorial_response(scene)
+	poi_def = ewcfg.id_to_poi.get(user_data.poi)
+	channels = [poi_def.channel]
+	return await ewutils.post_in_channels(member.server.id, ewutils.formatMessage(member, response), channels)
+	
+
+
 async def tutorial_cmd(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	client = cmd.client
@@ -63,8 +85,7 @@ async def tutorial_cmd(cmd):
 		return
 
 	if user_data.id_user not in user_to_tutorial_state:
-		user_to_tutorial_state[user_data.id_user] = 0
-
+		return await begin_tutorial(cmd.message.author)
 	
 	tutorial_state = user_to_tutorial_state.get(user_data.id_user)
 

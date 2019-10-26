@@ -1001,6 +1001,10 @@ async def on_member_join(member):
 		member = member,
 		server = member.server
 	)
+	user_data = EwUser(member = member)
+
+	if user_data.poi in ewcfg.tutorial_pois:
+		await ewdungeons.begin_tutorial(member)
 
 @client.event
 async def on_message_delete(message):
