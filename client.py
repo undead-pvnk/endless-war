@@ -49,6 +49,7 @@ import ewfaction
 import ewapt
 import ewweather
 import ewworldevent
+import ewdungeons
 import ewdebug
 
 from ewitem import EwItem
@@ -1152,7 +1153,10 @@ async def on_message(message):
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)
 
-		if cmd_fn != None:
+		if user_data.poi in ewcfg.tutorial_pois:	
+			return await ewdungeons.tutorial_cmd(cmd_obj)
+
+		elif cmd_fn != None:
 			# Execute found command
 			return await cmd_fn(cmd_obj)
 

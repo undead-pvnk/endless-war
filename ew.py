@@ -832,7 +832,7 @@ class EwUser:
 				self.apt_zone,
 				self.visiting,
 				self.active_slimeoid,
-				self.has_soul
+				self.has_soul,
 			))
 
 			conn.commit()
