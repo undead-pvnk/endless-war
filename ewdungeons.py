@@ -1,7 +1,9 @@
 import asyncio
+import random
 
 import ewcfg
 import ewutils
+import ewrolemgr
 
 from ew import EwUser
 
@@ -68,7 +70,7 @@ async def tutorial_cmd(cmd):
 
 	tutorial_scene = ewcfg.dungeon_tutorial[tutorial_state]
 
-	cmd_content = cmd.content[1:].lower()
+	cmd_content = cmd.message.content[1:].lower()
 
 	if cmd_content in tutorial_scene.options:
 		new_state = tutorial_scene.options.get(cmd_content)
@@ -113,29 +115,3 @@ async def tutorial_cmd(cmd):
 		response = format_tutorial_response(tutorial_scene)
 		return await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def dungeon_test(cmd):
-	response = "Starting tutorial..."
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	dungeon_state = True
-	scene_id = 0
-	while dungeon_state:
-		scene = dungeon_01[scene_id]
-		response = scene.text
-		if scene.dungeon_state:
-			response += "\n\nWhat do you do?\n\n**>options: "
-			for path in scene.options.keys():
-				response += "!{}, ".format(path)
-			response += "**"
-			await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-			try:
-		msg = await cmd.client.wait_for_message(timeout = 120, author = member, check = check)
-
-		if msg != None:
-			if message.content[1:] in scene.options.keys():
-			scene_id = scene.options
-			else:
-						response = "You can't do that."
-						await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
-					continue
-			except:
-		return
