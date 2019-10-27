@@ -475,7 +475,7 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
-	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
+	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -1219,9 +1219,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 100,000 slime!"
+			response = "You get 1,000,000,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 100000)
+			levelup_response = user_data.change_slimes(n = 1000000000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 

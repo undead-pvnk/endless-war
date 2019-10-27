@@ -135,4 +135,3 @@ async def tutorial_cmd(cmd):
 
 		response = format_tutorial_response(tutorial_scene)
 		return await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-

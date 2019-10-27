@@ -82,6 +82,7 @@ poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
 poi_id_rpcity = "rpcity"
+poi_id_underworld = "underworld"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -149,6 +150,8 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+
+poi_id_underworld_subway_station = "underworldsubwaystation"
 
 # ferry ports
 poi_id_df_blimp_tower = "dreadfordblimptower"
@@ -576,7 +579,7 @@ cmd_menu_alt2 = cmd_prefix + 'catalogue'
 cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
-cmd_crush = cmd_prefix + 'crushpoudrin'
+cmd_crush = cmd_prefix + 'crush'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -818,7 +821,7 @@ slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
-slimes_permill = 75000
+slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
@@ -1738,6 +1741,42 @@ item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
 
+# TODO: Remove after Double Halloween
+# A list used to check if certain items can be made into Double Halloween Grist
+candy_ids_list = [
+	item_id_paradoxchocs,
+	item_id_licoricelobsters,
+	item_id_chocolateslimecorpbadges,
+	item_id_munchies,
+	item_id_sni,
+	item_id_twixten,
+	item_id_slimeybears,
+	item_id_marsbar,
+	item_id_magickspatchkids,
+	item_id_atms,
+	item_id_seanis,
+	item_id_candybungis,
+	item_id_turstwerthers,
+	item_id_poudrinpops,
+	item_id_juvieranchers,
+	item_id_krakel,
+	item_id_swedishbassedgods,
+	item_id_bustahfingers,
+	item_id_endlesswarheads,
+	item_id_n8heads,
+	item_id_strauberryshortcakes,
+	item_id_chutzpahcherries,
+	item_id_n3crunch,
+	item_id_slimesours,
+]
+
+item_id_doublehalloweengrist = "doublehalloweengrist"
+item_id_whitelineticket = "ticket"
+
+# Possibly NOT remove after Double Halloween? 
+# In any case, this is so that people who gain slime from the horseman don't use it to cause any major slime count shifts for the kingpins
+slimes_toboss_max = 1000000
+
 #vegetable ids
 item_id_poketubers = "poketubers"
 item_id_pulpgourds = "pulpgourds"
@@ -2141,6 +2180,25 @@ item_list = [
 		vendors = [vendor_rpcity],
 		price = 50000,
 	),
+	EwGeneralItem(
+		id_item = item_id_doublehalloweengrist,
+		context = 'dhgrist',
+		alias = [
+			"grist"
+		],
+		str_name = "Double Halloween Grist",
+		str_desc = "A mush of finely ground candy. Perhaps it can be forged into something special?",
+	),
+	EwGeneralItem(
+		id_item = item_id_whitelineticket,
+		context = 'wlticket',
+		alias = [
+			"tickettohell"
+		],
+		str_name = "Ticket to the White Line",
+		str_desc = "A large assortment of candy molded into one unholy voucher for access into the underworld. Use it in a White Line subway station... ***IF YOU DARE!!***",
+		acquisition=acquisition_smelting,
+	)
 ]
 item_list += ewdebug.debugitem_set
 
@@ -3002,7 +3060,7 @@ weapon_list = [
 			"nunchucks"
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_backfire = "**Whack!!** {name_player} fucks up his kung-fu routine and whacks himself in the head with his own nun-chucks!!",
+		str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
 		str_equip = "You equip the nun-chucks.",
 		str_weapon = "nun-chucks",
 		str_weaponmaster_self = "You are a rank {rank} kung-fu master.",
@@ -3381,8 +3439,6 @@ def atf_molotovbreath(ctn = None):
 		ctn.slimes_damage *= 2
 			
 def atf_armcannon(ctn = None):
-	dmg = ctn.slimes_damage
-
 	aim = (random.randrange(20) + 1)
 	
 	if aim <= 2:
@@ -3391,6 +3447,30 @@ def atf_armcannon(ctn = None):
 	if aim == 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 3
+
+
+def atf_axe(ctn=None):
+	ctn.slimes_damage *= 0.7
+	aim = (random.randrange(10) + 1)
+
+	if aim <= 4:
+		ctn.miss = True
+
+	if aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+
+def atf_hooves(ctn=None):
+	ctn.slimes_damage *= 0.4
+	aim = (random.randrange(30) + 1)
+
+	if aim <= 5:
+		ctn.miss = True
+
+	if aim > 25:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -3467,10 +3547,32 @@ enemy_attack_type_list = [
 		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
 		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
 		str_trauma = "There's a deep bruising right in the middle of their forehead.",
-		str_kill = "{name_enemy} readies their crosshair right for your head fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
+		str_kill = "{name_enemy} readies their crosshair right for your head and fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
 		str_killdescriptor = "sniped",
 		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
 		fn_effect = atf_armcannon
+	),
+	EwAttackType( # 8
+		id_type = "axe",
+		str_crit = "**Critical hit!!** {name_target} is thoroughly cleaved by {name_enemy}'s axe!",
+		str_miss = "**{name_enemy} missed!** The axe gives a loud **THUD** as it strikes the earth!",
+		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		str_kill = "{name_enemy} lifts up their axe for one last swing. The wicked edge buries itself deep into your skull, cutting your brain in twain. {emote_skull}",
+		str_killdescriptor = "axed",
+		str_damage = "{name_target} is swung at right on their {hitzone}!!",
+		fn_effect = atf_axe
+	),
+	EwAttackType( # 9
+		id_type = "hooves",
+		str_crit = "**Critical hit!!** {name_enemy} lays a savage hind-leg kick into {name_target}'s chest!",
+		str_miss = "**WHOOSH!** {name_enemy}'s hooves just barely miss you!",
+		str_trauma_self = "Your chest is somewhat concave.",
+		str_trauma = "Their chest is somewhat concave.",
+		str_kill = "{name_enemy} gallops right over your head, readying their hind legs just after landing. Before you can even ready your weapon, their legs are already planted right onto your chest. Your heart explodes. {emote_skull}",
+		str_killdescriptor = "stomped",
+		str_damage = "{name_target} is stomped all over their {hitzone}!!",
+		fn_effect = atf_hooves
 	),
 ]
 
@@ -5501,6 +5603,20 @@ food_list = [
 		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
 		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
 		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = "sourpussbread",
+		alias = [
+			"bowserbread",
+			"spb",
+			"sourpuss"
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Sourpuss Bread',
+		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
+		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
+		vendors = vendor_pizzahut
 	),
 ]
 
@@ -9516,6 +9632,7 @@ poi_list = [
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
+	# TODO: Remove after Double Halloween
 	EwPoi( # RP City
 		id_poi = poi_id_rpcity,
 		alias = [
@@ -9535,6 +9652,39 @@ poi_list = [
 		role = "RP City",
 		mother_district = poi_id_littlechernobyl,
 		is_subzone = True
+	),
+	EwPoi(  # Underworld Subway Station
+		id_poi = poi_id_underworld_subway_station,
+		alias = [
+			"underworldsubwaystation",
+			"uws",
+			"us"
+		],
+		str_name = "The Underworld Subway Station",
+		str_desc = str_generic_subway_station_description + "\n\nExits into The Underworld.",
+		coord = (63, 44),
+		channel = "underworld-subway-station",
+		role = "Underworld Subway Station",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_underworld,
+		is_transport_stop = True,
+		transport_lines = set()
+	),
+	EwPoi( # The Underworld
+		id_poi = poi_id_underworld,
+		alias = [
+			"uw",
+			"undertale",
+			"underground",
+		],
+		str_name = "The Underworld, last stop of the White Line",
+		str_desc = "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
+		coord = (63, 46),
+		channel = "the-underworld",
+		role = "Underworld",
+		pvp=False,
+		is_capturable=False,
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -9651,18 +9801,19 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	#EwPoi(  # Subway train on the white line
-	#	id_poi = poi_id_subway_white01,
-	#	str_name = "A Subway Train",
-	#	str_desc = generic_subway_description, # TODO: add description
-	#	channel = channel_subway_white01,
-	#	role = "Subway Train W-01",
-	#	pvp = True,
-	#	is_transport = True,
-	#	transport_type = transport_type_subway,
-	#	default_line = transport_line_subway_white_eastbound,
-	#	default_stop = poi_id_dt_subway_station
-	#),
+	# TODO: Comment back in after Double Halloween
+	EwPoi(  # Subway train on the white line
+		id_poi = poi_id_subway_white01,
+		str_name = "A Subway Train",
+		str_desc = str_generic_subway_description, # TODO: add description
+		channel = channel_subway_white01,
+		role = "Subway Train W-01",
+		pvp = False,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_white_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -10678,43 +10829,46 @@ transport_lines = [
 		    }
 
 		),
-	#EwTransportLine( # white subway line from downtown to juvies row
-	#	id_line = transport_line_subway_white_eastbound,
-	#	alias = [
-	#		"whiteeastline",
-	#		"whiteeast",
-	#		"eastwhite",
-	#		"whitetojuviesrow",
-	#		"whitetojuvies",
-	#		"whitetojr"
-	#	    ],
-	#	first_stop = poi_id_dt_subway_station,
-	#	last_stop = poi_id_jr_subway_station,
-	#	next_line = transport_line_subway_white_westbound,
-	#	str_name = "The white subway line towards Juvie's Row",
-	#	schedule = {
-	#		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-	#	    }
-	#	),
-	#EwTransportLine( # white subway line from juvies row to downtown
-	#	id_line = transport_line_subway_white_westbound,
-	#	alias = [
-	#		"whitewestline",
-	#		"whitewest",
-	#		"westwhite",
-	#		"whitetodowntown",
-	#		"whitetodt"
-	#	    ],
-	#	first_stop = poi_id_jr_subway_station,
-	#	last_stop = poi_id_dt_subway_station,
-	#	next_line = transport_line_subway_white_eastbound,
-	#	str_name = "The white subway line towards Downtown NLACakaNM",
-	#	schedule = {
-	#		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
-	#	    }
-	#	),
+	# TODO: Comment back in after Double Halloween
+	EwTransportLine( # white subway line from downtown to juvies row
+		id_line = transport_line_subway_white_eastbound,
+		alias = [
+			"whiteeastline",
+			"whiteeast",
+			"eastwhite",
+			"whitetojuviesrow",
+			"whitetojuvies",
+			"whitetojr"
+		    ],
+		first_stop = poi_id_underworld_subway_station,
+		last_stop = poi_id_jr_subway_station,
+		next_line = transport_line_subway_white_westbound,
+		str_name = "The white subway line towards Juvie's Row",
+		schedule = {
+			poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+		    }
+		),
+	EwTransportLine( # white subway line from juvies row to downtown
+		id_line = transport_line_subway_white_westbound,
+		alias = [
+			"whitewestline",
+			"whitewest",
+			"westwhite",
+			"whitetounderworld",
+			"whitetouw"
+		    ],
+		first_stop = poi_id_jr_subway_station,
+		last_stop = poi_id_underworld_subway_station,
+		next_line = transport_line_subway_white_eastbound,
+		str_name = "The white subway line towards The Underworld",
+		schedule = {
+			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+		    }
+		),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -11301,6 +11455,14 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 	),
+	EwCosmeticItem(
+		id_cosmetic = "halloweenmedallion",
+		str_name = "Double Halloween Medallion",
+		str_desc = "A glistening crystal medallion, carved in the shape of a pumpkin. It is strewn together with black pearls. Awarded only to the bravest of souls who managed to best the Double Headless Double Horseman in combat.",
+		rarity = "Double Halloween",
+		acquisition = "DH-bossfight",
+		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
+	)
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -11464,7 +11626,7 @@ smelting_recipe_list = [
 		str_name = "a cooked piece of Dinoslime meat",
 		alias = [
 			"cookedmeat",
-			"sss"
+			"dss"
 		],
 		ingredients = {
 			item_id_faggot : 1,
@@ -11487,7 +11649,7 @@ smelting_recipe_list = [
 		},
 		products = ['fishingrod']
 	),
-        EwSmeltingRecipe(
+    EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -11498,8 +11660,8 @@ smelting_recipe_list = [
 			'string':4
 		},
 		products = ['bass']
-        ),
-		EwSmeltingRecipe(
+    ),
+	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
 		alias = [
@@ -11510,8 +11672,8 @@ smelting_recipe_list = [
 			'scalp': 10
 		},
 		products = ['leathercouch']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherchair",
 		str_name = "a leather chair",
 		alias = [
@@ -11522,8 +11684,8 @@ smelting_recipe_list = [
 			'scalp': 5
 		},
 		products = ['leatherchair']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherlamp",
 		str_name = "a leather coated lamp",
 		alias = [
@@ -11534,8 +11696,8 @@ smelting_recipe_list = [
 			'scalp': 3
 		},
 		products = ['leatherlamp']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherdesk",
 		str_name = "a leather desk",
 		alias = [
@@ -11546,8 +11708,8 @@ smelting_recipe_list = [
 			'scalp': 4
 		},
 		products = ['leatherdesk']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherbed",
 		str_name = "a leather bed",
 		alias = [
@@ -11558,7 +11720,19 @@ smelting_recipe_list = [
 			'scalp': 12
 		},
 		products = ['leatherbed']
-		)
+	),
+    # TODO: Remove after Double Halloween
+    EwSmeltingRecipe(
+        id_recipe = "ticket",
+        str_name = "Ticket to the White Line",
+        alias = [
+            "tickettohell",
+        ],
+        ingredients = {
+            item_id_doublehalloweengrist: 100,
+        },
+        products = ['ticket']
+    )
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13339,7 +13513,8 @@ for m in cosmetic_items_list:
 		mine_results.append(m)
 	else:
 		pass
-	
+
+# TODO: Remove after Double Halloween
 # Gather all the items that can be the result of trick-or-treating.
 trickortreat_results = []
 
@@ -13348,7 +13523,23 @@ for t in food_list:
 		trickortreat_results.append(t)
 	else:
 		pass
-		
+
+# Gather the Halloween Grist
+grist_results = []
+
+for g in item_list:
+	if g.context == 'dhgrist':
+		grist_results.append(g)
+	else:
+		pass
+	
+# Gather the Medallion
+medallion_results = []
+for m in cosmetic_items_list:
+	if m.ingredients == 'HorsemanSoul':
+		medallion_results.append(m)
+	else:
+		pass
 
 slimexodia_parts = []
 
@@ -13605,6 +13796,8 @@ enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
 enemy_attacktype_molotovbreath = 'molotov breath'
 enemy_attacktype_armcannon = 'arm cannon'
+enemy_attacktype_axe = 'axe'
+enemy_attacktype_hooves = 'hooves'
 
 # Enemy types
 # Common enemies
@@ -13626,42 +13819,16 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
 
+# Double Halloween bosses. Could be brought back as enemies later on, for now will only spawn in the underworld.
+enemy_type_doubleheadlessdoublehorseman = 'doubleheadlessdoublehorseman'
+enemy_type_doublehorse = 'doublehorse'
+
 # Enemy ai types
 enemy_ai_sandbag = 'Sandbag'
 enemy_ai_coward = 'Coward'
 enemy_ai_attacker_a = 'Attacker-A'
 enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
-
-# Enemy display names
-enemy_displayname_sandbag = "Sand Bag"
-enemy_displayname_juvie = "Lost Juvie"
-enemy_displayname_dinoslime = "Dinoslime"
-enemy_displayname_slimeadactyl = "Slimeadactyl"
-enemy_displayname_desertraider = "Desert Raider"
-enemy_displayname_mammoslime = "Mammoslime"
-enemy_displayname_microslime = "Microslime"
-enemy_displayname_slimeofgreed = "Slime Of Greed"
-enemy_displayname_megaslime = "Megaslime"
-enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
-enemy_displayname_greeneyesslimedragon = "Green Eyes Slime Dragon"
-enemy_displayname_unnervingfightingoperator = "Unnerving Fighting Operator"
-
-# Display names for rare variants of enemies
-rare_display_names = {
-	enemy_displayname_sandbag: "Durable Sand Bag",
-	enemy_displayname_juvie: "Shellshocked Juvie",
-	enemy_displayname_dinoslime: "Voracious Dinoslime",
-	enemy_displayname_slimeadactyl: "Predatory Slimeadactyl",
-	enemy_displayname_desertraider: "Desert Warlord",
-	enemy_displayname_mammoslime: "Territorial Mammoslime",
-	enemy_displayname_microslime: "Irridescent Microslime",
-	enemy_displayname_slimeofgreed: "Slime Of Avarice",
-	enemy_displayname_megaslime: "Rampaging Megaslime",
-	enemy_displayname_slimeasaurusrex: "Sex Rex",
-	enemy_displayname_greeneyesslimedragon: "Green Eyes JPEG Dragon",
-	enemy_displayname_unnervingfightingoperator: "Unyielding Fierce Operator",
-}
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
@@ -13678,33 +13845,16 @@ raid_boss_tiers = {
 	#"Nega": [],
 }
 
-# Shorthand names the player can refer to enemies as.
-enemy_aliases = {
-	enemy_type_sandbag: ["sandbag", "bag o sand", "bag of sand"],
-    enemy_type_juvie: ["juvie","greenman","lostjuvie", "lost"],
-    enemy_type_dinoslime: ["dino","slimeasaur"],
-    enemy_type_slimeadactyl: ["bird","dactyl"],
-    enemy_type_microslime: ["micro","pinky"],
-	enemy_type_slimeofgreed: ["slime","slimeofgreed","pot","potofgreed","draw2cards"],
-    enemy_type_desertraider: ["raider","scytheboy","desertraider", "desert"],
-	enemy_type_mammoslime: ["mammoth","brunswick"],
-    enemy_type_megaslime: ["mega","smooze","muk"],
-	enemy_type_slimeasaurusrex: ["rex","trex","slimeasaurusrex","slimeasaurus"],
-	enemy_type_greeneyesslimedragon: ["dragon","greeneyes","greeneyesslimedragon","green"],
-	enemy_type_unnervingfightingoperator: ["ufo", "alien","unnervingfightingoperator","unnvering"]
-}
+# List of enemies that are simply too powerful to have their rare variants spawn
+overkill_enemies = [enemy_type_doubleheadlessdoublehorseman, enemy_type_doublehorse]
 
-# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = [
-	enemy_displayname_megaslime, 
-	enemy_displayname_slimeasaurusrex, 
-	enemy_displayname_greeneyesslimedragon, 
-	enemy_displayname_unnervingfightingoperator,
-	rare_display_names[enemy_displayname_megaslime],
-	rare_display_names[enemy_displayname_slimeasaurusrex],
-	rare_display_names[enemy_displayname_greeneyesslimedragon],
-	rare_display_names[enemy_displayname_unnervingfightingoperator]
-]
+# List of enemies that have other enemies spawn with them
+enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman]
+
+# Dict of enemy spawn groups. The leader is the key, which correspond to which enemies to spawn, and how many.
+enemy_spawn_groups = {
+	enemy_type_doubleheadlessdoublehorseman: [[enemy_type_doublehorse, 1]]
+}
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
@@ -13716,27 +13866,46 @@ enemy_drop_tables = {
     enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
     enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
+	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 44]},  {"patrician": [100, 2, 4]}],
+	enemy_type_doublehorse: [{"poudrin": [100, 22, 44]},  {"pleb": [100, 2, 4]}],
     enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
-# Table of all min and max slime counts for enemies. Min to max, left to right.
-enemy_slime_table = {
-	enemy_type_sandbag: [100000000000, 100000000000], # 100 billion
-	enemy_type_juvie: [10000, 50000],
-	enemy_type_microslime: [10000, 50000],
-	enemy_type_slimeofgreed: [20000, 100000],
-	enemy_type_dinoslime: [250000, 500000],
-	enemy_type_slimeadactyl: [500000, 750000],
-	enemy_type_desertraider: [250000, 750000],
-	enemy_type_mammoslime: [650000, 950000],
-	enemy_type_megaslime: [1000000, 1000000],
-	enemy_type_slimeasaurusrex: [1750000, 3000000],
-	enemy_type_greeneyesslimedragon: [3500000, 5000000],
-	enemy_type_unnervingfightingoperator: [1000000, 3000000],
+# Template. Use this when making a new enemy, as they need all these values filled out.
+# {"slimerange": , "ai": , "attacktype": , "displayname": , "raredisplayname": , "aliases": },
+
+# Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
+enemy_data_table = {
+	enemy_type_sandbag: {"slimerange": [1000000000, 1000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
+	enemy_type_juvie: {"slimerange": [10000, 50000], "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, "displayname": "Lost Juvie", "raredisplayname": "Shellshocked Juvie", "aliases": ["juvie","greenman","lostjuvie", "lost"]},
+	enemy_type_dinoslime: {"slimerange": [250000, 500000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_fangs, "displayname": "Dinoslime", "raredisplayname": "Voracious Dinoslime", "aliases": ["dino","slimeasaur"]},
+	enemy_type_slimeadactyl: {"slimerange": [500000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_talons, "displayname": "Slimeadactyl", "raredisplayname": "Predatory Slimeadactyl", "aliases": ["bird","dactyl"]},
+	enemy_type_desertraider: {"slimerange": [250000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_raiderscythe, "displayname": "Desert Raider", "raredisplayname": "Desert Warlord", "aliases": ["raider","scytheboy","desertraider", "desert"]},
+	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
+	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
+	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
+	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight"]},
+	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
+	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
+	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
+	enemy_type_greeneyesslimedragon: {"slimerange": [3500000, 5000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_molotovbreath, "displayname": "Green Eyes Slime Dragon", "raredisplayname": "Green Eyes JPEG Dragon", "aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]},
+	enemy_type_unnervingfightingoperator: {"slimerange": [1000000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_armcannon, "displayname": "Unnerving Fighting Operator", "raredisplayname": "Unyielding Fierce Operator", "aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]},
 }
+
+# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
+raid_boss_names = [
+	enemy_data_table[enemy_type_megaslime]["displayname"],
+	enemy_data_table[enemy_type_megaslime]["raredisplayname"],
+	enemy_data_table[enemy_type_slimeasaurusrex]["displayname"],
+	enemy_data_table[enemy_type_slimeasaurusrex]["raredisplayname"],
+	enemy_data_table[enemy_type_greeneyesslimedragon]["displayname"],
+	enemy_data_table[enemy_type_greeneyesslimedragon]["raredisplayname"],
+	enemy_data_table[enemy_type_unnervingfightingoperator]["displayname"],
+	enemy_data_table[enemy_type_unnervingfightingoperator]["raredisplayname"],
+]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [

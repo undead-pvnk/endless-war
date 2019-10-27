@@ -670,25 +670,63 @@ async def scavenge(cmd):
 async def crush(cmd):
 	member = cmd.message.author
 	user_data = EwUser(member=member)
-	response = ""
+	response = "" # if it's not overwritten
 	crush_slimes = ewcfg.crush_slimes
 	
-	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
-	
 	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Alas, you try to shatter the hardened slime crystal, but your ghostly form cannot firmly grasp it."
+		response = "Alas, you try to shatter the item, but your ghostly form cannot firmly grasp it."
 		return 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
+
+	if item_sought:
+		sought_id = item_sought.get('id_item')
+		item_data = EwItem(id_item=sought_id)
+
+		response = "The item doesn't have !crush functionality"  # if it's not overwritten
+
+		if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
+			# delete a slime poudrin from the player's inventory
+			ewitem.item_delete(id_item=sought_id)
+
+			user_data.slimes += crush_slimes
+			user_data.persist()
+
+			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
+			
+		# TODO: Remove after Double Halloween
+		elif item_data.item_type == ewcfg.it_food:
+			candy_id = item_data.item_props.get("id_food")
+			if candy_id in ewcfg.candy_ids_list:
+				# delete candy from the player's inventory
+				ewitem.item_delete(id_item=sought_id)
+				
+				gristnum = random.randrange(2) + 1
+				gristcount = 0
 	
-	if poudrin is None:
-		response = "You need a slime poudrin."
+				item_name = item_data.item_props.get('food_name')
+				
+				response = "You crush the {} with an iron grip. You gain {} piece(s) of Double Halloween Grist!".format(item_name, gristnum)
+				
+				while gristcount < gristnum:
+					
+					grist = ewcfg.grist_results[0]
+					grist_props = ewitem.gen_item_props(grist)
+					
+					ewitem.item_create(
+						item_type=grist.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.server.id,
+						item_props=grist_props
+					)
+					
+					gristcount += 1
 	else:
-		# delete a slime poudrin from the player's inventory
-		ewitem.item_delete(id_item=poudrin.get('id_item'))
-		
-		user_data.slimes += crush_slimes
-		user_data.persist()
-		
-		response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
+		if item_search:  # if they didnt forget to specify an item and it just wasn't found
+			response = "You don't have one."
+		else:
+			response = "Crush which item? (check **!inventory**)"
 		
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
