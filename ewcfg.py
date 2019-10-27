@@ -5419,7 +5419,7 @@ food_list = [
 		],
 		recover_hunger = 200,
 		price = 1000,
-		str_name = 'Choclate Slimecorp Badges',
+		str_name = 'Chocolate Slimecorp Badges',
 		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
 		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
 		acquisition = acquisition_trickortreating
@@ -5469,7 +5469,7 @@ food_list = [
 		price = 10000,
 		str_name = 'Bustahfingers',
 		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
-		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of choclate in the middle.",
+		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of chocolate in the middle.",
 		acquisition = acquisition_trickortreating
 	),
 	EwFood(
