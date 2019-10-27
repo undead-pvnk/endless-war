@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.9hwx2"
+version = "v3.10hwx2"
 
 dir_msgqueue = 'msgqueue'
 
