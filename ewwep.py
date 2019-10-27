@@ -950,6 +950,11 @@ async def attack(cmd):
 				kingpin = ewutils.find_kingpin(id_server = cmd.message.server.id, kingpin_role = role_boss)
 
 				if kingpin:
+					
+					# TODO: Remove/change this after Double Halloween. This is put in place to prevent major slime changes after killing the horseman.
+					if boss_slimes > ewcfg.slimes_toboss_max:
+						boss_slimes = ewcfg.slimes_toboss_max
+					
 					kingpin.change_slimes(n = boss_slimes)
 					kingpin.persist()
 
@@ -2068,7 +2073,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			ewstats.increment_stat(user=user_data, metric=weapon.stat)
 
 		# Give a bonus to the player's weapon skill for killing a stronger enemy.
-		if enemy_data.level >= user_data.slimelevel and weapon is not None:
+		if enemy_data.enemytype != ewcfg.enemy_type_sandbag and enemy_data.level >= user_data.slimelevel and weapon is not None:
 			user_data.add_weaponskill(n=1, weapon_type=weapon.id_weapon)
 
 		# release bleed storage
@@ -2087,7 +2092,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		levelup_response = user_data.change_slimes(n=slimes_tokiller, source=ewcfg.source_killing)
 		if ewcfg.mutation_id_fungalfeaster in user_mutations:
 			user_data.hunger = 0
-
+				
 		# Enemy was killed.
 		ewhunting.delete_enemy(enemy_data)
 
@@ -2131,6 +2136,33 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 		# give player item for defeating an enemy
 		response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
+
+		# TODO: Remove after Double Halloween
+		if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
+			defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nYOU HAVE ALL TRULY PUT ON A SPLENDID PERFORMANCE.\nI KNOW WHEN I AM DEFEATED. PLEASE, TAKE THIS MEDALLION...\nIT IS A TOKEN OF MY EXTREME.\nFOR NOW THOUGH, THIS IS WHERE I GET OFF.\nSAVE A SEAT FOR ME, WON'T YOU, PHOEBUS?\n"
+			resp_cont.add_channel_response(cmd.message.channel.name, defeat_response)
+
+			# Give the medallion to everyone in the underworld
+			# The horseman only spawns in the underworld and can't leave, so using current district_data is fine
+			life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
+			all_users_in_underworld = district_data.get_players_in_district(life_states=life_states)
+
+			for user in all_users_in_underworld:
+				underworld_user_data = EwUser(id_user=user, id_server=user_data.id_server)
+				underworld_player_data = EwPlayer(id_user=user)
+
+				medallion = ewcfg.medallion_results[0]
+				medallion_props = ewitem.gen_item_props(medallion)
+
+				ewitem.item_create(
+					item_type=medallion.item_type,
+					id_user=underworld_user_data.id_user,
+					id_server=underworld_user_data.id_server,
+					item_props=medallion_props
+				)
+
+				medallion_player_response = "**{} has been giften the Double Halloween Medallion!!**\n".format(underworld_player_data.display_name)
+				resp_cont.add_channel_response(cmd.message.channel.name, medallion_player_response)
 
 		if slimeoid.life_state == ewcfg.slimeoid_state_active:
 			brain = ewcfg.brain_map.get(slimeoid.ai)

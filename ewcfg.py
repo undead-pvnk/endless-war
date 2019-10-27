@@ -1766,6 +1766,10 @@ candy_ids_list = [
 item_id_doublehalloweengrist = "doublehalloweengrist"
 item_id_whitelineticket = "ticket"
 
+# Possibly NOT remove after Double Halloween? 
+# In any case, this is so that people who gain slime from the horseman don't use it to cause any major slime count shifts for the kingpins
+slimes_toboss_max = 1000000
+
 #vegetable ids
 item_id_poketubers = "poketubers"
 item_id_pulpgourds = "pulpgourds"
@@ -3428,8 +3432,6 @@ def atf_molotovbreath(ctn = None):
 		ctn.slimes_damage *= 2
 			
 def atf_armcannon(ctn = None):
-	dmg = ctn.slimes_damage
-
 	aim = (random.randrange(20) + 1)
 	
 	if aim <= 2:
@@ -3441,8 +3443,7 @@ def atf_armcannon(ctn = None):
 
 
 def atf_axe(ctn=None):
-	dmg = ctn.slimes_damage
-
+	ctn.slimes_damage *= 0.7
 	aim = (random.randrange(10) + 1)
 
 	if aim <= 4:
@@ -3450,12 +3451,11 @@ def atf_axe(ctn=None):
 
 	if aim == 10:
 		ctn.crit = True
-		ctn.slimes_damage *= 3
+		ctn.slimes_damage *= 2
 
 
 def atf_hooves(ctn=None):
-	dmg = ctn.slimes_damage
-
+	ctn.slimes_damage *= 0.7
 	aim = (random.randrange(30) + 1)
 
 	if aim <= 5:
@@ -9678,7 +9678,6 @@ poi_list = [
 		role = "Underworld",
 		pvp=True,
 		is_capturable=False,
-		is_outskirts=True
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -11426,6 +11425,14 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 	),
+	EwCosmeticItem(
+		id_cosmetic = "halloweenmedallion",
+		str_name = "Double Halloween Medallion",
+		str_desc = "A glistening crystal medallion, carved in the shape of a pumpkin. It is strewn together with black pearls. Awarded only to the bravest of souls who managed to best the Double Headless Double Horseman in combat.",
+		rarity = "Double Halloween",
+		acquisition = "DH-bossfight",
+		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
+	)
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -13496,6 +13503,14 @@ for g in item_list:
 		grist_results.append(g)
 	else:
 		pass
+	
+# Gather the Medallion
+medallion_results = []
+for m in cosmetic_items_list:
+	if m.ingredients == 'HorsemanSoul':
+		medallion_results.append(m)
+	else:
+		pass
 
 slimexodia_parts = []
 
@@ -13800,6 +13815,9 @@ raid_boss_tiers = {
 	# This can be left empty until we get more raid boss ideas.
 	#"Nega": [],
 }
+
+# List of enemies that are simply too powerful to have their rare variants spawn
+overkill_enemies = [enemy_type_doubleheadlessdoublehorseman, enemy_type_doublehorse]
 
 # List of enemies that have other enemies spawn with them
 enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman]

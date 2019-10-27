@@ -1441,7 +1441,7 @@ def get_enemy_data(enemy_type):
 	enemy.display_name = ewcfg.enemy_data_table[enemy_type]["displayname"]
 	enemy.attacktype = ewcfg.enemy_data_table[enemy_type]["attacktype"]
 		
-	if rare_status == 1:
+	if rare_status == 1 and enemy.enemytype not in ewcfg.overkill_enemies:
 		enemy.display_name = ewcfg.enemy_data_table[enemy_type]["raredisplayname"]
 		enemy.slimes *= 2
 
