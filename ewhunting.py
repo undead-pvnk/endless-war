@@ -911,8 +911,8 @@ def find_enemy(enemy_search=None, user_data=None):
 
 	if enemy_search != None:
 
-		for enemy_type in ewcfg.enemy_aliases:
-			if enemy_search.lower() in ewcfg.enemy_aliases[enemy_type]:
+		for enemy_type in ewcfg.enemy_data_table:
+			if enemy_search.lower() in ewcfg.enemy_data_table[enemy_type]["aliases"]:
 				enemy_search_alias = enemy_type
 				continue
 
@@ -1371,11 +1371,11 @@ def get_enemy_data(enemy_type):
 	enemy = EwEnemy()
 	
 	rare_status = 0
-	if random.randrange(10) == 0:
-	   rare_status = 1
+	if random.randrange(5) == 0:
+		rare_status = 1
 
 	enemy.id_server = ""
-	enemy.slimes = get_enemy_slime(enemy_type)
+	enemy.slimes = 0
 	enemy.totaldamage = 0
 	enemy.level = 0
 	enemy.life_state = ewcfg.enemy_lifestate_alive
@@ -1386,89 +1386,28 @@ def get_enemy_data(enemy_type):
 	enemy.id_target = ""
 	enemy.raidtimer = 0
 	enemy.rare_status = rare_status
-
-	# Normal enemies
-	if enemy_type == ewcfg.enemy_type_sandbag:
-		enemy.ai = ewcfg.enemy_ai_sandbag
-		enemy.display_name = ewcfg.enemy_displayname_sandbag
-		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
-	
-	if enemy_type == ewcfg.enemy_type_juvie:
-		enemy.ai = ewcfg.enemy_ai_coward
-		enemy.display_name = ewcfg.enemy_displayname_juvie
-		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
-
-	elif enemy_type == ewcfg.enemy_type_microslime:
-		enemy.ai = ewcfg.enemy_ai_defender
-		enemy.display_name = ewcfg.enemy_displayname_microslime
-		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
-		
-	elif enemy_type == ewcfg.enemy_type_slimeofgreed:
-		enemy.ai = ewcfg.enemy_ai_defender
-		enemy.display_name = ewcfg.enemy_displayname_slimeofgreed
-		enemy.attacktype = ewcfg.enemy_attacktype_unarmed
-
-	elif enemy_type == ewcfg.enemy_type_dinoslime:
-		enemy.ai = ewcfg.enemy_ai_attacker_a
-		enemy.display_name = ewcfg.enemy_displayname_dinoslime
-		enemy.attacktype = ewcfg.enemy_attacktype_fangs
-
-	elif enemy_type == ewcfg.enemy_type_slimeadactyl:
-		enemy.ai = ewcfg.enemy_ai_attacker_b
-		enemy.display_name = ewcfg.enemy_displayname_slimeadactyl
-		enemy.attacktype = ewcfg.enemy_attacktype_talons
-
-	elif enemy_type == ewcfg.enemy_type_desertraider:
-		enemy.ai = ewcfg.enemy_ai_attacker_b
-		enemy.display_name = ewcfg.enemy_displayname_desertraider
-		enemy.attacktype = ewcfg.enemy_attacktype_raiderscythe
-
-	elif enemy_type == ewcfg.enemy_type_mammoslime:
-		enemy.ai = ewcfg.enemy_ai_defender
-		enemy.display_name = ewcfg.enemy_displayname_mammoslime
-		enemy.attacktype = ewcfg.enemy_attacktype_tusks
-
-	# Raid bosses
-	elif enemy_type == ewcfg.enemy_type_megaslime:
-		enemy.ai = ewcfg.enemy_ai_attacker_a
-		enemy.display_name = ewcfg.enemy_displayname_megaslime
-		enemy.attacktype = ewcfg.enemy_attacktype_gunkshot
-
-	elif enemy_type == ewcfg.enemy_type_slimeasaurusrex:
-		enemy.ai = ewcfg.enemy_ai_attacker_b
-		enemy.display_name = ewcfg.enemy_displayname_slimeasaurusrex
-		enemy.attacktype = ewcfg.enemy_attacktype_fangs
-		
-	elif enemy_type == ewcfg.enemy_type_greeneyesslimedragon:
-		enemy.ai = ewcfg.enemy_ai_attacker_a
-		enemy.display_name = ewcfg.enemy_displayname_greeneyesslimedragon
-		enemy.attacktype = ewcfg.enemy_attacktype_molotovbreath
-		
-	elif enemy_type == ewcfg.enemy_type_unnervingfightingoperator:
-		enemy.ai = ewcfg.enemy_ai_attacker_b
-		enemy.display_name = ewcfg.enemy_displayname_unnervingfightingoperator
-		enemy.attacktype = ewcfg.enemy_attacktype_armcannon
 		
 	if enemy_type in ewcfg.raid_bosses:
 		enemy.life_state = ewcfg.enemy_lifestate_unactivated
 		enemy.raidtimer = int(time.time())
+
+	slimetable = ewcfg.enemy_data_table[enemy_type]["slimerange"]
+	minslime = slimetable[0]
+	maxslime = slimetable[1]
+
+	slime = random.randrange(minslime, (maxslime + 1))
+	
+	enemy.slimes = slime
+	enemy.ai = ewcfg.enemy_data_table[enemy_type]["ai"]
+	enemy.display_name = ewcfg.enemy_data_table[enemy_type]["displayname"]
+	enemy.attacktype = ewcfg.enemy_data_table[enemy_type]["attacktype"]
 		
 	if rare_status == 1:
-		enemy.display_name = ewcfg.rare_display_names[enemy.display_name]
+		enemy.display_name = ewcfg.enemy_data_table[enemy_type]["raredisplayname"]
 		enemy.slimes *= 2
 
 	return enemy
 
-# Returns a randomized amount of slime based on enemy type
-def get_enemy_slime(enemy_type):
-	slime = 0
-	
-	slimetable = ewcfg.enemy_slime_table[enemy_type]
-	minslime = slimetable[0]
-	maxslime = slimetable[1]
-	
-	slime = random.randrange(minslime, (maxslime + 1))	
-	return slime
 
 # Selects which non-ghost user to attack based on certain parameters.
 def get_target_by_ai(enemy_data):
