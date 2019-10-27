@@ -11729,8 +11729,7 @@ smelting_recipe_list = [
             "tickettohell",
         ],
         ingredients = {
-            #item_id_doublehalloweengrist: 100,
-			item_id_slimepoudrin: 2
+            item_id_doublehalloweengrist: 100,
         },
         products = ['ticket']
     )
