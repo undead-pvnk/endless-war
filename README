@@ -27,7 +27,7 @@ CREATE TABLE users (
 	bounty bigint NOT NULL DEFAULT '0',
 	inebriation int NOT NULL DEFAULT '0',
 	faction varchar(32) NOT NULL default '',
-	poi varchar(64) NOT NULL default 'downtown',
+	poi varchar(64) NOT NULL default 'classroom',
 	life_state int NOT NULL DEFAULT '1',
 	busted int NOT NULL DEFAULT '0',
 	rr_challenger_id varchar(128) NOT NULL DEFAULT '',
@@ -49,7 +49,6 @@ CREATE TABLE users (
 	time_lastenlist int NOT NULL DEFAULT '0',
 	active_slimeoid int NOT NULL DEFAULT '-1',
 	has_soul int NOT NULL DEFAULT '1',
-
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );

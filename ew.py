@@ -695,14 +695,14 @@ class EwUser:
 					self.active_slimeoid = result[36]
 					self.has_soul = result[37]
 				else:
-					self.poi = ewcfg.poi_id_downtown
+					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,
 						id_server,
-						ewcfg.poi_id_downtown,
-						ewcfg.life_state_juvenile
+						self.poi,
+						self.life_state
 					))
 					
 					conn.commit()
@@ -832,7 +832,7 @@ class EwUser:
 				self.apt_zone,
 				self.visiting,
 				self.active_slimeoid,
-				self.has_soul
+				self.has_soul,
 			))
 
 			conn.commit()

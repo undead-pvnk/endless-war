@@ -2092,7 +2092,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		levelup_response = user_data.change_slimes(n=slimes_tokiller, source=ewcfg.source_killing)
 		if ewcfg.mutation_id_fungalfeaster in user_mutations:
 			user_data.hunger = 0
-				
+
 		# Enemy was killed.
 		ewhunting.delete_enemy(enemy_data)
 

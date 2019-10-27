@@ -154,6 +154,9 @@ class EwPoi:
 	# if the pier is in fresh slime or salt slime
 	pier_type = None
 
+	# if the poi is part of the tutorial
+	is_tutorial = False
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -186,7 +189,8 @@ class EwPoi:
 		is_outskirts = False,
 		community_chest = None,
 		is_pier = False,
-		pier_type = None
+		pier_type = None,
+		is_tutorial = False,
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -219,6 +223,7 @@ class EwPoi:
 		self.community_chest = community_chest
 		self.is_pier = is_pier
 		self.pier_type = pier_type
+		self.is_tutorial = is_tutorial
 
 # New map as of 7/19/19
 
@@ -951,7 +956,6 @@ async def move(cmd = None, isApt = False):
 				"You {} {}.".format(poi.str_enter, poi.str_name)
 			)
 		)
-		
 		try:
 			await cmd.client.delete_message(msg_walk_start)
 			await asyncio.sleep(30)
