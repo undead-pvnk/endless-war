@@ -7,7 +7,6 @@ import ewcfg
 import ewstats
 import ewitem
 import ewstatuseffects
-import ewdungeons
 from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -205,11 +204,7 @@ class EwUser:
 
 			self.life_state = ewcfg.life_state_corpse
 			self.poi_death = self.poi
-			if self.poi in ewcfg.tutorial_pois:
-				self.poi = ewcfg.poi_id_tutorial_slimevat
-				ewdungeons.user_to_tutorial_state[self.id_user] = 10
-			else:
-				self.poi = ewcfg.poi_id_thesewers
+			self.poi = ewcfg.poi_id_thesewers
 			self.weapon = -1
 			self.time_expirpvp = 0
 

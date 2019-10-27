@@ -545,6 +545,11 @@ async def on_member_remove(member):
 	# Kill players who leave the server.
 	try:
 		user_data = EwUser(member = member)
+
+		# don't kill players who haven't cleared the tutorial yet
+		if user_data.poi in ewcfg.tutorial_pois:
+			return
+
 		user_data.die(cause = ewcfg.cause_leftserver)
 		user_data.persist()
 
