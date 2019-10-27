@@ -230,7 +230,7 @@ poi_id_apt_dreadford = "aptdreadford"
 
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"
-poi_id_tutorial_slimevat = "slimevat"
+poi_id_tutorial_ghostcontainment = "ghostcontainment"
 poi_id_tutorial_hallway = "hallway"
 
 compartment_id_closet = "closet"
@@ -10384,9 +10384,9 @@ poi_list = [
 		is_tutorial = True,
 	),
 	EwPoi(  # Tutorial - 3
-		id_poi = poi_id_tutorial_slimevat,
-		channel="slime-vat",
-		role="Slime Vat",
+		id_poi = poi_id_tutorial_ghostcontainment,
+		channel="ghost-containment",
+		role="Ghost Containment",
 		is_tutorial = True,
 	),
 
@@ -13913,7 +13913,7 @@ dungeon_tutorial = [
 			   "your ghost, into the vat, where they land with a SPLOOSH. Then he sits down in a nearby chair and " \
 			   "lights up a fat SLIMECORP™-brand cigar.",
 		options = {"revive": 1, "wait": 10},
-		poi = poi_id_tutorial_slimevat,
+		poi = poi_id_tutorial_ghostcontainment,
 		life_state = life_state_corpse,
 
 	),
@@ -13984,7 +13984,7 @@ dungeon_tutorial = [
 			   "your body. Across the dark room, a man in a SLIMECORP™ jumpsuit sits and smokes a " \
 			   "SLIMECORP™-brand cigar, apparently waiting for something.",
 		options = {"revive": 1, "wait": 10},
-		poi = poi_id_tutorial_slimevat,
+		poi = poi_id_tutorial_ghostcontainment,
 		life_state = life_state_corpse,
 
 	),
@@ -13992,7 +13992,7 @@ dungeon_tutorial = [
 	EwDungeonScene(
 		text = "You and your body float in the glowing green liquid. Nothing happens.",
 		options = {"revive": 1, "wait": 10},
-		poi = poi_id_tutorial_slimevat,
+		poi = poi_id_tutorial_ghostcontainment,
 		life_state = life_state_corpse,
 
 	),
