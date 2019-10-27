@@ -1045,6 +1045,7 @@ async def move(cmd = None, isApt = False):
 						)
 					)
 					
+					# TODO: Remove after Double Halloween
 					if poi_current.id_poi == ewcfg.poi_id_underworld:
 						potential_chosen_district = EwDistrict(district=poi_current.id_poi, id_server=user_data.id_server)
 						enemies_list = potential_chosen_district.get_enemies_in_district()

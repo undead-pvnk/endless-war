@@ -3445,12 +3445,12 @@ def atf_axe(ctn=None):
 
 	aim = (random.randrange(10) + 1)
 
-	if aim <= 5:
+	if aim <= 4:
 		ctn.miss = True
 
 	if aim == 10:
 		ctn.crit = True
-		ctn.slimes_damage *= 8
+		ctn.slimes_damage *= 3
 
 
 def atf_hooves(ctn=None):
@@ -3463,7 +3463,7 @@ def atf_hooves(ctn=None):
 
 	if aim > 25:
 		ctn.crit = True
-		ctn.slimes_damage *= 3
+		ctn.slimes_damage *= 2
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
