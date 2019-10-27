@@ -262,7 +262,7 @@ class EwEnemy:
 		if check_raidboss_countdown(enemy_data) and enemy_data.life_state == ewcfg.enemy_lifestate_unactivated:
 			# Raid boss has activated!
 			response = "*The ground quakes beneath your feet as slime begins to pool into one hulking, solidified mass...*" \
-					   "\n{} **{} has arrvied! It's level {} and has {} slime!** {}\n".format(
+					   "\n{} **{} has arrived! It's level {} and has {} slime!** {}\n".format(
 				ewcfg.emote_megaslime,
 				enemy_data.display_name,
 				enemy_data.level,

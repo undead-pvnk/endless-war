@@ -2139,7 +2139,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 		# TODO: Remove after Double Halloween
 		if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
-			defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nYOU HAVE ALL TRULY PUT ON A SPLENDID PERFORMANCE.\nI KNOW WHEN I AM DEFEATED. PLEASE, TAKE THIS MEDALLION...\nIT IS A TOKEN OF MY EXTREME.\nFOR NOW THOUGH, THIS IS WHERE I GET OFF.\nSAVE A SEAT FOR ME, WON'T YOU, PHOEBUS?\n"
+			defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nYOU HAVE ALL TRULY PUT ON A SPLENDID PERFORMANCE.\nI KNOW WHEN I AM DEFEATED. PLEASE, TAKE THIS MEDALLION...\nIT IS A TOKEN OF MY EXTREME PRAISE.\nFOR NOW THOUGH, THIS IS WHERE I GET OFF.\nSAVE A SEAT FOR ME, WON'T YOU, PHOEBUS?\n"
 			resp_cont.add_channel_response(cmd.message.channel.name, defeat_response)
 
 			# Give the medallion to everyone in the underworld
@@ -2165,7 +2165,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
 				ewitem.soulbind(medallion_id)
 
-				medallion_player_response = "**{} has been giften the Double Halloween Medallion!!**\n".format(underworld_player_data.display_name)
+				medallion_player_response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(underworld_player_data.display_name)
 				resp_cont.add_channel_response(cmd.message.channel.name, medallion_player_response)
 
 		if slimeoid.life_state == ewcfg.slimeoid_state_active:
