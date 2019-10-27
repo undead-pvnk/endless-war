@@ -173,6 +173,7 @@ async def updateRoles(
 		ewcfg.role_kingpin,
 		ewcfg.role_grandfoe,
 		ewcfg.role_slimecorp,
+		ewcfg.role_tutorial,
 	]
 
 	# Manage faction roles.
@@ -191,6 +192,11 @@ async def updateRoles(
 		if ewutils.is_otp(user_data):
 			active_role = ewcfg.role_to_active_role.get(faction_role)
 			faction_roles_remove.remove(active_role)
+
+	tutorial_role = None
+	if user_data.poi in ewcfg.tutorial_pois:
+		tutorial_role = ewcfg.role_tutorial
+		faction_roles_remove.remove(tutorial_role)
 
 	# Manage location roles.
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -240,6 +246,14 @@ async def updateRoles(
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(active_role))
+
+	try:
+		role_data = EwRole(id_server = id_server, name = tutorial_role)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(tutorial_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = poi_role)

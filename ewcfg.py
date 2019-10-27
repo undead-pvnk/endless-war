@@ -308,6 +308,7 @@ role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
+role_tutorial = "newintown"
 
 faction_roles = [
 	role_juvenile,
