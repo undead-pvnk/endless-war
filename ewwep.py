@@ -2154,12 +2154,16 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				medallion = ewcfg.medallion_results[0]
 				medallion_props = ewitem.gen_item_props(medallion)
 
-				ewitem.item_create(
+				medallion_id = ewitem.item_create(
 					item_type=medallion.item_type,
 					id_user=underworld_user_data.id_user,
 					id_server=underworld_user_data.id_server,
 					item_props=medallion_props
 				)
+
+				# Soulbind the medallion. A player can get multiple medallions, but later on a new command could be added to destroy them.
+				# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
+				ewitem.soulbind(medallion_id)
 
 				medallion_player_response = "**{} has been giften the Double Halloween Medallion!!**\n".format(underworld_player_data.display_name)
 				resp_cont.add_channel_response(cmd.message.channel.name, medallion_player_response)
