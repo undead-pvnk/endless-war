@@ -701,8 +701,8 @@ class EwUser:
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,
 						id_server,
-						ewcfg.poi_id_downtown,
-						ewcfg.life_state_juvenile
+						self.poi,
+						self.life_state
 					))
 					
 					conn.commit()
