@@ -3439,6 +3439,32 @@ def atf_armcannon(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 3
 
+
+def atf_axe(ctn=None):
+	dmg = ctn.slimes_damage
+
+	aim = (random.randrange(10) + 1)
+
+	if aim <= 5:
+		ctn.miss = True
+
+	if aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 8
+
+
+def atf_hooves(ctn=None):
+	dmg = ctn.slimes_damage
+
+	aim = (random.randrange(30) + 1)
+
+	if aim <= 5:
+		ctn.miss = True
+
+	if aim > 25:
+		ctn.crit = True
+		ctn.slimes_damage *= 3
+
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
 	EwAttackType( # 1
@@ -3514,10 +3540,32 @@ enemy_attack_type_list = [
 		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
 		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
 		str_trauma = "There's a deep bruising right in the middle of their forehead.",
-		str_kill = "{name_enemy} readies their crosshair right for your head fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
+		str_kill = "{name_enemy} readies their crosshair right for your head and fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
 		str_killdescriptor = "sniped",
 		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
 		fn_effect = atf_armcannon
+	),
+	EwAttackType( # 8
+		id_type = "axe",
+		str_crit = "**Critical hit!!** {name_target} is thoroughly cleaved by {name_enemy}'s axe!",
+		str_miss = "**{name_enemy} missed!** The axe gives a loud **THUD** as it strikes the earth!",
+		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		str_kill = "{name_enemy} lifts up their axe for one last swing. The wicked edge buries itself deep into your skull, cutting your brain in twain. {emote_skull}",
+		str_killdescriptor = "axed",
+		str_damage = "{name_target} is swung at right on their {hitzone}!!",
+		fn_effect = atf_axe
+	),
+	EwAttackType( # 9
+		id_type = "hooves",
+		str_crit = "**Critical hit!!** {name_enemy} lays a savage hind-leg kick into {name_target}'s chest!",
+		str_miss = "**WHOOSH!** {name_enemy}'s hooves just barely miss you!",
+		str_trauma_self = "Your chest is somewhat concave.",
+		str_trauma = "Their chest is somewhat concave.",
+		str_kill = "{name_enemy} gallops right over your head, readying their hind legs just after landing. Before you can even ready your weapon, their legs are already planted right onto your chest. Your heart explodes. {emote_skull}",
+		str_killdescriptor = "stomped",
+		str_damage = "{name_target} is stomped all over their {hitzone}!!",
+		fn_effect = atf_hooves
 	),
 ]
 
@@ -13689,6 +13737,8 @@ enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
 enemy_attacktype_molotovbreath = 'molotov breath'
 enemy_attacktype_armcannon = 'arm cannon'
+enemy_attacktype_axe = 'axe'
+enemy_attacktype_hooves = 'hooves'
 
 # Enemy types
 # Common enemies
@@ -13710,7 +13760,7 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
 
-# Double Halloween bosses. Could be brought back as enemies later on, for now will only spawn in the underworld
+# Double Halloween bosses. Could be brought back as enemies later on, for now will only spawn in the underworld.
 enemy_type_doubleheadlesshorseman = 'doubleheadlesshorseman'
 enemy_type_doublehorse = 'doublehorse'
 
@@ -13746,12 +13796,18 @@ enemy_drop_tables = {
     enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
     enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
+	enemy_type_doubleheadlesshorseman: [{"poudrin": [100, 22, 44]},  {"patrician": [100, 2, 4]}],
+	enemy_type_doublehorse: [{"poudrin": [100, 22, 44]},  {"pleb": [100, 2, 4]}],
     enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
+# Template. Use this when making a new enemy, as they need all these values filled out.
+# {"slimerange": , "ai": , "attacktype": , "displayname": , "raredisplayname": , "aliases": },
+
+# Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
 enemy_data_table = {
 	enemy_type_sandbag: {"slimerange": [100000000000, 100000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
 	enemy_type_juvie: {"slimerange": [10000, 50000], "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, "displayname": "Lost Juvie", "raredisplayname": "Shellshocked Juvie", "aliases": ["juvie","greenman","lostjuvie", "lost"]},
@@ -13761,6 +13817,8 @@ enemy_data_table = {
 	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
 	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
 	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
+	enemy_type_doubleheadlesshorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight"]},
+	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
 	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
 	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
 	enemy_type_greeneyesslimedragon: {"slimerange": [3500000, 5000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_molotovbreath, "displayname": "Green Eyes Slime Dragon", "raredisplayname": "Green Eyes JPEG Dragon", "aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]},
