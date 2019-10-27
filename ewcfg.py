@@ -327,7 +327,8 @@ faction_roles = [
 	role_corpse_active,
 	role_kingpin,
 	role_grandfoe,
-	role_slimecorp
+	role_slimecorp,
+	role_tutorial,
 	]
 
 role_to_pvp_role = {
