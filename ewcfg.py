@@ -3462,7 +3462,7 @@ def atf_axe(ctn=None):
 
 
 def atf_hooves(ctn=None):
-	ctn.slimes_damage *= 0.7
+	ctn.slimes_damage *= 0.4
 	aim = (random.randrange(30) + 1)
 
 	if aim <= 5:
