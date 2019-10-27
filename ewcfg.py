@@ -5597,6 +5597,20 @@ food_list = [
 		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
 		acquisition = acquisition_trickortreating
 	),
+	EwFood(
+		id_food = "sourpussbread",
+		alias = [
+			"bowserbread",
+			"spb",
+			"sourpuss"
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Sourpuss Bread',
+		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
+		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
+		vendors = vendor_pizzahut
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -9653,6 +9667,7 @@ poi_list = [
 	EwPoi( # The Underworld
 		id_poi = poi_id_underworld,
 		alias = [
+			"uw",
 			"undertale",
 			"underground",
 		],
@@ -13761,7 +13776,7 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 enemy_type_sandbag = 'sandbag'
 
 # Double Halloween bosses. Could be brought back as enemies later on, for now will only spawn in the underworld.
-enemy_type_doubleheadlesshorseman = 'doubleheadlesshorseman'
+enemy_type_doubleheadlessdoublehorseman = 'doubleheadlessdoublehorseman'
 enemy_type_doublehorse = 'doublehorse'
 
 # Enemy ai types
@@ -13786,6 +13801,14 @@ raid_boss_tiers = {
 	#"Nega": [],
 }
 
+# List of enemies that have other enemies spawn with them
+enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman]
+
+# Dict of enemy spawn groups. The leader is the key, which correspond to which enemies to spawn, and how many.
+enemy_spawn_groups = {
+	enemy_type_doubleheadlessdoublehorseman: [[enemy_type_doublehorse, 1]]
+}
+
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
@@ -13796,7 +13819,7 @@ enemy_drop_tables = {
     enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
     enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
-	enemy_type_doubleheadlesshorseman: [{"poudrin": [100, 22, 44]},  {"patrician": [100, 2, 4]}],
+	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 44]},  {"patrician": [100, 2, 4]}],
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 44]},  {"pleb": [100, 2, 4]}],
     enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
@@ -13809,7 +13832,7 @@ enemy_drop_tables = {
 
 # Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
 enemy_data_table = {
-	enemy_type_sandbag: {"slimerange": [100000000000, 100000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
+	enemy_type_sandbag: {"slimerange": [1000000000, 1000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
 	enemy_type_juvie: {"slimerange": [10000, 50000], "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, "displayname": "Lost Juvie", "raredisplayname": "Shellshocked Juvie", "aliases": ["juvie","greenman","lostjuvie", "lost"]},
 	enemy_type_dinoslime: {"slimerange": [250000, 500000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_fangs, "displayname": "Dinoslime", "raredisplayname": "Voracious Dinoslime", "aliases": ["dino","slimeasaur"]},
 	enemy_type_slimeadactyl: {"slimerange": [500000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_talons, "displayname": "Slimeadactyl", "raredisplayname": "Predatory Slimeadactyl", "aliases": ["bird","dactyl"]},
@@ -13817,7 +13840,7 @@ enemy_data_table = {
 	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
 	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
 	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
-	enemy_type_doubleheadlesshorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight"]},
+	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight"]},
 	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
 	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
 	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},

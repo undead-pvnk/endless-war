@@ -474,7 +474,7 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
-	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
+	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,

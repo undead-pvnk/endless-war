@@ -19,7 +19,7 @@ from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
 from ewplayer import EwPlayer
 
-from ewhunting import EwEnemy
+from ewhunting import EwEnemy, spawn_enemy
 
 move_counter = 0
 
@@ -951,6 +951,7 @@ async def move(cmd = None, isApt = False):
 				"You {} {}.".format(poi.str_enter, poi.str_name)
 			)
 		)
+		
 		try:
 			await cmd.client.delete_message(msg_walk_start)
 			await asyncio.sleep(30)
@@ -1043,6 +1044,18 @@ async def move(cmd = None, isApt = False):
 							"You {} {}.".format(poi_current.str_enter, poi_current.str_name)
 						)
 					)
+					
+					if poi_current.id_poi == ewcfg.poi_id_underworld:
+						potential_chosen_district = EwDistrict(district=poi_current.id_poi, id_server=user_data.id_server)
+						enemies_list = potential_chosen_district.get_enemies_in_district()
+						enemies_count = len(enemies_list)
+						if enemies_count == 0:
+							dh_resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+							sub_response, sub_channel = await spawn_enemy(id_server=user_data.id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld)
+
+							if sub_response != "":
+								dh_resp_cont.add_channel_response(sub_channel, sub_response)
+								await dh_resp_cont.post()
 
 					if len(user_data.faction) > 0 and user_data.poi in ewcfg.capturable_districts:
 						district = EwDistrict(
