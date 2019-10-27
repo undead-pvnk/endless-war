@@ -475,7 +475,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '/'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
