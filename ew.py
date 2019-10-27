@@ -707,14 +707,14 @@ class EwUser:
 					self.sap = result[38]
 					self.hardened_sap = result[39]
 				else:
-					self.poi = ewcfg.poi_id_downtown
+					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,
 						id_server,
-						ewcfg.poi_id_downtown,
-						ewcfg.life_state_juvenile
+						self.poi,
+						self.life_state
 					))
 					
 					conn.commit()

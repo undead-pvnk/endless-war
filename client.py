@@ -49,6 +49,7 @@ import ewfaction
 import ewapt
 import ewweather
 import ewworldevent
+import ewdungeons
 import ewdebug
 
 from ewitem import EwItem
@@ -479,7 +480,7 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
-	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
+	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -549,6 +550,11 @@ async def on_member_remove(member):
 	# Kill players who leave the server.
 	try:
 		user_data = EwUser(member = member)
+
+		# don't kill players who haven't cleared the tutorial yet
+		if user_data.poi in ewcfg.tutorial_pois:
+			return
+
 		user_data.die(cause = ewcfg.cause_leftserver)
 		user_data.persist()
 
@@ -1006,6 +1012,10 @@ async def on_member_join(member):
 		member = member,
 		server = member.server
 	)
+	user_data = EwUser(member = member)
+
+	if user_data.poi in ewcfg.tutorial_pois:
+		await ewdungeons.begin_tutorial(member)
 
 @client.event
 async def on_message_delete(message):
@@ -1158,7 +1168,10 @@ async def on_message(message):
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)
 
-		if cmd_fn != None:
+		if user_data.poi in ewcfg.tutorial_pois:	
+			return await ewdungeons.tutorial_cmd(cmd_obj)
+
+		elif cmd_fn != None:
 			# Execute found command
 			return await cmd_fn(cmd_obj)
 
@@ -1212,9 +1225,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 100,000 slime!"
+			response = "You get 1,000,000,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 100000)
+			levelup_response = user_data.change_slimes(n = 1000000000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 

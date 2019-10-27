@@ -21,10 +21,11 @@ from ewfarm import EwFarmAction
 from ewfish import EwFish
 from ewapt import EwFurniture
 from ewworldevent import EwEventDef
+from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.9hwx2"
+version = "v3.10hwx2"
 
 dir_msgqueue = 'msgqueue'
 
@@ -81,6 +82,7 @@ poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
 poi_id_rpcity = "rpcity"
+poi_id_underworld = "underworld"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -106,6 +108,7 @@ poi_id_neomilwaukeestate = "neomilwaukeestate"
 poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
+poi_id_slimesendcliffs = "slimesendcliffs"
 
 
 # transports
@@ -147,6 +150,8 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+
+poi_id_underworld_subway_station = "underworldsubwaystation"
 
 # ferry ports
 poi_id_df_blimp_tower = "dreadfordblimptower"
@@ -226,7 +231,10 @@ poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 
-poi_id_slimesendcliffs = "slimesendcliffs"
+# Tutorial zones
+poi_id_tutorial_classroom = "classroom"
+poi_id_tutorial_ghostcontainment = "ghostcontainment"
+poi_id_tutorial_hallway = "hallway"
 
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
@@ -303,6 +311,7 @@ role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
+role_tutorial = "newintown"
 
 faction_roles = [
 	role_juvenile,
@@ -321,7 +330,8 @@ faction_roles = [
 	role_corpse_active,
 	role_kingpin,
 	role_grandfoe,
-	role_slimecorp
+	role_slimecorp,
+	role_tutorial,
 	]
 
 role_to_pvp_role = {
@@ -569,7 +579,7 @@ cmd_menu_alt2 = cmd_prefix + 'catalogue'
 cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
-cmd_crush = cmd_prefix + 'crushpoudrin'
+cmd_crush = cmd_prefix + 'crush'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -814,7 +824,7 @@ slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
-slimes_permill = 75000
+slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
@@ -1739,6 +1749,42 @@ item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
 
+# TODO: Remove after Double Halloween
+# A list used to check if certain items can be made into Double Halloween Grist
+candy_ids_list = [
+	item_id_paradoxchocs,
+	item_id_licoricelobsters,
+	item_id_chocolateslimecorpbadges,
+	item_id_munchies,
+	item_id_sni,
+	item_id_twixten,
+	item_id_slimeybears,
+	item_id_marsbar,
+	item_id_magickspatchkids,
+	item_id_atms,
+	item_id_seanis,
+	item_id_candybungis,
+	item_id_turstwerthers,
+	item_id_poudrinpops,
+	item_id_juvieranchers,
+	item_id_krakel,
+	item_id_swedishbassedgods,
+	item_id_bustahfingers,
+	item_id_endlesswarheads,
+	item_id_n8heads,
+	item_id_strauberryshortcakes,
+	item_id_chutzpahcherries,
+	item_id_n3crunch,
+	item_id_slimesours,
+]
+
+item_id_doublehalloweengrist = "doublehalloweengrist"
+item_id_whitelineticket = "ticket"
+
+# Possibly NOT remove after Double Halloween? 
+# In any case, this is so that people who gain slime from the horseman don't use it to cause any major slime count shifts for the kingpins
+slimes_toboss_max = 1000000
+
 #vegetable ids
 item_id_poketubers = "poketubers"
 item_id_pulpgourds = "pulpgourds"
@@ -2142,6 +2188,25 @@ item_list = [
 		vendors = [vendor_rpcity],
 		price = 50000,
 	),
+	EwGeneralItem(
+		id_item = item_id_doublehalloweengrist,
+		context = 'dhgrist',
+		alias = [
+			"grist"
+		],
+		str_name = "Double Halloween Grist",
+		str_desc = "A mush of finely ground candy. Perhaps it can be forged into something special?",
+	),
+	EwGeneralItem(
+		id_item = item_id_whitelineticket,
+		context = 'wlticket',
+		alias = [
+			"tickettohell"
+		],
+		str_name = "Ticket to the White Line",
+		str_desc = "A large assortment of candy molded into one unholy voucher for access into the underworld. Use it in a White Line subway station... ***IF YOU DARE!!***",
+		acquisition=acquisition_smelting,
+	)
 ]
 item_list += ewdebug.debugitem_set
 
@@ -3073,7 +3138,7 @@ weapon_list = [
 			"nunchucks"
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_backfire = "**Whack!!** {name_player} fucks up his kung-fu routine and whacks himself in the head with his own nun-chucks!!",
+		str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
 		str_equip = "You equip the nun-chucks.",
 		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
@@ -3505,6 +3570,30 @@ def atf_armcannon(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 3
 
+
+def atf_axe(ctn=None):
+	ctn.slimes_damage *= 0.7
+	aim = (random.randrange(10) + 1)
+
+	if aim <= 4:
+		ctn.miss = True
+
+	if aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+
+def atf_hooves(ctn=None):
+	ctn.slimes_damage *= 0.4
+	aim = (random.randrange(30) + 1)
+
+	if aim <= 5:
+		ctn.miss = True
+
+	if aim > 25:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
 	EwAttackType( # 1
@@ -3580,10 +3669,32 @@ enemy_attack_type_list = [
 		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
 		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
 		str_trauma = "There's a deep bruising right in the middle of their forehead.",
-		str_kill = "{name_enemy} readies their crosshair right for your head fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
+		str_kill = "{name_enemy} readies their crosshair right for your head and fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
 		str_killdescriptor = "sniped",
 		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
 		fn_effect = atf_armcannon
+	),
+	EwAttackType( # 8
+		id_type = "axe",
+		str_crit = "**Critical hit!!** {name_target} is thoroughly cleaved by {name_enemy}'s axe!",
+		str_miss = "**{name_enemy} missed!** The axe gives a loud **THUD** as it strikes the earth!",
+		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		str_kill = "{name_enemy} lifts up their axe for one last swing. The wicked edge buries itself deep into your skull, cutting your brain in twain. {emote_skull}",
+		str_killdescriptor = "axed",
+		str_damage = "{name_target} is swung at right on their {hitzone}!!",
+		fn_effect = atf_axe
+	),
+	EwAttackType( # 9
+		id_type = "hooves",
+		str_crit = "**Critical hit!!** {name_enemy} lays a savage hind-leg kick into {name_target}'s chest!",
+		str_miss = "**WHOOSH!** {name_enemy}'s hooves just barely miss you!",
+		str_trauma_self = "Your chest is somewhat concave.",
+		str_trauma = "Their chest is somewhat concave.",
+		str_kill = "{name_enemy} gallops right over your head, readying their hind legs just after landing. Before you can even ready your weapon, their legs are already planted right onto your chest. Your heart explodes. {emote_skull}",
+		str_killdescriptor = "stomped",
+		str_damage = "{name_target} is stomped all over their {hitzone}!!",
+		fn_effect = atf_hooves
 	),
 ]
 
@@ -5614,6 +5725,20 @@ food_list = [
 		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
 		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
 		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = "sourpussbread",
+		alias = [
+			"bowserbread",
+			"spb",
+			"sourpuss"
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Sourpuss Bread',
+		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
+		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
+		vendors = vendor_pizzahut
 	),
 ]
 
@@ -9629,6 +9754,7 @@ poi_list = [
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
+	# TODO: Remove after Double Halloween
 	EwPoi( # RP City
 		id_poi = poi_id_rpcity,
 		alias = [
@@ -9648,6 +9774,39 @@ poi_list = [
 		role = "RP City",
 		mother_district = poi_id_littlechernobyl,
 		is_subzone = True
+	),
+	EwPoi(  # Underworld Subway Station
+		id_poi = poi_id_underworld_subway_station,
+		alias = [
+			"underworldsubwaystation",
+			"uws",
+			"us"
+		],
+		str_name = "The Underworld Subway Station",
+		str_desc = str_generic_subway_station_description + "\n\nExits into The Underworld.",
+		coord = (63, 44),
+		channel = "underworld-subway-station",
+		role = "Underworld Subway Station",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_underworld,
+		is_transport_stop = True,
+		transport_lines = set()
+	),
+	EwPoi( # The Underworld
+		id_poi = poi_id_underworld,
+		alias = [
+			"uw",
+			"undertale",
+			"underground",
+		],
+		str_name = "The Underworld, last stop of the White Line",
+		str_desc = "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
+		coord = (63, 46),
+		channel = "the-underworld",
+		role = "Underworld",
+		pvp=False,
+		is_capturable=False,
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -9764,18 +9923,19 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	#EwPoi(  # Subway train on the white line
-	#	id_poi = poi_id_subway_white01,
-	#	str_name = "A Subway Train",
-	#	str_desc = generic_subway_description, # TODO: add description
-	#	channel = channel_subway_white01,
-	#	role = "Subway Train W-01",
-	#	pvp = True,
-	#	is_transport = True,
-	#	transport_type = transport_type_subway,
-	#	default_line = transport_line_subway_white_eastbound,
-	#	default_stop = poi_id_dt_subway_station
-	#),
+	# TODO: Comment back in after Double Halloween
+	EwPoi(  # Subway train on the white line
+		id_poi = poi_id_subway_white01,
+		str_name = "A Subway Train",
+		str_desc = str_generic_subway_description, # TODO: add description
+		channel = channel_subway_white01,
+		role = "Subway Train W-01",
+		pvp = False,
+		is_transport = True,
+		transport_type = transport_type_subway,
+		default_line = transport_line_subway_white_eastbound,
+		default_stop = poi_id_dt_subway_station
+	),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -10484,6 +10644,24 @@ poi_list = [
 		is_capturable=False,
 		is_outskirts=True
 	),
+	EwPoi(  # Tutorial - 1
+		id_poi = poi_id_tutorial_classroom,
+		channel="classroom",
+		role="Classroom",
+		is_tutorial = True,
+	),
+	EwPoi(  # Tutorial - 2
+		id_poi = poi_id_tutorial_hallway,
+		channel="hallway",
+		role="Hallway",
+		is_tutorial = True,
+	),
+	EwPoi(  # Tutorial - 3
+		id_poi = poi_id_tutorial_ghostcontainment,
+		channel="ghost-containment",
+		role="Ghost Containment",
+		is_tutorial = True,
+	),
 
 ]
 poi_list += ewdebug.debugpois
@@ -10502,6 +10680,7 @@ transports = []
 transport_stops = []
 piers = []
 outskirts = []
+tutorial_pois = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -10533,6 +10712,9 @@ for poi in poi_list:
 
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
+
+	if poi.is_tutorial:
+		tutorial_pois.append(poi.id_poi)
 
 landmark_pois = [
 	poi_id_countryclub,
@@ -10769,43 +10951,46 @@ transport_lines = [
 			}
 
 		),
-	#EwTransportLine( # white subway line from downtown to juvies row
-	#	id_line = transport_line_subway_white_eastbound,
-	#	alias = [
-	#		"whiteeastline",
-	#		"whiteeast",
-	#		"eastwhite",
-	#		"whitetojuviesrow",
-	#		"whitetojuvies",
-	#		"whitetojr"
-	#		],
-	#	first_stop = poi_id_dt_subway_station,
-	#	last_stop = poi_id_jr_subway_station,
-	#	next_line = transport_line_subway_white_westbound,
-	#	str_name = "The white subway line towards Juvie's Row",
-	#	schedule = {
-	#		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-	#		}
-	#	),
-	#EwTransportLine( # white subway line from juvies row to downtown
-	#	id_line = transport_line_subway_white_westbound,
-	#	alias = [
-	#		"whitewestline",
-	#		"whitewest",
-	#		"westwhite",
-	#		"whitetodowntown",
-	#		"whitetodt"
-	#		],
-	#	first_stop = poi_id_jr_subway_station,
-	#	last_stop = poi_id_dt_subway_station,
-	#	next_line = transport_line_subway_white_eastbound,
-	#	str_name = "The white subway line towards Downtown NLACakaNM",
-	#	schedule = {
-	#		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
-	#		}
-	#	),
+	# TODO: Comment back in after Double Halloween
+	EwTransportLine( # white subway line from downtown to juvies row
+		id_line = transport_line_subway_white_eastbound,
+		alias = [
+			"whiteeastline",
+			"whiteeast",
+			"eastwhite",
+			"whitetojuviesrow",
+			"whitetojuvies",
+			"whitetojr"
+		    ],
+		first_stop = poi_id_underworld_subway_station,
+		last_stop = poi_id_jr_subway_station,
+		next_line = transport_line_subway_white_westbound,
+		str_name = "The white subway line towards Juvie's Row",
+		schedule = {
+			poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+		    }
+		),
+	EwTransportLine( # white subway line from juvies row to downtown
+		id_line = transport_line_subway_white_westbound,
+		alias = [
+			"whitewestline",
+			"whitewest",
+			"westwhite",
+			"whitetounderworld",
+			"whitetouw"
+		    ],
+		first_stop = poi_id_jr_subway_station,
+		last_stop = poi_id_underworld_subway_station,
+		next_line = transport_line_subway_white_eastbound,
+		str_name = "The white subway line towards The Underworld",
+		schedule = {
+			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+			poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+		    }
+		),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -11392,6 +11577,14 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 	),
+	EwCosmeticItem(
+		id_cosmetic = "halloweenmedallion",
+		str_name = "Double Halloween Medallion",
+		str_desc = "A glistening crystal medallion, carved in the shape of a pumpkin. It is strewn together with black pearls. Awarded only to the bravest of souls who managed to best the Double Headless Double Horseman in combat.",
+		rarity = "Double Halloween",
+		acquisition = "DH-bossfight",
+		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
+	)
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -11555,7 +11748,7 @@ smelting_recipe_list = [
 		str_name = "a cooked piece of Dinoslime meat",
 		alias = [
 			"cookedmeat",
-			"sss"
+			"dss"
 		],
 		ingredients = {
 			item_id_faggot : 1,
@@ -11578,7 +11771,7 @@ smelting_recipe_list = [
 		},
 		products = ['fishingrod']
 	),
-        EwSmeltingRecipe(
+    EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -11589,8 +11782,8 @@ smelting_recipe_list = [
 			'string':4
 		},
 		products = ['bass']
-        ),
-		EwSmeltingRecipe(
+    ),
+	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
 		alias = [
@@ -11601,8 +11794,8 @@ smelting_recipe_list = [
 			'scalp': 10
 		},
 		products = ['leathercouch']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherchair",
 		str_name = "a leather chair",
 		alias = [
@@ -11613,8 +11806,8 @@ smelting_recipe_list = [
 			'scalp': 5
 		},
 		products = ['leatherchair']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherlamp",
 		str_name = "a leather coated lamp",
 		alias = [
@@ -11625,8 +11818,8 @@ smelting_recipe_list = [
 			'scalp': 3
 		},
 		products = ['leatherlamp']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherdesk",
 		str_name = "a leather desk",
 		alias = [
@@ -11637,8 +11830,8 @@ smelting_recipe_list = [
 			'scalp': 4
 		},
 		products = ['leatherdesk']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherbed",
 		str_name = "a leather bed",
 		alias = [
@@ -11649,7 +11842,19 @@ smelting_recipe_list = [
 			'scalp': 12
 		},
 		products = ['leatherbed']
-		)
+	),
+    # TODO: Remove after Double Halloween
+    EwSmeltingRecipe(
+        id_recipe = "ticket",
+        str_name = "Ticket to the White Line",
+        alias = [
+            "tickettohell",
+        ],
+        ingredients = {
+            item_id_doublehalloweengrist: 100,
+        },
+        products = ['ticket']
+    )
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13430,7 +13635,8 @@ for m in cosmetic_items_list:
 		mine_results.append(m)
 	else:
 		pass
-	
+
+# TODO: Remove after Double Halloween
 # Gather all the items that can be the result of trick-or-treating.
 trickortreat_results = []
 
@@ -13439,7 +13645,23 @@ for t in food_list:
 		trickortreat_results.append(t)
 	else:
 		pass
-		
+
+# Gather the Halloween Grist
+grist_results = []
+
+for g in item_list:
+	if g.context == 'dhgrist':
+		grist_results.append(g)
+	else:
+		pass
+	
+# Gather the Medallion
+medallion_results = []
+for m in cosmetic_items_list:
+	if m.ingredients == 'HorsemanSoul':
+		medallion_results.append(m)
+	else:
+		pass
 
 slimexodia_parts = []
 
@@ -13696,6 +13918,8 @@ enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
 enemy_attacktype_molotovbreath = 'molotov breath'
 enemy_attacktype_armcannon = 'arm cannon'
+enemy_attacktype_axe = 'axe'
+enemy_attacktype_hooves = 'hooves'
 
 # Enemy types
 # Common enemies
@@ -13717,42 +13941,16 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
 
+# Double Halloween bosses. Could be brought back as enemies later on, for now will only spawn in the underworld.
+enemy_type_doubleheadlessdoublehorseman = 'doubleheadlessdoublehorseman'
+enemy_type_doublehorse = 'doublehorse'
+
 # Enemy ai types
 enemy_ai_sandbag = 'Sandbag'
 enemy_ai_coward = 'Coward'
 enemy_ai_attacker_a = 'Attacker-A'
 enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
-
-# Enemy display names
-enemy_displayname_sandbag = "Sand Bag"
-enemy_displayname_juvie = "Lost Juvie"
-enemy_displayname_dinoslime = "Dinoslime"
-enemy_displayname_slimeadactyl = "Slimeadactyl"
-enemy_displayname_desertraider = "Desert Raider"
-enemy_displayname_mammoslime = "Mammoslime"
-enemy_displayname_microslime = "Microslime"
-enemy_displayname_slimeofgreed = "Slime Of Greed"
-enemy_displayname_megaslime = "Megaslime"
-enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
-enemy_displayname_greeneyesslimedragon = "Green Eyes Slime Dragon"
-enemy_displayname_unnervingfightingoperator = "Unnerving Fighting Operator"
-
-# Display names for rare variants of enemies
-rare_display_names = {
-	enemy_displayname_sandbag: "Durable Sand Bag",
-	enemy_displayname_juvie: "Shellshocked Juvie",
-	enemy_displayname_dinoslime: "Voracious Dinoslime",
-	enemy_displayname_slimeadactyl: "Predatory Slimeadactyl",
-	enemy_displayname_desertraider: "Desert Warlord",
-	enemy_displayname_mammoslime: "Territorial Mammoslime",
-	enemy_displayname_microslime: "Irridescent Microslime",
-	enemy_displayname_slimeofgreed: "Slime Of Avarice",
-	enemy_displayname_megaslime: "Rampaging Megaslime",
-	enemy_displayname_slimeasaurusrex: "Sex Rex",
-	enemy_displayname_greeneyesslimedragon: "Green Eyes JPEG Dragon",
-	enemy_displayname_unnervingfightingoperator: "Unyielding Fierce Operator",
-}
 
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
@@ -13769,33 +13967,16 @@ raid_boss_tiers = {
 	#"Nega": [],
 }
 
-# Shorthand names the player can refer to enemies as.
-enemy_aliases = {
-	enemy_type_sandbag: ["sandbag", "bagosand", "bagofsand"],
-	enemy_type_juvie: ["juvie","greenman","lostjuvie", "lost"],
-	enemy_type_dinoslime: ["dino","slimeasaur"],
-	enemy_type_slimeadactyl: ["bird","dactyl"],
-	enemy_type_microslime: ["micro","pinky"],
-	enemy_type_slimeofgreed: ["slime","slimeofgreed","pot","potofgreed","draw2cards"],
-	enemy_type_desertraider: ["raider","scytheboy","desertraider", "desert"],
-	enemy_type_mammoslime: ["mammoth","brunswick"],
-	enemy_type_megaslime: ["mega","smooze","muk"],
-	enemy_type_slimeasaurusrex: ["rex","trex","slimeasaurusrex","slimeasaurus"],
-	enemy_type_greeneyesslimedragon: ["dragon","greeneyes","greeneyesslimedragon","green"],
-	enemy_type_unnervingfightingoperator: ["ufo", "alien","unnervingfightingoperator","unnvering"]
-}
+# List of enemies that are simply too powerful to have their rare variants spawn
+overkill_enemies = [enemy_type_doubleheadlessdoublehorseman, enemy_type_doublehorse]
 
-# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = [
-	enemy_displayname_megaslime, 
-	enemy_displayname_slimeasaurusrex, 
-	enemy_displayname_greeneyesslimedragon, 
-	enemy_displayname_unnervingfightingoperator,
-	rare_display_names[enemy_displayname_megaslime],
-	rare_display_names[enemy_displayname_slimeasaurusrex],
-	rare_display_names[enemy_displayname_greeneyesslimedragon],
-	rare_display_names[enemy_displayname_unnervingfightingoperator]
-]
+# List of enemies that have other enemies spawn with them
+enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman]
+
+# Dict of enemy spawn groups. The leader is the key, which correspond to which enemies to spawn, and how many.
+enemy_spawn_groups = {
+	enemy_type_doubleheadlessdoublehorseman: [[enemy_type_doublehorse, 1]]
+}
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
@@ -13808,26 +13989,45 @@ enemy_drop_tables = {
 	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
+	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 44]},  {"patrician": [100, 2, 4]}],
+	enemy_type_doublehorse: [{"poudrin": [100, 22, 44]},  {"pleb": [100, 2, 4]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
-# Table of all min and max slime counts for enemies. Min to max, left to right.
-enemy_slime_table = {
-	enemy_type_sandbag: [100000000000, 100000000000], # 100 billion
-	enemy_type_juvie: [10000, 50000],
-	enemy_type_microslime: [10000, 50000],
-	enemy_type_slimeofgreed: [20000, 100000],
-	enemy_type_dinoslime: [250000, 500000],
-	enemy_type_slimeadactyl: [500000, 750000],
-	enemy_type_desertraider: [250000, 750000],
-	enemy_type_mammoslime: [650000, 950000],
-	enemy_type_megaslime: [1000000, 1000000],
-	enemy_type_slimeasaurusrex: [1750000, 3000000],
-	enemy_type_greeneyesslimedragon: [3500000, 5000000],
-	enemy_type_unnervingfightingoperator: [1000000, 3000000],
+# Template. Use this when making a new enemy, as they need all these values filled out.
+# {"slimerange": , "ai": , "attacktype": , "displayname": , "raredisplayname": , "aliases": },
+
+# Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
+enemy_data_table = {
+	enemy_type_sandbag: {"slimerange": [1000000000, 1000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
+	enemy_type_juvie: {"slimerange": [10000, 50000], "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, "displayname": "Lost Juvie", "raredisplayname": "Shellshocked Juvie", "aliases": ["juvie","greenman","lostjuvie", "lost"]},
+	enemy_type_dinoslime: {"slimerange": [250000, 500000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_fangs, "displayname": "Dinoslime", "raredisplayname": "Voracious Dinoslime", "aliases": ["dino","slimeasaur"]},
+	enemy_type_slimeadactyl: {"slimerange": [500000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_talons, "displayname": "Slimeadactyl", "raredisplayname": "Predatory Slimeadactyl", "aliases": ["bird","dactyl"]},
+	enemy_type_desertraider: {"slimerange": [250000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_raiderscythe, "displayname": "Desert Raider", "raredisplayname": "Desert Warlord", "aliases": ["raider","scytheboy","desertraider", "desert"]},
+	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
+	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
+	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
+	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight"]},
+	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
+	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
+	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
+	enemy_type_greeneyesslimedragon: {"slimerange": [3500000, 5000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_molotovbreath, "displayname": "Green Eyes Slime Dragon", "raredisplayname": "Green Eyes JPEG Dragon", "aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]},
+	enemy_type_unnervingfightingoperator: {"slimerange": [1000000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_armcannon, "displayname": "Unnerving Fighting Operator", "raredisplayname": "Unyielding Fierce Operator", "aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]},
 }
+
+# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
+raid_boss_names = [
+	enemy_data_table[enemy_type_megaslime]["displayname"],
+	enemy_data_table[enemy_type_megaslime]["raredisplayname"],
+	enemy_data_table[enemy_type_slimeasaurusrex]["displayname"],
+	enemy_data_table[enemy_type_slimeasaurusrex]["raredisplayname"],
+	enemy_data_table[enemy_type_greeneyesslimedragon]["displayname"],
+	enemy_data_table[enemy_type_greeneyesslimedragon]["raredisplayname"],
+	enemy_data_table[enemy_type_unnervingfightingoperator]["displayname"],
+	enemy_data_table[enemy_type_unnervingfightingoperator]["raredisplayname"],
+]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [
@@ -13952,6 +14152,281 @@ halloween_tricks_trickee = {
 	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
 }
 
+dungeon_tutorial = [
+	#00
+	EwDungeonScene(
+		text = "You're fucked.\n\nYou'd been dreaming of the day when you'd finally get your hands on some **SLIME**," \
+			   " the most precious resource in New Los Angeles City, aka Neo Milwaukee (NLACakaNM).\n\nAs a humble, " \
+			   "pitiful Juvenile, or Juvie as they say on the mean streets, it seemed like a pipe dream. Then one day, " \
+			   "it happened: you saw a molotov cocktail blow open the hull of a SLIMECORP™ Freight Unit, sending barrels " \
+			   "of sweet, beautiful SLIME rolling out across the pavement. You grabbed the first one you could lay your " \
+			   "hands on and bolted.\n\nIt was more slime than you'd ever seen before in your wretched Juvie life. But " \
+			   "it was not to last. SLIMECORP™ has eyes everywhere. It wasn't long before a SLIMECORP™ death squad kicked " \
+			   "in your door, recovered their stolen assets, and burned your whole place to the ground.\n\nTale as old as " \
+			   "time.\n\nAs for you, they dumped you in this run-down facility in downtown NLACakaNM called the Detention " \
+			   "Center. Supposedly it exists to re-educate wayward youths like yourself on how to be productive citizens. " \
+			   "*BARF*\n\nSome guy in a suit brought you to an empty classroom and handcuffed you to a desk. That was like " \
+			   "seven hours ago.",
+		options = {"escape": 2, "suicide": 3,"wait": 4},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+	),
+	#01
+	EwDungeonScene(
+		text = "Defeated, you reunite your ghost with your body. Alas, death is not the end in NLACakaNM.\n\nAlive " \
+			   "once more, the man puts his stogie out and grabs you. He drags you to a new empty classroom, " \
+			   "handcuffs you to a new desk, and promptly leaves.",
+		options = {"escape": 2, "suicide": 3,"wait": 4},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#02
+	EwDungeonScene(
+		text = "You yank on the handcuffs that hold you to the desk. Being rusted and eroded from years of radiation " \
+			   "exposure, the chain snaps instantly. You're free.\n\nYou have two possible routes of escape: the door " \
+			   "that you came in through which leads to a hallway, or the window which leads to a courtyard.",
+		options = {"goto door": 8, "goto window": 9},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#03
+	EwDungeonScene(
+		text = "You fumble inside the desk and find exactly what you need: a pencil.\n\nYou stab the pencil into " \
+			   "the desk so it's standing up straight. You're pretty sure you saw this in a movie once.\n\nWith " \
+			   "all your might, you slam your head onto the desk. The pencil has disappeared! Congratulations, you " \
+			   "are dead.\n\nHowever, before your ghost can make its way out of the room, a guy in a SLIMECORP™ " \
+			   "jumpsuit with a bizarre-looking machine on his back kicks in the door and blasts you with some kind " \
+			   "of energy beam, then traps you in a little ghost-box.\n\nHe grabs your body and drags it out of the " \
+			   "room, down a series of hallways and several escalators, into a dark room full of boilers and pipes, " \
+			   "and one large vat containing a phosphorescent green fluid. He tosses your body, and the box containing " \
+			   "your ghost, into the vat, where they land with a SPLOOSH. Then he sits down in a nearby chair and " \
+			   "lights up a fat SLIMECORP™-brand cigar.",
+		options = {"revive": 1, "wait": 10},
+		poi = poi_id_tutorial_ghostcontainment,
+		life_state = life_state_corpse,
+
+	),
+	#04
+	EwDungeonScene(
+		text = "You sit and wait for the authorities to decide your fate like a well-behaved little Juvie." \
+			   "\n\nYou wait for another hour. Nothing happens.",
+		options = {"escape": 2, "suicide": 3,"wait": 5},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#05
+	EwDungeonScene(
+		text = "You sit and wait for the authorities to decide your fate like a well-behaved little Juvie." \
+			   "\n\nYou wait for another hour. Still, nothing happens.",
+		options = {"escape": 2, "suicide": 3,"wait": 6},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#06
+	EwDungeonScene(
+		text = "You sit and wait for the authorities to decide your fate like a well-behaved little Juvie.\n\n" \
+			   "You wait for another hour. You begin to hear a faint commotion through the door. There are " \
+			   "distant voices yelling in the hallway outside.",
+		options = {"escape": 2, "suicide": 3,"wait": 7},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#07
+	EwDungeonScene(
+		text = "You wait and listen, trying to discern what's going on in the hallway.\n\nThe voices grow louder. " \
+			   "You begin to discern more clearly... there are voices frantically shouting, mostly voices that " \
+			   "sound like Juvies your age, but some strangely inhuman.\n\nSuddenly you hear gunshots.\n\nA " \
+			   "deafening fury erupts as you hear from the hallway a hail of gunfire and the clanging of metal." \
+			   "\n\nA sudden explosion demolishes the classroom wall and sends you flying. The desk you were " \
+			   "handcuffed to is smashed apart... you're free!\n\nYou have two possible routes of escape: the " \
+			   "hole blown in the wall which leads out to the hallway, or the window which leads to a courtyard.",
+		options = {"goto hole": 11, "goto window": 9},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#08
+	EwDungeonScene(
+		text = "You go to the door and open it. You step out into the hallway. It is completely empty. " \
+			   "You can make out faint voices shouting in the distance.",
+		options = {"goto left": 12, "goto right": 12},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	#09
+	EwDungeonScene(
+		text = "You make for the window. It slides open easily and you jump out into the courtyard. " \
+			   "The grass here is completely dry and dead. A few faintly glowing green thorny weeds " \
+			   "grow in patches here and there. Across the lawn you see a high chain-link fence " \
+			   "topped with barbed wire. You break into a run hoping to hop the fence and escape.\n\n" \
+			   "You make it about 20 feet from the window before a gun turret mounted on the Detention " \
+			   "Center roof gets a clear shot at you. A torrent of bullets rips through you and you " \
+			   "fall to the ground, directly onto one of the many, many landmines buried here. The " \
+			   "explosion blows your body into meaty chunks, and the force is to powerful that even " \
+			   "your ghost is knocked unconscious.\n\nWhen you regain consciousness, you realize that" \
+			   " you are contained in a tiny ghost-box that's floating in a vat of phosphorescent green " \
+			   "fluid along with a collection of bloody meat-chunks that are presumably what's left of " \
+			   "your body. Across the dark room, a man in a SLIMECORP™ jumpsuit sits and smokes a " \
+			   "SLIMECORP™-brand cigar, apparently waiting for something.",
+		options = {"revive": 1, "wait": 10},
+		poi = poi_id_tutorial_ghostcontainment,
+		life_state = life_state_corpse,
+
+	),
+	#10
+	EwDungeonScene(
+		text = "You and your body float in the glowing green liquid. Nothing happens.",
+		options = {"revive": 1, "wait": 10},
+		poi = poi_id_tutorial_ghostcontainment,
+		life_state = life_state_corpse,
+
+	),
+	# 11
+	EwDungeonScene(
+		text="You peer through the charred hole in the classroom wall and into the hallway.",
+		options={"proceed": 15},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 12
+	EwDungeonScene(
+		text="You make your way down the hallway, hoping to find an exit. The shouting voices grow louder."
+			 "\n\nYou come to a split in the hallway. You can go left or right.",
+		options={"goto left": 13, "goto right": 13},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 13
+	EwDungeonScene(
+		text="You make your way down the hallway, hoping to find an exit. The shouting voices grow even "
+			 "louder.\n\nYou come to another split. Left or right?",
+		options={"goto left": 14, "goto right": 14},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 14
+	EwDungeonScene(
+		text="You make your way down the hallway, hoping to find an exit.\n\nAs you come to the next "
+			 "split in the hallway, a gunshot rings out. Suddenly, there is an explosion of noise as "
+			 "more and more guns fire, and you hear the clang of metal against metal.",
+		options={"proceed": 15},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 15
+	EwDungeonScene(
+		text="It looks like a fucking war has erupted. Bullets are flying through the air and bodies, blood, " \
+			 "and slime are all smeared across the floor and the walls.\n\nDown the hallway in both directions " \
+			 "are groups of people waging what you now realize must be GANG WARFARE. These must be gang " \
+			 "members here to capture some territory for their KINGPINS.\n\nTo your right, a throng of terrifying " \
+			 "freaks in pink gleefully !thrash about, swinging spiked bats and firing automatic weapons with " \
+			 "wild abandon. You've heard about them... the deadly ROWDYS.\n\nTo your left, a shadowy mass of " \
+			 "sinister-looking purple-clad ne'er-do-wells !dab defiantly in the face of death, blades and guns " \
+			 "gleaming in the fluorescent light. These must be the dreaded KILLERS.\n\nAnd in the middle, " \
+			 "where the two gangs meet, weapons clash and bodies are smashed open, slime splattering everywhere " \
+			 "as the death count rises.\n\nA little bit gets on you. It feels good.",
+		options={"scavenge": 16, "kill": 17, "goto left": 18, "goto right": 19},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 16
+	EwDungeonScene(
+		text="You surreptitiously try to scrape up as much of the dropped slime as you can without " \
+			 "alerting the gang members to your presence. It's not much, but you stuff what little " \
+			 "you can gather into your pockets.\n\nGod you fucking love slime so much.",
+		options={"scavenge": 16, "kill": 17, "goto left": 18, "goto right": 19},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 17
+	EwDungeonScene(
+		text="You itch to get in on the action. But unfortunately, you're still a mere Juvenile. " \
+			 "Violence is simply beyond your capability... for now.\n\nYou make a mental note to " \
+			 "!enlist in a gang at the first possible opportunity. You'll need to escape the " \
+			 "Detention Center first though, and get some slime.",
+		options={"scavenge": 16, "kill": 17, "goto left": 18, "goto right": 19},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 18
+	EwDungeonScene(
+		text="You're certain any individual member of either side of this conflict could obliterate " \
+				"you with a mere thought. With no safe options available, you decide to make a break " \
+				"for it to the left, through the ranks of the KILLERS.\n\nYou sprint down the hall " \
+				"and pray that none of the whizzing bullets connect with your tender and slimeless Juvie " \
+				"body.\n\nReaching the Killer front lines, you make a running leap. A curved scythe " \
+				"blade that you think must be sharp enough to split atoms whizzes millimeters above " \
+				"your head.\n\nMiraculously, you land still intact on the other side of the Killers, who " \
+				"pay you no further mind. You break into a run.\n\nYou run through through hallway after " \
+				"hallway riddled with the burned craters and bullet holes left in the wake of the Killers. " \
+				"Purple graffiti is scrawled on the walls everywhere. \"!DAB\" is written over and over, " \
+				"along with the occasional \"ROWDYS IS BUSTAHS\", drawings of bizarre slimy-looking creatures, " \
+				"and pictures of a hooded man in a beanie accompanied by the message \"FOR THE COP KILLER\".\n\n" \
+				"This \"Cop Killer\" must be a pretty cool guy, you decide.\n\nAt last, when you're nearing " \
+				"exhaustion, you come to a large burnt hole in the wall that leads outside. The Killers must " \
+				"have blown the wall open to make their assault.\n\nCould it be? Sweet freedom at last??",
+		options={"escape": 20},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 19
+	EwDungeonScene(
+		text="You're certain any individual member of either side of this conflict could obliterate " \
+			"you with a mere thought. With no safe options available, you decide to make a break for " \
+			"it to the right, through the ranks of the ROWDYS.\n\nYou sprint down the hall and pray " \
+			"that none of the whizzing bullets connect with your tender and slimeless Juvie body.\n\n" \
+			"Reaching the Rowdy front lines, you make a running leap. A wildly swung nun-chuck packing " \
+			"the force of an eighteen-wheeler whizzes millimeters above your head.\n\nMiraculously, " \
+			"you land still intact on the other side of the Rowdys, who pay you no further mind. You " \
+			"break into a run.\n\nYou run through through hallway after hallway riddled with the burned " \
+			"craters and bullet holes left in the wake of the Rowdys. Pink graffiti is scrawled on the " \
+			"walls everywhere. \"!THRASH\" is written over and over, along with the occasional \"KILLERS " \
+			"GET FUCKED\", drawings of bizarre slimy-looking creatures, and pictures of a man in a " \
+			"jester's cap accompanied by the message \"FOR THE ROWDY FUCKER\".\n\nThis \"Rowdy Fucker\" " \
+			"must be a pretty cool guy, you decide.\n\nAt last, when you're nearing exhaustion, you come " \
+			"to a large burnt hole in the wall that leads outside. The Rowdys must have blown the wall " \
+			"open to make their assault.\n\nCould it be? Sweet freedom at last??",
+		options={"escape": 20},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 20
+	EwDungeonScene(
+		text="You exit through the hole in the wall into the front parking lot of the Detention " \
+				"Center. Behind you you can still hear screams and gunshots echoing through the halls." \
+				"\n\nMoving quickly, you sprint across the parking lot, lest some SLIMECORP™ security " \
+				"camera alert a guard to your presence. Fortunately, it seems that all available Detention " \
+				"Center personel are dealing with the Gang Warfare currently raging inside.\n\nUpon " \
+				"reaching the high chain link fence encircling the facility, you find that a large hole " \
+				"has been torn open in it, through which you quickly make your escape.\n\nYou take a " \
+				"moment to survey the scene before you. Downtown NLACakaNM bustles and hums with activity " \
+				"and you hear the familiar clicking of the Geiger Counters on every street corner. Over " \
+				"the skyline you see it... the towering green obelisk, ENDLESS WAR. Taker of Life, " \
+				"Bringer of Slime. Your heart swells with pride and your eyes flood with tears at the " \
+				"sight of His glory.\n\nBehind you, SLIMECORP™ helicopters circle overhead. You know " \
+				"what that means. Things are about to get hot. Time to skedaddle.\n\nYou leave the " \
+				"Detention Center and head into Downtown.\n\nIt's time to resume your life in NLACakaNM.",
+		dungeon_state = False,
+		poi = poi_id_downtown,
+		life_state = life_state_juvenile,
+
+	),
+]
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 
