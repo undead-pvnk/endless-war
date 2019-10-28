@@ -5616,7 +5616,7 @@ food_list = [
 		str_name = 'Sourpuss Bread',
 		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
 		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
-		vendors = vendor_pizzahut
+		vendors = [vendor_pizzahut]
 	),
 ]
 
