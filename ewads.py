@@ -1,0 +1,173 @@
+import ewcfg
+import ewutils
+
+from ew import EwUser
+
+class EwAd:
+
+	id_ad = -1
+
+	id_server = ""
+	id_sponsor = ""
+
+	content = ""
+	time_expir = 0
+
+	def __init__(
+		self,
+		id_ad = None
+	):
+		if id_ad != None:
+			self.id_ad = id_ad
+			data = ewutils.execute_sql_query("SELECT {id_server}, {id_sponsor}, {content}, {time_expir} FROM ads WHERE {id_ad} = %s".format(
+				id_server = ewcfg.col_id_server,
+				id_sponsor = ewcfg.col_id_sponsor,
+				content = ewcfg.col_ad_content,
+				time_expir = ewcfg.col_time_expir,
+				id_ad = ewcfg.col_id_ad,
+			),(
+				self.id_ad,
+			))
+
+			if len(data) > 0:
+				result = data[0]
+				
+				self.id_server = result[0]
+				self.id_sponsor = result[1]
+				self.content = result[2]
+				self.time_expir = result[3]
+			else:
+				self.id_ad = -1
+
+	def persist(self):
+		ewutils.execute_sql_query("REPLACE INTO ads ({}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s)".format(
+			ewcfg.col_id_ad,
+			ewcfg.col_id_server,
+			ewcfg.col_id_sponsor,
+			ewcfg.col_ad_content,
+			ewcfg.col_time_expir,
+		),(
+			self.id_ad,
+			self.id_server,
+			self.id_sponsor,
+			self.content,
+			self.time_expir
+		))
+	
+
+def create_ad(id_server, id_sponsor, content, time_expir):
+	ewutils.execute_sql_query("INSERT INTO ads ({}, {}, {}, {}) VALUES (%s, %s, %s, %s)".format(
+		ewcfg.col_id_server,
+		ewcfg.col_id_sponsor,
+		ewcfg.col_ad_content,
+		ewcfg.col_time_expir,
+	),(
+		id_server,
+		id_sponsor,
+		content,
+		time_expir,
+	))
+
+def get_ads(id_server):
+	time_now = int(time.time())
+	ad_ids = []
+	data = ewutils.execute_sql_query("SELECT {id_ad} FROM ads WHERE {id_server} = %s AND {time_expir} < %s ORDER BY {time_expir} ASC".format(
+		id_ad = ewcfg.col_id_ad,
+		id_server = ewcfg.col_id_server,
+		time_expir = ewcfg.time_expir,
+	),(
+		id_server,
+		time_now
+	))
+
+	for result in data:
+		ad_ids.append(result[0])
+ 
+	return ad_ids
+
+async def advertise(cmd):
+
+	time_now = int(time.time())
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_slimecorphq:
+		response = "To buy ad space, you'll need to go SlimeCorp HQ."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+	cost = ewcfg.slimecoin_toadvertise
+
+	if user_data.slimecoin < cost:
+		response = "Your don't have enough slimecoin to advertise. ({:,}/{:,})".format(user_data.slimecoin, cost)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	ads = get_ads(cmd.message.server.id)
+
+	if len(ads) >= ewcfg.max_concurrent_ads:
+		first_ad = EwAd(id_ad = ads[-1])
+		first_expire = first_ad.time_expir
+
+		secs_to_expire = int(first_expire - time_now)
+		mins_to_expire = int(secs_to_expire / 60)
+		hours_to_expire = int(mins_to_expire / 60)
+		
+
+		time_to_expire = ""
+		if hours_to_expire > 0:
+			time_to_expire += "{} hours, ".format(hours_to_expire)
+		if mins_to_expire > 0:
+			time_to_expire += "{} minutes, ".format(mins_to_expire % 60)
+		time_to_expire += "{} seconds".format(secs_to_expire % 60)
+
+		response = "Sorry, but all of our ad space is currently in use. The next vacancy will be in {}".format(time_to_expire)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.tokens_count < 2:
+		response = "Please specify the content of your ad."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	content = cmd.message.content[cmd.tokens[0]:].strip()
+
+	if len(content) > ewcfg.max_length_ads:
+		response = "Your ad is too long, we can't fit that on a billboard. ({:,}/{:,})".format(len(content), ewcfg.max_length_ads)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	sponsor_disclaimer = "Paid for by {}".format(cmd.message.author.display_name)
+
+	response = "This is what your ad is going to look like."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	response = "{}\n\n*{}*".format(content, sponsor_disclaimer)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	response = "It will cost {:,} slimecoin to stay up for 4 weeks. Is this fine? {} or {}".format(cost, ewcfg.cmd_confirm, ewcfg.cmd_cancel)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	accepted = False
+	try:
+		msg = await cmd.client.wait_for_message(timeout = 30, author = cmd.message.author, check = ewutils.check_confirm_or_cancel)
+
+		if msg != None:
+			if msg.content.lower() == ewcfg.cmd_confirm:
+				accepted = True
+	except:
+		accepted = False
+
+	if accepted:
+		create_ad(
+			id_server = cmd.message.server.id,
+			id_sponsor = cmd.message.author.id,
+			content = content,
+			time_expir = time_now + ewcfg.uptime_ads,
+		)
+			
+		user_data.change_slimecoin(n = -cost, source = ewcfg.coinsource_spending)
+
+		user_data.persist()
+
+
+		response = "Thank you for your business."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		response = "Good luck raising awareness by word of mouth."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

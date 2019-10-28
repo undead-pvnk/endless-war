@@ -1105,6 +1105,10 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	return response
 
 
+async def confirm(cmd):
+	return
 
+async def cancel(cmd):
+	return
 
 

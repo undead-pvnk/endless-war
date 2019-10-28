@@ -1257,13 +1257,17 @@ async def delete_last_message(client, last_messages, tick_length):
 	except:
 		logMsg("failed to delete last message")
 
-def check_accept_or_refuse(str):
-	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
+def check_accept_or_refuse(string):
+	if string.content.lower() == ewcfg.cmd_accept or string.content.lower() == ewcfg.cmd_refuse:
+		return True
+
+def check_confirm_or_cancel(string):
+	if string.content.lower() == ewcfg.cmd_confirm or string.content.lower() == ewcfg.cmd_cancel:
 		return True
 	
 # TODO: Remove after Double Halloween
-def check_trick_or_treat(str):
-	if str.content.lower() == ewcfg.cmd_treat or str.content.lower() == ewcfg.cmd_trick:
+def check_trick_or_treat(string):
+	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
 		return True
 	
 def end_trade(id_user):

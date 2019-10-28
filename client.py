@@ -50,6 +50,7 @@ import ewapt
 import ewweather
 import ewworldevent
 import ewdungeons
+import ewads
 import ewdebug
 
 from ewitem import EwItem
@@ -298,6 +299,11 @@ cmd_map = {
 
 	# check available stocks
 	ewcfg.cmd_stocks: ewmarket.stocks,
+
+	# ads
+	ewcfg.cmd_advertise: ewads.advertise,
+	ewcfg.cmd_confirm: ewcmd.confirm,
+	ewcfg.cmd_cancel: ewcmd.cancel,
 
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
