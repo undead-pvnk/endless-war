@@ -1,3 +1,5 @@
+import time
+
 import ewcfg
 import ewutils
 
@@ -74,7 +76,7 @@ def get_ads(id_server):
 	data = ewutils.execute_sql_query("SELECT {id_ad} FROM ads WHERE {id_server} = %s AND {time_expir} < %s ORDER BY {time_expir} ASC".format(
 		id_ad = ewcfg.col_id_ad,
 		id_server = ewcfg.col_id_server,
-		time_expir = ewcfg.time_expir,
+		time_expir = ewcfg.col_time_expir,
 	),(
 		id_server,
 		time_now
@@ -126,7 +128,7 @@ async def advertise(cmd):
 		response = "Please specify the content of your ad."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-	content = cmd.message.content[cmd.tokens[0]:].strip()
+	content = cmd.message.content[len(cmd.tokens[0]):].strip()
 
 	if len(content) > ewcfg.max_length_ads:
 		response = "Your ad is too long, we can't fit that on a billboard. ({:,}/{:,})".format(len(content), ewcfg.max_length_ads)
@@ -161,12 +163,12 @@ async def advertise(cmd):
 			time_expir = time_now + ewcfg.uptime_ads,
 		)
 			
-		user_data.change_slimecoin(n = -cost, source = ewcfg.coinsource_spending)
+		user_data.change_slimecoin(n = -cost, coinsource = ewcfg.coinsource_spending)
 
 		user_data.persist()
 
 
-		response = "Thank you for your business."
+		response = "Your ad will be put up immediately. Thank you for your business."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		response = "Good luck raising awareness by word of mouth."
