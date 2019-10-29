@@ -175,7 +175,6 @@ cmd_map = {
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_trickortreat: ewapt.trickortreat,
-	ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand: ewapt.propstand,
