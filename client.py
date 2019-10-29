@@ -302,6 +302,7 @@ cmd_map = {
 
 	# ads
 	ewcfg.cmd_advertise: ewads.advertise,
+	ewcfg.cmd_ads: ewads.ads_look,
 	ewcfg.cmd_confirm: ewcmd.confirm,
 	ewcfg.cmd_cancel: ewcmd.cancel,
 
@@ -947,6 +948,9 @@ async def on_ready():
 
 					# Remove fish offers which have timed out
 					ewfish.kill_dead_offers(id_server = server.id)
+
+					# kill advertisements that have timed out
+					ewads.delete_expired_ads(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 

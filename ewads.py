@@ -4,6 +4,7 @@ import ewcfg
 import ewutils
 
 from ew import EwUser
+from ewplayer import EwPlayer
 
 class EwAd:
 
@@ -73,7 +74,7 @@ def create_ad(id_server, id_sponsor, content, time_expir):
 def get_ads(id_server):
 	time_now = int(time.time())
 	ad_ids = []
-	data = ewutils.execute_sql_query("SELECT {id_ad} FROM ads WHERE {id_server} = %s AND {time_expir} < %s ORDER BY {time_expir} ASC".format(
+	data = ewutils.execute_sql_query("SELECT {id_ad} FROM ads WHERE {id_server} = %s AND {time_expir} > %s ORDER BY {time_expir} ASC".format(
 		id_ad = ewcfg.col_id_ad,
 		id_server = ewcfg.col_id_server,
 		time_expir = ewcfg.col_time_expir,
@@ -86,6 +87,25 @@ def get_ads(id_server):
 		ad_ids.append(result[0])
  
 	return ad_ids
+
+def delete_expired_ads(id_server):
+	time_now = int(time.time())
+	data = ewutils.execute_sql_query("DELETE FROM ads WHERE {id_server} = %s AND {time_expir} < %s".format(
+		id_server = ewcfg.col_id_server,
+		time_expir = ewcfg.col_time_expir,
+	),(
+		id_server,
+		time_now
+	))
+	
+
+def format_ad_response(ad_data):
+	
+	sponsor_player = EwPlayer(id_user = ad_data.id_sponsor)
+	sponsor_disclaimer = "Paid for by {}".format(sponsor_player.display_name)
+	ad_response = "A billboard catches your eye:\n\n{}\n\n*{}*".format(ad_data.content, sponsor_disclaimer)
+
+	return ad_response
 
 async def advertise(cmd):
 
@@ -172,4 +192,24 @@ async def advertise(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		response = "Good luck raising awareness by word of mouth."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def ads_look(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	response = "You look around for ads. God, you love being advertised to...\n"
+
+	ads = get_ads(id_server = cmd.message.server.id)
+
+
+	if poi.has_ads and len(ads) > 0:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		for id_ad in ads:
+			ad_data = EwAd(id_ad = id_ad)
+			ad_resp = format_ad_response(ad_data)
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, ad_resp))
+
+	else:
+		response += "\nBut you couldn't find any. Bummer."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
