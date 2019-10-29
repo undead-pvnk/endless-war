@@ -1052,9 +1052,17 @@ async def move(cmd = None, isApt = False):
 					# TODO: Remove after Double Halloween
 					if poi_current.id_poi == ewcfg.poi_id_underworld:
 						potential_chosen_district = EwDistrict(district=poi_current.id_poi, id_server=user_data.id_server)
-						enemies_list = potential_chosen_district.get_enemies_in_district()
-						enemies_count = len(enemies_list)
-						if enemies_count == 0:
+						life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
+
+						enemies_count = len(potential_chosen_district.get_enemies_in_district())
+						players_count = len(potential_chosen_district.get_players_in_district(life_states=life_states))
+						
+						# The Horseman spawns on three conditions
+						# 1 - A player enters the underworld while alive
+						# 2 - There are no enemies in the underworld
+						# 3 - There are no enlisted/juvie/exec players in hell, besides the one that just entered
+						
+						if enemies_count == 0 and players_count == 1:
 							dh_resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 							sub_response, sub_channel = await spawn_enemy(id_server=user_data.id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld)
 
