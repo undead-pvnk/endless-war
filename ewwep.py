@@ -532,7 +532,7 @@ async def attack(cmd):
 
 				weapon_item.item_props['time_lastattack'] = time_now
 				weapon_item.persist()
-
+				
 				# Spend slimes, to a minimum of zero
 				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 
@@ -777,7 +777,7 @@ async def attack(cmd):
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
-          
+		  
 					# Scalp text
 					if weapon != None:
 						scalp_text = weapon.str_scalp
@@ -1869,9 +1869,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		weapon_item.item_props['time_lastattack'] = time_now
 		weapon_item.persist()
 
+		# print(user_data.slimes)
+		# print(slimes_spent)
+
 		# Spend slimes, to a minimum of zero
-		user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent),
-								source=ewcfg.source_spending)
+		user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source=ewcfg.source_spending)
+		user_data.persist()
 
 		if weapon.id_weapon == ewcfg.weapon_id_garrote:
 			user_data.persist()
