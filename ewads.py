@@ -126,22 +126,27 @@ async def advertise(cmd):
 	ads = get_ads(cmd.message.server.id)
 
 	if len(ads) >= ewcfg.max_concurrent_ads:
-		first_ad = EwAd(id_ad = ads[-1])
+		first_ad = EwAd(id_ad = ads[0])
 		first_expire = first_ad.time_expir
 
 		secs_to_expire = int(first_expire - time_now)
 		mins_to_expire = int(secs_to_expire / 60)
 		hours_to_expire = int(mins_to_expire / 60)
-		
+		days_to_expire = int(hours_to_expire / 24)
 
-		time_to_expire = ""
+		expire_list = []
 		if hours_to_expire > 0:
-			time_to_expire += "{} hours, ".format(hours_to_expire)
+			expire_list.append("{} days".format(days_to_expire))
+		if hours_to_expire > 0:
+			expire_list.append("{} hours".format(hours_to_expire % 24))
 		if mins_to_expire > 0:
-			time_to_expire += "{} minutes, ".format(mins_to_expire % 60)
-		time_to_expire += "{} seconds".format(secs_to_expire % 60)
+			expire_list.append("{} minutes".format(mins_to_expire % 60))
+		else:
+			expire_list.append("{} seconds".format(secs_to_expire % 60))
 
-		response = "Sorry, but all of our ad space is currently in use. The next vacancy will be in {}".format(time_to_expire)
+		time_to_expire = ewutils.formatNiceList(names = expire_list, conjunction = "and")
+
+		response = "Sorry, but all of our ad space is currently in use. The next vacancy will be in {}.".format(time_to_expire)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.tokens_count < 2:
