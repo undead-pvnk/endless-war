@@ -365,3 +365,13 @@ CREATE TABLE world_events_prop (
 		REFERENCES world_events(id_event)
 		ON DELETE CASCADE
 );
+
+CREATE TABLE ads (
+	id_ad int NOT NULL AUTO_INCREMENT,
+	id_server varchar(128) NOT NULL,
+	id_sponsor varchar(128) NOT NULL DEFAULT '',
+	content varchar(500) NOT NULL DEFAULT '',
+	time_expir int NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_ad)
+);

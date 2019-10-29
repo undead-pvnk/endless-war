@@ -2,6 +2,7 @@ import asyncio
 import time
 import math
 import heapq
+import random
 
 from copy import deepcopy
 
@@ -10,6 +11,7 @@ import ewcmd
 import ewrolemgr
 import ewcfg
 import ewapt
+import ewads
 
 from ew import EwUser
 from ewdistrict import EwDistrict
@@ -18,6 +20,7 @@ from ewmarket import EwMarket
 from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
 from ewplayer import EwPlayer
+from ewads import EwAd
 
 from ewhunting import EwEnemy, spawn_enemy
 
@@ -157,6 +160,9 @@ class EwPoi:
 	# if the poi is part of the tutorial
 	is_tutorial = False
 
+	# whether to show ads here
+	has_ads = False
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -191,6 +197,7 @@ class EwPoi:
 		is_pier = False,
 		pier_type = None,
 		is_tutorial = False,
+		has_ads = False,
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -224,6 +231,7 @@ class EwPoi:
 		self.is_pier = is_pier
 		self.pier_type = pier_type
 		self.is_tutorial = is_tutorial
+		self.has_ads = has_ads
 
 # New map as of 7/19/19
 
@@ -1048,6 +1056,14 @@ async def move(cmd = None, isApt = False):
 							"You {} {}.".format(poi_current.str_enter, poi_current.str_name)
 						)
 					)
+
+					if poi_current.has_ads:
+						ads = ewads.get_ads(id_server = user_data.id_server)
+						if len(ads) > 0:
+							id_ad = random.choice(ads)
+							ad_data = EwAd(id_ad = id_ad)
+							ad_response = ewads.format_ad_response(ad_data)
+							await ewutils.send_message(cmd.client, channel, ewutils.formatMessage(cmd.message.author, ad_response))
 					
 					# TODO: Remove after Double Halloween
 					if poi_current.id_poi == ewcfg.poi_id_underworld:
@@ -1263,6 +1279,16 @@ async def look(cmd):
 	else:
 		soul_resp = ""
 
+	ad_resp = ""
+	ad_formatting = ""
+	if poi.has_ads:
+		ads = ewads.get_ads(id_server = user_data.id_server)
+		if len(ads) > 0:
+			id_ad = random.choice(ads)
+			ad_data = EwAd(id_ad = id_ad)
+			ad_resp = ewads.format_ad_response(ad_data)
+			ad_formatting = "\n\n..."
+
 	# post result to channel
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -1273,10 +1299,9 @@ async def look(cmd):
 				poi.str_desc
 			)
 		))
-		await asyncio.sleep(0.1)
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"{}{}{}{}{}{}".format(
+			"{}{}{}{}{}{}{}".format(
 				slimes_resp,
 				players_resp,
 				slimeoids_resp,
@@ -1284,9 +1309,15 @@ async def look(cmd):
 				soul_resp,
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
-				) if cmd.message.server != None else "")
+				) if cmd.message.server != None else ""),
+				ad_formatting
 			)
 		))
+		if len(ad_resp) > 0:
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+				cmd.message.author,
+				ad_resp
+			))
 
 async def survey(cmd):
 	user_data = EwUser(member=cmd.message.author)

@@ -670,6 +670,11 @@ cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
 cmd_recycle = cmd_prefix + 'recycle'
 cmd_recycle_alt1 = cmd_prefix + 'incinerate'
+cmd_advertise = cmd_prefix + 'advertise'
+cmd_ads = cmd_prefix + 'ads'
+cmd_confirm = cmd_prefix + 'confirm'
+cmd_cancel = cmd_prefix + 'cancel'
+
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -842,6 +847,13 @@ hunger_perscavenge = 2
 hunger_pertick = 3
 # TODO: Remove after Double Halloween
 hunger_pertrickortreat = 6
+
+# ads
+slimecoin_toadvertise = 1000000
+max_concurrent_ads = 8
+max_length_ads = 500
+uptime_ads = 7 * 24 * 60 * 60 # one week
+
 
 #inebriation
 inebriation_max = 20
@@ -1464,6 +1476,12 @@ col_source = 'source'
 col_id_event = 'id_event'
 col_event_type = 'event_type'
 col_time_activate = 'time_activate'
+
+# Database columns for advertisements
+col_id_ad = 'id_ad'
+col_id_sponsor = 'id_sponsor'
+col_ad_content = 'content'
+
 
 # Item type names
 it_item = "item"
@@ -7339,7 +7357,8 @@ poi_list = [
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
-		is_capturable = True
+		is_capturable = True,
+		has_ads = True
 	),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
