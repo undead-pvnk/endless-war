@@ -175,6 +175,7 @@ cmd_map = {
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
 	ewcfg.cmd_trickortreat: ewapt.trickortreat,
+	ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand: ewapt.propstand,
@@ -386,6 +387,7 @@ cmd_map = {
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -1219,9 +1221,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 1,000,000,000 slime!"
+			response = "You get 100,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 1000000000)
+			levelup_response = user_data.change_slimes(n = 100000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 

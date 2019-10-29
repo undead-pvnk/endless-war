@@ -629,7 +629,7 @@ def landmark_heuristic(path, coord_end):
 			scores.append(abs(score_path - score_goal))
 
 		return max(scores)
-		    
+			
 	
 
 def replace_with_inf(n):
@@ -1051,16 +1051,34 @@ async def move(cmd = None, isApt = False):
 					
 					# TODO: Remove after Double Halloween
 					if poi_current.id_poi == ewcfg.poi_id_underworld:
-						potential_chosen_district = EwDistrict(district=poi_current.id_poi, id_server=user_data.id_server)
-						enemies_list = potential_chosen_district.get_enemies_in_district()
-						enemies_count = len(enemies_list)
-						if enemies_count == 0:
-							dh_resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
-							sub_response, sub_channel = await spawn_enemy(id_server=user_data.id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld)
+						if user_data.life_state != ewcfg.life_state_corpse:
+							potential_chosen_district = EwDistrict(district=poi_current.id_poi, id_server=user_data.id_server)
+							life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
+							market_data = EwMarket(id_server = cmd.message.server.id)
+							spawn_ready = False
+	
+							enemies_count = len(potential_chosen_district.get_enemies_in_district())
+							
+							# The Horseman spawns on four conditions
+							# 1 - A player enters the underworld while alive
+							# 2 - There are no enemies in the underworld
+							# 3 - He has not yet died twice.
+							# 4 - It has been at least two (real life) days since his last death.
+							
+							if int(time_now) > (market_data.horseman_timeofdeath + ewcfg.horseman_death_cooldown):
+								spawn_ready = True
 
-							if sub_response != "":
-								dh_resp_cont.add_channel_response(sub_channel, sub_response)
-								await dh_resp_cont.post()
+							# print(spawn_ready)
+							# print(market_data.horseman_deaths)
+							# print(enemies_count)
+							
+							if enemies_count == 0 and market_data.horseman_deaths <= 1 and spawn_ready:
+								dh_resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+								sub_response, sub_channel = await spawn_enemy(id_server=user_data.id_server, pre_chosen_type=ewcfg.enemy_type_doubleheadlessdoublehorseman, pre_chosen_poi=ewcfg.poi_id_underworld)
+	
+								if sub_response != "":
+									dh_resp_cont.add_channel_response(sub_channel, sub_response)
+									await dh_resp_cont.post()
 
 					if len(user_data.faction) > 0 and user_data.poi in ewcfg.capturable_districts:
 						district = EwDistrict(
