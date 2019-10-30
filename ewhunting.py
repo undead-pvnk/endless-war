@@ -928,7 +928,7 @@ async def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 
 	# If it couldn't find a district in 5 tries or less, back out of spawning that enemy.
 	if chosen_poi == "":
-		return
+		return "", ""
 	
 	# Recursively spawn enemies that belong to groups.
 	if enemytype in ewcfg.enemy_group_leaders:
