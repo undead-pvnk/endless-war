@@ -1000,7 +1000,7 @@ def find_enemy(enemy_search=None, user_data=None):
 
 		enemy_search_tokens = enemy_search.split(' ')
 
-		for enemy_type in ewcfg.enemy_aliases:
+		for enemy_type in ewcfg.enemy_data_table:
 			aliases = ewcfg.enemy_data_table[enemy_type]["aliases"]
 			if enemy_search.lower() in aliases:
 				enemy_search_alias = enemy_type
