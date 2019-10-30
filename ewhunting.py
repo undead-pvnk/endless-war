@@ -442,7 +442,7 @@ class EwEnemy:
 			
 					# apply hardened sap armor
 					sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
-					slimes_damage -= sap_armor
+					slimes_damage *= sap_armor
 					slimes_damage = int(max(slimes_damage, 0))
     
 					sap_damage = min(sap_damage, target_data.hardened_sap)

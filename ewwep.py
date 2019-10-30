@@ -691,7 +691,7 @@ async def attack(cmd):
 			
 
 			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
-			slimes_damage -= sap_armor
+			slimes_damage *= sap_armor
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
@@ -1235,7 +1235,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 				# apply sap armor
 				sap_armor = get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
-				slimes_damage_target -= sap_armor
+				slimes_damage_target *= sap_armor
 				slimes_damage_target = int(max(0, slimes_damage_target))
 
 				slimes_dropped = target_data.totaldamage + target_data.slimes
@@ -1339,7 +1339,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 				# apply sap armor
 				sap_armor = get_sap_armor(shootee_data = target_enemy_data, sap_ignored = sap_ignored)
-				slimes_damage_target -= sap_armor
+				slimes_damage_target *= sap_armor
 				slimes_damage_target = int(max(0, slimes_damage_target))
 
 				slimes_dropped = target_enemy_data.totaldamage + target_enemy_data.slimes
@@ -2068,7 +2068,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if not sandbag_mode:
 		# apply hardened sap armor
 		sap_armor = get_sap_armor(shootee_data = enemy_data, sap_ignored = sap_ignored)
-		slimes_damage -= sap_armor
+		slimes_damage *= sap_armor
 		slimes_damage = int(max(slimes_damage, 0))
 
 	sap_damage = min(sap_damage, enemy_data.hardened_sap)
@@ -2494,5 +2494,5 @@ def get_sap_armor(shootee_data, sap_ignored):
 	elif hasattr(shootee_data, "level"):
 		level = shootee_data.level
 
-	sap_armor = (effective_hardened_sap ** 2) * (level ** 2)
+	sap_armor = 5 / (5+effective_hardened_sap)
 	return sap_armor
