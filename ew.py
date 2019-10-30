@@ -54,6 +54,7 @@ class EwUser:
 
 	apt_zone = "empty"
 	visiting = "empty"
+	has_soul = 0
 
 	move_speed = 1 # not a database column
 
@@ -147,6 +148,9 @@ class EwUser:
 		
 	def die(self, cause = None):
 		time_now = int(time.time())
+
+		ewutils.end_trade(self.id_user)
+
 		if cause == ewcfg.cause_busted:
 			self.busted = True
 			self.poi = ewcfg.poi_id_thesewers
@@ -166,12 +170,17 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 
+
 			if self.time_expirpvp >= time_now: # If you were Wanted.
-				ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
+				if cause != ewcfg.cause_cliff:
+					ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
+
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
 				self.slimecoin = 0
 				self.weaponmarried = False
 
+			if cause == ewcfg.cause_cliff:
+				pass
 			else:
 				if self.life_state == ewcfg.life_state_juvenile: # If you were a Juvenile.
 					item_fraction = 4
@@ -201,6 +210,9 @@ class EwUser:
 
 		if cause == ewcfg.cause_killing_enemy:  # If your killer was an Enemy. Duh.
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_pve_deaths)
+
+		if cause == ewcfg.cause_leftserver:
+			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
 
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
@@ -405,23 +417,24 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = 0):
+	def applyStatus(self, id_status = None, value = 0, source = 0, multiplier = 1):
 		response = ""
 		if id_status != None:
 			status = None
 
 			status = ewcfg.status_effects_def_map.get(id_status)
+			time_expire = status.time_expire * multiplier
 
 			if status != None:
 				statuses = self.getStatusEffects()
 
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire=status.time_expire, value=value, source=source)
-
+				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source)
+				
 				if id_status in statuses:
 					status_effect.value = value
 
 					if status.time_expire > 0 and id_status in ewcfg.stackable_status_effects:
-						status_effect.time_expire += status.time_expire
+						status_effect.time_expire += time_expire
 						response = status.str_acquire
 
 					status_effect.persist() 
@@ -590,12 +603,12 @@ class EwUser:
 			try:
 				conn_info = ewutils.databaseConnect()
 				conn = conn_info.get('conn')
-				cursor = conn.cursor();
+				cursor = conn.cursor()
 
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -634,6 +647,7 @@ class EwUser:
 					ewcfg.col_apt_zone,
 					ewcfg.col_visiting,
 					ewcfg.col_active_slimeoid,
+					ewcfg.col_has_soul,
 				), (
 					id_user,
 					id_server
@@ -679,15 +693,16 @@ class EwUser:
 					self.apt_zone = result[34]
 					self.visiting = result[35]
 					self.active_slimeoid = result[36]
+					self.has_soul = result[37]
 				else:
-					self.poi = ewcfg.poi_id_downtown
+					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,
 						id_server,
-						ewcfg.poi_id_downtown,
-						ewcfg.life_state_juvenile
+						self.poi,
+						self.life_state
 					))
 					
 					conn.commit()
@@ -734,7 +749,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -775,6 +790,7 @@ class EwUser:
 				ewcfg.col_apt_zone,
 				ewcfg.col_visiting,
 				ewcfg.col_active_slimeoid,
+				ewcfg.col_has_soul,
 			), (
 				self.id_user,
 				self.id_server,
@@ -816,6 +832,7 @@ class EwUser:
 				self.apt_zone,
 				self.visiting,
 				self.active_slimeoid,
+				self.has_soul,
 			))
 
 			conn.commit()

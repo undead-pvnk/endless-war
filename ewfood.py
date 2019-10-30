@@ -147,6 +147,20 @@ async def menu(cmd):
 					items.append(item_name)
 
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = items))
+			if user_data.has_soul == 0:
+				if vendor == ewcfg.vendor_dojo:
+					response += "\n\nThe Dojo master looks at your soulless form with pity."
+				elif vendor == ewcfg.vendor_bar:
+					response += "\n\nThe bartender, sensing your misery, asks if you're okay."
+				elif vendor == ewcfg.vendor_diner:
+					response += "\n\nThe cook gives you a concerned look as he throws down another helping of flapjacks."
+				elif vendor == ewcfg.vendor_seafood:
+					response += "\n\nThe waiter sneers at how soulless and unkempt you look. You try to ignore him."
+				elif vendor == ewcfg.vendor_bazaar:
+					response += "\n\nAll the shops seem so lively. You wish you had a soul so you could be like them."
+				elif vendor == ewcfg.vendor_beachresort or vendor == ewcfg.vendor_countryclub:
+					response += "\n\nEverything looks so fancy here, but it doesn't really appeal to you since you don't have a soul."
+
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

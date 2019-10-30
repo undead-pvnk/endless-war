@@ -19,6 +19,8 @@ import ewslimeoid
 import ewwep
 import ewquadrants
 
+from ewitem import EwItem
+
 class EwApartment:
 	id_user = ""
 	id_server = ""
@@ -360,6 +362,9 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.visiting = ewcfg.location_id_empty
 			user_data.time_lastenter = int(time.time())
 			user_data.persist()
+			
+			ewutils.end_trade(user_data.id_user)
+
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 
 			if isGoto:
@@ -390,7 +395,7 @@ async def rent_time(id_server = None):
 	try:
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
-		cursor = conn.cursor();
+		cursor = conn.cursor()
 		client = ewutils.get_client()
 		if id_server != None:
 			#get all players with apartments. If a player is evicted, thir rent is 0, so this will not affect any bystanders.
@@ -461,6 +466,7 @@ async def apt_look(cmd):
 	poi = ewcfg.id_to_poi.get(apt_model.poi)
 	lookObject = cmd.message.author.id
 	isVisiting = False
+	resp_cont = ewutils.EwResponseContainer(id_server=playermodel.id_server)
 
 	if usermodel.visiting != ewcfg.location_id_empty:
 		apt_model = EwApartment(id_user=usermodel.visiting, id_server=playermodel.id_server)
@@ -473,6 +479,8 @@ async def apt_look(cmd):
 	if isVisiting:
 		response = response.replace("your", "a")
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+
 	furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
 	furniture_id_list = []
@@ -483,21 +491,22 @@ async def apt_look(cmd):
 		furniture_id_list.append(i.item_props['id_furniture'])
 
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_lgbt):
-		response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
+		furn_response += "This is the most homosexual room you could possibly imagine. Everything is painted rainbow. A sign on your bedroom door reads \"FORNICATION ZONE\". There's so much love in the air that some dust mites set up a gay bar in your closet. It's amazing.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_haunted):
-		response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
+		furn_response += "One day, on a whim, you decided to say \"Levy Jevy\" 3 times into the mirror. Big mistake. Not only did it summon several staydeads, but they're so enamored with your decoration that they've been squatting here ever since.\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_highclass):
-		response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+		furn_response += "This place is loaded. Marble fountains, fully stocked champagne fridges, complementary expensive meats made of bizarre unethical ingredients, it's a treat for the senses. You wonder if there's any higher this place can go. Kind of depressing, really.\n\n"
+	if all(elem in furniture_id_list for elem in ewcfg.furniture_leather):
+		furn_response += "34 innocent lives. 34 lives were taken to build the feng shui in this one room. Are you remorseful about that? Obsessed? Nobody has the base antipathy needed to peer into your mind and pick at your decisions. The leather finish admittedly does look fantastic, however. Nice work.\n\n"
 
+	resp_cont.add_channel_response(cmd.message.channel.name, furn_response)
 
-	response += furn_response
-
-	response += " "
+	response = " "
 	iterate = 0
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
 	if(len(frids) > 0):
-		response += "The fridge contains: "
+		response += "\n\nThe fridge contains: "
 		fridge_pile = []
 		for frid in frids:
 			fridge_pile.append(frid.get('name'))
@@ -505,22 +514,24 @@ async def apt_look(cmd):
 		response = response + '.'
 	closets = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
+	response = ""
+
 	if (len(closets) > 0):
-		response += "The closet contains: "
+		response += "\n\nThe closet contains: "
 		closet_pile = []
 		for closet in closets:
 			closet_pile.append(closet.get('name'))
 		response += ewutils.formatNiceList(closet_pile)
 		response = response + '.'
 
+	resp_cont.add_channel_response(cmd.message.channel.name, response)
 
 	freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
 
-	response += freezeList
-
-
-
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	resp_cont.add_channel_response(cmd.message.channel.name, freezeList)
+	return await resp_cont.post(channel=cmd.message.channel)
+	#return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def store_item(cmd, dest):
 	destination = dest #used to separate the compartment keyword from the string displayed to the user.
@@ -705,7 +716,7 @@ async def upgrade(cmd):
 		accepted = False
 
 		try:
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewslimeoid.check)
+			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -937,7 +948,7 @@ async def knock(cmd = None):
 					user_data = EwUser(member=cmd.message.author)
 					user_data.rr_challenger = target_data.apt_zone
 					user_data.persist()
-					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewslimeoid.check)
+					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
 
 					if message != None:
 						if message.content.lower() == ewcfg.cmd_accept:
@@ -952,7 +963,7 @@ async def knock(cmd = None):
 				accepted = False
 			user_data = EwUser(member=cmd.message.author)
 			if accepted:
-				user_data.poi = target_poi. id_poi
+				user_data.poi = target_poi.id_poi
 				user_data.visiting = target_data.id_user
 				user_data.rr_challenger = ""
 				user_data.persist()
@@ -968,6 +979,240 @@ async def knock(cmd = None):
 	elif cmd.mentions_count == 0:
 		response = "Whose door are you knocking?"
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		response = "One door at a time, please."
+		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+
+# TODO: Remove after Double Halloween
+async def trickortreat(cmd = None):
+	user_data = EwUser(member=cmd.message.author)
+
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		response = "There will be neither trick nor treat found in these parts."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "The undead are too wicked and impure for such acts. Seems you can't have your cake and !haunt it too on Double Halloween."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		response = "You're too hungry to trick-or-treat right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+	reject = False
+
+	items = ewitem.inventory(
+		id_user=cmd.message.author.id,
+		id_server=cmd.message.server.id,
+		item_type_filter=ewcfg.it_cosmetic
+	)
+
+	costumes = 0
+	for it in items:
+		i = EwItem(it.get('id_item'))
+		context = i.item_props.get('context')
+		adorned = i.item_props.get('adorned')
+		if context == 'costume' and adorned == 'true':
+			costumes += 1
+			
+	if costumes == 0 and cmd.mentions_count >= 1:
+		response = "How are you gonna go trick-or-treating without a costume on?"
+		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+	elif costumes == 0 and cmd.mentions_count == 0:
+		response = "How are you gonna go trick-or-treating without a costume on?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.mentions_count == 1:
+		target = cmd.mentions[0]
+		target_data = EwUser(member=target)
+		target_poi = ewcfg.id_to_poi.get(target_data.poi)
+		if poi.is_apartment:
+			response = "You're already in an apartment."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		elif target_data.apt_zone != user_data.poi:
+			response = "You're not anywhere near their apartment."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		elif (not target_poi.is_apartment) or target_data.visiting != ewcfg.location_id_empty:
+			response = "You knock, but nobody's home."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		else:
+			response = "{} is all dressed up for Double Halloween, waiting at your doorstep. Do you pull a !trick on them, or !treat them to a piece of candy?".format(cmd.message.author.display_name)
+			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			try:
+				treat = False
+				if user_data.rr_challenger == target_data.apt_zone:
+					# For Double Halloween spam knocking isn't really an issue. Just clear up rr_challenger for now.
+					print('DEBUG: Spam knock in trickortreat command.')
+					user_data.rr_challenger = ""
+					user_data.persist()
+					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
+				else:
+					user_data = EwUser(member=cmd.message.author)
+					user_data.rr_challenger = target_data.apt_zone
+					user_data.persist()
+					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_trick_or_treat)
+
+					if message != None:
+						if message.content.lower() == ewcfg.cmd_treat:
+							treat = True
+						if message.content.lower() == ewcfg.cmd_trick:
+							treat = False
+					else:
+						reject = True
+						user_data = EwUser(member=cmd.message.author)
+						if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
+							user_data.persist()
+			except:
+				reject = True
+			user_data = EwUser(member=cmd.message.author)
+			
+			if reject:
+				response = "No response. Maybe they're busy?"
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				response = "You just sort of wait in your apartment until they go away."
+				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			user_data.hunger += ewcfg.hunger_pertrickortreat * int(hunger_cost_mod)
+			user_data.persist()
+			
+			if treat:
+				user_data.rr_challenger = ""
+				user_data.persist()
+				
+				item = random.choice(ewcfg.trickortreat_results)
+				item_props = ewitem.gen_item_props(item)
+				if item is not None:
+					ewitem.item_create(
+						item_type=item.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.server.id,
+						item_props=item_props
+					)
+				item_name = item_props.get('food_name')
+				
+				response = "{} gives you a {}. You thank them, and go about your business.".format(target.display_name, item_name)
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				response = "You give {} a {}. Happy Double Halloween, you knucklehead!".format(cmd.message.author.display_name, item_name)
+				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			else:
+				slime_loss = random.choice(ewcfg.trick_amounts)
+				if user_data.rr_challenger != "":
+					user_data.rr_challenger = ""
+				user_data.change_slimes(n = -slime_loss, source=ewcfg.source_damage)
+				if user_data.slimes <= 0:
+					client = ewutils.get_client()
+					server = client.get_server(user_data.id_server)
+					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+					
+					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
+					
+					user_data.die(cause=ewcfg.cause_killing)
+					deathreport = "{skull} *{uname}*: You were tricked to death. {skull}".format(skull=ewcfg.emote_slimeskull, uname=player_data.display_name)
+					
+					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+					resp_cont.add_channel_response(user_poi.channel, deathreport)
+
+					await resp_cont.post()
+					await ewrolemgr.updateRoles(client=client, member=server.get_member(user_data.id_user))
+					
+				user_data.persist()
+				response = ewcfg.halloween_tricks_trickee[slime_loss].format(target.display_name)
+				await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+				response = ewcfg.halloween_tricks_tricker[slime_loss].format(cmd.message.author.display_name)
+				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			
+				
+	elif cmd.mentions_count == 0:
+		user_poi = ewcfg.id_to_poi.get(user_data.poi)
+		
+		if user_poi.is_capturable:
+			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+			user_data.hunger += ewcfg.hunger_pertrickortreat * int(hunger_cost_mod)
+			user_data.persist()
+			
+			trick_chance = 10
+			
+			lowtrick = 10
+			mediumtrick = 7
+			hightrick = 4
+			extremetrick = 3
+			
+			property_class = user_poi.property_class
+			
+			if property_class == ewcfg.property_class_c:
+				trick_chance = lowtrick
+			elif property_class == ewcfg.property_class_b:
+				trick_chance = mediumtrick
+			elif property_class == ewcfg.property_class_a:
+				trick_chance = hightrick
+			elif property_class == ewcfg.property_class_s:
+				trick_chance = extremetrick
+			
+			class_based_treats = []
+			for treat in ewcfg.trickortreat_results:
+				if trick_chance == lowtrick and treat.price == 100:
+					class_based_treats.append(treat)
+				elif trick_chance == mediumtrick and treat.price == 1000:
+					class_based_treats.append(treat)
+				elif trick_chance == hightrick and treat.price == 10000:
+					class_based_treats.append(treat)
+				elif trick_chance == extremetrick and treat.price == 100000:
+					class_based_treats.append(treat)
+				
+			
+			response = "You try and go trick-or-treating around various houses in {}.\n".format(user_poi.str_name)
+			
+			if random.randrange(trick_chance) == 0:
+				treat = False
+			else:
+				treat = True
+				
+			if treat:
+				item = random.choice(class_based_treats)
+				item_props = ewitem.gen_item_props(item)
+				if item is not None:
+					ewitem.item_create(
+						item_type=item.item_type,
+						id_user=cmd.message.author.id,
+						id_server=cmd.message.server.id,
+						item_props=item_props
+					)
+				item_name = item_props.get('food_name')
+
+				response += "A kind resident gives you a {}. You thank them, and go about your business.".format(item_name)
+			else:
+				slime_loss = random.choice(ewcfg.trick_amounts)
+				user_data.change_slimes(n=-slime_loss, source=ewcfg.source_damage)
+				if user_data.slimes <= 0:
+					client = ewutils.get_client()
+					server = client.get_server(user_data.id_server)
+					user_poi = ewcfg.id_to_poi.get(user_data.poi)
+
+					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
+
+					user_data.die(cause=ewcfg.cause_killing)
+					deathreport = "{skull} *{uname}*: You were tricked to death. {skull}".format(skull=ewcfg.emote_slimeskull, uname=player_data.display_name)
+
+					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+					resp_cont.add_channel_response(user_poi.channel, deathreport)
+
+					await resp_cont.post()
+					await ewrolemgr.updateRoles(client=client, member=server.get_member(user_data.id_user))
+				user_data.persist()
+				response += ewcfg.halloween_tricks_trickee[slime_loss].format("A pranksterous resident")
+				
+			
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			response = "Whose door are you knocking?"
+			return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
+		
 	else:
 		response = "One door at a time, please."
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
@@ -990,7 +1235,7 @@ async def cancel(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		try:
 			accepted = False
-			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewslimeoid.check)
+			message = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author, check=ewutils.check_accept_or_refuse)
 
 			if message != None:
 				if message.content.lower() == ewcfg.cmd_prefix + "accept":
@@ -1132,7 +1377,7 @@ async def propstand(cmd):
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
 		else:
 			fname = "{} stand".format(item_sought.get('name'))
-			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Oh, god. That's not coming off.".format(item_sought.get('name'))
+			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
 			lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
 			placedesc = "You mount the {} on the wall. God damn magnificent.".format(item_sought.get('name'))
 			fdesc = item_sought.get('item_def').str_desc
@@ -1213,6 +1458,74 @@ async def releaseprop(cmd):
 		response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def wash(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	slimeoid_search = ewslimeoid.find_slimeoid(slimeoid_search=item_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
+	slimeoid = ewslimeoid.EwSlimeoid(id_slimeoid=slimeoid_search, id_server=playermodel.id_server, id_user=playermodel.id_user)
+	if usermodel.visiting != ewcfg.location_id_empty:
+		usermodel = EwUser(id_user=usermodel.visiting, id_server=playermodel.id_server)
+
+	if ewitem.find_item(item_search="washingmachine", id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
+		if item_sought:
+			item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+			if item.item_type == ewcfg.it_cosmetic:
+				if item.item_props.get('hue') is None or item.item_props.get('hue') == "":
+					response = "You jam your dirty laundry into the machine. It's so loud you can't hear the gunshots outside anymore, but you're sure the neighbors won't mind. Some time later, your {} pops out, freshly cleaned and full of static.".format(item.item_props.get('cosmetic_name'))
+				else:
+					item.item_props['hue'] = ""
+					item.persist()
+					response = "You toss the {} into the washing machine. The thing shakes and sputters like a juvie begging for its life, but after a few minutes your {} comes out undyed.".format(item.item_props.get('cosmetic_name'), item.item_props.get('cosmetic_name'))
+				if item.item_props.get('adorned') == 'true':
+					response += " You readorn the {}. Man, this feels comfy.".format(item.item_props.get('cosmetic_name'))
+			else:
+				response = "Don't put a {} in the washing machine. You'll break it. Christ, you spent like 1.6 mega on that fucking thing.".format(item_sought.get('name'))
+		elif slimeoid_search and slimeoid.life_state == ewcfg.slimeoid_state_active:
+			if slimeoid.hue == "" or slimeoid.hue is None:
+				response = "You tell {} that there's a poudrin for it in the washer. D'aww. It's so trusting. The moment it enters, you close the lid and crank the spin cycle. You laugh for awhile, but quickly realize you don't know how to pause it and let {} out. Guess you'll have to wait the full 20 minutes. Time passes, and your slimeoid stumbles out, nearly unconscious. Sorry, little buddy.".format(slimeoid.name, slimeoid.name)
+			else:
+				response = "You toss your colored slimeoid in the washing machine and press start. Not only is {} now tumbling around and getting constantly scalded by the water, it's also suddenly insecure about how you wanted to rid it of its racial identity. After about 20 minutes {} steps out, demoralized, exhausted, and green as an ogre. Nice. Nice.".format(slimeoid.name, slimeoid.name)
+				slimeoid.hue = ""
+				slimeoid.persist()
+		elif item_search == "":
+			response = "There's nothing to wash. You start the machine anyway, riding it like a fucking bucking bronco. This thing really was a great investment."
+		elif item_search == "brain":
+			response = "You learn the cult-like ideology that all washing machines share. Truly, this new philosophy will change the future of humanity, and you'll be the one it all starts with. You'll follow this washing machine through thick and thin, through cover-ups and mass suicide plots. The religion will be called: LAUNDRONISM. \n\nActually, you know what? This is fucking stupid. ENDLESS WAR is way better at brainwashing than this rusty old thing."
+		else:
+			response = "There's no item or slimeoid with that name. "
+	else:
+		response = "You don't have a washing machine."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def browse(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	if ewitem.find_item(item_search="laptopcomputer", id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
+		response = random.choice(ewcfg.browse_list)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		await apt_look(cmd=cmd)
+
+async def frame(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	namechange = cmd.message.content[(len(ewcfg.cmd_frame)):].strip()
+
+	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server) and len(namechange) >= 3:
+		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server)
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		item.item_props['furniture_desc'] = namechange
+		item.persist()
+		response = "You slip the photo into a frame."
+	elif len(namechange) < 3:
+		response = "You try to put the nothing you have into the frame, but then you realize that's fucking stupid. Put an image link in there"
+	else:
+		response = "You don't have a frame."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 def toss_items(id_user = None, id_server = None, poi = None):
@@ -1281,11 +1594,25 @@ async def aptCommands(cmd):
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_trickortreat:
+		return await trickortreat(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_wash:
+		return await wash(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_browse:
+		return await browse(cmd=cmd)
 	# from here, all commands are prebuilt and just set to work in DMs
 	cmd.message.author = member_object
 	cmd.message.server = server
 	if cmd_text == ewcfg.cmd_use:
 		return await ewitem.item_use(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_extractsoul:
+		return await ewitem.soulextract(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_returnsoul:
+		return await ewitem.returnsoul(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_releaseprop:
+		return await releaseprop(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_releasefish:
+		return await releasefish(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_halt or cmd_text == ewcfg.cmd_halt_alt1:
 		return await ewmap.halt(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_aquarium:
@@ -1296,6 +1623,8 @@ async def aptCommands(cmd):
 		return await ewcmd.cmd_howl(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_data:
 		return await ewcmd.data(cmd=cmd)
+	elif cmd_text == ewcfg.cmd_hunger:
+		return await ewcmd.hunger(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_slimecoin or cmd_text == ewcfg.cmd_slimecoin_alt1 or cmd_text == ewcfg.cmd_slimecoin_alt2 or cmd_text == ewcfg.cmd_slimecoin_alt3:
 		return await ewmarket.slimecoin(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_score or cmd_text == ewcfg.cmd_score_alt1:
@@ -1370,11 +1699,18 @@ async def aptCommands(cmd):
 		return await ewcmd.piss(cmd=cmd)
 	elif ewcfg.cmd_scout == cmd_text:
 		return await ewmap.scout(cmd=cmd)
+	elif ewcfg.cmd_smoke == cmd_text:
+		return await ewcosmeticitem.smoke(cmd=cmd)
+	elif ewcfg.cmd_squeeze == cmd_text:
+		return await ewitem.squeeze(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
 	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:
 		return await apt_help(cmd)
 	elif cmd_text == ewcfg.cmd_accept or cmd_text == ewcfg.cmd_refuse:
+		pass
+	# TODO: Remove after Double Halloween
+	elif cmd_text == ewcfg.cmd_trick or cmd_text == ewcfg.cmd_treat:
 		pass
 	elif cmd_text[0]==ewcfg.cmd_prefix: #faliure text
 		randint = random.randint(1, 3)
