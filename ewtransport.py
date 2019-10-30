@@ -262,7 +262,7 @@ async def embark(cmd):
 			# TODO: Remove after Double Halloween
 			user_data = EwUser(member=cmd.message.author)
 			if user_data.poi == ewcfg.poi_id_dt_subway_station or user_data.poi == ewcfg.poi_id_rr_subway_station or user_data.poi == ewcfg.poi_id_jr_subway_station:
-				if transport_line.id_line == ewcfg.transport_line_subway_white_eastbound or ewcfg.transport_line_subway_white_westbound:
+				if transport_line.id_line in [ewcfg.transport_line_subway_white_eastbound, ewcfg.transport_line_subway_white_westbound]:
 					ticket = ewitem.find_item(item_search=ewcfg.item_id_whitelineticket, id_user=cmd.message.author.id,  id_server=cmd.message.server.id if cmd.message.server is not None else None)
 					if ticket is None:
 						response = "You need a ticket to embark on the White Line."

@@ -964,6 +964,10 @@ async def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 		enemy.poi = chosen_poi
 		enemy.identifier = set_identifier(chosen_poi, id_server)
 		enemy.hardened_sap = int(enemy.level / 2)
+		
+		market_data = EwMarket(id_server=id_server)
+		if (enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman or enemytype == ewcfg.enemy_type_doublehorse) and market_data.horseman_deaths >= 1:
+			enemy.slimes *= 1.5
 
 		enemy.persist()
 
@@ -975,6 +979,10 @@ async def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 			# TODO: Remove after Double Halloween
 			if enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
 				response = "***BEHOLD!!!***  The {} has arrvied to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(enemy.display_name, enemy.slimes, enemy.level)
+				
+				if market_data.horseman_deaths >= 1:
+					response += "\n***BACK SO SOON, MORTALS? I'M JUST GETTING WARMED UP, BAHAHAHAHAHAHA!!!***"
+				
 			if enemytype == ewcfg.enemy_type_doublehorse:
 				response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(enemy.display_name, enemy.slimes, enemy.level)
 		
@@ -1061,6 +1069,8 @@ def delete_enemy(enemy_data):
 
 # Drops items into the district when an enemy dies.
 def drop_enemy_loot(enemy_data, district_data):
+	loot_poi = ewcfg.id_to_poi.get(district_data.name)
+	loot_resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
 	response = ""
 
 	item_counter = 0
@@ -1241,7 +1251,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					),
 					item = EwItem(id_item=item.id_item)
 					item.persist()
-			response += "They dropped a slime poudrin!\n"
+			response = "They dropped a slime poudrin!"
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
 			item_counter += 1
 
@@ -1269,7 +1280,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					'adorned': 'false'
 				}
 			)
-			response += "They dropped a {item_name}!\n".format(item_name=item.str_name)
+			response = "They dropped a {item_name}!".format(item_name=item.str_name)
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
 			item_counter += 1
 
@@ -1297,7 +1309,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					'adorned': 'false'
 				}
 			)
-			response += "They dropped a {item_name}!\n".format(item_name=item.str_name)
+			response = "They dropped a {item_name}!".format(item_name=item.str_name)
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
 			item_counter += 1
 
@@ -1321,7 +1334,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					'time_expir': time.time() + ewcfg.farm_food_expir
 				}
 			)
-			response += "They dropped a bushel of {vegetable_name}!\n".format(vegetable_name=vegetable.str_name)
+			response = "They dropped a bushel of {vegetable_name}!".format(vegetable_name=vegetable.str_name)
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
 			item_counter += 1
 
@@ -1348,7 +1362,8 @@ def drop_enemy_loot(enemy_data, district_data):
 					'time_expir': time.time() + ewcfg.std_food_expir
 				}
 			)
-			response += "They dropped a piece of meat!\n"
+			response = "They dropped a piece of meat!"
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 			
 			item_counter += 1
 	
@@ -1373,14 +1388,16 @@ def drop_enemy_loot(enemy_data, district_data):
 					'item_desc': cards.str_desc,
 				}
 			)
-			response += "They dropped a pack of trading cards!\n"
+			response = "They dropped a pack of trading cards!"
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 			
 			item_counter += 1
 
 	if not poudrin_dropped and not pleb_dropped and not patrician_dropped and not crop_dropped and not meat_dropped and not card_dropped:
 		response = "They didn't drop anything...\n"
+		loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
-	return response
+	return loot_resp_cont
 
 # Determines what level an enemy is based on their slime count.
 def level_byslime(slime):
@@ -1457,7 +1474,7 @@ def get_enemy_data(enemy_type):
 	enemy = EwEnemy()
 	
 	rare_status = 0
-	if random.randrange(5) == 0:
+	if random.randrange(5) == 0 and enemy_type not in ewcfg.overkill_enemies:
 		rare_status = 1
 
 	enemy.id_server = ""
@@ -1488,7 +1505,7 @@ def get_enemy_data(enemy_type):
 	enemy.display_name = ewcfg.enemy_data_table[enemy_type]["displayname"]
 	enemy.attacktype = ewcfg.enemy_data_table[enemy_type]["attacktype"]
 		
-	if rare_status == 1 and enemy.enemytype not in ewcfg.overkill_enemies:
+	if rare_status == 1:
 		enemy.display_name = ewcfg.enemy_data_table[enemy_type]["raredisplayname"]
 		enemy.slimes *= 2
 

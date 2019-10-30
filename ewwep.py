@@ -579,7 +579,7 @@ async def attack(cmd):
 
 				weapon_item.item_props['time_lastattack'] = time_now_float
 				weapon_item.persist()
-
+				
 				# Spend slimes, to a minimum of zero
 				user_data.change_slimes(n = (-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source = ewcfg.source_spending)
 
@@ -791,7 +791,7 @@ async def attack(cmd):
 
 					#add bounty
 					user_data.add_bounty(n = (shootee_data.bounty / 2) + (slimes_dropped / 4))
-	  
+					
 					# Scalp text
 					if weapon != None:
 						scalp_text = weapon.str_scalp
@@ -1390,8 +1390,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					ewhunting.delete_enemy(target_enemy_data)
 
 					response += "{} was killed by an explosion during your fight with {}!".format(target_enemy_data.display_name, shootee_player.display_name)
-					response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
-					
+					resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
 					resp_cont.add_channel_response(channel, response)
 
 				# Survived the explosion
@@ -1955,9 +1954,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		weapon_item.item_props['time_lastattack'] = time_now_float
 		weapon_item.persist()
 
+		# print(user_data.slimes)
+		# print(slimes_spent)
+
 		# Spend slimes, to a minimum of zero
-		user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent),
-								source=ewcfg.source_spending)
+		user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source=ewcfg.source_spending)
+		user_data.persist()
 
 		# Spend sap
 		user_data.sap -= weapon.sap_cost
@@ -2195,38 +2197,50 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		old_response = response
 
 		# give player item for defeating an enemy
-		response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
+		resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
 
 		# TODO: Remove after Double Halloween
 		if enemy_data.enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
-			defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nYOU HAVE ALL TRULY PUT ON A SPLENDID PERFORMANCE.\nI KNOW WHEN I AM DEFEATED. PLEASE, TAKE THIS MEDALLION...\nIT IS A TOKEN OF MY EXTREME PRAISE.\nFOR NOW THOUGH, THIS IS WHERE I GET OFF.\nSAVE A SEAT FOR ME, WON'T YOU, PHOEBUS?\n"
+			market_data = EwMarket(id_server=cmd.message.server.id)
+			horseman_deaths = market_data.horseman_deaths
+			
+			if horseman_deaths == 0:
+				defeat_response = "***AHA... AHAHAHAHA...***\n*COUGH*... *HACK*...\nYOU HAVE ALL TRULY PUT ON A SPLENDID PERFORMANCE.\nI KNOW WHEN I AM DEFEATED. PLEASE, TAKE THESE GIFTS OFF OF MY CORPSE...\nTHEY ARE OF NO USE TO ME ANYMORE.\nFOR NOW THOUGH, THIS IS WHERE I GET OFF.\nSAVE A SEAT FOR ME, WON'T YOU, PHOEBUS?\n"
+			else:
+				defeat_response = "***GAHAHAH... AHAHA...***\n*WHEEZE*... *PUKE*...\nBESTED A SECOND TIME...\nIF I WEREN'T GONE FOR GOOD... THIS WOULD FEEL LIKE AN INSULT.\nNOW, HOWEVER, I HAVE REACHED MY LIMIT.\nTHE GREAT BEYOND CALLS TO ME ONCE AGAIN, AND I ANSWER.\nI JUST HOPE I HAVE THE HEART TO TELL HIM HOW I FEEL...\nUNTIL WE MEET AGAIN AT NEXT DOUBLE HOLLOW'S EVE, ***MORTALS!!!***\n"
+
 			resp_cont.add_channel_response(cmd.message.channel.name, defeat_response)
+			
+			
+			market_data.horseman_deaths += 1
+			market_data.horseman_timeofdeath = int(time_now)
+			market_data.persist()
 
-			# Give the medallion to everyone in the underworld
-			# The horseman only spawns in the underworld and can't leave, so using current district_data is fine
-			life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
-			all_users_in_underworld = district_data.get_players_in_district(life_states=life_states)
-
-			for user in all_users_in_underworld:
-				underworld_user_data = EwUser(id_user=user, id_server=user_data.id_server)
-				underworld_player_data = EwPlayer(id_user=user)
-
-				medallion = ewcfg.medallion_results[0]
-				medallion_props = ewitem.gen_item_props(medallion)
-
-				medallion_id = ewitem.item_create(
-					item_type=medallion.item_type,
-					id_user=underworld_user_data.id_user,
-					id_server=underworld_user_data.id_server,
-					item_props=medallion_props
-				)
-
-				# Soulbind the medallion. A player can get multiple medallions, but later on a new command could be added to destroy them.
-				# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
-				ewitem.soulbind(medallion_id)
-
-				medallion_player_response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(underworld_player_data.display_name)
-				resp_cont.add_channel_response(cmd.message.channel.name, medallion_player_response)
+			# # Give the medallion to everyone in the underworld
+			# # The horseman only spawns in the underworld and can't leave, so using current district_data is fine
+			# life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
+			# all_users_in_underworld = district_data.get_players_in_district(life_states=life_states)
+			# 
+			# for user in all_users_in_underworld:
+			# 	underworld_user_data = EwUser(id_user=user, id_server=user_data.id_server)
+			# 	underworld_player_data = EwPlayer(id_user=user)
+			# 
+			# 	medallion = ewcfg.medallion_results[0]
+			# 	medallion_props = ewitem.gen_item_props(medallion)
+			# 
+			# 	medallion_id = ewitem.item_create(
+			# 		item_type=medallion.item_type,
+			# 		id_user=underworld_user_data.id_user,
+			# 		id_server=underworld_user_data.id_server,
+			# 		item_props=medallion_props
+			# 	)
+			# 
+			# 	# Soulbind the medallion. A player can get multiple medallions, but later on a new command could be added to destroy them.
+			# 	# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
+			# 	ewitem.soulbind(medallion_id)
+			# 
+			# 	medallion_player_response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(underworld_player_data.display_name)
+			# 	resp_cont.add_channel_response(cmd.message.channel.name, medallion_player_response)
 
 		if slimeoid.life_state == ewcfg.slimeoid_state_active:
 			brain = ewcfg.brain_map.get(slimeoid.ai)

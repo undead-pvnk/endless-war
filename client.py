@@ -50,6 +50,7 @@ import ewapt
 import ewweather
 import ewworldevent
 import ewdungeons
+import ewads
 import ewdebug
 
 from ewitem import EwItem
@@ -304,6 +305,12 @@ cmd_map = {
 	# check available stocks
 	ewcfg.cmd_stocks: ewmarket.stocks,
 
+	# ads
+	ewcfg.cmd_advertise: ewads.advertise,
+	ewcfg.cmd_ads: ewads.ads_look,
+	ewcfg.cmd_confirm: ewcmd.confirm,
+	ewcfg.cmd_cancel: ewcmd.cancel,
+
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
@@ -391,6 +398,7 @@ cmd_map = {
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -948,6 +956,9 @@ async def on_ready():
 					# Remove fish offers which have timed out
 					ewfish.kill_dead_offers(id_server = server.id)
 
+					# kill advertisements that have timed out
+					ewads.delete_expired_ads(id_server = server.id)
+
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
 					await ewmap.kick(server.id)
@@ -1225,9 +1236,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 1,000,000,000 slime!"
+			response = "You get 100,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 1000000000)
+			levelup_response = user_data.change_slimes(n = 100000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 

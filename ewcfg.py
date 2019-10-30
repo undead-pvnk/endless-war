@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.10hwx2"
+version = "v3.11hwx2"
 
 dir_msgqueue = 'msgqueue'
 
@@ -650,6 +650,7 @@ cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
+cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -672,6 +673,11 @@ cmd_recycle_alt1 = cmd_prefix + 'incinerate'
 cmd_view_sap = cmd_prefix + 'sap'
 cmd_harden_sap = cmd_prefix + 'harden'
 cmd_liquefy_sap = cmd_prefix + 'liquefy'
+cmd_advertise = cmd_prefix + 'advertise'
+cmd_ads = cmd_prefix + 'ads'
+cmd_confirm = cmd_prefix + 'confirm'
+cmd_cancel = cmd_prefix + 'cancel'
+
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -693,6 +699,7 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
+# TODO: Remove after Double Halloween
 cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
@@ -844,6 +851,13 @@ hunger_pertick = 3
 # TODO: Remove after Double Halloween
 hunger_pertrickortreat = 6
 
+# ads
+slimecoin_toadvertise = 1000000
+max_concurrent_ads = 8
+max_length_ads = 500
+uptime_ads = 7 * 24 * 60 * 60 # one week
+
+
 #inebriation
 inebriation_max = 20
 inebriation_pertick = 2
@@ -862,6 +876,7 @@ acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
 # TODO: Remove after Double Halloween
 acquisition_trickortreating = "trickortreating"
+horseman_death_cooldown = 12 * 3600 * 4  # 2 days
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1405,6 +1420,9 @@ col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
 col_splattered_slimes = 'splattered_slimes'
+# TODO: Remove after Double Halloween
+col_horseman_deaths = 'horseman_deaths'
+col_horseman_timeofdeath = 'horseman_timeofdeath'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -1466,6 +1484,12 @@ col_source = 'source'
 col_id_event = 'id_event'
 col_event_type = 'event_type'
 col_time_activate = 'time_activate'
+
+# Database columns for advertisements
+col_id_ad = 'id_ad'
+col_id_sponsor = 'id_sponsor'
+col_ad_content = 'content'
+
 
 # Item type names
 it_item = "item"
@@ -5557,7 +5581,7 @@ food_list = [
 		],
 		recover_hunger = 200,
 		price = 1000,
-		str_name = 'Choclate Slimecorp Badges',
+		str_name = 'Chocolate Slimecorp Badges',
 		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
 		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
 		acquisition = acquisition_trickortreating
@@ -5607,7 +5631,7 @@ food_list = [
 		price = 10000,
 		str_name = 'Bustahfingers',
 		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
-		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of choclate in the middle.",
+		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of chocolate in the middle.",
 		acquisition = acquisition_trickortreating
 	),
 	EwFood(
@@ -5754,7 +5778,7 @@ food_list = [
 		str_name = 'Sourpuss Bread',
 		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
 		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
-		vendors = vendor_pizzahut
+		vendors = [vendor_pizzahut]
 	),
 ]
 
@@ -7471,7 +7495,8 @@ poi_list = [
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
-		is_capturable = True
+		is_capturable = True,
+		has_ads = True
 	),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
@@ -14004,9 +14029,9 @@ enemy_drop_tables = {
 	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
 	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
+	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
+	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
-	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 44]},  {"patrician": [100, 2, 4]}],
-	enemy_type_doublehorse: [{"poudrin": [100, 22, 44]},  {"pleb": [100, 2, 4]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
@@ -14025,7 +14050,7 @@ enemy_data_table = {
 	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
 	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
 	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
-	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight"]},
+	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight", "horseman"]},
 	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
 	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
 	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
