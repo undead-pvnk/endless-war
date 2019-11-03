@@ -482,7 +482,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -696,8 +696,6 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
-# TODO: Remove after Double Halloween
-cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
 cmd_propstand = cmd_prefix + 'propstand'
@@ -822,9 +820,7 @@ slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
-#slimes_hauntmax = 20000
-# TODO: Change back after Double Halloween
-slimes_hauntmax = 50000
+slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
@@ -845,8 +841,6 @@ hunger_perminereset = 10
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
-# TODO: Remove after Double Halloween
-hunger_pertrickortreat = 6
 
 # ads
 slimecoin_toadvertise = 1000000
@@ -871,9 +865,6 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
-# TODO: Remove after Double Halloween
-acquisition_trickortreating = "trickortreating"
-horseman_death_cooldown = 12 * 3600 * 4  # 2 days
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1042,9 +1033,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 # Cooldowns
 cd_kill = 5
 cd_spar = 60
-#cd_haunt = 600
-# TODO: Change back after Double Halloween
-cd_haunt = 180
+cd_haunt = 600
 cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
@@ -1412,9 +1401,6 @@ col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
 col_splattered_slimes = 'splattered_slimes'
-# TODO: Remove after Double Halloween
-col_horseman_deaths = 'horseman_deaths'
-col_horseman_timeofdeath = 'horseman_timeofdeath'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -1732,6 +1718,8 @@ item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 item_id_costumekit = "costumekit"
+item_id_doublehalloweengrist = "doublehalloweengrist"
+item_id_whitelineticket = "ticket"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1764,42 +1752,6 @@ item_id_strauberryshortcakes = "strauberryshortcakes"
 item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
-
-# TODO: Remove after Double Halloween
-# A list used to check if certain items can be made into Double Halloween Grist
-candy_ids_list = [
-	item_id_paradoxchocs,
-	item_id_licoricelobsters,
-	item_id_chocolateslimecorpbadges,
-	item_id_munchies,
-	item_id_sni,
-	item_id_twixten,
-	item_id_slimeybears,
-	item_id_marsbar,
-	item_id_magickspatchkids,
-	item_id_atms,
-	item_id_seanis,
-	item_id_candybungis,
-	item_id_turstwerthers,
-	item_id_poudrinpops,
-	item_id_juvieranchers,
-	item_id_krakel,
-	item_id_swedishbassedgods,
-	item_id_bustahfingers,
-	item_id_endlesswarheads,
-	item_id_n8heads,
-	item_id_strauberryshortcakes,
-	item_id_chutzpahcherries,
-	item_id_n3crunch,
-	item_id_slimesours,
-]
-
-item_id_doublehalloweengrist = "doublehalloweengrist"
-item_id_whitelineticket = "ticket"
-
-# Possibly NOT remove after Double Halloween? 
-# In any case, this is so that people who gain slime from the horseman don't use it to cause any major slime count shifts for the kingpins
-slimes_toboss_max = 1000000
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -9657,60 +9609,6 @@ poi_list = [
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
-	# TODO: Remove after Double Halloween
-	EwPoi( # RP City
-		id_poi = poi_id_rpcity,
-		alias = [
-			"rp",
-			"rp city",
-			"roleplay city",
-			"rpc",
-			"costume store",
-			"costumestore",
-		],
-		str_name = "RP City",
-		str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
-		coord = (63, 18),
-		pvp = False,
-		vendors = [vendor_rpcity],
-		channel = "rp-city",
-		role = "RP City",
-		mother_district = poi_id_littlechernobyl,
-		is_subzone = True
-	),
-	EwPoi(  # Underworld Subway Station
-		id_poi = poi_id_underworld_subway_station,
-		alias = [
-			"underworldsubwaystation",
-			"uws",
-			"us"
-		],
-		str_name = "The Underworld Subway Station",
-		str_desc = str_generic_subway_station_description + "\n\nExits into The Underworld.",
-		coord = (63, 44),
-		channel = "underworld-subway-station",
-		role = "Underworld Subway Station",
-		pvp = False,
-		is_subzone = True,
-		mother_district = poi_id_underworld,
-		is_transport_stop = True,
-		transport_lines = set()
-	),
-	EwPoi( # The Underworld
-		id_poi = poi_id_underworld,
-		alias = [
-			"uw",
-			"undertale",
-			"underground",
-		],
-		str_name = "The Underworld, last stop of the White Line",
-		str_desc = "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
-		coord = (63, 46),
-		channel = "the-underworld",
-		role = "Underworld",
-		pvp=False,
-		is_capturable=False,
-	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
 		alias = [
@@ -9826,19 +9724,18 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	# TODO: Comment back in after Double Halloween
-	EwPoi(  # Subway train on the white line
-		id_poi = poi_id_subway_white01,
-		str_name = "A Subway Train",
-		str_desc = str_generic_subway_description, # TODO: add description
-		channel = channel_subway_white01,
-		role = "Subway Train W-01",
-		pvp = False,
-		is_transport = True,
-		transport_type = transport_type_subway,
-		default_line = transport_line_subway_white_eastbound,
-		default_stop = poi_id_dt_subway_station
-	),
+	# EwPoi(  # Subway train on the white line
+	# 	id_poi = poi_id_subway_white01,
+	# 	str_name = "A Subway Train",
+	# 	str_desc = str_generic_subway_description, # TODO: add description
+	# 	channel = channel_subway_white01,
+	# 	role = "Subway Train W-01",
+	# 	pvp = False,
+	# 	is_transport = True,
+	# 	transport_type = transport_type_subway,
+	# 	default_line = transport_line_subway_white_eastbound,
+	# 	default_stop = poi_id_dt_subway_station
+	# ),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -10854,46 +10751,45 @@ transport_lines = [
 		    }
 
 		),
-	# TODO: Comment back in after Double Halloween
-	EwTransportLine( # white subway line from downtown to juvies row
-		id_line = transport_line_subway_white_eastbound,
-		alias = [
-			"whiteeastline",
-			"whiteeast",
-			"eastwhite",
-			"whitetojuviesrow",
-			"whitetojuvies",
-			"whitetojr"
-		    ],
-		first_stop = poi_id_underworld_subway_station,
-		last_stop = poi_id_jr_subway_station,
-		next_line = transport_line_subway_white_westbound,
-		str_name = "The white subway line towards Juvie's Row",
-		schedule = {
-			poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-		    }
-		),
-	EwTransportLine( # white subway line from juvies row to downtown
-		id_line = transport_line_subway_white_westbound,
-		alias = [
-			"whitewestline",
-			"whitewest",
-			"westwhite",
-			"whitetounderworld",
-			"whitetouw"
-		    ],
-		first_stop = poi_id_jr_subway_station,
-		last_stop = poi_id_underworld_subway_station,
-		next_line = transport_line_subway_white_eastbound,
-		str_name = "The white subway line towards The Underworld",
-		schedule = {
-			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
-		    }
-		),
+	# EwTransportLine( # white subway line from downtown to juvies row
+	# 	id_line = transport_line_subway_white_eastbound,
+	# 	alias = [
+	# 		"whiteeastline",
+	# 		"whiteeast",
+	# 		"eastwhite",
+	# 		"whitetojuviesrow",
+	# 		"whitetojuvies",
+	# 		"whitetojr"
+	# 	    ],
+	# 	first_stop = poi_id_underworld_subway_station,
+	# 	last_stop = poi_id_jr_subway_station,
+	# 	next_line = transport_line_subway_white_westbound,
+	# 	str_name = "The white subway line towards Juvie's Row",
+	# 	schedule = {
+	# 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+	# 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+	# 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+	# 	    }
+	# 	),
+	# EwTransportLine( # white subway line from juvies row to downtown
+	# 	id_line = transport_line_subway_white_westbound,
+	# 	alias = [
+	# 		"whitewestline",
+	# 		"whitewest",
+	# 		"westwhite",
+	# 		"whitetounderworld",
+	# 		"whitetouw"
+	# 	    ],
+	# 	first_stop = poi_id_jr_subway_station,
+	# 	last_stop = poi_id_underworld_subway_station,
+	# 	next_line = transport_line_subway_white_eastbound,
+	# 	str_name = "The white subway line towards The Underworld",
+	# 	schedule = {
+	# 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+	# 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+	# 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+	# 	    }
+	# 	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -11746,18 +11642,6 @@ smelting_recipe_list = [
 		},
 		products = ['leatherbed']
 	),
-    # TODO: Remove after Double Halloween
-    EwSmeltingRecipe(
-        id_recipe = "ticket",
-        str_name = "Ticket to the White Line",
-        alias = [
-            "tickettohell",
-        ],
-        ingredients = {
-            item_id_doublehalloweengrist: 100,
-        },
-        products = ['ticket']
-    )
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13539,33 +13423,6 @@ for m in cosmetic_items_list:
 	else:
 		pass
 
-# TODO: Remove after Double Halloween
-# Gather all the items that can be the result of trick-or-treating.
-trickortreat_results = []
-
-for t in food_list:
-	if t.acquisition == acquisition_trickortreating:
-		trickortreat_results.append(t)
-	else:
-		pass
-
-# Gather the Halloween Grist
-grist_results = []
-
-for g in item_list:
-	if g.context == 'dhgrist':
-		grist_results.append(g)
-	else:
-		pass
-	
-# Gather the Medallion
-medallion_results = []
-for m in cosmetic_items_list:
-	if m.ingredients == 'HorsemanSoul':
-		medallion_results.append(m)
-	else:
-		pass
-
 slimexodia_parts = []
 
 # Gather all parts of slimexodia.
@@ -13708,7 +13565,7 @@ help_responses = {
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
-	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look. To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
+	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
 	"mutations": "**Mutations** are helpful bonuses you acquire every five levels. When you acquire a mutation, a short text response will indicate what it can do. To reroll your most recent mutation, you can visit the labs and type **'!rerollmutation'**. To get rid of all your current mutations, you can also do **'!sterilizemutations'**.",
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
@@ -14036,23 +13893,6 @@ grid_type_by_mining_event = {
 	event_type_minesweeper: mine_grid_type_minesweeper,
 	event_type_pokemine: mine_grid_type_pokemine,
 	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
-}
-
-# A list of tricks for Double Halloween
-trick_amounts = [10, 100, 1000, 10000]
-
-halloween_tricks_tricker = {
-	10:"You open the door and give {} a hearty '!SPOOK'. They lose 10 slime!",
-	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime!",
-	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime!",
-	10000:"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose 10000 slime!",
-}
-
-halloween_tricks_trickee = {
-	10:"{} opens the door and gives you a hearty '!SPOOK'. You lose 10 slime!",
-	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime!",
-	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime!",
-	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
 }
 
 dungeon_tutorial = [

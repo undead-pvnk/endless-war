@@ -88,6 +88,9 @@ async def adorn(cmd):
 
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
+				if i.item_props.get("context") == 'costume':
+					pass
+					#check_costume_time
 				else:
 					item_sought = i
 					break

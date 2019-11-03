@@ -343,10 +343,7 @@ class EwEnemy:
 				slimes_damage *= 20  # specific to microslime
 
 			# Organic Fursuit
-			if ewcfg.mutation_id_organicfursuit in target_mutations and (
-					(market_data.day % 31 == 0 and market_data.clock >= 20)
-					or (market_data.day % 31 == 1 and market_data.clock < 6)
-			):
+			if ewcfg.mutation_id_organicfursuit in target_mutations and ewutils.check_fursuit_active(target_data.id_server):
 				slimes_damage *= 0.1
 
 			# Fat chance
@@ -934,16 +931,6 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 			if enemytype == ewcfg.enemy_type_sandbag:
 				response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(enemy.display_name, enemy.level, enemy.slimes)
 			
-			# TODO: Remove after Double Halloween
-			if enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
-				response = "***BEHOLD!!!***  The {} has arrived to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(enemy.display_name, enemy.slimes, enemy.level)
-				
-				if market_data.horseman_deaths >= 1:
-					response += "\n***BACK SO SOON, MORTALS? I'M JUST GETTING WARMED UP, BAHAHAHAHAHAHA!!!***"
-				
-			if enemytype == ewcfg.enemy_type_doublehorse:
-				response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(enemy.display_name, enemy.slimes, enemy.level)
-		
 		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
 	if len(response) > 0 and len(ch_name) > 0:

@@ -148,12 +148,8 @@ cmd_map = {
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
 	
-	# Ghosts can BOO (and during Double Halloween, SPOOK)
+	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
-	ewcfg.cmd_spook: ewcmd.spook,
-    
-    # Make a costume for Double Halloween
-    ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
