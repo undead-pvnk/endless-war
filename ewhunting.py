@@ -932,6 +932,7 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 		if weather != ewcfg.enemy_weathertype_normal:
 			if weather == ewcfg.enemy_weathertype_rainresist:
 				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
+				enemy.slimes *= 1.2
 
 		enemy.persist()
 

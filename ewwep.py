@@ -2003,6 +2003,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Defender enemies take less damage
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		slimes_damage *= 0.5
+		
+	# Bicarbonate enemies take less damage
+	if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
+		slimes_damage *= 0.5
 
 	# Damage stats
 	ewstats.track_maximum(user=user_data, metric=ewcfg.stat_max_hitdealt, value=slimes_damage)
