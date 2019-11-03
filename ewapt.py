@@ -1360,8 +1360,6 @@ async def aptCommands(cmd):
 		return await ewmap.move(cmd=cmd, isApt = True)
 	elif cmd_text == ewcfg.cmd_knock:
 		return await knock(cmd=cmd)
-	elif cmd_text == ewcfg.cmd_trickortreat:
-		return await trickortreat(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_wash:
 		return await wash(cmd=cmd)
 	elif cmd_text == ewcfg.cmd_browse:

@@ -649,7 +649,6 @@ cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
-cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -664,6 +663,7 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
+cmd_boot = cmd_prefix + 'boot'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
@@ -1733,7 +1733,7 @@ item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
 item_id_sni = "sni"
 item_id_twixten = "twixten"
-item_id_slimeybears = "slimybears"
+item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
 item_id_magickspatchkids = "magickspatchkids"
 item_id_atms = "atms"
@@ -2152,7 +2152,6 @@ item_list = [
 		],
 		str_name = "Double Halloween Costume Kit",
 		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
-		vendors = [vendor_rpcity],
 		price = 50000,
 	),
 	EwGeneralItem(
@@ -9620,7 +9619,7 @@ poi_list = [
 			"candy shop",
 		],
 		str_name="Slimy Persuits",
-		str_desc="",
+		str_desc="It's a candy Shop [DEBUG]",
 		coord=(85, 12),
 		pvp=False,
 		vendors=[vendor_slimypersuits],

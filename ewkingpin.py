@@ -134,4 +134,3 @@ async def create(cmd):
 
 	response = 'Item "{}" successfully created.'.format(item_name)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-

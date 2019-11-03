@@ -1649,20 +1649,26 @@ async def boot(cmd):
 		response = 'Usage: !boot [location A] [location B]'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	destination_a = cmd.tokens[2]
-	destination_b = cmd.tokens[3]
+	destination_a = cmd.tokens[1]
+	destination_b = cmd.tokens[2]
 
 	old_poi = ewcfg.id_to_poi.get(destination_a)
 	new_poi = ewcfg.id_to_poi.get(destination_b)
-
-	district_data = EwDistrict(district = old_poi, id_server = user_data.id_server)
-
-	users = district_data.get_players_in_district()
 	
-	for user in users:
-		moved_user_data = EwUser(id_user=user, id_server=user_data.id_server)
-		moved_user_data.poi = new_poi.id_poi
-		moved_user_data.persist()
+
+	if old_poi != None and new_poi != None:
+	
+		district_data = EwDistrict(district = old_poi.id_poi, id_server = user_data.id_server)
+	
+		users = district_data.get_players_in_district()
+		
+		for user in users:
+			moved_user_data = EwUser(id_user=user, id_server=user_data.id_server)
+			moved_user_data.poi = new_poi.id_poi
+			moved_user_data.persist()
+	else:
+		response = '**DEBUG:** Invalid POIs'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 	response = "Everyone in {} has been moved to {}!".format(old_poi.id_poi, new_poi.id_poi)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

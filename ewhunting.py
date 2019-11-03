@@ -921,8 +921,6 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 		enemy.identifier = set_identifier(chosen_poi, id_server)
 		
 		market_data = EwMarket(id_server=id_server)
-		if (enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman or enemytype == ewcfg.enemy_type_doublehorse) and market_data.horseman_deaths >= 1:
-			enemy.slimes *= 1.5
 
 		enemy.persist()
 
