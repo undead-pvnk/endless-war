@@ -81,8 +81,7 @@ poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
-poi_id_rpcity = "rpcity"
-poi_id_underworld = "underworld"
+poi_id_slimypersuits = "slimypersuits"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -1700,7 +1699,7 @@ vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
-vendor_rpcity = "RP City" #You can buy costume creation kits here
+vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1734,7 +1733,7 @@ item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
 item_id_sni = "sni"
 item_id_twixten = "twixten"
-item_id_slimeybears = "slimeybears"
+item_id_slimeybears = "slimybears"
 item_id_marsbar = "marsbar"
 item_id_magickspatchkids = "magickspatchkids"
 item_id_atms = "atms"
@@ -5302,7 +5301,7 @@ food_list = [
 		str_name = 'Paradox Chocs',
 		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
 		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_twixten,
@@ -5314,7 +5313,7 @@ food_list = [
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_sni,
@@ -5326,19 +5325,19 @@ food_list = [
 		str_name = 'SNI-',
 		str_eat = "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
 		str_desc = "A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_slimeybears,
+		id_food = item_id_slimybears,
 		alias = [
 			"bears",
 		],
 		recover_hunger = 80,
 		price = 100,
-		str_name = 'Slimey Bears',
-		str_eat = "You stash a fistfull of Slimey Bears right into your gullet, chewing them thoroughly.",
-		str_desc = "A packet of Slimey Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
-		acquisition = acquisition_trickortreating
+		str_name = 'Slimy Bears',
+		str_eat = "You stash a fistfull of Slimy Bears right into your gullet, chewing them thoroughly.",
+		str_desc = "A packet of Slimy Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_n8heads,
@@ -5350,7 +5349,7 @@ food_list = [
 		str_name = 'N8heads',
 		str_eat = "You chew on a N8head. It stopped tasting good long before you were done sinking your teeth into it, but you felt committed enough to finish what you started. Fuckin shill.",
 		str_desc = "A N8heads packet. They're bars of sour taffy, each with his signature shades imprinted onto them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_turstwerthers,
@@ -5362,7 +5361,7 @@ food_list = [
 		str_name = 'Turstwerthers',
 		str_eat = "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
 		str_desc = "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_candybungis,
@@ -5374,7 +5373,7 @@ food_list = [
 		str_name = 'Candy (Bungis)',
 		str_eat = "You eat through the Candy (Bungis). Rather than imprint the temporary tattoo, you just shove the whole thing into your mouth and chew through it.",
 		str_desc = "A rolled up fruit snack. An layer of ink it has allows you to imprint an image of Sky (Bungis) onto your tongue.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_licoricelobsters,
@@ -5386,7 +5385,7 @@ food_list = [
 		str_name = 'Licorice Lobsters',
 		str_eat = "You chomp on the Licorice Lobsters. Their slight bittersweetness fills you with memories of days gone by.",
 		str_desc = "Yup. They're lobsters.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_chocolateslimecorpbadges,
@@ -5398,7 +5397,7 @@ food_list = [
 		str_name = 'Chocolate Slimecorp Badges',
 		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
 		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_poudrinpops,
@@ -5410,7 +5409,7 @@ food_list = [
 		str_name = 'Poudrin Pops',
 		str_eat = "You crush the poudrin pops with your teeth alone. You don't gain any slime, but they do taste amazing.",
 		str_desc = "Hard, green candy, meant to resemble Slime Poudrins. They're placed atop plastic rings, meant to be worn on your finger as you lick away.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_atms,
@@ -5422,7 +5421,7 @@ food_list = [
 		str_name = "ATm's",
 		str_eat = "You snack on the packet of ATm's. The hard shell pairs nicely with the milk chocolate on the inside.",
 		str_desc = "A packet of ATm's. They're all small, spherical chocolates with the @ symbol on them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_seanis,
@@ -5434,7 +5433,7 @@ food_list = [
 		str_name = 'Seanis',
 		str_eat = "You chomp on the Seanis, slicing them in twain over and over. By the time you're finished with them, you've developed three cavities.",
 		str_desc = "A packet of hard candies. They're small tablets, colored in fuchsia, purple, and seafoam green.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_bustahfingers,
@@ -5446,7 +5445,7 @@ food_list = [
 		str_name = 'Bustahfingers',
 		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
 		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of chocolate in the middle.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_marsbar,
@@ -5458,7 +5457,7 @@ food_list = [
 		str_name = 'Mars Bar',
 		str_eat = "You take a bite out of the mars bar. Shockingly, the nicotine on the inside pairs well with the creamy sweetness of the white chocolate shell.",
 		str_desc = "A small cylindrical candy bar, unsurprisingly shaped like a cigarette. What is surprising, however, is that it contains tiny traces of nicotine on the inside.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_juvieranchers,
@@ -5470,7 +5469,7 @@ food_list = [
 		str_name = 'Juvie Ranchers',
 		str_eat = "You suck on the Juvie Ranchers. The Dire Apple ones are particularly sour.",
 		str_desc = "A bag of hard candies, all flavored after the various crops of the city.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_swedishbassedgods,
@@ -5482,7 +5481,7 @@ food_list = [
 		str_name = 'Swedish Bassed Gods',
 		str_eat = "You chew through the Swedish Bassed Gods. Despite their unassuming appearance, they taste amazing. Truly a snack worthy of praise. Or would it be 'appraisal', in this case? Ah, forget it.",
 		str_desc = "A packet of gummies shaped like the Bassed God. On the back of the packet, there's an advertisement for the Fishing Guild.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food=item_id_endlesswarheads,
@@ -5494,7 +5493,7 @@ food_list = [
 		str_name='Endless Warheads',
 		str_eat="You chew through the Endless Warheads. Combining different colored ones inside your mouth sets off a burst of flavor. Sick!!",
 		str_desc="A bag of sour candies coated in sugar. They're all multicolored, and shaped like the familiar obelisk it gets its name from.",
-		acquisition=acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_chutzpahcherries,
@@ -5506,7 +5505,7 @@ food_list = [
 		str_name = 'Chutzpah Cherries',
 		str_eat = "You gobble up the Chutzpah Cherries. Who knew euthanasia could taste this good!",
 		str_desc = "A small box of dark red gummies, each one bearing the face of a slimeoid.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_slimesours,
@@ -5518,7 +5517,7 @@ food_list = [
 		str_name = 'Slime Sours',
 		str_eat = "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seemingly have no connection with the death raining from above.",
 		str_desc = "A small plastic bag of gumdrops, each as green as slime itself. Apparently they're made entirely by hand.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_munchies,
@@ -5530,7 +5529,7 @@ food_list = [
 		str_name = 'Munchies',
 		str_eat = "You gorge yourself on the Munchies. What seemed like such a basic snack item reveals itself to be incredibly addictive. Before you know it, the bag is empty, leaving you to reflect on your gluttony.",
 		str_desc = "A bag of crackers, with a thin layer of cream in the middle. They're all shaped like jester hats.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_magickspatchkids,
@@ -5542,7 +5541,7 @@ food_list = [
 		str_name = 'Magicks Patch Kids',
 		str_eat = "You munch on the Magicks Patch Kids. Sour. Sweet. !dab.",
 		str_desc = "People are rather split on these. Some find them too sour, while others claim it to have an 'acquired taste'.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_krakel,
@@ -5554,7 +5553,7 @@ food_list = [
 		str_name = 'Krakel',
 		str_eat = "You take a large bite out of the Krakel bar. The rice lining the interior gives it a nice texture, and offsets the bitterness of the dark chocolate a bit.",
 		str_desc = "A thick slab of dark chocolate. An engraving on the back reads 'SLURP SLIME, BUSTERS'. Go figure.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_strauberryshortcakes,
@@ -5566,7 +5565,7 @@ food_list = [
 		str_name = 'Strauberry Shortcakes',
 		str_eat = "You toss the shortcakes into your mouth one at a time, savoring every bite. Even though they're manufactured, somehow you feel like a lot of love went into making them. Maybe it's just because of all the sugar.",
 		str_desc = "A packet containing two small pastries. An anchor symbol made of pink frosting is drawn onto both of them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_n3crunch,
@@ -5578,7 +5577,7 @@ food_list = [
 		str_name = 'N3 Crunch',
 		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
 		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = "sourpussbread",
@@ -9608,6 +9607,27 @@ poi_list = [
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
+	),
+	EwPoi( # Slimy Persuits
+		id_poi=poi_id_slimypersuits,
+		alias=[
+			"sp",
+			"slimypersuits",
+			"slimeypersuits",
+			"candystore",
+			"candyshop",
+			"candy store",
+			"candy shop",
+		],
+		str_name="Slimy Persuits",
+		str_desc="",
+		coord=(85, 12),
+		pvp=False,
+		vendors=[vendor_slimypersuits],
+		channel="slimy-persuits",
+		role="Slimy Persuits",
+		mother_district=poi_id_newnewyonkers,
+		is_subzone=True
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
