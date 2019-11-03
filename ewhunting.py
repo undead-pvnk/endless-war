@@ -75,6 +75,9 @@ class EwEnemy:
 	
 	# Determines if an enemy should use its rare variant or not
 	rare_status = 0
+	
+	# What kind of weather the enemy is suited to
+	weathertype = 0
 
 	""" Load the enemy data from the database. """
 
@@ -98,7 +101,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -118,6 +121,7 @@ class EwEnemy:
 						ewcfg.col_enemy_id_target,
 						ewcfg.col_enemy_raidtimer,
 						ewcfg.col_enemy_rare_status,
+						ewcfg.col_enemy_weathertype,
 						query_suffix
 					))
 				result = cursor.fetchone();
@@ -143,6 +147,7 @@ class EwEnemy:
 					self.id_target = result[16]
 					self.raidtimer = result[17]
 					self.rare_status = result[18]
+					self.weathertype = result[19]
 
 			finally:
 				# Clean up the database handles.
@@ -159,7 +164,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -179,6 +184,7 @@ class EwEnemy:
 					ewcfg.col_enemy_id_target,
 					ewcfg.col_enemy_raidtimer,
 					ewcfg.col_enemy_rare_status,
+					ewcfg.col_enemy_weathertype,
 				), (
 					self.id_enemy,
 					self.id_server,
@@ -199,6 +205,7 @@ class EwEnemy:
 					self.id_target,
 					self.raidtimer,
 					self.rare_status,
+					self.weathertype,
 				))
 
 			conn.commit()
@@ -738,6 +745,7 @@ async def summonenemy(cmd):
 		enemy.level = level_byslime(enemy.slimes)
 		enemy.lifetime = time_now
 		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
+		enemy.weathertype = ewcfg.enemy_weathertype_normal
 		
 		# Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
 		enemy.rare_status = 0
@@ -816,7 +824,7 @@ async def enemy_perform_action(id_server):
 	#ewutils.logMsg("time spent on performing enemy actions: {}".format(time_end - time_start))
 
 # Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
-def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
+def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weather = None):
 	time_now = int(time.time())
 	response = ""
 	ch_name = ""
@@ -919,8 +927,11 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 		enemy.initialslimes = enemy.slimes
 		enemy.poi = chosen_poi
 		enemy.identifier = set_identifier(chosen_poi, id_server)
+		enemy.weathertype = weather
 		
-		market_data = EwMarket(id_server=id_server)
+		if weather != ewcfg.enemy_weathertype_normal:
+			if weather == ewcfg.enemy_weathertype_rainresist:
+				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
 
 		enemy.persist()
 
@@ -1428,6 +1439,7 @@ def get_enemy_data(enemy_type):
 	enemy.id_target = ""
 	enemy.raidtimer = 0
 	enemy.rare_status = rare_status
+	enemy.weathertype = ""
 		
 	if enemy_type in ewcfg.raid_bosses:
 		enemy.life_state = ewcfg.enemy_lifestate_unactivated

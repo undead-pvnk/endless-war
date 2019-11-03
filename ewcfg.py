@@ -1105,7 +1105,7 @@ emote_dice3 = "<:dice3:436942524041527298>"
 emote_dice4 = "<:dice4:436942524406300683>"
 emote_dice5 = "<:dice5:436942524444049408>"
 emote_dice6 = "<:dice6:436942524469346334>"
-emote_negaslime = "<:negaslime:453826200616566786>"
+emote_negaslime = "<:ns:453826200616566786>"
 emote_bustin = "<:bustin:455194248741126144>"
 emote_ghost = "<:lordofghosts:434002083256205314>"
 emote_slimefull = "<:slimefull:496397819154923553>"
@@ -1117,7 +1117,7 @@ emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
 emote_srs = "<:srs:631859962519224341>"
-emote_staydead = "<:staydead:506840095714836480>"
+emote_staydead = "<:sd:506840095714836480>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1381,6 +1381,7 @@ col_enemy_lifetime = 'lifetime'
 col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
 col_enemy_rare_status = 'rare_status'
+col_enemy_weathertype = 'weathertype'
 
 # Database column for the status of districts with locks on them
 col_locked_status = 'locked_status'
@@ -13699,6 +13700,10 @@ enemy_attacktype_molotovbreath = 'molotov breath'
 enemy_attacktype_armcannon = 'arm cannon'
 enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
+
+# Enemy weather types. In the future enemies will make use of this in tandem with the current weather, but for now they can just resist the rain.
+enemy_weathertype_normal = 'normal'
+enemy_weathertype_rainresist = 'rainresist'
 
 # Enemy types
 # Common enemies
