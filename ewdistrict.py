@@ -457,7 +457,7 @@ class EwDistrict:
 				if new_owner != "":  # if it was captured by a faction instead of being de-captured or decayed
 					countdown_message = ""
 					if self.time_unlock > 0:
-						countdown_message = "It will unlock for capture again in {time} minutes.".format(time = round(self.time_unlock))
+						countdown_message = "It will unlock for capture again in {time} minutes.".format(time = round(self.time_unlock / 60))
 					message = "{faction} just captured {district}. {countdown}".format(
 						faction = self.capturing_faction.capitalize(),
 						district = ewcfg.id_to_poi[self.name].str_name,
@@ -513,6 +513,9 @@ async def capture_progress(cmd):
 		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
 	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+
+	if district_data.time_unlock > 0:
+		response += "\nThis district cannot be captured currently. It will unlock in {} minutes.".format(round(self.time_unlock / 60))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 		
