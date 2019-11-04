@@ -152,7 +152,7 @@ async def menu(cmd):
 						value /= 2
 
 					# and 4 times as much for enemy gangsters
-					elif user_data.controlling_faction != "":
+					elif user_data.faction != "":
 						value *= 4
 
 				value = int(value)
@@ -280,7 +280,7 @@ async def order(cmd):
 						value /= 2
 
 					# and 4 times as much for enemy gangsters
-					elif user_data.controlling_faction != "":
+					elif user_data.faction != "":
 						value *= 4
 
 				value = int(value)

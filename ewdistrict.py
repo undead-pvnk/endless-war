@@ -515,7 +515,7 @@ async def capture_progress(cmd):
 	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
 
 	if district_data.time_unlock > 0:
-		response += "\nThis district cannot be captured currently. It will unlock in {} minutes.".format(round(self.time_unlock / 60))
+		response += "\nThis district cannot be captured currently. It will unlock in {} minutes.".format(round(district_data.time_unlock / 60))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 		
@@ -543,7 +543,7 @@ async def capture_tick(id_server):
 
 			if dist.time_unlock > 0 and not dist.all_neighbors_friendly():
 				responses = dist.change_capture_lock(progress = -ewcfg.capture_tick_length)
-				resp_cont.capture_tick.add_response_container(responses)
+				resp_cont_capture_tick.add_response_container(responses)
 
 			if dist.time_unlock > 0:
 				dist.persist()
