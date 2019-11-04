@@ -253,9 +253,9 @@ class EwDistrict:
 		progress_after = self.time_unlock
 
 		if (progress_after // ewcfg.capture_lock_milestone) != (progress_before // ewcfg.capture_lock_milestone):
-			time_mins = round(progress_before / 60)
+			time_mins = round(progress_after / 60)
 			if progress < 0:
-				if progress_before > 15 * 60 >= progress_after:
+				if progress_before >= 15 * 60 >= progress_after:
 					message = "{district} will unlock for capture in {time} minutes.".format(
 						district = ewcfg.id_to_poi[self.name].str_name,
 						time = time_mins
@@ -265,7 +265,7 @@ class EwDistrict:
 					for ch in channels:
 						resp_cont.add_channel_response(channel = ch, response = message)
 				
-				elif progress_before > 5 * 60 >= progress_after:
+				elif progress_before >= 5 * 60 >= progress_after:
 					message = "{district} will unlock for capture in {time} minutes.".format(
 						district = ewcfg.id_to_poi[self.name].str_name,
 						time = time_mins
