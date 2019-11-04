@@ -233,6 +233,7 @@ CREATE TABLE districts (
 	capturing_faction varchar(32) NOT NULL DEFAULT '',
 	capture_points bigint NOT NULL DEFAULT '0',
 	slimes bigint NOT NULL DEFAULT '0',
+	time_unlock int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
 );

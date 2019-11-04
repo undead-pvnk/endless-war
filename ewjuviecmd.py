@@ -166,6 +166,7 @@ async def mine(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	response = ""
 	# Kingpins can't mine.
@@ -350,6 +351,14 @@ async def mine(cmd):
 			#alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
 			#mining_yield = min(mining_yield, alternate_yield)
+
+			if poi.is_subzone:
+				district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
+			else:
+				district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+			if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+				mining_yield *= 2
 
 			if has_pickaxe == True:
 				mining_yield *= 2

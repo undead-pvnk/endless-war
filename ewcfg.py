@@ -38,7 +38,7 @@ update_pvp = 60
 update_market = 900 #15 min
 
 # Time saved moving through friendly territory (or lost in hostile territory).
-territory_time_gain = 5
+territory_time_gain = 10
 
 # Market delta
 max_iw_swing = 30
@@ -894,10 +894,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 4915  # 90 min
-max_capture_points_a = 3277  # 60 min
-max_capture_points_b = 2458  # 45 min
-max_capture_points_c = 1638   # 30 min
+max_capture_points_s = 60 * 60  # 60 min
+max_capture_points_a = 30 * 60  # 30 min
+max_capture_points_b = 15 * 60  # 15 min
+max_capture_points_c = 5 * 60   # 5 min
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -907,11 +907,31 @@ max_capture_points = {
 	property_class_c: max_capture_points_c
 }
 
+# how long districts stay locked after capture
+capture_lock_s = 4 * 60 * 60  # 4 hours
+capture_lock_a = 2 * 60 * 60  # 2 hours 
+capture_lock_b = 1 * 60 * 60  # 1 hour
+capture_lock_c = 30 * 60  # 30 min
+
+# district lock times assigned to property classes
+capture_locks = {
+	property_class_s: capture_lock_s,
+	property_class_a: capture_lock_a,
+	property_class_b: capture_lock_b,
+	property_class_c: capture_lock_c,
+}
+
+# by how much to extend the capture lock per additional gangster capping
+capture_lock_per_gangster = 30 * 60  # 30 min
+
+# capture lock messages
+capture_lock_milestone = 5 * 60 # 5 min
+
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
 
 # capture speed at 0% progress
-baseline_capture_speed = 2
+baseline_capture_speed = 1
 
 # accelerates capture speed depending on current progress
 capture_gradient = 1
@@ -1443,6 +1463,7 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
+col_time_unlock = 'time_unlock'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
