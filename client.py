@@ -136,6 +136,11 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
+	# SAP system
+	ewcfg.cmd_view_sap: ewcmd.view_sap,
+	ewcfg.cmd_harden_sap: ewwep.harden_sap,
+	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+	
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
 
@@ -152,8 +157,8 @@ cmd_map = {
 	ewcfg.cmd_boo: ewcmd.boo,
 	ewcfg.cmd_spook: ewcmd.spook,
     
-    # Make a costume for Double Halloween
-    ewcfg.cmd_makecostume: ewitem.makecostume,
+	# Make a costume for Double Halloween
+	ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
@@ -464,10 +469,10 @@ cmd_map = {
 	ewcfg.cmd_observeslimeoid: ewslimeoid.observeslimeoid,
 	ewcfg.cmd_slimeoidbattle: ewslimeoid.slimeoidbattle,
 	ewcfg.cmd_saturateslimeoid: ewslimeoid.saturateslimeoid,
-        ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
-        ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
-        ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
-        #ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
+	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
+	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
+	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
+	#ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
@@ -698,11 +703,12 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
-		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
+			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewfarm.farm_tick_loop(id_server = server.id))
 

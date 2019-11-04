@@ -49,6 +49,8 @@ CREATE TABLE users (
 	time_lastenlist int NOT NULL DEFAULT '0',
 	active_slimeoid int NOT NULL DEFAULT '-1',
 	has_soul int NOT NULL DEFAULT '1',
+	sap int NOT NULL DEFAULT '0',
+	hardened_sap int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -222,6 +224,7 @@ CREATE TABLE enemies (
 	id_target varchar(128) NOT NULL DEFAULT '',
 	raidtimer bigint NOT NULL DEFAULT '0',
 	rare_status int NOT NULL DEFAULT '0',
+	hardened_sap int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_enemy)
 );

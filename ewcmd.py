@@ -892,6 +892,24 @@ async def remove_item(cmd):
 		response = "There is no storage here, public or private."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def view_sap(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	
+	if cmd.mentions_count > 1:
+		response = "One at a time."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		target_data = EwUser(member = member)
+		response = "{} has {} hardened SAP and {} liquid SAP.".format(member.display_name, target_data.hardened_sap, target_data.sap)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		response = "You have {} hardened SAP and {} liquid SAP.".format(user_data.hardened_sap, user_data.sap)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def push(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	districtmodel = ewdistrict.EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)

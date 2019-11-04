@@ -39,6 +39,8 @@ class EwUser:
 	arrested = False
 	active_slimeoid = -1
 	splattered_slimes = 0
+	sap = 0
+	hardened_sap = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -74,6 +76,10 @@ class EwUser:
 
 		if self.move_speed <= 0:
 			self.move_speed = 1
+
+		self.sap = max(0, min(self.sap, self.slimelevel - self.hardened_sap))
+
+		self.hardened_sap = max(0, self.hardened_sap)
 
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
@@ -214,6 +220,8 @@ class EwUser:
 		if cause == ewcfg.cause_leftserver:
 			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
 
+		self.sap = 0
+		self.hardened_sap = 0
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 
@@ -608,7 +616,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -648,6 +656,8 @@ class EwUser:
 					ewcfg.col_visiting,
 					ewcfg.col_active_slimeoid,
 					ewcfg.col_has_soul,
+					ewcfg.col_sap,
+					ewcfg.col_hardened_sap,
 				), (
 					id_user,
 					id_server
@@ -694,6 +704,8 @@ class EwUser:
 					self.visiting = result[35]
 					self.active_slimeoid = result[36]
 					self.has_soul = result[37]
+					self.sap = result[38]
+					self.hardened_sap = result[39]
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
@@ -749,7 +761,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -791,6 +803,8 @@ class EwUser:
 				ewcfg.col_visiting,
 				ewcfg.col_active_slimeoid,
 				ewcfg.col_has_soul,
+				ewcfg.col_sap,
+				ewcfg.col_hardened_sap,
 			), (
 				self.id_user,
 				self.id_server,
@@ -833,6 +847,8 @@ class EwUser:
 				self.visiting,
 				self.active_slimeoid,
 				self.has_soul,
+				self.sap,
+				self.hardened_sap,
 			))
 
 			conn.commit()
