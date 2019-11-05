@@ -238,7 +238,8 @@ async def mine(cmd):
 
 			if type(mining_yield) == type(""):
 				response = mining_yield
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				if len(response) > 0:
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 					
 
@@ -1116,6 +1117,8 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	grid = grid_cont.grid
 	grid_multiplier = grid_cont.cells_mined ** 0.4
 
+	hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+
 	row = -1
 	col = -1
 	if cmd.tokens_count < 2:
@@ -1125,6 +1128,12 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	for token in cmd.tokens[1:]:
 				
 		coords = token.lower()
+		if coords == "reset":
+			user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
+			user_data.persist()
+			init_grid_minesweeper(user_data.poi, user_data.id_server)
+			return ""
+
 		if col < 1:
 		
 			for char in coords:
