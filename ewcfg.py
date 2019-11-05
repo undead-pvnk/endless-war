@@ -13739,7 +13739,7 @@ status_repelaftereffects_id = "repelaftereffects"
 status_evasive_id = "evasive"
 status_taunted_id = "taunted"
 status_aiming_id = "aiming"
-
+status_sapfatigue_id = "sapfatigue"
 
 time_expire_burn = 12
 
@@ -13802,6 +13802,12 @@ status_effect_list = [
 		str_describe_self = "You are taking careful aim.",
 		miss_mod_self = -0.1,
 		crit_mod_self = 0.2
+	),
+	EwStatusEffectDef(
+		id_status = status_sapfatigue_id,
+		time_expire = 60,
+		str_describe = "They are suffering from sap fatigue.",
+		str_descirbe_self = "You are suffering from sap fatigue.",
 	),
 ]
 
