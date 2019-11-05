@@ -2004,9 +2004,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if enemy_data.ai == ewcfg.enemy_ai_defender:
 		slimes_damage *= 0.5
 		
-	# Bicarbonate enemies take less damage
+	# Bicarbonate enemies take more damage
 	if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
-		slimes_damage *= 0.5
+		slimes_damage *= 1.5
 
 	# Damage stats
 	ewstats.track_maximum(user=user_data, metric=ewcfg.stat_max_hitdealt, value=slimes_damage)
@@ -2058,11 +2058,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			ewstats.increment_stat(user=user_data, metric=ewcfg.stat_lifetime_pve_takedowns)
 
 		if weapon != None:
-			weapon_item.item_props["kills"] = (int(weapon_item.item_props.get("kills")) if weapon_item.item_props.get(
-				"kills") != None else 0) + 1
-			weapon_item.item_props["totalkills"] = (int(
-				weapon_item.item_props.get("totalkills")) if weapon_item.item_props.get(
-				"totalkills") != None else 0) + 1
+			weapon_item.item_props["kills"] = (int(weapon_item.item_props.get("kills")) if weapon_item.item_props.get("kills") != None else 0) + 1
+			weapon_item.item_props["totalkills"] = (int(weapon_item.item_props.get("totalkills")) if weapon_item.item_props.get("totalkills") != None else 0) + 1
 			ewstats.increment_stat(user=user_data, metric=weapon.stat)
 
 		# Give a bonus to the player's weapon skill for killing a stronger enemy.
@@ -2071,8 +2068,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 		# release bleed storage
 		if ewcfg.mutation_id_thickerthanblood in user_mutations:
-			slimes_todistrict = 0
-			slimes_tokiller = enemy_data.slimes
+			slimes_todistrict = enemy_data.slimes * 0.25
+			slimes_tokiller = enemy_data.slimes * 0.75
 		else:
 			slimes_todistrict = enemy_data.slimes / 2
 			slimes_tokiller = enemy_data.slimes / 2

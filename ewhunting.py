@@ -348,6 +348,9 @@ class EwEnemy:
 				slimes_damage /= 2  # specific to juvies
 			if enemy_data.enemytype == ewcfg.enemy_type_microslime:
 				slimes_damage *= 20  # specific to microslime
+				
+			if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
+				slimes_damage *= 1.5
 
 			# Organic Fursuit
 			if ewcfg.mutation_id_organicfursuit in target_mutations and ewutils.check_fursuit_active(target_data.id_server):
@@ -932,7 +935,7 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 		if weather != ewcfg.enemy_weathertype_normal:
 			if weather == ewcfg.enemy_weathertype_rainresist:
 				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
-				enemy.slimes *= 1.2
+				enemy.slimes *= 2
 
 		enemy.persist()
 

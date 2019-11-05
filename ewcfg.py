@@ -481,7 +481,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '/'
+cmd_prefix = '!'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -12922,7 +12922,7 @@ mutations = [
 		id_mutation = mutation_id_thickerthanblood,
 		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to Thicker Than Blood.",
 		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to Thicker Than Blood.",
-		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. ",
+		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. Its effects are diminished on hunted enemies, however.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fungalfeaster,
@@ -13622,7 +13622,7 @@ help_responses_ordered_keys = [
 
 mutation_descriptions = {
 	mutation_id_spontaneouscombustion: "Upon dying you do damage proportional to your current slime level, calculated as (level^4)/5, hitting everyone in the district. Example: A level 50 player will do 1,250,000 damage.",
-	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin.",
+	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
 	mutation_id_2ndamendment: "One extra equippable gun slot in your inventory.",

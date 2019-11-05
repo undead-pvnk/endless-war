@@ -731,11 +731,6 @@ def init_grid_minesweeper(poi, id_server):
 		for j in range(num_cols):
 			row.append(ewcfg.cell_empty)
 		grid.append(row)
-	
-	# # Reveal an empty cell
-	# rand_x = random.randrange(13)
-	# rand_y = random.randrange(13)
-	# grid[rand_x][rand_y] = ewcfg.cell_empty_open
 
 	num_mines = 30
 
