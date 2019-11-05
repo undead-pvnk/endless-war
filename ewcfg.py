@@ -13785,21 +13785,21 @@ status_effect_list = [
 		id_status = status_evasive_id,
 		time_expire = 10,
 		str_describe = "They have assumed an evasive stance.",
-		str_descirbe_self = "You have assumed an evasive stance.",
+		str_describe_self = "You have assumed an evasive stance.",
 		miss_mod = 0.25
 	),
 	EwStatusEffectDef(
 		id_status = status_taunted_id,
 		time_expire = 10,
 		str_describe = "They are fuming with rage.",
-		str_descirbe_self = "You are fuming with rage.",
+		str_describe_self = "You are fuming with rage.",
 		miss_mod_self = 0.25
 	),
 	EwStatusEffectDef(
 		id_status = status_aiming_id,
 		time_expire = 10,
 		str_describe = "They are taking careful aim.",
-		str_descirbe_self = "You are taking careful aim.",
+		str_describe_self = "You are taking careful aim.",
 		miss_mod_self = -0.1,
 		crit_mod_self = 0.2
 	),
