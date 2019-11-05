@@ -8510,7 +8510,7 @@ poi_list = [
 		str_desc = "Huh, this is weird.\n\nUsually, this lobby is full of researchers scurrying about every which way, with some unpaid intern roleplaying receptionist. But… everything is quiet and dark, not a soul in sight. Where’d everybody go?\n\nIt looks like the elevator is working, at least. Alas, it requires you to enter an identification number, presumably to confirm you really work for SlimeCorp and aren’t a random juvenile who teleported into this place while it was closed. You’re pretty sure you remember getting your hands on an identification card a long, long time ago. Wonder if it’ll work?\n\n*Use the !verify command followed by the correct identification number to activate the elevator.*",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
-		coord = (64, 6),
+		coord = (67, 8),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_brawlden
@@ -10484,7 +10484,6 @@ poi_list = [
 	),
 
 ]
-poi_list += ewdebug.debugpois
 
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
