@@ -24,6 +24,8 @@ class EwEnemy:
 	id_enemy = 0
 	id_server = ""
 
+	combatant_type = "enemy"
+
 	# The amount of slime an enemy has
 	slimes = 0
 
@@ -83,6 +85,8 @@ class EwEnemy:
 	""" Load the enemy data from the database. """
 
 	def __init__(self, id_enemy=None, id_server=None, enemytype=None):
+		self.combatant_type = ewcfg.combatant_type_enemy
+
 		query_suffix = ""
 
 		if id_enemy != None:
@@ -344,7 +348,7 @@ class EwEnemy:
 			# slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
 
 			# since enemies dont use up slime or hunger, this is only used for damage calculation
-			slimes_spent = int(ewutils.slime_bylevel(enemy_data.level) / 20 * ewcfg.enemy_attack_tick_length / 2)
+			slimes_spent = int(ewutils.slime_bylevel(enemy_data.level) / 40 * ewcfg.enemy_attack_tick_length / 2)
 
 			slimes_damage = int(slimes_spent * 4)
 

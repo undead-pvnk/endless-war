@@ -43,6 +43,10 @@ territory_time_gain = 5
 # Market delta
 max_iw_swing = 30
 
+# combatant ids to differentiate players and NPCs in combat
+combatant_type_player = "player"
+combatant_type_enemy = "enemy"
+
 # Life states. How the player is living (or deading) in the database
 life_state_corpse = 0
 life_state_juvenile = 1
@@ -673,6 +677,10 @@ cmd_recycle_alt1 = cmd_prefix + 'incinerate'
 cmd_view_sap = cmd_prefix + 'sap'
 cmd_harden_sap = cmd_prefix + 'harden'
 cmd_liquefy_sap = cmd_prefix + 'liquefy'
+cmd_dodge = cmd_prefix + 'dodge'
+cmd_dodge_alt1 = cmd_prefix + 'evade'
+cmd_taunt = cmd_prefix + 'taunt'
+cmd_aim = cmd_prefix + 'aim'
 cmd_advertise = cmd_prefix + 'advertise'
 cmd_ads = cmd_prefix + 'ads'
 cmd_confirm = cmd_prefix + 'confirm'
@@ -1479,6 +1487,7 @@ col_quadrants_target2 = 'id_target2'
 # Database columns for status effects
 col_id_status = 'id_status'
 col_source = 'source'
+col_status_target = 'id_target'
 
 # Database columns for world events
 col_id_event = 'id_event'
@@ -13727,6 +13736,10 @@ status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 status_repelled_id = "repelled"
 status_repelaftereffects_id = "repelaftereffects"
+status_evasive_id = "evasive"
+status_taunted_id = "taunted"
+status_aiming_id = "aiming"
+
 
 time_expire_burn = 12
 
@@ -13767,6 +13780,28 @@ status_effect_list = [
 		str_acquire = 'You try and shake off the body spray, but its stench still lingers, if only for a brief moment.',
 		str_describe = 'Their surroundings give off a slightly foul odor.',
 		str_describe_self = 'Your surroundings give off a slightly foul odor.'
+	),
+	EwStatusEffectDef(
+		id_status = status_evasive_id,
+		time_expire = 10,
+		str_describe = "They have assumed an evasive stance.",
+		str_descirbe_self = "You have assumed an evasive stance.",
+		miss_mod = 0.25
+	),
+	EwStatusEffectDef(
+		id_status = status_taunted_id,
+		time_expire = 10,
+		str_describe = "They are fuming with rage.",
+		str_descirbe_self = "You are fuming with rage.",
+		miss_mod_self = 0.25
+	),
+	EwStatusEffectDef(
+		id_status = status_aiming_id,
+		time_expire = 10,
+		str_describe = "They are taking careful aim.",
+		str_descirbe_self = "You are taking careful aim.",
+		miss_mod_self = -0.1,
+		crit_mod_self = 0.2
 	),
 ]
 
