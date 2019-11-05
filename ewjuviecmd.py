@@ -1129,7 +1129,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 				
 		coords = token.lower()
 		if coords == "reset":
-			user_data.hunger += ewcfg.hunger_perminereset * int(hunger_cost_mod)
+			user_data.hunger += int(ewcfg.hunger_perminereset * hunger_cost_mod)
 			user_data.persist()
 			init_grid_minesweeper(user_data.poi, user_data.id_server)
 			return ""
