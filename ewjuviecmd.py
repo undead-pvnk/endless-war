@@ -699,10 +699,20 @@ async def crush(cmd):
 			# delete a slime poudrin from the player's inventory
 			ewitem.item_delete(id_item=sought_id)
 
+			status_effects = user_data.getStatusEffects()
+			sap_resp = ""
+			if ewcfg.status_sapfatigue_id not in status_effects:
+				sap_gain = 5
+				sap_gain = max(0, min(sap_gain, self.slimelevel - (self.hardened_sap + self.sap)))
+				if sap_gain > 0:
+					user_data.sap += sap_gain
+					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
+					sap_resp = " and {} sap".format(sap_gain)
+
 			user_data.slimes += crush_slimes
 			user_data.persist()
 
-			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
+			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
 			
 		# TODO: Remove after Double Halloween
 		elif item_data.item_type == ewcfg.it_food:
