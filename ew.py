@@ -15,6 +15,8 @@ class EwUser:
 	id_server = ""
 	id_killer = ""
 
+	combatant_type = "player"
+
 	slimes = 0
 	slimecoin = 0
 	slime_donations = 0
@@ -425,7 +427,7 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = 0, multiplier = 1):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
 		response = ""
 		if id_status != None:
 			status = None
@@ -436,7 +438,7 @@ class EwUser:
 			if status != None:
 				statuses = self.getStatusEffects()
 
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source)
+				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source, id_target = id_target)
 				
 				if id_status in statuses:
 					status_effect.value = value
@@ -598,6 +600,9 @@ class EwUser:
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
+
+		self.combatant_type = ewcfg.combatant_type_player
+
 		if(id_user == None) and (id_server == None):
 			if(member != None):
 				id_server = member.server.id

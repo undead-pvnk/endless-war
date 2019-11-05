@@ -462,9 +462,9 @@ async def attack(cmd):
 		sap_damage = 0
 		sap_ignored = 0
 
-		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other), 2)
-		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other), 2)
-		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other), 2)
+		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
+		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
+		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 		slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 2)) / 100.0)
@@ -1795,15 +1795,28 @@ async def unjam(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
-def apply_combat_mods(user_data = None, desired_type = None, target = None):
-	if user_data != None and desired_type != None and target != None:
+def apply_combat_mods(user_data = None, desired_type = None, target = None, shooter_data = None, shootee_data = None):
 
-		modifier = 0
+	modifier = 0
+	if user_data != None and desired_type != None and target != None:
 
 		# Get the user's status effects
 		user_statuses = user_data.getStatusEffects()
 		for status in user_statuses:
 			status_flavor = ewcfg.status_effects_def_map.get(status)
+
+			if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
+				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+				if status_data.id_target != "":
+					if status == ewcfg.status_taunted_id:
+						if shootee_data == None or shootee_data.combatant_type != ewcfg.combatant_type_player or shootee_data.id_user == status_data.id_target:
+							continue
+					elif status == ewcfg.status_evasive_id:
+						if shooter_data == None or shooter_data.combatant_type != ewcfg.combatant_type_player or shooter_data.id_user != status_data.id_target:
+							continue
+					elif status == ewcfg.status_aiming_id:
+						if shootee_data == None or shootee_data.combatant_type != ewcfg.combatant_type_player or shootee_data.id_user != status_data.id_target:
+							continue
 
 			if status_flavor is not None:
 				if target == ewcfg.status_effect_target_self:
@@ -1822,7 +1835,7 @@ def apply_combat_mods(user_data = None, desired_type = None, target = None):
 					elif desired_type == ewcfg.status_effect_type_damage:
 						modifier += status_flavor.dmg_mod
 
-		return modifier
+	return modifier
 	
 async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, market_data, time_now_float):
 	time_now = int(time_now_float)
@@ -1856,9 +1869,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	sap_damage = 0
 	sap_ignored = 0
 
-	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_other), 2)
-	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_other), 2)
-	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self) + apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_other), 2)
+	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
+	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
+	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 24)
 	slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 2)) / 100.0)
@@ -2423,6 +2436,142 @@ async def liquefy_sap(cmd):
 
 	response = "You liquefy {} SAP.".format(sap_to_liquefy)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def dodge(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "A bit late for that, don't you think?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	sap_cost = 3
+	
+	if sap_cost > user_data.sap:
+		response = "You don't have enough sap to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.mentions_count < 1:
+		response = "Whose attacks do you want to {}?".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	if cmd.mentions_count > 1:
+		response = "You can only focus on dodging one person at a time.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	member = cmd.mentions[0]
+	
+	member_data = EwUser(member = member)
+
+	if member_data.poi != user_data.poi:
+		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	id_status = ewcfg.status_evasive_id
+
+	user_data.clear_status(id_status = id_status)
+
+	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = member.id)
+
+	user_data.sap -= sap_cost
+
+	user_data.persist()
+
+	response = "You spend {} sap to focus on dodging {}'s attacks.".format(sap_cost, member.display_name)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def taunt(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "A bit late for that, don't you think?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	sap_cost = 5
+	
+	if sap_cost > user_data.sap:
+		response = "You don't have enough sap to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.mentions_count < 1:
+		response = "Who do you want to {}?".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	if cmd.mentions_count > 1:
+		response = "You can only focus on taunting one person at a time.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	member = cmd.mentions[0]
+	
+	member_data = EwUser(member = member)
+
+	if member_data.poi != user_data.poi:
+		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	id_status = ewcfg.status_taunted_id
+
+	member_statuses = member_data.getStatusEffects()
+
+	if id_status in member_statuses:
+		response = "{} has already been taunted.".format(member.display_name)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	member_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = cmd.message.author.id)
+
+	user_data.sap -= sap_cost
+
+	user_data.persist()
+
+	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, member.display_name)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def aim(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	response = ""
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "A bit late for that, don't you think?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	sap_cost = 2
+	
+	if sap_cost > user_data.sap:
+		response = "You don't have enough sap to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if cmd.mentions_count < 1:
+		response = "Who do you want to {} at?".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	if cmd.mentions_count > 1:
+		response = "You can only focus on aiming at one person at a time.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	member = cmd.mentions[0]
+	
+	member_data = EwUser(member = member)
+
+	if member_data.poi != user_data.poi:
+		response = "You can't {} at someone, who's not even here.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	id_status = ewcfg.status_aiming_id
+
+	user_data.clear_status(id_status = id_status)
+
+	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = member.id)
+
+	user_data.sap -= sap_cost
+
+	user_data.persist()
+
+	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, member.display_name)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	damage_mod = 1
