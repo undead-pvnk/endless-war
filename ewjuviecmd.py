@@ -694,7 +694,7 @@ async def crush(cmd):
 			sap_resp = ""
 			if ewcfg.status_sapfatigue_id not in status_effects:
 				sap_gain = 5
-				sap_gain = max(0, min(sap_gain, self.slimelevel - (self.hardened_sap + self.sap)))
+				sap_gain = max(0, min(sap_gain, user_data.slimelevel - (user_data.hardened_sap + user_data.sap)))
 				if sap_gain > 0:
 					user_data.sap += sap_gain
 					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
