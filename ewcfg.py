@@ -13828,7 +13828,7 @@ status_effect_list = [
 		id_status = status_sapfatigue_id,
 		time_expire = 60,
 		str_describe = "They are suffering from sap fatigue.",
-		str_descirbe_self = "You are suffering from sap fatigue.",
+		str_describe_self = "You are suffering from sap fatigue.",
 	),
 ]
 
