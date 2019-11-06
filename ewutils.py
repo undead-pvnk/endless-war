@@ -1176,10 +1176,16 @@ def explode(damage = 0, district_data = None, market_data = None):
 		user_data = EwUser(id_user = user, id_server = id_server)
 		mutations = user_data.get_mutations()
 
+		user_weapon = None
+		user_weapon_item = None
+		if user_data.weapon >= 0:
+			user_weapon_item = EwItem(id_item = user_data.weapon)
+			user_weapon = ewcfg.weapon_map.get(user_weapon_item.item_props.get("weapon_type"))
+
 		# apply defensive mods
 		slimes_damage_target = damage * ewwep.damage_mod_defend(
 			shootee_data = user_data,
-			shootee_mutations = user_data.get_mutations(),
+			shootee_mutations = mutations,
 			shootee_weapon = user_weapon,
 			market_data = market_data
 		)
