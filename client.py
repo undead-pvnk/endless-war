@@ -136,12 +136,12 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
-	# SAP system
+	# sap system
 	ewcfg.cmd_view_sap: ewcmd.view_sap,
 	ewcfg.cmd_harden_sap: ewwep.harden_sap,
 	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
 	
-	# combat SAP commands
+	# combat sap commands
 	ewcfg.cmd_taunt: ewwep.taunt,
 	ewcfg.cmd_aim: ewwep.aim,
 	ewcfg.cmd_dodge: ewwep.dodge,
