@@ -58,7 +58,7 @@ class EwUser:
 
 	apt_zone = "empty"
 	visiting = "empty"
-	has_soul = 0
+	has_soul = 1
 
 	move_speed = 1 # not a database column
 
