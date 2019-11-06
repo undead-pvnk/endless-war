@@ -825,6 +825,8 @@ async def on_ready():
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
+					if not ewutils.check_fursuit_active(market_data.id_server):
+						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
@@ -1398,6 +1400,53 @@ async def on_message(message):
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		# Toggles rain on and off
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
+			market_data = EwMarket(id_server=message.server.id)
+			
+			if market_data.weather == ewcfg.weather_bicarbonaterain:
+				newweather = ewcfg.weather_sunny
+				
+				market_data.weather = newweather
+				response = "Bicarbonate rain turned OFF. Weather was set to {}.".format(newweather)
+			else:
+				market_data.weather = ewcfg.weather_bicarbonaterain
+				response = "Bicarbonate rain turned ON."
+				
+			market_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'dayforward'):
+			market_data = EwMarket(id_server=message.server.id)
+
+			market_data.day += 1
+			market_data.persist()
+
+			response = "Time has progressed 1 day forward manually."
+			
+			if ewutils.check_fursuit_active(market_data.id_server):
+				response += "\nIt's a full moon!"
+				
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
+			market_data = EwMarket(id_server=message.server.id)
+			
+			market_data.clock += 1
+			response = "Time has progressed 1 hour forward manually."
+
+			if market_data.clock >= 24 or market_data.clock < 0:
+				market_data.clock = 0
+				market_data.day += 1
+				response += "\nMidnight has come. 1 day progressed forward."
+				
+			if ewutils.check_fursuit_active(market_data.id_server):
+				response += "\nIt's a full moon!"
+				
+			market_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
 			
 		# didn't match any of the command words.
 		else:

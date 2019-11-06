@@ -792,7 +792,11 @@ async def fursuit(cmd):
 
 	if ewcfg.mutation_id_organicfursuit in mutations:
 		days_until = -market_data.day % 31
-		response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
+		
+		if days_until == 0:
+			response = "Hair is beginning to grow on the surface of your skin rapidly. Your canine instincts will take over soon!"
+		else:
+			response = "With a basic hairy palm reading, you determine that you'll be particularly powerful in {} day{}.".format(days_until, "s" if days_until is not 1 else "")
 
 		if ewutils.check_fursuit_active(user_data.id_server):
 			response = "The full moon shines above! Now's your chance to strike!"
