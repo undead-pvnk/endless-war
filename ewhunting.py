@@ -593,7 +593,7 @@ class EwEnemy:
 									))
 								sap_response = ""
 								if sap_damage > 0:
-									sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+									sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
 								response += " {target_name} loses {damage:,} slime{sap_response}!".format(
 									target_name=target_player.display_name,
 									damage=damage,

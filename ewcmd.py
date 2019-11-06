@@ -899,11 +899,11 @@ async def view_sap(cmd):
 	elif cmd.mentions_count == 1:
 		member = cmd.mentions[0]
 		target_data = EwUser(member = member)
-		response = "{} has {} hardened SAP and {} liquid SAP.".format(member.display_name, target_data.hardened_sap, target_data.sap)
+		response = "{} has {} hardened sap and {} liquid sap.".format(member.display_name, target_data.hardened_sap, target_data.sap)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
-		response = "You have {} hardened SAP and {} liquid SAP.".format(user_data.hardened_sap, user_data.sap)
+		response = "You have {} hardened sap and {} liquid sap.".format(user_data.hardened_sap, user_data.sap)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 

@@ -297,7 +297,7 @@ def canAttack(cmd):
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 		response = "You are too exhausted for gang violence right now. Go get some grub!"
 	elif weapon != None and user_data.sap < weapon.sap_cost:
-		response = "You don't have enough SAP to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
+		response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
 	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
 		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
 	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
@@ -942,7 +942,7 @@ async def attack(cmd):
 
 							sap_response = ""
 							if sap_damage > 0:
-								sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+								sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
 
 							response += " {target_name} loses {damage:,} slime{sap_response}!".format(
 								target_name = member.display_name,
@@ -1323,7 +1323,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				else:
 					sap_response = ""
 					if sap_damage_target > 0:
-						sap_response = " and {} hardened SAP".format(sap_damage_target)
+						sap_response = " and {} hardened sap".format(sap_damage_target)
 
 					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime{}".format(target_player.display_name, shootee_player.display_name, damage, sap_response)
 					resp_cont.add_channel_response(channel, response)
@@ -1397,7 +1397,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				else:
 					sap_response = ""
 					if sap_damage_target > 0:
-						sap_response = " and {} hardened SAP".format(sap_damage_target)
+						sap_response = " and {} hardened sap".format(sap_damage_target)
 					response += "{} was caught in an explosion during your fight with {} and lost {:,} slime{}".format(target_enemy_data.display_name, shootee_player.display_name, damage, sap_response)
 					resp_cont.add_channel_response(channel, response)
 					target_enemy_data.persist()
@@ -2307,7 +2307,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				sap_response = ""
 				if sap_damage > 0:
-					sap_response = " and {sap_damage} hardened SAP".format(sap_damage = sap_damage)
+					sap_response = " and {sap_damage} hardened sap".format(sap_damage = sap_damage)
 
 				response += " {target_name} loses {damage:,} slime{sap_response}!".format(
 					target_name=enemy_data.display_name,
@@ -2397,7 +2397,7 @@ async def harden_sap(cmd):
 		sap_to_harden = user_data.sap
 
 	if sap_to_harden > user_data.sap:
-		response = "You don't have that much SAP to harden."
+		response = "You don't have that much sap to harden."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data.hardened_sap += sap_to_harden
@@ -2405,7 +2405,7 @@ async def harden_sap(cmd):
 
 	user_data.persist()
 
-	response = "You harden {} SAP.".format(sap_to_harden)
+	response = "You harden {} sap.".format(sap_to_harden)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def liquefy_sap(cmd):
@@ -2426,7 +2426,7 @@ async def liquefy_sap(cmd):
 		sap_to_liquefy = user_data.hardened_sap
 
 	if sap_to_liquefy > user_data.hardened_sap:
-		response = "You don't have that much hardened SAP."
+		response = "You don't have that much hardened sap."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data.sap += sap_to_liquefy
@@ -2434,7 +2434,7 @@ async def liquefy_sap(cmd):
 
 	user_data.persist()
 
-	response = "You liquefy {} SAP.".format(sap_to_liquefy)
+	response = "You liquefy {} sap.".format(sap_to_liquefy)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def dodge(cmd):
