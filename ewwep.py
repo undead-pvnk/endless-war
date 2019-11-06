@@ -995,10 +995,10 @@ async def attack(cmd):
 				weapon_item.persist()
 
 			shootee_data.persist()
-			if shootee_data.weapon > 0:
-				shootee_weapon = EwItem(id_item = shootee_data.weapon)
-				shootee_weapon.item_props["consecutive_hits"] = 0
-				shootee_weapon.persist()
+			if shootee_weapon_item != None:
+				shootee_weapon_item = EwItem(id_item = shootee_weapon_item.id_item)
+				shootee_weapon_item.item_props["consecutive_hits"] = 0
+				shootee_weapon_item.persist()
 
 			district_data.persist()
 
@@ -1141,9 +1141,17 @@ async def suicide(cmd):
 			if user_data.rr_challenger != "":
 				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
+
+			slimes_total = user_data.slimes
+			slimes_drained = int(slimes_total * 0.1)
+			slimes_todistrict = slimes_total - slimes_drained
 				
+			sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
+			sewer_data.change_slimes(n = slimes_drained)
+			sewer_data.persist()
+
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
-			district_data.change_slimes(n = user_data.slimes + user_data.bleed_storage, source = ewcfg.source_killing)
+			district_data.change_slimes(n = slimes_todistrict, source = ewcfg.source_killing)
 			district_data.persist()
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
