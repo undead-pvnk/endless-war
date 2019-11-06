@@ -271,4 +271,4 @@ def dedorn_all_costumes():
 		
 		costume_count += 1
 		
-	ewutils.logMsg("Dedorned {} costumes after full moon ended.".format(costume_count))
+	#ewutils.logMsg("Dedorned {} costumes after full moon ended.".format(costume_count))
