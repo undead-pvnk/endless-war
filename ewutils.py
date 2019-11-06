@@ -1263,6 +1263,10 @@ def check_confirm_or_cancel(string):
 	if string.content.lower() == ewcfg.cmd_confirm or string.content.lower() == ewcfg.cmd_cancel:
 		return True
 	
+def check_trick_or_treat(string):
+	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:

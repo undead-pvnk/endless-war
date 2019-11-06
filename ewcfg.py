@@ -695,6 +695,7 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
+cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
 cmd_propstand = cmd_prefix + 'propstand'
@@ -840,6 +841,7 @@ hunger_perminereset = 10
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
+hunger_pertrickortreat = 6
 
 # ads
 slimecoin_toadvertise = 1000000
@@ -864,6 +866,7 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
+acquisition_trickortreating = "trickortreating"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1732,7 +1735,7 @@ item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
-item_id_sni = "sni"
+item_id_snipercannon = "snipercannon"
 item_id_twixten = "twixten"
 item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
@@ -5324,15 +5327,16 @@ food_list = [
 		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_sni,
+		id_food = item_id_snipercannon,
 		alias = [
-			"blatantracism",
+			"sniper",
+			"cannon",
 		],
 		recover_hunger = 100,
 		price = 100,
-		str_name = 'SNI-',
-		str_eat = "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
-		str_desc = "A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
+		str_name = 'Sniper Cannon',
+		str_eat = "You take a bite out of your Sniper Cannon bar.",
+		str_desc = "A chocolate bar with wafers on the inside. It's shaped like a bulky, rectangular version of the cannon found on the arm of the Unnerving Fighting Operator. On the back of the wrapper, there's some text that reads: 'We at Slimy Persuits had only the best intentions in our initial run of the [REDACTED] bar. We hope this rebranding will allow you to continue to enjoy our products without having to fear of blatant racism.'",
 		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
@@ -8515,7 +8519,7 @@ poi_list = [
 			"slimeoid"
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
-		str_desc = "Huh, this is weird.\n\nUsually, this lobby is full of researchers scurrying about every which way, with some unpaid intern roleplaying receptionist. But… everything is quiet and dark, not a soul in sight. Where’d everybody go?\n\nIt looks like the elevator is working, at least. Alas, it requires you to enter an identification number, presumably to confirm you really work for SlimeCorp and aren’t a random juvenile who teleported into this place while it was closed. You’re pretty sure you remember getting your hands on an identification card a long, long time ago. Wonder if it’ll work?\n\n*Use the !verify command followed by the correct identification number to activate the elevator.*",
+		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
 		coord = (67, 8),
@@ -9628,7 +9632,7 @@ poi_list = [
 			"candy shop",
 		],
 		str_name="Slimy Persuits",
-		str_desc="It's a candy Shop [DEBUG]",
+		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting prescense and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In post-apocalyptic hellscape like NLCakaNM, it seems some traditions have still survived.",
 		coord=(85, 12),
 		pvp=False,
 		vendors=[vendor_slimypersuits],
@@ -13450,6 +13454,15 @@ for m in cosmetic_items_list:
 	else:
 		pass
 
+# Gather all the items that can be the result of trick-or-treating.
+trickortreat_results = []
+
+for t in food_list:
+	if t.acquisition == acquisition_trickortreating:
+		trickortreat_results.append(t)
+	else:
+		pass
+
 slimexodia_parts = []
 
 # Gather all parts of slimexodia.
@@ -13925,6 +13938,19 @@ grid_type_by_mining_event = {
 	event_type_pokemine: mine_grid_type_pokemine,
 	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
 }
+
+halloween_tricks_tricker = [
+	"You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",
+	"You slam open the door and give {} a knuckle sandwich. They lose {} slime!",
+	"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose {} slime!",
+	"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose {} slime!",
+]
+halloween_tricks_trickee = [
+	"{} opens the door and gives you a hearty '!SPOOK'. You lose {} slime!",
+	"{} slams open the door and gives you a knuckle sandwich. You lose {} slime!",
+	"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose {} slime!",
+	"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose {} slime!",
+]
 
 dungeon_tutorial = [
 	#00
