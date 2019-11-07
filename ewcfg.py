@@ -13637,6 +13637,7 @@ status_evasive_id = "evasive"
 status_taunted_id = "taunted"
 status_aiming_id = "aiming"
 status_sapfatigue_id = "sapfatigue"
+status_rerollfatigue_id = "rerollfatigue"
 
 time_expire_burn = 12
 
@@ -13706,6 +13707,10 @@ status_effect_list = [
 		str_describe = "They are suffering from sap fatigue.",
 		str_describe_self = "You are suffering from sap fatigue.",
 	),
+	EwStatusEffectDef(
+		id_status = status_rerollfatigue_id,
+	),
+	
 ]
 
 status_effects_def_map = {}
