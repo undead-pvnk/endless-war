@@ -239,7 +239,8 @@ async def mine(cmd):
 
 			if type(mining_yield) == type(""):
 				response = mining_yield
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				if len(response) > 0:
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 					
 
@@ -704,33 +705,6 @@ async def crush(cmd):
 
 			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
 			
-		# TODO: Remove after Double Halloween
-		elif item_data.item_type == ewcfg.it_food:
-			candy_id = item_data.item_props.get("id_food")
-			if candy_id in ewcfg.candy_ids_list:
-				# delete candy from the player's inventory
-				ewitem.item_delete(id_item=sought_id)
-				
-				gristnum = random.randrange(2) + 1
-				gristcount = 0
-	
-				item_name = item_data.item_props.get('food_name')
-				
-				response = "You crush the {} with an iron grip. You gain {} piece(s) of Double Halloween Grist!".format(item_name, gristnum)
-				
-				while gristcount < gristnum:
-					
-					grist = ewcfg.grist_results[0]
-					grist_props = ewitem.gen_item_props(grist)
-					
-					ewitem.item_create(
-						item_type=grist.item_type,
-						id_user=cmd.message.author.id,
-						id_server=cmd.message.server.id,
-						item_props=grist_props
-					)
-					
-					gristcount += 1
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."
@@ -1125,6 +1099,8 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	grid = grid_cont.grid
 	grid_multiplier = grid_cont.cells_mined ** 0.4
 
+	hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+
 	row = -1
 	col = -1
 	if cmd.tokens_count < 2:
@@ -1134,6 +1110,12 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	for token in cmd.tokens[1:]:
 				
 		coords = token.lower()
+		if coords == "reset":
+			user_data.hunger += int(ewcfg.hunger_perminereset * hunger_cost_mod)
+			user_data.persist()
+			init_grid_minesweeper(user_data.poi, user_data.id_server)
+			return ""
+
 		if col < 1:
 		
 			for char in coords:

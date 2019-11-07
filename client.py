@@ -148,12 +148,12 @@ cmd_map = {
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
 	
-	# Ghosts can BOO (and during Double Halloween, SPOOK)
+	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
-	ewcfg.cmd_spook: ewcmd.spook,
+	#ewcfg.cmd_spook: ewcmd.spook,
     
     # Make a costume for Double Halloween
-    ewcfg.cmd_makecostume: ewitem.makecostume,
+    #ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
@@ -175,7 +175,7 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
-	ewcfg.cmd_trickortreat: ewapt.trickortreat,
+	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand: ewapt.propstand,
@@ -393,7 +393,7 @@ cmd_map = {
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
-	ewcfg.cmd_exalt: ewkingpin.exalt,
+	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -504,6 +504,7 @@ cmd_map = {
 	ewcfg.cmd_teleport: ewmap.teleport,
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+	ewcfg.cmd_boot: ewmap.boot,
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
@@ -902,6 +903,9 @@ async def on_ready():
 
 
 					market_data.persist()
+
+					if not ewutils.check_fursuit_active(market_data.id_server):
+						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)
@@ -1403,6 +1407,53 @@ async def on_message(message):
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		# Toggles rain on and off
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
+			market_data = EwMarket(id_server=message.server.id)
+			
+			if market_data.weather == ewcfg.weather_bicarbonaterain:
+				newweather = ewcfg.weather_sunny
+				
+				market_data.weather = newweather
+				response = "Bicarbonate rain turned OFF. Weather was set to {}.".format(newweather)
+			else:
+				market_data.weather = ewcfg.weather_bicarbonaterain
+				response = "Bicarbonate rain turned ON."
+				
+			market_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'dayforward'):
+			market_data = EwMarket(id_server=message.server.id)
+
+			market_data.day += 1
+			market_data.persist()
+
+			response = "Time has progressed 1 day forward manually."
+			
+			if ewutils.check_fursuit_active(market_data.id_server):
+				response += "\nIt's a full moon!"
+				
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
+			market_data = EwMarket(id_server=message.server.id)
+			
+			market_data.clock += 1
+			response = "Time has progressed 1 hour forward manually."
+
+			if market_data.clock >= 24 or market_data.clock < 0:
+				market_data.clock = 0
+				market_data.day += 1
+				response += "\nMidnight has come. 1 day progressed forward."
+				
+			if ewutils.check_fursuit_active(market_data.id_server):
+				response += "\nIt's a full moon!"
+				
+			market_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
 			
 		# didn't match any of the command words.
 		else:
