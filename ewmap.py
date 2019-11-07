@@ -1122,7 +1122,7 @@ async def teleport_player(cmd):
 	author = cmd.message.author
 	user_data = EwUser(member=author)
 	
-	if author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
+	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
 		pass
 	else:
 		return
