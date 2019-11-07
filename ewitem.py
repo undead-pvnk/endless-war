@@ -1543,8 +1543,6 @@ def remove_from_trades(id_item):
 				return
 
 
-
-# TODO: Remove after Double Halloween
 async def makecostume(cmd):
 	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
 
