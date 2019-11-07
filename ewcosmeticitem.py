@@ -88,7 +88,7 @@ async def adorn(cmd):
 
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
-				if i.item_props.get("context") == 'costume':
+				elif i.item_props.get("context") == 'costume':
 					if not ewutils.check_fursuit_active(i.id_server):
 						response = "You can't adorn your costume right now."
 					else:
@@ -260,15 +260,16 @@ async def smoke(cmd):
 
 
 def dedorn_all_costumes():
-	costumes = ewutils.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE name = 'adorned' AND value = 'true')")
+	costumes = ewutils.execute_sql_query("SELECT id_item FROM items_prop WHERE name = 'context' AND value = 'costume' AND id_item IN (SELECT id_item FROM items_prop WHERE (name = 'adorned' OR name = 'slimeoid') AND value = 'true')")
 	costume_count = 0
 
 	for costume_id in costumes:
 		costume_item = EwItem(id_item=costume_id)
 		
 		costume_item.item_props['adorned'] = 'false'
+		costume_item.item_props['slimeoid'] = 'false'
 		costume_item.persist()
 		
 		costume_count += 1
 		
-	#ewutils.logMsg("Dedorned {} costumes after full moon ended.".format(costume_count))
+	ewutils.logMsg("Dedorned {} costumes after full moon ended.".format(costume_count))

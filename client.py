@@ -831,8 +831,6 @@ async def on_ready():
 
 					# Advance the time and potentially change weather.
 					market_data.clock += 1
-					if not ewutils.check_fursuit_active(market_data.id_server):
-						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
@@ -905,6 +903,9 @@ async def on_ready():
 
 
 					market_data.persist()
+
+					if not ewutils.check_fursuit_active(market_data.id_server):
+						ewcosmeticitem.dedorn_all_costumes()
 
 					if market_data.clock == 6 and market_data.day % 8 == 0:
 						await ewapt.rent_time(id_server=server.id)

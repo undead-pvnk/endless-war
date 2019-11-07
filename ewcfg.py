@@ -9632,7 +9632,7 @@ poi_list = [
 			"candy shop",
 		],
 		str_name="Slimy Persuits",
-		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting prescense and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In post-apocalyptic hellscape like NLCakaNM, it seems some traditions have still survived.",
+		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting presence and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In a post-apocalyptic hellscape like NLACakaNM, it seems some traditions have still survived.",
 		coord=(85, 12),
 		pvp=False,
 		vendors=[vendor_slimypersuits],
