@@ -2355,7 +2355,7 @@ def wef_bat(ctn = None):
 	
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (3 - min(time_lastattack, 3) **2 / 3) / 13 * 10
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
@@ -2509,7 +2509,7 @@ def wef_nunchucks(ctn = None):
 	user_mutations = ctn.user_data.get_mutations()
 
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (3 - min(time_lastattack, 3) ** 2 / 3) / 100 * 55
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
 
 	for count in range(4):
 		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
@@ -2758,7 +2758,7 @@ def wef_bass(ctn = None):
 	
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (3 - min(time_lastattack, 3) ** 2 / 3) / 13 * 10
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
@@ -3033,9 +3033,10 @@ weapon_list = [
 		fn_effect = wef_bat,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_bat_kills,
 		sap_cost = 2,
-		captcha_length = 4
+		captcha_length = 2
 	),	
 	EwWeapon( # 8
 		id_weapon = weapon_id_brassknuckles,
@@ -3062,9 +3063,10 @@ weapon_list = [
 		fn_effect = wef_brassknuckles,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_brassknuckles_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 2
 	),
 	EwWeapon( # 9
 		id_weapon = weapon_id_katana,
@@ -3092,9 +3094,10 @@ weapon_list = [
 		fn_effect = wef_katana,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_katana_kills,
 		sap_cost = 3,
-		captcha_length = 6
+		captcha_length = 8
 	),
 	EwWeapon( # 10
 		id_weapon = weapon_id_broadsword,
@@ -3126,10 +3129,10 @@ weapon_list = [
 		clip_size = 1,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
+		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_broadsword_kills,
 		sap_cost = 4,
-		captcha_length = 8
+		captcha_length = 4
 	),
 	EwWeapon( # 11
 		id_weapon = weapon_id_nunchucks,
@@ -3158,9 +3161,10 @@ weapon_list = [
 		fn_effect = wef_nunchucks,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills,
 		sap_cost = 2,
-		captcha_length = 6
+		captcha_length = 2
 	),
 	EwWeapon( # 12
 		id_weapon = weapon_id_scythe,
@@ -3185,9 +3189,10 @@ weapon_list = [
 		fn_effect = wef_scythe,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_scythe_kills,
 		sap_cost = 3,
-		captcha_length = 8
+		captcha_length = 4
 	),
 	EwWeapon( # 13	
 		id_weapon = weapon_id_yoyo,
@@ -3214,6 +3219,7 @@ weapon_list = [
 		fn_effect = wef_yoyo,
 		price = 10000,
 		vendors = [vendor_dojo],
+		classes= [weapon_class_captcha],
 		stat = stat_yoyo_kills,
 		sap_cost = 1,
 		captcha_length = 2
@@ -3364,8 +3370,8 @@ weapon_list = [
 		str_description = "It's a pickaxe.",
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
-		sap_cost = 1,
-		captcha_length = 4
+		sap_cost = 2,
+		captcha_length = 2
 	),
 	EwWeapon(  # 19
 		id_weapon = "fishingrod",
@@ -3395,8 +3401,8 @@ weapon_list = [
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
-		sap_cost = 1,
-		captcha_length = 4
+		sap_cost = 2,
+		captcha_length = 2
 	),
 	EwWeapon(  # 20
 		id_weapon = weapon_id_bass,
@@ -3422,7 +3428,7 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_bass_kills,
 		sap_cost = 2,
-		captcha_length = 4
+		captcha_length = 2
 	),
 	EwWeapon(  # 21
 		id_weapon = weapon_id_umbrella,
