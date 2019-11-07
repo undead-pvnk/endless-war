@@ -1093,7 +1093,15 @@ async def decrease_food_multiplier(id_user):
 
 async def spawn_enemies(id_server = None):
 	if random.randrange(3) == 0:
-		resp_cont = ewhunting.spawn_enemy(id_server)
+		weathertype = ewcfg.enemy_weathertype_normal
+
+		market_data = EwMarket(id_server=id_server)
+		# If it's raining, an enemy has  1/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
+		if market_data.weather == ewcfg.weather_bicarbonaterain:
+			if random.randrange(2) == 0:
+				weathertype = ewcfg.enemy_weathertype_rainresist
+		
+		resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
 
 		await resp_cont.post()
 
@@ -1132,10 +1140,7 @@ def get_move_speed(user_data):
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
 
-	if ewcfg.mutation_id_organicfursuit in mutations and (
-		(market_data.day % 31 == 0 and market_data.clock >= 20)
-		or (market_data.day % 31 == 1 and market_data.clock < 6)
-	):
+	if ewcfg.mutation_id_organicfursuit in mutations and check_fursuit_active(user_data.id_server):
 		move_speed *= 2
 	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
 		move_speed *= 2
@@ -1144,10 +1149,6 @@ def get_move_speed(user_data):
 
 	if user_data.time_expirpvp >= time_now:
 		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
-		
-	# TODO: Remove after Double Halloween
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 2
 
 	return move_speed
 
@@ -1290,7 +1291,6 @@ def check_confirm_or_cancel(string):
 	if string.content.lower() == ewcfg.cmd_confirm or string.content.lower() == ewcfg.cmd_cancel:
 		return True
 	
-# TODO: Remove after Double Halloween
 def check_trick_or_treat(string):
 	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
 		return True
@@ -1355,3 +1355,11 @@ def sap_tick(id_server):
 				enemy_data.persist()
 	except:
 		logMsg("An error occured in sap tick for server {}".format(id_server))
+
+def check_fursuit_active(id_server):
+	market_data = EwMarket(id_server=id_server)
+	if (market_data.day % 31 == 0 and market_data.clock >= 20
+	or market_data.day % 31 == 1 and market_data.clock < 6):
+		return True
+	else:
+		return False

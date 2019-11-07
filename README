@@ -77,8 +77,6 @@ CREATE TABLE markets (
 	donated_poudrins bigint NOT NULL DEFAULT '0',
 	caught_fish int NOT NULL DEFAULT '0',
 	splattered_slimes bigint NOT NULL DEFAULT '0',
-	horseman_deaths int NOT NULL DEFAULT '0',
-	horseman_timeofdeath bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server)
 );
@@ -225,6 +223,7 @@ CREATE TABLE enemies (
 	raidtimer bigint NOT NULL DEFAULT '0',
 	rare_status int NOT NULL DEFAULT '0',
 	hardened_sap int NOT NULL DEFAULT '0',
+	weathertype varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
 );
