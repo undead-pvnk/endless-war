@@ -12,6 +12,7 @@ import ewitem
 from ewmarket import EwMarket
 
 from ew import EwUser
+from ewstatuseffects import EwStatusEffect
 
 class EwMutationFlavor:
 
