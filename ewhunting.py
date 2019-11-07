@@ -78,6 +78,9 @@ class EwEnemy:
 	
 	# Determines if an enemy should use its rare variant or not
 	rare_status = 0
+	
+	# What kind of weather the enemy is suited to
+	weathertype = 0
 
 	# sap armor
 	hardened_sap = 0
@@ -106,7 +109,7 @@ class EwEnemy:
 
 				# Retrieve object
 				cursor.execute(
-					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
+					"SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM enemies{}".format(
 						ewcfg.col_id_enemy,
 						ewcfg.col_id_server,
 						ewcfg.col_enemy_slimes,
@@ -127,6 +130,7 @@ class EwEnemy:
 						ewcfg.col_enemy_raidtimer,
 						ewcfg.col_enemy_rare_status,
 						ewcfg.col_enemy_hardened_sap,
+						ewcfg.col_enemy_weathertype,
 						query_suffix
 					))
 				result = cursor.fetchone();
@@ -153,6 +157,7 @@ class EwEnemy:
 					self.raidtimer = result[17]
 					self.rare_status = result[18]
 					self.hardened_sap = result[19]
+					self.weathertype = result[20]
 
 			finally:
 				# Clean up the database handles.
@@ -169,7 +174,7 @@ class EwEnemy:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO enemies({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_enemy,
 					ewcfg.col_id_server,
 					ewcfg.col_enemy_slimes,
@@ -190,6 +195,7 @@ class EwEnemy:
 					ewcfg.col_enemy_raidtimer,
 					ewcfg.col_enemy_rare_status,
 					ewcfg.col_enemy_hardened_sap,
+					ewcfg.col_enemy_weathertype,
 				), (
 					self.id_enemy,
 					self.id_server,
@@ -211,6 +217,7 @@ class EwEnemy:
 					self.raidtimer,
 					self.rare_status,
 					self.hardened_sap,
+					self.weathertype,
 				))
 
 			conn.commit()
@@ -356,8 +363,10 @@ class EwEnemy:
 				slimes_damage /= 2  # specific to juvies
 			if enemy_data.enemytype == ewcfg.enemy_type_microslime:
 				slimes_damage *= 20  # specific to microslime
+				
+			if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
+				slimes_damage *= 1.5
 
-			
 			slimes_dropped = target_data.totaldamage + target_data.slimes
 
 			target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
@@ -784,6 +793,7 @@ async def summonenemy(cmd):
 		enemy.level = level_byslime(enemy.slimes)
 		enemy.lifetime = time_now
 		enemy.identifier = set_identifier(poi.id_poi, user_data.id_server)
+		enemy.weathertype = ewcfg.enemy_weathertype_normal
 		
 		# Re-assign rare_status to 0 so custom names don't confuse the dict in ewcfg
 		enemy.rare_status = 0
@@ -862,7 +872,7 @@ async def enemy_perform_action(id_server):
 	#ewutils.logMsg("time spent on performing enemy actions: {}".format(time_end - time_start))
 
 # Spawns an enemy in a randomized outskirt district. If a district is full, it will try again, up to 5 times.
-def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
+def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weather = None):
 	time_now = int(time.time())
 	response = ""
 	ch_name = ""
@@ -966,10 +976,12 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 		enemy.poi = chosen_poi
 		enemy.identifier = set_identifier(chosen_poi, id_server)
 		enemy.hardened_sap = int(enemy.level / 2)
+		enemy.weathertype = weather
 		
-		market_data = EwMarket(id_server=id_server)
-		if (enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman or enemytype == ewcfg.enemy_type_doublehorse) and market_data.horseman_deaths >= 1:
-			enemy.slimes *= 1.5
+		if weather != ewcfg.enemy_weathertype_normal:
+			if weather == ewcfg.enemy_weathertype_rainresist:
+				enemy.display_name = "Bicarbonate {}".format(enemy.display_name)
+				enemy.slimes *= 2
 
 		enemy.persist()
 
@@ -978,16 +990,6 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None):
 			if enemytype == ewcfg.enemy_type_sandbag:
 				response = "A new {} just got sent in. It's level {}, and has {} slime.\n*'Don't hold back!'*, the Dojo Master cries out from afar.".format(enemy.display_name, enemy.level, enemy.slimes)
 			
-			# TODO: Remove after Double Halloween
-			if enemytype == ewcfg.enemy_type_doubleheadlessdoublehorseman:
-				response = "***BEHOLD!!!***  The {} has arrived to challenge thee! He is of {} slime, and {} in level. Happy Double Halloween, you knuckleheads!".format(enemy.display_name, enemy.slimes, enemy.level)
-				
-				if market_data.horseman_deaths >= 1:
-					response += "\n***BACK SO SOON, MORTALS? I'M JUST GETTING WARMED UP, BAHAHAHAHAHAHA!!!***"
-				
-			if enemytype == ewcfg.enemy_type_doublehorse:
-				response = "***HARK!!!***  Clopping echoes throughout the cave! The {} has arrived with {} slime, and {} levels. And on top of him rides...".format(enemy.display_name, enemy.slimes, enemy.level)
-		
 		ch_name = ewcfg.id_to_poi.get(enemy.poi).channel
 
 	if len(response) > 0 and len(ch_name) > 0:
@@ -1494,6 +1496,7 @@ def get_enemy_data(enemy_type):
 	enemy.id_target = ""
 	enemy.raidtimer = 0
 	enemy.rare_status = rare_status
+	enemy.weathertype = ""
 		
 	if enemy_type in ewcfg.raid_bosses:
 		enemy.life_state = ewcfg.enemy_lifestate_unactivated

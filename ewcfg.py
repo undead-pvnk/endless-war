@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.11hwx2"
+version = "v3.12"
 
 dir_msgqueue = 'msgqueue'
 
@@ -85,8 +85,7 @@ poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
-poi_id_rpcity = "rpcity"
-poi_id_underworld = "underworld"
+poi_id_slimypersuits = "slimypersuits"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -654,7 +653,6 @@ cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
-cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -669,6 +667,7 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
+cmd_boot = cmd_prefix + 'boot'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
@@ -707,7 +706,6 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
-# TODO: Remove after Double Halloween
 cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
@@ -833,9 +831,7 @@ slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
-#slimes_hauntmax = 20000
-# TODO: Change back after Double Halloween
-slimes_hauntmax = 50000
+slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
@@ -852,11 +848,10 @@ hunger_pershot = 10
 hunger_perspar = 10
 hunger_perfarm = 50
 hunger_permine = 1
-hunger_perminereset = 10
+hunger_perminereset = 25
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
-# TODO: Remove after Double Halloween
 hunger_pertrickortreat = 6
 
 # ads
@@ -882,9 +877,7 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
-# TODO: Remove after Double Halloween
 acquisition_trickortreating = "trickortreating"
-horseman_death_cooldown = 12 * 3600 * 4  # 2 days
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -1076,9 +1069,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 # Cooldowns
 cd_kill = 5
 cd_spar = 60
-#cd_haunt = 600
-# TODO: Change back after Double Halloween
-cd_haunt = 180
+cd_haunt = 600
 cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
@@ -1151,7 +1142,7 @@ emote_dice3 = "<:dice3:436942524041527298>"
 emote_dice4 = "<:dice4:436942524406300683>"
 emote_dice5 = "<:dice5:436942524444049408>"
 emote_dice6 = "<:dice6:436942524469346334>"
-emote_negaslime = "<:negaslime:453826200616566786>"
+emote_negaslime = "<:ns:453826200616566786>"
 emote_bustin = "<:bustin:455194248741126144>"
 emote_ghost = "<:lordofghosts:434002083256205314>"
 emote_slimefull = "<:slimefull:496397819154923553>"
@@ -1163,7 +1154,7 @@ emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
 emote_srs = "<:srs:631859962519224341>"
-emote_staydead = "<:staydead:506840095714836480>"
+emote_staydead = "<:sd:506840095714836480>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1429,6 +1420,7 @@ col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
 col_enemy_rare_status = 'rare_status'
 col_enemy_hardened_sap = 'hardened_sap'
+col_enemy_weathertype = 'weathertype'
 
 # Database column for the status of districts with locks on them
 col_locked_status = 'locked_status'
@@ -1448,9 +1440,6 @@ col_decayed_slimes = 'decayed_slimes'
 col_donated_slimes = 'donated_slimes'
 col_donated_poudrins = 'donated_poudrins'
 col_splattered_slimes = 'splattered_slimes'
-# TODO: Remove after Double Halloween
-col_horseman_deaths = 'horseman_deaths'
-col_horseman_timeofdeath = 'horseman_timeofdeath'
 
 # Database columns for stocks
 col_stock = 'stock'
@@ -1752,7 +1741,7 @@ vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
-vendor_rpcity = "RP City" #You can buy costume creation kits here
+vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1770,6 +1759,8 @@ item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 item_id_costumekit = "costumekit"
+item_id_doublehalloweengrist = "doublehalloweengrist"
+item_id_whitelineticket = "ticket"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1782,9 +1773,9 @@ item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
-item_id_sni = "sni"
+item_id_snipercannon = "snipercannon"
 item_id_twixten = "twixten"
-item_id_slimeybears = "slimeybears"
+item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
 item_id_magickspatchkids = "magickspatchkids"
 item_id_atms = "atms"
@@ -1802,42 +1793,6 @@ item_id_strauberryshortcakes = "strauberryshortcakes"
 item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
-
-# TODO: Remove after Double Halloween
-# A list used to check if certain items can be made into Double Halloween Grist
-candy_ids_list = [
-	item_id_paradoxchocs,
-	item_id_licoricelobsters,
-	item_id_chocolateslimecorpbadges,
-	item_id_munchies,
-	item_id_sni,
-	item_id_twixten,
-	item_id_slimeybears,
-	item_id_marsbar,
-	item_id_magickspatchkids,
-	item_id_atms,
-	item_id_seanis,
-	item_id_candybungis,
-	item_id_turstwerthers,
-	item_id_poudrinpops,
-	item_id_juvieranchers,
-	item_id_krakel,
-	item_id_swedishbassedgods,
-	item_id_bustahfingers,
-	item_id_endlesswarheads,
-	item_id_n8heads,
-	item_id_strauberryshortcakes,
-	item_id_chutzpahcherries,
-	item_id_n3crunch,
-	item_id_slimesours,
-]
-
-item_id_doublehalloweengrist = "doublehalloweengrist"
-item_id_whitelineticket = "ticket"
-
-# Possibly NOT remove after Double Halloween? 
-# In any case, this is so that people who gain slime from the horseman don't use it to cause any major slime count shifts for the kingpins
-slimes_toboss_max = 1000000
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -2239,7 +2194,6 @@ item_list = [
 		],
 		str_name = "Double Halloween Costume Kit",
 		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
-		vendors = [vendor_rpcity],
 		price = 50000,
 	),
 	EwGeneralItem(
@@ -3775,54 +3729,62 @@ attack_type_map = {}
 for attack_type in enemy_attack_type_list:
 	attack_type_map[attack_type.id_type] = attack_type
 
+# Weather IDs
+weather_sunny = "sunny"
+weather_rainy = "rainy"
+weather_windy = "windy"
+weather_lightning = "lightning"
+weather_cloudy = "cloudy"
+weather_snow = "snow"
+weather_foggy = "foggy"
 weather_bicarbonaterain = "bicarbonaterain"
 
 # All weather effects in the game.
 weather_list = [
 	EwWeather(
-		name = "sunny",
+		name = weather_sunny,
 		sunrise = "The smog is beginning to clear in the sickly morning sunlight.",
 		day = "The sun is blazing on the cracked streets, making the air shimmer.",
 		sunset = "The sky is darkening, the low clouds an iridescent orange.",
 		night = "The moon looms yellow as factories belch smoke all through the night."
 	),
 	EwWeather(
-		name = "rainy",
+		name = weather_rainy,
 		sunrise = "Rain gently beats against the pavement as the sky starts to lighten.",
 		day = "Rain pours down, collecting in oily rivers that run down sewer drains.",
 		sunset = "Distant thunder rumbles as it rains, the sky now growing dark.",
 		night = "Silverish clouds hide the moon, and the night is black in the heavy rain."
 	),
 	EwWeather(
-		name = "windy",
+		name = weather_windy,
 		sunrise = "Wind whips through the city streets as the sun crests over the horizon.",
 		day = "Paper and debris are whipped through the city streets by the winds, buffetting pedestrians.",
 		sunset = "The few trees in the city bend and strain in the wind as the sun slowly sets.",
 		night = "The dark streets howl, battering apartment windows with vicious night winds."
 	),
 	EwWeather(
-		name = "lightning",
+		name = weather_lightning,
 		sunrise = "An ill-omened morning dawns as lighting streaks across the sky in the sunrise.",
 		day = "Flashes of bright lightning and peals of thunder periodically startle the citizens out of their usual stupor.",
 		sunset = "Bluish white arcs of electricity tear through the deep red dusky sky.",
 		night = "The dark night periodically lit with bright whitish-green bolts that flash off the metal and glass of the skyscrapers."
 	),
 	EwWeather(
-		name = "cloudy",
+		name = weather_cloudy,
 		sunrise = "The dim morning light spreads timidly across the thickly clouded sky.",
 		day = "The air hangs thick, and the pavement is damp with mist from the clouds overhead.",
 		sunset = "The dusky light blares angry red on a sky choked with clouds and smog.",
 		night = "Everything is dark and still but the roiling clouds, reflecting the city's eerie light."
 	),
 	EwWeather(
-		name = "snow",
+		name = weather_snow,
 		sunrise = "The morning sun glints off the thin layer or powdery snow that blankets the city.",
 		day = "Flakes of snow clump together and whip through the bitter cold air in the winder wind.",
 		sunset = "The cold air grows colder as the sky darkens and the snow piles higher in the streets.",
 		night = "Icy winds whip through the city, white snowflakes glittering in the black of night."
 	),
 	EwWeather(
-		name = "foggy",
+		name = weather_foggy,
 		sunrise = "Fog hangs thick in the air, stubbornly refusing to dissipate as the sun clears the horizon.",
 		day = "You can barely see to the next block in the sickly greenish NLAC smog.",
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
@@ -5518,7 +5480,7 @@ food_list = [
 		str_name = 'Paradox Chocs',
 		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
 		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_twixten,
@@ -5530,31 +5492,32 @@ food_list = [
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_sni,
+		id_food = item_id_snipercannon,
 		alias = [
-			"blatantracism",
+			"sniper",
+			"cannon",
 		],
 		recover_hunger = 100,
 		price = 100,
-		str_name = 'SNI-',
-		str_eat = "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
-		str_desc = "A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
-		acquisition = acquisition_trickortreating
+		str_name = 'Sniper Cannon',
+		str_eat = "You take a bite out of your Sniper Cannon bar.",
+		str_desc = "A chocolate bar with wafers on the inside. It's shaped like a bulky, rectangular version of the cannon found on the arm of the Unnerving Fighting Operator. On the back of the wrapper, there's some text that reads: 'We at Slimy Persuits had only the best intentions in our initial run of the [REDACTED] bar. We hope this rebranding will allow you to continue to enjoy our products without having to fear of blatant racism.'",
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_slimeybears,
+		id_food = item_id_slimybears,
 		alias = [
 			"bears",
 		],
 		recover_hunger = 80,
 		price = 100,
-		str_name = 'Slimey Bears',
-		str_eat = "You stash a fistfull of Slimey Bears right into your gullet, chewing them thoroughly.",
-		str_desc = "A packet of Slimey Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
-		acquisition = acquisition_trickortreating
+		str_name = 'Slimy Bears',
+		str_eat = "You stash a fistfull of Slimy Bears right into your gullet, chewing them thoroughly.",
+		str_desc = "A packet of Slimy Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_n8heads,
@@ -5566,7 +5529,7 @@ food_list = [
 		str_name = 'N8heads',
 		str_eat = "You chew on a N8head. It stopped tasting good long before you were done sinking your teeth into it, but you felt committed enough to finish what you started. Fuckin shill.",
 		str_desc = "A N8heads packet. They're bars of sour taffy, each with his signature shades imprinted onto them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_turstwerthers,
@@ -5578,7 +5541,7 @@ food_list = [
 		str_name = 'Turstwerthers',
 		str_eat = "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
 		str_desc = "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_candybungis,
@@ -5590,7 +5553,7 @@ food_list = [
 		str_name = 'Candy (Bungis)',
 		str_eat = "You eat through the Candy (Bungis). Rather than imprint the temporary tattoo, you just shove the whole thing into your mouth and chew through it.",
 		str_desc = "A rolled up fruit snack. An layer of ink it has allows you to imprint an image of Sky (Bungis) onto your tongue.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_licoricelobsters,
@@ -5602,7 +5565,7 @@ food_list = [
 		str_name = 'Licorice Lobsters',
 		str_eat = "You chomp on the Licorice Lobsters. Their slight bittersweetness fills you with memories of days gone by.",
 		str_desc = "Yup. They're lobsters.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_chocolateslimecorpbadges,
@@ -5614,7 +5577,7 @@ food_list = [
 		str_name = 'Chocolate Slimecorp Badges',
 		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
 		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_poudrinpops,
@@ -5626,7 +5589,7 @@ food_list = [
 		str_name = 'Poudrin Pops',
 		str_eat = "You crush the poudrin pops with your teeth alone. You don't gain any slime, but they do taste amazing.",
 		str_desc = "Hard, green candy, meant to resemble Slime Poudrins. They're placed atop plastic rings, meant to be worn on your finger as you lick away.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_atms,
@@ -5638,7 +5601,7 @@ food_list = [
 		str_name = "ATm's",
 		str_eat = "You snack on the packet of ATm's. The hard shell pairs nicely with the milk chocolate on the inside.",
 		str_desc = "A packet of ATm's. They're all small, spherical chocolates with the @ symbol on them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_seanis,
@@ -5650,7 +5613,7 @@ food_list = [
 		str_name = 'Seanis',
 		str_eat = "You chomp on the Seanis, slicing them in twain over and over. By the time you're finished with them, you've developed three cavities.",
 		str_desc = "A packet of hard candies. They're small tablets, colored in fuchsia, purple, and seafoam green.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_bustahfingers,
@@ -5662,7 +5625,7 @@ food_list = [
 		str_name = 'Bustahfingers',
 		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
 		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of chocolate in the middle.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_marsbar,
@@ -5674,7 +5637,7 @@ food_list = [
 		str_name = 'Mars Bar',
 		str_eat = "You take a bite out of the mars bar. Shockingly, the nicotine on the inside pairs well with the creamy sweetness of the white chocolate shell.",
 		str_desc = "A small cylindrical candy bar, unsurprisingly shaped like a cigarette. What is surprising, however, is that it contains tiny traces of nicotine on the inside.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_juvieranchers,
@@ -5686,7 +5649,7 @@ food_list = [
 		str_name = 'Juvie Ranchers',
 		str_eat = "You suck on the Juvie Ranchers. The Dire Apple ones are particularly sour.",
 		str_desc = "A bag of hard candies, all flavored after the various crops of the city.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_swedishbassedgods,
@@ -5698,7 +5661,7 @@ food_list = [
 		str_name = 'Swedish Bassed Gods',
 		str_eat = "You chew through the Swedish Bassed Gods. Despite their unassuming appearance, they taste amazing. Truly a snack worthy of praise. Or would it be 'appraisal', in this case? Ah, forget it.",
 		str_desc = "A packet of gummies shaped like the Bassed God. On the back of the packet, there's an advertisement for the Fishing Guild.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food=item_id_endlesswarheads,
@@ -5710,7 +5673,7 @@ food_list = [
 		str_name='Endless Warheads',
 		str_eat="You chew through the Endless Warheads. Combining different colored ones inside your mouth sets off a burst of flavor. Sick!!",
 		str_desc="A bag of sour candies coated in sugar. They're all multicolored, and shaped like the familiar obelisk it gets its name from.",
-		acquisition=acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_chutzpahcherries,
@@ -5722,7 +5685,7 @@ food_list = [
 		str_name = 'Chutzpah Cherries',
 		str_eat = "You gobble up the Chutzpah Cherries. Who knew euthanasia could taste this good!",
 		str_desc = "A small box of dark red gummies, each one bearing the face of a slimeoid.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_slimesours,
@@ -5734,7 +5697,7 @@ food_list = [
 		str_name = 'Slime Sours',
 		str_eat = "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seemingly have no connection with the death raining from above.",
 		str_desc = "A small plastic bag of gumdrops, each as green as slime itself. Apparently they're made entirely by hand.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_munchies,
@@ -5746,7 +5709,7 @@ food_list = [
 		str_name = 'Munchies',
 		str_eat = "You gorge yourself on the Munchies. What seemed like such a basic snack item reveals itself to be incredibly addictive. Before you know it, the bag is empty, leaving you to reflect on your gluttony.",
 		str_desc = "A bag of crackers, with a thin layer of cream in the middle. They're all shaped like jester hats.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_magickspatchkids,
@@ -5758,7 +5721,7 @@ food_list = [
 		str_name = 'Magicks Patch Kids',
 		str_eat = "You munch on the Magicks Patch Kids. Sour. Sweet. !dab.",
 		str_desc = "People are rather split on these. Some find them too sour, while others claim it to have an 'acquired taste'.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_krakel,
@@ -5770,7 +5733,7 @@ food_list = [
 		str_name = 'Krakel',
 		str_eat = "You take a large bite out of the Krakel bar. The rice lining the interior gives it a nice texture, and offsets the bitterness of the dark chocolate a bit.",
 		str_desc = "A thick slab of dark chocolate. An engraving on the back reads 'SLURP SLIME, BUSTERS'. Go figure.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_strauberryshortcakes,
@@ -5782,7 +5745,7 @@ food_list = [
 		str_name = 'Strauberry Shortcakes',
 		str_eat = "You toss the shortcakes into your mouth one at a time, savoring every bite. Even though they're manufactured, somehow you feel like a lot of love went into making them. Maybe it's just because of all the sugar.",
 		str_desc = "A packet containing two small pastries. An anchor symbol made of pink frosting is drawn onto both of them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_n3crunch,
@@ -5794,7 +5757,7 @@ food_list = [
 		str_name = 'N3 Crunch',
 		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
 		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = "sourpussbread",
@@ -8724,10 +8687,10 @@ poi_list = [
 			"slimeoid"
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
-		str_desc = "Huh, this is weird.\n\nUsually, this lobby is full of researchers scurrying about every which way, with some unpaid intern roleplaying receptionist. But… everything is quiet and dark, not a soul in sight. Where’d everybody go?\n\nIt looks like the elevator is working, at least. Alas, it requires you to enter an identification number, presumably to confirm you really work for SlimeCorp and aren’t a random juvenile who teleported into this place while it was closed. You’re pretty sure you remember getting your hands on an identification card a long, long time ago. Wonder if it’ll work?\n\n*Use the !verify command followed by the correct identification number to activate the elevator.*",
+		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
-		coord = (64, 6),
+		coord = (67, 8),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_brawlden
@@ -9825,59 +9788,26 @@ poi_list = [
 		mother_district = poi_id_glocksbury,
 		is_subzone = True
 	),
-	# TODO: Remove after Double Halloween
-	EwPoi( # RP City
-		id_poi = poi_id_rpcity,
-		alias = [
-			"rp",
-			"rp city",
-			"roleplay city",
-			"rpc",
-			"costume store",
-			"costumestore",
+	EwPoi( # Slimy Persuits
+		id_poi=poi_id_slimypersuits,
+		alias=[
+			"sp",
+			"slimypersuits",
+			"slimeypersuits",
+			"candystore",
+			"candyshop",
+			"candy store",
+			"candy shop",
 		],
-		str_name = "RP City",
-		str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
-		coord = (63, 18),
-		pvp = False,
-		vendors = [vendor_rpcity],
-		channel = "rp-city",
-		role = "RP City",
-		mother_district = poi_id_littlechernobyl,
-		is_subzone = True
-	),
-	EwPoi(  # Underworld Subway Station
-		id_poi = poi_id_underworld_subway_station,
-		alias = [
-			"underworldsubwaystation",
-			"uws",
-			"us"
-		],
-		str_name = "The Underworld Subway Station",
-		str_desc = str_generic_subway_station_description + "\n\nExits into The Underworld.",
-		coord = (63, 44),
-		channel = "underworld-subway-station",
-		role = "Underworld Subway Station",
-		pvp = False,
-		is_subzone = True,
-		mother_district = poi_id_underworld,
-		is_transport_stop = True,
-		transport_lines = set()
-	),
-	EwPoi( # The Underworld
-		id_poi = poi_id_underworld,
-		alias = [
-			"uw",
-			"undertale",
-			"underground",
-		],
-		str_name = "The Underworld, last stop of the White Line",
-		str_desc = "A cave underneath the city, well-lit by trash can bonfires scattered about. The walls are decorated with crude depictions of ENDLESS WAR. Strangely enough, there's a punching bag off in the distance, with what looks to be a picture of Phoebus taped onto it.",
-		coord = (63, 46),
-		channel = "the-underworld",
-		role = "Underworld",
+		str_name="Slimy Persuits",
+		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting presence and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In a post-apocalyptic hellscape like NLACakaNM, it seems some traditions have still survived.",
+		coord=(85, 12),
 		pvp=False,
-		is_capturable=False,
+		vendors=[vendor_slimypersuits],
+		channel="slimy-persuits",
+		role="Slimy Persuits",
+		mother_district=poi_id_newnewyonkers,
+		is_subzone=True
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -9994,19 +9924,18 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	# TODO: Comment back in after Double Halloween
-	EwPoi(  # Subway train on the white line
-		id_poi = poi_id_subway_white01,
-		str_name = "A Subway Train",
-		str_desc = str_generic_subway_description, # TODO: add description
-		channel = channel_subway_white01,
-		role = "Subway Train W-01",
-		pvp = False,
-		is_transport = True,
-		transport_type = transport_type_subway,
-		default_line = transport_line_subway_white_eastbound,
-		default_stop = poi_id_dt_subway_station
-	),
+	# EwPoi(  # Subway train on the white line
+	# 	id_poi = poi_id_subway_white01,
+	# 	str_name = "A Subway Train",
+	# 	str_desc = str_generic_subway_description, # TODO: add description
+	# 	channel = channel_subway_white01,
+	# 	role = "Subway Train W-01",
+	# 	pvp = False,
+	# 	is_transport = True,
+	# 	transport_type = transport_type_subway,
+	# 	default_line = transport_line_subway_white_eastbound,
+	# 	default_stop = poi_id_dt_subway_station
+	# ),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -10735,7 +10664,6 @@ poi_list = [
 	),
 
 ]
-poi_list += ewdebug.debugpois
 
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
@@ -11022,46 +10950,45 @@ transport_lines = [
 			}
 
 		),
-	# TODO: Comment back in after Double Halloween
-	EwTransportLine( # white subway line from downtown to juvies row
-		id_line = transport_line_subway_white_eastbound,
-		alias = [
-			"whiteeastline",
-			"whiteeast",
-			"eastwhite",
-			"whitetojuviesrow",
-			"whitetojuvies",
-			"whitetojr"
-		    ],
-		first_stop = poi_id_underworld_subway_station,
-		last_stop = poi_id_jr_subway_station,
-		next_line = transport_line_subway_white_westbound,
-		str_name = "The white subway line towards Juvie's Row",
-		schedule = {
-			poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-		    }
-		),
-	EwTransportLine( # white subway line from juvies row to downtown
-		id_line = transport_line_subway_white_westbound,
-		alias = [
-			"whitewestline",
-			"whitewest",
-			"westwhite",
-			"whitetounderworld",
-			"whitetouw"
-		    ],
-		first_stop = poi_id_jr_subway_station,
-		last_stop = poi_id_underworld_subway_station,
-		next_line = transport_line_subway_white_eastbound,
-		str_name = "The white subway line towards The Underworld",
-		schedule = {
-			poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-			poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
-			poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
-		    }
-		),
+	# EwTransportLine( # white subway line from downtown to juvies row
+	# 	id_line = transport_line_subway_white_eastbound,
+	# 	alias = [
+	# 		"whiteeastline",
+	# 		"whiteeast",
+	# 		"eastwhite",
+	# 		"whitetojuviesrow",
+	# 		"whitetojuvies",
+	# 		"whitetojr"
+	# 	    ],
+	# 	first_stop = poi_id_underworld_subway_station,
+	# 	last_stop = poi_id_jr_subway_station,
+	# 	next_line = transport_line_subway_white_westbound,
+	# 	str_name = "The white subway line towards Juvie's Row",
+	# 	schedule = {
+	# 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+	# 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+	# 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+	# 	    }
+	# 	),
+	# EwTransportLine( # white subway line from juvies row to downtown
+	# 	id_line = transport_line_subway_white_westbound,
+	# 	alias = [
+	# 		"whitewestline",
+	# 		"whitewest",
+	# 		"westwhite",
+	# 		"whitetounderworld",
+	# 		"whitetouw"
+	# 	    ],
+	# 	first_stop = poi_id_jr_subway_station,
+	# 	last_stop = poi_id_underworld_subway_station,
+	# 	next_line = transport_line_subway_white_eastbound,
+	# 	str_name = "The white subway line towards The Underworld",
+	# 	schedule = {
+	# 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+	# 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+	# 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+	# 	    }
+	# 	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -11914,18 +11841,6 @@ smelting_recipe_list = [
 		},
 		products = ['leatherbed']
 	),
-    # TODO: Remove after Double Halloween
-    EwSmeltingRecipe(
-        id_recipe = "ticket",
-        str_name = "Ticket to the White Line",
-        alias = [
-            "tickettohell",
-        ],
-        ingredients = {
-            item_id_doublehalloweengrist: 100,
-        },
-        products = ['ticket']
-    )
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13186,7 +13101,7 @@ mutations = [
 		id_mutation = mutation_id_thickerthanblood,
 		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to Thicker Than Blood.",
 		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to Thicker Than Blood.",
-		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. ",
+		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. Its effects are diminished on hunted enemies, however.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fungalfeaster,
@@ -13707,30 +13622,12 @@ for m in cosmetic_items_list:
 	else:
 		pass
 
-# TODO: Remove after Double Halloween
 # Gather all the items that can be the result of trick-or-treating.
 trickortreat_results = []
 
 for t in food_list:
 	if t.acquisition == acquisition_trickortreating:
 		trickortreat_results.append(t)
-	else:
-		pass
-
-# Gather the Halloween Grist
-grist_results = []
-
-for g in item_list:
-	if g.context == 'dhgrist':
-		grist_results.append(g)
-	else:
-		pass
-	
-# Gather the Medallion
-medallion_results = []
-for m in cosmetic_items_list:
-	if m.ingredients == 'HorsemanSoul':
-		medallion_results.append(m)
 	else:
 		pass
 
@@ -13761,6 +13658,7 @@ status_evasive_id = "evasive"
 status_taunted_id = "taunted"
 status_aiming_id = "aiming"
 status_sapfatigue_id = "sapfatigue"
+status_rerollfatigue_id = "rerollfatigue"
 
 time_expire_burn = 12
 
@@ -13830,6 +13728,10 @@ status_effect_list = [
 		str_describe = "They are suffering from sap fatigue.",
 		str_describe_self = "You are suffering from sap fatigue.",
 	),
+	EwStatusEffectDef(
+		id_status = status_rerollfatigue_id,
+	),
+	
 ]
 
 status_effects_def_map = {}
@@ -13908,7 +13810,7 @@ help_responses = {
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
-	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look. To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
+	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
 	"mutations": "**Mutations** are helpful bonuses you acquire every five levels. When you acquire a mutation, a short text response will indicate what it can do. To reroll your most recent mutation, you can visit the labs and type **'!rerollmutation'**. To get rid of all your current mutations, you can also do **'!sterilizemutations'**.",
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
@@ -13945,7 +13847,7 @@ help_responses_ordered_keys = [
 
 mutation_descriptions = {
 	mutation_id_spontaneouscombustion: "Upon dying you do damage proportional to your current slime level, calculated as (level^4)/5, hitting everyone in the district. Example: A level 50 player will do 1,250,000 damage.",
-	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin.",
+	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
 	mutation_id_2ndamendment: "One extra equippable gun slot in your inventory.",
@@ -14023,6 +13925,10 @@ enemy_attacktype_molotovbreath = 'molotov breath'
 enemy_attacktype_armcannon = 'arm cannon'
 enemy_attacktype_axe = 'axe'
 enemy_attacktype_hooves = 'hooves'
+
+# Enemy weather types. In the future enemies will make use of this in tandem with the current weather, but for now they can just resist the rain.
+enemy_weathertype_normal = 'normal'
+enemy_weathertype_rainresist = 'rainresist'
 
 # Enemy types
 # Common enemies
@@ -14238,22 +14144,18 @@ grid_type_by_mining_event = {
 	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
 }
 
-# A list of tricks for Double Halloween
-trick_amounts = [10, 100, 1000, 10000]
-
-halloween_tricks_tricker = {
-	10:"You open the door and give {} a hearty '!SPOOK'. They lose 10 slime!",
-	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime!",
-	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime!",
-	10000:"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose 10000 slime!",
-}
-
-halloween_tricks_trickee = {
-	10:"{} opens the door and gives you a hearty '!SPOOK'. You lose 10 slime!",
-	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime!",
-	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime!",
-	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
-}
+halloween_tricks_tricker = [
+	"You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",
+	"You slam open the door and give {} a knuckle sandwich. They lose {} slime!",
+	"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose {} slime!",
+	"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose {} slime!",
+]
+halloween_tricks_trickee = [
+	"{} opens the door and gives you a hearty '!SPOOK'. You lose {} slime!",
+	"{} slams open the door and gives you a knuckle sandwich. You lose {} slime!",
+	"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose {} slime!",
+	"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose {} slime!",
+]
 
 dungeon_tutorial = [
 	#00
