@@ -467,7 +467,7 @@ async def attack(cmd):
 		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
 
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 2)) / 100.0)
+		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 
 		if user_data.weaponskill < 5:
 			miss_mod += (5 - user_data.weaponskill) / 10
@@ -689,6 +689,9 @@ async def attack(cmd):
 				shootee_weapon = shootee_weapon
 			)
 			
+			if shootee_weapon != None:
+				if sap_damage > 0 and ewcfg.weapon_class_defensive in shootee_weapon.classes:
+					sap_damage -= 1
 
 			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
 			slimes_damage *= sap_armor
@@ -1878,7 +1881,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-	slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 2)) / 100.0)
+	slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10

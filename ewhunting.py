@@ -452,6 +452,10 @@ class EwEnemy:
 						market_data = market_data
 					)
 
+					if target_weapon != None:
+						if sap_damage > 0 and ewcfg.weapon_class_defensive in target_weapon.classes:
+							sap_damage -= 1
+
 			
 					# apply hardened sap armor
 					sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
