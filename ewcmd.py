@@ -575,7 +575,7 @@ async def help(cmd):
 		# poi variable assignment used for checking if player is in a vendor subzone or not
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 
-		dojo_topics = ["dojo", "sparring", "combat", "sap", "revolver", "dualpistols", "shotgun", "rifle", "smg", "minigun", "bat", "brassknuckles", "katana", "broadsword", "nunchucks", "scythe", "yo-yo", "bass", "umbrella", "knives", "molotovs", "grenades", "garrote"]
+		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nun-chucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
 
 		if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 			# mine help
@@ -585,7 +585,7 @@ async def help(cmd):
 			response = ewcfg.help_responses['food']
 		elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
 			# dojo help
-			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **!help [weapon]'**."
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **'!help [weapon]'**."
 		elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic in dojo_topics and topic in ewcfg.help_responses:
