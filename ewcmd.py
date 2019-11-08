@@ -575,6 +575,8 @@ async def help(cmd):
 		# poi variable assignment used for checking if player is in a vendor subzone or not
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 
+		dojo_topics = ["dojo", "sparring", "combat", "sap", "revolver", "dualpistols", "shotgun", "rifle", "smg", "minigun", "bat", "brassknuckles", "katana", "broadsword", "nunchucks", "scythe", "yo-yo", "bass", "umbrella", "knives", "molotovs", "grenades", "garrote"]
+
 		if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 			# mine help
 			response = ewcfg.help_responses['mining']
@@ -583,13 +585,11 @@ async def help(cmd):
 			response = ewcfg.help_responses['food']
 		elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
 			# dojo help
-			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**"
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **!help [weapon]'**."
 		elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
-			if topic == 'dojo':
-				response = ewcfg.help_responses['dojo']
-			elif topic == 'sparring':
-				response = ewcfg.help_responses['sparring']
+			if topic in dojo_topics and topic in ewcfg.help_responses:
+				response = ewcfg.help_responses[topic]
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
 		elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:

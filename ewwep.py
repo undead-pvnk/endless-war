@@ -689,6 +689,9 @@ async def attack(cmd):
 				shootee_weapon = shootee_weapon
 			)
 			
+			if shootee_weapon != None:
+				if sap_damage > 0 and ewcfg.weapon_class_defensive in shootee_weapon.classes:
+					sap_damage -= 1
 
 			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
 			slimes_damage *= sap_armor
