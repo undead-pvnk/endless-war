@@ -311,6 +311,9 @@ class EwUser:
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
 						self.die(cause = ewcfg.cause_busted)
+				if item_props['id_food'] == "seaweedjoint":
+					self.applyStatus(id_status = ewcfg.status_high_id)
+
 			except:
 				# An exception will occur if there's no id_food prop in the database. We don't care.
 				pass
@@ -840,4 +843,3 @@ class EwUser:
 			# Clean up the database handles.
 			cursor.close()
 			ewutils.databaseClose(conn_info)
-
