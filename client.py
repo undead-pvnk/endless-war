@@ -47,6 +47,10 @@ import ewhunting
 import ewfish
 import ewfaction
 import ewapt
+import ewweather
+import ewworldevent
+import ewdungeons
+import ewads
 import ewdebug
 
 from ewitem import EwItem
@@ -123,7 +127,7 @@ cmd_map = {
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
 	# flags a vein as dangerous
-	#ewcfg.cmd_flag: ewjuviecmd.flag,
+	ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
@@ -132,21 +136,34 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
+	# Check how hungry you are.
+	ewcfg.cmd_hunger: ewcmd.hunger,
+
 	#check what time it is, and the weather
 	ewcfg.cmd_time: ewcmd.weather,
 	ewcfg.cmd_clock: ewcmd.weather,
 	ewcfg.cmd_weather: ewcmd.weather,
 
-
 	# Rowdys thrash and Killers dab.
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
+	
+	# Ghosts can BOO 
+	ewcfg.cmd_boo: ewcmd.boo,
+	#ewcfg.cmd_spook: ewcmd.spook,
+    
+    # Make a costume for Double Halloween
+    #ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
+	
+	# Show the total of positive slime in the world.
+	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
+
 
 	ewcfg.cmd_retire: ewapt.retire,
 	ewcfg.cmd_depart: ewapt.depart,
@@ -158,10 +175,30 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
+	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
+	ewcfg.cmd_aquarium: ewapt.aquarium,
+	ewcfg.cmd_propstand: ewapt.propstand,
+	ewcfg.cmd_releaseprop: ewapt.releaseprop,
+	ewcfg.cmd_releasefish: ewapt.releasefish,
+	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
-	ewcfg.cmd_store: ewapt.lobbywarning,
-	ewcfg.cmd_take: ewapt.lobbywarning,
+	ewcfg.cmd_frame: ewapt.frame,
+	ewcfg.cmd_extractsoul: ewitem.soulextract,
+	ewcfg.cmd_returnsoul: ewitem.returnsoul,
+	ewcfg.cmd_betsoul: ewcasino.betsoul,
+	ewcfg.cmd_buysoul: ewcasino.buysoul,
+	ewcfg.cmd_squeeze: ewitem.squeeze,
+
+	ewcfg.cmd_toss: ewcmd.toss_off_cliff,
+	ewcfg.cmd_jump: ewcmd.jump,
+	ewcfg.cmd_push: ewcmd.push,
+	ewcfg.cmd_push_alt_1: ewcmd.push,
+
+
+	ewcfg.cmd_store: ewcmd.store_item,
+	ewcfg.cmd_take: ewcmd.remove_item,
+
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,
@@ -263,11 +300,18 @@ cmd_map = {
 	# check available stocks
 	ewcfg.cmd_stocks: ewmarket.stocks,
 
+	# ads
+	ewcfg.cmd_advertise: ewads.advertise,
+	ewcfg.cmd_ads: ewads.ads_look,
+	ewcfg.cmd_confirm: ewcmd.confirm,
+	ewcfg.cmd_cancel: ewcmd.cancel,
+
 	# show player inventory
 	ewcfg.cmd_inventory: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt1: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt2: ewitem.inventory_print,
 	ewcfg.cmd_inventory_alt3: ewitem.inventory_print,
+	ewcfg.cmd_communitychest: ewitem.inventory_print,
 
 	# get an item's description
 	ewcfg.cmd_inspect: ewitem.item_look,
@@ -308,6 +352,9 @@ cmd_map = {
 	# Look around the POI you find yourself in.
 	ewcfg.cmd_look: ewmap.look,
 	
+	# Look around the POI, but do not obtain the district's description (reduces clutter and response time).
+	ewcfg.cmd_survey: ewmap.survey,
+	
 	# Inspect objects in a POI
 	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
@@ -320,6 +367,7 @@ cmd_map = {
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
+	ewcfg.cmd_transportmap: ewcmd.transportmap,
 
 	#farming
 	ewcfg.cmd_sow: ewfarm.sow,
@@ -343,7 +391,9 @@ cmd_map = {
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -358,6 +408,10 @@ cmd_map = {
 	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
 	ewcfg.cmd_discard_alt1: ewitem.discard,
+
+	# recycle your trash at the slimecorp recycling plant
+	ewcfg.cmd_recycle: ewcmd.recycle,
+	ewcfg.cmd_recycle_alt1: ewcmd.recycle,
 
 	# kill all players in your district; could be re-used for a future raid boss
 	#ewcfg.cmd_writhe: ewraidboss.writhe,
@@ -416,6 +470,8 @@ cmd_map = {
         #ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
+	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
+	ewcfg.cmd_undress_slimeoid_alt1: ewslimeoid.undress_slimeoid,
 
 	# Negaslimeoids
 
@@ -427,7 +483,7 @@ cmd_map = {
 	ewcfg.cmd_battlenegaslimeoid_alt1: ewslimeoid.negaslimeoidbattle,
 
 	# Enemies
-	ewcfg.cmd_summonenemy: ewhunting.summon_enemy,
+	ewcfg.cmd_summonenemy: ewhunting.summonenemy,
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
@@ -448,6 +504,7 @@ cmd_map = {
 	ewcfg.cmd_teleport: ewmap.teleport,
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+	ewcfg.cmd_boot: ewmap.boot,
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
@@ -472,6 +529,13 @@ cmd_map = {
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
+
+	# trading
+	ewcfg.cmd_trade: ewmarket.trade,
+	ewcfg.cmd_offer: ewmarket.offer_item,
+	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
+	ewcfg.cmd_completetrade: ewmarket.complete_trade,
+	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
 }
 
 debug = False
@@ -483,6 +547,7 @@ while sys.argv:
 
 # When debug is enabled, additional commands are turned on.
 if debug == True:
+	ewutils.DEBUG = True
 	ewutils.logMsg('Debug mode enabled.')
 
 @client.event
@@ -490,6 +555,11 @@ async def on_member_remove(member):
 	# Kill players who leave the server.
 	try:
 		user_data = EwUser(member = member)
+
+		# don't kill players who haven't cleared the tutorial yet
+		if user_data.poi in ewcfg.tutorial_pois:
+			return
+
 		user_data.die(cause = ewcfg.cause_leftserver)
 		user_data.persist()
 
@@ -630,6 +700,8 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
+		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -764,10 +836,6 @@ async def on_ready():
 					if market_data.clock >= 24 or market_data.clock < 0:
 						market_data.clock = 0
 						market_data.day += 1
-						if market_data.day % 8 == 0:
-							market_data.persist()
-							await ewapt.rent_time(id_server=server.id)
-							market_data = EwMarket(id_server=server.id)
 
 					if market_data.clock == 6:
 						# Update the list of available bazaar items by clearing the current list and adding the new items
@@ -791,26 +859,45 @@ async def on_ready():
 							elif item in ewcfg.furniture_names:
 								bazaar_furniture.append(item)
 
+						market_data.bazaar_wares['slimecorp1'] = ewcfg.weapon_id_umbrella
+						market_data.bazaar_wares['slimecorp2'] = ewcfg.cosmetic_id_raincoat
+
 						market_data.bazaar_wares['generalitem'] = random.choice(bazaar_general_items)
 
 						market_data.bazaar_wares['food1'] = random.choice(bazaar_foods)
 						# Don't add repeated foods
-						while market_data.bazaar_wares.get('food2') is None or market_data.bazaar_wares.get('food2') == market_data.bazaar_wares['food1']:
-							market_data.bazaar_wares['food2'] = random.choice(bazaar_foods)
+						bw_food2 = None
+						while bw_food2 is None or bw_food2 in market_data.bazaar_wares.values():
+							bw_food2 = random.choice(bazaar_foods)
+
+						market_data.bazaar_wares['food2'] = bw_food2
 
 						market_data.bazaar_wares['cosmetic1'] = random.choice(bazaar_cosmetics)
 						# Don't add repeated cosmetics
-						while market_data.bazaar_wares.get('cosmetic2') is None or market_data.bazaar_wares.get('cosmetic2') == market_data.bazaar_wares['cosmetic1']:
-							market_data.bazaar_wares['cosmetic2'] = random.choice(bazaar_cosmetics)
-						while market_data.bazaar_wares.get('cosmetic3') is None or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic1'] or market_data.bazaar_wares.get('cosmetic3') == market_data.bazaar_wares['cosmetic2']:
-							market_data.bazaar_wares['cosmetic3'] = random.choice(bazaar_cosmetics)
+						bw_cosmetic2 = None
+						while bw_cosmetic2 is None or bw_cosmetic2 in market_data.bazaar_wares.values():
+							bw_cosmetic2 = random.choice(bazaar_cosmetics)
 
+						market_data.bazaar_wares['cosmetic2'] = bw_cosmetic2
 
-						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
-						while market_data.bazaar_wares.get('furniture2') is None or market_data.bazaar_wares.get('furniture2') == market_data.bazaar_wares['furniture1']:
-							market_data.bazaar_wares['furniture2'] = random.choice(bazaar_furniture)
-						while market_data.bazaar_wares.get('furniture3') is None or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture1'] or market_data.bazaar_wares.get('furniture3') == market_data.bazaar_wares['furniture2']:
-							market_data.bazaar_wares['furniture3'] = random.choice(bazaar_furniture)
+						bw_cosmetic3 = None
+						while bw_cosmetic3 is None or bw_cosmetic3 in market_data.bazaar_wares.values():
+							bw_cosmetic3 = random.choice(bazaar_cosmetics)
+
+						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
+
+						bw_furniture2 = None
+						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
+							bw_furniture2 = random.choice(bazaar_furniture)
+
+						market_data.bazaar_wares['furniture2'] = bw_furniture2
+
+						bw_furniture3 = None
+						while bw_furniture3 is None or bw_furniture3 in market_data.bazaar_wares.values():
+							bw_furniture3 = random.choice(bazaar_furniture)
+
+						market_data.bazaar_wares['furniture3'] = bw_furniture3
+
 
 						if random.random() == 0.1:
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
@@ -818,6 +905,15 @@ async def on_ready():
 
 					market_data.persist()
 
+					if not ewutils.check_fursuit_active(market_data.id_server):
+						ewcosmeticitem.dedorn_all_costumes()
+
+					if market_data.clock == 6 and market_data.day % 8 == 0:
+						await ewapt.rent_time(id_server=server.id)
+
+					market_data = EwMarket(id_server=server.id)
+
+					market_data.persist()
 					if market_data.clock == 6:
 						response = ' The SlimeCorp Stock Exchange is now open for business.'
 						await ewutils.send_message(client, channels_stockmarket.get(server.id), response)
@@ -827,11 +923,14 @@ async def on_ready():
 
 					market_data = EwMarket(id_server = server.id)
 
-					if random.randrange(30) == 0:
+					if random.randrange(3) == 0:
 						pattern_count = len(ewcfg.weather_list)
 
 						if pattern_count > 1:
 							weather_old = market_data.weather
+
+							if random.random() < 0.4:
+								market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
 							while market_data.weather == weather_old:
@@ -855,6 +954,9 @@ async def on_ready():
 
 					# Remove fish offers which have timed out
 					ewfish.kill_dead_offers(id_server = server.id)
+
+					# kill advertisements that have timed out
+					ewads.delete_expired_ads(id_server = server.id)
 
 					await ewdistrict.give_kingpins_slime_and_decay_capture_points(id_server = server.id)
 
@@ -920,6 +1022,10 @@ async def on_member_join(member):
 		member = member,
 		server = member.server
 	)
+	user_data = EwUser(member = member)
+
+	if user_data.poi in ewcfg.tutorial_pois:
+		await ewdungeons.begin_tutorial(member)
 
 @client.event
 async def on_message_delete(message):
@@ -1033,7 +1139,7 @@ async def on_message(message):
 				# Only send the help doc once every thirty seconds. There's no need to spam it.
 				if (time_now - time_last) > 30:
 					last_helped_times[message.author.id] = time_now
-					await ewutils.send_message(client, message.channel, 'Check out the guide for help: https://ew.krakissi.net/guide/')
+					await ewutils.send_message(client, message.channel, ewcfg.generic_help_response)
 
 			# Nothing else to do in a DM.
 			return
@@ -1072,7 +1178,10 @@ async def on_message(message):
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)
 
-		if cmd_fn != None:
+		if user_data.poi in ewcfg.tutorial_pois:	
+			return await ewdungeons.tutorial_cmd(cmd_obj)
+
+		elif cmd_fn != None:
 			# Execute found command
 			return await cmd_fn(cmd_obj)
 
@@ -1137,7 +1246,7 @@ async def on_message(message):
 
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
-		elif debug == True and cmd == '!getcoin':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getcoin'):
 			user_data = EwUser(member=message.author)
 			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)
 
@@ -1147,7 +1256,7 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		# Deletes all items in your inventory.
-		elif debug == True and cmd == '!clearinv':
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'clearinv'):
 			user_data = EwUser(member = message.author)
 			ewitem.item_destroyall(id_server = message.server.id, id_user = message.author.id)
 			response = "You destroy every single item in your inventory."
@@ -1281,7 +1390,72 @@ async def on_message(message):
 					response = 'Unrecognized role.'
 
 			await ewutils.send_message(client, cmd.message.channel, ewutils.formatMessage(message.author, response))
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getrowdy'):
+			response = "You get rowdy. Fuck. YES!"
+			user_data = EwUser(member=message.author)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_rowdys
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getkiller'):
+			response = "You uh... 'get' killer. Sure."
+			user_data = EwUser(member=message.author)
+			user_data.life_state = ewcfg.life_state_enlisted
+			user_data.faction = ewcfg.faction_killers
+			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		# Toggles rain on and off
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'toggledownfall'):
+			market_data = EwMarket(id_server=message.server.id)
+			
+			if market_data.weather == ewcfg.weather_bicarbonaterain:
+				newweather = ewcfg.weather_sunny
+				
+				market_data.weather = newweather
+				response = "Bicarbonate rain turned OFF. Weather was set to {}.".format(newweather)
+			else:
+				market_data.weather = ewcfg.weather_bicarbonaterain
+				response = "Bicarbonate rain turned ON."
+				
+			market_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'dayforward'):
+			market_data = EwMarket(id_server=message.server.id)
+
+			market_data.day += 1
+			market_data.persist()
+
+			response = "Time has progressed 1 day forward manually."
+			
+			if ewutils.check_fursuit_active(market_data.id_server):
+				response += "\nIt's a full moon!"
+				
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'hourforward'):
+			market_data = EwMarket(id_server=message.server.id)
+			
+			market_data.clock += 1
+			response = "Time has progressed 1 hour forward manually."
+
+			if market_data.clock >= 24 or market_data.clock < 0:
+				market_data.clock = 0
+				market_data.day += 1
+				response += "\nMidnight has come. 1 day progressed forward."
+				
+			if ewutils.check_fursuit_active(market_data.id_server):
+				response += "\nIt's a full moon!"
+				
+			market_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+			
 		# didn't match any of the command words.
 		else:
 			""" couldn't process the command. bail out!! """

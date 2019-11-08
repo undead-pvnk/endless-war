@@ -256,6 +256,7 @@ async def embark(cmd):
 
 		for transport_id in transport_ids:
 			transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
+
 			# check if one of the vehicles at the stop matches up with the line, the user wants to board
 			if transport_data.current_line == transport_line.id_line:
 				last_stop_poi = ewcfg.id_to_poi.get(transport_line.last_stop)
@@ -343,6 +344,8 @@ async def disembark(cmd):
 				response = "You try to heave yourself over the railing as you're hit by a sudden case of sea sickness. You puke into the sea and sink back on deck."
 				response = ewutils.formatMessage(cmd.message.author, response)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			user_data.poi = ewcfg.poi_id_slimesea
+			user_data.persist()
 			user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
 			deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
@@ -351,11 +354,12 @@ async def disembark(cmd):
 
 			response = "{} jumps over the railing of the ferry and promptly drowns in the slime sea.".format(cmd.message.author.display_name)
 			resp_cont.add_channel_response(channel = ewcfg.channel_slimesea, response = response)
+			resp_cont.add_channel_response(channel = ewcfg.channel_ferry, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		# they also can't fly
 		elif transport_data.transport_type == ewcfg.transport_type_blimp and not stop_poi.is_transport_stop and user_data.life_state != ewcfg.life_state_corpse:
 			if user_data.life_state == ewcfg.life_state_kingpin:
-				response = "Your life flashes before your eyes, as you plummet towards your certain death. A lifetime spent being a piece of shit and playing videogames all day. You close your eyes and... BOING! You open your eyes gain to see a crew of workers transporting the trampoline that broke your fall. You get up and dust yourself off, sighing heavily."
+				response = "Your life flashes before your eyes, as you plummet towards your certain death. A lifetime spent being a piece of shit and playing videogames all day. You close your eyes and... BOING! You open your eyes again to see a crew of workers transporting the trampoline that broke your fall. You get up and dust yourself off, sighing heavily."
 				response = ewutils.formatMessage(cmd.message.author, response)
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 				user_data.poi = stop_poi.id_poi
@@ -365,6 +369,8 @@ async def disembark(cmd):
 			district_data = EwDistrict(id_server = user_data.id_server, district = stop_poi.id_poi)
 			district_data.change_slimes(n = user_data.slimes)
 			district_data.persist()
+			user_data.poi = stop_poi.id_poi
+			user_data.persist()
 			user_data.die(cause = ewcfg.cause_falling)
 			user_data.persist()
 			deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
