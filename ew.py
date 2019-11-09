@@ -285,6 +285,7 @@ class EwUser:
 	def eat(self, food_item = None):
 		item_props = food_item.item_props
 		mutations = self.get_mutations()
+		statuses = self.getStatusEffects()
 
 		if ewcfg.mutation_id_spoiledappetite not in mutations and float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
@@ -297,7 +298,12 @@ class EwUser:
 				ewutils.food_multiplier[self.id_user] += 1
 			else:
 				ewutils.food_multiplier[self.id_user] = 1
-				
+
+			if ewcfg.status_high_id in statuses:
+				hunger_restored *= 0.5			
+	
+			hunger_restored = round(hunger_restored)
+
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
@@ -311,7 +317,7 @@ class EwUser:
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
 						self.die(cause = ewcfg.cause_busted)
-				if item_props['id_food'] == "seaweedjoint":
+				if item_props['id_food'] == ewcfg.item_id_seaweedjoint:
 					self.applyStatus(id_status = ewcfg.status_high_id)
 
 			except:

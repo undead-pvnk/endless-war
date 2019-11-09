@@ -13521,6 +13521,7 @@ status_repelaftereffects_id = "repelaftereffects"
 status_high_id = "high"
 
 time_expire_burn = 12
+time_expire_high = 10 * 60 # 10 minutes
 
 time_expire_repel_base = 60 * 60 * 3 # 3 hours
 

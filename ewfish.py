@@ -623,10 +623,8 @@ async def reel(cmd):
 					slime_gain = slime_gain * 2
 
 				if fisher.current_fish == "plebefish":
-                                        slime_gain = ewcfg.fish_gain * .5
-
-                                if fisher.current_fish == "plebefish":
-                                        value = 10
+					slime_gain = ewcfg.fish_gain * .5
+					value = 10
 
 				ewitem.item_create(
 					id_user = cmd.message.author.id,
@@ -910,7 +908,7 @@ async def barter(cmd):
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
-						slime_gain = random.randint(min_value, max_value)
+						slime_gain = round(random.triangular(min_value, max_value, min_value * 2))
 
 						offer.offer_receive = slime_gain
 
