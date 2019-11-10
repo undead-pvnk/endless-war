@@ -407,7 +407,7 @@ class EwUser:
 			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if ewcfg.weapon_class_captcha in weapon.classes:
 				captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-				weapon.item_props["captcha"] = captcha
+				weapon_item.item_props["captcha"] = captcha
 				response += "\nSecurity code: **{}**".format(captcha)
 
 		return response
