@@ -440,6 +440,10 @@ class EwEnemy:
 					if miss:
 						slimes_damage = 0
 						sap_damage = 0
+						crit = False
+	
+					if crit:
+						sap_damage += 1
 
 					enemy_data.persist()
 					target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)

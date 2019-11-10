@@ -667,7 +667,10 @@ async def attack(cmd):
 				slimes_damage = 0
 				sap_damage = 0
 				weapon_item.item_props["consecutive_hits"] = 0
+				crit = False
 
+			if crit:
+				sap_damage += 1
 					
 
 			# Remove !revive invulnerability.
@@ -1572,6 +1575,7 @@ async def equip(cmd):
 		if item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)
 			user_data.persist()
+			item.persist()
 		else:
 			response = "Not a weapon you ignorant juvenile"
 	else:
@@ -2070,6 +2074,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		slimes_damage = 0
 		sap_damage = 0
 		weapon_item.item_props["consecutive_hits"] = 0
+		crit = False
+
+	if crit:
+		sap_damage += 1
 
 	# Remove !revive invulnerability.
 	user_data.time_lastrevive = 0
@@ -2620,5 +2628,5 @@ def get_sap_armor(shootee_data, sap_ignored):
 	elif hasattr(shootee_data, "level"):
 		level = shootee_data.level
 
-	sap_armor = 5 / (5+effective_hardened_sap)
+	sap_armor = 10 / (10+effective_hardened_sap)
 	return sap_armor
