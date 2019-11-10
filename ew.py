@@ -401,8 +401,14 @@ class EwUser:
 					partner_name = "partner"
 				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
 		else:
-			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
 			self.weapon = weapon_item.id_item
+
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+				weapon.item_props["captcha"] = captcha
+				response += "\nSecurity code: **{}**".format(captcha)
 
 		return response
 

@@ -1575,6 +1575,7 @@ async def equip(cmd):
 		if item.item_type == ewcfg.it_weapon:
 			response = user_data.equip(item)
 			user_data.persist()
+			item.persist()
 		else:
 			response = "Not a weapon you ignorant juvenile"
 	else:
