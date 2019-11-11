@@ -544,8 +544,6 @@ async def capture_tick(id_server):
 			if dist.time_unlock > 0 and not dist.all_neighbors_friendly():
 				responses = dist.change_capture_lock(progress = -ewcfg.capture_tick_length)
 				resp_cont_capture_tick.add_response_container(responses)
-
-			if dist.time_unlock > 0:
 				dist.persist()
 				continue
 
