@@ -13681,12 +13681,12 @@ status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 status_repelled_id = "repelled"
 status_repelaftereffects_id = "repelaftereffects"
-status_high_id = "high"
 status_evasive_id = "evasive"
 status_taunted_id = "taunted"
 status_aiming_id = "aiming"
 status_sapfatigue_id = "sapfatigue"
 status_rerollfatigue_id = "rerollfatigue"
+status_high_id = "high"
 
 time_expire_burn = 12
 time_expire_high = 10 * 60 # 10 minutes
@@ -13766,7 +13766,6 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_rerollfatigue_id,
 	),
-	
 ]
 
 status_effects_def_map = {}

@@ -2422,7 +2422,7 @@ async def dodge(cmd):
 	sap_cost = 3
 	
 	if sap_cost > user_data.sap:
-		response = "You don't have enough sap to {}.".format(cmd.tokens[0])
+		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count < 1:
@@ -2466,7 +2466,7 @@ async def taunt(cmd):
 	sap_cost = 5
 	
 	if sap_cost > user_data.sap:
-		response = "You don't have enough sap to {}.".format(cmd.tokens[0])
+		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count < 1:
@@ -2514,7 +2514,7 @@ async def aim(cmd):
 	sap_cost = 2
 	
 	if sap_cost > user_data.sap:
-		response = "You don't have enough sap to {}.".format(cmd.tokens[0])
+		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count < 1:
