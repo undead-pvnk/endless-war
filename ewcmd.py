@@ -575,6 +575,8 @@ async def help(cmd):
 		# poi variable assignment used for checking if player is in a vendor subzone or not
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 
+		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
+
 		if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
 			# mine help
 			response = ewcfg.help_responses['mining']
@@ -583,13 +585,11 @@ async def help(cmd):
 			response = ewcfg.help_responses['food']
 		elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
 			# dojo help
-			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**"
+			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **'!help [weapon]'**."
 		elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
-			if topic == 'dojo':
-				response = ewcfg.help_responses['dojo']
-			elif topic == 'sparring':
-				response = ewcfg.help_responses['sparring']
+			if topic in dojo_topics and topic in ewcfg.help_responses:
+				response = ewcfg.help_responses[topic]
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
 		elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
@@ -893,6 +893,24 @@ async def remove_item(cmd):
 	else:
 		response = "There is no storage here, public or private."
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def view_sap(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	
+	if cmd.mentions_count > 1:
+		response = "One at a time."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	elif cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		target_data = EwUser(member = member)
+		response = "{} has {} hardened sap and {} liquid sap.".format(member.display_name, target_data.hardened_sap, target_data.sap)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	else:
+		response = "You have {} hardened sap and {} liquid sap.".format(user_data.hardened_sap, user_data.sap)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 async def push(cmd):
 	user_data = EwUser(member=cmd.message.author)

@@ -15,6 +15,8 @@ class EwUser:
 	id_server = ""
 	id_killer = ""
 
+	combatant_type = "player"
+
 	slimes = 0
 	slimecoin = 0
 	slime_donations = 0
@@ -39,6 +41,8 @@ class EwUser:
 	arrested = False
 	active_slimeoid = -1
 	splattered_slimes = 0
+	sap = 0
+	hardened_sap = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -54,7 +58,7 @@ class EwUser:
 
 	apt_zone = "empty"
 	visiting = "empty"
-	has_soul = 0
+	has_soul = 1
 
 	move_speed = 1 # not a database column
 
@@ -74,6 +78,10 @@ class EwUser:
 
 		if self.move_speed <= 0:
 			self.move_speed = 1
+
+		self.sap = max(0, min(self.sap, self.slimelevel - self.hardened_sap))
+
+		self.hardened_sap = max(0, self.hardened_sap)
 
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
@@ -214,6 +222,8 @@ class EwUser:
 		if cause == ewcfg.cause_leftserver:
 			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
 
+		self.sap = 0
+		self.hardened_sap = 0
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 
@@ -400,8 +410,14 @@ class EwUser:
 					partner_name = "partner"
 				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
 		else:
-			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
 			self.weapon = weapon_item.id_item
+
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+				weapon_item.item_props["captcha"] = captcha
+				response += "\nSecurity code: **{}**".format(captcha)
 
 		return response
 
@@ -426,7 +442,7 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = 0, multiplier = 1):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
 		response = ""
 		if id_status != None:
 			status = None
@@ -437,7 +453,7 @@ class EwUser:
 			if status != None:
 				statuses = self.getStatusEffects()
 
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source)
+				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source, id_target = id_target)
 				
 				if id_status in statuses:
 					status_effect.value = value
@@ -599,6 +615,9 @@ class EwUser:
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
+
+		self.combatant_type = ewcfg.combatant_type_player
+
 		if(id_user == None) and (id_server == None):
 			if(member != None):
 				id_server = member.server.id
@@ -617,7 +636,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -657,6 +676,8 @@ class EwUser:
 					ewcfg.col_visiting,
 					ewcfg.col_active_slimeoid,
 					ewcfg.col_has_soul,
+					ewcfg.col_sap,
+					ewcfg.col_hardened_sap,
 				), (
 					id_user,
 					id_server
@@ -703,6 +724,8 @@ class EwUser:
 					self.visiting = result[35]
 					self.active_slimeoid = result[36]
 					self.has_soul = result[37]
+					self.sap = result[38]
+					self.hardened_sap = result[39]
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
@@ -758,7 +781,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -800,6 +823,8 @@ class EwUser:
 				ewcfg.col_visiting,
 				ewcfg.col_active_slimeoid,
 				ewcfg.col_has_soul,
+				ewcfg.col_sap,
+				ewcfg.col_hardened_sap,
 			), (
 				self.id_user,
 				self.id_server,
@@ -842,6 +867,8 @@ class EwUser:
 				self.visiting,
 				self.active_slimeoid,
 				self.has_soul,
+				self.sap,
+				self.hardened_sap,
 			))
 
 			conn.commit()

@@ -8,6 +8,7 @@ import ewitem
 from ewmarket import EwMarket
 from ew import EwUser
 from ewitem import EwItem
+from ewdistrict import EwDistrict
 
 class EwFisher:
 	fishing = False
@@ -495,6 +496,7 @@ async def reel(cmd):
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
 	fisher = fishers[cmd.message.author.id]
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	# Ghosts cannot fish.
 	if user_data.life_state == ewcfg.life_state_corpse:
@@ -625,6 +627,13 @@ async def reel(cmd):
 				if fisher.current_fish == "plebefish":
 					slime_gain = ewcfg.fish_gain * .5
 					value = 10
+				if poi.is_subzone:
+					district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
+				else:
+					district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+				if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+					slime_gain *= 2
 
 				ewitem.item_create(
 					id_user = cmd.message.author.id,

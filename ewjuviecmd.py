@@ -166,6 +166,7 @@ async def mine(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	response = ""
 	# Kingpins can't mine.
@@ -351,6 +352,14 @@ async def mine(cmd):
 			#alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
 			#mining_yield = min(mining_yield, alternate_yield)
+
+			if poi.is_subzone:
+				district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
+			else:
+				district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+			if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+				mining_yield *= 2
 
 			if has_pickaxe == True:
 				mining_yield *= 2
@@ -691,10 +700,20 @@ async def crush(cmd):
 			# delete a slime poudrin from the player's inventory
 			ewitem.item_delete(id_item=sought_id)
 
+			status_effects = user_data.getStatusEffects()
+			sap_resp = ""
+			if ewcfg.status_sapfatigue_id not in status_effects:
+				sap_gain = 5
+				sap_gain = max(0, min(sap_gain, user_data.slimelevel - (user_data.hardened_sap + user_data.sap)))
+				if sap_gain > 0:
+					user_data.sap += sap_gain
+					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
+					sap_resp = " and {} sap".format(sap_gain)
+
 			user_data.slimes += crush_slimes
 			user_data.persist()
 
-			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
+			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
 			
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
