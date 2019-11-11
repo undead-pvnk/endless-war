@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.12"
+version = "v3.420"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1740,6 +1740,7 @@ item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 item_id_costumekit = "costumekit"
 item_id_doublehalloweengrist = "doublehalloweengrist"
 item_id_whitelineticket = "ticket"
+item_id_seaweedjoint = "seaweedjoint"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -5746,6 +5747,20 @@ food_list = [
 		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
 		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
 		vendors = [vendor_pizzahut]
+	),
+	EwFood(
+		id_food = item_id_seaweedjoint,
+		alias = [
+			"joint",
+			"weed",
+			"blunt",
+			"doobie",
+		],
+		recover_hunger = 0,
+		str_name = 'Seaweed Joint',
+		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
+		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
+		acquisition = acquisition_smelting
 	),
 ]
 
@@ -11815,6 +11830,23 @@ smelting_recipe_list = [
 		},
 		products = ['leatherbed']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "seaweedjoint",
+		str_name = "a seaweed joint",
+		alias = [
+			"joint",
+			"seaweed",
+			"weed",
+			"doobie",
+			"blunt"
+		],
+		ingredients = {
+			'seaweed' : 3,
+			'dankwheat': 1,
+			item_id_slimepoudrin : 1,
+		},
+		products = ['seaweedjoint']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13633,8 +13665,10 @@ status_taunted_id = "taunted"
 status_aiming_id = "aiming"
 status_sapfatigue_id = "sapfatigue"
 status_rerollfatigue_id = "rerollfatigue"
+status_high_id = "high"
 
 time_expire_burn = 12
+time_expire_high = 10 * 60 # 10 minutes
 
 time_expire_repel_base = 60 * 60 * 3 # 3 hours
 
@@ -13705,7 +13739,12 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_rerollfatigue_id,
 	),
-	
+	EwStatusEffectDef(
+		id_status = status_high_id,
+		time_expire = time_expire_high,
+		str_describe = "They are as high as a kite.",
+		str_describe_self = "You are as high as a kite."
+	),
 ]
 
 status_effects_def_map = {}
