@@ -139,13 +139,16 @@ cmd_map = {
 	# sap system
 	ewcfg.cmd_view_sap: ewcmd.view_sap,
 	ewcfg.cmd_harden_sap: ewwep.harden_sap,
+	ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
 	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+
 	
 	# combat sap commands
 	ewcfg.cmd_taunt: ewwep.taunt,
 	ewcfg.cmd_aim: ewwep.aim,
 	ewcfg.cmd_dodge: ewwep.dodge,
 	ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
