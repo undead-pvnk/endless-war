@@ -545,6 +545,8 @@ async def capture_tick(id_server):
 				responses = dist.change_capture_lock(progress = -ewcfg.capture_tick_length)
 				resp_cont_capture_tick.add_response_container(responses)
 				dist.persist()
+
+			if dist.time_unlock > 0:
 				continue
 
 			controlling_faction = dist.controlling_faction
