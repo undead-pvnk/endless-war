@@ -207,8 +207,12 @@ async def mine(cmd):
 				if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
-						captcha = event_data.event_props.get('captcha')
-						if captcha in cmd.tokens[1:]:
+						captcha = event_data.event_props.get('captcha').lower()
+						tokens_lower = []
+						for token in cmd.tokens[1:]:
+							tokens_lower.append(token.lower())
+
+						if captcha in tokens_lower:
 							ewworldevent.delete_world_event(id_event = id_event)
 							response = "You escape from the collapsing mineshaft."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
