@@ -386,14 +386,9 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 		for item in drop_candidates:
 			cosmetic_id = item.get('id_item')
 			cosmetic_item = EwItem(id_item = cosmetic_id)
-			if cosmetic_item.item_props['adorned'] == "false":
+			if cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
 				filtered_items.append(item)
 
-			elif cosmetic_item.item_props.get('slimeoid') != None:
-				if cosmetic_item.item_props['slimeoid'] == "false":
-					filtered_items.append(item)
-			else:
-				pass
 	if item_type_filter == ewcfg.it_weapon:
 		for item in drop_candidates:
 			if item.get('id_item') != user_data.weapon:
