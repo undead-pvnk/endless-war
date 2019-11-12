@@ -139,7 +139,7 @@ cmd_map = {
 	# sap system
 	ewcfg.cmd_view_sap: ewcmd.view_sap,
 	ewcfg.cmd_harden_sap: ewwep.harden_sap,
-	cmd_harden_sap_alt1: ewwep.harden_sap,
+	ewcfg.cmd_harden_sap_alt1: ewwep.harden_sap,
 	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
 
 	
