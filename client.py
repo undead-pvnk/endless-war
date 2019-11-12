@@ -146,6 +146,7 @@ cmd_map = {
 	ewcfg.cmd_aim: ewwep.aim,
 	ewcfg.cmd_dodge: ewwep.dodge,
 	ewcfg.cmd_dodge_alt1: ewwep.dodge,
+	ewcfg.cmd_dodge_alt2: ewwep.dodge,
 
 	# Check how hungry you are.
 	ewcfg.cmd_hunger: ewcmd.hunger,
