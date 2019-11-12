@@ -24,6 +24,7 @@ from ewplayer import EwPlayer
 from ewhunting import EwEnemy
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
+from ewitem import EwItem
 
 TERMINATE = False
 DEBUG = False
