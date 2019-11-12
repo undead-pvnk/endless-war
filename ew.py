@@ -404,6 +404,12 @@ class EwUser:
 			if weapon_item.item_props.get("married") == self.id_user:
 				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 				self.weapon = weapon_item.id_item
+
+				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+				if ewcfg.weapon_class_captcha in weapon.classes:
+					captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+					weapon_item.item_props["captcha"] = captcha
+					response += "\nSecurity code: **{}**".format(captcha)
 			else:
 				partner_name = current_weapon.item_props.get("weapon_name")
 				if partner_name in [None, ""]:
