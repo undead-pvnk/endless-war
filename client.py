@@ -141,6 +141,7 @@ cmd_map = {
 	ewcfg.cmd_harden_sap: ewwep.harden_sap,
 	cmd_harden_sap_alt1: ewwep.harden_sap,
 	ewcfg.cmd_liquefy_sap: ewwep.liquefy_sap,
+
 	
 	# combat sap commands
 	ewcfg.cmd_taunt: ewwep.taunt,
