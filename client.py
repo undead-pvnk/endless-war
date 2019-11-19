@@ -379,6 +379,9 @@ cmd_map = {
 	# Check your current POI capture progress
 	ewcfg.cmd_capture_progress: ewdistrict.capture_progress,
 
+	# Change your current POI capture progress
+	ewcfg.cmd_annex: ewdistrict.annex,
+
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,
 	ewcfg.cmd_transportmap: ewcmd.transportmap,

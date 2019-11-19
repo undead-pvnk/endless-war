@@ -132,7 +132,8 @@ class EwDistrict:
 			life_states = [],
 			factions = [],
 			min_slimes = -math.inf,
-			max_slimes = math.inf
+			max_slimes = math.inf,
+			ignore_offline = False
 		):
 		client = ewutils.get_client()
 		server = client.get_server(self.id_server)
@@ -140,9 +141,13 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		players = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE id_server = %s AND {poi} = %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimes}, {slimelevel}, {faction}, {life_state} FROM users WHERE id_server = %s AND {poi} = %s".format(
 			id_user = ewcfg.col_id_user,
-			poi = ewcfg.col_poi
+			slimes = ewcfg.col_slimes,
+			slimelevel = ewcfg.col_slimelevel,
+			faction = ewcfg.col_faction,
+			life_state = ewcfg.col_life_state,
+			poi = ewcfg.col_poi,
 		),(
 			self.id_server,
 			self.name
@@ -150,13 +155,21 @@ class EwDistrict:
 
 		filtered_players = []
 		for player in players:
-			if server.get_member(player[0]) != None:
-				user_data = EwUser(id_user = player[0], id_server = self.id_server)
-				if max_level >= user_data.slimelevel >= min_level \
-				and max_slimes >= user_data.slimes >= min_slimes \
-				and (len(life_states) == 0 or user_data.life_state in life_states) \
-				and (len(factions) == 0 or user_data.faction in factions):
-					filtered_players.append(user_data.id_user)
+			id_user = player[0]
+			slimes = player[1]
+			slimelevel = player[2]
+			faction = player[3]
+			life_state = player[4]
+			
+			member = server.get_member(id_user)
+
+			if member != None:
+				if max_level >= slimelevel >= min_level \
+				and max_slimes >= slimes >= min_slimes \
+				and (len(life_states) == 0 or life_state in life_states) \
+				and (len(factions) == 0 or faction in factions) \
+				and not (ignore_offline and member.status == discord.Status.offline):
+					filtered_players.append(id_user)
 
 		return filtered_players
 
@@ -302,7 +315,6 @@ class EwDistrict:
 
 		progress_percent_after = int(self.capture_points / self.max_capture_points * 100)
 
-
 		if num_lock > 0 \
 		and self.capture_points == self.max_capture_points \
 		and progress > 0 \
@@ -311,6 +323,9 @@ class EwDistrict:
 			base_time_unlock = ewcfg.capture_locks.get(self.property_class)
 			responses = self.change_capture_lock(base_time_unlock + (num_lock - 1) * ewcfg.capture_lock_per_gangster)
 			resp_cont_change_cp.add_response_container(responses)
+
+		if progress > 0 and actor != ewcfg.actor_decay:
+			self.capturing_faction = actor
 
 		# display a message if it's reached a certain amount
 		if (progress_percent_after // ewcfg.capture_milestone) != (progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
@@ -387,7 +402,7 @@ class EwDistrict:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					message = "{faction}' control of {district} has decreased. Remaining control level: {progress}%".format(
-						faction = self.capturing_faction.capitalize(),
+						faction = self.controlling_faction.capitalize(),
 						district = ewcfg.id_to_poi[self.name].str_name,
 						progress = progress_percent_after
 					)
@@ -405,6 +420,9 @@ class EwDistrict:
 					
 					for ch in channels:
 						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
+
+		if progress < 0 and self.capture_points == 0:
+			self.capturing_faction = ""
 
 		# if capture_points is at its maximum value (or above), assign the district to the capturing faction
 		if self.capture_points == self.max_capture_points:
@@ -517,7 +535,89 @@ async def capture_progress(cmd):
 	if district_data.time_unlock > 0:
 		response += "\nThis district cannot be captured currently. It will unlock in {} minutes.".format(round(district_data.time_unlock / 60))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
+	
+
+async def annex(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not user_data.poi in ewcfg.capturable_districts:
+		response = "This zone cannot be captured."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if not (len(user_data.faction) > 0 and user_data.life_state == ewcfg.life_state_enlisted):
+		response = "You must join a gang before you can capture territory." 
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
+
+	if district_data.time_unlock > 0:
+		response = "This district cannot be captured currently. It will unlock in {} minutes.".format(round(district_data.time_unlock / 60)) 
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if district_data.all_neighbors_friendly():
+		response = "You cannot capture districts, that are fully surrounded by districts the same faction controls."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	users_in_district = district_data.get_players_in_district(
+		life_states = [ewcfg.life_state_enlisted],
+		min_slimes = ewcfg.min_slime_to_cap,
+		ignore_offline = True
+	)
+
+	allies_in_district = district_data.get_players_in_district(
+		factions = [user_data.faction],
+		life_states = [ewcfg.life_state_enlisted],
+		min_slimes = ewcfg.min_slime_to_cap,
+		ignore_offline = True
+	)
+
+	if len(users_in_district) > len(allies_in_district):
+		response = "You cannot capture a district while enemy gangsters are present."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	cost = ewcfg.slimes_toannex.get(district_data.property_class)
+
+	if cost > user_data.slimes:
+		response = "It costs {:,} slime to annex a{} {}-class district, but you only have {:,}.".format(
+			cost,
+			"n" if district_data.property_class in ["s", "a"] else "",
+			district_data.property_class.upper(), 
+			user_data.slimes
+		)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+	if district_data.controlling_faction != "":
+		if district_data.controlling_faction != user_data.faction:
+			resp_cont = district_data.change_capture_points(
+				progress  = -district_data.capture_points,
+				actor = user_data.faction,
+				num_lock = len(allies_in_district),
+			)
+		else:
+			resp_cont = district_data.change_capture_points(
+				progress  = district_data.max_capture_points,
+				actor = user_data.faction,
+				num_lock = len(allies_in_district),
+			)
+	else:
+		resp_cont = district_data.change_capture_points(
+			progress  = district_data.max_capture_points,
+			actor = user_data.faction,
+			num_lock = len(allies_in_district),
+		)
+
+
+	user_data.change_slimes(n = -cost, source = ewcfg.source_spending)
+	user_data.persist()
+	district_data.persist()
+
+	return await resp_cont.post()			
+	
 		
 
 """
@@ -551,7 +651,7 @@ async def capture_tick(id_server):
 
 			controlling_faction = dist.controlling_faction
 
-			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
+			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted], ignore_offline = True)
 					
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
@@ -702,4 +802,3 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
 	await resp_cont_decay_loop.post()
-

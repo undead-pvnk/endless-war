@@ -663,6 +663,7 @@ cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
+cmd_annex = cmd_prefix + 'annex'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
@@ -914,10 +915,10 @@ max_capture_points = {
 }
 
 # how long districts stay locked after capture
-capture_lock_s = 4 * 60 * 60  # 4 hours
-capture_lock_a = 2 * 60 * 60  # 2 hours 
-capture_lock_b = 1 * 60 * 60  # 1 hour
-capture_lock_c = 30 * 60  # 30 min
+capture_lock_s = 8 * 60 * 60  # 8 hours
+capture_lock_a = 4 * 60 * 60  # 4 hours 
+capture_lock_b = 2 * 60 * 60  # 2 hours
+capture_lock_c = 1 * 60 * 60  # 1 hour
 
 # district lock times assigned to property classes
 capture_locks = {
@@ -925,6 +926,20 @@ capture_locks = {
 	property_class_a: capture_lock_a,
 	property_class_b: capture_lock_b,
 	property_class_c: capture_lock_c,
+}
+
+# how much slimes is needed to bypass capture times
+slimes_toannex_s = 1000000 # 1 mega
+slimes_toannex_a = 500000 # 500 k
+slimes_toannex_b = 200000 # 200 k
+slimes_toannex_c = 100000 # 100 k
+
+# slimes to annex by property class
+slimes_toannex = {
+	property_class_s: slimes_toannex_s,
+	property_class_a: slimes_toannex_a,
+	property_class_b: slimes_toannex_b,
+	property_class_c: slimes_toannex_c
 }
 
 # by how much to extend the capture lock per additional gangster capping
