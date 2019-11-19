@@ -632,7 +632,8 @@ async def on_ready():
 		poi = ewcfg.id_to_poi.get(id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
 			coord_start = poi.coord,
-			user_data = fake_observer
+			user_data = fake_observer,
+			landmark_mode = True
 		)
 
 	ewutils.logMsg("finished landmark precomputation")

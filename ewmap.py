@@ -357,7 +357,7 @@ class EwPath:
 		steps = [],
 		cost = 0,
 		visited = {},
-		pois_visited = set()
+		pois_visited = None
 	):
 		if path_from != None:
 			self.steps = deepcopy(path_from.steps)
@@ -368,13 +368,16 @@ class EwPath:
 			self.steps = steps
 			self.cost = cost
 			self.visited = visited
-			self.pois_visited = pois_visited
+			if pois_visited == None:
+				self.pois_visited = set()
+			else:
+				self.pois_visited = pois_visited
 			
 
 """
 	Add coord_next to the path.
 """
-def path_step(path, coord_next, user_data, coord_end):
+def path_step(path, coord_next, user_data, coord_end, landmark_mode = False):
 	visited_set_y = path.visited.get(coord_next[0])
 	if visited_set_y == None:
 		path.visited[coord_next[0]] = { coord_next[1]: True }
@@ -396,6 +399,7 @@ def path_step(path, coord_next, user_data, coord_end):
 			
 			# check if we already got the movement bonus/malus for this district
 			if not next_poi.id_poi in path.pois_visited:
+				ewutils.logMsg("next poi: {}".format(next_poi.id_poi))
 				path.pois_visited.add(next_poi.id_poi)
 				if len(user_data.faction) > 0 and next_poi.coord != coord_end and next_poi.coord != path.steps[0]:
 					district = EwDistrict(
@@ -408,6 +412,7 @@ def path_step(path, coord_next, user_data, coord_end):
 							cost_next = -ewcfg.territory_time_gain
 						else:
 							cost_next = ewcfg.territory_time_gain
+						ewutils.logMsg("applying territory time gain for poi {}: {}".format(next_poi.id_poi, cost_next))
 					else:
 						cost_next = 0
 				else:
@@ -417,6 +422,9 @@ def path_step(path, coord_next, user_data, coord_end):
 
 	cost_next = int(cost_next / user_data.move_speed)
 
+	if landmark_mode and cost_next > ewcfg.territory_time_gain:
+		cost_next -= ewcfg.territory_time_gain
+
 	path.cost += cost_next
 
 	return True
@@ -424,10 +432,10 @@ def path_step(path, coord_next, user_data, coord_end):
 """
 	Returns a new path including all of path_base, with the next step coord_next.
 """
-def path_branch(path_base, coord_next, user_data, coord_end):
+def path_branch(path_base, coord_next, user_data, coord_end, landmark_mode = False):
 	path_next = EwPath(path_from = path_base)
 
-	if path_step(path_next, coord_next, user_data, coord_end) == False:
+	if path_step(path_next, coord_next, user_data, coord_end, landmark_mode) == False:
 		return None
 	
 	return path_next
@@ -437,6 +445,7 @@ def score_map_from(
 	coord_end = None,
 	poi_start = None,
 	user_data = None,
+	landmark_mode = False
 ):
 	score_map = []
 	for row in map_world:
@@ -489,12 +498,12 @@ def score_map_from(
 
 				neigh = neighs[i]
 				if i < num_neighbors - 1:
-					branch = path_branch(path_base, neigh, user_data, coord_end)
+					branch = path_branch(path_base, neigh, user_data, coord_end, landmark_mode)
 					if branch != None:
 						paths_walking_new.append(branch)
 
 				else:
-					if path_step(path_base, neigh, user_data, coord_end):
+					if path_step(path_base, neigh, user_data, coord_end, landmark_mode):
 						paths_walking_new.append(path_base)
 
 
