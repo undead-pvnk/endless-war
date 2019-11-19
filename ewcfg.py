@@ -2513,12 +2513,15 @@ def wef_katana(ctn = None):
 
 # weapon effect function for "broadsword"
 def wef_broadsword(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	ctn.slimes_spent = int(ctn.slimes_spent * 5)
+	dmg = ctn.slimes_damage
+	ctn.slimes_damage *= 3
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
 	ctn.sap_damage = 5
+	ctn.sap_ignored = 20
 
-	ctn.slimes_damage += int( ctn.slimes_damage * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
+	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
 	if aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
@@ -2573,11 +2576,10 @@ def wef_nunchucks(ctn = None):
 
 # weapon effect function for "scythe"
 def wef_scythe(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.25)
+	ctn.slimes_spent = int(ctn.slimes_spent * 3)
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
 	ctn.sap_damage = 0
-	ctn.sap_ignored = 10
 
 	try:
 		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
@@ -2585,6 +2587,7 @@ def wef_scythe(ctn = None):
 		target_kills = 4
 
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
+	ctn.sap_ignored = 3 * min(target_kills, 10)
 
 	# Decreased damage if attacking within less than three seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -2999,7 +3002,7 @@ weapon_list = [
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_jammable, weapon_class_captcha],
+		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
 		sap_cost = 2,
 		captcha_length = 4
@@ -3159,7 +3162,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_broadsword_kills,
-		sap_cost = 4,
+		sap_cost = 12,
 		captcha_length = 4
 	),
 	EwWeapon( # 11
@@ -3219,7 +3222,7 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes= [weapon_class_captcha],
 		stat = stat_scythe_kills,
-		sap_cost = 3,
+		sap_cost = 6,
 		captcha_length = 4
 	),
 	EwWeapon( # 13	

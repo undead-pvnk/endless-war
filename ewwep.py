@@ -959,7 +959,7 @@ async def attack(cmd):
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
-						if ewcfg.weapon_class_captcha in weapon.classes:
+						if ewcfg.weapon_class_captcha in weapon.classes or jammed:
 							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 							response += "\nNew security code: **{}**".format(new_captcha)
 							weapon_item.item_props['captcha'] = new_captcha
@@ -1793,9 +1793,17 @@ async def unjam(cmd):
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		if ewcfg.weapon_class_jammable in weapon.classes:
 			if weapon_item.item_props.get("jammed") == "True":
-				weapon_item.item_props["jammed"] = "False"
-				weapon_item.persist()
-				response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
+				captcha = weapon_item.item_props.get("captcha").lower()
+				tokens_lower = []
+				for token in cmd.tokens[1:]:
+					tokens_lower.append(token.lower())
+
+				if captcha in tokens_lower:
+					weapon_item.item_props["jammed"] = "False"
+					weapon_item.persist()
+					response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
+				else:
+					response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha.upper())
 			else:
 				response = "Let’s not get ahead of ourselves, there’s nothing clogging with your {weapon} (yet)!!".format(weapon = weapon.id_weapon)
 		else:
