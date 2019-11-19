@@ -399,7 +399,6 @@ def path_step(path, coord_next, user_data, coord_end, landmark_mode = False):
 			
 			# check if we already got the movement bonus/malus for this district
 			if not next_poi.id_poi in path.pois_visited:
-				ewutils.logMsg("next poi: {}".format(next_poi.id_poi))
 				path.pois_visited.add(next_poi.id_poi)
 				if len(user_data.faction) > 0 and next_poi.coord != coord_end and next_poi.coord != path.steps[0]:
 					district = EwDistrict(
@@ -412,7 +411,6 @@ def path_step(path, coord_next, user_data, coord_end, landmark_mode = False):
 							cost_next = -ewcfg.territory_time_gain
 						else:
 							cost_next = ewcfg.territory_time_gain
-						ewutils.logMsg("applying territory time gain for poi {}: {}".format(next_poi.id_poi, cost_next))
 					else:
 						cost_next = 0
 				else:
