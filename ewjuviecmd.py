@@ -756,7 +756,7 @@ def init_grid_minesweeper(poi, id_server):
 			row.append(ewcfg.cell_empty)
 		grid.append(row)
 
-	num_mines = 30
+	num_mines = 20
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
