@@ -1700,6 +1700,7 @@ source_farming = 12
 source_fishing = 13
 source_squeeze = 14
 source_weather = 15
+source_crush = 16
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0

@@ -714,10 +714,13 @@ async def crush(cmd):
 					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
 					sap_resp = " and {} sap".format(sap_gain)
 
-			user_data.slimes += crush_slimes
+			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
 
 			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+			
+			if len(levelup_response) > 0:
+				response += "\n\n" + levelup_response
 			
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
