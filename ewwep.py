@@ -608,24 +608,6 @@ async def attack(cmd):
 						shootee_data.clear_status(ewcfg.status_strangled_id)
 						#shootee_data.persist()
 					
-				if weapon.id_weapon == ewcfg.weapon_id_minigun:
-					user_data.persist()
-					shootee_data.persist()
-					response = "You begin revving up your minigun..."
-					resp_cont.add_channel_response(cmd.message.channel.name, response)
-					resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-					await resp_cont.post()
-					await asyncio.sleep(5)
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
-
-					# One of the players died in the meantime
-					if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
-						return
-					# A user left the district
-					if user_data.poi != shootee_data.poi:
-						miss = True
-
 				# Remove a bullet from the weapon
 				if ewcfg.weapon_class_ammo in weapon.classes:
 					weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
@@ -2017,23 +1999,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# else:
 		# pass
 		# enemy_data.persist()
-
-		if weapon.id_weapon == ewcfg.weapon_id_minigun:
-			user_data.persist()
-			enemy_data.persist()
-			response = "You begin revving up your minigun..."
-			resp_cont.add_channel_response(cmd.message.channel.name, response)
-			resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-			await resp_cont.post()
-			await asyncio.sleep(5)
-			user_data = EwUser(member=cmd.message.author)
-
-			# One of the users/enemies died in the meantime
-			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.enemy_lifestate_dead:
-				return
-			# A user/enemy left the district
-			if user_data.poi != enemy_data.poi:
-				miss = True
 
 		# Remove a bullet from the weapon
 		if ewcfg.weapon_class_ammo in weapon.classes:
