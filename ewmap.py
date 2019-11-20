@@ -3,6 +3,7 @@ import time
 import math
 import heapq
 import random
+import discord
 
 from copy import deepcopy
 
@@ -1343,8 +1344,10 @@ async def scout(cmd):
 				if len(allies_in_district) > 3:
 					continue
 			if ewcfg.mutation_id_chameleonskin in scoutee_mutations:
-				detailed_players_resp += "\n" + scoutee_player.display_name
-				continue
+				member = cmd.message.server.get_member(scoutee_data.id_user)
+				if member == None or member.status == discord.Status.offline:
+					continue
+
 			if ewcfg.mutation_id_aposematicstench in scoutee_mutations:
 				num_players += math.floor(scoutee_data.slimelevel / 5)
 				continue

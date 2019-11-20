@@ -305,7 +305,7 @@ def canAttack(cmd):
 	elif weapon != None and weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
-		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam)
+		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = captcha)
 	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
 
@@ -466,6 +466,11 @@ async def attack(cmd):
 		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
 		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
 
+		if shootee_weapon != None:
+			if ewcfg.weapon_class_heavy in shootee_weapon.classes:
+				miss_mod -= 0.1
+				crit_mod += 0.05
+
 		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
 		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 
@@ -608,24 +613,6 @@ async def attack(cmd):
 						shootee_data.clear_status(ewcfg.status_strangled_id)
 						#shootee_data.persist()
 					
-				if weapon.id_weapon == ewcfg.weapon_id_minigun:
-					user_data.persist()
-					shootee_data.persist()
-					response = "You begin revving up your minigun..."
-					resp_cont.add_channel_response(cmd.message.channel.name, response)
-					resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-					await resp_cont.post()
-					await asyncio.sleep(5)
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
-
-					# One of the players died in the meantime
-					if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
-						return
-					# A user left the district
-					if user_data.poi != shootee_data.poi:
-						miss = True
-
 				# Remove a bullet from the weapon
 				if ewcfg.weapon_class_ammo in weapon.classes:
 					weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
@@ -959,7 +946,7 @@ async def attack(cmd):
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
-						if ewcfg.weapon_class_captcha in weapon.classes:
+						if ewcfg.weapon_class_captcha in weapon.classes or jammed:
 							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 							response += "\nNew security code: **{}**".format(new_captcha)
 							weapon_item.item_props['captcha'] = new_captcha
@@ -1793,9 +1780,17 @@ async def unjam(cmd):
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		if ewcfg.weapon_class_jammable in weapon.classes:
 			if weapon_item.item_props.get("jammed") == "True":
-				weapon_item.item_props["jammed"] = "False"
-				weapon_item.persist()
-				response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
+				captcha = weapon_item.item_props.get("captcha").lower()
+				tokens_lower = []
+				for token in cmd.tokens[1:]:
+					tokens_lower.append(token.lower())
+
+				if captcha in tokens_lower:
+					weapon_item.item_props["jammed"] = "False"
+					weapon_item.persist()
+					response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
+				else:
+					response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha.upper())
 			else:
 				response = "Let’s not get ahead of ourselves, there’s nothing clogging with your {weapon} (yet)!!".format(weapon = weapon.id_weapon)
 		else:
@@ -2009,23 +2004,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# else:
 		# pass
 		# enemy_data.persist()
-
-		if weapon.id_weapon == ewcfg.weapon_id_minigun:
-			user_data.persist()
-			enemy_data.persist()
-			response = "You begin revving up your minigun..."
-			resp_cont.add_channel_response(cmd.message.channel.name, response)
-			resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-			await resp_cont.post()
-			await asyncio.sleep(5)
-			user_data = EwUser(member=cmd.message.author)
-
-			# One of the users/enemies died in the meantime
-			if user_data.life_state == ewcfg.life_state_corpse or enemy_data.life_state == ewcfg.enemy_lifestate_dead:
-				return
-			# A user/enemy left the district
-			if user_data.poi != enemy_data.poi:
-				miss = True
 
 		# Remove a bullet from the weapon
 		if ewcfg.weapon_class_ammo in weapon.classes:
@@ -2298,7 +2276,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				response += "\n" + weapon.str_reload_warning.format(
 					name_player=cmd.message.author.display_name)
 	
-			if ewcfg.weapon_class_captcha in weapon.classes:
+			if ewcfg.weapon_class_captcha in weapon.classes or jammed:
 				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 				response += "\nNew security code: **{}**".format(new_captcha)
 				weapon_item.item_props['captcha'] = new_captcha
