@@ -2839,6 +2839,7 @@ weapon_class_exploding = "exploding"
 weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
+weapon_class_heavy = "heavy"
 
 # All weapons in the game.
 weapon_list = [
@@ -3033,7 +3034,7 @@ weapon_list = [
 		fn_effect = wef_minigun,
 		price = 1000000,
 		vendors = [vendor_bazaar],
-		classes= [weapon_class_captcha],
+		classes= [weapon_class_captcha, weapon_class_heavy],
 		stat = stat_minigun_kills,
 		sap_cost = 15,
 		captcha_length = 10
@@ -3160,7 +3161,7 @@ weapon_list = [
 		clip_size = 1,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo, weapon_class_captcha],
+		classes = [weapon_class_ammo, weapon_class_captcha, weapon_class_heavy],
 		stat = stat_broadsword_kills,
 		sap_cost = 12,
 		captcha_length = 4
