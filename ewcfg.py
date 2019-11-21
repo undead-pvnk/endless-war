@@ -112,6 +112,8 @@ poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
 poi_id_slimesendcliffs = "slimesendcliffs"
+poi_id_greencakecafe = "greencakecafe"
+
 
 
 # transports
@@ -9841,6 +9843,25 @@ poi_list = [
 		channel="slimy-persuits",
 		role="Slimy Persuits",
 		mother_district=poi_id_newnewyonkers,
+		is_subzone=True
+	),
+	EwPoi(  # Green Cake Cafe
+		id_poi=poi_id_greencakecafe,
+		alias=[
+			"gcc",
+			"cafe",
+			"greencake",
+			"green",
+			"cake"
+		],
+		str_name="Green Cake Cafe",
+		str_desc="Deeply nestled in the vandalized, sparsely populated buildings of Little Chernobyl lays a stubby building covered in vines, spray paint, and posters for criminals and concerts that have both long since passed. It seems the recently realized population of authors in the city has taken this irradiated little dump to be a safe haven from the general noisiness of the other districts in the city. Little do they know, the consequences of spending most of your time in Little Chernobyl will far exceed tinnitus in the long-term, but for now the Green Cake Cafe is where hipsters of all varieties want to write their zine opus while drinking a fresh cup of goolong tea served by the seven-eyed waitress.",
+		coord=(67, 14),
+		pvp=False,
+		vendors=[vendor_greencakecafe],
+		channel="green-cake-cafe",
+		role="Green Cake Cafe",
+		mother_district=poi_id_littlechernobyl,
 		is_subzone=True
 	),
 	EwPoi(  # Ferry
