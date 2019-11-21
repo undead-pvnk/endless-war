@@ -1764,6 +1764,7 @@ vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
+vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -5808,6 +5809,89 @@ food_list = [
 		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
 		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
 		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food="brawldenbagel",
+		alias=[
+			"bagel",
+			"bdbagel",
+			"brawlbagel"
+		],
+		recover_hunger=111-1, # ;)
+		price=1001,
+		str_name='Brawlden Bagel',
+		str_eat="You attempt to cut the bagel with the shitty plastic butter-knife the waitress gave you, but it snaps in two almost immediately. Looks like you won’t be having any slime cream cheese on your meal today. You crunch as hard as you can into the absolute BRICK of Juvish bread and in the process nearly snap your jaw in two. You begin to chew it only to realize it's fucking sludgeberry. Who puts sludgeberries a bagel? You’re just too furious to finish this distinctly non-keto bagel of burden, so you find the nearest Juvie and chuck it at their skull.",
+		str_desc="Despite the rampant crime-rates of their home district, Brawlden Bagels are a staple of NLACakaNM’s brunch cuisine. Of course, they’re all so stale that most people just use them as brass knuckles, but nonetheless they can be downright irresistible with a large enough smattering of slime cream cheese. That shit has to be, like, an inch thick, though.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="greeneye",
+		alias=[
+			"redeye",
+			"espresso",
+			"caffeine"
+		],
+		recover_hunger=150,
+		price=1500,
+		str_name='Green Eye',
+		str_eat="You bring the small cup to your lips, only to be greeted by a very suspicious smell. You think nothing of it and down the drink in one gulp… This was a mistake. That smell was slime vapor because it turns out the coffee was still fucking boiling when the waitress poured it for you. It may have burned all the skin in your mouth off, sure, but it also burned the nerve-endings on your tongue, so it only hurt for a moment. At the very least, you feel energized and in the mood to put pen to paper and write.",
+		str_desc="Coffee topped off with a nice rejuvenating shot of slime to stop the ol’ adenosine from pumping. It’s even served in a miniature cup so you can shotgun it without issue!",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="pcpastry",
+		alias=[
+			"pcp",
+			"pastry",
+			"procrastinatorspastry"
+		],
+		recover_hunger=90,
+		price=900,
+		str_name='PCPastry',
+		str_eat="You aren’t certain about this pastry’s quality because you were a bit iffy on last week’s. You give it a try and are pleasantly surprised! The ingredients seem to be more in harmony this week, and generally it just has a better texture. All the people you know seem to still be under the assumption that they’re always gonna be spicy and hard to eat, but that hasn’t really been the case for a few months. After finishing it, you come to the conclusion that, while you wouldn’t go so far as to call yourself a PCPastries-head, you’d probably purchase one again as long as they keep up the quality.",
+		str_desc="A sweet treat that is somewhat notorious in town. Of course, everybody has their favorite and least favorite ingredients, but is it actually really worth the trek to the cafe to eat the new one every single week?",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="fuckuccino",
+		alias=[
+			"frappuccino",
+			"cappuccino",
+			"sourpuss"
+		],
+		recover_hunger=300,
+		price=3000,
+		str_name='Fuckuccino',
+		str_eat="You let it cool off for a few seconds before taking a sip, only to be disgusted by how bitter it is. You figured this would be the case, so you unload one of the sugar packets into the mug. Nope, the bitterness remains. You pour another. It's still not sweet enough. You continue this cycle until you’ve poured all 12 sugar packets into the coffee. Eventually it becomes sweet enough to tolerate. Truly, the young slimeboi’s ambrosia.",
+		str_desc="A wonderful cup of joe mixed with a healthy dose of Fuck Energy ™ Cream. It comes with several packets of sugar, in case the 500 milligrams of caffeine isn’t enough for you.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="goolongtea",
+		alias=[
+			"tea",
+			"oolong",
+			"goolong"
+		],
+		recover_hunger=310,
+		price=3100,
+		str_name='Goolong Tea',
+		str_eat="Finally, after months of purely fast food and various carcinogens, a beverage that won’t take a year off of your lifespan. You sip the oriental tea with newfound vigor. You begin to recall back to before the slime, before the poudrins, before the FUCK Energy. You snap back to reality when you realize that you were so out of it that you spilled the rest of it all over your clothes. Shit.",
+		str_desc="Restorative, piping-hot tea made with the goolong herb grown in the far eastern lands of *Nuvada*. Even if it is “good” for you, at least it’s served in a styrofoam cup so it can still hurt the environment in some way. The zarf is bright green. If you don’t know what that means then look it up, pussy.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="3tart",
+		alias=[
+			"tart",
+			"3tard",
+		],
+		recover_hunger=33,
+		price=333,
+		str_name='3tart',
+		str_eat="You bite into the 3tart, and yeah, the initial mouthfeel is pretty crummy, but you decide to stick with it because you already invested some slime in the thing anyways. As you chew it more and more you begin to grow less wary of it. By the time you swallow, you’re actually somewhat  fond of the thing, even if it was relatively new. Man, if only 3tards could follow this kind of arc.",
+		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
+		vendors=[vendor_greencakecafe]
 	),
 ]
 
