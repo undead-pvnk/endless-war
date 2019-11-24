@@ -6605,7 +6605,14 @@ fish_list  =  [
 		catch_weather = None,
 		str_desc = "It has no arms and a blue bandana.",
 		slime = fish_slime_freshwater
-	)
+	),
+	EwFish(
+		id_fish = "mertwink",
+		str_name = "Mertwink",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = fish_catchtime_rain,
+		str_desc = "Rejoice, horndogs.",
 ]
 
 # A map of id_fish to EwFish objects.
