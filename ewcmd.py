@@ -993,9 +993,6 @@ async def push(cmd):
 		districtmodel.change_slimes(n=slimetotal)
 		districtmodel.persist()
 
-		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target, deathreport)
-
 		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
 		for item in cliff_inventory:
 			item_object = ewitem.EwItem(id_item=item.get('id_item'))
@@ -1018,12 +1015,11 @@ async def push(cmd):
 
 
 
-		targetmodel.die(cause = ewcfg.cause_cliff)
+		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=target)
-		if deathreport != "":
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+		if die_resp != ewutils.EwResponseContainer(id_server = cmd.message.server.id_server):
+			await die_resp.post()
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1038,8 +1034,6 @@ async def jump(cmd):
 		response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
 	else:
 		response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
-		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
 
 		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=user_data.id_user)
 		for item in cliff_inventory:
@@ -1061,12 +1055,11 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
-		user_data.die(cause = ewcfg.cause_cliff)
+		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		if deathreport != "":
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+		if die_resp != ewutils.EwResponseContainer(id_server = cmd.message.server.id):
+			await die_resp.post()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 

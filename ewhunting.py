@@ -520,7 +520,7 @@ class EwEnemy:
 						# Player was killed. Remove its id from enemies with defender ai.
 						enemy_data.id_target = ""
 						target_data.id_killer = enemy_data.id_enemy
-						target_data.die(cause=ewcfg.cause_killing_enemy)
+
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
 
 						kill_descriptor = "beaten to death"
@@ -555,20 +555,12 @@ class EwEnemy:
 							brain = ewcfg.brain_map.get(target_slimeoid.ai)
 							response += "\n\n" + brain.str_death.format(slimeoid_name=target_slimeoid.name)
 
-						deathreport = "You were {} by {}. {}".format(kill_descriptor, enemy_data.display_name,
-																	 ewcfg.emote_slimeskull)
-						deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target_player, deathreport)
+						die_resp = target_data.die(cause=ewcfg.cause_killing_enemy) # moved after trauma definition so it can gurantee .die knows killer
 
 						target_data.persist()
 						enemy_data.persist()
-						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+						resp_cont.add_response_container(die_resp)
 						resp_cont.add_channel_response(ch_name, response)
-						if ewcfg.mutation_id_spontaneouscombustion in target_mutations:
-							explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
-								target_player.display_name)
-							resp_cont.add_channel_response(ch_name, explode_resp)
-							explosion = ewutils.explode(damage=explode_damage, district_data=district_data)
-							resp_cont.add_response_container(explosion)
 
 						# don't recreate enemy data if enemy was killed in explosion
 						if check_death(enemy_data) == False:
