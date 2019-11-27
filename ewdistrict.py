@@ -170,6 +170,8 @@ class EwDistrict:
 				and (len(factions) == 0 or faction in factions) \
 				and not (ignore_offline and member.status == discord.Status.offline):
 					filtered_players.append(id_user)
+			else:
+				ewutils.logMsg("Failed to fetch member {} from server {}".format(id_user, server.id))
 
 		return filtered_players
 
