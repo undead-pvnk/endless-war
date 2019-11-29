@@ -1018,8 +1018,7 @@ async def push(cmd):
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=target)
-		if die_resp != ewutils.EwResponseContainer(id_server = cmd.message.server.id_server):
-			await die_resp.post()
+		await die_resp.post()
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

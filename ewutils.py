@@ -1204,7 +1204,6 @@ def explode(damage = 0, district_data = None, market_data = None):
 			district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
 			district_data.persist()
 			slimes_dropped = user_data.totaldamage + user_data.slimes
-			explode_damage = slime_bylevel(user_data.slimelevel)
 
 			user_data.die(cause = ewcfg.cause_killing)
 			#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
@@ -1212,10 +1211,6 @@ def explode(damage = 0, district_data = None, market_data = None):
 
 			response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
 			resp_cont.add_channel_response(channel, response)
-
-			if ewcfg.mutation_id_spontaneouscombustion in mutations:
-				sub_explosion = explode(explode_damage, district_data)
-				resp_cont.add_response_container(sub_explosion)
 
 			resp_cont.add_member_to_update(server.get_member(user_data.id_user))
 		else:
@@ -1372,26 +1367,15 @@ def create_death_report(cause = None, user_data = None):
 	user_member = server.get_member(user_data.id_user)
 	user_nick = user_member.display_name
 
+	deathreport = "You arrive among the dead. {}".format(ewcfg.emote_slimeskull)
+	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
 	report_requires_killer = [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning, ewcfg.cause_killing_enemy]
 	if(cause in report_requires_killer): # Only deal with enemy data if necessary
-		
-		killer_isEnemy = False
-		killer_isUser = False
-
-		# Generate list of enemy inflicted traumas
-		enemy_trauma_list = []
-		for atype in ewcfg.enemy_attack_type_list:
-			enemy_trauma_list.append(atype.id_type)
-
-		# Enemies have unique traumas, meaning if they have enemy trauma the killer was an enemy
-		if(user_data.trauma in enemy_trauma_list):
-			killer_isEnemy = True
-			killer_data = ewhunting.EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
-		else:
-			killer_isUser = True
-			killer_data = EwUser(id_user = user_data.id_killer, id_server = user_data.id_server)
-
 		if(killer_isUser): # Generate responses for dying to another player
+			# Grab user data
+			killer_data = EwUser(id_user = user_data.id_killer, id_server = user_data.id_server)
+			
 			# Get killer weapon
 			weapon_item = EwItem(id_item = killer_data.weapon)
 			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
@@ -1411,6 +1395,9 @@ def create_death_report(cause = None, user_data = None):
 				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
 
 		if(killer_isEnemy): # Generate responses for being killed by enemy
+			# Grab enemy data
+			killer_data = ewhunting.EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
+
 			if killer_data.attacktype != ewcfg.enemy_attacktype_unarmed:
 				used_attacktype = ewcfg.attack_type_map.get(killer_data.attacktype)
 			else:

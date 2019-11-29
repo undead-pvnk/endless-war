@@ -1156,7 +1156,7 @@ async def suicide(cmd):
 			response = "\*click* Alas, your gun has jammed."
 
 	# Send the response to the player.
-	resp_cont.add_channel_response(cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) # TODO - fix this, cmd.message.channel returns none?
+	resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
 	await resp_cont.post()
 
 """ Damage all players in a district; Exploding weapon's effect """
