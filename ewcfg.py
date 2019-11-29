@@ -5889,7 +5889,7 @@ food_list = [
 		recover_hunger=33,
 		price=333,
 		str_name='3tart',
-		str_eat="You bite into the 3tart, and yeah, the initial mouthfeel is pretty crummy, but you decide to stick with it because you already invested some slime in the thing anyways. As you chew it more and more you begin to grow less wary of it. By the time you swallow, you’re actually somewhat  fond of the thing, even if it was relatively new. Man, if only 3tards could follow this kind of arc.",
+		str_eat="You bite into the 3tart, and yeah, the initial mouthfeel is pretty crummy, but you decide to stick with it because you already invested some slime in the thing anyways. As you chew it more and more you begin to grow less wary of it. By the time you swallow, you’re actually somewhat fond of the thing, even if it was relatively new. Man, if only 3tards could follow this kind of arc.",
 		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
 		vendors=[vendor_greencakecafe]
 	),
@@ -6613,6 +6613,7 @@ fish_list  =  [
 		catch_time = None,
 		catch_weather = fish_catchtime_rain,
 		str_desc = "Rejoice, horndogs.",
+	),
 ]
 
 # A map of id_fish to EwFish objects.
