@@ -121,11 +121,9 @@ async def weather_tick(id_server = None):
 					response = "*{uname}*: The bicarbonate rain dissolves {slimeloss:,} of your slime.".format(uname = player_data.display_name, slimeloss = slimes_to_erase)
 					resp_cont.add_channel_response(user_poi.channel, response)
 					if user_data.slimes <= 0:
-						user_data.die(cause = ewcfg.cause_weather)
+						die_resp = user_data.die(cause = ewcfg.cause_weather)
 						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						deathreport = "{skull} *{uname}*: You have been cleansed by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
-						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
-						resp_cont.add_channel_response(user_poi.channel, deathreport)
+						resp_cont.add_response_container(die_resp)
 						users_to_update.append(user[0])
 					user_data.persist()
 
