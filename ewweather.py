@@ -78,7 +78,6 @@ async def weather_tick(id_server = None):
 
 			deathreport = ""
 			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
-			users_to_update = []
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				if user_data.life_state == ewcfg.life_state_kingpin:
@@ -124,7 +123,9 @@ async def weather_tick(id_server = None):
 						die_resp = user_data.die(cause = ewcfg.cause_weather)
 						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 						resp_cont.add_response_container(die_resp)
-						users_to_update.append(user[0])
+						member = server.get_member(user_data.id_user)
+						if member != None:
+							resp_cont.add_member_to_update(member)
 					user_data.persist()
 
 				
@@ -206,10 +207,6 @@ async def weather_tick(id_server = None):
 					ewhunting.delete_enemy(enemy_data)
 					deathreport = "{skull} {name} is dissolved by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, name = enemy_data.display_name)
 					resp_cont.add_channel_response(enemy_poi.channel, deathreport)
-
-			for user in users_to_update:
-
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user))
 
 			await resp_cont.post()
 

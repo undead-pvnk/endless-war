@@ -247,10 +247,10 @@ async def data(cmd):
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {} slime, and attack with their {}.".format(
+				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}.".format(
 					enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level,
+				response = "{} is a level {} enemy. They have {:,} slime.".format(enemy.display_name, enemy.level,
 																				enemy.slimes)
 		else:
 			response = "ENDLESS WAR didn't understand that name."
