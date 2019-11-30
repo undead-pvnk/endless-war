@@ -781,7 +781,9 @@ async def piss(cmd):
 
 	if ewcfg.mutation_id_enlargedbladder in mutations:
 		response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
-                if random.randint(1,1) < 100:
+                if random.randint(1,2) < 2:
+			slimeoid = EwSlimeoid(member = cmd.message.author)
+			hue = ewcfg.hue_map.get("yellow")
 			response = "CONGRATULATIONS. You suddenly lose control of your HUGE COCK and saturate your {} with your PISS. {}".format(slimeoid.name, hue.str_saturate)
 			slimeoid.hue = (ewcfg.hue_map.get("yellow")).id_hue
 			slimeoid.persist()
