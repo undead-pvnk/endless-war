@@ -346,11 +346,9 @@ async def disembark(cmd):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			user_data.poi = ewcfg.poi_id_slimesea
 			user_data.persist()
-			user_data.die(cause = ewcfg.cause_drowning)
+			die_resp = user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
-			deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
-			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
-			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
+			resp_cont.add_response_container(die_resp)
 
 			response = "{} jumps over the railing of the ferry and promptly drowns in the slime sea.".format(cmd.message.author.display_name)
 			resp_cont.add_channel_response(channel = ewcfg.channel_slimesea, response = response)
@@ -371,11 +369,9 @@ async def disembark(cmd):
 			district_data.persist()
 			user_data.poi = stop_poi.id_poi
 			user_data.persist()
-			user_data.die(cause = ewcfg.cause_falling)
+			die_resp = user_data.die(cause = ewcfg.cause_falling)
 			user_data.persist()
-			deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
-			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
-			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
+			resp_cont.add_response_container(die_resp)
 			response = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
 			resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

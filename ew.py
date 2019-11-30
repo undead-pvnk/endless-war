@@ -7,6 +7,7 @@ import ewcfg
 import ewstats
 import ewitem
 import ewstatuseffects
+import ewdistrict
 from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -159,11 +160,38 @@ class EwUser:
 
 		ewutils.end_trade(self.id_user)
 
+		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+
+		client = ewcfg.get_client()
+		server = client.get_server(self.id_server)
+
+		deathreport = ''
+		
+
+		# Make The death report
+		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
+		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+
+		if cause == ewcfg.cause_weather:
+			resp_cont.add_channel_response(self.poi, deathreport)
+
+		# Grab necessary data for spontaneous combustion before stat reset
+		explosion_block_list = [ewcfg.cause_suicide, ewcfg.cause_donation, ewcfg.cause_leftserver, ewcfg.cause_cliff]
+		user_hasCombustion = False
+		if cause not in explosion_block_list:
+			if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
+				user_hasCombustion = True
+				explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
+				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
+				explode_poi_channel = ewcfg.id_to_poi.get(self.poi).channel
+
 		if cause == ewcfg.cause_busted:
 			self.busted = True
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
+			
+
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -227,9 +255,22 @@ class EwUser:
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 
+		self.persist()
+
+		if cause not in explosion_block_list: # Run explosion after location/stat reset, to prevent looping onto self
+			if user_hasCombustion:
+				explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!\n".format(server.get_member(self.id_user).display_name)
+				ewutils.logMsg("")
+				resp_cont.add_channel_response(explode_poi_channel, explode_resp)
+
+				explosion = ewutils.explode(damage = explode_damage, district_data = explode_district)
+				resp_cont.add_response_container(explosion)
+
 		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
+
+		return(resp_cont)
 
 	def add_bounty(self, n = 0):
 		self.bounty += int(n)
