@@ -1365,22 +1365,26 @@ def create_death_report(cause = None, user_data = None):
 
 	# User display name is used repeatedly later, grab now
 	user_member = server.get_member(user_data.id_user)
-	user_nick = user_member.display_name
+	user_player = EwPlayer(id_user = user_data.id_user)
+	user_nick = user_player.display_name
 
 	deathreport = "You arrive among the dead. {}".format(ewcfg.emote_slimeskull)
 	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
 
 	report_requires_killer = [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning, ewcfg.cause_killing_enemy]
 	if(cause in report_requires_killer): # Only deal with enemy data if necessary
+		killer_isUser = cause in [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning]
+		killer_isEnemy = cause in [ewcfg.cause_killing_enemy]
 		if(killer_isUser): # Generate responses for dying to another player
 			# Grab user data
 			killer_data = EwUser(id_user = user_data.id_killer, id_server = user_data.id_server)
-			
+			player_data = EwPlayer(id_user = user_data.id_killer)		
+
 			# Get killer weapon
 			weapon_item = EwItem(id_item = killer_data.weapon)
 			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
-			killer_nick = server.get_member(user_data.id_killer).display_name
+			killer_nick = player_data.display_name
 
 			if (cause == ewcfg.cause_killing): # Response for dying to another player
 				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
