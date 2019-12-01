@@ -40,6 +40,7 @@ active_trades = {}
 # Contains the items being offered by players
 trading_offers = {}
 
+
 class Message:
 	# Send the message to this exact channel by name.
 	channel = None

@@ -16,6 +16,7 @@ import ewsmelting
 import ewcosmeticitem
 from ew import EwUser
 import ewslimeoid
+import ewhunting
 import ewwep
 import ewquadrants
 
@@ -87,7 +88,8 @@ class EwApartment:
 				col_apt_description=ewcfg.col_apt_description,
 				col_poi=ewcfg.col_poi,
 				col_rent=ewcfg.col_rent,
-				col_apt_class=ewcfg.col_apt_class
+				col_apt_class=ewcfg.col_apt_class,
+
 			), (
 				self.id_server,
 				self.id_user,
@@ -95,7 +97,8 @@ class EwApartment:
 				self.description,
 				self.poi,
 				self.rent,
-				self.apt_class
+				self.apt_class,
+
 			))
 class EwFurniture:
 	item_type = "furniture"
@@ -364,6 +367,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.poi = poi_dest.id_poi
 			user_data.visiting = ewcfg.location_id_empty
 			user_data.time_lastenter = int(time.time())
+			user_data.rr_challenger = ""
 			user_data.persist()
 			
 			ewutils.end_trade(user_data.id_user)
@@ -486,12 +490,19 @@ async def apt_look(cmd):
 
 	furns = ewitem.inventory(id_user= lookObject+ewcfg.compartment_id_decorate, id_server= playermodel.id_server, item_type_filter=ewcfg.it_furniture)
 
+	has_hat_stand = False
+
 	furniture_id_list = []
 	furn_response = ""
 	for furn in furns:
 		i = ewitem.EwItem(furn.get('id_item'))
+
 		furn_response += "{} ".format(i.item_props['furniture_look_desc'])
+
 		furniture_id_list.append(i.item_props['id_furniture'])
+		if i.item_props.get('id_furniture') == "hatstand":
+			has_hat_stand = True
+
 
 		hue = ewcfg.hue_map.get(i.item_props.get('hue'))
 		if hue != None and i.item_props.get('furn_set') != "specialhue":
@@ -538,12 +549,26 @@ async def apt_look(cmd):
 	if (len(closets) > 0):
 		response += "The closet contains: "
 		closet_pile = []
+		hatstand_pile = []
 		for closet in closets:
-			closet_pile.append(closet.get('name'))
+			closet_obj = ewitem.EwItem(id_item=closet.get('id_item'))
+			map_obj = ewcfg.cosmetic_map(closet_obj.item_props.get('id_cosmetic'))
+			if has_hat_stand and map_obj and map_obj.is_hat == True:
+				hatstand_pile.append(closet.get('name'))
+			else:
+				closet_pile.append(closet.get('name'))
 		response += ewutils.formatNiceList(closet_pile)
 		response = response + '.'
 
-	resp_cont.add_channel_response(cmd.message.channel.name, response)
+		resp_cont.add_channel_response(cmd.message.channel.name, response)
+
+		if len(hatstand_pile) > 0:
+			response = "The hat stand holds: "
+			response += ewutils.formatNiceList(hatstand_pile)
+			response = response + '.'
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
+
+
 
 	freezeList = ewslimeoid.get_slimeoid_look_string(user_id=lookObject+'freeze', server_id = playermodel.id_server)
 
@@ -628,6 +653,11 @@ async def store_item(cmd, dest):
 
 		else:
 			response = "You store the {} in the {}.".format(name_string, destination)
+			hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user+"decorate", item_search="hatstand")
+			if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
+				map_obj = ewcfg.cosmetic_map(item.item_props.get('id_cosmetic'))
+				if map_obj.is_hat == True and hatrack:
+					response = "You hang the {} on the rack.".format(name_string)
 
 	else:
 		response = "Are you sure you have that item?"
@@ -762,6 +792,66 @@ async def upgrade(cmd):
 			response = "The deed is done. Back at your apartment, a Slimecorp builder nearly has a stroke trying to speed-renovate. You're now rank {}.".format(apt_model.apt_class)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def watch(cmd):
+	player_model = EwPlayer(id_user=cmd.message.author.id)
+	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
+	poi = user_model.poi
+
+	if user_model.visiting != ewcfg.location_id_empty:
+		user_id = user_model.visiting
+	else:
+		user_id = cmd.message.author.id
+	apartment_model = EwApartment(id_server=cmd.message.server.id, id_user=user_id)
+	apartment_model.persist()
+
+	poi_object = ewcfg.id_to_poi.get(poi)
+	item_sought = ewitem.find_item(id_user=user_id, id_server=player_model.id_server, item_search="television")
+	if item_sought:
+		item_obj = ewitem.EwItem(id_item=item_sought.get('id_item'))
+	else:
+		item_obj = None
+
+	if not poi_object.is_apartment:
+		response = "Watching TV in public sounds like a good idea on paper, but when you're 3 hours in, braindead and drooling your fucking tonsils out your yapper you won't want the masses taking pictures."
+	elif not item_sought:
+		response = "There's no TV here. Give it up and go back to killing people."
+	elif item_obj and "television" not in item_obj.item_props.get('id_furniture'):
+		response = "Get your counterfeit TVs out of here before you start watching the real deal."
+	elif user_model.rr_challenger == "tvset":
+		response = "You're already watching TV."
+
+	else:
+		user_model.rr_challenger = "tvset"
+		user_model.persist()
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You begin watching TV."))
+		for x in range (0, 62):
+			await asyncio.sleep(300)
+			user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
+			if user_model.poi == poi and user_model.time_last_action < (int(time.time()) - ewcfg.time_kickout):
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.tv_lines)))
+			else:
+				if user_model.time_last_action >= (int(time.time()) - ewcfg.time_kickout):
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You fell asleep watching TV."))
+				else:
+					return
+		await asyncio.sleep(300)
+		for lyric in ewcfg.the_slime_lyrics:
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, lyric))
+			await asyncio.sleep(3)
+
+		poi = ewcfg.id_to_poi.get(user_model.poi)
+		cmd.tokens[1] = "megaslime"
+		cmd.tokens[2] = poi.mother_district
+		cmd.tokens[3] = ewcfg.tv_set_slime
+		cmd.tokens[4] = ewcfg.tv_set_level
+		cmd.tokens[5] = "The"
+		cmd.tokens[6] = "Slime"
+		await ewhunting.summon_enemy(is_bot_spawn=True, cmd=cmd)
+		response = ""
+	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
+	user_model.rr_challenger = ""
+	user_model.persist()
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, ""))
 
 def check(str):
 	if str.content == ewcfg.cmd_sign or str.content == ewcfg.cmd_rip:
@@ -1370,7 +1460,7 @@ async def dyefurniture(cmd):
 
 
 #****************************************************************************
-#ADD NEW FUNCTIONS HERE
+#ADD NEW FUNCTIONS HERE async above, non-async below
 #****************************************************************************
 def toss_items(id_user = None, id_server = None, poi = None):
 	if id_user != None and id_server != None and poi != None:

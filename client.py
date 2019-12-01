@@ -856,6 +856,8 @@ async def on_ready():
 
 						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
 
+						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
+
 						bw_furniture2 = None
 						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
 							bw_furniture2 = random.choice(bazaar_furniture)

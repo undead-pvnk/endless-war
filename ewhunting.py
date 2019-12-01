@@ -704,10 +704,10 @@ class EwEnemyEffectContainer:
 		self.target_data = target_data
 
 # Debug command. Could be used for events, perhaps?
-async def summon_enemy(cmd):
+async def summon_enemy(cmd, is_bot_spawn = False):
 	author = cmd.message.author
 
-	if not author.server_permissions.administrator:
+	if not author.server_permissions.administrator and is_bot_spawn == False:
 		return
 
 	time_now = int(time.time())

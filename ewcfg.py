@@ -696,6 +696,9 @@ apartment_s_multiplier = 6000000000
 
 soulprice = 500000000
 
+tv_set_slime = 5000000
+tv_set_level = 100
+
 cmd_promote = cmd_prefix + 'promote'
 
 cmd_arrest = cmd_prefix + 'arrest'
@@ -1224,7 +1227,6 @@ col_apt_name = 'apt_name'
 col_apt_description = 'apt_description'
 col_rent = 'rent'
 col_apt_class = 'apt_class'
-
 
 # Database columns for server
 col_icon = "icon"
@@ -5876,6 +5878,24 @@ bible_verses = [
 ]
 
 
+tv_lines = [
+	"Breaking news! A local street performer won't come down from a gigantic pile of corpses. He refuses to eat for publicity! More to come."
+]
+
+the_slime_lyrics= [
+"https://www.youtube.com/watch?v=w-sREpqDiUo",
+"I am gross and perverted \nI'm obsessed 'n deranged \nI have existed for years\nBut very little has changed",
+"I'm the tool of the Government\nAnd industry too\nFor I am destined to rule\nAnd regulate you",
+"I may be vile and pernicious\nBut you can't look away\nI make you think I'm delicious\nWith the stuff that I say",
+"I'm the best you can get\nHave you guessed me yet?\nI'm the slime oozin' out\nFrom your TV set",
+"You will obey me while I lead you\nAnd eat the garbage that I feed you\nUntil the day that we don't need you\nDon't go for help . . . no one will heed you",
+"Your mind is totally controlled\nIt has been stuffed into my mold\nAnd you will do as you are told\nUntil the rights to you are sold",
+"That's right, folks\nDon't touch that dial",
+"Well, I am the slime from your video\nOozin' along on your livin' room floor\nI am the slime from your video\nCan't stop the slime, people, lookit me go",
+"I am the slime from your video\nOozin' along on your livin' room floor\nI am the slime from your video\nCan't stop the slime, people, lookit me go",
+"Welp, there it went. The Slime begins to wreak havoc outside your apartment. Can you believe you sat on your ass for like 6 hours?"
+]
+
 furniture_list = [
 EwFurniture(
 		id_furniture = "interrogationchair",
@@ -6548,6 +6568,29 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "You can sense brony vibes in this room.",
 		furniture_place_desc = "You place a horse figurine on the windowsill."),
+EwFurniture(
+		id_furniture = "hatstand",
+		str_name = "hat stand",
+		str_desc = "A hat stand is by the door.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A hat stand sits near the door.",
+		furniture_place_desc = "You prop the hat stand up and hang whatever hats you can find on top."),
+EwFurniture(
+		id_furniture = "recordplayer",
+		str_name = "record player",
+		str_desc = "An antique gramophone from the 1930s. It normally plays vinyl, but through the power of slime, CDs work just as well.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 460000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An old record player sits on the floor.",
+		furniture_place_desc = "You place the "
+
+
+),
 ]
 
 
@@ -10538,6 +10581,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat = True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -10547,6 +10591,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat = True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pickelhaube",
@@ -10556,6 +10601,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fedora",
@@ -10565,6 +10611,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "baseballcap",
@@ -10574,6 +10621,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "backwardsbaseballcap",
@@ -10583,6 +10631,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -10592,6 +10641,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -10619,6 +10669,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "handkerchief",
@@ -10664,6 +10715,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "scarf",
@@ -10682,6 +10734,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bomberhat",
@@ -10691,6 +10744,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tuxedo",
@@ -10709,6 +10763,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "jestershat",
@@ -10718,6 +10773,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairof3dglasses",
@@ -10745,6 +10801,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofflipflops",
@@ -10763,6 +10820,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowtie",
@@ -10781,6 +10839,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "kepi",
@@ -10799,6 +10858,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "ushanka",
@@ -10808,6 +10868,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "karategi",
@@ -10826,6 +10887,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nemes",
@@ -10835,6 +10897,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "varsityjacket",
@@ -10853,6 +10916,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hawaiianshirt",
@@ -10889,6 +10953,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 1000000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "weddingring",
@@ -10932,6 +10997,7 @@ cosmetic_items_list = [
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_poketubers,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "juveolantern",
@@ -10939,6 +11005,7 @@ cosmetic_items_list = [
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowlerhat",
@@ -10946,6 +11013,7 @@ cosmetic_items_list = [
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_sourpotatoes,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cabbagetreehat",
@@ -10953,6 +11021,7 @@ cosmetic_items_list = [
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_bloodcabbages,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "braces",
@@ -10981,6 +11050,7 @@ cosmetic_items_list = [
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_pawpaw,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cosplayhorns",
@@ -10995,6 +11065,7 @@ cosmetic_items_list = [
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		acquisition = acquisition_milling,
 		ingredients = item_id_suganmanuts,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pajamaonesie",
