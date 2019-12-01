@@ -48,6 +48,7 @@ import ewfish
 import ewfaction
 import ewapt
 import ewweather
+import ewworldevent
 import ewdebug
 
 from ewitem import EwItem
@@ -124,7 +125,7 @@ cmd_map = {
 	ewcfg.cmd_mine: ewjuviecmd.mine,
 
 	# flags a vein as dangerous
-	#ewcfg.cmd_flag: ewjuviecmd.flag,
+	ewcfg.cmd_flag: ewjuviecmd.flag,
 
 	# Show the current slime score of a player.
 	ewcfg.cmd_score: ewcmd.score,
@@ -133,18 +134,30 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
+	# Check how hungry you are.
+	ewcfg.cmd_hunger: ewcmd.hunger,
+
 	#check what time it is, and the weather
 	ewcfg.cmd_time: ewcmd.weather,
 	ewcfg.cmd_clock: ewcmd.weather,
 	ewcfg.cmd_weather: ewcmd.weather,
 
-
 	# Rowdys thrash and Killers dab.
 	ewcfg.cmd_thrash: ewcmd.thrash,
 	ewcfg.cmd_dab: ewcmd.dab,
+	
+	# Ghosts can BOO (and during Double Halloween, SPOOK)
+	ewcfg.cmd_boo: ewcmd.boo,
+	ewcfg.cmd_spook: ewcmd.spook,
+    
+    # Make a costume for Double Halloween
+    ewcfg.cmd_makecostume: ewitem.makecostume,
 
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
+	
+	# Show the total of positive slime in the world.
+	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
@@ -160,6 +173,7 @@ cmd_map = {
 	ewcfg.cmd_sign: ewapt.nothing,
 	ewcfg.cmd_upgrade: ewapt.upgrade,
 	ewcfg.cmd_knock: ewapt.knock,
+	ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand: ewapt.propstand,
@@ -672,6 +686,7 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)

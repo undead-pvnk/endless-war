@@ -2953,12 +2953,23 @@ async def dress_slimeoid(cmd):
 			)
 
 			item_sought = None
+			already_adorned = False
+			item_from_user = None
 			for item in cosmetics:
 				if item.get('id_item') == item_id_int or item_search in ewutils.flattenTokenListToString(item.get('name')):
 					cos = EwItem(item.get('id_item'))
-					if cos.item_props.get('slimeoid') != 'true':
+					if item_from_user == None and cos.item_props.get('adorned') == 'true':
+						item_from_user = cos
+						continue
+
+					if cos.item_props.get('slimeoid') == 'true':
+						already_adorned = True
+					else:
 						item_sought = cos
 						break
+
+			if item_sought == None:
+				item_sought = item_from_user
 
 			if item_sought != None:
 				# get the cosmetics worn by the slimeoid
@@ -2980,6 +2991,8 @@ async def dress_slimeoid(cmd):
 					item_sought.persist()
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'
+			elif already_adorned:
+				response = "Your slimeoid is already wearing it."
 			else:
 				response = 'You don\'t have one.'
 		else:

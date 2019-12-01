@@ -72,12 +72,14 @@ class EwResponseContainer:
 	id_server = ""
 	channel_responses = {}
 	channel_topics = {}
+	members_to_update = []
 
 	def __init__(self, client = None, id_server = None):
 		self.client = client
 		self.id_server = id_server
 		self.channel_responses = {}
 		self.channel_topics = {}
+		self.members_to_update = []
 
 	def add_channel_response(self, channel, response):
 		if channel in self.channel_responses:
@@ -88,6 +90,13 @@ class EwResponseContainer:
 	def add_channel_topic(self, channel, topic):
 		self.channel_topics[channel] = topic
 
+	def add_member_to_update(self, member):
+		for update_member in self.members_to_update:
+			if update_member.id == member.id:
+				return
+
+		self.members_to_update.append(member)
+
 	def add_response_container(self, resp_cont):
 		for ch in resp_cont.channel_responses:
 			responses = resp_cont.channel_responses[ch]
@@ -96,6 +105,9 @@ class EwResponseContainer:
 
 		for ch in resp_cont.channel_topics:
 			self.add_channel_topic(ch, resp_cont.channel_topics[ch])
+
+		for member in resp_cont.members_to_update:
+			self.add_member_to_update(member)
 
 	def format_channel_response(self, channel, member):
 		if channel in self.channel_responses:
@@ -114,6 +126,9 @@ class EwResponseContainer:
 		if server == None:
 			logMsg("Couldn't find server with id {}".format(self.id_server))
 			return messages
+
+		for member in self.members_to_update:
+			await ewrolemgr.updateRoles(client = self.client, member = member)
 
 		for ch in self.channel_responses:
 			if channel == None:
@@ -1133,11 +1148,15 @@ def get_move_speed(user_data):
 
 	if user_data.time_expirpvp >= time_now:
 		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
+		
+	# TODO: Remove after Double Halloween
+	if user_data.life_state == ewcfg.life_state_corpse:
+		move_speed *= 2
 
 	return move_speed
 
 """ Damage all players in a district """
-async def explode(damage = 0, district_data = None):
+def explode(damage = 0, district_data = None):
 	id_server = district_data.id_server
 	poi = district_data.name
 
@@ -1178,10 +1197,10 @@ async def explode(damage = 0, district_data = None):
 				resp_cont.add_channel_response(channel, response)
 
 				if ewcfg.mutation_id_spontaneouscombustion in mutations:
-					sub_explosion = await explode(explode_damage, district_data)
+					sub_explosion = explode(explode_damage, district_data)
 					resp_cont.add_response_container(sub_explosion)
 
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				resp_cont.add_member_to_update(server.get_member(user_data.id_user))
 			else:
 				# survive
 				slime_splatter = 0.5 * slimes_damage
@@ -1242,7 +1261,12 @@ async def delete_last_message(client, last_messages, tick_length):
 def check_accept_or_refuse(str):
 	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
 		return True
-
+	
+# TODO: Remove after Double Halloween
+def check_trick_or_treat(str):
+	if str.content.lower() == ewcfg.cmd_treat or str.content.lower() == ewcfg.cmd_trick:
+		return True
+	
 def end_trade(id_user):
 	# Cancel an ongoing trade
 	if active_trades.get(id_user) != None and len(active_trades.get(id_user)) > 0:
@@ -1259,3 +1283,4 @@ def generate_captcha(n = 4):
 	for i in range(n):
 		captcha += random.choice(ewcfg.alphabet)
 	return captcha.upper()
+

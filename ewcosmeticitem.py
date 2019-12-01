@@ -82,12 +82,23 @@ async def adorn(cmd):
 		)
 
 		item_sought = None
+		item_from_slimeoid = None
+		already_adorned = False
 		for item in items:
 			if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
 				i = EwItem(item.get('id_item'))
-				if i.item_props.get("adorned") == 'false':
+				if item_from_slimeoid == None and i.item_props.get("slimeoid") == 'true':
+					item_from_slimeoid = i
+					continue
+
+				if i.item_props.get("adorned") == 'true':
+					already_adorned = True
+				else:
 					item_sought = i
 					break
+
+		if item_sought == None:
+			item_sought = item_from_slimeoid
 
 		if item_sought != None:
 			adorned_items = 0
@@ -112,6 +123,9 @@ async def adorn(cmd):
 					response = "You successfully adorn your " + item_sought.item_props['cosmetic_name'] + "."
 
 				item_sought.persist()
+
+		elif already_adorned:
+			response = "You already have it adorned."
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:

@@ -20,10 +20,11 @@ from ewstatuseffects import EwStatusEffectDef
 from ewfarm import EwFarmAction
 from ewfish import EwFish
 from ewapt import EwFurniture
+from ewworldevent import EwEventDef
 import ewdebug
 
 # Global configuration options.
-version = "v3.8a"
+version = "v3.9hwx2"
 
 dir_msgqueue = 'msgqueue'
 
@@ -79,6 +80,7 @@ poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
+poi_id_rpcity = "rpcity"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -299,6 +301,8 @@ role_corpse_active = "corpseotp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
+role_deathfurnace = "deathfurnace"
+role_donor = "terezigang"
 
 faction_roles = [
 	role_juvenile,
@@ -547,8 +551,10 @@ cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
 cmd_negaslime = cmd_prefix + 'negaslime'
+cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
+cmd_hunger = cmd_prefix + 'hunger'
 cmd_clock = cmd_prefix + 'clock'
 cmd_time = cmd_prefix + 'time'
 cmd_weather = cmd_prefix + 'weather'
@@ -604,6 +610,11 @@ cmd_news = cmd_prefix + 'news'
 cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
+cmd_boo = cmd_prefix + 'boo'
+cmd_spook = cmd_prefix + 'spook'
+cmd_makecostume = cmd_prefix + 'makecostume'
+cmd_trick = cmd_prefix + 'trick'
+cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
@@ -669,6 +680,7 @@ cmd_aptname = cmd_prefix + 'aptname'
 cmd_aptdesc = cmd_prefix + 'aptdesc'
 cmd_upgrade  = cmd_prefix + 'aptupgrade' #do we need the apt at the beginning?
 cmd_knock = cmd_prefix + 'knock'
+cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
 cmd_propstand = cmd_prefix + 'propstand'
@@ -797,7 +809,9 @@ slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
-slimes_hauntmax = 20000
+#slimes_hauntmax = 20000
+# TODO: Change back after Double Halloween
+slimes_hauntmax = 50000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
@@ -818,6 +832,8 @@ hunger_perminereset = 10
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
+# TODO: Remove after Double Halloween
+hunger_pertrickortreat = 6
 
 #inebriation
 inebriation_max = 20
@@ -835,6 +851,8 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
+# TODO: Remove after Double Halloween
+acquisition_trickortreating = "trickortreating"
 
 # standard food expiration in seconds
 std_food_expir = 12 * 3600  # 12 hours
@@ -934,6 +952,9 @@ invuln_onrevive = 0
 # how often to apply weather effects
 weather_tick_length = 10
 
+# how often to delete expired world events
+event_tick_length = 5
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000
@@ -1000,7 +1021,9 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 # Cooldowns
 cd_kill = 5
 cd_spar = 60
-cd_haunt = 600
+#cd_haunt = 600
+# TODO: Change back after Double Halloween
+cd_haunt = 180
 cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
@@ -1084,6 +1107,8 @@ emote_slimegun = "<:slimegun:436500203743477760>"
 emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
+emote_srs = "<:srs:631859962519224341>"
+emote_staydead = "<:staydead:506840095714836480>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1108,15 +1133,20 @@ emote_broken_heart = ":broken_heart:"
 emote_ms_hidden = ":pick:"
 emote_ms_mine = ":x:"
 emote_ms_flagged = ":triangular_flag_on_post:"
-emote_ms_0 = ":zero:"
-emote_ms_1 = ":one:"
-emote_ms_2 = ":two:"
-emote_ms_3 = ":three:"
-emote_ms_4 = ":four:"
-emote_ms_5 = ":five:"
+emote_ms_0 = ":white_circle:"
+emote_ms_1 = ":heart:"
+emote_ms_2 = ":yellow_heart:"
+emote_ms_3 = ":green_heart:"
+emote_ms_4 = ":blue_heart:"
+emote_ms_5 = ":purple_heart:"
 emote_ms_6 = ":six:"
 emote_ms_7 = ":seven:"
 emote_ms_8 = ":eight:"
+
+# mining grid types
+mine_grid_type_minesweeper = "minesweeper"
+mine_grid_type_pokemine = "pokemining"
+mine_grid_type_bubblebreaker = "bubblebreaker"
 
 # mining sweeper
 cell_mine = 1
@@ -1128,6 +1158,24 @@ cell_empty_marked = -2
 cell_empty_open = -3
 
 cell_slime = 0
+
+# bubble breaker
+cell_bubble_empty = "0"
+cell_bubble_0 = "5"
+cell_bubble_1 = "1"
+cell_bubble_2 = "2"
+cell_bubble_3 = "3"
+cell_bubble_4 = "4"
+
+cell_bubbles = [
+	cell_bubble_0,
+	cell_bubble_1,
+	cell_bubble_2,
+	cell_bubble_3,
+	cell_bubble_4
+]
+
+bubbles_to_burst = 4
 
 
 symbol_map_ms = {
@@ -1399,6 +1447,11 @@ col_quadrants_target2 = 'id_target2'
 col_id_status = 'id_status'
 col_source = 'source'
 
+# Database columns for world events
+col_id_event = 'id_event'
+col_event_type = 'event_type'
+col_time_activate = 'time_activate'
+
 # Item type names
 it_item = "item"
 it_medal = "medal"
@@ -1630,6 +1683,7 @@ vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
+vendor_rpcity = "RP City" #You can buy costume creation kits here
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1643,9 +1697,10 @@ item_id_forbidden111 = "theforbiddenoneoneone"
 item_id_tradingcardpack = "tradingcardpack"
 item_id_stick = "stick"
 item_id_gameguide = "gameguide"
-item_id_fuckenergybodyspray = "fuckenergybodyspray"
+item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
+item_id_costumekit = "costumekit"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1653,6 +1708,31 @@ item_id_doublefaggot = "doublefaggot"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
 
+#candy ids
+item_id_paradoxchocs = "paradoxchocs"
+item_id_licoricelobsters = "licoricelobsters"
+item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
+item_id_munchies = "munchies"
+item_id_sni = "sni"
+item_id_twixten = "twixten"
+item_id_slimeybears = "slimeybears"
+item_id_marsbar = "marsbar"
+item_id_magickspatchkids = "magickspatchkids"
+item_id_atms = "atms"
+item_id_seanis = "seanis"
+item_id_candybungis = "candybungis"
+item_id_turstwerthers = "turstwerthers"
+item_id_poudrinpops = "poudrinpops"
+item_id_juvieranchers = "juvieranchers"
+item_id_krakel = "krakel"
+item_id_swedishbassedgods = "swedishbassedgods"
+item_id_bustahfingers = "bustahfingers"
+item_id_endlesswarheads = "endlesswarheads"
+item_id_n8heads = "n8heads"
+item_id_strauberryshortcakes = "strauberryshortcakes"
+item_id_chutzpahcherries = "chutzpahcherries"
+item_id_n3crunch = "n3crunch"
+item_id_slimesours = "slimesours"
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -1989,18 +2069,24 @@ item_list = [
 		price = 10000,
 	),
 	EwGeneralItem(
-		id_item = item_id_fuckenergybodyspray,
-		context = 'repel',
-		alias = [
+		id_item=item_id_juviegradefuckenergybodyspray,
+		context='repel',
+		alias=[
+			"regular body spray",
+			"regbs",
+			"regular repel",
+			"juvie",
+			"juviegrade",
+			"juvie grade",
 			"repel",
 			"body spray",
 			"bodyspray",
 			"bs",
 		],
-		str_name = "FUCK ENERGY Body Spray",
-		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
-		vendors = [vendor_glocksburycomics],
-		price = 10000,
+		str_name="Juvie Grade FUCK ENERGY Body Spray",
+		str_desc="A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for three hours.",
+		vendors=[vendor_glocksburycomics],
+		price=10000,
 	),
 	EwGeneralItem(
 		id_item = item_id_superduperfuckenergybodyspray,
@@ -2035,6 +2121,21 @@ item_list = [
 		str_desc = "A canister of perfume. Somehow doubles as a slime beast repellant. The label on the back says it lasts for twelve hours.",
 		vendors = [vendor_glocksburycomics],
 		price = 40000,
+	),
+	EwGeneralItem(
+		id_item = item_id_costumekit,
+		context = 'costumekit',
+		alias = [
+			"costumekit",
+			"ck",
+			"fursuit",
+			"kit",
+			"costume",
+		],
+		str_name = "Double Halloween Costume Kit",
+		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
+		vendors = [vendor_rpcity],
+		price = 50000,
 	),
 ]
 item_list += ewdebug.debugitem_set
@@ -2202,10 +2303,14 @@ def wef_bat(ctn = None):
 	elif aim == -1:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
 	elif aim >= (11 - int(13 * ctn.crit_mod)):
@@ -2296,10 +2401,14 @@ def wef_broadsword(ctn = None):
 	elif aim <= 3:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -ctn.slimes_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -ctn.slimes_damage)
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
@@ -2332,7 +2441,9 @@ def wef_nunchucks(ctn = None):
 		ctn.slimes_damage += dmg * 4
 
 	elif ctn.strikes == 0:
-		ctn.backfire = True
+		ctn.backfire = True if not ctn.sandbag_mode else False
+		if not ctn.backfire:
+			return
 		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
 
 # weapon effect function for "scythe"
@@ -2434,10 +2545,14 @@ def wef_molotov(ctn = None):
 	if aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
 
 	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
@@ -2474,10 +2589,14 @@ def wef_grenade(ctn = None):
 	elif aim > 1 and aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True
+				ctn.backfire = True if not ctn.sandbag_mode else False
+				if not ctn.backfire:
+					return
 				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 		else:
-			ctn.backfire = True
+			ctn.backfire = True if not ctn.sandbag_mode else False
+			if not ctn.backfire:
+				return
 			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
 
 	elif aim >= (10 - (10 * ctn.crit_mod)):
@@ -3254,8 +3373,8 @@ def atf_molotovbreath(ctn = None):
 		ctn.slimes_damage = 0
 
 	elif aim == 10:
-			ctn.crit = True
-			ctn.slimes_damage *= 2
+		ctn.crit = True
+		ctn.slimes_damage *= 2
 			
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
@@ -4856,7 +4975,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Khaotic Killiflower FUCK ENERGY',
+		str_name = 'Khaotic Killiflower FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its bitter, low quality artificial Purple Killiflower flavorings remind you of discount children’s cough medicine. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Khaotic Killiflower flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4866,7 +4985,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Rampaging Rowddish FUCK ENERGY',
+		str_name = 'Rampaging Rowddish FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its sickeningly sweet artificial Pink Rowddish flavorings taste like if you mixed about 16 packs of Starburst FaveREDs into a blender. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Rampaging Rowddish flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4876,7 +4995,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Dire Apple Cider FUCK ENERGY',
+		str_name = 'Dire Apple Cider FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its wickedly sour artificial Dire Apple flavorings, mixed with its thick consistency, makes it feel like you’re drinking applesauce mixed with a healthy heaping of malic acid. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Dire Apple Cider flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4886,7 +5005,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Ultimate Urine FUCK ENERGY',
+		str_name = 'Ultimate Urine FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. It literally just tastes like piss. You’re almost positive you’re literally drinking pee right now. It’s not even carbonated. Nigh instantaneously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Ultimate Urine flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psychedelic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any otherr living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -4896,7 +5015,7 @@ food_list = [
 		price = 12000,
 		inebriation = 1000,
 		vendors = [vendor_mtndew, vendor_vendingmachine],
-		str_name = 'Super Water FUCK ENERGY',
+		str_name = 'Super Water FUCK ENERGY Drink',
 		str_eat = "You crack open a cold, refreshing can of Super Water flavored FUCK ENERGY. You throw your head back and begin to chug it, its viciously viscous consistency is almost enough to trigger your gag reflexes. But, you hold strong. Its extremely potent artificial water flavorings overwhelm your senses, temporarily shutting off your brain from the sheer amount of information being sent to it from your overloaded taste buds. You probably are literally retarded now. Nigh instanously, the chemicals infiltrate your central nervous system. You feel an intense heat, like your body is about to spontaneously combust. You become lightheaded, your body twitching and convulsing randomly. And then, suddenly, you are launched into a manic, hyper-awareness. You begin to process more information in a single nanosecond than people with a masters in theoretical physics analyze in a lifetime. Your left and right brain sever, they now operate completely separately from one another and twice as efficiently. Your pineal gland doubles, nay, triples in size. You have never felt more alive. You crush the can with your forehead, screaming.",
 		str_desc = "A cold, refreshing can of Super Water flavored FUCK ENERGY. You can occasionally feel rumbles from inside it, the drink itself begging to be released from the thin metal sarcophagus that barely contains it. You flip it over to read the blurb on the back.\n\n\n*Make no mistake - FUCK ENERGY is not your grandma's run-of-the-mill pissy baby fucker fapper limp, lame liquid masquerading as a psychotic psycadellic or performance-enhancing elixir. FUCK ENERGY is the real deal. From the moment you bought this energy drink, your fate was sealed, cursed. Reality itself has been rewritten, and your destiny decided. Your body's natural limits and basic inhibitions will be completely and utterly pulverized, ground into dust to be scavenged by us to imbue into the next incarnation of the very instrument of your destruction. Every FUCK ENERGY is infused, steeped in the atomized souls of our unprepared consumers. You will contribute to this vicious cycle, at a near molecular level your very consciousness will be ripped apart and sold into slavery. Your new master? Us. Every drop of FUCK ENERGY has been rigorously tested to systematically attack you, shutting down entire bodily functions. Your organs will be forcefully transformed into top-of-the-line computer parts, hand picked by a cruel computer science major to maximize the fidelity of his foreign language visual erotica. Your brain will be overclocked, your heart pushed past all previous extremes, and without an internal fan to cool it down either. You will be a being of pure adrenaline and a martyr for dopamine. You will be consumed by the abstract idea of energy. But, it won't be abstract to you. You will understand energy more than any other living creature on this planet. Now go, open this quite literal Pandora's Box. Escaping your purpose is impossible. What are you waiting for? Are you scared? GET FUCKED.*",
 	),
@@ -5090,7 +5209,295 @@ food_list = [
 		str_eat = "You savour every last bite of your meal, and all the doubt you might have had about sacrificing your sticks washes away.",
 		str_desc = "Through a stroke of genius, a faggot was sacrificed, and fire was made. The result is the meat of a savage beast, seared to perfection.",
 		acquisition = acquisition_smelting
-	)
+	),
+	EwFood(
+		id_food = item_id_paradoxchocs,
+		alias = [
+			"chocs",
+		],
+		recover_hunger = 120,
+        price = 100,
+		str_name = 'Paradox Chocs',
+		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
+		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_twixten,
+		alias = [
+			"twix",
+		],
+		recover_hunger = 150,
+        price = 100,
+		str_name = 'Twixten',
+		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
+		str_desc = "A chocolate bar. It's shaped like a katana.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_sni,
+		alias = [
+			"blatantracism",
+		],
+		recover_hunger = 100,
+		price = 100,
+		str_name = 'SNI-',
+		str_eat = "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
+		str_desc = "A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_slimeybears,
+		alias = [
+			"bears",
+		],
+		recover_hunger = 80,
+		price = 100,
+		str_name = 'Slimey Bears',
+		str_eat = "You stash a fistfull of Slimey Bears right into your gullet, chewing them thoroughly.",
+		str_desc = "A packet of Slimey Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_n8heads,
+		alias = [
+			"n8s",
+		],
+		recover_hunger = 60,
+		price = 100,
+		str_name = 'N8heads',
+		str_eat = "You chew on a N8head. It stopped tasting good long before you were done sinking your teeth into it, but you felt committed enough to finish what you started. Fuckin shill.",
+		str_desc = "A N8heads packet. They're bars of sour taffy, each with his signature shades imprinted onto them.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_turstwerthers,
+		alias = [
+			"turst",
+		],
+		recover_hunger = 70,
+		price = 100,
+		str_name = 'Turstwerthers',
+		str_eat = "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
+		str_desc = "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_candybungis,
+		alias = [
+			"bungis",
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Candy (Bungis)',
+		str_eat = "You eat through the Candy (Bungis). Rather than imprint the temporary tattoo, you just shove the whole thing into your mouth and chew through it.",
+		str_desc = "A rolled up fruit snack. An layer of ink it has allows you to imprint an image of Sky (Bungis) onto your tongue.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_licoricelobsters,
+		alias = [
+			"licorice",
+		],
+		recover_hunger = 150,
+		price = 1000,
+		str_name = 'Licorice Lobsters',
+		str_eat = "You chomp on the Licorice Lobsters. Their slight bittersweetness fills you with memories of days gone by.",
+		str_desc = "Yup. They're lobsters.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_chocolateslimecorpbadges,
+		alias = [
+			"badges",
+		],
+		recover_hunger = 200,
+		price = 1000,
+		str_name = 'Choclate Slimecorp Badges',
+		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
+		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_poudrinpops,
+		alias = [
+			"pops",
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Poudrin Pops',
+		str_eat = "You crush the poudrin pops with your teeth alone. You don't gain any slime, but they do taste amazing.",
+		str_desc = "Hard, green candy, meant to resemble Slime Poudrins. They're placed atop plastic rings, meant to be worn on your finger as you lick away.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_atms,
+		alias = [
+			"ATm's",
+		],
+		recover_hunger = 130,
+		price = 1000,
+		str_name = "ATm's",
+		str_eat = "You snack on the packet of ATm's. The hard shell pairs nicely with the milk chocolate on the inside.",
+		str_desc = "A packet of ATm's. They're all small, spherical chocolates with the @ symbol on them.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_seanis,
+		alias = [
+			"seanies",
+		],
+		recover_hunger = 90,
+		price = 1000,
+		str_name = 'Seanis',
+		str_eat = "You chomp on the Seanis, slicing them in twain over and over. By the time you're finished with them, you've developed three cavities.",
+		str_desc = "A packet of hard candies. They're small tablets, colored in fuchsia, purple, and seafoam green.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_bustahfingers,
+		alias = [
+			"bustah",
+		],
+		recover_hunger = 300,
+		price = 10000,
+		str_name = 'Bustahfingers',
+		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
+		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of choclate in the middle.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_marsbar,
+		alias = [
+			"mars",
+		],
+		recover_hunger = 300,
+		price = 10000,
+		str_name = 'Mars Bar',
+		str_eat = "You take a bite out of the mars bar. Shockingly, the nicotine on the inside pairs well with the creamy sweetness of the white chocolate shell.",
+		str_desc = "A small cylindrical candy bar, unsurprisingly shaped like a cigarette. What is surprising, however, is that it contains tiny traces of nicotine on the inside.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_juvieranchers,
+		alias = [
+			"ranchers",
+		],
+		recover_hunger = 30,
+		price = 10000,
+		str_name = 'Juvie Ranchers',
+		str_eat = "You suck on the Juvie Ranchers. The Dire Apple ones are particularly sour.",
+		str_desc = "A bag of hard candies, all flavored after the various crops of the city.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_swedishbassedgods,
+		alias = [
+			"bassedgods",
+		],
+		recover_hunger = 100,
+		price = 10000,
+		str_name = 'Swedish Bassed Gods',
+		str_eat = "You chew through the Swedish Bassed Gods. Despite their unassuming appearance, they taste amazing. Truly a snack worthy of praise. Or would it be 'appraisal', in this case? Ah, forget it.",
+		str_desc = "A packet of gummies shaped like the Bassed God. On the back of the packet, there's an advertisement for the Fishing Guild.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food=item_id_endlesswarheads,
+		alias=[
+			"warheads",
+		],
+		recover_hunger=250,
+		price=10000,
+		str_name='Endless Warheads',
+		str_eat="You chew through the Endless Warheads. Combining different colored ones inside your mouth sets off a burst of flavor. Sick!!",
+		str_desc="A bag of sour candies coated in sugar. They're all multicolored, and shaped like the familiar obelisk it gets its name from.",
+		acquisition=acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_chutzpahcherries,
+		alias = [
+			"cherries",
+		],
+		recover_hunger = 250,
+		price = 10000,
+		str_name = 'Chutzpah Cherries',
+		str_eat = "You gobble up the Chutzpah Cherries. Who knew euthanasia could taste this good!",
+		str_desc = "A small box of dark red gummies, each one bearing the face of a slimeoid.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_slimesours,
+		alias = [
+			"sours",
+		],
+		recover_hunger = 100,
+		price = 100000,
+		str_name = 'Slime Sours',
+		str_eat = "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seemingly have no connection with the death raining from above.",
+		str_desc = "A small plastic bag of gumdrops, each as green as slime itself. Apparently they're made entirely by hand.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_munchies,
+		alias = [
+			"munchys",
+		],
+		recover_hunger = 350,
+		price = 100000,
+		str_name = 'Munchies',
+		str_eat = "You gorge yourself on the Munchies. What seemed like such a basic snack item reveals itself to be incredibly addictive. Before you know it, the bag is empty, leaving you to reflect on your gluttony.",
+		str_desc = "A bag of crackers, with a thin layer of cream in the middle. They're all shaped like jester hats.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_magickspatchkids,
+		alias = [
+			"magicks",
+		],
+		recover_hunger = 100,
+		price = 100000,
+		str_name = 'Magicks Patch Kids',
+		str_eat = "You munch on the Magicks Patch Kids. Sour. Sweet. !dab.",
+		str_desc = "People are rather split on these. Some find them too sour, while others claim it to have an 'acquired taste'.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_krakel,
+		alias = [
+			"krak",
+		],
+		recover_hunger = 320,
+		price = 100000,
+		str_name = 'Krakel',
+		str_eat = "You take a large bite out of the Krakel bar. The rice lining the interior gives it a nice texture, and offsets the bitterness of the dark chocolate a bit.",
+		str_desc = "A thick slab of dark chocolate. An engraving on the back reads 'SLURP SLIME, BUSTERS'. Go figure.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_strauberryshortcakes,
+		alias = [
+			"shortcakes",
+		],
+		recover_hunger = 250,
+		price = 100000,
+		str_name = 'Strauberry Shortcakes',
+		str_eat = "You toss the shortcakes into your mouth one at a time, savoring every bite. Even though they're manufactured, somehow you feel like a lot of love went into making them. Maybe it's just because of all the sugar.",
+		str_desc = "A packet containing two small pastries. An anchor symbol made of pink frosting is drawn onto both of them.",
+		acquisition = acquisition_trickortreating
+	),
+	EwFood(
+		id_food = item_id_n3crunch,
+		alias = [
+			"crunch",
+		],
+		recover_hunger = 250,
+		price = 100000,
+		str_name = 'N3 Crunch',
+		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
+		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
+		acquisition = acquisition_trickortreating
+	),
 ]
 
 # A map of id_food to EwFood objects.
@@ -5813,16 +6220,16 @@ fish_map = {}
 fish_names = []
 
 bully_responses = [
-"You push {} into a puddle of sludge, laughing at how hopelessly dirty they are.",
-"You hold {} down and pull their underwear over their head. It looks like their neck's about to snap off, holy shit.",
-"You decide to give {} a slime swirly in a nearby puddle. It's so shallow that they mostly get a faceful of gravel.",
-"You tie {} to a tree and slap them around senselessly. You untie them once their face and belly bruise cherry red.",
-"You flag down a muscle car on the road and shout: \"HEY! {} FUCKED YOUR WIFE!\" The good man parks on the side of the road and starts beating the everloving shit out them. -SLIMEOID- cowers in the corner, now scarred for life and afraid of dads.",
-"You pull on {}'s hair, ripping some out and causing them to cry. They should fucking grow up.",
-"You reach into {}'s shirt and give them a purple nurple. Man, these bullying tactics are getting kind of gay.",
-"You whip out your dick and pee on {}'s wife. Fuck. That's a power move right there.",
-"You scream \"HEY {}! NICE {cosmetic} YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
-"You grab {slimeoid} and give them a noogie. Just when {} thinks this is all fun and games, you throw {slimeoid} into the street. They have a panic attack trying to get past all the traffic and back to safety."
+	"You push {target_name} into a puddle of sludge, laughing at how hopelessly dirty they are.",
+	"You hold {target_name} down and pull their underwear over their head. It looks like their neck's about to snap off, holy shit.",
+	"You decide to give {target_name} a slime swirly in a nearby puddle. It's so shallow that they mostly get a faceful of gravel.",
+	"You tie {target_name} to a tree and slap them around senselessly. You untie them once their face and belly bruise cherry red.",
+	"You flag down a muscle car on the road and shout: \"HEY! {target_name} FUCKED YOUR WIFE!\" The good man parks on the side of the road and starts beating the everloving shit out them. {slimeoid} cowers in the corner, now scarred for life and afraid of dads.",
+	"You pull on {target_name}'s hair, ripping some out and causing them to cry. They should fucking grow up.",
+	"You reach into {target_name}'s shirt and give them a purple nurple. Man, these bullying tactics are getting kind of gay.",
+	"You whip out your dick and pee on {target_name}'s wife. Fuck. That's a power move right there.",
+	"You scream \"HEY {target_name}! NICE {cosmetic} YOU'RE WEARING! DID YOUR MOM BUY IT FOR YA?\"",
+	"You grab {slimeoid} and give them a noogie. Just when {target_name} thinks this is all fun and games, you throw {slimeoid} into the street. They have a panic attack trying to get past all the traffic and back to safety."
 
 ]
 
@@ -7094,7 +7501,7 @@ poi_list = [
 			"lc"
 		],
 		str_name = "Little Chernobyl",
-		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nTo the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
+		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains RP City. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
 		coord = (67, 18),
 		coord_alias = [
 			(63, 16),
@@ -7548,7 +7955,7 @@ poi_list = [
 			"se"
 		],
 		str_name = "Slime's End",
-		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\n To the North is Vagrant's Corner.",
+		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner.",
 		coord = (98, 38),
 		coord_alias = [
 			(94, 36),
@@ -8028,7 +8435,6 @@ poi_list = [
 			"stockexchange",
 			"slimecorpstockexchange",
 			"sex",  # slime's end is "se"
-			"sec",
 			"sx",
 			"scex",
 			"scx",
@@ -9330,6 +9736,7 @@ poi_list = [
 	EwPoi( # Glocksbury Comics
 		id_poi = poi_id_glocksburycomics,
 		alias = [
+			"gbc",
 			"gc",
 			"glocksburycomics",
 			"comicstore",
@@ -9345,6 +9752,26 @@ poi_list = [
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
+		is_subzone = True
+	),
+	EwPoi( # RP City
+		id_poi = poi_id_rpcity,
+		alias = [
+			"rp",
+			"rp city",
+			"roleplay city",
+			"rpc",
+			"costume store",
+			"costumestore",
+		],
+		str_name = "RP City",
+		str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
+		coord = (63, 18),
+		pvp = False,
+		vendors = [vendor_rpcity],
+		channel = "rp-city",
+		role = "RP City",
+		mother_district = poi_id_littlechernobyl,
 		is_subzone = True
 	),
 	EwPoi(  # Ferry
@@ -9491,7 +9918,7 @@ poi_list = [
 		default_stop = poi_id_df_blimp_tower
 	),
 
-EwPoi( # apt
+	EwPoi( # apt
 		id_poi = poi_id_apt,
 		alias = [
 		],
@@ -9502,7 +9929,7 @@ EwPoi( # apt
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-downtown
+	EwPoi( # apt-downtown
 		id_poi = poi_id_apt_downtown,
 		alias = [
 			"apt",
@@ -9516,7 +9943,7 @@ EwPoi( # apt-downtown
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-smogsburg
+	EwPoi( # apt-smogsburg
 		id_poi = poi_id_apt_smogsburg,
 		alias = [
 			"apt",
@@ -9530,7 +9957,7 @@ EwPoi( # apt-smogsburg
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-krakbay
+	EwPoi( # apt-krakbay
 		id_poi = poi_id_apt_krakbay,
 		alias = [
 			"apt",
@@ -9544,7 +9971,7 @@ EwPoi( # apt-krakbay
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-poudrinalley
+	EwPoi( # apt-poudrinalley
 		id_poi = poi_id_apt_poudrinalley,
 		alias = [
 			"apt",
@@ -9558,7 +9985,7 @@ EwPoi( # apt-poudrinalley
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-green-light-district
+	EwPoi( # apt-green-light-district
 		id_poi = poi_id_apt_greenlightdistrict,
 		alias = [
 
@@ -9572,7 +9999,7 @@ EwPoi( # apt-green-light-district
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-old-new-yonkers
+	EwPoi( # apt-old-new-yonkers
 		id_poi = poi_id_apt_oldnewyonkers,
 		alias = [
 
@@ -9586,7 +10013,7 @@ EwPoi( # apt-old-new-yonkers
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-little-chernobyl
+	EwPoi( # apt-little-chernobyl
 		id_poi = poi_id_apt_littlechernobyl,
 		alias = [
 
@@ -9600,7 +10027,7 @@ EwPoi( # apt-little-chernobyl
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-arsonbrook
+	EwPoi( # apt-arsonbrook
 		id_poi = poi_id_apt_arsonbrook,
 		alias = [
 
@@ -9614,7 +10041,7 @@ EwPoi( # apt-arsonbrook
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-astatine-heights
+	EwPoi( # apt-astatine-heights
 		id_poi = poi_id_apt_astatineheights,
 		alias = [
 
@@ -9628,7 +10055,7 @@ EwPoi( # apt-astatine-heights
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-gatlingsdale
+	EwPoi( # apt-gatlingsdale
 		id_poi = poi_id_apt_gatlingsdale,
 		alias = [
 
@@ -9642,7 +10069,7 @@ EwPoi( # apt-gatlingsdale
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-vandal-park
+	EwPoi( # apt-vandal-park
 		id_poi = poi_id_apt_vandalpark,
 		alias = [
 
@@ -9684,7 +10111,7 @@ EwPoi( # apt-vandal-park
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-south-sleezeborough
+	EwPoi( # apt-south-sleezeborough
 		id_poi = poi_id_apt_southsleezeborough,
 		alias = [
 
@@ -9698,7 +10125,7 @@ EwPoi( # apt-south-sleezeborough
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # ooze-gardens
+	EwPoi( # ooze-gardens
 		id_poi = poi_id_apt_oozegardens,
 		alias = [
 
@@ -9712,7 +10139,7 @@ EwPoi( # ooze-gardens
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-cratersville
+	EwPoi( # apt-cratersville
 		id_poi = poi_id_apt_cratersville,
 		alias = [
 
@@ -9740,7 +10167,7 @@ EwPoi( # apt-cratersville
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-slimes-end
+	EwPoi( # apt-slimes-end
 		id_poi = poi_id_apt_slimesend,
 		alias = [
 
@@ -9754,7 +10181,7 @@ EwPoi( # apt-slimes-end
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-vagrants-corner
+	EwPoi( # apt-vagrants-corner
 		id_poi = poi_id_apt_vagrantscorner,
 		alias = [
 
@@ -9768,7 +10195,7 @@ EwPoi( # apt-vagrants-corner
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi(  # apt-afbr
+	EwPoi(  # apt-afbr
 		id_poi=poi_id_apt_assaultflatsbeach,
 		alias=[
 
@@ -9796,7 +10223,7 @@ EwPoi(  # apt-afbr
 		pvp=False,
 		is_subzone=False,
 	),
-EwPoi( # apt-brawlden
+	EwPoi( # apt-brawlden
 		id_poi = poi_id_apt_brawlden,
 		alias = [
 
@@ -9810,7 +10237,7 @@ EwPoi( # apt-brawlden
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-toxington
+	EwPoi( # apt-toxington
 		id_poi = poi_id_apt_toxington,
 		alias = [
 
@@ -9824,7 +10251,7 @@ EwPoi( # apt-toxington
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-charcoal-park
+	EwPoi( # apt-charcoal-park
 		id_poi = poi_id_apt_charcoalpark,
 		alias = [
 
@@ -9838,7 +10265,7 @@ EwPoi( # apt-charcoal-park
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # polonium-hill
+	EwPoi( # polonium-hill
 		id_poi = poi_id_apt_poloniumhill,
 		alias = [
 
@@ -9852,7 +10279,7 @@ EwPoi( # polonium-hill
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-west-glocksbury
+	EwPoi( # apt-west-glocksbury
 		id_poi = poi_id_apt_westglocksbury,
 		alias = [
 
@@ -9866,7 +10293,7 @@ EwPoi( # apt-west-glocksbury
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-jaywalker-plain
+	EwPoi( # apt-jaywalker-plain
 		id_poi = poi_id_apt_jaywalkerplain,
 		alias = [
 
@@ -9880,7 +10307,7 @@ EwPoi( # apt-jaywalker-plain
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-crookline
+	EwPoi( # apt-crookline
 		id_poi = poi_id_apt_crookline,
 		alias = [
 
@@ -9894,7 +10321,7 @@ EwPoi( # apt-crookline
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # apt-dreadford
+	EwPoi( # apt-dreadford
 		id_poi = poi_id_apt_dreadford,
 		alias = [
 
@@ -9908,7 +10335,7 @@ EwPoi( # apt-dreadford
 		pvp = False,
 		is_subzone = False,
 	),
-EwPoi( # slime's end cliffs
+	EwPoi( # slime's end cliffs
 		id_poi = poi_id_slimesendcliffs,
 		alias = [
 			"sec",
@@ -9917,9 +10344,9 @@ EwPoi( # slime's end cliffs
 			"cliff"
 		],
 		str_name = "Slime's End Cliffs",
-		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a lesiurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
-		role = "Dreadford Apartments",
+		role = "Slime's End Cliffs",
 		mother_district = poi_id_slimesend,
 		pvp = True,
 		is_subzone = True,
@@ -13160,10 +13587,20 @@ for m in cosmetic_items_list:
 		mine_results.append(m)
 	else:
 		pass
+	
+# Gather all the items that can be the result of trick-or-treating.
+trickortreat_results = []
+
+for t in food_list:
+	if t.acquisition == acquisition_trickortreating:
+		trickortreat_results.append(t)
+	else:
+		pass
+		
 
 slimexodia_parts = []
 
-# Gather all items that can be the result of mining.
+# Gather all parts of slimexodia.
 for slimexodia in item_list:
 	if slimexodia.context == 'slimexodia':
 		slimexodia_parts.append(slimexodia)
@@ -13299,7 +13736,7 @@ help_responses = {
 	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. What this means is that you've killed or otherwise attacked a juvenile, causing you to be persued by law enforcement, and your location is revealed to the opposing gang's base to boot. You will be 'wanted' for at least 1 hour, with an additional time of your current bounty converted to seconds (example: A player with a bounty of 3600 slimecoin will be wanted for two hours). While wanted, your movement speed is cut in half, you cannot enter subzones, drop all your slimecoin on death, cannot use !suicide or be killed by teammates, drop all your items on death, as well as drop your current weapon skill level (see !help sparring) down to zero on death. It's a brutal punishment, so try and consider if killing a certain juvie is really worth it beforehand.",
 	# Ways to gain slime
-	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently, mining is done on a board. Choose your coordinate and type '!mine [coordinate]'. To reset the board, use '!mine reset'.\n\nKEY: A '**~**' signifies that a lot of slime is on that tile, a '**;**' signifies that some slime is on that tile, a blank tile will give no slime, and an '**X**' will damage you if you mine it.",
+	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
@@ -13317,20 +13754,25 @@ help_responses = {
 	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
+	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
+	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
 	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
-  	"profile":"This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
-	"trading":"Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**."
+	# Additional gameplay mechanics, part 4
+	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
 help_responses_ordered_keys = [
 	"gangs", "food", "capturing", "transportation", "death",
 	"dojo", "subzones", "scouting", "otp", "wanted",
+	"mining", "scavenging", "farming", "fishing", "hunting",
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
-	"casino", "bleeding", "offline", "profile", "trading"
+	"trading", "weather", "casino", "bleeding", "offline",
+	"profile",
 ]
 
 mutation_descriptions = {
@@ -13343,7 +13785,7 @@ mutation_descriptions = {
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
 	mutation_id_lightasafeather: "Double movement speed while weather is windy. Use **'!weather'** to check if it's windy.",
-	mutation_id_whitenationalist: "Cannot be scouted regularly and you scavenge 50% more slime while weather is snowy. Use **'!weather'** to check if it's snowing. You can still be scouted by players with the Keen Smell mutation.",
+	mutation_id_whitenationalist: "Cannot be scouted regularly and you scavenge 50% more slime while weather is snowy, which also stacks with the Webbed Feet mutation. Use **'!weather'** to check if it's snowing. You can still be scouted by players with the Keen Smell mutation.",
 	mutation_id_spoiledappetite: "You can eat spoiled food.",
 	mutation_id_bigbones: "The amount of food items you can hold in your inventory is doubled.",
 	mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",
@@ -13593,6 +14035,79 @@ rain_protection = [
 	cosmetic_id_raincoat,
 	weapon_id_umbrella
 ]
+
+event_type_slimeglob = "slimeglob"
+event_type_slimefrenzy = "slimefrenzy"
+event_type_poudrinfrenzy = "poudrinfrenzy"
+event_type_minecollapse = "minecollapse"
+event_type_minesweeper = "minesweeper"
+event_type_pokemine = "pokemine"
+event_type_bubblebreaker = "bubblebreaker"
+
+world_events = [
+	EwEventDef(
+		event_type = event_type_slimeglob,
+		str_event_start = "You mined an extra big glob of slime! {}".format(emote_slime1),
+	),
+	EwEventDef(
+		event_type = event_type_slimefrenzy,
+		str_event_start = "You hit a dense vein of slime! Double slimegain for the next 30 seconds.",
+		str_event_end = "The double slime vein dried up.",
+	),
+	EwEventDef(
+		event_type = event_type_poudrinfrenzy,
+		str_event_start = "You hit a dense vein of poudrins! Guaranteed poudrin on every {} for the next 5 seconds.".format(cmd_mine),
+		str_event_end = "The poudrin vein dried up.",
+	),
+	EwEventDef(
+		event_type = event_type_minecollapse,
+		str_event_start = "The mineshaft starts collapsing around you. Get out of there quickly! ({cmd} {captcha})",
+	),
+	EwEventDef(
+		event_type = event_type_minesweeper,
+		str_event_start = "You notice the wall bulging slightly and you can dig into it. ({} coordinates, {} coordinates)".format(cmd_mine, cmd_flag),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_pokemine,
+		str_event_start = "You notice the wall bulging slightly and you can dig into it. ({} coordinates)".format(cmd_mine, cmd_flag),
+		str_event_end = "The wall collapses.",
+	),
+	EwEventDef(
+		event_type = event_type_bubblebreaker,
+		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
+		str_event_end = "The wall collapses.",
+	),
+	
+]
+
+event_type_to_def = {}
+
+for event in world_events:
+	event_type_to_def[event.event_type] = event
+
+grid_type_by_mining_event = {
+	event_type_minesweeper: mine_grid_type_minesweeper,
+	event_type_pokemine: mine_grid_type_pokemine,
+	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
+}
+
+# A list of tricks for Double Halloween
+trick_amounts = [10, 100, 1000, 10000]
+
+halloween_tricks_tricker = {
+	10:"You open the door and give {} a hearty '!SPOOK'. They lose 10 slime!",
+	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime!",
+	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime!",
+	10000:"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose 10000 slime!",
+}
+
+halloween_tricks_trickee = {
+	10:"{} opens the door and gives you a hearty '!SPOOK'. You lose 10 slime!",
+	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime!",
+	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime!",
+	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
