@@ -555,10 +555,12 @@ class EwEnemy:
 							brain = ewcfg.brain_map.get(target_slimeoid.ai)
 							response += "\n\n" + brain.str_death.format(slimeoid_name=target_slimeoid.name)
 
+						enemy_data.persist()
+						district_data.persist()
 						die_resp = target_data.die(cause=ewcfg.cause_killing_enemy) # moved after trauma definition so it can gurantee .die knows killer
+						district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 
 						target_data.persist()
-						enemy_data.persist()
 						resp_cont.add_response_container(die_resp)
 						resp_cont.add_channel_response(ch_name, response)
 

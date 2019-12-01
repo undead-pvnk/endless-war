@@ -449,7 +449,6 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 
 				#round up or down, randomly weighted
 				remainder = slimes_to_bleed - int(slimes_to_bleed)
@@ -460,6 +459,11 @@ async def bleedSlimes(id_server = None):
 				if slimes_to_bleed >= 1:
 					user_data.bleed_storage -= slimes_to_bleed
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
+
+					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
+					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
+					district_data.persist()
+
 					if user_data.slimes < 0:
 						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
 						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
@@ -467,8 +471,6 @@ async def bleedSlimes(id_server = None):
 						resp_cont.add_response_container(die_resp)
 					user_data.persist()
 
-					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
-					district_data.persist()
 					total_bled += slimes_to_bleed
 
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
