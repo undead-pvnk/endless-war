@@ -504,12 +504,11 @@ async def donate(cmd):
 				response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
 				market_data.donated_slimes += user_data.slimes
 				market_data.persist()
-				user_data.die(cause = ewcfg.cause_donation)
+				die_resp = user_data.die(cause = ewcfg.cause_donation)
 				user_data.persist()
 				# Assign the corpse role to the player. He dead.
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-				sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-				await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
+				await die_resp.post()
 			else:
 				# Do the transfer if the player can afford it.
 				market_data.donated_slimes += cost_total

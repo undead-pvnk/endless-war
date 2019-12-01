@@ -136,6 +136,10 @@ cmd_map = {
 	# Show a player's combat data.
 	ewcfg.cmd_data: ewcmd.data,
 
+	# Show a player's mutations.
+	ewcfg.cmd_mutations: ewcmd.mutations,
+	ewcfg.cmd_mutations_alt_1: ewcmd.mutations,
+
 	# sap system
 	ewcfg.cmd_view_sap: ewcmd.view_sap,
 	ewcfg.cmd_harden_sap: ewwep.harden_sap,

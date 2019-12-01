@@ -461,11 +461,10 @@ async def bleedSlimes(id_server = None):
 					user_data.bleed_storage -= slimes_to_bleed
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
 					if user_data.slimes < 0:
-						user_data.die(cause = ewcfg.cause_bleeding)
+						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
 						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
-						deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
-						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+						resp_cont.add_response_container(die_resp)
 					user_data.persist()
 
 					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
@@ -650,12 +649,10 @@ async def burnSlimes(id_server = None):
 
 				# Kill player
 				user_data.id_killer = killer_data.id_user
-				user_data.die(cause = ewcfg.cause_burning)
+				die_resp = user_data.die(cause = ewcfg.cause_burning)
 				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-			
-				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer.display_name, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(server.get_member(user_data.id_user), deathreport)
-				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+
+				resp_cont.add_response_container(die_resp)
 
 				user_data.trauma = weapon.id_weapon
 
@@ -1207,7 +1204,6 @@ def explode(damage = 0, district_data = None, market_data = None):
 			district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
 			district_data.persist()
 			slimes_dropped = user_data.totaldamage + user_data.slimes
-			explode_damage = slime_bylevel(user_data.slimelevel)
 
 			user_data.die(cause = ewcfg.cause_killing)
 			#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
@@ -1215,10 +1211,6 @@ def explode(damage = 0, district_data = None, market_data = None):
 
 			response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
 			resp_cont.add_channel_response(channel, response)
-
-			if ewcfg.mutation_id_spontaneouscombustion in mutations:
-				sub_explosion = explode(explode_damage, district_data)
-				resp_cont.add_response_container(sub_explosion)
 
 			resp_cont.add_member_to_update(server.get_member(user_data.id_user))
 		else:
@@ -1365,3 +1357,93 @@ def check_fursuit_active(id_server):
 		return True
 	else:
 		return False
+
+def create_death_report(cause = None, user_data = None):
+	
+	client = ewcfg.get_client()
+	server = client.get_server(user_data.id_server)
+
+	# User display name is used repeatedly later, grab now
+	user_member = server.get_member(user_data.id_user)
+	user_player = EwPlayer(id_user = user_data.id_user)
+	user_nick = user_player.display_name
+
+	deathreport = "You arrive among the dead. {}".format(ewcfg.emote_slimeskull)
+	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+	report_requires_killer = [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning, ewcfg.cause_killing_enemy]
+	if(cause in report_requires_killer): # Only deal with enemy data if necessary
+		killer_isUser = cause in [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning]
+		killer_isEnemy = cause in [ewcfg.cause_killing_enemy]
+		if(killer_isUser): # Generate responses for dying to another player
+			# Grab user data
+			killer_data = EwUser(id_user = user_data.id_killer, id_server = user_data.id_server)
+			player_data = EwPlayer(id_user = user_data.id_killer)		
+
+			# Get killer weapon
+			weapon_item = EwItem(id_item = killer_data.weapon)
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
+			killer_nick = player_data.display_name
+
+			if (cause == ewcfg.cause_killing): # Response for dying to another player
+				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+			if (cause == ewcfg.cause_busted): # Response for being busted
+				deathreport = "Your ghost has been busted by {}. {}".format(killer_nick, ewcfg.emote_bustin)
+				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_member, deathreport)
+
+			if (cause == ewcfg.cause_burning): # Response for burning to death
+				deathreport = "You were {} by {}. {}".format(ewcfg.weapon_map.get(ewcfg.weapon_id_molotov).str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+		if(killer_isEnemy): # Generate responses for being killed by enemy
+			# Grab enemy data
+			killer_data = ewhunting.EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
+
+			if killer_data.attacktype != ewcfg.enemy_attacktype_unarmed:
+				used_attacktype = ewcfg.attack_type_map.get(killer_data.attacktype)
+			else:
+				used_attacktype = ewcfg.enemy_attacktype_unarmed
+			if (cause == ewcfg.cause_killing_enemy): # Response for dying to enemy attack
+				# Get attack kill description
+				kill_descriptor = "beaten to death"
+				if used_attacktype != ewcfg.enemy_attacktype_unarmed:
+					kill_descriptor = used_attacktype.str_killdescriptor
+
+				# Format report
+				deathreport = "You were {} by {}. {}".format(kill_descriptor, killer_data.display_name, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+	if (cause == ewcfg.cause_donation): # Response for overdonation
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull))
+
+	if (cause == ewcfg.cause_suicide): # Response for !suicide
+		deathreport = "You arrive among the dead by your own volition. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+	if (cause == ewcfg.cause_drowning): # Response for disembarking into the slime sea
+		deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+	if (cause == ewcfg.cause_falling): # Response for disembarking blimp over the city
+		deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+	if (cause == ewcfg.cause_bleeding): # Response for bleed death
+		deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = user_nick)
+
+	if (cause == ewcfg.cause_weather): # Response for death by bicarbonate rain
+		deathreport = "{skull} *{uname}*: You have been cleansed by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, uname = user_nick)
+
+	if (cause == ewcfg.cause_cliff): # Response for falling or being pushed off cliff
+		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+
+	if (cause == ewcfg.cause_backfire): # Response for death by self backfire
+		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
+
+	return(deathreport)

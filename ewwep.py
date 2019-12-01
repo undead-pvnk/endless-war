@@ -508,13 +508,11 @@ async def attack(cmd):
 			# Steal items
 			ewitem.item_loot(member = member, id_user_target = cmd.message.author.id)
 
-			shootee_data.die(cause = ewcfg.cause_busted)
+			shootee_data.id_killer = user_data.id_user
+			die_resp = shootee_data.die(cause = ewcfg.cause_busted)
 
 			response = "{name_target}\'s ghost has been **BUSTED**!!".format(name_target = member.display_name)
 
-			deathreport = "Your ghost has been busted by {}. {}".format(cmd.message.author.display_name, ewcfg.emote_bustin)
-			deathreport = "{} ".format(ewcfg.emote_bustin) + ewutils.formatMessage(member, deathreport)
-			
 			if coinbounty > 0:
 				response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
@@ -529,10 +527,10 @@ async def attack(cmd):
 			# Persist every users' data.
 			user_data.persist()
 			shootee_data.persist()
+			if die_resp != resp_cont:
+				resp_cont.add_response_container(die_resp)
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
-			if deathreport != "":
-				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
-
+			
 			resp_cont.add_member_to_update(member)
 
 		else:
@@ -835,9 +833,13 @@ async def attack(cmd):
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
 
+					user_data.persist()
 					# Player was killed.
-					shootee_data.die(cause = ewcfg.cause_killing)
+					shootee_data.id_killer = user_data.id_user
+					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+
+					user_data = EwUser(member = cmd.message.author)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -884,24 +886,13 @@ async def attack(cmd):
 					if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
 						brain = ewcfg.brain_map.get(shootee_slimeoid.ai)
 						response += "\n\n" + brain.str_death.format(slimeoid_name = shootee_slimeoid.name)
-
-					deathreport = "You were {} by {}. {}".format(kill_descriptor, cmd.message.author.display_name, ewcfg.emote_slimeskull)
-					deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(member, deathreport)
 					
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
 					shootee_data.persist()
-					user_data.persist()
-					resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+					resp_cont.add_response_container(die_resp)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
-					if ewcfg.mutation_id_spontaneouscombustion in shootee_mutations:
-						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(member.display_name)
-						resp_cont.add_channel_response(cmd.message.channel.name, explode_resp)
-						explosion = ewutils.explode(damage = explode_damage, district_data = district_data)
-						resp_cont.add_response_container(explosion)
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
 				else:
 					# A non-lethal blow!
 
@@ -919,9 +910,9 @@ async def attack(cmd):
 
 							if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 								district_data.change_slimes(n = user_data.slimes)
-								user_data.die(cause = ewcfg.cause_suicide)
+								die_resp = user_data.die(cause = ewcfg.cause_backfire)
 								resp_cont.add_member_to_update(cmd.message.author)
-								resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_name))
+								resp_cont.add_response_container(die_resp)
 							else:
 								district_data.change_slimes(n = backfire_damage / 2)
 								user_data.change_slimes(n = -backfire_damage / 2,  source = ewcfg.source_self_damage)
@@ -1116,6 +1107,8 @@ async def suicide(cmd):
 	response = ""
 	deathreport = ""
 
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+
 	# Only allowed in the combat zone.
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
@@ -1159,7 +1152,8 @@ async def suicide(cmd):
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
-			user_data.die(cause = ewcfg.cause_suicide)
+			die_resp = user_data.die(cause = ewcfg.cause_suicide)
+			resp_cont.add_response_container(die_resp)
 			user_data.persist()
 
 			# Assign the corpse role to the player. He dead.
@@ -1170,17 +1164,13 @@ async def suicide(cmd):
 			else:
 				response = "Ahh. As it should be. {}".format(ewcfg.emote_slimeskull)
 
-			deathreport = "You arrive among the dead by your own volition. {}".format(ewcfg.emote_slimeskull)
-			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
 		else:
 			# This should never happen. We handled all the role cases. Just in case.
 			response = "\*click* Alas, your gun has jammed."
 
 	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	if deathreport != "":
-		sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-		await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+	resp_cont.add_channel_response(cmd.message.channel.name, ewutils.formatMessage(cmd.message.author, response))
+	await resp_cont.post()
 
 """ Damage all players in a district; Exploding weapon's effect """
 def weapon_explosion(user_data = None, shootee_data = None, district_data = None, life_states = None, factions = None, slimes_damage = 0, backfire = None, time_now = 0, target_enemy = None, sap_damage = 0, sap_ignored = 0):
@@ -1322,15 +1312,6 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, user_player.display_name)
 
 					resp_cont.add_channel_response(channel, response)
-
-					if ewcfg.mutation_id_spontaneouscombustion in target_data.get_mutations():
-						
-						explode_damage = ewutils.slime_bylevel(target_data.slimelevel) / 5
-						
-						explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(user_player.display_name)
-						resp_cont.add_channel_response(channel, explode_resp)
-						explosion = ewutils.explode(damage = explode_damage, district_data = district_data)
-						resp_cont.add_response_container(explosion)
 
 					resp_cont.add_member_to_update(server.get_member(target_data.id_user))
 				#Survived the explosion
@@ -2250,9 +2231,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 					district_data.change_slimes(n = user_data.slimes)
-					user_data.die(cause = ewcfg.cause_suicide)
+					die_resp = user_data.die(cause = ewcfg.cause_suicide)
 					resp_cont.add_member_to_update(cmd.message.author)
-					resp_cont.add_channel_response(ewcfg.channel_sewers, "{} killed themselves with their own {}. Dumbass.".format(cmd.message.author.display_name, weapon.str_name))
+					resp_cont.add_response_container(die_resp)
 				else:
 					district_data.change_slimes(n = backfire_damage / 2)
 					user_data.change_slimes(n = -backfire_damage / 2,  source = ewcfg.source_self_damage)

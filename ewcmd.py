@@ -132,30 +132,27 @@ async def score(cmd):
 	if member != None:
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
+
 def gen_data_text(
-	id_user = None,
-	id_server = None,
-	display_name = None,
-	channel_name = None
+		id_user=None,
+		id_server=None,
+		display_name=None,
+		channel_name=None
 ):
-	resp_cont = ewutils.EwResponseContainer(id_server=id_server)
-	response = ""
 	user_data = EwUser(
-		id_user = id_user,
-		id_server = id_server
+		id_user=id_user,
+		id_server=id_server
 	)
-	slimeoid = EwSlimeoid(id_user = id_user, id_server = id_server)
-	
-	mutations = user_data.get_mutations()
+	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
 	cosmetics = ewitem.inventory(
-		id_user = user_data.id_user,
-		id_server = user_data.id_server,
-		item_type_filter = ewcfg.it_cosmetic
+		id_user=user_data.id_user,
+		id_server=user_data.id_server,
+		item_type_filter=ewcfg.it_cosmetic
 	)
 	adorned_cosmetics = []
 	for cosmetic in cosmetics:
-		cos = EwItem(id_item = cosmetic.get('id_item'))
+		cos = EwItem(id_item=cosmetic.get('id_item'))
 		if cos.item_props['adorned'] == 'true':
 			hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
@@ -167,7 +164,6 @@ def gen_data_text(
 		else:
 			response = "You can't discern anything useful about {}.".format(display_name)
 
-		resp_cont.add_channel_response(channel_name, response)
 	else:
 
 		# return somebody's score
@@ -178,13 +174,16 @@ def gen_data_text(
 
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
-		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if weapon != None:
-			response += " {} {}{}.".format(ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding, ("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
+			response += " {} {}{}.".format(
+				ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding, (
+					"" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
-				response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
+				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
 		# if trauma is not gathered from weapon_map, get it from attack_type_map
@@ -195,24 +194,14 @@ def gen_data_text(
 			response += " {}".format(trauma.str_trauma)
 
 		response_block = ""
-		for mutation in mutations:
-			mutation_flavor = ewcfg.mutations_map[mutation]
-			response_block += "{} ".format(mutation_flavor.str_describe_other)
 
-		if len(response_block) > 0:
-			response += "\n\n" + response_block
+		user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
 
-		resp_cont.add_channel_response(channel_name, response)
-
-		response = ""
-		response_block = ""
-
-		user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-
-		enemy_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_pve_kills)
+		enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
 
 		if user_kills > 0 and enemy_kills > 0:
-			response_block += "They have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills, enemy_kills)
+			response_block += "They have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills,
+																								  enemy_kills)
 		elif user_kills > 0:
 			response_block += "They have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
@@ -225,7 +214,7 @@ def gen_data_text(
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 		statuses = user_data.getStatusEffects()
-		
+
 		for status in statuses:
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
@@ -234,52 +223,53 @@ def gen_data_text(
 					response_block += status_flavor.str_describe + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name,
+																							str(slimeoid.level))
 		if len(response_block) > 0:
 			response += "\n" + response_block
 
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
 
-		resp_cont.add_channel_response(channel_name, response)
+	return response
 
-	return resp_cont
 
 """ show player information and description """
+
+
 async def data(cmd):
-	response = ""
-	user_data = None
 	member = None
-	resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
+	response = ""
 
 	if len(cmd.tokens) > 1 and cmd.mentions_count == 0:
-		user_data = EwUser(member = cmd.message.author)
+		user_data = EwUser(member=cmd.message.author)
 
 		soughtenemy = " ".join(cmd.tokens[1:]).lower()
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {} slime, and attack with their {}.".format(enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
+				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}.".format(
+					enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {} slime.".format(enemy.display_name, enemy.level, enemy.slimes)
+				response = "{} is a level {} enemy. They have {:,} slime.".format(enemy.display_name, enemy.level,
+																				enemy.slimes)
 		else:
 			response = "ENDLESS WAR didn't understand that name."
 
-		resp_cont.add_channel_response(cmd.message.channel.name, response)
+
 
 	elif cmd.mentions_count == 0:
 
-		user_data = EwUser(member = cmd.message.author)
-		slimeoid = EwSlimeoid(member = cmd.message.author)
-		mutations = user_data.get_mutations()
+		user_data = EwUser(member=cmd.message.author)
+		slimeoid = EwSlimeoid(member=cmd.message.author)
 
 		cosmetics = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_cosmetic
+			id_user=cmd.message.author.id,
+			id_server=cmd.message.server.id,
+			item_type_filter=ewcfg.it_cosmetic
 		)
 		adorned_cosmetics = []
 		for cosmetic in cosmetics:
-			cos = EwItem(id_item = cosmetic.get('id_item'))
+			cos = EwItem(id_item=cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
 				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
@@ -299,13 +289,16 @@ async def data(cmd):
 
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
-		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 
 		if weapon != None:
-			response += " {} {}{}.".format(ewcfg.str_weapon_married_self if user_data.weaponmarried == True else ewcfg.str_weapon_wielding_self, ("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
+			response += " {} {}{}.".format(
+				ewcfg.str_weapon_married_self if user_data.weaponmarried == True else ewcfg.str_weapon_wielding_self, (
+					"" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
-				response += " {}".format(weapon.str_weaponmaster_self.format(rank = (user_data.weaponskill - 4)))
+				response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4)))
 
 		trauma = ewcfg.weapon_map.get(user_data.trauma)
 		# if trauma is not gathered from weapon_map, get it from attack_type_map
@@ -314,30 +307,19 @@ async def data(cmd):
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
-		
-		response_block = ""
-		for mutation in mutations:
-			mutation_flavor = ewcfg.mutations_map[mutation]
-			response_block += "{} ".format(mutation_flavor.str_describe_self)
 
-		if len(response_block) > 0:
-			response += "\n\n" + response_block
-
-		resp_cont.add_channel_response(cmd.message.channel.name, response)
-
-		response = ""
 		response_block = ""
 
 		user_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_kills)
 		enemy_kills = ewstats.get_stat(user=user_data, metric=ewcfg.stat_pve_kills)
 
 		if user_kills > 0 and enemy_kills > 0:
-			response_block += "You have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills, enemy_kills)
+			response_block += "You have {:,} confirmed kills, and {:,} confirmed hunts. ".format(user_kills,
+																								 enemy_kills)
 		elif user_kills > 0:
 			response_block += "You have {:,} confirmed kills. ".format(user_kills)
 		elif enemy_kills > 0:
 			response_block += "You have {:,} confirmed hunts. ".format(enemy_kills)
-
 
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
@@ -354,7 +336,7 @@ async def data(cmd):
 			response_block += "You are busted and therefore cannot leave the sewers until your next !haunt. "
 
 		statuses = user_data.getStatusEffects()
-		
+
 		for status in statuses:
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
@@ -363,32 +345,58 @@ async def data(cmd):
 					response_block += status_flavor.str_describe_self + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name,
+																							str(slimeoid.level))
 
 		if len(response_block) > 0:
 			response += "\n" + response_block
 
-
 		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(user_data.id_user)
-
-		resp_cont.add_channel_response(cmd.message.channel.name, response)
 	else:
 		member = cmd.mentions[0]
-		resp_cont = gen_data_text(
-			id_user = member.id,
-			id_server = member.server.id,
-			display_name = member.display_name,
-			channel_name = cmd.message.channel.name
+		response = gen_data_text(
+			id_user=member.id,
+			id_server=member.server.id,
+			display_name=member.display_name,
+			channel_name=cmd.message.channel.name
 		)
-	
+
 	# Send the response to the player.
-	resp_cont.format_channel_response(cmd.message.channel.name, cmd.message.author)
-	await resp_cont.post(channel=cmd.message.channel)
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+	await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 	if member != None:
-		await ewrolemgr.updateRoles(client = cmd.client, member = member)
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
 
+
+""" Finally, separates mutations from !data """
+
+
+async def mutations(cmd):
+	response = ""
+	if cmd.mentions_count == 0:
+		user_data = EwUser(member=cmd.message.author)
+		mutations = user_data.get_mutations()
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += "{} ".format(mutation_flavor.str_describe_self)
+		if len(mutations) == 0:
+			response = "You are miraculously unmodified from your normal genetic code!"
+
+	else:
+		member = cmd.mentions[0]
+		user_data = EwUser(
+			id_user=member.id,
+			id_server=member.server.id
+		)
+		mutations = user_data.get_mutations()
+		for mutation in mutations:
+			mutation_flavor = ewcfg.mutations_map[mutation]
+			response += "{} ".format(mutation_flavor.str_describe_other)
+		if len(mutations) == 0:
+			response = "They are miraculously unmodified from their normal genetic code!"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """ Check how hungry you are. """
 async def hunger(cmd):
@@ -993,9 +1001,6 @@ async def push(cmd):
 		districtmodel.change_slimes(n=slimetotal)
 		districtmodel.persist()
 
-		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target, deathreport)
-
 		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=targetmodel.id_user)
 		for item in cliff_inventory:
 			item_object = ewitem.EwItem(id_item=item.get('id_item'))
@@ -1018,12 +1023,10 @@ async def push(cmd):
 
 
 
-		targetmodel.die(cause = ewcfg.cause_cliff)
+		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=target)
-		if deathreport != "":
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+		await die_resp.post()
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1038,8 +1041,6 @@ async def jump(cmd):
 		response = "You try to end things right here. Sadly, the gangster sycophants that kiss the ground you walk on grab your ankles in desperation and prevent you from suicide. Oh, the price of fame."
 	else:
 		response = "Hmm. The cliff looks safe enough. You imagine, with the proper diving posture, you'll be able to land in the slime unharmed. You steel yourself for the fall, run along the cliff, and swan dive off its steep edge. Of course, you forgot that the Slime Sea is highly corrosive, there are several krakens there, and you can't swim. Welp, time to die."
-		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
 
 		cliff_inventory = ewitem.inventory(id_server=cmd.message.server.id, id_user=user_data.id_user)
 		for item in cliff_inventory:
@@ -1061,12 +1062,11 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
-		user_data.die(cause = ewcfg.cause_cliff)
+		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-		if deathreport != "":
-			sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-			await ewutils.send_message(cmd.client, sewerchannel, deathreport)
+		if die_resp != ewutils.EwResponseContainer(id_server = cmd.message.server.id):
+			await die_resp.post()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
