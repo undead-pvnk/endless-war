@@ -1126,13 +1126,13 @@ async def suicide(cmd):
 
 		if user_isdead:
 			response = "Too late for that."
-		elif user_isjuvenile:
-			response = "Juveniles are too cowardly for suicide."
+		#elif user_isjuvenile:
+		#	response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
 		elif user_data.time_expirpvp >= time_now:
 			response = "*Tsk, tsk.* Trying to take the coward’s way out, I see. Don’t worry, all WANTED get what’s coming to them eventually."
-		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
+		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky or user_isjuvenile:
 			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
 				response = "You can't do that now."
