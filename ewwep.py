@@ -820,10 +820,13 @@ async def attack(cmd):
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
 
+					user_data.persist()
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+
+					user_data = EwUser(member = cmd.message.author)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -875,12 +878,8 @@ async def attack(cmd):
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
 					shootee_data.persist()
-					user_data.persist()
 					resp_cont.add_response_container(die_resp)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
-
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
 				else:
 					# A non-lethal blow!
 
