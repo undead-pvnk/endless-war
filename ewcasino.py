@@ -91,6 +91,8 @@ async def pachinko(cmd):
 
 			# add winnings/subtract losses
 			user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+			#SLIMERNALIA
+			user_data.slimernalia_coin_gambled += value
 			user_data.persist()
 
 			if winnings > 0:
@@ -159,6 +161,8 @@ async def craps(cmd):
 
 				# add winnings/subtract losses
 				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+				#SLIMERNALIA
+				user_data.slimernalia_coin_gambled += value
 				user_data.persist()
 		else:
 			response = "Specify how much SlimeCoin you will wager."
@@ -271,6 +275,8 @@ async def slots(cmd):
 
 			# add winnings/subtract losses
 			user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+			#SLIMERNALIA
+			user_data.slimernalia_coin_gambled += value
 			user_data.persist()
 
 		last_slotsed_times[cmd.message.author.id] = 0
@@ -389,6 +395,8 @@ async def roulette(cmd):
 
 				# add winnings/subtract losses
 				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+				#SLIMERNALIA
+				user_data.slimernalia_coin_gambled += value
 				user_data.persist()
 		else:
 			response = "Specify how much SlimeCoin you will wager."
@@ -951,6 +959,8 @@ async def baccarat(cmd):
 				# add winnings/subtract losses
 				user_data = EwUser(member = cmd.message.author)
 				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
+				#SLIMERNALIA
+				user_data.slimernalia_coin_gambled += value
 				user_data.persist()
 				await ewutils.edit_message(cmd.client, resp_f, ewutils.formatMessage(cmd.message.author, response))
 

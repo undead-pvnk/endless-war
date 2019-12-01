@@ -809,6 +809,9 @@ cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
+#SLIMERNALIA
+cmd_festivity = cmd_prefix + 'festivity'
+
 offline_cmds = [
 	cmd_move,
 	cmd_move_alt1,
@@ -1392,6 +1395,9 @@ col_visiting = "visiting"
 col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
+#SLIMERNALIA
+col_festivity = 'festivity'
+col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1550,6 +1556,8 @@ leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
+#SLIMERNALIA
+leaderboard_slimernalia = "MOST FESTIVE"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1786,6 +1794,9 @@ item_id_doublefaggot = "doublefaggot"
 
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+
+#SLIMERNALIA
+item_id_sigillaria = "sigillaria"
 
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"

@@ -553,6 +553,9 @@ cmd_map = {
 	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
 	ewcfg.cmd_completetrade: ewmarket.complete_trade,
 	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
+
+	#SLIMERNALIA
+	ewcfg.cmd_festivity: ewcmd.festivity,
 }
 
 debug = False
@@ -1267,9 +1270,9 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getcoin'):
 			user_data = EwUser(member=message.author)
-			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)
+			user_data.change_slimecoin(n=1000000000000, coinsource=ewcfg.coinsource_spending)
 
-			response = "You get 1,000,000,000 slimecoin!"
+			response = "You get 1,000,000,000,000 slimecoin!"
 
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
