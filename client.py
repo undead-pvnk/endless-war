@@ -92,13 +92,11 @@ cmd_map = {
 	# Fix your jammed gun
 	ewcfg.cmd_unjam: ewwep.unjam,
 
-	# Get a weapon into your inventory
-	#ewcfg.cmd_arm: ewwep.arm,
-	#ewcfg.cmd_arsenalize: ewwep.arm,
-
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
-
+	ewcfg.cmd_arm: ewwep.equip,
+	ewcfg.cmd_arsenalize: ewwep.equip,
+	
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
 	ewcfg.cmd_suicide_alt1: ewwep.suicide,

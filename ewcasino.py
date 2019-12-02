@@ -1020,7 +1020,8 @@ async def russian_roulette(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Players have to be enlisted
-	playable_life_states = [ewcfg.life_state_enlisted,ewcfg.life_state_lucky,ewcfg.life_state_executive]
+	#SLIMERNALIA
+	playable_life_states = [ewcfg.life_state_enlisted,ewcfg.life_state_lucky,ewcfg.life_state_executive, ewcfg.life_state_juvenile]
 	if challenger.life_state not in playable_life_states or challengee.life_state not in playable_life_states:
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "You try to grab the gun, but it falls through your hands. Ghosts can't hold weapons.".format(author.display_name).replace("@", "\{at\}")
@@ -1057,6 +1058,16 @@ async def russian_roulette(cmd):
 
 	#Start game
 	if accepted == 1:
+		#SLIMERNALIA
+		challenger = EwUser(member = author)
+		challengee = EwUser(member = member)
+
+		challenger.festivity += challenger.slimes
+		challengee.festivity += challengee.slimes
+
+		challenger.persist()
+		challengee.persist()
+
 		#Same team tax
 		tax = 1
 		if challengee.faction == challenger.faction:
@@ -1065,7 +1076,7 @@ async def russian_roulette(cmd):
 		for spin in range(1, 7):
 			challenger = EwUser(member = author)
 			challengee = EwUser(member = member)
-				
+
 			#Challenger goes second
 			if spin % 2 == 0:
 				player = author
