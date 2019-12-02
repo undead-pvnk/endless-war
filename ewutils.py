@@ -1447,3 +1447,28 @@ def create_death_report(cause = None, user_data = None):
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
 	return(deathreport)
+
+def get_slimernalia_kingpin(server):
+		data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
+		),(
+			server.id,
+		))
+
+		if len(data) > 0:
+			return data[0][0]
+
+		return None
+
+def get_most_festive(server):
+		data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s ORDER BY {festivity} DESC LIMIT 1".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			festivity = ewcfg.col_festivity
+		),(
+			server.id,
+		))
+
+		return data[0][0]

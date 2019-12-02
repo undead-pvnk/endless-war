@@ -317,6 +317,7 @@ role_slimecorp = "slimecorp"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
 role_tutorial = "newintown"
+role_slimernalia = "kingpinofslimernalia"
 
 faction_roles = [
 	role_juvenile,
@@ -1402,6 +1403,7 @@ col_hardened_sap = 'hardened_sap'
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
+col_slimernalia_kingpin = 'slimernalia_kingpin'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'

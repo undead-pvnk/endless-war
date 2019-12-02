@@ -47,6 +47,7 @@ class EwUser:
 	#SLIMERNALIA
 	festivity = 0
 	slimernalia_coin_gambled = 0
+	slimernalia_kingpin = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -713,7 +714,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -757,6 +758,7 @@ class EwUser:
 					ewcfg.col_hardened_sap,
 					ewcfg.col_festivity,
 					ewcfg.col_slimernalia_coin_gambled,
+					ewcfg.col_slimernalia_kingpin
 				), (
 					id_user,
 					id_server
@@ -807,6 +809,7 @@ class EwUser:
 					self.hardened_sap = result[39]
 					self.festivity = result[40]
 					self.slimernalia_coin_gambled = result[41]
+					self.slimenalia_kingpin = result[42]
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
@@ -862,7 +865,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -908,6 +911,7 @@ class EwUser:
 				ewcfg.col_hardened_sap,
 				ewcfg.col_festivity,
 				ewcfg.col_slimernalia_coin_gambled,
+				ewcfg.col_slimernalia_kingpin
 			), (
 				self.id_user,
 				self.id_server,
@@ -953,7 +957,8 @@ class EwUser:
 				self.sap,
 				self.hardened_sap,
 				self.festivity,
-				self.slimernalia_coin_gambled
+				self.slimernalia_coin_gambled,
+				self.slimernalia_kingpin
 			))
 
 			conn.commit()

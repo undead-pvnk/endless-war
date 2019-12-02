@@ -1136,7 +1136,6 @@ async def cancel(cmd):
 
 
 async def festivity(cmd):
-
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 		response = "You currently have {} festivity.".format(user_data.get_festivity())
