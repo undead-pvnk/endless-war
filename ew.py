@@ -47,7 +47,7 @@ class EwUser:
 	#SLIMERNALIA
 	festivity = 0
 	slimernalia_coin_gambled = 0
-	slimernalia_kingpin = 0
+	slimernalia_kingpin = False
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -809,7 +809,7 @@ class EwUser:
 					self.hardened_sap = result[39]
 					self.festivity = result[40]
 					self.slimernalia_coin_gambled = result[41]
-					self.slimenalia_kingpin = result[42]
+					self.slimernalia_kingpin = (result[42] == 1)
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile

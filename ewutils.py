@@ -1463,11 +1463,17 @@ def get_slimernalia_kingpin(server):
 		return None
 
 def get_most_festive(server):
-		data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s ORDER BY {festivity} DESC LIMIT 1".format(
+		data = execute_sql_query("SELECT users.{id_user}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
-			festivity = ewcfg.col_festivity
+			festivity = ewcfg.col_festivity,
+			coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+			name = ewcfg.col_name,
+			value = ewcfg.col_value,
+			id_item = ewcfg.col_id_item,
 		),(
+			"id_furniture",
+			ewcfg.item_id_sigillaria,
 			server.id,
 		))
 
