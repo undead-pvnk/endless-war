@@ -800,18 +800,25 @@ async def attack(cmd):
 						scalp_text = ""
 					
 					# Drop shootee scalp
+					#SLIMERNALIA
 					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
+						#item_type = ewcfg.it_cosmetic,
+						item_type = ewcfg.it_furniture,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
+						#item_props = {
+						#	'id_cosmetic': 'scalp',
+						#	'cosmetic_name': "{}'s scalp".format(shootee_name),
+						#	'cosmetic_desc': "A scalp.{}".format(scalp_text),
+						#	'adorned': 'false'
+						#}
 						item_props = {
-							#'id_cosmetic': 'scalp',
-							#'cosmetic_name': "{}'s scalp".format(shootee_name),
-							#'cosmetic_desc': "A scalp.{}".format(scalp_text),
-							'id_cosmetic': ewcfg.item_id_sigillaria,
-							'cosmetic_name': "{}'s sigillaria".format(shootee_name),
-							'cosmetic_desc': "A sigillaria.{}".format(scalp_text),
-							'adorned': 'false'
+							'id_furniture': ewcfg.item_id_sigillaria,
+							'furniture_name': "{}'s sigillaria".format(shootee_name),
+							'furniture_desc': "sigillaria desc",#TODO flavor text
+							'rarity': ewcfg.rarity_plebeian,
+							'furniture_place_desc': "sigillaria place desc",#TODO flavor text
+							'furniture_look_desc': "sigillaria look desc"#TODO flavor text
 						}
 					)
 

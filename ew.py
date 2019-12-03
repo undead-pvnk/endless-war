@@ -679,7 +679,7 @@ class EwUser:
 			value = ewcfg.col_value,
 			id_item = ewcfg.col_id_item,
 		),(
-			"id_cosmetic",
+			"id_furniture",
 			ewcfg.item_id_sigillaria,
 			self.id_user,
 			self.id_server
