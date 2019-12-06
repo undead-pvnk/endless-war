@@ -338,7 +338,7 @@ async def mine(cmd):
 					)
 
 				
-				response += "You unearthed {} {}! ".format(unearthed_item_amount, item.str_name)
+				response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 

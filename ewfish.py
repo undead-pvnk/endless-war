@@ -539,7 +539,7 @@ async def reel(cmd):
 							item_props = item_props
 						)
 
-					response += "You reel in {} {}! ".format(unearthed_item_amount, item.str_name)
+					response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				else:
 					item = random.choice(slimesea_inventory)

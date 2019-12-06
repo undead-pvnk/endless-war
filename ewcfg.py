@@ -998,7 +998,7 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 3 # Three minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 3
+enemy_attack_tick_length = 5
 
 # how often to burn
 burn_tick_length = 4
@@ -2041,8 +2041,8 @@ item_list = [
 		],
 		str_name = "Trading Cards",
 		str_desc = "A pack of trading cards",
-		price = 1000,
-		vendors = [vendor_bazaar],
+		price = 50000,
+		vendors = [vendor_bazaar, vendor_glocksburycomics],
 	),
 	EwGeneralItem(
 		id_item = "rightleg",
@@ -5479,7 +5479,7 @@ food_list = [
 		],
 		recover_hunger = 500,
 		str_name = 'Dinoslime Meat',
-		str_eat = "You bite into the raw meat of dead Dinoslime. At certain points of your feast, it feels like you're biting into a fucking fan belt, but hey, food is food.",
+		str_eat = "You bite into the raw meat of dead Dinoslime. It feels like you're biting into raw sewage at certain points, but hey, food is food.",
 		str_desc = "The meat of a Dinoslime. It's best to probably cook it before consumption, if only you knew how.",
 	),
 	EwFood(

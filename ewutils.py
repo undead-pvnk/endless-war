@@ -1127,6 +1127,9 @@ async def enemy_action_tick_loop(id_server):
 def check_defender_targets(user_data, enemy_data):
 	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
 	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+	
+	#print(defending_enemy.poi)
+	#print(searched_user.poi)
 
 	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
 		defending_enemy.id_target = ""
