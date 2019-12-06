@@ -173,7 +173,8 @@ class EwUser:
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
 		if cause == ewcfg.cause_weather:
-			resp_cont.add_channel_response(self.poi, deathreport)
+			poi = ewcfg.id_to_poi.get(self.poi)
+			resp_cont.add_channel_response(poi.channel, deathreport)
 
 		# Grab necessary data for spontaneous combustion before stat reset
 		explosion_block_list = [ewcfg.cause_suicide, ewcfg.cause_donation, ewcfg.cause_leftserver, ewcfg.cause_cliff]

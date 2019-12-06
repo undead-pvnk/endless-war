@@ -820,10 +820,15 @@ async def attack(cmd):
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
 
+					user_data.persist()
+					district_data.persist()
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+
+					user_data = EwUser(member = cmd.message.author)
+					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -875,12 +880,8 @@ async def attack(cmd):
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
 
 					shootee_data.persist()
-					user_data.persist()
 					resp_cont.add_response_container(die_resp)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
-
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
 				else:
 					# A non-lethal blow!
 
@@ -898,7 +899,11 @@ async def attack(cmd):
 
 							if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 								district_data.change_slimes(n = user_data.slimes)
+								district_data.persist()
+								shootee_data.persist()
 								die_resp = user_data.die(cause = ewcfg.cause_backfire)
+								district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
+								shootee_data = EwUser(member = member)
 								resp_cont.add_member_to_update(cmd.message.author)
 								resp_cont.add_response_container(die_resp)
 							else:
@@ -2211,7 +2216,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 					district_data.change_slimes(n = user_data.slimes)
-					die_resp = user_data.die(cause = ewcfg.cause_suicide)
+					district_data.persist()
+					die_resp = user_data.die(cause = ewcfg.cause_backfire)
+					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 					resp_cont.add_member_to_update(cmd.message.author)
 					resp_cont.add_response_container(die_resp)
 				else:
