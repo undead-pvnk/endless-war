@@ -321,7 +321,7 @@ async def mine(cmd):
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
-				unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+				unearthed_item_amount = (random.randrange(3) + 5) # anywhere from 5-7 drops
 
 			if unearthed_item == True:
 				# If there are multiple possible products, randomly select one.
@@ -337,11 +337,8 @@ async def mine(cmd):
 						item_props = item_props
 					)
 
-				if unearthed_item_amount == 1:
-					response += "You unearthed a {}! ".format(item.str_name)
-				elif unearthed_item_amount == 2:
-					response += "You unearthed two (2) {}! ".format(item.str_name)
-
+				
+				response += "You unearthed {} {}! ".format(unearthed_item_amount, item.str_name)
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 

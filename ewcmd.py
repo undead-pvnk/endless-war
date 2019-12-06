@@ -845,7 +845,7 @@ async def recycle(cmd):
 			
 			ewitem.item_delete(id_item = item.id_item)
 
-			pay = int(random.random() * 10 ** random.randrange(2,5))
+			pay = int(random.random() * 100 ** random.randrange(2,5))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
 			if pay == 0:
 				item_reward = random.choice(ewcfg.mine_results)

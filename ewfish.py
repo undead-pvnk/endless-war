@@ -527,7 +527,7 @@ async def reel(cmd):
 
 					item = random.choice(ewcfg.mine_results)
 				
-					unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+					unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
 					item_props = ewitem.gen_item_props(item)
 
@@ -539,10 +539,7 @@ async def reel(cmd):
 							item_props = item_props
 						)
 
-					if unearthed_item_amount == 1:
-						response = "You reel in a {}!".format(item.str_name)
-					else:
-						response = "You reel in two {}s!".format(item.str_name)
+					response += "You reel in {} {}! ".format(unearthed_item_amount, item.str_name)
 
 				else:
 					item = random.choice(slimesea_inventory)
