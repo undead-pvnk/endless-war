@@ -169,6 +169,9 @@ cmd_map = {
 	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
 	#ewcfg.cmd_spook: ewcmd.spook,
+	
+	# Terezi Gang can flip coins
+	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
 	#ewcfg.cmd_makecostume: ewitem.makecostume,

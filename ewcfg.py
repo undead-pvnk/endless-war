@@ -353,6 +353,9 @@ role_to_active_role = {
 	role_corpse : role_corpse_active
 	}
 
+# used for checking if a user has the donor role
+role_donor_proper = "Terezi Gang"
+
 # Faction names and bases
 faction_killers = "killers"
 gangbase_killers = "Cop Killtown"
@@ -628,6 +631,7 @@ cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
+cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'

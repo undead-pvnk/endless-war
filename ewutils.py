@@ -1452,3 +1452,15 @@ def create_death_report(cause = None, user_data = None):
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
 	return(deathreport)
+
+def check_donor_role(cmd_object):
+	
+	cmd = cmd_object
+	
+	member = cmd.message.author
+
+	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
+	if terezi_role not in member.roles:
+		return False
+	else:
+		return True
