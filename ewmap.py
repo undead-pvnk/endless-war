@@ -1536,7 +1536,7 @@ def get_enemies_look_resp(user_data, district_data):
 		found_enemy_data = EwEnemy(id_enemy=enemies_in_district[0])
 
 		if found_enemy_data.identifier != '':
-			identifier_text = " {}".format(":regional_indicator_{}".format(found_enemy_data.identifier.lower()))
+			identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
 		else:
 			identifier_text = ""
 			

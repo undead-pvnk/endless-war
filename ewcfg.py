@@ -1029,6 +1029,12 @@ event_tick_length = 5
 # how often to refresh sap
 sap_tick_length = 5
 
+# the amount of sap crushed by !piss
+sap_crush_piss = 3
+
+# the amount of sap spent on !piss'ing on someone
+sap_spend_piss = 1
+
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
 reap_gain = 100000

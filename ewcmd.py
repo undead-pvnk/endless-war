@@ -819,8 +819,31 @@ async def piss(cmd):
 	mutations = user_data.get_mutations()
 
 	if ewcfg.mutation_id_enlargedbladder in mutations:
-		response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+		if cmd.mentions_count == 0:
+			response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+		if cmd.mentions_count == 1:
+			target_member = cmd.mentions[0]
+			target_user_data = EwUser(member = target_member)
+			
+			if user_data.poi == target_user_data.poi:
+				if user_data.sap <= ewcfg.sap_spend_piss:
+					response = "You don't have enough liquid sap to !piss..."
+				else:
+					sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
+					target_user_data.hardened_sap -= sap_damage_target
+					target_user_data.persist()
+					
+					user_data.sap -= ewcfg.sap_spend_piss
+					user_data.limit_fix()
+					user_data.persist()
+	
+					response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!! They lose {} hardened sap!".format(ewcfg.sap_spend_piss, target_member.display_name, sap_damage_target)
+			else:
+				response = "You can't !piss on someone who isn't there! Moron!"
 
+		elif cmd.mentions_count > 1:
+			response = "Whoa, one water-sports fetishist at a time, pal!"
+			
 	else:
 		response = "You lack the moral fiber necessary for urination."
 
