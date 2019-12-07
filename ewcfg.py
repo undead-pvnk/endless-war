@@ -590,6 +590,7 @@ cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
 cmd_crush = cmd_prefix + 'crush'
+cmd_crush_alt1 = cmd_prefix + 'crunch'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -899,7 +900,7 @@ milled_food_expir = 12 * 3600 * 28 # 2 weeks
 crush_slimes = 10000
 
 # minimum amount of slime needed to capture territory
-min_slime_to_cap = 50000
+min_slime_to_cap = 200000
 
 # property classes
 property_class_s = "s"

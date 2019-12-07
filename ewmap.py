@@ -1041,7 +1041,7 @@ async def halt(cmd):
 async def teleport(cmd):
 	
 	blj_used = False
-	if cmd.tokens[0] == '!blj':
+	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'blj'):
 		blj_used = True
 	
 	if channel_name_is_poi(cmd.message.channel.name) == False:
