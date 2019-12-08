@@ -113,6 +113,7 @@ poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
 poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
+poi_id_sodafountain = "sodafountain"
 
 
 
@@ -737,6 +738,7 @@ cmd_push = cmd_prefix + 'push'
 cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
+cmd_purify = cmd_prefix + 'purify'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -9967,6 +9969,24 @@ poi_list = [
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
 		mother_district=poi_id_littlechernobyl,
+		is_subzone=True
+	),
+	EwPoi(
+		id_poi=poi_id_sodafountain,
+		alias=[
+			"tsf",
+			"soda",
+			"fountain",
+			"bicarbonate",
+			"newgameplus"
+		],
+		str_name="The Bicarbonate Soda Fountain",
+		str_desc="A sickening display of worship recently and secretly installed by those who wish to pay tribute to that blue cartoon, the one that's plagued our city for Slime Invictus knows HOW long. Legends say you can offer up your slime and !purify yourself with the deadly waters that fluctuate in, out, and around the fountain. Even THINKING about the act of doing such a thing makes you SICK... or, maybe not? There's no shame in trying something you've never tried before, you think to yourself.",
+		coord=(45, 44),
+		pvp=False,
+		channel="the-bicarbonate-soda-fountain",
+		role="The Bicarbonate Soda Fountain",
+		mother_district=poi_id_krakbay,
 		is_subzone=True
 	),
 	EwPoi(  # Ferry

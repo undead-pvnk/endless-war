@@ -1182,6 +1182,29 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	return response
 
 
+async def purify(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	
+	if user_data.poi == ewcfg.poi_id_sodafountain:
+		if user_data.life_state == ewcfg.life_state_corpse:
+			response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
+		else:
+			response = "You close your eyes and hold out your hands to the gentle waters of the bicarbonate soda fountain..."
+			
+			user_data.slimelevel = 1
+			user_data.slimes = 0
+			user_data.weaponskill /= 2
+			
+			user_data.persist()
+			
+			response += "\nYou have purified yourself and are now a level 1 slimeboi. The bond you've forged with your weapon has grown weaker as a result."
+	else:
+		response = "Purify yourself how? With what? Your own piss?"
+		
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
 async def confirm(cmd):
 	return
 
