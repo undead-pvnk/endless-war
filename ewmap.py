@@ -1083,7 +1083,7 @@ async def teleport(cmd):
 			time_lastuse = 0
 
 		if time_lastuse + 180*60 > time_now:
-			response = "You can't do that again yet."
+			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			
 		valid_destinations = set()
