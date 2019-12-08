@@ -889,6 +889,58 @@ async def fursuit(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def pray(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.poi != ewcfg.poi_id_endlesswar:
+		response = "You must be in the presence of your lord if you wish to pray to him."
+
+	else:
+		# Generates a random integer from 1 to 100. If it is below the prob of poudrin, the player gets a poudrin.
+		# If the random integer is above prob of poudrin but below probofpoud+probofdeath, then the player dies. Else,
+		# the player is blessed with a response from EW.
+		probabilityofpoudrin = 10
+		probabilityofdeath = 10
+		diceroll = random.randint(1, 100)
+
+		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
+			item = random.choice(ewcfg.mine_results)
+
+			item_props = ewitem.gen_item_props(item)
+
+			ewitem.item_create(
+				item_type = item.item_type,
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_props = item_props
+			)
+
+			response = "ENDLESS WAR takes pity on you, and with a minor tremor he materializes a {} in your pocket.".format(item.str_name)
+
+		elif diceroll < (probabilityofpoudrin + probabilityofdeath): # Player gets a face full of bone-hurting beam.
+			response = "ENDLESS WAR doesn’t respond. You squint, looking directly into his eye, and think you begin to see particle effects begin to accumulate..."
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(3)
+
+			user_data = EwUser(member = cmd.message.author)
+			user_data.die(cause = ewcfg.cause_praying)
+			user_data.persist()
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
+			response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
+
+		else:
+			responses_list = ewcfg.pray_responses_list
+
+			if user_data.slimes > 1000000:
+				responses_list = responses_list + ["ENDLESS WAR is impressed by your vast amounts of slime."]
+			else:
+				responses_list = responses_list + ["ENDLESS WAR can’t help but laugh at how little slime you have."]
+
+			response = random.choice(responses_list)
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 """recycle your trash at the SlimeCorp Recycling plant"""
 async def recycle(cmd):
 	user_data = EwUser(member=cmd.message.author)

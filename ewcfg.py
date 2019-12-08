@@ -697,6 +697,7 @@ cmd_advertise = cmd_prefix + 'advertise'
 cmd_ads = cmd_prefix + 'ads'
 cmd_confirm = cmd_prefix + 'confirm'
 cmd_cancel = cmd_prefix + 'cancel'
+cmd_pray = cmd_prefix + 'pray'
 
 
 cmd_retire = cmd_prefix + 'retire'
@@ -1747,6 +1748,7 @@ cause_killing_enemy = 11
 cause_weather = 12
 cause_cliff = 13
 cause_backfire = 14
+cause_praying = 15
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -14663,6 +14665,18 @@ dungeon_tutorial = [
 
 	),
 ]
+
+pray_responses_list = [
+	"ENDLESS WAR momentarily overwhelms all of your senses by telepathically communicating with you in his eldritch tongue.",
+	"ENDLESS WAR gazes up towards the stars, longingly.",
+	"ENDLESS WAR fondly regards the good ol’ days.",
+	"ENDLESS WAR urges you to collect more slime.",
+	"ENDLESS WAR hungers for more.",
+	"ENDLESS WAR commands you to kill thy neighbor.",
+	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
+	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+]
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 
