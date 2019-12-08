@@ -821,11 +821,22 @@ async def piss(cmd):
 	if ewcfg.mutation_id_enlargedbladder in mutations:
 		if cmd.mentions_count == 0:
 			response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if cmd.mentions_count == 1:
 			target_member = cmd.mentions[0]
 			target_user_data = EwUser(member = target_member)
 			
+			if user_data.id_user == target_user_data.id_user:
+				response = "Your love for piss knows no bounds. You aim your urine stream sky high, causing it to land right back into your own mouth. Mmmm, tasty~!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
 			if user_data.poi == target_user_data.poi:
+
+				if target_user_data.life_state == ewcfg.life_state_corpse:
+					response = "You piss right through them! Their ghostly form ripples as the stream of urine pours endlessly unto them."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				
 				if user_data.sap < ewcfg.sap_spend_piss:
 					response = "You don't have enough liquid sap to !piss..."
 				else:
@@ -847,7 +858,7 @@ async def piss(cmd):
 	else:
 		response = "You lack the moral fiber necessary for urination."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """find out how many days are left until the 31st"""
 async def fursuit(cmd):
@@ -899,7 +910,7 @@ async def recycle(cmd):
 			
 			ewitem.item_delete(id_item = item.id_item)
 
-			pay = int(random.random() * 100 ** random.randrange(2,5))
+			pay = int(random.random() * 10 ** random.randrange(2,6))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
 			if pay == 0:
 				item_reward = random.choice(ewcfg.mine_results)
@@ -1197,7 +1208,7 @@ async def purify(cmd):
 				user_data.slimelevel = 1
 				user_data.slimes = 0
 				
-				new_weaponskill = int(user_data.weaponskill/4)
+				new_weaponskill = int(user_data.weaponskill * 0.75)
 				
 				ewutils.weaponskills_clear(id_server = user_data.id_server, id_user = user_data.id_user, weaponskill = new_weaponskill)
 				
