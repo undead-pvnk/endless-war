@@ -923,9 +923,10 @@ async def pray(cmd):
 			await asyncio.sleep(3)
 
 			user_data = EwUser(member = cmd.message.author)
-			user_data.die(cause = ewcfg.cause_praying)
+			die_resp = user_data.die(cause = ewcfg.cause_praying)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			await die_resp.post()
 
 			response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
 
