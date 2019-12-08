@@ -5,6 +5,7 @@ import time
 import discord
 
 import ewcfg
+import ewrolemgr
 import ewstats
 import ewutils
 from ew import EwUser
@@ -535,7 +536,7 @@ async def capture_progress(cmd):
 	if district_data.time_unlock > 0:
 		response += "\nThis district cannot be captured currently. It will unlock in {} minutes.".format(round(district_data.time_unlock / 60))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
+
 
 async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -613,12 +614,16 @@ async def annex(cmd):
 
 
 	user_data.change_slimes(n = -cost, source = ewcfg.source_spending)
+	# Flag the user for PvP
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
+
 	user_data.persist()
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	district_data.persist()
 
-	return await resp_cont.post()			
-	
-		
+	return await resp_cont.post()
+
+
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -652,10 +657,10 @@ async def capture_tick(id_server):
 			controlling_faction = dist.controlling_faction
 
 			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted], ignore_offline = True)
-					
+
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
-			
+
 			nega_present = len(slimeoids) > 0
 #			if nega_present:
 #				continue
@@ -702,7 +707,7 @@ async def capture_tick(id_server):
 							player_capture_speed *= 2
 						if ewcfg.mutation_id_patriot in mutations:
 							player_capture_speed *= 2
-							
+
 
 						capture_speed += player_capture_speed
 						num_capturers += 1

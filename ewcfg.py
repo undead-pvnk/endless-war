@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.14"
+version = "v3.15 - PvP Flags / New Capturing Mechanic"
 
 dir_msgqueue = 'msgqueue'
 
@@ -298,7 +298,7 @@ transport_line_blimp_afb_to_df = "blimpafbtodf"
 
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
-role_juvenile_pvp = "juvenilepvp"
+role_juvenile_pvp = "juvenilewanted"
 role_juvenile_active = "juvenileotp"
 role_rowdyfucker = "rowdyfucker"
 role_rowdyfuckers = "rowdys"
@@ -1102,12 +1102,16 @@ cd_scavenge = 0
 cd_enlist = 60
 
 # PvP timer pushouts
-time_pvp_kill = 60 * 60 # 1 hour
-
-#time_pvp_mine = 180
-#time_pvp_haunt = 600
-#time_pvp_invest_withdraw = 180
-#time_pvp = 1800
+time_pvp_kill = 1 #30 * 60
+time_pvp_attack = 1 #10 * 60
+time_pvp_annex = 30 * 60
+time_pvp_capture = 10 * 60
+time_pvp_mine = 1 * 60
+time_pvp_scavenge = 3 * 60
+time_pvp_fish = 5 * 60
+time_pvp_farm = 10 * 60
+time_pvp_spar = 5 * 60
+time_pvp_enlist = 5 * 60
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour

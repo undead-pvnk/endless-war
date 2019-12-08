@@ -1125,10 +1125,16 @@ async def enemy_action_tick_loop(id_server):
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
 def check_defender_targets(user_data, enemy_data):
-	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
-	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+	defending_enemy = EwEnemy(id_enemy = enemy_data.id_enemy)
+	searched_user = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
 
-	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
+	print(defending_enemy.poi)
+	print(searched_user.poi)
+
+	time_now = int(time.time())
+
+	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse) or (
+			searched_user.time_expirpvp < time_now):
 		defending_enemy.id_target = ""
 		defending_enemy.persist()
 		return False
@@ -1147,9 +1153,6 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
-
-	if user_data.time_expirpvp >= time_now:
-		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
 
 	return move_speed
 
@@ -1449,3 +1452,22 @@ def create_death_report(cause = None, user_data = None):
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
 	return(deathreport)
+
+""" Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
+def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
+	if desired_time_expirpvp > current_time_expirpvp:
+		return desired_time_expirpvp
+
+	return current_time_expirpvp
+
+""" add the PvP flag role to a member """
+async def add_pvp_role(cmd = None):
+	member = cmd.message.author
+	roles_map_user = getRoleMap(member.roles)
+
+	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])

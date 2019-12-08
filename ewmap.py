@@ -796,11 +796,6 @@ async def move(cmd = None, isApt = False):
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
-	# If you're WANTED, you can't enter sub-zones.
-	if user_data.time_expirpvp >= time_now:
-		if poi.is_subzone == True:
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What the hell are you thinking? As soon as the onlookers there catch a glimpse of a WANTED, they’re going straight to the cops. You better keep a low profile."))
-
 	if user_data.life_state == ewcfg.life_state_corpse and user_data.poi == ewcfg.poi_id_thesewers:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
 	if isApt:

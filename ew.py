@@ -207,15 +207,6 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 
-
-			if self.time_expirpvp >= time_now: # If you were Wanted.
-				if cause != ewcfg.cause_cliff:
-					ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
-
-				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
-				self.slimecoin = 0
-				self.weaponmarried = False
-
 			if cause == ewcfg.cause_cliff:
 				pass
 			else:
@@ -224,7 +215,7 @@ class EwUser:
 					food_fraction = 4
 					cosmetic_fraction = 4
 
-				else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
+				else:  # If you were a Gangster.
 					item_fraction = 2
 					food_fraction = 2
 					cosmetic_fraction = 2
