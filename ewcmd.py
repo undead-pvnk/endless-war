@@ -819,7 +819,6 @@ async def fursuit(cmd):
 
 async def pray(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	resp_cont = ewutils.EwResponseContainer(id_server = user_data.id_server)
 
 	if user_data.poi != ewcfg.poi_id_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
@@ -851,12 +850,10 @@ async def pray(cmd):
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			await asyncio.sleep(3)
 
+			user_data = EwUser(member = cmd.message.author)
 			user_data.die(cause = ewcfg.cause_praying)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			deathreport = ewutils.create_death_report(cause = ewcfg.cause_praying, user_data = user_data)
-			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
-			await resp_cont.post()
 
 			response = "ENDLESS WAR completely and utterly obliterates you with a bone-hurting beam."
 
