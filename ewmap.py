@@ -281,8 +281,8 @@ map_world = [
 	[ -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1], # 40
 	[ -1, -1, -1, -1, -1,  0,  0, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, 20, -1, -1, -1], # 41
 	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -1, -1, -2, -1, -1, -1], # 42
-	[ -1, -1, -1, -1, -1, 30, -1, -1, -1, 20, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, 20, -1, 20, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 43
-	[ -1, -1, -1, -1, -1, -2, 30,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 44
+	[ -1, -1, -1, -1, -1, 30, -1, -1, -1, 20, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, 20, -1, 20, -1, -3, -1, 20, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 43
+	[ -1, -1, -1, -1, -1, -2, 30,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0,  0,  0, 30, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30,  0,  0,  0, -1, -2, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 44
 	[ -1, -1, -1, -1, -1, 30, -1, -1, -1, 20, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 20, -1, 20, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 45
 	[ -1, -1, -1, -1, -1,  0, -1, -1, -1, -2, -1, -1, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2, -1, -2, -1, -2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -3, -3, -3, -3, -3, -3, -3, -3, 30, -1, -1, -1, -1, -1, -1, -1,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 46
 	[ -1, -1,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -3, -1, -1, -1, -1, -1, -1, -1, -1, -1, 30, -1, -1, -1, 30, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], # 47
@@ -1041,7 +1041,7 @@ async def halt(cmd):
 async def teleport(cmd):
 	
 	blj_used = False
-	if cmd.tokens[0] == '!blj':
+	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'blj'):
 		blj_used = True
 	
 	if channel_name_is_poi(cmd.message.channel.name) == False:
@@ -1083,7 +1083,7 @@ async def teleport(cmd):
 			time_lastuse = 0
 
 		if time_lastuse + 180*60 > time_now:
-			response = "You can't do that again yet."
+			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			
 		valid_destinations = set()
@@ -1170,7 +1170,7 @@ async def look(cmd):
 
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
-	enemies_resp = get_enemies_look_resp(district_data)
+	enemies_resp = get_enemies_look_resp(user_data, district_data)
 	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
 	soul_resp = ""
 
@@ -1232,7 +1232,7 @@ async def survey(cmd):
 
 	slimes_resp = get_slimes_resp(district_data)
 	players_resp = get_players_look_resp(user_data, district_data)
-	enemies_resp = get_enemies_look_resp(district_data)
+	enemies_resp = get_enemies_look_resp(user_data, district_data)
 	slimeoids_resp = get_slimeoids_resp(cmd.message.server.id, poi)
 
 	if slimeoids_resp != "":
@@ -1516,8 +1516,12 @@ def get_players_look_resp(user_data, district_data):
 	
 	return players_resp
 	
-def get_enemies_look_resp(district_data):
+def get_enemies_look_resp(user_data, district_data):
 	# lists off enemies in district
+	
+	# identifiers are converted into lowercase, then into emoticons for visual clarity.
+	# server emoticons are also used for clarity
+	
 	enemies_in_district = district_data.get_enemies_in_district()
 
 	num_enemies = len(enemies_in_district)
@@ -1532,31 +1536,48 @@ def get_enemies_look_resp(district_data):
 		found_enemy_data = EwEnemy(id_enemy=enemies_in_district[0])
 
 		if found_enemy_data.identifier != '':
-			identifier_formatter = " {}"
+			identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
 		else:
-			identifier_formatter = ""
+			identifier_text = ""
+			
+		if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user):
+			threat_emote = ewcfg.emote_slimeheart
+		else:
+			threat_emote = ewcfg.emote_slimeskull
 
-		enemies_resp += ("You look around and find a **{}" + identifier_formatter + "** in this location.").format(found_enemy_data.display_name, found_enemy_data.identifier)
+		enemies_resp += ("You look around and find a\n{} **{}" + identifier_text + "**\nin this location.").format(threat_emote, found_enemy_data.display_name)
 	else:
-		enemies_resp += "You notice several enemies in this district, such as "
+		enemies_resp += "You notice several enemies in this district, such as\n"
 		while numerator < (len(enemies_in_district) - 1):
 			found_enemy_data = EwEnemy(id_enemy=enemies_in_district[numerator])
 
 			if found_enemy_data.identifier != '':
-				identifier_formatter = " {}"
+				identifier_text = " {}".format(":regional_indicator_{}:".format(found_enemy_data.identifier.lower()))
 			else:
-				identifier_formatter = ""
+				identifier_text = ""
 
-			enemies_resp += ("**{}" + identifier_formatter + "**, ").format(found_enemy_data.display_name, found_enemy_data.identifier)
+			if found_enemy_data.ai == ewcfg.enemy_ai_coward or found_enemy_data.ai == ewcfg.enemy_ai_sandbag or (
+					found_enemy_data.ai == ewcfg.enemy_ai_defender and found_enemy_data.id_target != user_data.id_user):
+				threat_emote = ewcfg.emote_slimeheart
+			else:
+				threat_emote = ewcfg.emote_slimeskull
+
+			enemies_resp += ("{} **{}" + identifier_text + "**\n").format(threat_emote, found_enemy_data.display_name)
 			numerator += 1
+			
 		final_enemy_data = EwEnemy(id_enemy=enemies_in_district[num_enemies - 1])
 
 		if final_enemy_data.identifier != '':
-			identifier_formatter = " {}"
+			identifier_text = " {}".format(":regional_indicator_{}:".format(final_enemy_data.identifier.lower()))
 		else:
-			identifier_formatter = ""
+			identifier_text = ""
+			
+		if final_enemy_data.ai == ewcfg.enemy_ai_coward or final_enemy_data.ai == ewcfg.enemy_ai_sandbag or (final_enemy_data.ai == ewcfg.enemy_ai_defender and final_enemy_data.id_target != user_data.id_user):
+			threat_emote = ewcfg.emote_slimeheart
+		else:
+			threat_emote = ewcfg.emote_slimeskull
 
-		enemies_resp += ("and **{}" + identifier_formatter + "**.").format(final_enemy_data.display_name, final_enemy_data.identifier)
+		enemies_resp += ("{} **{}" + identifier_text + "**").format(threat_emote, final_enemy_data.display_name)
 	
 	return enemies_resp
 

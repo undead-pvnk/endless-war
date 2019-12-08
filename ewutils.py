@@ -1127,6 +1127,9 @@ async def enemy_action_tick_loop(id_server):
 def check_defender_targets(user_data, enemy_data):
 	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
 	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+	
+	#print(defending_enemy.poi)
+	#print(searched_user.poi)
 
 	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
 		defending_enemy.id_target = ""
@@ -1448,4 +1451,19 @@ def create_death_report(cause = None, user_data = None):
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
+	if (cause == ewcfg.cause_praying): # Response for praying
+		deathreport = formatMessage(user_member, "{} owww yer frickin bones man {}".format(ewcfg.emote_slimeskull, ewcfg.emote_slimeskull))
+
 	return(deathreport)
+
+def check_donor_role(cmd_object):
+	
+	cmd = cmd_object
+	
+	member = cmd.message.author
+
+	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
+	if terezi_role not in member.roles:
+		return False
+	else:
+		return True

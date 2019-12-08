@@ -136,8 +136,10 @@ class EwUser:
 			if self.life_state != ewcfg.life_state_corpse:
 				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
 			for level in range(self.slimelevel+1, new_level+1):
-				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
-					current_mutations = self.get_mutations()
+				current_mutations = self.get_mutations()
+				
+				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse and len(current_mutations) < 10:
+					
 					new_mutation = random.choice(list(ewcfg.mutation_ids))
 					while new_mutation in current_mutations:
 						new_mutation = random.choice(list(ewcfg.mutation_ids))

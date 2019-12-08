@@ -1901,6 +1901,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 		
 	if sandbag_mode:
+		slimes_spent_sandbag = slimes_spent
 		slimes_spent = 0
 		slimes_dropped = 0
 
@@ -2284,6 +2285,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				elif enemy_data.ai == ewcfg.enemy_ai_defender:
 					enemy_data.id_target = user_data.id_user
 					enemy_data.persist()
+					
+		if sandbag_mode:
+			response += '\n*The dojo master cries out:*\n"If this were a real fight, you would have spent **{}** slime on that attack!"'.format(slimes_spent_sandbag)
 
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
 
