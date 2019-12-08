@@ -615,7 +615,7 @@ async def scavenge(cmd):
 			if ewcfg.mutation_id_trashmouth in mutations:
 				time_since_last_scavenge *= 3
 
-			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
+			time_since_last_scavenge = min(max(1, time_since_last_scavenge), ewcfg.soft_cd_scavenge)
 
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)

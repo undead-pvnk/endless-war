@@ -826,7 +826,7 @@ async def piss(cmd):
 			target_user_data = EwUser(member = target_member)
 			
 			if user_data.poi == target_user_data.poi:
-				if user_data.sap <= ewcfg.sap_spend_piss:
+				if user_data.sap < ewcfg.sap_spend_piss:
 					response = "You don't have enough liquid sap to !piss..."
 				else:
 					sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
