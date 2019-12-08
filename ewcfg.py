@@ -8633,7 +8633,7 @@ poi_list = [
 			"b"
 		],
 		str_name = "The Bazaar",
-		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren.\n\nExits into Brawlden.",
+		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren, but what does catch your eye is a stall some weirdo's set up. Apparently his services include prying things off of propstands and luring fish out of their tanks.\n\nExits into Brawlden.",
 		channel = channel_bazaar,
 		role = "Bazaar",
 		coord = (57, 28),
