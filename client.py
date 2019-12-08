@@ -557,6 +557,9 @@ cmd_map = {
 	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
 	ewcfg.cmd_completetrade: ewmarket.complete_trade,
 	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
+
+	# Praying at the base of ENDLESS WAR.
+	ewcfg.cmd_pray: ewcmd.pray,
 }
 
 debug = False

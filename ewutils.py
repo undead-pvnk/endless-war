@@ -1448,4 +1448,7 @@ def create_death_report(cause = None, user_data = None):
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
+	if (cause == ewcfg.cause_praying): # Response for praying
+		deathreport = formatMessage(user_member, "{} owww yer frickin bones man {}".format(ewcfg.emote_slimeskull, ewcfg.emote_slimeskull))
+
 	return(deathreport)
