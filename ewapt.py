@@ -1427,7 +1427,7 @@ async def propstand(cmd):
 
 	else:
 		if item_search == "" or item_search == None:
-			response = "Specify the weapon you want to put on the stand."
+			response = "Specify the item you want to put on the stand."
 		else:
 			response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1436,6 +1436,11 @@ async def propstand(cmd):
 async def releasefish(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	
+	if usermodel.poi != ewcfg.poi_id_bazaar:
+		response = "You need to see a specialist at The Bazaar to do that."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if item_sought:
@@ -1443,7 +1448,7 @@ async def releasefish(cmd):
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
 				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-				response = "You let the fish out of its tank."
+				response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
@@ -1458,6 +1463,11 @@ async def releasefish(cmd):
 async def releaseprop(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	
+	if usermodel.poi != ewcfg.poi_id_bazaar:
+		response = "You need to see a specialist at The Bazaar to do that."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if item_sought:
@@ -1465,7 +1475,7 @@ async def releaseprop(cmd):
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
 				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-				response = "After a bit of tugging, you pry the item of its stand."
+				response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "

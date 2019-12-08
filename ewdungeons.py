@@ -92,6 +92,29 @@ async def tutorial_cmd(cmd):
 	tutorial_scene = ewcfg.dungeon_tutorial[tutorial_state]
 
 	cmd_content = cmd.message.content[1:].lower()
+	
+	# Administrators can skip the tutorial
+	if cmd_content == "skiptutorial" and cmd.message.author.server_permissions.administrator:
+		new_state = 20
+		user_to_tutorial_state[user_data.id_user] = new_state
+
+		scene = ewcfg.dungeon_tutorial[new_state]
+
+		if scene.poi != None:
+			user_data.poi = scene.poi
+
+		if scene.life_state != None:
+			user_data.life_state = scene.life_state
+
+		user_data.persist()
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
+		response = format_tutorial_response(scene)
+
+		poi_def = ewcfg.id_to_poi.get(user_data.poi)
+		channels = [poi_def.channel]
+		return await ewutils.post_in_channels(cmd.message.server.id, ewutils.formatMessage(cmd.message.author, response), channels)
 
 	if cmd_content in tutorial_scene.options:
 		new_state = tutorial_scene.options.get(cmd_content)

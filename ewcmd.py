@@ -524,6 +524,37 @@ async def boo(cmd):
 		await resp_cont.post()
 	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_ghost + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_srs + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_ghost + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_negaslime + ewcfg.emote_srs + ewcfg.emote_negaslime + ewcfg.emote_staydead + ewcfg.emote_staydead + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank))
 
+"""
+	Terezi Gang FLIP COINS
+"""
+async def coinflip(cmd):
+	
+	user_data = EwUser(member=cmd.message.author)
+	response = ""
+	
+	if ewutils.check_donor_role(cmd):
+		
+		if user_data.slimecoin <= 1:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "YOU DON'T H4V3 4NY SL1M3CO1N TO FL1P >:["))
+		else:
+			user_data.change_slimecoin(n = -1, coinsource = ewcfg.coinsource_spending)
+			user_data.persist()
+		
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "YOU FL1P ON3 SL1M3CO1N R1GHT 1N TH3 41R!\nhttps://cdn.discordapp.com/attachments/431240644464214017/652341405129375794/Terezi_Hussnasty_coinflip.gif"))
+		await asyncio.sleep(2)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "..."))
+		await asyncio.sleep(3)
+		
+		flipnum = random.randrange(2)
+
+		if flipnum == 0:
+			response = "H34DS!\nhttps://www.homestuck.com/images/storyfiles/hs2/02045_3.gif"
+		else:
+			response = "T41LS!\nhttps://66.media.tumblr.com/tumblr_m6gdpg4qOg1r6ajb6.gif"
+		
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def spook(cmd):
 	#user_data = EwUser(member=cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n' "***SPOOKED YA!***" + '\n' + "https://www.youtube.com/watch?v=T-dtcIXZo4s"))
@@ -788,12 +819,46 @@ async def piss(cmd):
 	mutations = user_data.get_mutations()
 
 	if ewcfg.mutation_id_enlargedbladder in mutations:
-		response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+		if cmd.mentions_count == 0:
+			response = "You unzip your dick and just start pissing all over the goddamn fucking floor. God, you’ve waited so long for this moment, and it’s just as perfect as you could have possibly imagined. You love pissing so much."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+		if cmd.mentions_count == 1:
+			target_member = cmd.mentions[0]
+			target_user_data = EwUser(member = target_member)
+			
+			if user_data.id_user == target_user_data.id_user:
+				response = "Your love for piss knows no bounds. You aim your urine stream sky high, causing it to land right back into your own mouth. Mmmm, tasty~!"
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
+			if user_data.poi == target_user_data.poi:
+
+				if target_user_data.life_state == ewcfg.life_state_corpse:
+					response = "You piss right through them! Their ghostly form ripples as the stream of urine pours endlessly unto them."
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				
+				if user_data.sap < ewcfg.sap_spend_piss:
+					response = "You don't have enough liquid sap to !piss..."
+				else:
+					sap_damage_target = min(ewcfg.sap_crush_piss, target_user_data.hardened_sap)
+					target_user_data.hardened_sap -= sap_damage_target
+					target_user_data.persist()
+					
+					user_data.sap -= ewcfg.sap_spend_piss
+					user_data.limit_fix()
+					user_data.persist()
+	
+					response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!! They lose {} hardened sap!".format(ewcfg.sap_spend_piss, target_member.display_name, sap_damage_target)
+			else:
+				response = "You can't !piss on someone who isn't there! Moron!"
+
+		elif cmd.mentions_count > 1:
+			response = "Whoa, one water-sports fetishist at a time, pal!"
+			
 	else:
 		response = "You lack the moral fiber necessary for urination."
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """find out how many days are left until the 31st"""
 async def fursuit(cmd):
@@ -845,7 +910,7 @@ async def recycle(cmd):
 			
 			ewitem.item_delete(id_item = item.id_item)
 
-			pay = int(random.random() * 10 ** random.randrange(2,5))
+			pay = int(random.random() * 10 ** random.randrange(2,6))
 			response = "You put your {} into the designated opening. **CRUSH! Splat!** *hiss...* and it's gone. \"Thanks for keeping the city clean.\" a robotic voice informs you.".format(item_sought.get("name"))
 			if pay == 0:
 				item_reward = random.choice(ewcfg.mine_results)
@@ -1126,6 +1191,35 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	districtmodel.change_slimes(n=slimetotal)
 	districtmodel.persist()
 	return response
+
+
+async def purify(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	
+	if user_data.poi == ewcfg.poi_id_sodafountain:
+		if user_data.life_state == ewcfg.life_state_corpse:
+			response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
+		else:
+			if user_data.slimelevel < 50:
+				response = "You're not big enough in slime levels to be worthy of purification"
+			else:
+				response = "You close your eyes and hold out your hands to the gentle waters of the bicarbonate soda fountain..."
+				
+				user_data.slimelevel = 1
+				user_data.slimes = 0
+				
+				new_weaponskill = int(user_data.weaponskill * 0.75)
+				
+				ewutils.weaponskills_clear(id_server = user_data.id_server, id_user = user_data.id_user, weaponskill = new_weaponskill)
+				
+				user_data.persist()
+				
+				response += "\n\nYou have purified yourself and are now a level 1 slimeboi.\nThe bond you've forged with your weapon has grown weaker as a result."
+	else:
+		response = "Purify yourself how? With what? Your own piss?"
+		
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 
 async def confirm(cmd):
