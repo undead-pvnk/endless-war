@@ -1189,18 +1189,21 @@ async def purify(cmd):
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
 		else:
-			response = "You close your eyes and hold out your hands to the gentle waters of the bicarbonate soda fountain..."
-			
-			user_data.slimelevel = 1
-			user_data.slimes = 0
-			
-			new_weaponskill = int(user_data.weaponskill/4)
-			
-			ewutils.weaponskills_clear(id_server = user_data.id_server, id_user = user_data.id_user, weaponskill = new_weaponskill)
-			
-			user_data.persist()
-			
-			response += "\n\nYou have purified yourself and are now a level 1 slimeboi.\nThe bond you've forged with your weapon has grown weaker as a result."
+			if user_data.slimelevel < 50:
+				response = "You're not big enough in slime levels to be worthy of purification"
+			else:
+				response = "You close your eyes and hold out your hands to the gentle waters of the bicarbonate soda fountain..."
+				
+				user_data.slimelevel = 1
+				user_data.slimes = 0
+				
+				new_weaponskill = int(user_data.weaponskill/4)
+				
+				ewutils.weaponskills_clear(id_server = user_data.id_server, id_user = user_data.id_user, weaponskill = new_weaponskill)
+				
+				user_data.persist()
+				
+				response += "\n\nYou have purified yourself and are now a level 1 slimeboi.\nThe bond you've forged with your weapon has grown weaker as a result."
 	else:
 		response = "Purify yourself how? With what? Your own piss?"
 		
