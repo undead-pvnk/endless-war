@@ -1193,11 +1193,14 @@ async def purify(cmd):
 			
 			user_data.slimelevel = 1
 			user_data.slimes = 0
-			user_data.weaponskill /= 2
+			
+			new_weaponskill = int(user_data.weaponskill/4)
+			
+			ewutils.weaponskills_clear(id_server = user_data.id_server, id_user = user_data.id_user, weaponskill = new_weaponskill)
 			
 			user_data.persist()
 			
-			response += "\nYou have purified yourself and are now a level 1 slimeboi. The bond you've forged with your weapon has grown weaker as a result."
+			response += "\n\nYou have purified yourself and are now a level 1 slimeboi.\nThe bond you've forged with your weapon has grown weaker as a result."
 	else:
 		response = "Purify yourself how? With what? Your own piss?"
 		
