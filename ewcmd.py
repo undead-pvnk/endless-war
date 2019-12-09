@@ -467,10 +467,10 @@ async def weather(cmd):
 
 
 """
-	Harvest is and has always been a command.
+	Harvest is not and has never been a command.
 """
 async def harvest(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '**HARVEST IS A COMMAND YOU BEAUTIFUL SLIMEBOI**'))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '**HARVEST IS NOT A COMMAND YOU FUCKING IDIOT**'))
 
 """
 	Salute the NLACakaNM flag.
