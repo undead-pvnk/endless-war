@@ -271,7 +271,7 @@ async def mine(cmd):
 
 			# Determine if an item is found.
 			unearthed_item = False
-			unearthed_item_amount = 0
+			unearthed_item_amount = (random.randrange(3) + 5) # anywhere from 5-7 drops
 
 			# juvies get items 4 times as often as enlisted players
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
@@ -294,6 +294,7 @@ async def mine(cmd):
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
 						unearthed_item_chance = 1
+						unearthed_item_amount = 1
 
 			if random.random() < 0.05:
 				id_event = create_mining_event(cmd)
@@ -321,7 +322,6 @@ async def mine(cmd):
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
-				unearthed_item_amount = (random.randrange(3) + 5) # anywhere from 5-7 drops
 
 			if unearthed_item == True:
 				# If there are multiple possible products, randomly select one.
@@ -337,8 +337,10 @@ async def mine(cmd):
 						item_props = item_props
 					)
 
-				
-				response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
+				if unearthed_item_amount == 1:
+					response += "You unearthed a {}! ".format(unearthed_item_amount, item.str_name)
+				else:
+					response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 
