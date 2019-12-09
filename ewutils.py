@@ -1391,7 +1391,7 @@ def create_death_report(cause = None, user_data = None):
 
 			killer_nick = player_data.display_name
 
-			if (cause == ewcfg.cause_killing): # Response for dying to another player
+			if (cause == ewcfg.cause_killing) and (weapon != None): # Response for dying to another player
 				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
 				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
