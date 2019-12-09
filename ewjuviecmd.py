@@ -338,7 +338,7 @@ async def mine(cmd):
 					)
 
 				if unearthed_item_amount == 1:
-					response += "You unearthed a {}! ".format(unearthed_item_amount, item.str_name)
+					response += "You unearthed a {}! ".format(item.str_name)
 				else:
 					response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
 
