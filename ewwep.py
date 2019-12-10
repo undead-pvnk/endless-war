@@ -815,10 +815,10 @@ async def attack(cmd):
 						item_props = {
 							'id_furniture': ewcfg.item_id_sigillaria,
 							'furniture_name': "{}'s sigillaria".format(shootee_name),
-							'furniture_desc': "sigillaria desc",#TODO flavor text
+							'furniture_desc': "A sigillaria of {}.".format(shootee_name),
 							'rarity': ewcfg.rarity_plebeian,
-							'furniture_place_desc': "sigillaria place desc",#TODO flavor text
-							'furniture_look_desc': "sigillaria look desc"#TODO flavor text
+							'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
+							'furniture_look_desc': "There's a sigillaria of {}.".format(shootee_name)
 						}
 					)
 
