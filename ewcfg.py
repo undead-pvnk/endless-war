@@ -871,6 +871,9 @@ max_concurrent_ads = 8
 max_length_ads = 500
 uptime_ads = 7 * 24 * 60 * 60 # one week
 
+# currencies you can gamble at the casino
+currency_slime = "slime"
+currency_slimecoin = "SlimeCoin"
 
 #inebriation
 inebriation_max = 20
@@ -1715,6 +1718,7 @@ source_fishing = 13
 source_squeeze = 14
 source_weather = 15
 source_crush = 16
+source_casino = 17
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
