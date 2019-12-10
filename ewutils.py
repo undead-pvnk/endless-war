@@ -246,6 +246,54 @@ def formatNiceList(names = [], conjunction = "and"):
 	
 	return ', '.join(names[0:-1]) + '{comma} {conj} '.format(comma = (',' if l > 2 else ''), conj = conjunction) + names[-1]
 
+def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False):
+	try:
+		seconds = int(seconds)
+	except:
+		seconds = 0
+
+	if round_to_minutes:
+		minutes = round(seconds / 60)
+	else:
+		minutes = int(seconds / 60)
+
+	if round_to_hours:
+		hours = round(minutes / 60)
+	else:
+		hours = int(minutes / 60)
+
+	minutes = minutes % 60
+	seconds = seconds % 60
+	time_tokens = []
+	if hours > 0:
+		if hours == 1:
+			token_hours = "1 hour"
+		else:
+			token_hours = "{} hours".format(hours)
+		time_tokens.append(token_hours)
+
+	if round_to_hours:
+		return token_hours
+
+	if minutes > 0:
+		if minutes == 1:
+			token_mins = "1 minute"
+		else:
+			token_mins = "{} minutes".format(minutes)
+		time_tokens.append(token_mins)
+	
+	if round_to_minutes:
+		return formatNiceList(names = time_tokens, conjunction = "and")
+
+	if seconds > 0:
+		if seconds == 1:
+			token_secs = "1 second"
+		else:
+			token_secs = "{} seconds".format(seconds)
+		time_tokens.append(token_secs)
+
+	return formatNiceList(names = time_tokens, conjunction = "and")
+
 """ turn a list of Users into a list of their respective names """
 def userListToNameString(list_user):
 	names = []
