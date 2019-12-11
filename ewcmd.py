@@ -855,7 +855,9 @@ async def piss(cmd):
 					user_data.limit_fix()
 					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 					user_data.persist()
-	
+					
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+					
 					response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!! They lose {} hardened sap!".format(ewcfg.sap_spend_piss, target_member.display_name, sap_damage_target)
 			else:
 				response = "You can't !piss on someone who isn't there! Moron!"
