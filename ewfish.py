@@ -4,6 +4,7 @@ import time
 import ewcfg
 import ewutils
 import ewitem
+import ewrolemgr
 
 from ewmarket import EwMarket
 from ew import EwUser
@@ -701,8 +702,12 @@ async def reel(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.pier = ""
-				
+
+				# Flag the user for PvP
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
+
 				user_data.persist()
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."

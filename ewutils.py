@@ -246,6 +246,54 @@ def formatNiceList(names = [], conjunction = "and"):
 	
 	return ', '.join(names[0:-1]) + '{comma} {conj} '.format(comma = (',' if l > 2 else ''), conj = conjunction) + names[-1]
 
+def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False):
+	try:
+		seconds = int(seconds)
+	except:
+		seconds = 0
+
+	if round_to_minutes:
+		minutes = round(seconds / 60)
+	else:
+		minutes = int(seconds / 60)
+
+	if round_to_hours:
+		hours = round(minutes / 60)
+	else:
+		hours = int(minutes / 60)
+
+	minutes = minutes % 60
+	seconds = seconds % 60
+	time_tokens = []
+	if hours > 0:
+		if hours == 1:
+			token_hours = "1 hour"
+		else:
+			token_hours = "{} hours".format(hours)
+		time_tokens.append(token_hours)
+
+	if round_to_hours:
+		return token_hours
+
+	if minutes > 0:
+		if minutes == 1:
+			token_mins = "1 minute"
+		else:
+			token_mins = "{} minutes".format(minutes)
+		time_tokens.append(token_mins)
+	
+	if round_to_minutes:
+		return formatNiceList(names = time_tokens, conjunction = "and")
+
+	if seconds > 0:
+		if seconds == 1:
+			token_secs = "1 second"
+		else:
+			token_secs = "{} seconds".format(seconds)
+		time_tokens.append(token_secs)
+
+	return formatNiceList(names = time_tokens, conjunction = "and")
+
 """ turn a list of Users into a list of their respective names """
 def userListToNameString(list_user):
 	names = []
@@ -1127,9 +1175,6 @@ async def enemy_action_tick_loop(id_server):
 def check_defender_targets(user_data, enemy_data):
 	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
 	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
-	
-	#print(defending_enemy.poi)
-	#print(searched_user.poi)
 
 	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
 		defending_enemy.id_target = ""
@@ -1150,9 +1195,6 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
-
-	if user_data.time_expirpvp >= time_now:
-		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
 
 	return move_speed
 
@@ -1457,9 +1499,9 @@ def create_death_report(cause = None, user_data = None):
 	return(deathreport)
 
 def check_donor_role(cmd_object):
-	
+
 	cmd = cmd_object
-	
+
 	member = cmd.message.author
 
 	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
@@ -1467,3 +1509,22 @@ def check_donor_role(cmd_object):
 		return False
 	else:
 		return True
+
+""" Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
+def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
+	if desired_time_expirpvp > current_time_expirpvp:
+		return desired_time_expirpvp
+
+	return current_time_expirpvp
+
+""" add the PvP flag role to a member """
+async def add_pvp_role(cmd = None):
+	member = cmd.message.author
+	roles_map_user = getRoleMap(member.roles)
+
+	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])

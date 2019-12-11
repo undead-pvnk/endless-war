@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.15"
+version = "v3.16"
 
 dir_msgqueue = 'msgqueue'
 
@@ -299,7 +299,7 @@ transport_line_blimp_afb_to_df = "blimpafbtodf"
 
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
-role_juvenile_pvp = "juvenilepvp"
+role_juvenile_pvp = "juvenilewanted"
 role_juvenile_active = "juvenileotp"
 role_rowdyfucker = "rowdyfucker"
 role_rowdyfuckers = "rowdys"
@@ -674,6 +674,7 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_annex = cmd_prefix + 'annex'
+cmd_annex_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
@@ -913,10 +914,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 60 * 60  # 60 min
-max_capture_points_a = 30 * 60  # 30 min
-max_capture_points_b = 15 * 60  # 15 min
-max_capture_points_c = 5 * 60   # 5 min
+max_capture_points_s = 5000000 # 5 megaslime
+max_capture_points_a = 3000000  # 3 megaslime
+max_capture_points_b = 2000000  # 2 megaslime
+max_capture_points_c = 1000000   # 1 megaslime
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -927,10 +928,10 @@ max_capture_points = {
 }
 
 # how long districts stay locked after capture
-capture_lock_s = 8 * 60 * 60  # 8 hours
-capture_lock_a = 4 * 60 * 60  # 4 hours 
-capture_lock_b = 2 * 60 * 60  # 2 hours
-capture_lock_c = 1 * 60 * 60  # 1 hour
+capture_lock_s = 48 * 60 * 60  # 2 days
+capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_b = 12 * 60 * 60  # 12 hours
+capture_lock_c = 6 * 60 * 60  # 6 hours
 
 # district lock times assigned to property classes
 capture_locks = {
@@ -955,7 +956,7 @@ slimes_toannex = {
 }
 
 # by how much to extend the capture lock per additional gangster capping
-capture_lock_per_gangster = 30 * 60  # 30 min
+capture_lock_per_gangster = 60 * 60  # 60 min
 
 # capture lock messages
 capture_lock_milestone = 5 * 60 # 5 min
@@ -1117,12 +1118,15 @@ soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
 
 # PvP timer pushouts
-time_pvp_kill = 60 * 60 # 1 hour
-
-#time_pvp_mine = 180
-#time_pvp_haunt = 600
-#time_pvp_invest_withdraw = 180
-#time_pvp = 1800
+time_pvp_kill = 30 * 60
+time_pvp_attack = 10 * 60
+time_pvp_annex = 10 * 60
+time_pvp_mine = 1 * 60
+time_pvp_scavenge = 3 * 60
+time_pvp_fish = 5 * 60
+time_pvp_farm = 10 * 60
+time_pvp_spar = 5 * 60
+time_pvp_enlist = 5 * 60
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -14010,7 +14014,7 @@ help_responses = {
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
 	"scouting": "Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even enemies. Scouting will list all players/enemies above your own level, as well as players/enemies below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district.",
 	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
-	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. What this means is that you've killed or otherwise attacked a juvenile, causing you to be persued by law enforcement, and your location is revealed to the opposing gang's base to boot. You will be 'wanted' for at least 1 hour, with an additional time of your current bounty converted to seconds (example: A player with a bounty of 3600 slimecoin will be wanted for two hours). While wanted, your movement speed is cut in half, you cannot enter subzones, drop all your slimecoin on death, cannot use !suicide or be killed by teammates, drop all your items on death, as well as drop your current weapon skill level (see !help sparring) down to zero on death. It's a brutal punishment, so try and consider if killing a certain juvie is really worth it beforehand.",
+	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. This means that you are able to be attacked by gangsters! Always be on the look out and remember to check your corners.",
 	# Ways to gain slime
 	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
 	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 15 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 15 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
