@@ -5,6 +5,7 @@ import asyncio
 import ewcfg
 import ewitem
 import ewutils
+import ewrolemgr
 
 from ew import EwUser
 from ewmarket import EwMarket
@@ -238,7 +239,11 @@ async def reap(cmd):
 						response += "\n\n" + levelup_response
 
 					user_data.hunger += ewcfg.hunger_perfarm
+					# Flag the user for PvP
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_farm))
+
 					user_data.persist()
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 				farm.time_lastsow = 0  # 0 means no seeds are currently planted
 				farm.persist()

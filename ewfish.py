@@ -4,6 +4,7 @@ import time
 import ewcfg
 import ewutils
 import ewitem
+import ewrolemgr
 
 from ewmarket import EwMarket
 from ew import EwUser
@@ -527,7 +528,7 @@ async def reel(cmd):
 
 					item = random.choice(ewcfg.mine_results)
 				
-					unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+					unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
 					item_props = ewitem.gen_item_props(item)
 
@@ -539,10 +540,7 @@ async def reel(cmd):
 							item_props = item_props
 						)
 
-					if unearthed_item_amount == 1:
-						response = "You reel in a {}!".format(item.str_name)
-					else:
-						response = "You reel in two {}s!".format(item.str_name)
+					response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				else:
 					item = random.choice(slimesea_inventory)
@@ -704,8 +702,12 @@ async def reel(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.pier = ""
-				
+
+				# Flag the user for PvP
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
+
 				user_data.persist()
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."

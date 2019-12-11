@@ -246,6 +246,54 @@ def formatNiceList(names = [], conjunction = "and"):
 	
 	return ', '.join(names[0:-1]) + '{comma} {conj} '.format(comma = (',' if l > 2 else ''), conj = conjunction) + names[-1]
 
+def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False):
+	try:
+		seconds = int(seconds)
+	except:
+		seconds = 0
+
+	if round_to_minutes:
+		minutes = round(seconds / 60)
+	else:
+		minutes = int(seconds / 60)
+
+	if round_to_hours:
+		hours = round(minutes / 60)
+	else:
+		hours = int(minutes / 60)
+
+	minutes = minutes % 60
+	seconds = seconds % 60
+	time_tokens = []
+	if hours > 0:
+		if hours == 1:
+			token_hours = "1 hour"
+		else:
+			token_hours = "{} hours".format(hours)
+		time_tokens.append(token_hours)
+
+	if round_to_hours:
+		return token_hours
+
+	if minutes > 0:
+		if minutes == 1:
+			token_mins = "1 minute"
+		else:
+			token_mins = "{} minutes".format(minutes)
+		time_tokens.append(token_mins)
+	
+	if round_to_minutes:
+		return formatNiceList(names = time_tokens, conjunction = "and")
+
+	if seconds > 0:
+		if seconds == 1:
+			token_secs = "1 second"
+		else:
+			token_secs = "{} seconds".format(seconds)
+		time_tokens.append(token_secs)
+
+	return formatNiceList(names = time_tokens, conjunction = "and")
+
 """ turn a list of Users into a list of their respective names """
 def userListToNameString(list_user):
 	names = []
@@ -449,7 +497,6 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 
 				#round up or down, randomly weighted
 				remainder = slimes_to_bleed - int(slimes_to_bleed)
@@ -460,6 +507,11 @@ async def bleedSlimes(id_server = None):
 				if slimes_to_bleed >= 1:
 					user_data.bleed_storage -= slimes_to_bleed
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
+
+					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
+					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
+					district_data.persist()
+
 					if user_data.slimes < 0:
 						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
 						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
@@ -467,8 +519,6 @@ async def bleedSlimes(id_server = None):
 						resp_cont.add_response_container(die_resp)
 					user_data.persist()
 
-					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
-					district_data.persist()
 					total_bled += slimes_to_bleed
 
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
@@ -1146,9 +1196,6 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 
-	if user_data.time_expirpvp >= time_now:
-		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
-
 	return move_speed
 
 """ Damage all players in a district """
@@ -1369,7 +1416,7 @@ def create_death_report(cause = None, user_data = None):
 	user_nick = user_player.display_name
 
 	deathreport = "You arrive among the dead. {}".format(ewcfg.emote_slimeskull)
-	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	report_requires_killer = [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning, ewcfg.cause_killing_enemy]
 	if(cause in report_requires_killer): # Only deal with enemy data if necessary
@@ -1386,17 +1433,17 @@ def create_death_report(cause = None, user_data = None):
 
 			killer_nick = player_data.display_name
 
-			if (cause == ewcfg.cause_killing): # Response for dying to another player
+			if (cause == ewcfg.cause_killing) and (weapon != None): # Response for dying to another player
 				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 			if (cause == ewcfg.cause_busted): # Response for being busted
 				deathreport = "Your ghost has been busted by {}. {}".format(killer_nick, ewcfg.emote_bustin)
-				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_player, deathreport)
 
 			if (cause == ewcfg.cause_burning): # Response for burning to death
 				deathreport = "You were {} by {}. {}".format(ewcfg.weapon_map.get(ewcfg.weapon_id_molotov).str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 		if(killer_isEnemy): # Generate responses for being killed by enemy
 			# Grab enemy data
@@ -1414,22 +1461,22 @@ def create_death_report(cause = None, user_data = None):
 
 				# Format report
 				deathreport = "You were {} by {}. {}".format(kill_descriptor, killer_data.display_name, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_donation): # Response for overdonation
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull))
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull))
 
 	if (cause == ewcfg.cause_suicide): # Response for !suicide
 		deathreport = "You arrive among the dead by your own volition. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_drowning): # Response for disembarking into the slime sea
 		deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_falling): # Response for disembarking blimp over the city
 		deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_bleeding): # Response for bleed death
 		deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = user_nick)
@@ -1439,47 +1486,81 @@ def create_death_report(cause = None, user_data = None):
 
 	if (cause == ewcfg.cause_cliff): # Response for falling or being pushed off cliff
 		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_backfire): # Response for death by self backfire
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
+	if (cause == ewcfg.cause_praying): # Response for praying
+		deathreport = formatMessage(user_member, "{} owww yer frickin bones man {}".format(ewcfg.emote_slimeskull, ewcfg.emote_slimeskull))
+
 	return(deathreport)
 
 # Get the current kingpin of slimernalia
 def get_slimernalia_kingpin(server):
-		data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
-			id_user = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server,
-			slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
-		),(
-			server.id,
-		))
+	data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
+		id_user = ewcfg.col_id_user,
+		id_server = ewcfg.col_id_server,
+		slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
+	),(
+		server.id,
+	))
 
-		if len(data) > 0:
-			return data[0][0]
+	if len(data) > 0:
+		return data[0][0]
 
-		return None
+	return None
 
 # Get the player with the most festivity
 def get_most_festive(server):
-		data = execute_sql_query(
-		"SELECT users.{id_user}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users "\
-		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} "\
-		"WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
-			id_user = ewcfg.col_id_user,
-			id_server = ewcfg.col_id_server,
-			festivity = ewcfg.col_festivity,
-			coin_gambled = ewcfg.col_slimernalia_coin_gambled,
-			name = ewcfg.col_name,
-			value = ewcfg.col_value,
-			id_item = ewcfg.col_id_item,
-		),(
-			"id_furniture",
-			ewcfg.item_id_sigillaria,
-			server.id,
-		))
+	data = execute_sql_query(
+	"SELECT users.{id_user}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users "\
+	"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} "\
+	"WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
+		id_user = ewcfg.col_id_user,
+		id_server = ewcfg.col_id_server,
+		festivity = ewcfg.col_festivity,
+		coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+		name = ewcfg.col_name,
+		value = ewcfg.col_value,
+		id_item = ewcfg.col_id_item,
+	),(
+		"id_furniture",
+		ewcfg.item_id_sigillaria,
+		server.id,
+	))
 
-		return data[0][0]
+	return data[0][0]
+
+def check_donor_role(cmd_object):
+
+	cmd = cmd_object
+
+	member = cmd.message.author
+
+	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
+	if terezi_role not in member.roles:
+		return False
+	else:
+		return True
+
+""" Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
+def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
+	if desired_time_expirpvp > current_time_expirpvp:
+		return desired_time_expirpvp
+
+	return current_time_expirpvp
+
+""" add the PvP flag role to a member """
+async def add_pvp_role(cmd = None):
+	member = cmd.message.author
+	roles_map_user = getRoleMap(member.roles)
+
+	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])

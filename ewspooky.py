@@ -134,7 +134,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif not ewutils.is_otp(haunted_data):
+		elif time_now > haunted_data.time_expirpvp:
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -160,6 +160,8 @@ async def haunt(cmd):
 			user_data.time_lasthaunt = time_now
 			user_data.busted = False
 
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+			resp_cont.add_member_to_update(cmd.message.author)
 			# Persist changes to the database.
 			user_data.persist()
 			haunted_data.persist()

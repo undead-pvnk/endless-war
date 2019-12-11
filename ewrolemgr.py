@@ -189,9 +189,9 @@ async def updateRoles(
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
-		if ewutils.is_otp(user_data):
-			active_role = ewcfg.role_to_active_role.get(faction_role)
-			faction_roles_remove.remove(active_role)
+		# if ewutils.is_otp(user_data):
+		# 	active_role = ewcfg.role_to_active_role.get(faction_role)
+		# 	faction_roles_remove.remove(active_role)
 
 	tutorial_role = None
 	if user_data.poi in ewcfg.tutorial_pois:

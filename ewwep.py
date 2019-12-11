@@ -391,17 +391,16 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
+		elif time_now > shootee_data.time_expirpvp:
+			# Target is not flagged for PvP.
+			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+
 		# Identify if the shooter and the shootee are on the same team.
 		same_faction = False
 		if user_iskillers and shootee_data.faction == ewcfg.faction_killers:
 			same_faction = True
 		if user_isrowdys and shootee_data.faction == ewcfg.faction_rowdys:
 			same_faction = True
-
-		# If you're on the same team as a WANTED player and you try to put them out of their misery
-		# (or, kill them to give them back their items after they revive) then you can't do that dude!
-		if same_faction == True and shootee_data.time_expirpvp >= time_now:
-			response = "There’s no putting them out of their misery, WANTED deserve a harsher fate. They’ve dug their grave, now they have to sleep in it."
 
 	return response
 
@@ -493,11 +492,6 @@ async def attack(cmd):
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 
-		# Determine if the shootee is WANTED.
-		shootee_wanted = False
-		if shootee_data.time_expirpvp >= time_now:
-			shootee_wanted = True
-
 		if shootee_data.life_state == ewcfg.life_state_corpse:
 			# Attack a ghostly target
 			coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)
@@ -536,7 +530,6 @@ async def attack(cmd):
 		else:
 			#hunger drain
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
-			
 
 			# Weaponized flavor text.
 			randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
@@ -716,15 +709,10 @@ async def attack(cmd):
 				was_shot = True
 
 			if was_shot:
+				# Flag the user for PvP
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 
-				if was_juvenile == True:
-					# Flag the shooter as WANTED no matter what happens next.
-					user_data.time_expirpvp = time_now + ewcfg.time_pvp_kill + int(user_data.bounty / ewcfg.slimecoin_exchangerate)
-
-					user_data.persist()
-
-					# Add the PvP flag role.
-					resp_cont.add_member_to_update(cmd.message.author)
+				resp_cont.add_member_to_update(cmd.message.author)
 
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
@@ -841,12 +829,14 @@ async def attack(cmd):
 						user_data.hunger = 0
 
 					user_data.persist()
+					district_data.persist()
 					# Player was killed.
 					shootee_data.id_killer = user_data.id_user
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 					user_data = EwUser(member = cmd.message.author)
+					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 
 					kill_descriptor = "beaten to death"
 					if weapon != None:
@@ -917,7 +907,11 @@ async def attack(cmd):
 
 							if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 								district_data.change_slimes(n = user_data.slimes)
+								district_data.persist()
+								shootee_data.persist()
 								die_resp = user_data.die(cause = ewcfg.cause_backfire)
+								district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
+								shootee_data = EwUser(member = member)
 								resp_cont.add_member_to_update(cmd.message.author)
 								resp_cont.add_response_container(die_resp)
 							else:
@@ -1014,80 +1008,11 @@ async def attack(cmd):
 				resp_cont.format_channel_response(ewcfg.channel_killfeed, cmd.message.author)
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
 
-				#If the shooter is WANTED, post their slime amount, level, weapon, weaponskill level, location, and hunger #kill-feed, and their opposing gangbase.
-				if user_data.time_expirpvp >= time_now:
+				# Flag the user for PvP
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
 
-					response = "@here A busted-up, old hotwired police walkie-talkie begins crackling, as if about to receive input…\n*BZZ-KT!* “Attention all units, attention all units…"
-
-					if user_data.weapon >= 0:
-						weapon_item = EwItem(id_item = user_data.weapon)
-						weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-						descriptor = weapon.str_killdescriptor
-
-					else:
-						descriptor = "killed"
-
-					response += "*'WANTED criminal {} has {} {} in {}! ".format(cmd.message.author.display_name, descriptor, member.display_name, ewmap.poi_id_to_display_name(user_data.poi))
-
-					response += "{} is a level {} slimeboi, and they are currently in possession of {:,} slime. ".format(cmd.message.author.display_name, user_data.slimelevel, user_data.slimes)
-
-					if user_data.hunger > 0:
-						response += "They appear to be about {}% hungry. ".format(round(user_data.hunger * 100.0 / user_data.get_hunger_max(), 1))
-
-					coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
-
-					weapon_item = EwItem(id_item = user_data.weapon)
-					weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-
-					if weapon != None:
-						response += " {} {}{}.".format(
-							ewcfg.str_weapon_married if user_data.weaponmarried == True else ewcfg.str_weapon_wielding,
-							("" if len(weapon_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
-								weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
-						if user_data.weaponskill >= 5:
-							response += " {}".format(weapon.str_weaponmaster.format(rank = (user_data.weaponskill - 4)))
-
-					mutations = user_data.get_mutations()
-
-					response_block = ""
-					for mutation in mutations:
-						mutation_flavor = ewcfg.mutations_map[mutation]
-						response_block += "{} ".format(mutation_flavor.str_describe_other)
-
-					if len(response_block) > 0:
-						response += "\n\n" + response_block
-
-					response_block = ""
-					user_kills = ewstats.get_stat(user = user_data, metric = ewcfg.stat_kills)
-
-					if user_kills > 0:
-						response_block += "They have {:,} confirmed kills. ".format(user_kills)
-
-					if coinbounty != 0:
-						response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for their death. ".format(coinbounty)
-
-					statuses = user_data.getStatusEffects()
-
-					for status in statuses:
-						status_effect = EwStatusEffect(id_status = status, user_data = user_data)
-						if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
-							status_flavor = ewcfg.status_effects_def_map.get(status)
-							if status_flavor is not None:
-								response_block += status_flavor.str_describe + " "
-
-					if len(response_block) > 0:
-						response += "\n\n" + response_block
-
-					response += "'*"
-
-					if user_data.faction == ewcfg.faction_rowdys:
-						gangbase = ewcfg.channel_copkilltown
-					elif user_data.faction == ewcfg.faction_killers:
-						gangbase = ewcfg.channel_rowdyroughhouse
-					else:
-						gangbase = ewcfg.channel_juviesrow
-
-					resp_cont.add_channel_response(gangbase, response)
+				user_data.persist()
+				resp_cont.add_member_to_update(cmd.message.author)
 
 			#await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
@@ -1137,10 +1062,7 @@ async def suicide(cmd):
 		#	response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
-		elif user_data.time_expirpvp >= time_now:
-			response = "*Tsk, tsk.* Trying to take the coward’s way out, I see. Don’t worry, all WANTED get what’s coming to them eventually."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky or user_isjuvenile:
-			#Give slime to challenger if player suicides mid russian roulette
 			if user_data.rr_challenger != "":
 				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
@@ -1514,8 +1436,13 @@ async def spar(cmd):
 
 					weaker_player.time_lastspar = time_now
 
+					# Flag the user for PvP
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_spar))
+
 					user_data.persist()
 					sparred_data.persist()
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 
 					# player was sparred with
 					if duel and weapon != None:
@@ -1922,6 +1849,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 		
 	if sandbag_mode:
+		slimes_spent_sandbag = slimes_spent
 		slimes_spent = 0
 		slimes_dropped = 0
 
@@ -2238,7 +2166,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 				if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 					district_data.change_slimes(n = user_data.slimes)
-					die_resp = user_data.die(cause = ewcfg.cause_suicide)
+					district_data.persist()
+					die_resp = user_data.die(cause = ewcfg.cause_backfire)
+					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 					resp_cont.add_member_to_update(cmd.message.author)
 					resp_cont.add_response_container(die_resp)
 				else:
@@ -2304,6 +2234,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				elif enemy_data.ai == ewcfg.enemy_ai_defender:
 					enemy_data.id_target = user_data.id_user
 					enemy_data.persist()
+					
+		if sandbag_mode:
+			response += '\n*The dojo master cries out:*\n"If this were a real fight, you would have spent **{}** slime on that attack!"'.format(slimes_spent_sandbag)
 
 		resp_cont.add_channel_response(cmd.message.channel.name, response)
 
@@ -2313,6 +2246,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Enemy kills don't award slime to the kingpin.
 
 	# Persist user data.
+	# Flag the user for PvP
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+
+	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
 	if user_data.weapon > 0:
 		weapon_item.persist()

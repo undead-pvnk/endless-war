@@ -140,8 +140,10 @@ class EwUser:
 			if self.life_state != ewcfg.life_state_corpse:
 				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
 			for level in range(self.slimelevel+1, new_level+1):
-				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
-					current_mutations = self.get_mutations()
+				current_mutations = self.get_mutations()
+				
+				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse and len(current_mutations) < 10:
+					
 					new_mutation = random.choice(list(ewcfg.mutation_ids))
 					while new_mutation in current_mutations:
 						new_mutation = random.choice(list(ewcfg.mutation_ids))
@@ -177,7 +179,8 @@ class EwUser:
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
 		if cause == ewcfg.cause_weather:
-			resp_cont.add_channel_response(self.poi, deathreport)
+			poi = ewcfg.id_to_poi.get(self.poi)
+			resp_cont.add_channel_response(poi.channel, deathreport)
 
 		# Grab necessary data for spontaneous combustion before stat reset
 		explosion_block_list = [ewcfg.cause_suicide, ewcfg.cause_donation, ewcfg.cause_leftserver, ewcfg.cause_cliff]
@@ -210,15 +213,6 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 
-
-			if self.time_expirpvp >= time_now: # If you were Wanted.
-				if cause != ewcfg.cause_cliff:
-					ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
-
-				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
-				self.slimecoin = 0
-				self.weaponmarried = False
-
 			if cause == ewcfg.cause_cliff:
 				pass
 			else:
@@ -227,7 +221,7 @@ class EwUser:
 					food_fraction = 4
 					cosmetic_fraction = 4
 
-				else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
+				else:  # If you were a Gangster.
 					item_fraction = 2
 					food_fraction = 2
 					cosmetic_fraction = 2
