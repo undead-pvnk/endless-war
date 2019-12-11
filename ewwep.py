@@ -704,8 +704,7 @@ async def attack(cmd):
 				# Flag the user for PvP
 				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 
-				user_data.persist()
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				resp_cont.add_member_to_update(cmd.message.author)
 
 				if slimes_damage >= shootee_data.slimes - shootee_data.bleed_storage:
 					was_killed = True
@@ -992,7 +991,7 @@ async def attack(cmd):
 				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				resp_cont.add_member_to_update(cmd.message.author)
 
 			#await ewutils.send_message(cmd.client, killfeed_channel, ewutils.formatMessage(cmd.message.author, killfeed_resp))
 
@@ -1415,9 +1414,9 @@ async def spar(cmd):
 					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_spar))
 
 					user_data.persist()
+					sparred_data.persist()
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-					sparred_data.persist()
 
 					# player was sparred with
 					if duel and weapon != None:
@@ -2220,6 +2219,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Enemy kills don't award slime to the kingpin.
 
 	# Persist user data.
+	# Flag the user for PvP
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+
+	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
 	if user_data.weapon > 0:
 		weapon_item.persist()

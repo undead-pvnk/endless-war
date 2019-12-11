@@ -134,21 +134,24 @@ class EwDistrict:
 			factions = [],
 			min_slimes = -math.inf,
 			max_slimes = math.inf,
-			ignore_offline = False
+			ignore_offline = False,
+			pvp_only = False
 		):
 		client = ewutils.get_client()
 		server = client.get_server(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
+		time_now = int(time.time())
 
-		players = ewutils.execute_sql_query("SELECT {id_user}, {slimes}, {slimelevel}, {faction}, {life_state} FROM users WHERE id_server = %s AND {poi} = %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimes}, {slimelevel}, {faction}, {life_state}, {time_expirpvp} FROM users WHERE id_server = %s AND {poi} = %s".format(
 			id_user = ewcfg.col_id_user,
 			slimes = ewcfg.col_slimes,
 			slimelevel = ewcfg.col_slimelevel,
 			faction = ewcfg.col_faction,
 			life_state = ewcfg.col_life_state,
 			poi = ewcfg.col_poi,
+			time_expirpvp = ewcfg.col_time_expirpvp
 		),(
 			self.id_server,
 			self.name
@@ -161,6 +164,7 @@ class EwDistrict:
 			slimelevel = player[2]
 			faction = player[3]
 			life_state = player[4]
+			time_expirpvp = player[5]
 			
 			member = server.get_member(id_user)
 
@@ -169,7 +173,8 @@ class EwDistrict:
 				and max_slimes >= slimes >= min_slimes \
 				and (len(life_states) == 0 or life_state in life_states) \
 				and (len(factions) == 0 or faction in factions) \
-				and not (ignore_offline and member.status == discord.Status.offline):
+				and not (ignore_offline and member.status == discord.Status.offline)
+				and not (pvp_only and time_expirpvp < time_now):
 					filtered_players.append(id_user)
 
 		return filtered_players
@@ -583,14 +588,16 @@ async def annex(cmd):
 	users_in_district = district_data.get_players_in_district(
 		life_states = [ewcfg.life_state_enlisted],
 		min_slimes = ewcfg.min_slime_to_cap,
-		ignore_offline = True
+		ignore_offline = True,
+		pvp_only = True
 	)
 
 	allies_in_district = district_data.get_players_in_district(
 		factions = [user_data.faction],
 		life_states = [ewcfg.life_state_enlisted],
 		min_slimes = ewcfg.min_slime_to_cap,
-		ignore_offline = True
+		ignore_offline = True,
+		pvp_only = True
 	)
 
 	if len(users_in_district) > len(allies_in_district):
@@ -600,7 +607,7 @@ async def annex(cmd):
 	slimes_spent = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
 
 	if slimes_spent == None:
-		response = "How much slime do you want to spend on spraying graffiti this district?"
+		response = "How much slime do you want to spend on spraying graffiti in this district?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if slimes_spent < 0:
@@ -636,8 +643,8 @@ async def annex(cmd):
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
 
 	user_data.persist()
-	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	district_data.persist()
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	return await resp_cont.post()
 
