@@ -853,6 +853,7 @@ async def piss(cmd):
 					
 					user_data.sap -= ewcfg.sap_spend_piss
 					user_data.limit_fix()
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 					user_data.persist()
 	
 					response = "You spend {} liquid sap to !piss HARD and FAST right onto {}!! They lose {} hardened sap!".format(ewcfg.sap_spend_piss, target_member.display_name, sap_damage_target)
