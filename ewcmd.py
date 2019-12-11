@@ -1267,6 +1267,7 @@ async def purify(cmd):
 				
 				user_data.slimelevel = 1
 				user_data.slimes = 0
+				user_data.hardened_sap = 0
 				
 				new_weaponskill = int(user_data.weaponskill * 0.75)
 				
