@@ -387,11 +387,13 @@ async def mine(cmd):
 			if was_levelup:
 				response += levelup_response
 
+			was_pvp = user_data.time_expirpvp > time_now
 			# Flag the user for PvP
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_mine))
 
 			user_data.persist()
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			if not was_pvp:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if printgrid:
 				await print_grid(cmd)
@@ -680,11 +682,13 @@ async def scavenge(cmd):
 
 			user_data.time_lastscavenge = time_now
 
+			was_pvp = user_data.time_expirpvp > time_now
 			# Flag the user for PvP
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_scavenge))
 
 			user_data.persist()
-			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			if not was_pvp:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

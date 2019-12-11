@@ -2346,9 +2346,12 @@ async def dodge(cmd):
 
 	user_data.sap -= sap_cost
 
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+
 	user_data.persist()
 
 	response = "You spend {} sap to focus on dodging {}'s attacks.".format(sap_cost, member.display_name)
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def taunt(cmd):
@@ -2394,9 +2397,11 @@ async def taunt(cmd):
 
 	user_data.sap -= sap_cost
 
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, member.display_name)
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def aim(cmd):
@@ -2438,9 +2443,11 @@ async def aim(cmd):
 
 	user_data.sap -= sap_cost
 
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, member.display_name)
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def damage_mod_attack(user_data, market_data, user_mutations, district_data):

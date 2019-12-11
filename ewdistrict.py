@@ -587,7 +587,6 @@ async def annex(cmd):
 	
 	users_in_district = district_data.get_players_in_district(
 		life_states = [ewcfg.life_state_enlisted],
-		min_slimes = ewcfg.min_slime_to_cap,
 		ignore_offline = True,
 		pvp_only = True
 	)
@@ -595,7 +594,6 @@ async def annex(cmd):
 	allies_in_district = district_data.get_players_in_district(
 		factions = [user_data.faction],
 		life_states = [ewcfg.life_state_enlisted],
-		min_slimes = ewcfg.min_slime_to_cap,
 		ignore_offline = True,
 		pvp_only = True
 	)
@@ -604,7 +602,21 @@ async def annex(cmd):
 		response = "Holy shit, deal with your rival gangsters first! You can’t spray graffiti while they’re on the prowl!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	mutations = user_data.get_mutations()
+
 	slimes_spent = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	capture_discount = 1
+
+	if ewcfg.mutation_id_lonewolf in mutations:
+		if user_data.time_expirpvp > time_now:
+			if len(users_in_district) == 1:
+				capture_discount *= 0.8
+		else:
+			if len(users_in_district) == 0:
+				capture_discount *= 0.8
+
+	if ewcfg.mutation_id_patriot in mutations:
+		capture_discount *= 0.8
 
 	if slimes_spent == None:
 		response = "How much slime do you want to spend on spraying graffiti in this district?"
@@ -626,7 +638,7 @@ async def annex(cmd):
 		)
 		resp_cont.add_response_container(decap_resp)
 		
-		user_data.change_slimes(n = -slimes_decap, source = ewcfg.source_spending)
+		user_data.change_slimes(n = -slimes_decap * capture_discount, source = ewcfg.source_spending)
 		slimes_spent -= slimes_decap
 
 	slimes_cap = min(district_data.max_capture_points - district_data.capture_points, slimes_spent)
@@ -637,7 +649,7 @@ async def annex(cmd):
 	)
 	resp_cont.add_response_container(cap_resp)
 		
-	user_data.change_slimes(n = -slimes_cap, source = ewcfg.source_spending)
+	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
 
 	# Flag the user for PvP
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
