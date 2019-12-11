@@ -675,6 +675,7 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_annex = cmd_prefix + 'annex'
+cmd_annex_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
@@ -914,10 +915,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 60 * 60  # 60 min
-max_capture_points_a = 30 * 60  # 30 min
-max_capture_points_b = 15 * 60  # 15 min
-max_capture_points_c = 5 * 60   # 5 min
+max_capture_points_s = 5000000 # 5 megaslime
+max_capture_points_a = 3000000  # 3 megaslime
+max_capture_points_b = 2000000  # 2 megaslime
+max_capture_points_c = 1000000   # 1 megaslime
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -928,10 +929,10 @@ max_capture_points = {
 }
 
 # how long districts stay locked after capture
-capture_lock_s = 8 * 60 * 60  # 8 hours
-capture_lock_a = 4 * 60 * 60  # 4 hours 
-capture_lock_b = 2 * 60 * 60  # 2 hours
-capture_lock_c = 1 * 60 * 60  # 1 hour
+capture_lock_s = 48 * 60 * 60  # 2 days
+capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_b = 12 * 60 * 60  # 12 hours
+capture_lock_c = 6 * 60 * 60  # 6 hours
 
 # district lock times assigned to property classes
 capture_locks = {
@@ -956,7 +957,7 @@ slimes_toannex = {
 }
 
 # by how much to extend the capture lock per additional gangster capping
-capture_lock_per_gangster = 30 * 60  # 30 min
+capture_lock_per_gangster = 60 * 60  # 60 min
 
 # capture lock messages
 capture_lock_milestone = 5 * 60 # 5 min
