@@ -1125,16 +1125,10 @@ async def enemy_action_tick_loop(id_server):
 
 # Clears out id_target in enemies with defender ai. Primarily used for when players die or leave districts the defender is in.
 def check_defender_targets(user_data, enemy_data):
-	defending_enemy = EwEnemy(id_enemy = enemy_data.id_enemy)
-	searched_user = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
+	defending_enemy = EwEnemy(id_enemy=enemy_data.id_enemy)
+	searched_user = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
 
-	print(defending_enemy.poi)
-	print(searched_user.poi)
-
-	time_now = int(time.time())
-
-	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse) or (
-			searched_user.time_expirpvp < time_now):
+	if (defending_enemy.poi != searched_user.poi) or (searched_user.life_state == ewcfg.life_state_corpse):
 		defending_enemy.id_target = ""
 		defending_enemy.persist()
 		return False
@@ -1374,7 +1368,7 @@ def create_death_report(cause = None, user_data = None):
 	user_nick = user_player.display_name
 
 	deathreport = "You arrive among the dead. {}".format(ewcfg.emote_slimeskull)
-	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	report_requires_killer = [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning, ewcfg.cause_killing_enemy]
 	if(cause in report_requires_killer): # Only deal with enemy data if necessary
@@ -1391,17 +1385,17 @@ def create_death_report(cause = None, user_data = None):
 
 			killer_nick = player_data.display_name
 
-			if (cause == ewcfg.cause_killing): # Response for dying to another player
+			if (cause == ewcfg.cause_killing) and (weapon != None): # Response for dying to another player
 				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 			if (cause == ewcfg.cause_busted): # Response for being busted
 				deathreport = "Your ghost has been busted by {}. {}".format(killer_nick, ewcfg.emote_bustin)
-				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_player, deathreport)
 
 			if (cause == ewcfg.cause_burning): # Response for burning to death
 				deathreport = "You were {} by {}. {}".format(ewcfg.weapon_map.get(ewcfg.weapon_id_molotov).str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 		if(killer_isEnemy): # Generate responses for being killed by enemy
 			# Grab enemy data
@@ -1419,22 +1413,22 @@ def create_death_report(cause = None, user_data = None):
 
 				# Format report
 				deathreport = "You were {} by {}. {}".format(kill_descriptor, killer_data.display_name, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_donation): # Response for overdonation
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull))
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull))
 
 	if (cause == ewcfg.cause_suicide): # Response for !suicide
 		deathreport = "You arrive among the dead by your own volition. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_drowning): # Response for disembarking into the slime sea
 		deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_falling): # Response for disembarking blimp over the city
 		deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_bleeding): # Response for bleed death
 		deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = user_nick)
@@ -1444,14 +1438,29 @@ def create_death_report(cause = None, user_data = None):
 
 	if (cause == ewcfg.cause_cliff): # Response for falling or being pushed off cliff
 		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
-		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_member, deathreport)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
 
 	if (cause == ewcfg.cause_backfire): # Response for death by self backfire
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
 
+	if (cause == ewcfg.cause_praying): # Response for praying
+		deathreport = formatMessage(user_member, "{} owww yer frickin bones man {}".format(ewcfg.emote_slimeskull, ewcfg.emote_slimeskull))
+
 	return(deathreport)
+
+def check_donor_role(cmd_object):
+
+	cmd = cmd_object
+
+	member = cmd.message.author
+
+	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
+	if terezi_role not in member.roles:
+		return False
+	else:
+		return True
 
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
 def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):

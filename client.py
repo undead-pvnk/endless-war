@@ -117,6 +117,7 @@ cmd_map = {
 	
 	# Crush a poudrin to get some slime.
 	ewcfg.cmd_crush: ewjuviecmd.crush,
+    ewcfg.cmd_crush_alt1: ewjuviecmd.crush,
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
@@ -169,6 +170,9 @@ cmd_map = {
 	# Ghosts can BOO 
 	ewcfg.cmd_boo: ewcmd.boo,
 	#ewcfg.cmd_spook: ewcmd.spook,
+	
+	# Terezi Gang can flip coins
+	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
 	#ewcfg.cmd_makecostume: ewitem.makecostume,
@@ -195,8 +199,8 @@ cmd_map = {
 	ewcfg.cmd_knock: ewapt.knock,
 	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
-	ewcfg.cmd_aquarium: ewapt.aquarium,
-	ewcfg.cmd_propstand: ewapt.propstand,
+	ewcfg.cmd_aquarium: ewapt.lobbywarning,
+	ewcfg.cmd_propstand: ewapt.lobbywarning,
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
@@ -213,6 +217,7 @@ cmd_map = {
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
 
+    ewcfg.cmd_purify: ewcmd.purify,
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,
@@ -557,6 +562,9 @@ cmd_map = {
 	ewcfg.cmd_remove_offer: ewmarket.remove_offer,
 	ewcfg.cmd_completetrade: ewmarket.complete_trade,
 	ewcfg.cmd_canceltrade: ewmarket.cancel_trade,
+
+	# Praying at the base of ENDLESS WAR.
+	ewcfg.cmd_pray: ewcmd.pray,
 }
 
 debug = False
@@ -1258,9 +1266,9 @@ async def on_message(message):
 			user_data = EwUser(member = message.author)
 			user_initial_level = user_data.slimelevel
 
-			response = "You get 100,000 slime!"
+			response = "You get 1,000,000 slime!"
 
-			levelup_response = user_data.change_slimes(n = 100000)
+			levelup_response = user_data.change_slimes(n = 1000000)
 
 			was_levelup = True if user_initial_level < user_data.slimelevel else False
 

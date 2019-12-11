@@ -272,7 +272,7 @@ async def mine(cmd):
 
 			# Determine if an item is found.
 			unearthed_item = False
-			unearthed_item_amount = 0
+			unearthed_item_amount = (random.randrange(3) + 5) # anywhere from 5-7 drops
 
 			# juvies get items 4 times as often as enlisted players
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
@@ -295,6 +295,7 @@ async def mine(cmd):
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
 						unearthed_item_chance = 1
+						unearthed_item_amount = 1
 
 			if random.random() < 0.05:
 				id_event = create_mining_event(cmd)
@@ -322,7 +323,6 @@ async def mine(cmd):
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
-				unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
 			if unearthed_item == True:
 				# If there are multiple possible products, randomly select one.
@@ -340,9 +340,8 @@ async def mine(cmd):
 
 				if unearthed_item_amount == 1:
 					response += "You unearthed a {}! ".format(item.str_name)
-				elif unearthed_item_amount == 2:
-					response += "You unearthed two (2) {}! ".format(item.str_name)
-
+				else:
+					response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 
@@ -623,7 +622,7 @@ async def scavenge(cmd):
 			if ewcfg.mutation_id_trashmouth in mutations:
 				time_since_last_scavenge *= 3
 
-			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
+			time_since_last_scavenge = min(max(1, time_since_last_scavenge), ewcfg.soft_cd_scavenge)
 
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
@@ -695,10 +694,14 @@ async def crush(cmd):
 	user_data = EwUser(member=member)
 	response = "" # if it's not overwritten
 	crush_slimes = ewcfg.crush_slimes
+
+	crunch_used = False
+	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'crunch'):
+		crunch_used = True
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Alas, you try to shatter the item, but your ghostly form cannot firmly grasp it."
-		return 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		response = "Alas, your ghostly form cannot {} anything. Lame.".format("crunch" if crunch_used else "crush")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
@@ -707,7 +710,7 @@ async def crush(cmd):
 		sought_id = item_sought.get('id_item')
 		item_data = EwItem(id_item=sought_id)
 
-		response = "The item doesn't have !crush functionality"  # if it's not overwritten
+		response = "The item doesn't have !{} functionality".format("crunch" if crunch_used else "crush")  # if it's not overwritten
 
 		if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
 			# delete a slime poudrin from the player's inventory
@@ -725,8 +728,11 @@ async def crush(cmd):
 
 			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
 			user_data.persist()
-
-			response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+			
+			if crunch_used:
+				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+			else:
+				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
 			
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
@@ -735,7 +741,7 @@ async def crush(cmd):
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."
 		else:
-			response = "Crush which item? (check **!inventory**)"
+			response = "{} which item? (check **!inventory**)".format("crunch" if crunch_used else "crush")
 		
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
