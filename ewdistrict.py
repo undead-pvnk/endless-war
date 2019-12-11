@@ -7,6 +7,7 @@ import discord
 import ewcfg
 import ewstats
 import ewutils
+import ewrolemgr
 from ew import EwUser
 from ewmarket import EwMarket
 
@@ -546,22 +547,37 @@ async def annex(cmd):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not user_data.poi in ewcfg.capturable_districts:
-		response = "This zone cannot be captured."
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You ineffectively try shaking your can of spraypaint to whip up some sick graffiti. Alas, you’re all outta slime. " \
+                   "They should really make these things compatible with ectoplasm."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if not (len(user_data.faction) > 0 and user_data.life_state == ewcfg.life_state_enlisted):
-		response = "You must join a gang before you can capture territory." 
+		response = "Juveniles are too chickenshit to make graffiti and risk getting busted by the cops. Fuckin’ losers."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+		response = "There’s no point, the rest of your gang has already covered this place in spraypaint. Focus on exporting your graffiti instead."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi == ewcfg.poi_id_juviesrow:
+		response = "Nah, the Rowdys and Killers have both agreed this is neutral ground. You don’t want to start a diplomatic crisis, " \
+                   "just stick to spraying down sick graffiti and splattering your rival gang across the pavement in the other districts."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if not user_data.poi in ewcfg.capturable_districts:
+		response = "This zone cannot be captured."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
 
 	if district_data.time_unlock > 0:
-		response = "This district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True)) 
+		response = "You can’t spray graffiti here yet, it’s too soon after your rival gang extended their own cultural dominance over it. Try again in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if district_data.all_neighbors_friendly():
-		response = "You cannot capture districts, that are fully surrounded by districts the same faction controls."
+		response = "What the hell are you doing, dude? You can’t put down any graffiti here, it’s been completely overrun by your rival gang. " \
+                   "You can only spray districts that have at least one unfriendly neighbor, duh!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	users_in_district = district_data.get_players_in_district(
@@ -578,20 +594,20 @@ async def annex(cmd):
 	)
 
 	if len(users_in_district) > len(allies_in_district):
-		response = "You cannot capture a district while enemy gangsters are present."
+		response = "Holy shit, deal with your rival gangsters first! You can’t spray graffiti while they’re on the prowl!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	slimes_spent = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
 
 	if slimes_spent == None:
-		response = "How much slime do you want to spend on capturing this district?"
+		response = "How much slime do you want to spend on spraying graffiti this district?"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if slimes_spent < 0:
 		slimes_spent = user_data.slimes
 
 	if slimes_spent > user_data.slimes:
-		response = "You don't have that much slime."
+		response = "You don't have that much slime, retard."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if (district_data.controlling_faction not in ["", user_data.faction]) or (district_data.capturing_faction not in ["", user_data.faction]):
@@ -616,12 +632,14 @@ async def annex(cmd):
 		
 	user_data.change_slimes(n = -slimes_cap, source = ewcfg.source_spending)
 
+	# Flag the user for PvP
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
+
 	user_data.persist()
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	district_data.persist()
 
-	return await resp_cont.post()			
-	
-		
+	return await resp_cont.post()
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called

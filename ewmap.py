@@ -1067,9 +1067,6 @@ async def teleport(cmd):
 	if inaccessible(user_data = user_data, poi = poi):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
-	if user_data.time_expirpvp >= time_now:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "That’s probably not a good idea, teleporting draws way more attention than you can afford right now as a WANTED. You better keep a low profile."))
-
 	if ewcfg.mutation_id_quantumlegs in mutations:
 		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
 		if len(mutation_data.data) > 0:
@@ -1269,10 +1266,6 @@ async def scout(cmd):
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Who cares? These meatbags all look the same to you."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	if user_data.time_expirpvp >= time_now:
-		response = "Police sirens drown out whatever useful auditory reconnaissance you could normally glean. Oh shit, it sounds like they’re getting closer. You better get out of here, dude. Man, being WANTED fucking sucks."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# if no arguments given, scout own location

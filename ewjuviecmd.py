@@ -103,6 +103,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist))
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -127,6 +128,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist))
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
