@@ -173,7 +173,7 @@ class EwDistrict:
 				and max_slimes >= slimes >= min_slimes \
 				and (len(life_states) == 0 or life_state in life_states) \
 				and (len(factions) == 0 or faction in factions) \
-				and not (ignore_offline and member.status == discord.Status.offline)
+				and not (ignore_offline and member.status == discord.Status.offline) \
 				and not (pvp_only and time_expirpvp < time_now):
 					filtered_players.append(id_user)
 
