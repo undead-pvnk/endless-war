@@ -639,7 +639,7 @@ async def annex(cmd):
 		resp_cont.add_response_container(decap_resp)
 		
 		user_data.change_slimes(n = -slimes_decap * capture_discount, source = ewcfg.source_spending)
-		slimes_spent -= slimes_decap
+		slimes_spent -= slimes_decap * capture_discount
 
 	slimes_cap = min(district_data.max_capture_points - district_data.capture_points, slimes_spent)
 	cap_resp = district_data.change_capture_points(
