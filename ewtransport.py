@@ -392,9 +392,12 @@ async def disembark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def check_schedule(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	response = ""
+
 
 	if poi.is_transport_stop:
 		response = "The following public transit lines stop here:"
@@ -404,7 +407,7 @@ async def check_schedule(cmd):
 	elif poi.is_transport:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = poi.id_poi)
 		transport_line = ewcfg.id_to_transport_line.get(transport_data.current_line)
-		response = "This {} is following {}.".format(transport_data.transport_type, transport_line.str_name)
+		response = "This {} is following {}.".format(transport_data.transport_type, transport_line.str_name.replace("The", "the"))
 	else:
 		response = "There is no schedule to check here."
 
