@@ -281,6 +281,7 @@ map_world = [
 map_width = len(map_world[0])
 map_height = len(map_world)
 
+
 sem_wall = -1
 sem_city = -2
 sem_city_alias = -3
