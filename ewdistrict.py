@@ -553,6 +553,7 @@ async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	time_now = int(time.time())
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
