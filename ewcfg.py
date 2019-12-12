@@ -10110,6 +10110,7 @@ debugfish_goal = ewdebug.debugfish_goal
 
 id_to_poi = {}
 coord_to_poi = {}
+chname_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
 transports = []
@@ -10151,6 +10152,8 @@ for poi in poi_list:
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
+
+	chname_to_poi[poi.channel] = poi
 
 landmark_pois = [
 	poi_id_countryclub,

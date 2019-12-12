@@ -226,9 +226,11 @@ async def embark(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
+	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+
 	# must be at a transport stop to enter a transport
-	if user_data.poi in ewcfg.transport_stops:
-		transport_ids = get_transports_at_stop(id_server = user_data.id_server, stop = user_data.poi)
+	if poi != None and poi.id_poi in ewcfg.transport_stops:
+		transport_ids = get_transports_at_stop(id_server = user_data.id_server, stop = poi.id_poi)
 		
 		# can't embark, when there's no vehicles to embark on
 		if len(transport_ids) == 0:
@@ -278,7 +280,7 @@ async def embark(cmd):
 					transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
 
 					# check if the transport is still at the same stop
-					if transport_data.current_stop == user_data.poi:
+					if transport_data.current_stop == poi.id_poi:
 						user_data.poi = transport_data.poi
 						user_data.persist()
 
@@ -376,7 +378,10 @@ async def disembark(cmd):
 			
 		# update user location, if move successful
 		else:
-			user_data.poi = transport_data.current_stop
+			if stop_poi.is_subzone:
+				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+
+			user_data.poi = stop_poi.id_poi
 			user_data.persist()
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
