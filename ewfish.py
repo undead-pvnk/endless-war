@@ -973,8 +973,8 @@ async def barter(cmd):
 				if fish.id_owner != user_data.id_user:
 					accepted = False
 
-				# cancel deal if the user has left the speakeasy
-				if user_data.poi != ewcfg.poi_id_speakeasy:
+				# cancel deal if the user has left Vagrant's Corner
+				if user_data.poi != ewcfg.poi_id_vagrantscorner:
 					accepted = False
 
 				# cancel deal if the offer has been deleted
