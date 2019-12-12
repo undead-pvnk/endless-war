@@ -406,6 +406,7 @@ channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
 channel_juviesrow = "juvies-row"
+channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
 
 channel_wt_port = "wreckington-port"
@@ -9155,7 +9156,7 @@ poi_list = [
 		str_name = "SlimeCorp Real Estate Agency",
 		str_desc = "The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
 		pvp = False,
-		channel = "slimecorp-real-estate-agency",
+		channel = channel_realestateagency,
 		role = "Real Estate Agency",
 		mother_district = poi_id_oldnewyonkers,
 		is_subzone = True

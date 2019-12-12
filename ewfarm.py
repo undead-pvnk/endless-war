@@ -136,12 +136,12 @@ async def reap(cmd):
 	# Checking availability of reap action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -261,13 +261,13 @@ async def sow(cmd):
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
 
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "The cracked, filthy concrete streets around you would be a pretty terrible place for a farm. Try again on more arable land."
 
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -342,7 +342,7 @@ async def mill(cmd):
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can mill their vegetables."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Alas, there doesn’t seem to be an official SlimeCorp milling station anywhere around here. Probably because you’re in the middle of the fucking city. Try looking where you reaped your vegetable in the first place, dumbass."
 
 	elif user_data.slimes < ewcfg.slimes_permill:
@@ -399,15 +399,16 @@ async def check_farm(cmd):
 	# Checking availability of check farm action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
+
 
 		farm = EwFarm(
 			id_server = cmd.message.server.id,
@@ -449,15 +450,16 @@ async def cultivate(cmd):
 	# Checking availability of irrigate action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
+
 
 		farm = EwFarm(
 			id_server = cmd.message.server.id,

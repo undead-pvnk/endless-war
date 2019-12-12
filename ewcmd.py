@@ -578,7 +578,7 @@ async def help(cmd):
 	# checks if user is in a college or if they have a game guide
 	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
 
-	if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
+	if cmd.message.channel.name == ewcfg.channel_neomilwaukeestate or cmd.message.channel.name == ewcfg.channel_nlacu or gameguide:
 		if not len(cmd.tokens) > 1:
 			topic_counter = 0
 			topic_total = 0
@@ -616,28 +616,28 @@ async def help(cmd):
 
 		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
 
-		if user_data.poi in [ewcfg.poi_id_mine, ewcfg.poi_id_cv_mines, ewcfg.poi_id_tt_mines]:
+		if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
 			# mine help
 			response = ewcfg.help_responses['mining']
-		elif (len(poi.vendors) >= 1) and not user_data.poi in ewcfg.poi_id_dojo:
+		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in ewcfg.channel_dojo:
 			# food help
 			response = ewcfg.help_responses['food']
-		elif user_data.poi in ewcfg.poi_id_dojo and not len(cmd.tokens) > 1:
+		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
 			# dojo help
 			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **'!help [weapon]'**."
-		elif user_data.poi in ewcfg.poi_id_dojo and len(cmd.tokens) > 1:
+		elif cmd.message.channel.name in ewcfg.channel_dojo and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic in dojo_topics and topic in ewcfg.help_responses:
 				response = ewcfg.help_responses[topic]
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the dojo. Try referring to the topics list again by using just !help.'
-		elif user_data.poi in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+		elif cmd.message.channel.name in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 			# farming help
 			response = ewcfg.help_responses['farming']
-		elif user_data.poi in ewcfg.poi_id_slimeoidlab and not len(cmd.tokens) > 1:
+		elif cmd.message.channel.name in ewcfg.channel_slimeoidlab and not len(cmd.tokens) > 1:
 			# labs help
 			response = "For information on slimeoids, do **'!help slimeoids'**. To learn about your current mutations, do **'!help mymutations'**"
-		elif user_data.poi in ewcfg.poi_id_slimeoidlab and len(cmd.tokens) > 1:
+		elif cmd.message.channel.name in ewcfg.channel_slimeoidlab and len(cmd.tokens) > 1:
 			topic = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			if topic == 'slimeoids':
 				response = ewcfg.help_responses['slimeoids']
@@ -648,30 +648,30 @@ async def help(cmd):
 					response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
-		elif user_data.poi in ewcfg.transport_stops:
+		elif cmd.message.channel.name in ewcfg.transport_stops:
 			# transportation help
 			response = ewcfg.help_responses['transportation']
-		elif user_data.poi in ewcfg.poi_id_stockexchange:
+		elif cmd.message.channel.name in ewcfg.channel_stockexchange:
 			# stock exchange help
 			response = ewcfg.help_responses['stocks']
-		elif user_data.poi in ewcfg.poi_id_thecasino:
+		elif cmd.message.channel.name in ewcfg.channel_casino:
 			# casino help
 			response = ewcfg.help_responses['casino']
-		elif user_data.poi in ewcfg.poi_id_thesewers:
+		elif cmd.message.channel.name in ewcfg.poi_id_thesewers:
 			# death help
 			response = ewcfg.help_responses['death']
 
-		elif user_data.poi in ewcfg.poi_id_realestate:
+		elif cmd.message.channel.name in ewcfg.channel_realestateagency:
 			#real estate help
 			response = ewcfg.help_responses['realestate']
-		elif user_data.poi in [
-			ewcfg.poi_id_toxington_pier,
-			ewcfg.poi_id_assaultflatsbeach_pier,
-			ewcfg.poi_id_vagrantscorner_pier,
-			ewcfg.poi_id_crookline_pier,
-			ewcfg.poi_id_slimesend_pier,
-			ewcfg.poi_id_jaywalkerplain_pier,
-			ewcfg.poi_id_ferry
+		elif cmd.message.channel.name in [
+			ewcfg.channel_tt_pier,
+			ewcfg.channel_afb_pier,
+			ewcfg.channel_vc_pier,
+			ewcfg.channel_cl_pier,
+			ewcfg.channel_se_pier,
+			ewcfg.channel_jp_pier,
+			ewcfg.channel_ferry
 		]:
 			# fishing help
 			response = ewcfg.help_responses['fishing']
@@ -895,7 +895,7 @@ async def fursuit(cmd):
 async def pray(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.poi != ewcfg.poi_id_endlesswar:
+	if cmd.message.channel.name != ewcfg.channel_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
 
 	else:
@@ -950,7 +950,7 @@ async def recycle(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 
-	if user_data.poi != ewcfg.poi_id_recyclingplant:
+	if cmd.message.channel.name != ewcfg.channel_recyclingplant:
 		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1069,7 +1069,7 @@ async def push(cmd):
 	if targetmodel.poi != user_data.poi:
 		response = "You can't {} them because they aren't here.".format(cmd.tokens[0])
 		
-	elif user_data.poi != ewcfg.poi_id_slimesendcliffs:
+	elif cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		response = random.choice(ewcfg.bully_responses)
 
 		formatMap = {}
@@ -1161,7 +1161,7 @@ async def push(cmd):
 async def jump(cmd):
 	user_data = EwUser(member=cmd.message.author)
 
-	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
+	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		response = "You jump. Nope. Still not good at parkour."
 	elif user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're already dead. You'd just ghost hover above the cliff."
@@ -1203,7 +1203,7 @@ async def toss_off_cliff(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
-	if user_data.poi != ewcfg.poi_id_slimesendcliffs:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewitem.discard(cmd=cmd)
 
 	elif item_sought:
@@ -1259,7 +1259,7 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 async def purify(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	
-	if user_data.poi == ewcfg.poi_id_sodafountain:
+	if cmd.message.channel.name == "the-bicarbonate-soda-fountain":
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
 		else:
