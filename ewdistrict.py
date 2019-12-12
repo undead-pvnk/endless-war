@@ -486,7 +486,7 @@ class EwDistrict:
 					countdown_message = ""
 					if self.time_unlock > 0:
 						countdown_message = "It will unlock for capture again in {}.".format(ewutils.formatNiceTime(seconds = self.time_unlock, round_to_minutes = True))
-						message = "{faction} just captured {district}. {countdown}".format(
+					message = "{faction} just captured {district}. {countdown}".format(
 						faction = self.capturing_faction.capitalize(),
 						district = ewcfg.id_to_poi[self.name].str_name,
 						countdown = countdown_message
