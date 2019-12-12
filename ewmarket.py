@@ -938,7 +938,8 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 		shares_value = round(shares * (stock.exchange_rate / 1000.0))
 
 		response = "You have {shares:,} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
-		if cmd.message.channel.name == ewcfg.channel_stockexchange:
+
+		if id_user.poi == ewcfg.poi_id_downtown:
 			response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
 		else:
 			response += "."

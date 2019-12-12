@@ -265,6 +265,9 @@ poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
 
+# The Sphere
+poi_id_thesphere = "thesphere"
+
 # Community Chests
 chest_id_copkilltown = "copkilltownchest"
 chest_id_rowdyroughhouse = "rowdyroughhousechest"
@@ -10088,7 +10091,15 @@ poi_list = [
 		role="Ghost Containment",
 		is_tutorial = True,
 	),
-
+	EwPoi(  # For containing people while server-wide renovations are transpiring.
+		id_poi = poi_id_thesphere,
+		str_name = "The Sphere",
+		str_desc = "A nebulous defined space for containing hazardous waste. You can't tell what's happening on the outside, but it's probably not good.",
+		coord = (49, 29),
+		channel = "the-sphere",
+		role = "The Sphere",
+		is_subzone = True
+	),
 ]
 
 debugroom = ewdebug.debugroom

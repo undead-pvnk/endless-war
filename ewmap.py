@@ -276,7 +276,7 @@ map_world = [
 	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #26
 	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #27
 	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,  0, 30, -2, 30,  0,  0,  0,  0,  0,  0,  0, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ], #28
-	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 ]  #29
+	[ -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -2 ]  #29
 ]
 map_width = len(map_world[0])
 map_height = len(map_world)
@@ -1176,6 +1176,10 @@ async def look(cmd):
 				poi.str_desc
 			)
 		))
+
+		if poi.id_poi == ewcfg.poi_id_thesphere:
+			return
+
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
 			"{}{}{}{}{}{}{}".format(
@@ -1253,7 +1257,6 @@ async def scout(cmd):
 		target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 		poi = ewcfg.id_to_poi.get(target_name)
 
-
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
 
@@ -1276,11 +1279,11 @@ async def scout(cmd):
 		#is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
 		#is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
 
-		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not poi.mother_district == user_poi.id_poi):
+		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not poi.mother_district == user_poi.id_poi) and (not user_poi.mother_district == poi.id_poi):
 			response = "You can't scout that far."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if (not user_poi.mother_district == poi.id_poi):
+		if user_poi.id_poi == poi.mother_district:
 			response = "Why scout? Just pop your head in!"
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1592,10 +1595,23 @@ async def boot(cmd):
 			moved_user_data = EwUser(id_user=user, id_server=user_data.id_server)
 			moved_user_data.poi = new_poi.id_poi
 			moved_user_data.persist()
+		response = "Everyone in {} has been moved to {}!".format(old_poi.id_poi, new_poi.id_poi)
+
+	if destination_a == "all" and new_poi != None:
+		for district in ewcfg.poi_list:
+			district_data = EwDistrict(district = district.id_poi, id_server = user_data.id_server)
+
+			users = district_data.get_players_in_district()
+
+			for user in users:
+				moved_user_data = EwUser(id_user = user, id_server = user_data.id_server)
+				moved_user_data.poi = new_poi.id_poi
+				moved_user_data.persist()
+		response = "@everyone has been moved to {}".format(new_poi.id_poi)
+
 	else:
 		response = '**DEBUG:** Invalid POIs'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		
-	response = "Everyone in {} has been moved to {}!".format(old_poi.id_poi, new_poi.id_poi)
+
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
