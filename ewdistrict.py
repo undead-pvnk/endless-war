@@ -304,6 +304,10 @@ class EwDistrict:
 				for ch in channels:
 					resp_cont.add_channel_response(channel = ch, response = message)
 
+		if self.time_unlock == 0 and progress < 0:
+			chip_cont = self.change_capture_points(progress = -1, actor = ewcfg.actor_decay)
+			resp_cont.add_response_container(chip_cont)
+
 		return resp_cont
 
 	def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
