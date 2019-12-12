@@ -5,6 +5,7 @@ import asyncio
 import ewcfg
 import ewitem
 import ewutils
+import ewmap
 import random
 import ewrolemgr
 import ewstatuseffects
@@ -93,10 +94,10 @@ class EwFood:
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
 	market_data = EwMarket(id_server = cmd.message.server.id)
+	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
-	if poi == None or len(poi.vendors) == 0:
+	if ewmap.fetch_poi_if_coordless(cmd.message.channel.name) is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
@@ -184,10 +185,10 @@ async def menu(cmd):
 # Buy items.
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
 	market_data = EwMarket(id_server = cmd.message.server.id)
+	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
-	if poi == None or len(poi.vendors) == 0:
+	if ewmap.fetch_poi_if_coordless(cmd.message.channel.name) is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
