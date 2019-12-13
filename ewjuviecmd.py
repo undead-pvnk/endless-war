@@ -29,9 +29,9 @@ toxington_mines = {}
 cratersville_mines = {}
 
 mines_map = {
-	ewcfg.poi_id_mine: juviesrow_mines,
-	ewcfg.poi_id_tt_mines: toxington_mines,
-	ewcfg.poi_id_cv_mines: cratersville_mines
+	ewcfg.channel_mines: juviesrow_mines,
+	ewcfg.channel_tt_mines: toxington_mines,
+	ewcfg.channel_cv_mines: cratersville_mines
 }
 
 
@@ -222,14 +222,14 @@ async def mine(cmd):
 						else:
 							return await mismine(cmd, user_data, ewcfg.event_type_minecollapse)
 
-			if user_data.poi not in mines_map:
+			if cmd.message.channel.name not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif user_data.id_server not in mines_map.get(user_data.poi):
-				init_grid(user_data.poi, user_data.id_server)
+			elif user_data.id_server not in mines_map.get(cmd.message.channel.name):
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
 
-			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+			grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 			grid = grid_cont.grid
 
 			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
@@ -453,7 +453,7 @@ async def flag(cmd):
 				response = "What do you think you can flag here?"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if user_data.poi not in mines_map:
+			if cmd.message.channel.name not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif user_data.id_server not in mines_map.get(user_data.poi):

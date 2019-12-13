@@ -168,7 +168,7 @@ async def consult(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 
-	if user_data.poi != ewcfg.poi_id_realestate:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at Slimecorp Real Estate in Old New Yonkers."))
 
 	poi = ewcfg.id_to_poi.get(target_name)
@@ -217,8 +217,7 @@ async def signlease(cmd):
 
 	user_data = EwUser(member=cmd.message.author)
 
-
-	if user_data.poi != ewcfg.poi_id_realestate:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at Slimecorp Real Estate in Old New Yonkers."))
 	poi = ewcfg.id_to_poi.get(target_name)
 
