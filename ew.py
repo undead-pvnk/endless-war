@@ -174,14 +174,14 @@ class EwUser:
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
 		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
 
+		poi = ewcfg.id_to_poi.get(self.poi)
 		if cause == ewcfg.cause_weather:
-			poi = ewcfg.id_to_poi.get(self.poi)
 			resp_cont.add_channel_response(poi.channel, deathreport)
 
 		# Grab necessary data for spontaneous combustion before stat reset
-		explosion_block_list = [ewcfg.cause_suicide, ewcfg.cause_donation, ewcfg.cause_leftserver, ewcfg.cause_cliff]
+		explosion_block_list = [ewcfg.cause_leftserver, ewcfg.cause_cliff]
 		user_hasCombustion = False
-		if cause not in explosion_block_list:
+		if (cause not in explosion_block_list) and (poi.pvp):
 			if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
 				user_hasCombustion = True
 				explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
