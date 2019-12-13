@@ -703,7 +703,7 @@ cmd_ads = cmd_prefix + 'ads'
 cmd_confirm = cmd_prefix + 'confirm'
 cmd_cancel = cmd_prefix + 'cancel'
 cmd_pray = cmd_prefix + 'pray'
-
+cmd_flushsubzones = cmd_prefix + 'flushsubzones'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'

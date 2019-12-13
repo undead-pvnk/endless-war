@@ -1285,6 +1285,41 @@ async def purify(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
+async def flush_subzones(cmd):
+	member = cmd.message.author
+	
+	if not member.server_permissions.administrator:
+		return
+	
+	subzone_to_mother_district = {}
+
+	for poi in ewcfg.poi_list:
+		if poi.is_subzone:
+			subzone_to_mother_district[poi.id_poi] = poi.mother_district
+
+
+	for subzone in subzone_to_mother_district:
+		mother_district = subzone_to_mother_district.get(subzone)
+		
+		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
+			id_owner = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server
+		), (
+			mother_district,
+			subzone,
+			cmd.message.server.id
+		))
+
+		subzone_data = ewdistrict.EwDistrict(district = subzone, id_server = cmd.message.server.id)
+		district_data = ewdistrict.EwDistrict(district = mother_district, id_server = cmd.message.server.id)
+
+		district_data.change_slimes(n = subzone_data.slimes)
+		subzone_data.change_slimes(n = -subzone_data.slimes)
+
+		district_data.persist()
+		subzone_data.persist()
+	
+
 
 async def confirm(cmd):
 	return

@@ -117,7 +117,7 @@ cmd_map = {
 	
 	# Crush a poudrin to get some slime.
 	ewcfg.cmd_crush: ewjuviecmd.crush,
-    ewcfg.cmd_crush_alt1: ewjuviecmd.crush,
+	ewcfg.cmd_crush_alt1: ewjuviecmd.crush,
 
 	# move from juvenile to one of the armies (rowdys or killers)
 	ewcfg.cmd_enlist: ewjuviecmd.enlist,
@@ -217,7 +217,7 @@ cmd_map = {
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
 
-    ewcfg.cmd_purify: ewcmd.purify,
+	ewcfg.cmd_purify: ewcmd.purify,
 
 	ewcfg.cmd_store: ewcmd.store_item,
 	ewcfg.cmd_take: ewcmd.remove_item,
@@ -566,6 +566,9 @@ cmd_map = {
 
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
+
+	# flush items and slime from subzones into their mother district
+	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones
 }
 
 debug = False
