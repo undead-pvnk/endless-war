@@ -1271,7 +1271,7 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 async def purify(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	
-	if cmd.message.channel.name == "the-bicarbonate-soda-fountain":
+	if cmd.message.channel.name == ewcfg.channel_sodafountain:
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
 		else:
