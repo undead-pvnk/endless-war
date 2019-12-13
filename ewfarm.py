@@ -176,7 +176,10 @@ async def reap(cmd):
 					if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
 						slime_gain *= 2
 
-					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(slime_gain)
+					if cmd.message.channel.name == ewcfg.channel_jr_farms:
+						slime_gain = int(slimegain / 4)
+
+					response = "You reap what you’ve sown. Your investment has yielded {:,} slime, ".format(slime_gain)
 
 					# Determine if an item is found.
 					unearthed_item = False

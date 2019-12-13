@@ -633,6 +633,10 @@ async def reel(cmd):
 				if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
 					slime_gain *= 2
 
+
+				if cmd.message.channel.name == ewcfg.channel_jr_pier:
+					slime_gain = int(slimegain / 4)
+
 				ewitem.item_create(
 					id_user = cmd.message.author.id,
 					id_server = cmd.message.server.id,
@@ -652,8 +656,8 @@ async def reel(cmd):
 					}
 				)
 
-				response = "You reel in a {fish}! {flavor} You grab hold and wring {slime} slime from it. "\
-					.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = str(slime_gain))
+				response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. "\
+					.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = slime_gain)
 
 				if gang_bonus == True:
 					if user_data.faction == ewcfg.faction_rowdys:

@@ -1297,7 +1297,10 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		return mining_yield
 
 def get_mining_yield_default(cmd):
-	return 200
+	if cmd.message.channel.name == ewcfg.channel_mines:
+		return 50
+	else:
+		return 200
 
 def create_mining_event(cmd):
 	randomn = random.random()
