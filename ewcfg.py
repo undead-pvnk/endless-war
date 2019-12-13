@@ -10143,6 +10143,7 @@ alias_to_coord = {}
 capturable_districts = []
 transports = []
 transport_stops = []
+transport_stops_ch = []
 piers = []
 outskirts = []
 tutorial_pois = []
@@ -10170,7 +10171,8 @@ for poi in poi_list:
 		transports.append(poi.id_poi)
 
 	if poi.is_transport_stop:
-		transport_stops.append(poi.channel)
+		transport_stops.append(poi.id_poi)
+		transport_stops_ch.append(poi.channel)
 
 	if poi.is_pier:
 		piers.append(poi.id_poi)

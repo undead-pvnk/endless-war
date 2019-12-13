@@ -648,7 +648,7 @@ async def help(cmd):
 					response += "\n**{}**: {}".format(mutation, ewcfg.mutation_descriptions[mutation])
 			else:
 				response = 'ENDLESS WAR questions your belief in the existence of such information regarding the laboratory. Try referring to the topics list again by using just !help.'
-		elif cmd.message.channel.name in ewcfg.transport_stops:
+		elif cmd.message.channel.name in ewcfg.transport_stops_ch:
 			# transportation help
 			response = ewcfg.help_responses['transportation']
 		elif cmd.message.channel.name in ewcfg.channel_stockexchange:
