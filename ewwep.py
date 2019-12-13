@@ -621,7 +621,7 @@ async def attack(cmd):
 						factions = ["", user_data.faction if backfire else shootee_data.faction]
 						# Burn players in district
 						if weapon.id_weapon == ewcfg.weapon_id_molotov:
-							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 							for bystander in bystander_users:
 								#print(bystander)
 								bystander_user_data = EwUser(id_user = bystander, id_server = user_data.id_server)
@@ -1103,7 +1103,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 
-		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 		bystander_enemies = district_data.get_enemies_in_district()
 
 		for bystander in bystander_users:
@@ -1938,7 +1938,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					factions = ["", user_data.faction if backfire else bystander_faction]
 					# Burn players in district
 					if weapon.id_weapon == ewcfg.weapon_id_molotov:
-						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 						# TODO - Make enemies work with molotovs the same way players do.
 						for bystander in bystander_users:
 							# print(bystander)

@@ -1214,7 +1214,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 	channel = ewcfg.id_to_poi.get(poi).channel
 
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
-	users = district_data.get_players_in_district(life_states = life_states)
+	users = district_data.get_players_in_district(life_states = life_states, pvp_only = True)
 
 	enemies = district_data.get_enemies_in_district()
 
