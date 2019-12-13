@@ -110,6 +110,8 @@ async def score(cmd):
 	user_data = None
 	member = None
 
+	print(cmd.message.author)
+
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
 
@@ -667,7 +669,7 @@ async def help(cmd):
 		elif cmd.message.channel.name in [
 			ewcfg.channel_tt_pier,
 			ewcfg.channel_afb_pier,
-			ewcfg.channel_vc_pier,
+			ewcfg.channel_jr_pier,
 			ewcfg.channel_cl_pier,
 			ewcfg.channel_se_pier,
 			ewcfg.channel_jp_pier,
@@ -1049,6 +1051,7 @@ async def view_sap(cmd):
 
 
 async def push(cmd):
+	time_now = int(time.time())
 	user_data = EwUser(member=cmd.message.author)
 	districtmodel = ewdistrict.EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
 
@@ -1110,6 +1113,10 @@ async def push(cmd):
 	elif targetmodel.life_state == ewcfg.life_state_corpse:
 		response = "You try to give ol' {} a shove, but they're a bit too dead to be taking up physical space.".format(target.display_name)
 
+	elif time_now > targetmodel.time_expirpvp:
+		# Target is not flagged for PvP.
+		response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
+
 	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and ewcfg.mutation_id_lightasafeather not in target_mutations:
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
 
@@ -1154,6 +1161,12 @@ async def push(cmd):
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=target)
+
+		# Flag the user for PvP
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
+		user_data.persist()
+		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
 		await die_resp.post()
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

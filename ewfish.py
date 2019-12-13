@@ -330,7 +330,7 @@ async def cast(cmd):
 		response = "You've already cast a line."
 
 	# Only fish at The Pier
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			response = "You're too hungry to fish right now."
 
@@ -412,7 +412,7 @@ async def cast(cmd):
 				response = "You attach your {} to the hook as bait and then cast your fishing line into the ".format(str_name)
 
 
-			if cmd.message.channel.name in [ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+			if cmd.message.channel.name in [ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 				response += "vast Slime Sea."
 			else:
 				response += "glowing Slime Lake."
@@ -503,7 +503,7 @@ async def reel(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You can't fish while you're dead. Try {}.".format(ewcfg.cmd_revive)
 
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 		# Players who haven't cast a line cannot reel.
 		if fisher.fishing == False:
 			response = "You haven't cast your hook yet. Try !cast."
@@ -726,7 +726,7 @@ async def appraise(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 			response = 'You ask a nearby fisherman if he could appraise this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
@@ -831,7 +831,7 @@ async def barter(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'

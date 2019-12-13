@@ -455,8 +455,39 @@ def decaySlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)	
-			
+			databaseClose(conn_info)
+
+""" Flag all users in the Outskirts for PvP """
+async def flag_outskirts(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_server(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s".format(
+			), (
+				id_server,
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+
+				if user_data.poi in ewcfg.outskirts_districts:
+					# Flag the user for PvP
+					user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp,(int(time.time()) + ewcfg.time_pvp_mine))
+					user_data.persist()
+					await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
 """
 	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
 """

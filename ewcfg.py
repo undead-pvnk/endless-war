@@ -202,6 +202,7 @@ poi_id_crookline_pier = "crooklinepier"
 poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
+poi_id_juviesrow_pier = "juviesrowpier"
 
 
 #Apartment subzones
@@ -264,6 +265,13 @@ poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
+poi_id_south_outskirts = "southoutskirts"
+poi_id_southwest_outskirts = "southwestoutskirts"
+poi_id_west_outskirts = "westoutskirts"
+poi_id_northwest_outskirts = "northwestoutskirts"
+poi_id_north_outskirts = "northoutskirts"
+
 
 # The Sphere
 poi_id_thesphere = "thesphere"
@@ -408,6 +416,7 @@ channel_cl_pier = "crookline-pier"
 channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
+channel_jr_pier = "juvies-row-pier"
 channel_juviesrow = "juvies-row"
 channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
@@ -8460,20 +8469,38 @@ poi_list = [
 		pier_type = fish_slime_saltwater
 
 	),
-	EwPoi(  # Vagrant's Corner Pier
-		id_poi = poi_id_vagrantscorner_pier,
+	# EwPoi(  # Vagrant's Corner Pier
+	# 	id_poi = poi_id_vagrantscorner_pier,
+	# 	alias = [
+	# 		"vagrantscornerpier",
+	# 		"vcpier",
+	# 		"vcpr",
+	# 	],
+	# 	str_name = "Vagrant's Corner Pier",
+	# 	str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+	# 	channel = channel_vc_pier,
+	# 	role = "Vagrant's Corner Pier",
+	# 	pvp = False,
+	# 	is_subzone = True,
+	# 	mother_district = poi_id_vagrantscorner,
+	# 	is_pier = True,
+	# 	pier_type = fish_slime_saltwater
+	#
+	# ),
+	EwPoi(  # Juvie's Row Pier
+		id_poi = poi_id_juviesrow_pier,
 		alias = [
-			"vagrantscornerpier",
-			"vcpier",
-			"vcpr",
+			"juviesrowpier",
+			"jrpier",
+			"jrpr",
 		],
-		str_name = "Vagrant's Corner Pier",
-		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
-		channel = channel_vc_pier,
-		role = "Vagrant's Corner Pier",
+		str_name = "Juvie's Row Pier",
+		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+		channel = channel_jr_pier,
+		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_district = poi_id_juviesrow,
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 
@@ -9817,86 +9844,86 @@ poi_list = [
 		is_subzone = True,
 	),
 
-	# EwPoi(  # Outskirts - 1
-	# 	id_poi=poi_id_wreckington_outskirts,
-	# 	alias=[
-	# 		"wreckingtonoutskirts",
-	# 		"wtoutskirts",
-	# 		"wto",
-	# 	],
-	# 	str_name="Wreckington Outskirts",
-	# 	str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(59, 70),
-	# 	channel="wreckington-outskirts",
-	# 	role="Wreckington Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 2
-	# 	id_poi=poi_id_cratersville_outskirts,
-	# 	alias=[
-	# 		"cratersvilleoutskirts",
-	# 		"cvoutskirts",
-	# 		"cvo",
-	# 	],
-	# 	str_name="Cratersville Outskirts",
-	# 	str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
-	# 	coord=(44, 70),
-	# 	channel="cratersville-outskirts",
-	# 	role="Cratersville Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 3
-	# 	id_poi=poi_id_oozegardens_outskirts,
-	# 	alias=[
-	# 		"oozegardensoutskirts",
-	# 		"ogoutskirts",
-	# 		"ogo",
-	# 	],
-	# 	str_name="Ooze Gardens Outskirts",
-	# 	str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(35, 70),
-	# 	channel="ooze-gardens-outskirts",
-	# 	role="Ooze Gardens Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 4
-	# 	id_poi=poi_id_southsleezeborough_outskirts,
-	# 	alias=[
-	# 		"southsleezeboroughoutskirts",
-	# 		"ssboutskirts",
-	# 		"ssbo",
-	# 	],
-	# 	str_name="South Sleezeborough Outskirts",
-	# 	str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(27, 65),
-	# 	channel="south-sleezeborough-outskirts",
-	# 	role="South Sleezeborough Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
-	# EwPoi(  # Outskirts - 5
-	# 	id_poi=poi_id_crookline_outskirts,
-	# 	alias=[
-	# 		"crooklineoutskirts",
-	# 		"cloutskirts",
-	# 		"clo",
-	# 	],
-	# 	str_name="Crookline Outskirts",
-	# 	str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
-	# 	coord=(18, 66),
-	# 	channel="crookline-outskirts",
-	# 	role="Crookline Outskirts",
-	# 	pvp=True,
-	# 	is_capturable=False,
-	# 	is_outskirts=True
-	# ),
+	EwPoi(  # Outskirts - 1
+		id_poi=poi_id_south_outskirts,
+		alias=[
+			"southoutskirts",
+			"soutskirts",
+			"so",
+		],
+		str_name="Southern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Wreckington, Cratersville, and Ooze Gardens. If you kept wandering, you could probably wind up in the Southwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord=(12, 30),
+		channel="south-outskirts",
+		role="Southern Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
+	EwPoi(  # Outskirts - 2
+		id_poi=poi_id_southwest_outskirts,
+		alias=[
+			"southwesternoutskirts",
+			"swoutskirts",
+			"swo",
+		],
+		str_name="Southwestern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of South Sleezeborough, Crookline, and Dreadford. If you kept wandering, you could probably wind up in the Western or Southern Outskirts too.".format(str_generic_outskirts_description),
+		coord=(5, 28),
+		channel="southwest-outskirts",
+		role="Southwestern Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
+	EwPoi(  # Outskirts - 3
+		id_poi=poi_id_west_outskirts,
+		alias=[
+			"westernoutskirts",
+			"woutskirts",
+			"wo",
+		],
+		str_name="Western Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Jaywalker Plain, West Glocksbury, and Polonium Hill. If you kept wandering, you could probably wind up in the Southwestern or Northwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord=(2, 14),
+		channel="west-outskirts",
+		role="Western Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
+	EwPoi(  # Outskirts - 4
+		id_poi=poi_id_northwest_outskirts,
+		alias=[
+			"northwesternoutskirts",
+			"nwoutskirts",
+			"nwo",
+		],
+		str_name="Northwestern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Charcoal Park, Toxington, and Astatine Heights. If you kept wandering, you could probably wind up in the Western or Northern Outskirts too.".format(str_generic_outskirts_description),
+		coord=(17, 3),
+		channel="northwest-outskirts",
+		role="Northwestern Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
+	EwPoi(  # Outskirts - 5
+		id_poi=poi_id_north_outskirts,
+		alias=[
+			"northenoutskirts",
+			"noutskirts",
+			"no",
+		],
+		str_name="North Outskirts",
+		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord=(26, 1),
+		channel="north-outskirts",
+		role="Northern Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
 	# EwPoi(  # Outskirts - 6
 	# 	id_poi=poi_id_dreadford_outskirts,
 	# 	alias=[
@@ -10095,7 +10122,7 @@ poi_list = [
 		id_poi = poi_id_thesphere,
 		str_name = "The Sphere",
 		str_desc = "A nebulous defined space for containing hazardous waste. You can't tell what's happening on the outside, but it's probably not good.",
-		coord = (49, 29),
+		coord = (49, 33),
 		channel = "the-sphere",
 		role = "The Sphere",
 		is_subzone = True
@@ -13547,22 +13574,11 @@ coward_responses_hurt = [
 
 # List of outskirt districts for spawning purposes
 outskirts_districts = [
-	poi_id_wreckington_outskirts,
-	poi_id_cratersville_outskirts,
-	poi_id_oozegardens_outskirts,
-	poi_id_southsleezeborough_outskirts,
-	poi_id_crookline_outskirts,
-	poi_id_dreadford_outskirts,
-	poi_id_jaywalkerplain_outskirts,
-	poi_id_westglocksbury_outskirts,
-	poi_id_poloniumhill_outskirts,
-	poi_id_charcoalpark_outskirts,
-	poi_id_toxington_outskirts,
-	poi_id_astatineheights_outskirts,
-	poi_id_arsonbrook_outskirts,
-	poi_id_brawlden_outskirts,
-	poi_id_newnewyonkers_outskirts,
-	poi_id_assaultflatsbeach_outskirts
+	poi_id_south_outskirts,
+	poi_id_southwest_outskirts,
+	poi_id_west_outskirts,
+	poi_id_northwest_outskirts,
+	poi_id_north_outskirts
 ]
 
 # Letters that an enemy can identify themselves with
