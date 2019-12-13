@@ -277,7 +277,6 @@ CREATE TABLE transports (
 	transport_type varchar(64) NOT NULL DEFAULT '',
 	current_line varchar(64) NOT NULL DEFAULT '',
 	current_stop varchar(64) NOT NULL DEFAULT '',
-	current_station varchar(64) NOT NULL DEFAULT '',
 
 	PRIMARY KEY(id_server, poi)
 );

@@ -467,21 +467,22 @@ async def flag_outskirts(id_server = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT id_user FROM users WHERE id_server = %s".format(
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
 				id_server,
+				tuple(ewcfg.outskirts_districts)
+
 			))
 
 			users = cursor.fetchall()
 
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
+				# Flag the user for PvP
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp,(int(time.time()) + ewcfg.time_pvp_mine))
+				user_data.persist()
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 
-				if user_data.poi in ewcfg.outskirts_districts:
-					# Flag the user for PvP
-					user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp,(int(time.time()) + ewcfg.time_pvp_mine))
-					user_data.persist()
-					await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 			conn.commit()
 		finally:
 			# Clean up the database handles.

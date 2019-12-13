@@ -420,6 +420,7 @@ channel_jr_pier = "juvies-row-pier"
 channel_juviesrow = "juvies-row"
 channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
+channel_sodafountain = "the-bicarbonate-soda-fountain"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -8495,7 +8496,7 @@ poi_list = [
 			"jrpr",
 		],
 		str_name = "Juvie's Row Pier",
-		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Juvie's Row.",
 		channel = channel_jr_pier,
 		role = "Juvie's Row Pier",
 		pvp = False,
@@ -9261,7 +9262,7 @@ poi_list = [
 		str_name="The Bicarbonate Soda Fountain",
 		str_desc="A sickening display of worship recently and secretly installed by those who wish to pay tribute to that blue cartoon, the one that's plagued our city for Slime Invictus knows HOW long. Legends say you can offer up your slime and !purify yourself with the deadly waters that fluctuate in, out, and around the fountain. Even THINKING about the act of doing such a thing makes you SICK... or, maybe not? There's no shame in trying something you've never tried before, you think to yourself.\n\nExits into Krak Bay.",
 		pvp=False,
-		channel="the-bicarbonate-soda-fountain",
+		channel=channel_sodafountain,
 		role="The Bicarbonate Soda Fountain",
 		mother_district=poi_id_krakbay,
 		is_subzone=True
@@ -9911,7 +9912,7 @@ poi_list = [
 	EwPoi(  # Outskirts - 5
 		id_poi=poi_id_north_outskirts,
 		alias=[
-			"northenoutskirts",
+			"northernoutskirts",
 			"noutskirts",
 			"no",
 		],
@@ -10169,7 +10170,7 @@ for poi in poi_list:
 		transports.append(poi.id_poi)
 
 	if poi.is_transport_stop:
-		transport_stops.append(poi.id_poi)
+		transport_stops.append(poi.channel)
 
 	if poi.is_pier:
 		piers.append(poi.id_poi)
@@ -10183,11 +10184,11 @@ for poi in poi_list:
 	chname_to_poi[poi.channel] = poi
 
 landmark_pois = [
-	poi_id_countryclub,
+	poi_id_dreadford,
 	poi_id_charcoalpark,
-	poi_id_slimesend_pier,
-	poi_id_beachresort,
-	poi_id_diner,
+	poi_id_slimesend,
+	poi_id_assaultflatsbeach,
+	poi_id_wreckington,
 ]
 
 # maps districts to their immediate neighbors
