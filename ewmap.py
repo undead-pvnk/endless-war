@@ -44,9 +44,7 @@ def poi_is_pvp(poi_name = None):
 """
 def channel_name_is_poi(channel_name):
 	if channel_name != None:
-		for poi in ewcfg.poi_list:
-			if poi.channel == channel_name:
-				return True
+		return channel_name in ewcfg.chname_to_poi
 
 	return False
 
@@ -55,9 +53,10 @@ def channel_name_is_poi(channel_name):
 """
 def fetch_poi_if_coordless(channel_name):
 	if channel_name != None:
-		for poi in ewcfg.poi_list:
-			if poi.channel == channel_name and poi.coord is None:
-				return poi
+		poi = ewcfg.chname_to_poi.get(channel_name)
+		
+		if poi != None and poi.coord is None:
+			return poi
 
 	return None
 

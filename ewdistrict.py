@@ -304,6 +304,10 @@ class EwDistrict:
 				for ch in channels:
 					resp_cont.add_channel_response(channel = ch, response = message)
 
+		if self.time_unlock == 0 and progress < 0:
+			chip_cont = self.change_capture_points(progress = -1, actor = ewcfg.actor_decay)
+			resp_cont.add_response_container(chip_cont)
+
 		return resp_cont
 
 	def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
@@ -482,7 +486,7 @@ class EwDistrict:
 					countdown_message = ""
 					if self.time_unlock > 0:
 						countdown_message = "It will unlock for capture again in {}.".format(ewutils.formatNiceTime(seconds = self.time_unlock, round_to_minutes = True))
-						message = "{faction} just captured {district}. {countdown}".format(
+					message = "{faction} just captured {district}. {countdown}".format(
 						faction = self.capturing_faction.capitalize(),
 						district = ewcfg.id_to_poi[self.name].str_name,
 						countdown = countdown_message
@@ -549,6 +553,7 @@ async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	time_now = int(time.time())
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
@@ -587,7 +592,6 @@ async def annex(cmd):
 	
 	users_in_district = district_data.get_players_in_district(
 		life_states = [ewcfg.life_state_enlisted],
-		min_slimes = ewcfg.min_slime_to_cap,
 		ignore_offline = True,
 		pvp_only = True
 	)
@@ -595,7 +599,6 @@ async def annex(cmd):
 	allies_in_district = district_data.get_players_in_district(
 		factions = [user_data.faction],
 		life_states = [ewcfg.life_state_enlisted],
-		min_slimes = ewcfg.min_slime_to_cap,
 		ignore_offline = True,
 		pvp_only = True
 	)
@@ -604,7 +607,21 @@ async def annex(cmd):
 		response = "Holy shit, deal with your rival gangsters first! You can’t spray graffiti while they’re on the prowl!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	mutations = user_data.get_mutations()
+
 	slimes_spent = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	capture_discount = 1
+
+	if ewcfg.mutation_id_lonewolf in mutations:
+		if user_data.time_expirpvp > time_now:
+			if len(users_in_district) == 1:
+				capture_discount *= 0.8
+		else:
+			if len(users_in_district) == 0:
+				capture_discount *= 0.8
+
+	if ewcfg.mutation_id_patriot in mutations:
+		capture_discount *= 0.8
 
 	if slimes_spent == None:
 		response = "How much slime do you want to spend on spraying graffiti in this district?"
@@ -626,8 +643,8 @@ async def annex(cmd):
 		)
 		resp_cont.add_response_container(decap_resp)
 		
-		user_data.change_slimes(n = -slimes_decap, source = ewcfg.source_spending)
-		slimes_spent -= slimes_decap
+		user_data.change_slimes(n = -slimes_decap * capture_discount, source = ewcfg.source_spending)
+		slimes_spent -= slimes_decap * capture_discount
 
 	slimes_cap = min(district_data.max_capture_points - district_data.capture_points, slimes_spent)
 	cap_resp = district_data.change_capture_points(
@@ -637,7 +654,7 @@ async def annex(cmd):
 	)
 	resp_cont.add_response_container(cap_resp)
 		
-	user_data.change_slimes(n = -slimes_cap, source = ewcfg.source_spending)
+	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
 
 	# Flag the user for PvP
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
