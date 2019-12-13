@@ -759,9 +759,10 @@ async def move(cmd = None, isApt = False):
 
 	if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
 		poi = fetch_poi_if_coordless(poi.channel)
-		if poi.mother_district is not None: # Reroute you to the sub-zone's mother district if possible.
+		mother_poi = ewcfg.id_to_poi.get(poi.mother_district)
+		if mother_poi is not None: # Reroute you to the sub-zone's mother district if possible.
 			target_name = poi.mother_district
-			poi = ewcfg.id_to_poi.get(poi.mother_district)
+			poi = mother_poi
 
 	if poi.id_poi == user_data.poi:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
