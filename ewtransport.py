@@ -316,6 +316,13 @@ async def disembark(cmd):
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
+		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
+		if stop_poi.is_subzone:
+			stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+
+		if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+
 		# schedule tasks for concurrent execution
 		message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
 		wait_task = asyncio.ensure_future(asyncio.sleep(5))
@@ -380,6 +387,10 @@ async def disembark(cmd):
 		else:
 			if stop_poi.is_subzone:
 				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+
+			
+			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
 			user_data.poi = stop_poi.id_poi
 			user_data.persist()
