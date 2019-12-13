@@ -757,6 +757,12 @@ async def move(cmd = None, isApt = False):
 	elif user_data.poi != ewcfg.debugroom and cmd.tokens[0] == (ewcfg.cmd_descend):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move downwards on a solid surface, bitch."))
 
+	if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
+		poi = fetch_poi_if_coordless(poi.channel)
+		if poi.mother_district is not None: # Reroute you to the sub-zone's mother district if possible.
+			target_name = poi.mother_district
+			poi = ewcfg.id_to_poi.get(poi.mother_district)
+
 	if poi.id_poi == user_data.poi:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
 	elif isApt and poi.id_poi == user_data.poi[3:]:
@@ -769,12 +775,6 @@ async def move(cmd = None, isApt = False):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to {} in the city before you can wander its streets.".format(ewcfg.cmd_manifest)))
 	if isApt:
 		poi_current = ewcfg.id_to_poi.get(user_data.poi[3:])
-
-	if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
-		poi = fetch_poi_if_coordless(poi.channel)
-		if poi.mother_district is not None: # Reroute you to the sub-zone's mother district if possible.
-			target_name = poi.mother_district
-			poi = ewcfg.id_to_poi.get(poi.mother_district)
 
 	if poi.coord == None or poi_current == None or poi_current.coord == None:
 		if user_data.life_state == ewcfg.life_state_corpse and poi.id_poi == ewcfg.poi_id_thesewers:
