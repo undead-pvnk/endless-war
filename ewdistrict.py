@@ -635,7 +635,7 @@ async def annex(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if (district_data.controlling_faction not in ["", user_data.faction]) or (district_data.capturing_faction not in ["", user_data.faction]):
-		slimes_decap = min(district_data.capture_points, slimes_spent)
+		slimes_decap = min(district_data.capture_points, int(slimes_spent / capture_discount))
 		decap_resp = district_data.change_capture_points(
 			progress = -slimes_decap,
 			actor = user_data.faction,
@@ -646,7 +646,7 @@ async def annex(cmd):
 		user_data.change_slimes(n = -slimes_decap * capture_discount, source = ewcfg.source_spending)
 		slimes_spent -= slimes_decap * capture_discount
 
-	slimes_cap = min(district_data.max_capture_points - district_data.capture_points, slimes_spent)
+	slimes_cap = min(district_data.max_capture_points - district_data.capture_points, int(slimes_spent / capture_discount))
 	cap_resp = district_data.change_capture_points(
 		progress = slimes_cap,
 		actor = user_data.faction,
