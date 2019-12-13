@@ -646,14 +646,14 @@ async def on_ready():
 		ewutils.logMsg("Found neighbors for poi {}: {}".format(poi.id_poi, ewcfg.poi_neighbors[poi.id_poi]))
 
 
-	# for id_poi in ewcfg.landmark_pois:
-	# 	ewutils.logMsg("beginning landmark precomputation for " + id_poi)
-	# 	poi = ewcfg.id_to_poi.get(id_poi)
-	# 	ewmap.landmarks[id_poi] = ewmap.score_map_from(
-	# 		coord_start = poi.coord,
-	# 		user_data = fake_observer,
-	# 		landmark_mode = True
-	# 	)
+	for id_poi in ewcfg.landmark_pois:
+		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
+		poi = ewcfg.id_to_poi.get(id_poi)
+		ewmap.landmarks[id_poi] = ewmap.score_map_from(
+			coord_start = poi.coord,
+			user_data = fake_observer,
+			landmark_mode = True
+		)
 
 	ewutils.logMsg("finished landmark precomputation")
 
@@ -820,6 +820,9 @@ async def on_ready():
 			except:
 				ewutils.logMsg('Twitch handler hit an exception (continuing): {}'.format(json_string))
 				traceback.print_exc(file = sys.stdout)
+
+		# Flag all users in the Outskirts for PvP
+		await ewutils.flag_outskirts(id_server = server.id)
 
 		# Clear PvP roles from players who are no longer flagged.
 		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
@@ -1000,6 +1003,8 @@ async def on_ready():
 					# Post leaderboards at 6am NLACakaNM time.
 					if market_data.clock == 6:
 						await ewleaderboard.post_leaderboards(client = client, server = server)
+
+
 
 		except:
 			ewutils.logMsg('An error occurred in the scheduled slime market update task:')

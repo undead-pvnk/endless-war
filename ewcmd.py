@@ -612,7 +612,7 @@ async def help(cmd):
 		# user not in college, check what help message would apply to the subzone they are in
 
 		# poi variable assignment used for checking if player is in a vendor subzone or not
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+		poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
 
@@ -657,7 +657,7 @@ async def help(cmd):
 		elif cmd.message.channel.name in ewcfg.channel_casino:
 			# casino help
 			response = ewcfg.help_responses['casino']
-		elif cmd.message.channel.name in ewcfg.poi_id_thesewers:
+		elif cmd.message.channel.name in ewcfg.channel_sewers:
 			# death help
 			response = ewcfg.help_responses['death']
 
@@ -667,7 +667,7 @@ async def help(cmd):
 		elif cmd.message.channel.name in [
 			ewcfg.channel_tt_pier,
 			ewcfg.channel_afb_pier,
-			ewcfg.channel_vc_pier,
+			ewcfg.channel_jr_pier,
 			ewcfg.channel_cl_pier,
 			ewcfg.channel_se_pier,
 			ewcfg.channel_jp_pier,
@@ -1049,6 +1049,7 @@ async def view_sap(cmd):
 
 
 async def push(cmd):
+	time_now = int(time.time())
 	user_data = EwUser(member=cmd.message.author)
 	districtmodel = ewdistrict.EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
 
@@ -1110,6 +1111,10 @@ async def push(cmd):
 	elif targetmodel.life_state == ewcfg.life_state_corpse:
 		response = "You try to give ol' {} a shove, but they're a bit too dead to be taking up physical space.".format(target.display_name)
 
+	elif time_now > targetmodel.time_expirpvp:
+		# Target is not flagged for PvP.
+		response = "{} is not mired in the ENDLESS WAR right now.".format(target.display_name)
+
 	elif (ewcfg.mutation_id_bigbones in target_mutations or ewcfg.mutation_id_fatchance in target_mutations) and ewcfg.mutation_id_lightasafeather not in target_mutations:
 		response = "You try to push {}, but they're way too heavy. It's always fat people, constantly trying to prevent your murderous schemes.".format(target.display_name)
 
@@ -1153,7 +1158,14 @@ async def push(cmd):
 
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
-		await ewrolemgr.updateRoles(client=cmd.client, member=target)
+
+		# Flag the user for PvP
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
+		user_data.persist()
+
+		await ewrolemgr.updateRoles(client = cmd.client, member = target)
+		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+
 		await die_resp.post()
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
