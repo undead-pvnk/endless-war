@@ -273,7 +273,9 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
 		time_tokens.append(token_hours)
 
 	if round_to_hours:
-		return token_hours
+		if len(time_tokens) == 0:
+			time_tokens.append("0 hours")
+		return formatNiceList(names = time_tokens, conjunction = "and")
 
 	if minutes > 0:
 		if minutes == 1:
@@ -283,6 +285,8 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
 		time_tokens.append(token_mins)
 	
 	if round_to_minutes:
+		if len(time_tokens) == 0:
+			time_tokens.append("0 minutes")
 		return formatNiceList(names = time_tokens, conjunction = "and")
 
 	if seconds > 0:
@@ -292,6 +296,8 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
 			token_secs = "{} seconds".format(seconds)
 		time_tokens.append(token_secs)
 
+	if len(time_tokens) == 0:
+		time_tokens.append("0 seconds")
 	return formatNiceList(names = time_tokens, conjunction = "and")
 
 """ turn a list of Users into a list of their respective names """
