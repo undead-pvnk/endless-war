@@ -939,7 +939,7 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 
 		response = "You have {shares:,} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 
-		if id_user.poi == ewcfg.poi_id_downtown:
+		if user_data.poi == ewcfg.poi_id_downtown:
 			response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
 		else:
 			response += "."
