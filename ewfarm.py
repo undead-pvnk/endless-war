@@ -177,7 +177,7 @@ async def reap(cmd):
 						slime_gain *= 2
 
 					if cmd.message.channel.name == ewcfg.channel_jr_farms:
-						slime_gain = int(slimegain / 4)
+						slime_gain = int(slime_gain / 4)
 
 					response = "You reap what you’ve sown. Your investment has yielded {:,} slime, ".format(slime_gain)
 
