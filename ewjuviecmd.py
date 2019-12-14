@@ -234,9 +234,9 @@ async def mine(cmd):
 
 			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
 			if grid_type != grid_cont.grid_type:
-				init_grid(user_data.poi, user_data.id_server)
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
-				grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+				grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 				grid = grid_cont.grid
 
 			#minesweeper = True
@@ -320,7 +320,7 @@ async def mine(cmd):
 						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = event_data.event_props.get('captcha'))
 					response += str_event_start + "\n"
 				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
-					init_grid(poi = event_data.event_props.get('poi'), id_server = event_data.id_server)
+					init_grid(channel = event_data.event_props.get('channel'), id_server = event_data.id_server)
 					printgrid = True
 
 			if random.random() < unearthed_item_chance:
@@ -456,18 +456,18 @@ async def flag(cmd):
 			if cmd.message.channel.name not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif user_data.id_server not in mines_map.get(user_data.poi):
-				init_grid(user_data.poi, user_data.id_server)
+			elif user_data.id_server not in mines_map.get(cmd.message.channel.name):
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
 
-			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+			grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 			grid = grid_cont.grid
 
 			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
 			if grid_type != grid_cont.grid_type:
-				init_grid(user_data.poi, user_data.id_server)
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
-				grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+				grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 				grid = grid_cont.grid
 
 			
@@ -752,25 +752,25 @@ async def crush(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-def init_grid(poi, id_server):
+def init_grid(channel, id_server):
 	world_events = ewworldevent.get_world_events(id_server = id_server)
 	minigame_event = None
 	for id_event in world_events:
 		if world_events.get(id_event) in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
 			event_data = EwWorldEvent(id_event = id_event)
-			if event_data.event_props.get('poi') == poi:
+			if event_data.event_props.get('channel') == channel:
 				minigame_event = event_data.event_type
 
 	if minigame_event == ewcfg.event_type_minesweeper:
-		return init_grid_minesweeper(poi, id_server)
+		return init_grid_minesweeper(channel, id_server)
 	elif minigame_event == ewcfg.event_type_pokemine:
-		return init_grid_pokemine(poi, id_server)
+		return init_grid_pokemine(channel, id_server)
 	elif minigame_event == ewcfg.event_type_bubblebreaker:
-		return init_grid_bubblebreaker(poi, id_server)
+		return init_grid_bubblebreaker(channel, id_server)
 	else:
-		return init_grid_none(poi, id_server)
+		return init_grid_none(channel, id_server)
 
-def init_grid_minesweeper(poi, id_server):
+def init_grid_minesweeper(channel, id_server):
 	grid = []
 	num_rows = 13
 	num_cols = 13
@@ -791,14 +791,14 @@ def init_grid_minesweeper(poi, id_server):
 		grid[row][col] = ewcfg.cell_mine
 
 			
-	if poi in mines_map:
+	if channel in mines_map:
 		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_minesweeper)
-		mines_map.get(poi)[id_server] = grid_cont
+		mines_map.get(channel)[id_server] = grid_cont
 
-def init_grid_pokemine(poi,id_server):
-	return init_grid_none(poi, id_server)# TODO
+def init_grid_pokemine(channel,id_server):
+	return init_grid_none(channel, id_server)# TODO
 
-def init_grid_bubblebreaker(poi, id_server):
+def init_grid_bubblebreaker(channel, id_server):
 	grid = []
 	num_rows = 13
 	num_cols = 13
@@ -820,23 +820,24 @@ def init_grid_bubblebreaker(poi, id_server):
 
 
 			
-	if poi in mines_map:
+	if channel in mines_map:
 		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_bubblebreaker)
-		mines_map.get(poi)[id_server] = grid_cont
+		mines_map.get(channel)[id_server] = grid_cont
 
-def init_grid_none(poi, id_server):
-	if poi in mines_map:
+def init_grid_none(channel, id_server):
+	if channel in mines_map:
 		grid_cont = EwMineGrid(grid = None, grid_type = None)
-		mines_map.get(poi)[id_server] = grid_cont
+		mines_map.get(channel)[id_server] = grid_cont
 
 async def print_grid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
+	channel = cmd.message.channel.name
 	id_server = cmd.message.server.id
-	if poi in mines_map:
-		grid_map = mines_map.get(poi)
+	if channel in mines_map:
+		grid_map = mines_map.get(channel)
 		if id_server not in grid_map:
-			init_grid(poi, id_server)
+			init_grid(channel, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -852,12 +853,13 @@ async def print_grid_minesweeper(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
+	channel = cmd.message.channel.name
 	id_server = cmd.message.server.id
 	time_now = int(time.time())
-	if poi in mines_map:
-		grid_map = mines_map.get(poi)
+	if channel in mines_map:
+		grid_map = mines_map.get(channel)
 		if id_server not in grid_map:
-			init_grid_minesweeper(poi, id_server)
+			init_grid_minesweeper(channel, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -908,7 +910,7 @@ async def print_grid_minesweeper(cmd):
 			grid_cont.times_edited += 1
 
 		if grid_cont.wall_message == "":
-			wall_channel = ewcfg.mines_wall_map.get(poi)
+			wall_channel = ewcfg.mines_wall_map.get(channel)
 			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 			resp_cont.add_channel_response(wall_channel, grid_edit)
 			msg_handles = await resp_cont.post()
@@ -924,13 +926,14 @@ async def print_grid_bubblebreaker(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
+	channel = cmd.message.channel.name
 	id_server = cmd.message.server.id
 	time_now = int(time.time())
 	use_emotes = False
-	if poi in mines_map:
-		grid_map = mines_map.get(poi)
+	if channel in mines_map:
+		grid_map = mines_map.get(channel)
 		if id_server not in grid_map:
-			init_grid(poi, id_server)
+			init_grid(channel, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -973,7 +976,7 @@ async def print_grid_bubblebreaker(cmd):
 			grid_cont.times_edited += 1
 
 		if grid_cont.wall_message == "":
-			wall_channel = ewcfg.mines_wall_map.get(poi)
+			wall_channel = ewcfg.mines_wall_map.get(channel)
 			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 			resp_cont.add_channel_response(wall_channel, grid_edit)
 			msg_handles = await resp_cont.post()
