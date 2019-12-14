@@ -116,20 +116,23 @@ async def pachinko(cmd):
 		# Significant time has passed since the user issued this command. We can't trust that their data hasn't changed.
 		user_data = EwUser(member = cmd.message.author)
 
-		# add winnings
-		if currency_used == ewcfg.currency_slimecoin:
-			user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
-		else:
-			user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
-
-		user_data.persist()
-
 		if winnings > 0:
 			response += "\n\n**You won {:,} {}!**".format(winnings, currency_used)
 			if currency_used == ewcfg.currency_slime:
 				response += "\nSlimeCorp takes {:,} slime from your winnings.".format(int(winnings * 0.2))
 		else:
 			response += "\n\nYou lost your {}.".format(currency_used)
+
+		# add winnings
+		if currency_used == ewcfg.currency_slimecoin:
+			user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
+		else:
+			levelup_response = user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+			
+			if levelup_response != "":
+				response += "\n\n" + levelup_response
+
+		user_data.persist()
 
 		# Allow the player to pachinko again now that we're done.
 		last_pachinkoed_times[cmd.message.author.id] = 0
@@ -217,7 +220,10 @@ async def craps(cmd):
 			if currency_used == ewcfg.currency_slimecoin:
 				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 			else:
-				user_data.change_slimes(n = int(winnings * 0.8) - value, source = ewcfg.source_casino)
+				levelup_response = user_data.change_slimes(n = int(winnings * 0.8) - value, source = ewcfg.source_casino)
+
+				if levelup_response != "":
+					response += "\n\n" + levelup_response
 
 			user_data.persist()
 		else:
@@ -363,7 +369,10 @@ async def slots(cmd):
 		if currency_used == ewcfg.currency_slimecoin:
 			user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
 		else:
-			user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+			levelup_response = user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+
+			if levelup_response != "":
+					response += "\n\n" + levelup_response
 
 		user_data.persist()
 
@@ -518,7 +527,10 @@ async def roulette(cmd):
 				if currency_used == ewcfg.currency_slimecoin:
 					user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
 				else:
-					user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+					levelup_response = user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+					
+					if levelup_response != "":
+						response += "\n\n" + levelup_response
 
 				user_data.persist()
 		else:
@@ -1111,7 +1123,10 @@ async def baccarat(cmd):
 				if currency_used == ewcfg.currency_slimecoin:
 					user_data.change_slimecoin(n = winnings, coinsource = ewcfg.coinsource_casino)
 				else:
-					user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+					levelup_response = user_data.change_slimes(n = winnings * 0.8, source = ewcfg.source_casino)
+					
+					if levelup_response != "":
+						response += "\n\n" + levelup_response
 
 				user_data.persist()
 				await ewutils.edit_message(cmd.client, resp_f, ewutils.formatMessage(cmd.message.author, response))
