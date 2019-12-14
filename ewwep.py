@@ -628,7 +628,7 @@ async def attack(cmd):
 						factions = ["", ewcfg.faction_rowdys, ewcfg.faction_killers]#, user_data.faction if backfire else shootee_data.faction]
 						# Burn players in district
 						if weapon.id_weapon == ewcfg.weapon_id_molotov:
-							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 							for bystander in bystander_users:
 								#print(bystander)
 								bystander_user_data = EwUser(id_user = bystander, id_server = user_data.id_server)
@@ -1123,7 +1123,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 
-		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 		bystander_enemies = district_data.get_enemies_in_district()
 
 		for bystander in bystander_users:
@@ -1359,7 +1359,7 @@ async def spar(cmd):
 
 			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 				response = "You are too exhausted to train right now. Go get some grub!"
-			elif user_data.poi != ewcfg.poi_id_dojo or sparred_data.poi != ewcfg.poi_id_dojo:
+			elif cmd.message.channel.name != ewcfg.channel_dojo or sparred_data.poi != ewcfg.poi_id_southsleezeborough:
 				response = "Both players need to be in the dojo to spar."
 			elif sparred_data.hunger >= ewutils.hunger_max_bylevel(sparred_data.slimelevel):
 				response = "{} is too exhausted to train right now. They need a snack!".format(member.display_name)
@@ -1567,7 +1567,7 @@ async def marry(cmd):
 		weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
 	#Checks to make sure you're in the dojo.
-	if user_data.poi != ewcfg.poi_id_dojo:
+	if cmd.message.channel.name != ewcfg.channel_dojo:
 		response = "Do you really expect to just get married on the side of the street in this war torn concrete jungle? No way, you need to see a specialist for this type of thing, someone who can empathize with a man’s love for his arsenal. Maybe someone in the Dojo can help, *hint hint*."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Informs you that you cannot be a fucking faggot.
@@ -1667,7 +1667,7 @@ async def divorce(cmd):
 	if user_data.weaponmarried == False:
 		response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
 	# Checks to make sure you're in the dojo.
-	elif user_data.poi != ewcfg.poi_id_dojo:
+	elif cmd.message.channel.name != ewcfg.channel_dojo:
 		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 	else:
 		#Unpreform the ceremony
@@ -1965,7 +1965,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					factions = ["", ewcfg.faction_rowdys, ewcfg.faction_killers]#, user_data.faction if backfire else bystander_faction]
 					# Burn players in district
 					if weapon.id_weapon == ewcfg.weapon_id_molotov:
-						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions)
+						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 						# TODO - Make enemies work with molotovs the same way players do.
 						for bystander in bystander_users:
 							# print(bystander)
@@ -2373,9 +2373,12 @@ async def dodge(cmd):
 
 	user_data.sap -= sap_cost
 
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+
 	user_data.persist()
 
 	response = "You spend {} sap to focus on dodging {}'s attacks.".format(sap_cost, member.display_name)
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def taunt(cmd):
@@ -2421,9 +2424,11 @@ async def taunt(cmd):
 
 	user_data.sap -= sap_cost
 
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, member.display_name)
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def aim(cmd):
@@ -2465,9 +2470,11 @@ async def aim(cmd):
 
 	user_data.sap -= sap_cost
 
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, member.display_name)
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def damage_mod_attack(user_data, market_data, user_mutations, district_data):

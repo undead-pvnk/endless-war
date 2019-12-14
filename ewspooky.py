@@ -55,7 +55,7 @@ async def revive(cmd):
 			player_data.life_state = ewcfg.life_state_juvenile
 
 			# Get the player out of the sewers.
-			player_data.poi = ewcfg.poi_id_endlesswar
+			player_data.poi = ewcfg.poi_id_downtown
 
 			player_data.persist()
 			market_data.persist()

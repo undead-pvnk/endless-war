@@ -141,7 +141,7 @@ async def reroll_last_mutation(cmd):
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 
-	if user_data.poi != ewcfg.poi_id_slimeoidlab:
+	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -200,7 +200,7 @@ async def clear_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
-	if user_data.poi != ewcfg.poi_id_slimeoidlab:
+	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

@@ -584,7 +584,8 @@ class EwEnemy:
 									name_target = target_player.display_name
 								))
 								if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-									response += "\n\n" + drop_enemy_loot(enemy_data, district_data)
+									loot_cont = drop_enemy_loot(enemy_data, district_data)
+									resp_cont.add_response_container(loot_cont)
 									enemy_data.life_state = ewcfg.enemy_lifestate_dead
 									delete_enemy(enemy_data)
 								else:
