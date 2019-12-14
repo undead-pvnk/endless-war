@@ -1154,7 +1154,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 		if coords == "reset":
 			user_data.hunger += int(ewcfg.hunger_perminereset * hunger_cost_mod)
 			user_data.persist()
-			init_grid_minesweeper(user_data.poi, user_data.id_server)
+			init_grid_minesweeper(cmd.message.channel.name, user_data.id_server)
 			return ""
 
 		if col < 1:
@@ -1201,7 +1201,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	unmined_cells = get_unmined_cell_count(grid_cont)
 
 	if unmined_cells == 0:
-		init_grid_minesweeper(user_data.poi, user_data.id_server)
+		init_grid_minesweeper(cmd.message.channel.name, user_data.id_server)
 
 	if mining_accident:
 		slimes_lost = 0.1 * grid_multiplier * user_data.slimes
@@ -1212,7 +1212,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 			user_data.persist()
 			response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
-		init_grid_minesweeper(user_data.poi, user_data.id_server)
+		init_grid_minesweeper(cmd.message.channel.name, user_data.id_server)
 
 		return response
 
@@ -1293,7 +1293,7 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		user_data.persist()
 		response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
-		init_grid_bubblebreaker(user_data.poi, user_data.id_server)
+		init_grid_bubblebreaker(cmd.message.channel.name, user_data.id_server)
 
 		return response
 	else:
