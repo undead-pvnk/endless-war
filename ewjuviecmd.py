@@ -1316,6 +1316,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_slimeglob,
@@ -1327,6 +1328,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_slimefrenzy,
@@ -1345,6 +1347,7 @@ def create_mining_event(cmd):
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
 			event_props['captcha'] = ewutils.generate_captcha(n = 8)
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minecollapse,
@@ -1357,6 +1360,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_poudrinfrenzy,
@@ -1373,6 +1377,7 @@ def create_mining_event(cmd):
 		if randomn < 1/2:
 			event_props = {}
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minesweeper,
@@ -1385,6 +1390,7 @@ def create_mining_event(cmd):
 		else:
 			event_props = {}
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_bubblebreaker,

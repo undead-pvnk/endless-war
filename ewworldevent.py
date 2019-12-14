@@ -245,7 +245,10 @@ async def event_tick(id_server):
 					
 			if len(response) > 0:
 				poi = event_data.event_props.get('poi')
-				if poi != None:
+				channel = event_data.event_props.get('channel')
+				if channel != None:
+					resp_cont.add_channel_response(channel, response)
+				elif poi != None:
 					poi_def = ewcfg.id_to_poi.get(poi)
 					if poi_def != None:
 						resp_cont.add_channel_response(poi_def.channel, response)
