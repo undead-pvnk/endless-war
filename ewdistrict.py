@@ -634,12 +634,16 @@ async def annex(cmd):
 		response = "You don't have that much slime, retard."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	num_lock = len(allies_in_district)
+	if user_data.time_expirpvp < time_now:
+		num_lock += 1
+
 	if (district_data.controlling_faction not in ["", user_data.faction]) or (district_data.capturing_faction not in ["", user_data.faction]):
 		slimes_decap = min(district_data.capture_points, int(slimes_spent / capture_discount))
 		decap_resp = district_data.change_capture_points(
 			progress = -slimes_decap,
 			actor = user_data.faction,
-			num_lock = len(allies_in_district)
+			num_lock = num_lock
 		)
 		resp_cont.add_response_container(decap_resp)
 		
@@ -650,7 +654,7 @@ async def annex(cmd):
 	cap_resp = district_data.change_capture_points(
 		progress = slimes_cap,
 		actor = user_data.faction,
-		num_lock = len(allies_in_district)
+		num_lock = num_lock
 	)
 	resp_cont.add_response_container(cap_resp)
 		
