@@ -388,7 +388,7 @@ channel_endlesswar = "endless-war"
 channel_sewers = "the-sewers"
 channel_dojo = "the-dojo"
 channel_twitch_announcement = "rfck-chat"
-channel_casino = "slime-casino"
+channel_casino = "slimecorp-casino"
 channel_stockexchange = "slimecorp-stock-exchange"
 channel_foodcourt = "food-court"
 channel_slimeoidlab = "slimecorp-labs"
@@ -1329,10 +1329,10 @@ trade_state_ongoing = 1
 trade_state_complete = 2
 
 # Common strings.
-str_casino_closed = "The Slime Casino only operates at night."
+str_casino_closed = "The SlimeCorp Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
-str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " to {action} your {currency}."
+str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " in person to {action} your {currency}."
 str_exchange_busy = "You can't {action} right now. Your slimebroker is busy."
 str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
@@ -7522,7 +7522,7 @@ poi_list = [
 			"gld"
 		],
 		str_name = "Green Light District",
-		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
+		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
 		coord = (34, 19),
 		channel = "green-light-district",
 		role = "Green Light District",
@@ -8231,10 +8231,11 @@ poi_list = [
 			"theslimecasino",
 			"tc",  # the casino
 			"cas",
-			"c"
+			"c",
+			"scs"
 		],
-		str_name = "The Casino",
-		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit.\n\nExits into Green Light District.",
+		str_name = "The SlimeCorp Casino",
+		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
 		channel = channel_casino,
 		role = "Casino",
 		pvp = False,
@@ -13423,7 +13424,7 @@ help_responses = {
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
 	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
-	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
+	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
 	# Additional gameplay mechanics, part 4
