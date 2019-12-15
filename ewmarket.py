@@ -526,7 +526,7 @@ async def donate(cmd):
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
 	elif cmd.message.channel.name == ewcfg.channel_slimeoidlab:
-		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 		if poudrins == None:
 			response = "You have to own a poudrin in order to donate a poudrin. Duh."

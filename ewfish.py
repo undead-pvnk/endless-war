@@ -723,7 +723,7 @@ async def appraise(cmd):
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
-	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_food)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
@@ -1082,7 +1082,7 @@ async def embiggen(cmd):
 			if size == ewcfg.fish_size_huge:
 				poudrin_cost = 32
 
-			poudrins_owned = ewitem.find_item_all(item_search = "slimepoudrin", id_user = user_data.id_user, id_server = user_data.id_server)
+			poudrins_owned = ewitem.find_item_all(item_search = "slimepoudrin", id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 			poudrin_amount = len(poudrins_owned)
 
 			if poudrin_cost == 0:

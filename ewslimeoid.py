@@ -663,7 +663,7 @@ async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 	slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.message.server.id)
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
@@ -2013,7 +2013,7 @@ async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."

@@ -576,7 +576,7 @@ async def help(cmd):
 	# help only checks for districts while in game channels
 
 	# checks if user is in a college or if they have a game guide
-	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 	if cmd.message.channel.name == ewcfg.channel_neomilwaukeestate or cmd.message.channel.name == ewcfg.channel_nlacu or gameguide:
 		if not len(cmd.tokens) > 1:

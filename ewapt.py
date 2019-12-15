@@ -1496,7 +1496,7 @@ async def wash(cmd):
 	if usermodel.visiting != ewcfg.location_id_empty:
 		usermodel = EwUser(id_user=usermodel.visiting, id_server=playermodel.id_server)
 
-	if ewitem.find_item(item_search="washingmachine", id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
+	if ewitem.find_item(item_search="washingmachine", id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture):
 		if item_sought:
 			item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 			if item.item_type == ewcfg.it_cosmetic:
@@ -1543,8 +1543,8 @@ async def frame(cmd):
 
 	namechange = cmd.message.content[(len(ewcfg.cmd_frame)):].strip()
 
-	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server) and len(namechange) >= 3:
-		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server)
+	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_item) and len(namechange) >= 3:
+		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_item)
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		item.item_props['furniture_desc'] = namechange
 		item.persist()
