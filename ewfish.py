@@ -635,7 +635,7 @@ async def reel(cmd):
 
 
 				if cmd.message.channel.name == ewcfg.channel_jr_pier:
-					slime_gain = int(slimegain / 4)
+					slime_gain = int(slime_gain / 4)
 
 				ewitem.item_create(
 					id_user = cmd.message.author.id,
