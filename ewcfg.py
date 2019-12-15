@@ -2821,7 +2821,7 @@ def wef_garrote(ctn = None):
 		#Stop movement
 		ewutils.moves_active[ctn.user_data.id_user] = 0
 		#Stun player for 5 seconds
-		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
+		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(int(ctn.time_now) + 5))
 		#Start strangling target
 		ctn.shootee_data.applyStatus(id_status=status_strangled_id, source=ctn.user_data.id_user)
 
