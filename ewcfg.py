@@ -714,6 +714,9 @@ cmd_confirm = cmd_prefix + 'confirm'
 cmd_cancel = cmd_prefix + 'cancel'
 cmd_pray = cmd_prefix + 'pray'
 cmd_flushsubzones = cmd_prefix + 'flushsubzones'
+cmd_wrap = cmd_prefix + 'wrap'
+cmd_unwrap = cmd_prefix + 'unwrap'
+cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1576,6 +1579,7 @@ it_furniture = 'furniture'
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
+rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
 rarity_princeps = "Princeps"
 
 # Leaderboard score categories
@@ -11115,7 +11119,23 @@ cosmetic_items_list = [
 		rarity = "Double Halloween",
 		acquisition = "DH-bossfight",
 		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
-	)
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pileus",
+		str_name = "Pileus",
+		str_desc = "",
+		rarity = rarity_plebeian,
+		vendors = [vendor_bazaar],
+		price = 100,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "seacowcostume",
+		str_name = "Attractive Gray Sea Cow Mascot Costume for Adult",
+		str_desc = "Attractive. That's really all there is to say on the matter.",
+		rarity = rarity_promotional,
+		vendors = [vendor_bazaar],
+		price = 100000000,
+	),
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.

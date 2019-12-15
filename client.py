@@ -568,7 +568,13 @@ cmd_map = {
 	ewcfg.cmd_pray: ewcmd.pray,
 
 	# flush items and slime from subzones into their mother district
-	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones
+	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
+	
+	# Slimernalia
+	ewcfg.cmd_wrap: ewcmd.wrap,
+	ewcfg.cmd_unwrap: ewcmd.unwrap,
+	ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
+	
 }
 
 debug = False

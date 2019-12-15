@@ -1335,7 +1335,14 @@ async def flush_subzones(cmd):
 		district_data.persist()
 		subzone_data.persist()
 	
-
+async def wrap(cmd):
+	pass
+	
+async def unwrap(cmd):
+	pass
+	
+async def yoslimernalia(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '@everyone Yo, Slimernalia!'))
 
 async def confirm(cmd):
 	return
