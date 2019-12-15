@@ -1342,7 +1342,7 @@ async def unwrap(cmd):
 	pass
 	
 async def yoslimernalia(cmd):
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '@everyone Yo, Slimernalia!'))
+	await ewutils.send_message(cmd.client, cmd.message.channel, '@everyone Yo, Slimernalia!')
 
 async def confirm(cmd):
 	return
