@@ -505,7 +505,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '/'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -1820,6 +1820,9 @@ item_id_costumekit = "costumekit"
 item_id_doublehalloweengrist = "doublehalloweengrist"
 item_id_whitelineticket = "ticket"
 item_id_seaweedjoint = "seaweedjoint"
+item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
+item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
+item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -2273,6 +2276,39 @@ item_list = [
 		str_name = "Ticket to the White Line",
 		str_desc = "A large assortment of candy molded into one unholy voucher for access into the underworld. Use it in a White Line subway station... ***IF YOU DARE!!***",
 		acquisition=acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item=item_id_megaslimewrappingpaper,
+		context='wrappingpaper',
+		alias=[
+			"mswp"
+		],
+		str_name="Megaslime Wrapping Paper",
+		str_desc="",
+		vendors=[vendor_glocksburycomics],
+		price = 500,
+	),
+	EwGeneralItem(
+		id_item=item_id_greeneyesslimedragonwrappingpaper,
+		context='wrappingpaper',
+		alias=[
+			"gesdwp"
+		],
+		str_name="Green Eyes Slime Dragon Wrapping Paper",
+		str_desc="",
+		vendors=[vendor_glocksburycomics],
+		price = 500,
+	),
+	EwGeneralItem(
+		id_item = item_id_pheobuswrappingpaper,
+		context = 'wrappingpaper',
+		alias = [
+			"pwp"
+		],
+		str_name = "Phoebus Wrapping Paper",
+		str_desc = "",
+		vendors = [vendor_glocksburycomics],
+		price = 500,
 	)
 ]
 item_list += ewdebug.debugitem_set
