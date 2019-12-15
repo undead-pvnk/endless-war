@@ -303,7 +303,7 @@ async def invest(cmd):
 	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
-	if cmd.message.channel.name != ewcfg.channel_stockexchange:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -407,7 +407,7 @@ async def withdraw(cmd):
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_stockexchange:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

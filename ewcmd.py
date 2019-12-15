@@ -532,7 +532,7 @@ async def coinflip(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 	
-	if ewutils.check_donor_role(cmd):
+	if ewutils.check_user_has_role(cmd, ewcfg.role_donor_proper):
 		
 		if user_data.slimecoin <= 1:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "YOU DON'T H4V3 4NY SL1M3CO1N TO FL1P >:["))

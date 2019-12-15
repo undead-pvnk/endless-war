@@ -329,6 +329,7 @@ role_slimecorp = "slimecorp"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
 role_tutorial = "newintown"
+role_gellphone = "gellphone"
 
 faction_roles = [
 	role_juvenile,
@@ -367,6 +368,9 @@ role_to_active_role = {
 
 # used for checking if a user has the donor role
 role_donor_proper = "Terezi Gang"
+
+# used for checking if a user has the gellphone role
+role_gellphone_proper = "Gellphone"
 
 # Faction names and bases
 faction_killers = "killers"
@@ -1827,6 +1831,7 @@ item_id_seaweedjoint = "seaweedjoint"
 item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
 item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
 item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
+item_id_gellphone = "gellphone"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -2313,6 +2318,21 @@ item_list = [
 		str_desc = "",
 		vendors = [vendor_glocksburycomics],
 		price = 500,
+	),
+	EwGeneralItem(
+		id_item = item_id_gellphone,
+		context = 'gellphone',
+		alias = [
+			"gell",
+			"phone",
+			"cellphone",
+			"flipphone",
+			"nokia"
+		],
+		str_name = "Gellphone",
+		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
+		vendors = [vendor_bazaar],
+		price = 1000000
 	)
 ]
 item_list += ewdebug.debugitem_set
@@ -11123,7 +11143,7 @@ cosmetic_items_list = [
 	EwCosmeticItem(
 		id_cosmetic = "pileus",
 		str_name = "Pileus",
-		str_desc = "",
+		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
 		vendors = [vendor_bazaar],
 		price = 100,
