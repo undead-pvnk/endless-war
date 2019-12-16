@@ -532,7 +532,7 @@ async def coinflip(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 	
-	if ewutils.check_user_has_role(cmd, ewcfg.role_donor_proper):
+	if ewutils.check_user_has_role(cmd.message.server, cmd.message.author, ewcfg.role_donor_proper):
 		
 		if user_data.slimecoin <= 1:
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "YOU DON'T H4V3 4NY SL1M3CO1N TO FL1P >:["))
@@ -1359,12 +1359,12 @@ async def wrap(cmd):
 		response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	paper_sought = ewitem.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	paper_sought = ewitem.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter = ewcfg.it_item)
 	
 	if paper_sought:
 		paper_item = EwItem(id_item=paper_sought.get('id_item'))
 	
-	if paper_sought and paper_item.item_props.get('context') == 'wrappingpaper':
+	if paper_sought and paper_item.item_props.get('context') == ewcfg.context_wrappingpaper:
 		paper_name = paper_sought.get('name')
 	else:
 		response = "How are you going to wrap a gift without any wrapping paper?"
@@ -1402,11 +1402,15 @@ async def wrap(cmd):
 					'item_desc': gift_desc,
 					'context': gift_address,
 					'acquisition': "{}".format(item_sought.get('id_item')),
+					# flag indicating if the gift has already been given once so as to not have people farming festivity through !giving
+					'gifted': "false"
 				}
 			)
 			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "gift", id_server=cmd.message.server.id)
 			ewitem.item_delete(id_item=paper_item.id_item)
 
+			user_data.festivity += ewcfg.festivity_on_gift_wrapping
+			user_data.persist()
 	else:
 		if item_search == "" or item_search == None:
 			response = "Specify the item you want to wrap."
@@ -1447,6 +1451,10 @@ async def unwrap(cmd):
 				
 				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
+
+				user_data = EwUser(member=cmd.message.author)
+				user_data.festivity += ewcfg.festivity_on_gift_wrapping
+				user_data.persist()
 			else:
 				response = "You can't unwrap something that isn't a gift, bitch."
 		else:

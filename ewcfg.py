@@ -1336,6 +1336,10 @@ trade_state_proposed = 0
 trade_state_ongoing = 1
 trade_state_complete = 2
 
+# SLIMERNALIA
+festivity_on_gift_wrapping = 100
+festivity_on_gift_giving = 10000
+
 # Common strings.
 str_casino_closed = "The SlimeCorp Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
@@ -1805,6 +1809,7 @@ stats_clear_on_death = [
 context_slimeoidheart = 'slimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
+context_wrappingpaper = 'wrappingpaper'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -2306,7 +2311,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item=item_id_megaslimewrappingpaper,
-		context='wrappingpaper',
+		context=context_wrappingpaper,
 		alias=[
 			"mswp"
 		],
@@ -2317,7 +2322,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item=item_id_greeneyesslimedragonwrappingpaper,
-		context='wrappingpaper',
+		context=context_wrappingpaper,
 		alias=[
 			"gesdwp"
 		],
@@ -2328,7 +2333,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = item_id_pheobuswrappingpaper,
-		context = 'wrappingpaper',
+		context = context_wrappingpaper,
 		alias = [
 			"pwp"
 		],

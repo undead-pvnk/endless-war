@@ -1088,15 +1088,19 @@ async def item_use(cmd):
 					elif context == 'maxrepel':
 						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
 					item_delete(item.id_item)
-			elif context == 'gellphone':
-				gellphone_role = ewutils.return_server_role(cmd, ewcfg.role_gellphone_proper)
-				
-				if ewutils.check_user_has_role(cmd, ewcfg.role_gellphone_proper):
-					response = "You turn off your gellphone."
-					await cmd.client.remove_roles(author, gellphone_role)
-				else:
-					response = "You turn on your gellphone."
-					await cmd.client.add_roles(author, gellphone_role)
+			elif context == ewcfg.item_id_gellphone:
+				try:
+					gellphone_role = ewutils.return_server_role(server, ewcfg.role_gellphone_proper)
+					
+					if ewutils.check_user_has_role(server, author, ewcfg.role_gellphone_proper):
+						response = "You turn off your gellphone."
+						await cmd.client.remove_roles(author, gellphone_role)
+					else:
+						response = "You turn on your gellphone."
+						await cmd.client.add_roles(author, gellphone_role)
+				except:
+					response = "Looks like SlimeCorp's servers are down. You can't use your gellphone right now."
+					ewutils.logMsg("No role found for gellphones.")
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1289,6 +1293,15 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
+		#Slimernalia gifting
+		if item_sought.get('item_type') == ewcfg.it_item:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			#Slimernalia gifting
+			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
+				item_data.item_props['gifted'] = "true"
+				item_data.persist()
+				user_data.festivity += ewcfg.festivity_on_gift_giving
+				user_data.persist()
 
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
@@ -1306,6 +1319,14 @@ async def give(cmd):
 			if item_sought.get('id_item') == user_data.weapon:
 				user_data.weapon = -1
 				user_data.persist()
+
+			# Turn off the user's gellphone
+			if item_data.item_props.get('context') == ewcfg.item_id_gellphone and find_item(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item) == None:
+				gellphone_role = ewutils.return_server_role(server, ewcfg.role_gellphone_proper)
+
+				if ewutils.check_user_has_role(server, author, ewcfg.role_gellphone_proper):
+					await cmd.client.remove_roles(author, gellphone_role)
+
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
@@ -1339,9 +1360,16 @@ async def discard(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-				
+					
 			response = "You throw away your " + item_sought.get("name")
 			item_drop(id_item = item.id_item)
+
+			# Turn off the user's gellphone
+			if item.item_props.get('context') == ewcfg.item_id_gellphone and find_item(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item) == None:
+				gellphone_role = ewutils.return_server_role(cmd.message.server, ewcfg.role_gellphone_proper)
+
+				if ewutils.check_user_has_role(cmd.message.server, cmd.message.author, ewcfg.role_gellphone_proper):
+					await cmd.client.remove_roles(cmd.message.author, gellphone_role)
 
 		else:
 			response = "You can't throw away soulbound items."

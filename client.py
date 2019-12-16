@@ -565,16 +565,17 @@ cmd_map = {
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
 	
-	#SLIMERNALIA
-	# Check your current festivity
-	ewcfg.cmd_festivity: ewcmd.festivity,
-	
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
 	
 	# Slimernalia
+	# Check your current festivity
+	ewcfg.cmd_festivity: ewcmd.festivity,
+	# Wrap a gift
 	ewcfg.cmd_wrap: ewcmd.wrap,
+	# Unwrap a gift
 	ewcfg.cmd_unwrap: ewcmd.unwrap,
+	# Yo, Slimernalia
 	ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
 	
 }

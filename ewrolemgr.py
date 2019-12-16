@@ -3,6 +3,7 @@ import time
 
 import ewcfg
 import ewutils
+import ewitem
 
 from ew import EwUser
 
@@ -262,6 +263,15 @@ async def updateRoles(
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_role))
+
+
+	# Remove user's gellphone role if they don't have a phone
+	if ewitem.find_item(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item) == None:
+		gellphone_role = ewutils.return_server_role(client.get_server(id_server), ewcfg.role_gellphone_proper)
+		
+		if ewutils.check_user_has_role(client.get_server(id_server), member, ewcfg.role_gellphone_proper):
+			member.server.roles.remove(gellphone_role)
+			
 
 	#if faction_role not in role_names:
 	#	role_names.append(faction_role)
