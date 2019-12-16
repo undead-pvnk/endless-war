@@ -937,6 +937,8 @@ async def knock(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
 			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			try:
