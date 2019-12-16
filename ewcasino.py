@@ -2087,7 +2087,7 @@ async def betsoul(cmd):
 				item_select = item_object
 				break
 
-	if usermodel.poi != ewcfg.poi_id_thecasino:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		response = "If you want to exchange your soul for SlimeCoin you have to be in the casino first."
 	elif mention_target and item_select == None:
 		response = "Sorry, you don't have that soul."
@@ -2120,7 +2120,7 @@ async def buysoul(cmd):
 			if mention_target.id == item_object.item_props.get('user_id'):
 				break
 
-	if usermodel.poi != ewcfg.poi_id_thecasino:
+	if cmd.message.channel.name != ewcfg.channel_casino:
 		response = "If you want to buy people's souls you have to be in the casino first."
 	elif mention_target and selected_item == None:
 		response = "That soul isn't available. Go torment someone else."
