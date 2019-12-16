@@ -1336,11 +1336,126 @@ async def flush_subzones(cmd):
 		subzone_data.persist()
 	
 async def wrap(cmd):
-	pass
 	
+	if cmd.tokens_count != 4:
+		response = 'To !wrap a gift, you need to specify a recipient, message, and item, like so:\n```!wrap @munchy#6443 "Sample text." chickenbucket```'
+		return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+	if cmd.mentions_count == 0:
+		response = "Who exactly are you giving your gift to?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	if cmd.mentions_count > 1:
+		response = "Back it up man, the rules are one gift for one person!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	recipient = cmd.mentions[0]
+	recipient_data = EwUser(member=recipient)
+	
+	member = cmd.message.author
+	user_data = EwUser(member=cmd.message.author)
+	
+	if recipient_data.id_user == user_data.id_user:
+		response = "C'mon man, you got friends, don't you? Try and give a gift to someone other than yourself."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	paper_sought = ewitem.find_item(item_search="wrappingpaper", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	
+	if paper_sought:
+		paper_item = EwItem(id_item=paper_sought.get('id_item'))
+	
+	if paper_sought and paper_item.item_props.get('context') == 'wrappingpaper':
+		paper_name = paper_sought.get('name')
+	else:
+		response = "How are you going to wrap a gift without any wrapping paper?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	gift_message = cmd.tokens[2]
+	
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[3:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+
+	if item_sought:
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		if item.item_type == ewcfg.it_furniture:
+			if item.item_props.get('id_item') == "gift":
+				response = "It's already wrapped."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if item.soulbound:
+			response = "It's a nice gesture, but trying to gift someone a Soulbound item is going a bit too far, don't you think?"
+		else:
+			gift_name = "Gift"
+			
+			gift_address = 'To {}, {}. From, {}'.format(recipient.display_name, gift_message, member.display_name,)
+			
+			gift_desc = "A gift wrapped in {}. Wonder what's inside?\nThe front of the tag reads '{}'\nOn the back of the tag, an ID number reads **({})**.".format(paper_name, gift_address, item.id_item)
+
+			response = "You shroud your {} in {} and slap on a premade bow. Onto it, you attach a note containing the following text: '{}'.\nThis small act of kindness manages to endow you with Slimernalia spirit, if only a little.".format(item_sought.get('name'), paper_name, gift_address)
+			
+			ewitem.item_create(
+				id_user=cmd.message.author.id,
+				id_server=cmd.message.server.id,
+				item_type=ewcfg.it_item,
+				item_props={
+					'item_name': gift_name,
+					'id_item': "gift",
+					'item_desc': gift_desc,
+					'context': gift_address,
+					'acquisition': "{}".format(item_sought.get('id_item')),
+				}
+			)
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "gift", id_server=cmd.message.server.id)
+			ewitem.item_delete(id_item=paper_item.id_item)
+
+	else:
+		if item_search == "" or item_search == None:
+			response = "Specify the item you want to wrap."
+		else:
+			response = "Are you sure you have that item?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def unwrap(cmd):
-	pass
-	
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if item_sought:
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		if item.item_type == ewcfg.it_item:
+			if item.item_props.get('id_item') == "gift":
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+				
+				gifted_item = EwItem(id_item=item.item_props.get('acquisition'))
+				
+				gift_name_type = ''
+				if gifted_item.item_type == ewcfg.it_item:
+					gift_name_type = 'item_name'
+				elif gifted_item.item_type == ewcfg.it_medal:
+					gift_name_type = 'medal_name'
+				elif gifted_item.item_type == ewcfg.it_questitem:
+					gift_name_type = 'qitem_name'
+				elif gifted_item.item_type == ewcfg. it_food:
+					gift_name_type = 'food_name'
+				elif gifted_item.item_type == ewcfg.it_weapon:
+					gift_name_type = 'weapon_name'
+				elif gifted_item.item_type == ewcfg.it_cosmetic:
+					gift_name_type = 'cosmetic_name'
+				elif gifted_item.item_type == ewcfg.it_furniture:
+					gift_name_type = 'furniture_name'
+				
+				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
+				gifted_item_message = item.item_props.get('context')
+				
+				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
+				ewitem.item_delete(id_item=item_sought.get('id_item'))
+			else:
+				response = "You can't unwrap something that isn't a gift, bitch."
+		else:
+			response = "You can't unwrap something that isn't a gift, bitch."
+	else:
+		response = "Are you sure you have that item?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def yoslimernalia(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, '@everyone Yo, Slimernalia!')
 
