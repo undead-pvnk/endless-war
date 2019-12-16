@@ -1572,17 +1572,18 @@ def get_most_festive(server):
 
 	return data[0][0]
 
-def check_donor_role(cmd_object):
-
+def check_user_has_role(cmd_object, checked_role_name):
 	cmd = cmd_object
-
 	member = cmd.message.author
 
-	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
-	if terezi_role not in member.roles:
+	checked_role = discord.utils.get(cmd.message.server.roles, name=checked_role_name)
+	if checked_role not in member.roles:
 		return False
 	else:
 		return True
+	
+def return_server_role(cmd, role_name):
+	return discord.utils.get(cmd.message.server.roles, name=role_name)
 
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
 def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
