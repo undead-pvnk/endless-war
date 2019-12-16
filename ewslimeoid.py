@@ -1808,6 +1808,9 @@ async def slimeoidbattle(cmd):
 		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 
+		challengee.festivity += bet
+		challenger.festivity += bet
+
 		challengee.persist()
 		challenger.persist()
 
