@@ -1765,6 +1765,7 @@ source_squeeze = 14
 source_weather = 15
 source_crush = 16
 source_casino = 17
+source_slimeoid_betting = 18
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0

@@ -8,6 +8,7 @@ import ewitem
 import ewrolemgr
 import ewstats
 import ewmap
+import ewcasino
 
 from ew import EwUser
 from ewmarket import EwMarket
@@ -1703,7 +1704,8 @@ async def slimeoidbattle(cmd):
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
 	if bet == None:
 		bet = 0
-	bet_total_cost = round(bet * 1.05)
+	elif bet == -1:
+		bet = challenger.slimes
 
 	#Players have been challenged
 	if active_slimeoidbattles.get(challenger_slimeoid.id_slimeoid):
@@ -1726,11 +1728,11 @@ async def slimeoidbattle(cmd):
 		response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 	
-	if challenger.slimecoin < bet_total_cost:
-		response = "You don't have enough slimecoin!"
+	if challenger.slimes < bet:
+		response = "You don't have enough slime!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-	if challengee.slimecoin < bet_total_cost:
-		response = "They don't have enough slimecoin!"
+	if challengee.slimes < bet:
+		response = "They don't have enough slime!"
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))	
 
 	time_now = int(time.time())
@@ -1803,25 +1805,29 @@ async def slimeoidbattle(cmd):
 
 	#Start game
 	if accepted == 1:
-		challengee.slimecoin -= bet_total_cost
-		challenger.slimecoin -= bet_total_cost
+		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
+		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 
 		challengee.persist()
 		challenger.persist()
 
+		slimecorp_fee, winnings = ewcasino.slimecorp_collectfee(bet*2)
+
 		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challenger.poi, battle_type = ewcfg.battle_type_arena)
 		if result == -1:
-			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slimecoin!".format(bet*2))
+			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			challenger = EwUser(member = author)
-			challenger.slimecoin += (bet_total_cost + bet)
-			challenger.persist()
+			if challenger.life_state != ewcfg.life_state_corpse:
+				challenger.change_slimes(n = winnings)
+				challenger.persist()
 		elif result == 1:
-			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slimecoin!".format(bet*2))
+			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			challengee = EwUser(member = member)
-			challengee.slimecoin += (bet_total_cost + bet)
-			challengee.persist()
+			if challengee.life_state != ewcfg.life_state_corpse:
+				challengee.change_slimes(n = winnings)
+				challengee.persist()
 	else:
 		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
 

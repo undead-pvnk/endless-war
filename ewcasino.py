@@ -1260,11 +1260,6 @@ async def russian_roulette(cmd):
 		challenger.persist()
 		challengee.persist()
 
-		#Same team tax
-		tax = 1
-		if challengee.faction == challenger.faction:
-			tax = 0.5
-
 		for spin in range(1, 7):
 			challenger = EwUser(member = author)
 			challengee = EwUser(member = member)
@@ -1291,7 +1286,7 @@ async def russian_roulette(cmd):
 					challenger = EwUser(member = author)
 					challengee = EwUser(member = member)
 					
-					challengee.change_slimes(n = (challenger.slimes * tax), source = ewcfg.source_killing)
+					challengee.change_slimes(n = challenger.slimes * 0.8, source = ewcfg.source_killing)
 					ewitem.item_loot(member = author, id_user_target = member.id)
 					
 					challenger.id_killer = challenger.id_user
@@ -1304,7 +1299,7 @@ async def russian_roulette(cmd):
 					challenger = EwUser(member = author)
 					challengee = EwUser(member = member)
 					
-					challenger.change_slimes(n = (challengee.slimes * tax), source = ewcfg.source_killing)
+					challenger.change_slimes(n = challengee.slimes * 0.8, source = ewcfg.source_killing)
 					ewitem.item_loot(member = member, id_user_target = author.id)
 
 					challengee.id_killer = challengee.id_user
