@@ -1088,6 +1088,15 @@ async def item_use(cmd):
 					elif context == 'maxrepel':
 						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
 					item_delete(item.id_item)
+			elif context == 'gellphone':
+				gellphone_role = ewutils.return_server_role(cmd, ewcfg.role_gellphone_proper)
+				
+				if ewutils.check_user_has_role(cmd, ewcfg.role_gellphone_proper):
+					response = "You turn off your gellphone."
+					await cmd.client.remove_roles(author, gellphone_role)
+				else:
+					response = "You turn on your gellphone."
+					await cmd.client.add_roles(author, gellphone_role)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

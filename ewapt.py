@@ -697,7 +697,7 @@ async def upgrade(cmd):
 		response = "You don't have an apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif(usermodel.poi != ewcfg.poi_id_realestate):
+	elif cmd.message.channel.name != ewcfg.channel_realestateagency:
 		response = "Upgrade your home at the apartment agency."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -937,6 +937,8 @@ async def knock(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
 			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			try:
@@ -1241,7 +1243,7 @@ async def cancel(cmd):
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if usermodel.poi != ewcfg.poi_id_realestate:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		response = "You can only null your lease at the Real Estate Agency."
 	elif usermodel.apt_zone == ewcfg.location_id_empty:
 		response = "You don't have an apartment."
