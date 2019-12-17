@@ -2256,7 +2256,7 @@ async def betsoul(cmd):
 				item_select = item_object
 				break
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if cmd.message.channel.name != ewcfg.channel_casino:
 		response = "If you want to exchange your soul for SlimeCoin you have to be in the casino first."
 	elif mention_target and item_select == None:
 		response = "Sorry, you don't have that soul."

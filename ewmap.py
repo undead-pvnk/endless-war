@@ -1252,7 +1252,7 @@ async def scout(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	
-	if channel_name_is_poi(cmd.message.channel.name) is False or user_poi.is_subzone:
+	if channel_name_is_poi(cmd.message.channel.name) is False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)

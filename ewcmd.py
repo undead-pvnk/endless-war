@@ -1377,7 +1377,7 @@ async def wrap(cmd):
 
 	if item_sought:
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
-		if item.item_type == ewcfg.it_furniture:
+		if item.item_type == ewcfg.it_item:
 			if item.item_props.get('id_item') == "gift":
 				response = "It's already wrapped."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

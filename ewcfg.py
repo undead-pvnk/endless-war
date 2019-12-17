@@ -367,6 +367,11 @@ role_to_active_role = {
 	role_corpse : role_corpse_active
 	}
 
+misc_roles = {
+	role_slimernalia,
+	role_gellphone
+}
+
 # used for checking if a user has the donor role
 role_donor_proper = "Terezi Gang"
 
