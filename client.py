@@ -976,11 +976,11 @@ async def on_ready():
 						if pattern_count > 1:
 							weather_old = market_data.weather
 
-							if random.random() < 0.4:
-								market_data.weather = ewcfg.weather_bicarbonaterain
+							#if random.random() < 0.4:
+							#	market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
-							while market_data.weather == weather_old:
+							while market_data.weather == weather_old or market_data.weather == ewcfg.weather_bicarbonaterain:
 								pick = random.randrange(len(ewcfg.weather_list))
 								market_data.weather = ewcfg.weather_list[pick].name
 

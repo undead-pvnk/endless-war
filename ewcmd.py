@@ -962,6 +962,9 @@ async def pray(cmd):
 			"@everyone Yo, Slimernalia! https://imgur.com/16mzAJT"
 		)
 		response = "NOW GO FORTH AND SPLATTER SLIME."
+		market_data = EwMarket(id_server = cmd.message.server.id)
+		market_data.weather = ewcfg.weather_sunny
+		market_data.persist()
 
 	else:
 		# Generates a random integer from 1 to 100. If it is below the prob of poudrin, the player gets a poudrin.
