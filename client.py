@@ -92,13 +92,11 @@ cmd_map = {
 	# Fix your jammed gun
 	ewcfg.cmd_unjam: ewwep.unjam,
 
-	# Get a weapon into your inventory
-	#ewcfg.cmd_arm: ewwep.arm,
-	#ewcfg.cmd_arsenalize: ewwep.arm,
-
 	# Choose your weapon
 	ewcfg.cmd_equip: ewwep.equip,
-
+	ewcfg.cmd_arm: ewwep.equip,
+	ewcfg.cmd_arsenalize: ewwep.equip,
+	
 	# Kill yourself
 	ewcfg.cmd_suicide: ewwep.suicide,
 	ewcfg.cmd_suicide_alt1: ewwep.suicide,
@@ -566,9 +564,20 @@ cmd_map = {
 
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
-
+	
 	# flush items and slime from subzones into their mother district
-	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones
+	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
+	
+	# Slimernalia
+	# Check your current festivity
+	ewcfg.cmd_festivity: ewcmd.festivity,
+	# Wrap a gift
+	ewcfg.cmd_wrap: ewcmd.wrap,
+	# Unwrap a gift
+	ewcfg.cmd_unwrap: ewcmd.unwrap,
+	# Yo, Slimernalia
+	ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
+	
 }
 
 debug = False
@@ -1004,6 +1013,28 @@ async def on_ready():
 					if market_data.clock == 6:
 						await ewleaderboard.post_leaderboards(client = client, server = server)
 
+						# Depose current slimernalia kingpin
+						old_kingpin_id = ewutils.get_slimernalia_kingpin(server)
+						if old_kingpin_id != None:
+							old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
+							old_kingpin.slimernalia_kingpin = False
+							old_kingpin.persist()
+							try:
+								old_kingpin_member = server.get_member(old_kingpin.id_user)
+								await ewrolemgr.updateRoles(client = client, member = old_kingpin_member)
+							except:
+								ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
+
+						# Update the new kingpin of slimernalia
+						new_kingpin = EwUser(id_user=ewutils.get_most_festive(server), id_server=server.id)
+						new_kingpin.slimernalia_kingpin = True
+						new_kingpin.persist()
+						try:
+							new_kingpin_member = server.get_member(new_kingpin.id_user)
+							await ewrolemgr.updateRoles(client = client, member = new_kingpin_member)
+						except:
+							ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
+
 
 
 		except:
@@ -1288,9 +1319,9 @@ async def on_message(message):
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getcoin'):
 			user_data = EwUser(member=message.author)
-			user_data.change_slimecoin(n=1000000000, coinsource=ewcfg.coinsource_spending)
+			user_data.change_slimecoin(n=1000000000000, coinsource=ewcfg.coinsource_spending)
 
-			response = "You get 1,000,000,000 slimecoin!"
+			response = "You get 1,000,000,000,000 slimecoin!"
 
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))

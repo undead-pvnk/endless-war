@@ -1536,17 +1536,52 @@ def create_death_report(cause = None, user_data = None):
 
 	return(deathreport)
 
-def check_donor_role(cmd_object):
+# Get the current kingpin of slimernalia
+def get_slimernalia_kingpin(server):
+	data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
+		id_user = ewcfg.col_id_user,
+		id_server = ewcfg.col_id_server,
+		slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
+	),(
+		server.id,
+	))
 
-	cmd = cmd_object
+	if len(data) > 0:
+		return data[0][0]
 
-	member = cmd.message.author
+	return None
 
-	terezi_role = discord.utils.get(cmd.message.server.roles, name=ewcfg.role_donor_proper)
-	if terezi_role not in member.roles:
+# Get the player with the most festivity
+def get_most_festive(server):
+	data = execute_sql_query(
+	"SELECT users.{id_user}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users "\
+	"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} "\
+	"WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
+		id_user = ewcfg.col_id_user,
+		id_server = ewcfg.col_id_server,
+		festivity = ewcfg.col_festivity,
+		coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+		name = ewcfg.col_name,
+		value = ewcfg.col_value,
+		id_item = ewcfg.col_id_item,
+	),(
+		"id_furniture",
+		ewcfg.item_id_sigillaria,
+		server.id,
+	))
+
+	return data[0][0]
+
+def check_user_has_role(server, member, checked_role_name):
+
+	checked_role = discord.utils.get(server.roles, name=checked_role_name)
+	if checked_role not in member.roles:
 		return False
 	else:
 		return True
+	
+def return_server_role(server, role_name):
+	return discord.utils.get(server.roles, name=role_name)
 
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
 def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):

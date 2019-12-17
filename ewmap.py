@@ -1249,11 +1249,12 @@ async def survey(cmd):
 	Get information about an adjacent zone.
 """
 async def scout(cmd):
-	if channel_name_is_poi(cmd.message.channel.name) is False or fetch_poi_if_coordless(cmd.message.channel.name) is not None:
+	user_data = EwUser(member=cmd.message.author)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	
+	if channel_name_is_poi(cmd.message.channel.name) is False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	user_data = EwUser(member = cmd.message.author)
-	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	market_data = EwMarket(id_server = cmd.message.server.id)
 	mutations = user_data.get_mutations()
 

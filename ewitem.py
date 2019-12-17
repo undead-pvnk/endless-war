@@ -1088,6 +1088,16 @@ async def item_use(cmd):
 					elif context == 'maxrepel':
 						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
 					item_delete(item.id_item)
+			elif context == ewcfg.item_id_gellphone:
+
+				if item.item_props.get("active") == 'true':
+					response = "You turn off your gellphone."
+					item.item_props['active'] = 'false'
+				else:
+					response = "You turn on your gellphone."
+					item.item_props['active'] = 'true'
+				
+				item.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1146,7 +1156,7 @@ def soulbind(id_item):
 """
 	Find a single item in the player's inventory (returns either a (non-EwItem) item or None)
 """
-def find_item(item_search = None, id_user = None, id_server = None):
+def find_item(item_search = None, id_user = None, id_server = None, item_type_filter = None):
 	item_sought = None
 
 	# search for an ID instead of a name
@@ -1156,7 +1166,7 @@ def find_item(item_search = None, id_user = None, id_server = None):
 		item_search_int = None
 
 	if item_search:
-		items = inventory(id_user = id_user, id_server = id_server)
+		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 		item_sought = None
 
 		# find the first (i.e. the oldest) item that matches the search
@@ -1280,6 +1290,15 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
+		#Slimernalia gifting
+		if item_sought.get('item_type') == ewcfg.it_item:
+			item_data = EwItem(id_item = item_sought.get('id_item'))
+			#Slimernalia gifting
+			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
+				item_data.item_props['gifted'] = "true"
+				item_data.persist()
+				user_data.festivity += ewcfg.festivity_on_gift_giving
+				user_data.persist()
 
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
@@ -1297,6 +1316,9 @@ async def give(cmd):
 			if item_sought.get('id_item') == user_data.weapon:
 				user_data.weapon = -1
 				user_data.persist()
+
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
@@ -1330,9 +1352,11 @@ async def discard(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-				
+					
 			response = "You throw away your " + item_sought.get("name")
 			item_drop(id_item = item.id_item)
+
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 		else:
 			response = "You can't throw away soulbound items."
@@ -1544,7 +1568,7 @@ def remove_from_trades(id_item):
 
 
 async def makecostume(cmd):
-	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 	user_data = EwUser(member=cmd.message.author)
 	

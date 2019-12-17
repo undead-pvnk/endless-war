@@ -287,8 +287,14 @@ def canAttack(cmd):
 		captcha = weapon_item.item_props.get('captcha')
 
 	statuses = user_data.getStatusEffects()
+	#SLIMERNALIA
+	if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
+		if user_data.life_state == ewcfg.life_state_enlisted:
+			response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
+		else:
+			response = "You lack the moral fiber necessary for violence."
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
@@ -328,12 +334,12 @@ def canAttack(cmd):
 			# disallow kill if the player has killed recently
 			response = "Take a moment to appreciate your last slaughter."
 
-		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
+		#elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
-			if user_data.life_state == ewcfg.life_state_juvenile:
-				response = "Juveniles lack the moral fiber necessary for violence."
-			else:
-				response = "You lack the moral fiber necessary for violence."
+		#	if user_data.life_state == ewcfg.life_state_juvenile:
+		#		response = "Juveniles lack the moral fiber necessary for violence."
+		#	else:
+		#		response = "You lack the moral fiber necessary for violence."
 				
 		elif enemy_data != None:
 			# enemy found, redirect variables to code in ewhunting
@@ -366,12 +372,12 @@ def canAttack(cmd):
 		elif ewmap.poi_is_pvp(shootee_data.poi) == False:
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
-		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
+		#elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
-			if user_data.life_state == ewcfg.life_state_juvenile:
-				response = "Juveniles lack the moral fiber necessary for violence."
-			else:
-				response = "You lack the moral fiber necessary for violence."
+		#	if user_data.life_state == ewcfg.life_state_juvenile:
+		#		response = "Juveniles lack the moral fiber necessary for violence."
+		#	else:
+		#		response = "You lack the moral fiber necessary for violence."
 
 		elif (time_now - shootee_data.time_lastrevive) < ewcfg.invuln_onrevive:
 			# User is currently invulnerable.
@@ -618,7 +624,8 @@ async def attack(cmd):
 
 					if not miss:
 						life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
-						factions = ["", user_data.faction if backfire else shootee_data.faction]
+						#SLIMERNALIA
+						factions = ["", ewcfg.faction_rowdys, ewcfg.faction_killers]#, user_data.faction if backfire else shootee_data.faction]
 						# Burn players in district
 						if weapon.id_weapon == ewcfg.weapon_id_molotov:
 							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
@@ -684,8 +691,9 @@ async def attack(cmd):
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
 			ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_damage)
 
+			#SLIMERNALIA
 			# Slimes from this shot might be awarded to the boss.
-			role_boss = (ewcfg.role_copkiller if user_iskillers else ewcfg.role_rowdyfucker)
+			#role_boss = (ewcfg.role_copkiller if user_iskillers else ewcfg.role_rowdyfucker)
 			boss_slimes = 0
 			user_inital_level = user_data.slimelevel
 
@@ -695,8 +703,8 @@ async def attack(cmd):
 
 			if shootee_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
 				# User can be shot.
-				if shootee_data.life_state == ewcfg.life_state_juvenile:
-					was_juvenile = True
+				#if shootee_data.life_state == ewcfg.life_state_juvenile:
+					#was_juvenile = True
 
 				was_shot = True
 
@@ -715,12 +723,13 @@ async def attack(cmd):
 
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
-				if was_juvenile or user_data.faction == shootee_data.faction:
-					slimes_drained = int(3 * slimes_damage / 4) # 3/4
-					slimes_toboss = 0
-				else:
-					slimes_drained = 0
-					slimes_toboss = int(slimes_damage / 2)
+				#SLIMERNALIA
+				#if was_juvenile or user_data.faction == shootee_data.faction:
+				slimes_drained = int(3 * slimes_damage / 4) # 3/4
+				slimes_toboss = 0
+				#else:
+				#	slimes_drained = 0
+				#	slimes_toboss = int(slimes_damage / 2)
 
 				damage = slimes_damage
 
@@ -736,6 +745,8 @@ async def attack(cmd):
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
 				user_data.splattered_slimes += slimes_damage
+				# Slimernalia
+				user_data.festivity += slimes_splatter
 				user_data.persist()
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
@@ -778,15 +789,25 @@ async def attack(cmd):
 						scalp_text = ""
 					
 					# Drop shootee scalp
+					#SLIMERNALIA
 					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
+						#item_type = ewcfg.it_cosmetic,
+						item_type = ewcfg.it_furniture,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
+						#item_props = {
+						#	'id_cosmetic': 'scalp',
+						#	'cosmetic_name': "{}'s scalp".format(shootee_name),
+						#	'cosmetic_desc': "A scalp.{}".format(scalp_text),
+						#	'adorned': 'false'
+						#}
 						item_props = {
-							'id_cosmetic': 'scalp',
-							'cosmetic_name': "{}'s scalp".format(shootee_name),
-							'cosmetic_desc': "A scalp.{}".format(scalp_text),
-							'adorned': 'false'
+							'id_furniture': ewcfg.item_id_sigillaria,
+							'furniture_name': "{}'s sigillaria".format(shootee_name),
+							'furniture_desc': "A sigillaria of {}.".format(shootee_name),
+							'rarity': ewcfg.rarity_plebeian,
+							'furniture_place_desc': "You place the figurine, filling your apartment with Slimernalia cheer.",
+							'furniture_look_desc': "There's a sigillaria of {}.".format(shootee_name)
 						}
 					)
 
@@ -954,14 +975,15 @@ async def attack(cmd):
 			if user_inital_level < user_data.slimelevel:
 				resp_cont.add_channel_response(cmd.message.channel.name, "\n" + levelup_response)
 			# Team kills don't award slime to the kingpin.
-			if user_data.faction != shootee_data.faction:
+			#SLIMERNALIA no kills give kingpin slime
+			#if user_data.faction != shootee_data.faction:
 				# Give slimes to the boss if possible.
-				kingpin = ewutils.find_kingpin(id_server = cmd.message.server.id, kingpin_role = role_boss)
+			#	kingpin = ewutils.find_kingpin(id_server = cmd.message.server.id, kingpin_role = role_boss)
 
-				if kingpin:
+			#	if kingpin:
 					
-					kingpin.change_slimes(n = boss_slimes)
-					kingpin.persist()
+			#		kingpin.change_slimes(n = boss_slimes)
+			#		kingpin.persist()
 
 			# Persist every users' data.
 			user_data.persist()
@@ -1037,12 +1059,11 @@ async def suicide(cmd):
 
 		if user_isdead:
 			response = "Too late for that."
-		elif user_isjuvenile:
-			response = "Juveniles are too cowardly for suicide."
+		#elif user_isjuvenile:
+		#	response = "Juveniles are too cowardly for suicide."
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
-		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky:
-			#Give slime to challenger if player suicides mid russian roulette
+		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky or user_isjuvenile:
 			if user_data.rr_challenger != "":
 				response = "You can't do that now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
@@ -1126,7 +1147,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
 				target_isjuvenile = target_data.life_state == ewcfg.life_state_juvenile	
 
-				role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
+				#role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
 				boss_slimes = 0
 
 				target_weapon = None
@@ -1157,13 +1178,14 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 					
 				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
 
+				#SLIMERNALIA
 				# move around slime as a result of the shot
-				if target_isjuvenile or user_data.faction == target_data.faction:
-					slimes_drained = int(3 * slimes_damage_target / 4) # 3/4
-					slimes_toboss = 0
-				else:
-					slimes_drained = 0
-					slimes_toboss = int(slimes_damage_target / 2)
+				#if target_isjuvenile or user_data.faction == target_data.faction:
+				slimes_drained = int(3 * slimes_damage_target / 4) # 3/4
+				slimes_toboss = 0
+				#else:
+				#	slimes_drained = 0
+				#	slimes_toboss = int(slimes_damage_target / 2)
 
 				damage = slimes_damage_target
 				
@@ -1173,6 +1195,8 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				slimes_directdamage = slimes_damage_target - slimes_tobleed
 				slimes_splatter = slimes_damage_target - slimes_toboss - slimes_tobleed - slimes_drained
 
+				#SLIMERNALIA
+				user_data.festivity += slimes_splatter
 				boss_slimes += slimes_toboss
 				district_data.change_slimes(n = slimes_splatter, source = ewcfg.source_killing)
 				target_data.bleed_storage += slimes_tobleed
@@ -1342,9 +1366,11 @@ async def spar(cmd):
 				response = "{} is too exhausted to train right now. They need a snack!".format(member.display_name)
 			elif user_isdead == True:
 				response = "The dead think they're too cool for conventional combat. Pricks."
-			elif user_iskillers == False and user_isrowdys == False:
+			#SLIMERNALIA
+			elif not(user_iskillers == False and user_isrowdys == False and user_isslimecorp == False) or user_data.life_state == ewcfg.life_state_corpse:
 				# Only killers, rowdys, the cop killer, and the rowdy fucker can spar
-				response = "Juveniles lack the backbone necessary for combat."
+				#response = "Juveniles lack the backbone necessary for combat."
+				response = "Not so fast, you scrooge! Only Juveniles can spar during Slimernalia."
 			else:
 				was_juvenile = False
 				was_sparred = False
@@ -1375,12 +1401,13 @@ async def spar(cmd):
 					# Target is a juvenile.
 					was_juvenile = True
 
-				elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_killers)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_rowdys)):
+				#SLIMERNALIA
+				#elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_killers)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_rowdys)):
 					# User can be sparred.
 					was_sparred = True
-				elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_rowdys)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_killers)):
+				#elif (user_iskillers and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_rowdys)) or (user_isrowdys and (sparred_data.life_state == ewcfg.life_state_enlisted and sparred_data.faction == ewcfg.faction_killers)):
 					# Target is a member of the opposing faction.
-					was_enemy = True
+				#	was_enemy = True
 
 
 				#if the duel is successful
@@ -1493,7 +1520,7 @@ async def annoint(cmd):
 		else:
 			user_data = EwUser(member = cmd.message.author)
 
-			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 			all_weapons = ewitem.inventory(
 				id_server = cmd.message.server.id,
@@ -1935,7 +1962,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 						bystander_faction = "killers"
 					elif user_data.faction == "killers":
 						bystander_faction = "rowdys"
-					factions = ["", user_data.faction if backfire else bystander_faction]
+					#SLIMERNALIA
+					factions = ["", ewcfg.faction_rowdys, ewcfg.faction_killers]#, user_data.faction if backfire else bystander_faction]
 					# Burn players in district
 					if weapon.id_weapon == ewcfg.weapon_id_molotov:
 						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
@@ -2456,7 +2484,9 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	if ewcfg.mutation_id_lonewolf in user_mutations:
 		allies_in_district = district_data.get_players_in_district(
 			min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
-			life_states = [ewcfg.life_state_enlisted],
+			#SLIMERNALIA
+			#life_states = [ewcfg.life_state_enlisted],
+			life_states = [ewcfg.life_state_juvenile],
 			factions = [user_data.faction]
 		)
 		if user_data.id_user in allies_in_district:
@@ -2475,7 +2505,9 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	if ewcfg.mutation_id_socialanimal in user_mutations:
 		allies_in_district = district_data.get_players_in_district(
 			min_level = math.ceil((1/10) ** 0.25 * user_data.slimelevel),
-			life_states = [ewcfg.life_state_enlisted],
+			#SLIMERNALIA
+			#life_states = [ewcfg.life_state_enlisted],
+			life_states = [ewcfg.life_state_juvenile],
 			factions = [user_data.faction]
 		)
 		if user_data.id_user in allies_in_district:

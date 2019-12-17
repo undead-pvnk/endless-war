@@ -29,6 +29,8 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
+	topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
+	await ewutils.send_message(client, leaderboard_channel, topfestivity)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
@@ -161,6 +163,35 @@ def make_district_control_board(id_server, title):
 		entry_type = ewcfg.entry_type_districts
 	)
 
+#SLIMERNALIA
+def make_slimernalia_board(server, title):
+	entries = []
+	data = ewutils.execute_sql_query(
+		"SELECT {display_name}, {state}, {faction}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users "\
+		"LEFT JOIN (SELECT id_user, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
+		"WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			id_item = ewcfg.col_id_item,
+			festivity = ewcfg.col_festivity,
+			coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+			name = ewcfg.col_name,
+			display_name = ewcfg.col_display_name,
+			value = ewcfg.col_value,
+			state = ewcfg.col_life_state,
+			faction = ewcfg.col_faction
+		), (
+			"id_furniture",
+			ewcfg.item_id_sigillaria,
+			server.id
+		)
+	)
+
+	for row in data:
+		entries.append(row)
+	
+	return format_board(entries = entries, title = title)
+
 """
 	convert leaderboard data into a message ready string 
 """
@@ -204,6 +235,10 @@ def board_header(title):
 
 	elif title == ewcfg.leaderboard_donated:
 		emote = ewcfg.emote_slimecorp
+		bar += " "
+	
+	elif title == ewcfg.leaderboard_slimernalia:
+		emote = ewcfg.emote_slimeheart
 		bar += " "
 
 	return emote + bar + title + bar + emote + "\n"

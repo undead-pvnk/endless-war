@@ -44,6 +44,10 @@ class EwUser:
 	splattered_slimes = 0
 	sap = 0
 	hardened_sap = 0
+	#SLIMERNALIA
+	festivity = 0
+	slimernalia_coin_gambled = 0
+	slimernalia_kingpin = False
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -349,12 +353,17 @@ class EwUser:
 	
 			hunger_restored = round(hunger_restored)
 
+			#SLIMERNALIA
+			old_hunger = self.hunger
+
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
 			self.inebriation += int(item_props['inebriation'])
 			if self.inebriation > 20:
 				self.inebriation = 20
+
+			self.festivity += old_hunger - self.hunger
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:
@@ -432,8 +441,8 @@ class EwUser:
 	def equip(self, weapon_item = None):
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		elif self.life_state == ewcfg.life_state_juvenile:
-			response = "Juvies can't equip weapons."
+		#elif self.life_state == ewcfg.life_state_juvenile:
+		#	response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
 			if weapon_item.item_props.get("married") == self.id_user:
@@ -654,6 +663,31 @@ class EwUser:
 
 		return vouchers
 
+	def get_festivity(self):
+		data = ewutils.execute_sql_query(
+		"SELECT {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) FROM users "\
+		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
+		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			festivity = ewcfg.col_festivity,
+			coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+			name = ewcfg.col_name,
+			value = ewcfg.col_value,
+			id_item = ewcfg.col_id_item,
+		),(
+			"id_furniture",
+			ewcfg.item_id_sigillaria,
+			self.id_user,
+			self.id_server
+		))
+		res = 0
+
+		for row in data:
+			res = row[0]
+
+		return res
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
 
@@ -677,7 +711,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -719,6 +753,9 @@ class EwUser:
 					ewcfg.col_has_soul,
 					ewcfg.col_sap,
 					ewcfg.col_hardened_sap,
+					ewcfg.col_festivity,
+					ewcfg.col_slimernalia_coin_gambled,
+					ewcfg.col_slimernalia_kingpin
 				), (
 					id_user,
 					id_server
@@ -767,6 +804,9 @@ class EwUser:
 					self.has_soul = result[37]
 					self.sap = result[38]
 					self.hardened_sap = result[39]
+					self.festivity = result[40]
+					self.slimernalia_coin_gambled = result[41]
+					self.slimernalia_kingpin = (result[42] == 1)
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
@@ -822,7 +862,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -866,6 +906,9 @@ class EwUser:
 				ewcfg.col_has_soul,
 				ewcfg.col_sap,
 				ewcfg.col_hardened_sap,
+				ewcfg.col_festivity,
+				ewcfg.col_slimernalia_coin_gambled,
+				ewcfg.col_slimernalia_kingpin
 			), (
 				self.id_user,
 				self.id_server,
@@ -910,6 +953,9 @@ class EwUser:
 				self.has_soul,
 				self.sap,
 				self.hardened_sap,
+				self.festivity,
+				self.slimernalia_coin_gambled,
+				self.slimernalia_kingpin
 			))
 
 			conn.commit()
