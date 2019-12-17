@@ -3937,13 +3937,13 @@ weather_list = [
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
 	),
-	EwWeather(
-		name = weather_bicarbonaterain,
-		sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
-		day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
-		sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
-		night = "Clouds of doom obscure the moon as they dispense liquid death from above."
-	),
+	# EwWeather(
+	# 	name = weather_bicarbonaterain,
+	# 	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+	# 	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+	# 	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+	# 	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	# ),
 ]
 
 # stock ids
