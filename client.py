@@ -1019,21 +1019,21 @@ async def on_ready():
 							old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
 							old_kingpin.slimernalia_kingpin = False
 							old_kingpin.persist()
-							#try:
-							old_kingpin_member = server.get_member(old_kingpin.id_user)
-							await ewrolemgr.updateRoles(client = client, member = old_kingpin_member)
-							#except:
-							#	ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
+							try:
+								old_kingpin_member = server.get_member(old_kingpin.id_user)
+								await ewrolemgr.updateRoles(client = client, member = old_kingpin_member)
+							except:
+								ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
 
 						# Update the new kingpin of slimernalia
 						new_kingpin = EwUser(id_user=ewutils.get_most_festive(server), id_server=server.id)
 						new_kingpin.slimernalia_kingpin = True
 						new_kingpin.persist()
-						#try:
-						new_kingpin_member = server.get_member(new_kingpin.id_user)
-						await ewrolemgr.updateRoles(client = client, member = new_kingpin_member)
-						#except:
-						#	ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
+						try:
+							new_kingpin_member = server.get_member(new_kingpin.id_user)
+							await ewrolemgr.updateRoles(client = client, member = new_kingpin_member)
+						except:
+							ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
 
 
 
