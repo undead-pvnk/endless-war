@@ -902,6 +902,67 @@ async def pray(cmd):
 	if cmd.message.channel.name != ewcfg.channel_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
 
+	if user_data.life_state == ewcfg.life_state_kingpin:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"https://i.imgur.com/WgnoDSA.gif"
+		))
+		await asyncio.sleep(9)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"https://i.imgur.com/M5GWGGc.gif"
+		))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"https://i.imgur.com/fkLZ3XX.gif"
+		))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"https://i.imgur.com/lUajXCs.gif"
+		))
+		await asyncio.sleep(9)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"https://i.imgur.com/FIuGl0C.png"
+		))
+		await asyncio.sleep(6)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"BUT SERIOUSLY, FOLKS... https://i.imgur.com/sAa0uwB.png"
+		))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"IT'S SLIMERNALIA! https://i.imgur.com/lbLNJNC.gif"
+		))
+		await asyncio.sleep(6)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"***WHRRRRRRRRRRRR*** https://i.imgur.com/pvCfBQ2.gif"
+		))
+		await asyncio.sleep(6)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"***WHRRRRRRRRRRRR*** https://i.imgur.com/e2PY1VJ.gif"
+		))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"DELICIOUS KINGPIN SLIME... https://i.imgur.com/2Cp1u43.png"
+		))
+		await asyncio.sleep(3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
+			cmd.message.author,
+			"JUST ENOUGH FOR A WEEK OR TWO OF CLEAR SKIES... https://i.imgur.com/L7T3V5b.gif"
+		))
+		await asyncio.sleep(9)
+		await ewutils.send_message(cmd.client, cmd.message.channel,
+			"@everyone Yo, Slimernalia! https://imgur.com/16mzAJT"
+		)
+		response = "NOW GO FORTH AND SPLATTER SLIME."
+
 	else:
 		# Generates a random integer from 1 to 100. If it is below the prob of poudrin, the player gets a poudrin.
 		# If the random integer is above prob of poudrin but below probofpoud+probofdeath, then the player dies. Else,
