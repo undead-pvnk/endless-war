@@ -435,8 +435,8 @@ async def edit_page(cmd):
         elif content == "":
             response = "What are you writing down exactly?"
 
-        elif len(content) > 1800:
-            response = "Alright buddy, reel it in. That just won't fit on a single page. ({}/1800)".format(len(content))
+        elif len(content) > 1500:
+            response = "Alright buddy, reel it in. That just won't fit on a single page. ({}/1500)".format(len(content))
 
         else:
             page = int(page)
