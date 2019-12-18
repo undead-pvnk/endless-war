@@ -623,10 +623,10 @@ async def help(cmd):
 		elif cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
 			# mine help
 			response = ewcfg.help_responses['mining']
-		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in [ewcfg.channel_dojo, ewcfg.channel_nlacu, ewcfg.channel_neomilwaukeestate, ewcfg.channel_greecakecafe, ewcfg.channel_glocksburycomics]:
+		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in [ewcfg.channel_dojo, ewcfg.channel_greecakecafe, ewcfg.channel_glocksburycomics]:
 			# food help
 			response = ewcfg.help_responses['food']
-		elif cmd.message.channel.name in [ewcfg.channel_nlacu, ewcfg.channel_neomilwaukeestate, ewcfg.channel_greecakecafe, ewcfg.channel_glocksburycomics]:
+		elif cmd.message.channel.name in [ewcfg.channel_greecakecafe, ewcfg.channel_glocksburycomics]:
 			# zines help
 			response = ewcfg.help_responses['zines']
 		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
