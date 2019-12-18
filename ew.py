@@ -911,7 +911,7 @@ class EwUser:
 				ewcfg.col_hardened_sap,
 				ewcfg.col_festivity,
 				ewcfg.col_slimernalia_coin_gambled,
-				ewcfg.col_slimernalia_kingpin
+				ewcfg.col_slimernalia_kingpin,
 				ewcfg.col_manuscript,
 			), (
 				self.id_user,
