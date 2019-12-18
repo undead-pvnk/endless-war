@@ -1996,7 +1996,10 @@ item_list = [
 		context = "poudrin",
 		str_name = "Slime Poudrin",
 		str_desc = "A dense, crystalized chunk of precious slime.",
-		acquisition = acquisition_mining
+		acquisition = acquisition_mining,
+		ingredients={
+			item_id_royaltypoudrin: 2
+		}
 	),
 	EwGeneralItem(
 		id_item = "whitedye",
@@ -11483,6 +11486,20 @@ smelting_recipe_list = [
 		},
 		products = ['seaweedjoint']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "slimepoudrin",
+		str_name = "a slime poudrin",
+		alias = [
+			"poudrin",
+			"poud",
+			"pou",
+			"poodrin",
+		],
+		ingredients = {
+			'royaltypoudrin': 2
+		},
+		products = ['slimepoudrin']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13214,6 +13231,9 @@ smelt_results = []
 # Gather all items that can be the result of smelting.
 for s in item_list:
 	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	# So poudrins can be smelted with 2 royalty poudrins (this is obviously half-assed but i can't think of a better solution)
+	elif s.id_item == item_id_slimepoudrin:
 		smelt_results.append(s)
 	else:
 		pass
