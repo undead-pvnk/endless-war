@@ -623,9 +623,12 @@ async def help(cmd):
 		elif cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
 			# mine help
 			response = ewcfg.help_responses['mining']
-		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in ewcfg.channel_dojo:
+		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in [ewcfg.channel_dojo, ewcfg.channel_nlacu, ewcfg.channel_neomilwaukeestate, ewcfg.channel_greecakecafe, ewcfg.channel_glocksburycomics]:
 			# food help
 			response = ewcfg.help_responses['food']
+		elif cmd.message.channel.name in [ewcfg.channel_nlacu, ewcfg.channel_neomilwaukeestate, ewcfg.channel_greecakecafe, ewcfg.channel_glocksburycomics]:
+			# zines help
+			response = ewcfg.help_responses['zines']
 		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
 			# dojo help
 			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **'!help [weapon]'**."
