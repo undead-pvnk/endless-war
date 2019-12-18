@@ -991,7 +991,10 @@ async def browse_zines(cmd):
                     response += "It has received {} ratings with an average of {} fucks given out of 5.\n".format(rates, rating)
 
                 if cover != "":
-                    response += "The cover looks like this: {}".format(cover)
+                    if genre == "porn":
+                        response += "The cover looks like this: ||{}||".format(cover)
+                    else:
+                        response += "The cover looks like this: {}".format(cover)
 
             else:
                 response = "That's not a valid zine ID."
