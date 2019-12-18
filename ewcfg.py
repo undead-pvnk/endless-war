@@ -1455,6 +1455,7 @@ col_visiting = "visiting"
 col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
+col_manuscript = "manuscript"
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
@@ -1593,6 +1594,24 @@ col_id_ad = 'id_ad'
 col_id_sponsor = 'id_sponsor'
 col_ad_content = 'content'
 
+# Database columns for books
+col_id_book = "id_book"
+col_title = "title"
+col_author = "author"
+col_book_state = "book_state"
+col_date_published = "date_published"
+col_genre = "genre"
+col_length = "length"
+col_sales = "sales"
+col_rating = "rating"
+col_rates = "rates"
+
+# Database columns for pages of books
+col_page = "page"
+col_contents = "contents"
+
+# Database columns for book sales
+col_bought = "bought"
 
 # Item type names
 it_item = "item"
