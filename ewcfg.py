@@ -1646,6 +1646,7 @@ it_food = "food"
 it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
 it_furniture = 'furniture'
+it_book = 'book'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -7458,7 +7459,7 @@ item_def_list = [
 			'hue': "",
 		}
 	),
-EwItemDef(
+	EwItemDef(
 		item_type = it_furniture,
 		str_name = "{furniture_name}",
 		str_desc = "{furniture_desc}",
@@ -7470,6 +7471,19 @@ EwItemDef(
 			'rarity': rarity_plebeian,
 			'vendor': None,
 
+		}
+	),
+	EwItemDef(
+		item_type = it_book,
+		str_name = "{title}",
+		str_desc = "{book_desc}",
+		soulbound = False,
+		item_props = {
+			"title": "Book",
+			"author": "Boy",
+			"date_published": 2000,
+			"id_book": 69,
+			"book_desc": "A book by AUTHOR, published on DAY."
 		}
 	),
 ]
