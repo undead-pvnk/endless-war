@@ -4,8 +4,6 @@ import ewitem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
-import mimetypes
-import requests
 
 class EwBook:
     id_book = 0
@@ -423,9 +421,6 @@ async def edit_page(cmd):
         elif user_data.manuscript == -1:
             response = "You have yet to create a manuscript. Try !createmanuscript"
 
-        elif page == '0' and not is_cover_image(content):
-            response = "Invalid cover image."
-
         elif not page.isdigit():
             response = "You must specify a valid page to edit."
 
@@ -761,24 +756,6 @@ async def previous_page(cmd):
         response = "You haven't opened a zine yet!"
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-def is_cover_image(url):
-    mimetype,encoding = mimetypes.guess_type(url)
-    is_image = (mimetype and mimetype.startswith('image'))
-
-    try:
-        request = requests.get(url)
-        if request.status_code == 200:
-            is_ready = True
-        else:
-            is_ready = False
-    except:
-        is_ready = False
-
-    if is_ready and is_image:
-        return True
-    else:
-        return False
 
 def int_is_zine(id_book, id_server):
     book_list = []
