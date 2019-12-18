@@ -1679,6 +1679,24 @@ async def skat(cmd):
 	challengee2 = EwUser(member = member2)
 	maxgame = multiplier * max(2*15*12, 2*8*24)
 
+	gellphones_challengee1 = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = challengee.id_user, id_server = challengee.id_server, item_type_filter = ewcfg.it_item)
+	gellphone_active_challengee1 = False
+
+	for phone in gellphones_challengee1:
+		phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
+		if phone_data.item_props.get('active') == 'true':
+			gellphone_active_challengee1 = True
+			break
+
+	gellphones_challengee2 = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = challengee2.id_user, id_server = challengee2.id_server, item_type_filter = ewcfg.it_item)
+	gellphone_active_challengee2 = False
+
+	for phone in gellphones_challengee2:
+		phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
+		if phone_data.item_props.get('active') == 'true':
+			gellphone_active_challengee2 = True
+			break
+
 	#Players have been challenged
 	if challenger.rr_challenger != "":
 		response = "You are already in the middle of a challenge."
@@ -1692,7 +1710,7 @@ async def skat(cmd):
 		response = "{} is already in the middle of a challenge.".format(member2.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	if challenger.poi != challengee.poi or challenger.poi != challengee2.poi:
+	if not (challengee.poi == ewcfg.poi_id_greenlightdistrict or gellphone_active_challengee1) or not (challengee2.poi == ewcfg.poi_id_greenlightdistrict or gellphone_active_challengee2):
 		#Challangees must be in the casino
 		response = "All players must be in the casino."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
