@@ -168,7 +168,7 @@ def make_slimernalia_board(server, title):
 	entries = []
 	data = ewutils.execute_sql_query(
 		"SELECT {display_name}, {state}, {faction}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users "\
-		"LEFT JOIN (SELECT id_user, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
+		"LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
 		"WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,

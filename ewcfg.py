@@ -1856,7 +1856,14 @@ item_id_whitelineticket = "ticket"
 item_id_seaweedjoint = "seaweedjoint"
 item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
 item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
-item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
+item_id_phoebuswrappingpaper = "phoebuswrappingpaper"
+item_id_slimeheartswrappingpaper = "slimeheartswrappingpaper"
+item_id_slimeskullswrappingpaper = "slimeskullswrappingpaper"
+item_id_shermanwrappingpaper = "shermanwrappingpaper"
+item_id_slimecorpwrappingpaper = "slimecorpwrappingpaper"
+item_id_pickaxewrappingpaper = "pickaxewrappingpaper"
+item_id_munchywrappingpaper = "munchywrappingpaper"
+item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 
 item_id_faggot = "faggot"
@@ -2322,9 +2329,9 @@ item_list = [
 			"mswp"
 		],
 		str_name="Megaslime Wrapping Paper",
-		str_desc="",
+		str_desc="Wrapping paper with Megaslimes plastered all over it. Blaargh!",
 		vendors=[vendor_glocksburycomics],
-		price = 500,
+		price = 1000,
 	),
 	EwGeneralItem(
 		id_item=item_id_greeneyesslimedragonwrappingpaper,
@@ -2333,20 +2340,97 @@ item_list = [
 			"gesdwp"
 		],
 		str_name="Green Eyes Slime Dragon Wrapping Paper",
-		str_desc="",
+		str_desc="Wrapping paper with many images of the Green Eyes Slime Dragon printed on it. Powerful...",
 		vendors=[vendor_glocksburycomics],
-		price = 500,
+		price = 1000,
 	),
 	EwGeneralItem(
-		id_item = item_id_pheobuswrappingpaper,
+		id_item = item_id_phoebuswrappingpaper,
 		context = context_wrappingpaper,
 		alias = [
 			"pwp"
 		],
 		str_name = "Phoebus Wrapping Paper",
-		str_desc = "",
+		str_desc = "A set of wrapping paper with Slime Invictus on it. Yo, Slimernalia!",
 		vendors = [vendor_glocksburycomics],
-		price = 500,
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeheartswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"shwp"
+		],
+		str_name = "Slime Hearts Wrapping Paper",
+		str_desc = "Wrapping paper decorated with slime hearts. Cute!!",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeskullswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"sswp"
+		],
+		str_name = "Slime Skulls Wrapping Paper",
+		str_desc = "A roll of wrapping paper with Slime Skulls stamped all over it. Spooky...",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_shermanwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"swp"
+		],
+		str_name = "Sherman Wrapping Paper",
+		str_desc = "Wrapping paper with Sherman, the SlimeCorp salaryman etched into it. Jesus Christ, how horrifying!",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimecorpwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"scwp"
+		],
+		str_name = "SlimeCorp Wrapping Paper",
+		str_desc = "A set of wrapping paper with that accursed logo printed all over it. What sort of corporate bootlicker would wrap a gift in this?",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_pickaxewrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"pawp"
+		],
+		str_name = "Pickaxe Wrapping Paper",
+		str_desc = "A roll of wrapping paper with a bunch of pickaxes depicted on it. Perfect for Juvies who love to toil away in the mines.",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_benwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"bwp"
+		],
+		str_name = "Ben Wrapping Paper",
+		str_desc = "Wrapping paper with the Cop Killer printed on it. !dab !dab !dab",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_munchywrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"mwp"
+		],
+		str_name = "Munchy Wrapping Paper",
+		str_desc = "Wrapping paper with the Rowdy Fucker printed on it. !THRASH !THRASH !THRASH",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
 	),
 	EwGeneralItem(
 		id_item = item_id_gellphone,

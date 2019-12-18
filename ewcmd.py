@@ -1541,12 +1541,12 @@ async def cancel(cmd):
 async def festivity(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
-		response = "You currently have {} festivity.".format(user_data.get_festivity())
+		response = "You currently have {:,} festivity.".format(user_data.get_festivity())
 
 	else:
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)
-		response = "{} currently has {} festivity.".format(member.display_name, user_data.get_festivity())
+		response = "{} currently has {:,} festivity.".format(member.display_name, user_data.get_festivity())
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

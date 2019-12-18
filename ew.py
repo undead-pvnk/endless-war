@@ -666,7 +666,7 @@ class EwUser:
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) FROM users "\
-		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
+		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
 		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
