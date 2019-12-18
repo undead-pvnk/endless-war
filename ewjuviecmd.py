@@ -742,7 +742,23 @@ async def crush(cmd):
 			
 			if len(levelup_response) > 0:
 				response += "\n\n" + levelup_response
-			
+
+		elif item_data.item_props.get("id_item") == ewcfg.item_id_royaltypoudrin:
+			# delete a royalty poudrin from the player's inventory
+			ewitem.item_delete(id_item=sought_id)
+			crush_slimes = 5000
+
+			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
+			user_data.persist()
+
+			if crunch_used:
+				response = "You crunch your hard-earned slime crystal with your bare teeth.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
+			else:
+				response = "You crush your hard-earned slime crystal with your bare hands.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
+
+			if len(levelup_response) > 0:
+				response += "\n\n" + levelup_response
+
 	else:
 		if item_search:  # if they didnt forget to specify an item and it just wasn't found
 			response = "You don't have one."

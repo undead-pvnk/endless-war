@@ -1860,6 +1860,7 @@ item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
 item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
 item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
 item_id_gellphone = "gellphone"
+item_id_royaltypoudrin = "royaltypoudrin"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
