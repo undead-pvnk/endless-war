@@ -291,8 +291,8 @@ async def begin_manuscript(cmd):
     elif title == "":
         response = "Specify a title."
 
-    elif len(title) > 64:
-        response = "Alright buddy, reel it in. That title is just too long. ({}/64)".format(len(title))
+    elif len(title) > 50:
+        response = "Alright buddy, reel it in. That title is just too long. ({}/50)".format(len(title))
 
     else:
         if user_data.manuscript != -1:
