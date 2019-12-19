@@ -402,7 +402,7 @@ async def edit_page(cmd):
         response = "You must specify a valid page to edit."
 
     elif cmd.tokens_count < 3:
-        response = "What are you writing dow exactly?"
+        response = "What are you writing down exactly?"
 
     else:
         page = cmd.tokens[1]
