@@ -8187,7 +8187,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale
+		mother_district = poi_id_gatlingsdale,
+		write_manuscript = True,
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -8496,7 +8497,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough
+		mother_district = poi_id_northsleezeborough,
+		write_manuscript = True,
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -9364,7 +9366,8 @@ poi_list = [
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
-		is_subzone = True
+		is_subzone = True,
+		write_manuscript = True,
 	),
 	EwPoi( # Slimy Persuits
 		id_poi=poi_id_slimypersuits,
@@ -9402,7 +9405,8 @@ poi_list = [
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
 		mother_district=poi_id_littlechernobyl,
-		is_subzone=True
+		is_subzone=True,
+		write_manuscript=True,
 	),
 	EwPoi(
 		id_poi=poi_id_sodafountain,
