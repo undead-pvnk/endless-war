@@ -1292,7 +1292,7 @@ async def toss_off_cliff(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		return await ewitem.discard(cmd=cmd)
 
 	elif item_sought:

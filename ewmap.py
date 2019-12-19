@@ -1339,8 +1339,8 @@ async def scout(cmd):
 			num_players += 1
 
 		# No filtering is done on enemies themselves. Enemies that pose a threat to the player are filtered instead.
-		enemies_in_district = district_data.get_enemies_in_district()
-		threats_in_district = district_data.get_enemies_in_district(min_level=min_level)
+		enemies_in_district = district_data.get_enemies_in_district(scout_used=True)
+		threats_in_district = district_data.get_enemies_in_district(min_level=min_level, scout_used=True)
 
 		num_enemies = 0
 		enemies_resp = ""
