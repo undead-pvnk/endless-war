@@ -992,8 +992,8 @@ async def order_zine(cmd):
             id_book = int(cmd.tokens[1])
 
             if int_is_zine(id_book, cmd.message.server.id):
-                if user_data.slimes < 10000:
-                    response = "YOU CAN'T AFFORD IT. ({}/10000)".format(user_data.slimes)
+                if user_data.slimes < ewcfg.zine_cost:
+                    response = "YOU CAN'T AFFORD IT. ({}/{}})".format(user_data.slimes, ewcfg.zine_cost)
                 else:
                     book = EwBook(id_book=id_book)
                     accepted = True
@@ -1038,7 +1038,7 @@ async def order_zine(cmd):
                                 book_sale.persist()
                                 book.persist()
 
-                        user_data.change_slimes(n = -10000, source = ewcfg.source_spending)
+                        user_data.change_slimes(n = -(ewcfg.zine_cost), source = ewcfg.source_spending)
 
                         author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
@@ -1054,7 +1054,7 @@ async def order_zine(cmd):
                                     'id_item': 'royaltypoudrin'
                                 })
 
-                        response = "You manage to locate {} by {} in the vast array of zines on the bookshelf, so you bring it to the counter and hand over 12,000 slime to the employee. Now it's time to !read it.".format(book.title, book.author)
+                        response = "You manage to locate {} by {} in the vast array of zines on the bookshelf, so you bring it to the counter and hand over {} slime to the employee. Now it's time to !read it.".format(book.title, book.author, ewcfg.zine_cost)
 
             else:
                 response = "Specify a zine to purchase. Find zine IDs with !browse."

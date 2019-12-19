@@ -14193,6 +14193,8 @@ rating_flavor = [
 	"Glowing with admiration",
 	]
 
+zine_cost = 10000
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 
