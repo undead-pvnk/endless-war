@@ -351,11 +351,7 @@ async def set_genre(cmd):
         response = "You have yet to create a manuscript. Try !createmanuscript"
 
     elif genre not in ewcfg.book_genres:
-        response = "Please specify the genre you want to change it to. You can choose from:"
-
-        for genre in ewcfg.book_genres:
-            response += " {},".format(genre)
-        response = response[:len(response)-1]+'.'
+        response = "Please specify the genre you want to change it to. You can choose from {}.".format(ewutils.formatNiceList(ewcfg.book_genres))
 
     else:
         for i in [i for i, x in enumerate(ewcfg.book_genres) if x == genre]:
@@ -555,12 +551,7 @@ async def publish_manuscript(cmd):
             length += len(book.book_pages[page])
 
         if book.genre == -1:
-            response = "Before you publish your zine, you must first set a genre with !setgenre. The genre choices are:"
-
-            for genre in ewcfg.book_genres:
-                response += " {},".format(genre)
-
-            response = response[:len(response)-1]+'.'
+            response = "Before you publish your zine, you must first set a genre with !setgenre. The genre choices are {}.".format(ewutils.formatNiceList(ewcfg.book_genres))
 
         elif len(book.book_pages.keys()) < 3 or length < 10:
             response = "Who are you trying to fool? This zine is obviously too short!"
