@@ -1348,10 +1348,10 @@ async def scout(cmd):
 		num_threats = len(threats_in_district)
 		threats_resp = ""
 
-		detailed_enemies_resp = "You pick up the scent of the following enemies:"
+		detailed_enemies_resp = "You pick up the scent of the following enemies:\n"
 		for enemy in enemies_in_district:
 			enemy_data = EwEnemy(id_enemy=enemy)
-			detailed_enemies_resp += "\n**{}**".format(enemy_data.display_name)
+			detailed_enemies_resp += "**{}**\n".format(enemy_data.display_name)
 			num_enemies += 1
 
 		if num_players == 0:

@@ -593,6 +593,7 @@ cmd_exchangerate_alt3 = cmd_prefix + 'exchangerates'
 cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
+cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
@@ -657,6 +658,7 @@ cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
+cmd_dance = cmd_prefix + 'dance'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
@@ -6101,6 +6103,19 @@ food_list = [
 		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
 		vendors=[vendor_greencakecafe]
 	),
+	EwFood(
+		id_food = "juicebox",
+		alias = [
+			"juice",
+			"appyjuice",
+		],
+		recover_hunger=10,
+		price=1,
+		str_name = "Juice Box",
+		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
+		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
+		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
+	)
 ]
 
 # A map of id_food to EwFood objects.
@@ -11270,6 +11285,14 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 100000000,
 	),
+	EwCosmeticItem(
+		id_cosmetic = "wrappingpaperhat",
+		str_name = "Wrapping Paper Hat",
+		str_desc = "A hat made out of wrapping paper, fashioned in a way rather similar to a newspaper hat. How festive!",
+		rarity = rarity_plebeian,
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -14169,6 +14192,15 @@ pray_responses_list = [
 	"ENDLESS WAR commands you to kill thy neighbor.",
 	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+]
+
+dance_responses = [
+	"{} busts a move. Wow, look at 'em go!",
+	"{} gets down and boogies! Groovy!",
+	"{} does a headstand and starts breakdancing!",
+	"{} starts flossing fast and hard!",
+	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id
