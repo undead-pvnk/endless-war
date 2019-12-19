@@ -276,8 +276,9 @@ def check(str):
 async def begin_manuscript(cmd):
     user_data = EwUser(member = cmd.message.author)
     title = cmd.message.content[(len(cmd.tokens[0])):].strip()
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
+    if not poi.write_manuscript:
         response = "You'd love to begin producing a zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
     elif user_data.slimes < 20000:
@@ -311,8 +312,9 @@ async def begin_manuscript(cmd):
 
 async def set_pen_name(cmd):
     user_data = EwUser(member = cmd.message.author)
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
+    if not poi.write_manuscript:
         response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
     elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
@@ -337,8 +339,9 @@ async def set_pen_name(cmd):
 async def set_genre(cmd):
     user_data = EwUser(member = cmd.message.author)
     genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
+    if not poi.write_manuscript:
         response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
     elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
@@ -369,8 +372,9 @@ async def set_genre(cmd):
 async def set_title(cmd):
     user_data = EwUser(member = cmd.message.author)
     title = cmd.message.content[(len(cmd.tokens[0])):].strip()
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
+    if not poi.write_manuscript:
         response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
     elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
@@ -397,8 +401,18 @@ async def set_title(cmd):
 
 async def edit_page(cmd):
     user_data = EwUser(member = cmd.message.author)
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.tokens_count == 1:
+    if not poi.write_manuscript:
+        response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+    elif user_data.manuscript == -1:
+        response = "You have yet to create a manuscript. Try !createmanuscript"
+
+    elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
+        response = "You are just too hungry to write your masterpiece!"
+
+    elif cmd.tokens_count == 1:
         response = "You must specify a valid page to edit."
 
     elif cmd.tokens_count < 3:
@@ -410,16 +424,6 @@ async def edit_page(cmd):
 
         if page == "cover":
             page = '0'
-
-        if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
-            response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-
-        elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
-            response = "You are just too hungry to write your masterpiece!"
-
-        elif user_data.manuscript == -1:
-            response = "You have yet to create a manuscript. Try !createmanuscript"
 
         elif not page.isdigit():
             response = "You must specify a valid page to edit."
@@ -466,8 +470,15 @@ async def edit_page(cmd):
 
 async def view_page(cmd):
     user_data = EwUser(member=cmd.message.author)
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.tokens_count == 1:
+    if not poi.write_manuscript:
+        response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+    elif user_data.manuscript == -1:
+        response = "You have yet to create a manuscript. Try !createmanuscript"
+
+    elif cmd.tokens_count == 1:
         response = "You must specify a valid page to view."
 
     else:
@@ -475,12 +486,6 @@ async def view_page(cmd):
 
         if page == 'cover':
             page = '0'
-
-        if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
-            response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-        elif user_data.manuscript == -1:
-            response = "You have yet to create a manuscript. Try !createmanuscript"
 
         elif not page.isdigit():
             response = "You must specify a valid page to view."
@@ -502,8 +507,9 @@ async def view_page(cmd):
 
 async def check_manuscript(cmd):
     user_data = EwUser(member=cmd.message.author)
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
+    if not poi.write_manuscript:
         response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
     elif user_data.manuscript == -1:
@@ -533,8 +539,9 @@ async def check_manuscript(cmd):
 async def publish_manuscript(cmd):
     user_data = EwUser(member=cmd.message.author)
     market_data = EwMarket(id_server = user_data.id_server)
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["green-cake-cafe", "nlac-university", "neo-milwaukee-state", "glocksbury-comics"]:
+    if not poi.write_manuscript:
         response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
 
     elif user_data.manuscript == -1:
@@ -793,7 +800,9 @@ async def browse_zines(cmd):
     else:
         sort_token = "null"
 
-    if cmd.message.channel.name not in ["nlac-university", "neo-milwaukee-state", "glocksbury-comics", "green-cake-cafe"]:
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+
+    if not poi.write_manuscript:
         response = "You can't browse for zines here! Try going to the cafe. If you're looking for educational zines, try the colleges. If you can't read, then you might want to try the comic shop."
 
         await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -980,8 +989,9 @@ async def browse_zines(cmd):
 
 async def order_zine(cmd):
     user_data = EwUser(member=cmd.message.author)
+    poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-    if cmd.message.channel.name not in ["nlac-university", "neo-milwaukee-state", "glocksbury-comics", "green-cake-cafe"]:
+    if not poi.write_manuscript:
         response = "You can't buy zines here! Try going to the cafe. If you're looking for educational books, try the colleges. If you can't read, then you might want to try the comic shop."
 
     elif len(cmd.tokens) == 1:
