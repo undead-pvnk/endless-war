@@ -8,6 +8,7 @@ import ewitem
 import ewrolemgr
 import ewstats
 import ewmap
+import ewcasino
 
 from ew import EwUser
 from ewmarket import EwMarket
@@ -663,7 +664,7 @@ async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
-	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 	slimeoid_count = get_slimeoid_count(user_id=cmd.message.author.id, server_id=cmd.message.server.id)
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to create a Slimeoid."
@@ -734,6 +735,9 @@ async def dissolveslimeoid(cmd):
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_none:
 		response = "You have no slimeoid to dissolve."
+
+	elif active_slimeoidbattles.get(slimeoid.id_slimeoid):
+		response = "You can't do that right now."
 
 	else:
 		if slimeoid.life_state == ewcfg.slimeoid_state_forming:
@@ -1675,10 +1679,10 @@ async def negaslimeoid(cmd):
 
 async def slimeoidbattle(cmd):
 
-	if cmd.message.channel.name != ewcfg.channel_arena:
+	#if cmd.message.channel.name != ewcfg.channel_arena:
 		#Only at the arena
-		response = "You can only have Slimeoid Battles at the Battle Arena."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#	response = "You can only have Slimeoid Battles at the Battle Arena."
+	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.mentions_count != 1:
 		#Must mention only one player
@@ -1697,6 +1701,12 @@ async def slimeoidbattle(cmd):
 	challengee = EwUser(member = member)
 	challengee_slimeoid = EwSlimeoid(member = member)
 
+	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+	if bet == None:
+		bet = 0
+	elif bet == -1:
+		bet = challenger.slimes
+
 	#Players have been challenged
 	if active_slimeoidbattles.get(challenger_slimeoid.id_slimeoid):
 		response = "You are already in the middle of a challenge."
@@ -1708,7 +1718,7 @@ async def slimeoidbattle(cmd):
 
 	if challenger.poi != challengee.poi:
 		#Challangee must be in the arena
-		response = "Both players must be in the Battle Arena."
+		response = "Both players must be in the same place."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
@@ -1717,7 +1727,14 @@ async def slimeoidbattle(cmd):
 	if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
 		response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-		
+	
+	if challenger.slimes < bet:
+		response = "You don't have enough slime!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+	if challengee.slimes < bet:
+		response = "They don't have enough slime!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))	
+
 	time_now = int(time.time())
 
 	if (time_now - challenger_slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
@@ -1741,8 +1758,10 @@ async def slimeoidbattle(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged
-	active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = True
-	active_slimeoidbattles[challengee_slimeoid.id_slimeoid] = True
+	challenger_slimeoid_id = challenger_slimeoid.id_slimeoid
+	challengee_slimeoid_id = challengee_slimeoid.id_slimeoid
+	active_slimeoidbattles[challenger_slimeoid_id] = True
+	active_slimeoidbattles[challengee_slimeoid_id] = True
 
 	challengee.rr_challenger = challenger.id_user
 
@@ -1763,7 +1782,9 @@ async def slimeoidbattle(cmd):
 		accepted = 0
 
 	challengee = EwUser(member = member)
+	challengee_slimeoid = EwSlimeoid(member = member)
 	challenger = EwUser(member = author)
+	challengee_slimeoid = EwSlimeoid(member = member)
 
 	challengee.rr_challenger = ""
 	challenger.rr_challenger = ""
@@ -1771,24 +1792,53 @@ async def slimeoidbattle(cmd):
 	challengee.persist()
 	challenger.persist()
 
+	if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
+		active_slimeoidbattles[challenger_slimeoid_id] = False
+		active_slimeoidbattles[challengee_slimeoid_id] = False
+		response = "You do not have a Slimeoid ready to battle with!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+	if challengee_slimeoid.life_state != ewcfg.slimeoid_state_active:
+		active_slimeoidbattles[challenger_slimeoid_id] = False
+		active_slimeoidbattles[challengee_slimeoid_id] = False
+		response = "{} does not have a Slimeoid ready to battle with!".format(member.display_name)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
 	#Start game
 	if accepted == 1:
-		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = ewcfg.poi_id_arena, battle_type = ewcfg.battle_type_arena)
-		if result == -1:
-			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name)
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
-		elif result == 1:
-			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name)
-			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
+		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 
+		challengee.festivity += bet
+		challenger.festivity += bet
+
+		challengee.persist()
+		challenger.persist()
+
+		slimecorp_fee, winnings = ewcasino.slimecorp_collectfee(bet*2)
+
+		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challenger.poi, battle_type = ewcfg.battle_type_arena)
+		if result == -1:
+			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			challenger = EwUser(member = author)
+			if challenger.life_state != ewcfg.life_state_corpse:
+				challenger.change_slimes(n = winnings)
+				challenger.persist()
+		elif result == 1:
+			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challengee_slimeoid.name, challengee_slimeoid.name, member.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			challengee = EwUser(member = member)
+			if challengee.life_state != ewcfg.life_state_corpse:
+				challengee.change_slimes(n = winnings)
+				challengee.persist()
 	else:
 		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
 
 		# Send the response to the player.
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	active_slimeoidbattles[challenger_slimeoid.id_slimeoid] = False
-	active_slimeoidbattles[challengee_slimeoid.id_slimeoid] = False
+	active_slimeoidbattles[challenger_slimeoid_id] = False
+	active_slimeoidbattles[challengee_slimeoid_id] = False
 
 async def negaslimeoidbattle(cmd):
 
@@ -1972,7 +2022,7 @@ async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."
@@ -2788,6 +2838,15 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 			s1_active = True
 
+		challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
+		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
+
+		# Check if slimeoids have died during the fight
+		if challenger_slimeoid.life_state == ewcfg.slimeoid_state_dead:
+			s2hp = 0
+		elif challengee_slimeoid.life_state == ewcfg.slimeoid_state_dead:
+			s1hp = 0
+
 		# Send the response to the player.
 		if s1hp > 0 and s2hp > 0:
 			await ewutils.send_message(client, channel, response)
@@ -2880,6 +2939,9 @@ async def bottleslimeoid(cmd):
 
 	elif slimeoid.life_state == ewcfg.slimeoid_state_forming:
 		response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
+
+	elif active_slimeoidbattles.get(slimeoid.id_slimeoid):
+		response = "You can't do that right now."
 
 	else:
 		items = ewitem.inventory(id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
@@ -3022,6 +3084,9 @@ async def undress_slimeoid(cmd):
 
 	elif slimeoid.life_state != ewcfg.slimeoid_state_active:
 		response = "You don't have a Slimeoid with you."
+
+	elif active_slimeoidbattles.get(slimeoid.id_slimeoid):
+		response = "You can't do that right now."
 
 	else:
 		item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])

@@ -303,7 +303,7 @@ async def invest(cmd):
 	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
-	if user_data.poi != ewcfg.poi_id_stockexchange:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -407,7 +407,7 @@ async def withdraw(cmd):
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.poi != ewcfg.poi_id_stockexchange:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -481,7 +481,7 @@ async def donate(cmd):
 
 	time_now = round(time.time())
 
-	if user_data.poi == ewcfg.poi_id_slimecorphq:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		value = None
 		if cmd.tokens_count > 1:
 			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
@@ -504,12 +504,11 @@ async def donate(cmd):
 				response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
 				market_data.donated_slimes += user_data.slimes
 				market_data.persist()
-				user_data.die(cause = ewcfg.cause_donation)
+				die_resp = user_data.die(cause = ewcfg.cause_donation)
 				user_data.persist()
 				# Assign the corpse role to the player. He dead.
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-				sewerchannel = ewutils.get_channel(cmd.message.server, ewcfg.channel_sewers)
-				await ewutils.send_message(cmd.client, sewerchannel, "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull)))
+				await die_resp.post()
 			else:
 				# Do the transfer if the player can afford it.
 				market_data.donated_slimes += cost_total
@@ -526,8 +525,8 @@ async def donate(cmd):
 		else:
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
-	elif user_data.poi == ewcfg.poi_id_slimeoidlab:
-		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	elif cmd.message.channel.name == ewcfg.channel_slimeoidlab:
+		poudrins = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 		if poudrins == None:
 			response = "You have to own a poudrin in order to donate a poudrin. Duh."
@@ -631,7 +630,7 @@ async def rate(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
-	if user_data.poi != ewcfg.poi_id_stockexchange:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
 		response = "You must go to the Slime Stock Exchange to check the current stock exchange rates ."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -683,7 +682,7 @@ async def shares(cmd):
 async def stocks(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if user_data.poi != ewcfg.poi_id_stockexchange:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
 		response = "You must go to the Slime Stock Exchange to check the currently available stocks."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -939,7 +938,8 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 		shares_value = round(shares * (stock.exchange_rate / 1000.0))
 
 		response = "You have {shares:,} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
-		if user_data.poi == ewcfg.poi_id_stockexchange:
+
+		if user_data.poi == ewcfg.poi_id_downtown:
 			response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
 		else:
 			response += "."

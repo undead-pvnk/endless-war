@@ -73,7 +73,7 @@ print("<p>{}</p>".format(cgi.escape("".join(ewcmd.gen_data_text(
 	id_user = id_user,
 	id_server = id_server,
 	display_name = player.display_name
-).channel_responses.get(None)
+)
 ))))
 
 print("<h3>Statistics</h3>")

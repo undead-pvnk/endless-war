@@ -168,7 +168,7 @@ async def consult(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 
-	if user_data.poi != ewcfg.poi_id_realestate:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at Slimecorp Real Estate in Old New Yonkers."))
 
 	poi = ewcfg.id_to_poi.get(target_name)
@@ -217,8 +217,7 @@ async def signlease(cmd):
 
 	user_data = EwUser(member=cmd.message.author)
 
-
-	if user_data.poi != ewcfg.poi_id_realestate:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at Slimecorp Real Estate in Old New Yonkers."))
 	poi = ewcfg.id_to_poi.get(target_name)
 
@@ -698,7 +697,7 @@ async def upgrade(cmd):
 		response = "You don't have an apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif(usermodel.poi != ewcfg.poi_id_realestate):
+	elif cmd.message.channel.name != ewcfg.channel_realestateagency:
 		response = "Upgrade your home at the apartment agency."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -938,6 +937,8 @@ async def knock(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
 			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			try:
@@ -1242,7 +1243,7 @@ async def cancel(cmd):
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if usermodel.poi != ewcfg.poi_id_realestate:
+	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		response = "You can only null your lease at the Real Estate Agency."
 	elif usermodel.apt_zone == ewcfg.location_id_empty:
 		response = "You don't have an apartment."
@@ -1427,7 +1428,7 @@ async def propstand(cmd):
 
 	else:
 		if item_search == "" or item_search == None:
-			response = "Specify the weapon you want to put on the stand."
+			response = "Specify the item you want to put on the stand."
 		else:
 			response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1436,6 +1437,11 @@ async def propstand(cmd):
 async def releasefish(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	
+	if cmd.message.channel.name != ewcfg.channel_bazaar:
+		response = "You need to see a specialist at The Bazaar to do that."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if item_sought:
@@ -1443,7 +1449,7 @@ async def releasefish(cmd):
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "aquarium" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
 				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-				response = "You let the fish out of its tank."
+				response = "The mysterious individual running the fish luring stall helps you coax the fish out of its tank."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
@@ -1458,6 +1464,11 @@ async def releasefish(cmd):
 async def releaseprop(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	
+	if cmd.message.channel.name != ewcfg.channel_bazaar:
+		response = "You need to see a specialist at The Bazaar to do that."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if item_sought:
@@ -1465,7 +1476,7 @@ async def releaseprop(cmd):
 		if item.item_type == ewcfg.it_furniture:
 			if item.item_props.get('id_furniture') == "propstand" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
 				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-				response = "After a bit of tugging, you pry the item of its stand."
+				response = "After a bit of tugging, you and the mysterious individual running the prop release stall pry the item of its stand."
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
 			elif item.item_props.get('acquisition') == ewcfg.acquisition_smelting:
 				response = "Uh oh. This one's not coming out. "
@@ -1487,7 +1498,7 @@ async def wash(cmd):
 	if usermodel.visiting != ewcfg.location_id_empty:
 		usermodel = EwUser(id_user=usermodel.visiting, id_server=playermodel.id_server)
 
-	if ewitem.find_item(item_search="washingmachine", id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server):
+	if ewitem.find_item(item_search="washingmachine", id_user=usermodel.id_user + ewcfg.compartment_id_decorate, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture):
 		if item_sought:
 			item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 			if item.item_type == ewcfg.it_cosmetic:
@@ -1534,8 +1545,8 @@ async def frame(cmd):
 
 	namechange = cmd.message.content[(len(ewcfg.cmd_frame)):].strip()
 
-	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server) and len(namechange) >= 3:
-		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server)
+	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_item) and len(namechange) >= 3:
+		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_item)
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		item.item_props['furniture_desc'] = namechange
 		item.persist()

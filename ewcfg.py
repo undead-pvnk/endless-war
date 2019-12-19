@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.13"
+version = "v3.18yoslimernalia"
 
 dir_msgqueue = 'msgqueue'
 
@@ -112,6 +112,9 @@ poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
 poi_id_slimesendcliffs = "slimesendcliffs"
+poi_id_greencakecafe = "greencakecafe"
+poi_id_sodafountain = "sodafountain"
+
 
 
 # transports
@@ -199,6 +202,7 @@ poi_id_crookline_pier = "crooklinepier"
 poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
+poi_id_juviesrow_pier = "juviesrowpier"
 
 
 #Apartment subzones
@@ -262,6 +266,16 @@ poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
 
+poi_id_south_outskirts = "southoutskirts"
+poi_id_southwest_outskirts = "southwestoutskirts"
+poi_id_west_outskirts = "westoutskirts"
+poi_id_northwest_outskirts = "northwestoutskirts"
+poi_id_north_outskirts = "northoutskirts"
+
+
+# The Sphere
+poi_id_thesphere = "thesphere"
+
 # Community Chests
 chest_id_copkilltown = "copkilltownchest"
 chest_id_rowdyroughhouse = "rowdyroughhousechest"
@@ -296,7 +310,7 @@ transport_line_blimp_afb_to_df = "blimpafbtodf"
 
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
-role_juvenile_pvp = "juvenilepvp"
+role_juvenile_pvp = "juvenilewanted"
 role_juvenile_active = "juvenileotp"
 role_rowdyfucker = "rowdyfucker"
 role_rowdyfuckers = "rowdys"
@@ -307,7 +321,7 @@ role_copkillers = "killers"
 role_copkillers_pvp = "killerwanted"
 role_copkillers_active = "killerotp"
 role_corpse = "corpse"
-role_corpse_pvp = "corpsepvp"
+role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
@@ -315,6 +329,8 @@ role_slimecorp = "slimecorp"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
 role_tutorial = "newintown"
+role_slimernalia = "kingpinofslimernalia"
+role_gellphone = "gellphone"
 
 faction_roles = [
 	role_juvenile,
@@ -351,6 +367,17 @@ role_to_active_role = {
 	role_corpse : role_corpse_active
 	}
 
+misc_roles = {
+	role_slimernalia,
+	role_gellphone
+}
+
+# used for checking if a user has the donor role
+role_donor_proper = "Terezi Gang"
+
+# used for checking if a user has the gellphone role
+role_gellphone_proper = "Gellphone"
+
 # Faction names and bases
 faction_killers = "killers"
 gangbase_killers = "Cop Killtown"
@@ -367,7 +394,7 @@ channel_endlesswar = "endless-war"
 channel_sewers = "the-sewers"
 channel_dojo = "the-dojo"
 channel_twitch_announcement = "rfck-chat"
-channel_casino = "slime-casino"
+channel_casino = "slimecorp-casino"
 channel_stockexchange = "slimecorp-stock-exchange"
 channel_foodcourt = "food-court"
 channel_slimeoidlab = "slimecorp-labs"
@@ -399,8 +426,11 @@ channel_cl_pier = "crookline-pier"
 channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
+channel_jr_pier = "juvies-row-pier"
 channel_juviesrow = "juvies-row"
+channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
+channel_sodafountain = "the-bicarbonate-soda-fountain"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -567,6 +597,8 @@ cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
+cmd_mutations = cmd_prefix + 'mutations'
+cmd_mutations_alt_1 = cmd_prefix + 'stds'
 cmd_hunger = cmd_prefix + 'hunger'
 cmd_clock = cmd_prefix + 'clock'
 cmd_time = cmd_prefix + 'time'
@@ -583,6 +615,7 @@ cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
 cmd_crush = cmd_prefix + 'crush'
+cmd_crush_alt1 = cmd_prefix + 'crunch'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -624,6 +657,7 @@ cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
+cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
@@ -664,6 +698,7 @@ cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_annex = cmd_prefix + 'annex'
+cmd_annex_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
@@ -687,7 +722,11 @@ cmd_advertise = cmd_prefix + 'advertise'
 cmd_ads = cmd_prefix + 'ads'
 cmd_confirm = cmd_prefix + 'confirm'
 cmd_cancel = cmd_prefix + 'cancel'
-
+cmd_pray = cmd_prefix + 'pray'
+cmd_flushsubzones = cmd_prefix + 'flushsubzones'
+cmd_wrap = cmd_prefix + 'wrap'
+cmd_unwrap = cmd_prefix + 'unwrap'
+cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -728,6 +767,7 @@ cmd_push = cmd_prefix + 'push'
 cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
+cmd_purify = cmd_prefix + 'purify'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -809,6 +849,9 @@ cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
+#SLIMERNALIA
+cmd_festivity = cmd_prefix + 'festivity'
+
 offline_cmds = [
 	cmd_move,
 	cmd_move_alt1,
@@ -863,6 +906,9 @@ max_concurrent_ads = 8
 max_length_ads = 500
 uptime_ads = 7 * 24 * 60 * 60 # one week
 
+# currencies you can gamble at the casino
+currency_slime = "slime"
+currency_slimecoin = "SlimeCoin"
 
 #inebriation
 inebriation_max = 20
@@ -891,7 +937,7 @@ milled_food_expir = 12 * 3600 * 28 # 2 weeks
 crush_slimes = 10000
 
 # minimum amount of slime needed to capture territory
-min_slime_to_cap = 50000
+min_slime_to_cap = 200000
 
 # property classes
 property_class_s = "s"
@@ -901,10 +947,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 60 * 60  # 60 min
-max_capture_points_a = 30 * 60  # 30 min
-max_capture_points_b = 15 * 60  # 15 min
-max_capture_points_c = 5 * 60   # 5 min
+max_capture_points_s = 5000000 # 5 megaslime
+max_capture_points_a = 3000000  # 3 megaslime
+max_capture_points_b = 2000000  # 2 megaslime
+max_capture_points_c = 1000000   # 1 megaslime
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -915,10 +961,10 @@ max_capture_points = {
 }
 
 # how long districts stay locked after capture
-capture_lock_s = 8 * 60 * 60  # 8 hours
-capture_lock_a = 4 * 60 * 60  # 4 hours 
-capture_lock_b = 2 * 60 * 60  # 2 hours
-capture_lock_c = 1 * 60 * 60  # 1 hour
+capture_lock_s = 48 * 60 * 60  # 2 days
+capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_b = 12 * 60 * 60  # 12 hours
+capture_lock_c = 6 * 60 * 60  # 6 hours
 
 # district lock times assigned to property classes
 capture_locks = {
@@ -943,7 +989,7 @@ slimes_toannex = {
 }
 
 # by how much to extend the capture lock per additional gangster capping
-capture_lock_per_gangster = 30 * 60  # 30 min
+capture_lock_per_gangster = 60 * 60  # 60 min
 
 # capture lock messages
 capture_lock_milestone = 5 * 60 # 5 min
@@ -994,7 +1040,7 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 3 # Three minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 3
+enemy_attack_tick_length = 5
 
 # how often to burn
 burn_tick_length = 4
@@ -1019,6 +1065,12 @@ event_tick_length = 5
 
 # how often to refresh sap
 sap_tick_length = 5
+
+# the amount of sap crushed by !piss
+sap_crush_piss = 3
+
+# the amount of sap spent on !piss'ing on someone
+sap_spend_piss = 1
 
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
@@ -1095,15 +1147,20 @@ cd_rr = 600
 #slimeoid downtime after a defeat
 cd_slimeoiddefeated = 300
 cd_scavenge = 0
+soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
 
 # PvP timer pushouts
-time_pvp_kill = 60 * 60 # 1 hour
-
-#time_pvp_mine = 180
-#time_pvp_haunt = 600
-#time_pvp_invest_withdraw = 180
-#time_pvp = 1800
+time_pvp_kill = 30 * 60
+time_pvp_attack = 10 * 60
+time_pvp_annex = 10 * 60
+time_pvp_mine = 1 * 60
+time_pvp_scavenge = 3 * 60
+time_pvp_fish = 5 * 60
+time_pvp_farm = 10 * 60
+time_pvp_spar = 5 * 60
+time_pvp_enlist = 5 * 60
+time_pvp_knock = 10 #temp fix. will probably add spam prevention or something funny like restraining orders later
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -1274,9 +1331,9 @@ number_emote_map = {
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 mines_wall_map = {
-	poi_id_mine : channel_jrmineswall,
-	poi_id_tt_mines : channel_ttmineswall,
-	poi_id_cv_mines : channel_cvmineswall
+	channel_mines : channel_jrmineswall,
+	channel_tt_mines : channel_ttmineswall,
+	channel_cv_mines : channel_cvmineswall
 }
 
 # trading
@@ -1284,11 +1341,15 @@ trade_state_proposed = 0
 trade_state_ongoing = 1
 trade_state_complete = 2
 
+# SLIMERNALIA
+festivity_on_gift_wrapping = 100
+festivity_on_gift_giving = 10000
+
 # Common strings.
-str_casino_closed = "The Slime Casino only operates at night."
+str_casino_closed = "The SlimeCorp Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
-str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " to {action} your {currency}."
+str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " in person to {action} your {currency}."
 str_exchange_busy = "You can't {action} right now. Your slimebroker is busy."
 str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
@@ -1392,6 +1453,10 @@ col_visiting = "visiting"
 col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
+#SLIMERNALIA
+col_festivity = 'festivity'
+col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
+col_slimernalia_kingpin = 'slimernalia_kingpin'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1539,6 +1604,7 @@ it_furniture = 'furniture'
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
+rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
 rarity_princeps = "Princeps"
 
 # Leaderboard score categories
@@ -1550,6 +1616,8 @@ leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
+#SLIMERNALIA
+leaderboard_slimernalia = "MOST FESTIVE"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1701,6 +1769,8 @@ source_fishing = 13
 source_squeeze = 14
 source_weather = 15
 source_crush = 16
+source_casino = 17
+source_slimeoid_betting = 18
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1728,6 +1798,8 @@ cause_burning = 10
 cause_killing_enemy = 11
 cause_weather = 12
 cause_cliff = 13
+cause_backfire = 14
+cause_praying = 15
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -1743,6 +1815,7 @@ stats_clear_on_death = [
 context_slimeoidheart = 'slimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
+context_wrappingpaper = 'wrappingpaper'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -1760,6 +1833,7 @@ vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
+vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1780,12 +1854,19 @@ item_id_costumekit = "costumekit"
 item_id_doublehalloweengrist = "doublehalloweengrist"
 item_id_whitelineticket = "ticket"
 item_id_seaweedjoint = "seaweedjoint"
+item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
+item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
+item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
+item_id_gellphone = "gellphone"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
 
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
+
+#SLIMERNALIA
+item_id_sigillaria = "sigillaria"
 
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"
@@ -2035,8 +2116,8 @@ item_list = [
 		],
 		str_name = "Trading Cards",
 		str_desc = "A pack of trading cards",
-		price = 1000,
-		vendors = [vendor_bazaar],
+		price = 50000,
+		vendors = [vendor_bazaar, vendor_glocksburycomics],
 	),
 	EwGeneralItem(
 		id_item = "rightleg",
@@ -2233,6 +2314,54 @@ item_list = [
 		str_name = "Ticket to the White Line",
 		str_desc = "A large assortment of candy molded into one unholy voucher for access into the underworld. Use it in a White Line subway station... ***IF YOU DARE!!***",
 		acquisition=acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item=item_id_megaslimewrappingpaper,
+		context=context_wrappingpaper,
+		alias=[
+			"mswp"
+		],
+		str_name="Megaslime Wrapping Paper",
+		str_desc="",
+		vendors=[vendor_glocksburycomics],
+		price = 500,
+	),
+	EwGeneralItem(
+		id_item=item_id_greeneyesslimedragonwrappingpaper,
+		context=context_wrappingpaper,
+		alias=[
+			"gesdwp"
+		],
+		str_name="Green Eyes Slime Dragon Wrapping Paper",
+		str_desc="",
+		vendors=[vendor_glocksburycomics],
+		price = 500,
+	),
+	EwGeneralItem(
+		id_item = item_id_pheobuswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"pwp"
+		],
+		str_name = "Phoebus Wrapping Paper",
+		str_desc = "",
+		vendors = [vendor_glocksburycomics],
+		price = 500,
+	),
+	EwGeneralItem(
+		id_item = item_id_gellphone,
+		context = 'gellphone',
+		alias = [
+			"gell",
+			"phone",
+			"cellphone",
+			"flipphone",
+			"nokia"
+		],
+		str_name = "Gellphone",
+		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
+		vendors = [vendor_bazaar],
+		price = 1000000
 	)
 ]
 item_list += ewdebug.debugitem_set
@@ -2764,7 +2893,7 @@ def wef_garrote(ctn = None):
 		#Stop movement
 		ewutils.moves_active[ctn.user_data.id_user] = 0
 		#Stun player for 5 seconds
-		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
+		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(int(ctn.time_now) + 5))
 		#Start strangling target
 		ctn.shootee_data.applyStatus(id_status=status_strangled_id, source=ctn.user_data.id_user)
 
@@ -3808,13 +3937,13 @@ weather_list = [
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
 	),
-	EwWeather(
-		name = weather_bicarbonaterain,
-		sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
-		day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
-		sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
-		night = "Clouds of doom obscure the moon as they dispense liquid death from above."
-	),
+	#EwWeather(
+	# 	name = weather_bicarbonaterain,
+	# 	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+	# 	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+	# 	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+	# 	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	#),
 ]
 
 # stock ids
@@ -5473,7 +5602,7 @@ food_list = [
 		],
 		recover_hunger = 500,
 		str_name = 'Dinoslime Meat',
-		str_eat = "You bite into the raw meat of dead Dinoslime. At certain points of your feast, it feels like you're biting into a fucking fan belt, but hey, food is food.",
+		str_eat = "You bite into the raw meat of dead Dinoslime. It feels like you're biting into raw sewage at certain points, but hey, food is food.",
 		str_desc = "The meat of a Dinoslime. It's best to probably cook it before consumption, if only you knew how.",
 	),
 	EwFood(
@@ -5804,6 +5933,89 @@ food_list = [
 		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
 		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
 		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food="brawldenbagel",
+		alias=[
+			"bagel",
+			"bdbagel",
+			"brawlbagel"
+		],
+		recover_hunger=111-1, # ;)
+		price=1001,
+		str_name='Brawlden Bagel',
+		str_eat="You attempt to cut the bagel with the shitty plastic butter-knife the waitress gave you, but it snaps in two almost immediately. Looks like you won’t be having any slime cream cheese on your meal today. You crunch as hard as you can into the absolute BRICK of Juvish bread and in the process nearly snap your jaw in two. You begin to chew it only to realize it's fucking sludgeberry. Who puts sludgeberries a bagel? You’re just too furious to finish this distinctly non-keto bagel of burden, so you find the nearest Juvie and chuck it at their skull.",
+		str_desc="Despite the rampant crime-rates of their home district, Brawlden Bagels are a staple of NLACakaNM’s brunch cuisine. Of course, they’re all so stale that most people just use them as brass knuckles, but nonetheless they can be downright irresistible with a large enough smattering of slime cream cheese. That shit has to be, like, an inch thick, though.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="greeneye",
+		alias=[
+			"redeye",
+			"espresso",
+			"caffeine"
+		],
+		recover_hunger=150,
+		price=1500,
+		str_name='Green Eye',
+		str_eat="You bring the small cup to your lips, only to be greeted by a very suspicious smell. You think nothing of it and down the drink in one gulp… This was a mistake. That smell was slime vapor because it turns out the coffee was still fucking boiling when the waitress poured it for you. It may have burned all the skin in your mouth off, sure, but it also burned the nerve-endings on your tongue, so it only hurt for a moment. At the very least, you feel energized and in the mood to put pen to paper and write.",
+		str_desc="Coffee topped off with a nice rejuvenating shot of slime to stop the ol’ adenosine from pumping. It’s even served in a miniature cup so you can shotgun it without issue!",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="pcpastry",
+		alias=[
+			"pcp",
+			"pastry",
+			"procrastinatorspastry"
+		],
+		recover_hunger=90,
+		price=900,
+		str_name='PCPastry',
+		str_eat="You aren’t certain about this pastry’s quality because you were a bit iffy on last week’s. You give it a try and are pleasantly surprised! The ingredients seem to be more in harmony this week, and generally it just has a better texture. All the people you know seem to still be under the assumption that they’re always gonna be spicy and hard to eat, but that hasn’t really been the case for a few months. After finishing it, you come to the conclusion that, while you wouldn’t go so far as to call yourself a PCPastries-head, you’d probably purchase one again as long as they keep up the quality.",
+		str_desc="A sweet treat that is somewhat notorious in town. Of course, everybody has their favorite and least favorite ingredients, but is it actually really worth the trek to the cafe to eat the new one every single week?",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="fuckuccino",
+		alias=[
+			"frappuccino",
+			"cappuccino",
+			"sourpuss"
+		],
+		recover_hunger=300,
+		price=3000,
+		str_name='Fuckuccino',
+		str_eat="You let it cool off for a few seconds before taking a sip, only to be disgusted by how bitter it is. You figured this would be the case, so you unload one of the sugar packets into the mug. Nope, the bitterness remains. You pour another. It's still not sweet enough. You continue this cycle until you’ve poured all 12 sugar packets into the coffee. Eventually it becomes sweet enough to tolerate. Truly, the young slimeboi’s ambrosia.",
+		str_desc="A wonderful cup of joe mixed with a healthy dose of Fuck Energy ™ Cream. It comes with several packets of sugar, in case the 500 milligrams of caffeine isn’t enough for you.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="goolongtea",
+		alias=[
+			"tea",
+			"oolong",
+			"goolong"
+		],
+		recover_hunger=310,
+		price=3100,
+		str_name='Goolong Tea',
+		str_eat="Finally, after months of purely fast food and various carcinogens, a beverage that won’t take a year off of your lifespan. You sip the oriental tea with newfound vigor. You begin to recall back to before the slime, before the poudrins, before the FUCK Energy. You snap back to reality when you realize that you were so out of it that you spilled the rest of it all over your clothes. Shit.",
+		str_desc="Restorative, piping-hot tea made with the goolong herb grown in the far eastern lands of *Nuvada*. Even if it is “good” for you, at least it’s served in a styrofoam cup so it can still hurt the environment in some way. The zarf is bright green. If you don’t know what that means then look it up, pussy.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="3tart",
+		alias=[
+			"tart",
+			"3tard",
+		],
+		recover_hunger=33,
+		price=333,
+		str_name='3tart',
+		str_eat="You bite into the 3tart, and yeah, the initial mouthfeel is pretty crummy, but you decide to stick with it because you already invested some slime in the thing anyways. As you chew it more and more you begin to grow less wary of it. By the time you swallow, you’re actually somewhat fond of the thing, even if it was relatively new. Man, if only 3tards could follow this kind of arc.",
+		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
+		vendors=[vendor_greencakecafe]
 	),
 ]
 
@@ -6517,7 +6729,15 @@ fish_list  =  [
 		catch_weather = None,
 		str_desc = "It has no arms and a blue bandana.",
 		slime = fish_slime_freshwater
-	)
+	),
+	EwFish(
+		id_fish = "mertwink",
+		str_name = "Mertwink",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = fish_catchtime_rain,
+		str_desc = "Rejoice, horndogs.",
+	),
 ]
 
 # A map of id_fish to EwFish objects.
@@ -7212,38 +7432,6 @@ for item_def in item_def_list:
 	item_def_map[item_def.item_type] = item_def
 
 poi_list = [
-	EwPoi( # ENDLESS WAR
-		id_poi = poi_id_endlesswar,
-		alias = [
-			"obelisk",
-			"war",
-			"ew"
-		],
-		str_in = "at the base of",
-		str_enter = "arrive at",
-		str_name = "ENDLESS WAR",
-		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
-		coord = (57, 40),
-		channel = channel_endlesswar,
-		role = "Endless War"
-	),
-	EwPoi( # slimecorp HQ
-		id_poi = poi_id_slimecorphq,
-		alias = [
-			"slimecorp",
-			"hq",
-			"corp"
-		],
-		str_in = "in the lobby of",
-		str_name = "SlimeCorp HQ",
-		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
-		coord = (61, 40),
-		channel = channel_slimecorphq,
-		role = "SlimeCorp HQ",
-		pvp = False,
-		is_subzone = True,
-		mother_district = poi_id_downtown
-	),
 	EwPoi( # 1
 		id_poi = poi_id_downtown,
 		alias = [
@@ -7252,32 +7440,12 @@ poi_list = [
 		],
 		str_name = "Downtown NLACakaNM",
 		str_desc = "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren’t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
-		coord = (59, 40),
+		coord = (28, 21),
 		coord_alias = [
-			(59, 36),
-			(59, 37),
-			(59, 43),
-			(59, 44),
-			(55, 38),
-			(56, 38),
-			(57, 38),
-			(58, 38),
-			(59, 38),
-			(60, 38),
-			(61, 38),
-			(62, 38),
-			(63, 38),
-			(59, 39),
-			(59, 41),
-			(55, 42),
-			(56, 42),
-			(57, 42),
-			(58, 42),
-			(59, 42),
-			(60, 42),
-			(61, 42),
-			(62, 42),
-			(63, 42)
+			(29, 21),
+			(30, 21),
+			(30, 22),
+			(30, 23)
 		],
 		channel = "downtown",
 		role = "Downtown",
@@ -7293,29 +7461,7 @@ poi_list = [
 		],
 		str_name = "Smogsburg",
 		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
-		coord = (59, 28),
-		coord_alias = [
-			(55, 26),
-			(56, 26),
-			(57, 26),
-			(58, 26),
-			(59, 26),
-			(60, 26),
-			(61, 26),
-			(62, 26),
-			(63, 26),
-			(59, 27),
-			(59, 29),
-			(55, 30),
-			(56, 30),
-			(57, 30),
-			(58, 30),
-			(59, 30),
-			(60, 30),
-			(61, 30),
-			(62, 30),
-			(63, 30)
-		],
+		coord = (28, 16),
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
@@ -7337,29 +7483,7 @@ poi_list = [
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Edifices of various sinister architectural styles rise above the pavement. Gothic cathedrals, Victorian buildings, and New England brownstone apartments all dyed cool, dark colors. This district even hosts a miniature Japantown, featuring stores and restaurants that clutter your vision with densely packed fluorescent signage and other visual noise. Often cloaked in shadow from the height of these imposing buildings, the narrow, cobblestone streets of this district are perfect to brood and foster your angst in.\nCop Killtown is the gang base of the hardboiled, and calculating Killers. St. Ben’s Cathedral looms menacing on the horizon.\nhttps://discord.gg/xSQQD2M\n\nThis area contains the Cop Killtown Subway Station. To the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the Northwest is Gatlingsdale.",
-		coord = (44, 32),
-		coord_alias = [
-			(40, 30),
-			(41, 30),
-			(42, 30),
-			(43, 30),
-			(44, 30),
-			(45, 30),
-			(46, 30),
-			(47, 30),
-			(48, 30),
-			(44, 31),
-			(44, 33),
-			(40, 34),
-			(41, 34),
-			(42, 34),
-			(43, 34),
-			(44, 34),
-			(45, 34),
-			(46, 34),
-			(47, 34),
-			(48, 34)
-		],
+		coord = (22, 18),
 		channel = channel_copkilltown,
 		role = "Cop Killtown",
 		factions = [
@@ -7376,30 +7500,8 @@ poi_list = [
 			"kb"
 		],
 		str_name = "Krak Bay",
-		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
-		coord = (43, 44),
-		coord_alias = [
-			(39, 42),
-			(40, 42),
-			(41, 42),
-			(42, 42),
-			(43, 42),
-			(44, 42),
-			(45, 42),
-			(46, 42),
-			(47, 42),
-			(43, 43),
-			(43, 45),
-			(39, 46),
-			(40, 46),
-			(41, 46),
-			(42, 46),
-			(43, 46),
-			(44, 46),
-			(45, 46),
-			(46, 46),
-			(47, 46)
-		],
+		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
+		coord = (21, 24),
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
@@ -7413,29 +7515,7 @@ poi_list = [
 		],
 		str_name = "Poudrin Alley",
 		str_desc = "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren’t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay.",
-		coord = (50, 54),
-		coord_alias = [
-			(48, 50),
-			(48, 51),
-			(48, 52),
-			(48, 53),
-			(48, 54),
-			(48, 55),
-			(48, 56),
-			(48, 57),
-			(48, 58),
-			(49, 54),
-			(51, 54),
-			(52, 50),
-			(52, 51),
-			(52, 52),
-			(52, 53),
-			(52, 54),
-			(52, 55),
-			(52, 56),
-			(52, 57),
-			(52, 58)
-		],
+		coord = (24, 28),
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
@@ -7454,29 +7534,7 @@ poi_list = [
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Cheap townhouses and abandoned warehouses host graffiti art on basically every surface. An almost completely overrun slum, many of the deteriorated buildings have been painted a bright pink by the gangsters that seized them. Overpopulated and underhoused, the majority of the residents have constructed shanty houses for themselves and gather around trash can bonfires. Loud music blasts from bass-heavy speakers all hours of the night, fueling the seemingly constant parties this district is known for.\nRowdy Roughhouse is the gang base of the hot blooded, and reckless Rowdys. In the heart of the district stands the Rowdy Roughhouse, for which the district is named. Yes, it’s confusing, we know.\nhttps://discord.gg/JZ2AaJ2\n\nThis area contains the Rowdy Roughhouse Subway Station. To the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
-		coord = (62, 51),
-		coord_alias = [
-			(58, 49),
-			(59, 49),
-			(60, 49),
-			(61, 49),
-			(62, 49),
-			(63, 49),
-			(64, 49),
-			(65, 49),
-			(66, 49),
-			(62, 50),
-			(62, 52),
-			(58, 53),
-			(59, 53),
-			(60, 53),
-			(61, 53),
-			(62, 53),
-			(63, 53),
-			(64, 53),
-			(65, 53),
-			(66, 53)
-		],
+		coord = (30, 26),
 		channel = channel_rowdyroughhouse,
 		role = "Rowdy Roughhouse",
 		factions = [
@@ -7493,30 +7551,8 @@ poi_list = [
 			"gld"
 		],
 		str_name = "Green Light District",
-		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
-		coord = (73, 33),
-		coord_alias = [
-			(71, 29),
-			(71, 30),
-			(71, 31),
-			(71, 32),
-			(71, 33),
-			(71, 34),
-			(71, 35),
-			(71, 36),
-			(71, 37),
-			(72, 33),
-			(74, 33),
-			(75, 29),
-			(75, 30),
-			(75, 31),
-			(75, 32),
-			(75, 33),
-			(75, 34),
-			(75, 35),
-			(75, 36),
-			(75, 37)
-		],
+		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
+		coord = (34, 19),
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
@@ -7530,29 +7566,7 @@ poi_list = [
 		],
 		str_name = "Old New Yonkers",
 		str_desc = "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district’s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee’s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
-		coord = (80, 21),
-		coord_alias = [
-			(76, 19),
-			(77, 19),
-			(78, 19),
-			(79, 19),
-			(80, 19),
-			(81, 19),
-			(82, 19),
-			(83, 19),
-			(84, 19),
-			(80, 20),
-			(80, 22),
-			(76, 23),
-			(77, 23),
-			(78, 23),
-			(79, 23),
-			(80, 23),
-			(81, 23),
-			(82, 23),
-			(83, 23),
-			(84, 23)
-		],
+		coord = (37, 14),
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
@@ -7567,30 +7581,8 @@ poi_list = [
 			"lc"
 		],
 		str_name = "Little Chernobyl",
-		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains RP City. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
-		coord = (67, 18),
-		coord_alias = [
-			(63, 16),
-			(64, 16),
-			(65, 16),
-			(66, 16),
-			(67, 16),
-			(68, 16),
-			(69, 16),
-			(70, 16),
-			(71, 16),
-			(67, 17),
-			(67, 19),
-			(63, 20),
-			(64, 20),
-			(65, 20),
-			(66, 20),
-			(67, 20),
-			(68, 20),
-			(69, 20),
-			(70, 20),
-			(71, 20)
-		],
+		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains Green Cake Cafe. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
+		coord = (30, 12),
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
@@ -7604,29 +7596,7 @@ poi_list = [
 		],
 		str_name = "Arsonbrook",
 		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
-		coord = (56, 10),
-		coord_alias = [
-			(54, 6),
-			(54, 7),
-			(54, 8),
-			(54, 9),
-			(54, 10),
-			(54, 11),
-			(54, 12),
-			(54, 13),
-			(54, 14),
-			(55, 10),
-			(57, 10),
-			(58, 6),
-			(58, 7),
-			(58, 8),
-			(58, 9),
-			(58, 10),
-			(58, 11),
-			(58, 12),
-			(58, 13),
-			(58, 14)
-		],
+		coord = (26, 8),
 		channel = "arsonbrook",
 		role = "Arsonbrook",
 		property_class = property_class_b,
@@ -7641,29 +7611,7 @@ poi_list = [
 		],
 		str_name = "Astatine Heights",
 		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts.",
-		coord = (46, 16),
-		coord_alias = [
-			(42, 14),
-			(43, 14),
-			(44, 14),
-			(45, 14),
-			(46, 14),
-			(47, 14),
-			(48, 14),
-			(49, 14),
-			(50, 14),
-			(46, 15),
-			(46, 17),
-			(42, 18),
-			(43, 18),
-			(44, 18),
-			(45, 18),
-			(46, 18),
-			(47, 18),
-			(48, 18),
-			(49, 18),
-			(50, 18)
-		],
+		coord = (22, 11),
 		channel = "astatine-heights",
 		role = "Astatine Heights",
 		property_class = property_class_a,
@@ -7678,29 +7626,7 @@ poi_list = [
 		],
 		str_name = "Gatlingsdale",
 		str_desc = "Hundreds of small “nerdy” retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington.",
-		coord = (36, 21),
-		coord_alias = [
-			(32, 19),
-			(33, 19),
-			(34, 19),
-			(35, 19),
-			(36, 19),
-			(37, 19),
-			(38, 19),
-			(39, 19),
-			(40, 19),
-			(36, 20),
-			(36, 22),
-			(32, 23),
-			(33, 23),
-			(34, 23),
-			(35, 23),
-			(36, 23),
-			(37, 23),
-			(38, 23),
-			(39, 23),
-			(40, 23)
-		],
+		coord = (18, 14),
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
 		property_class = property_class_a,
@@ -7715,29 +7641,7 @@ poi_list = [
 		],
 		str_name = "Vandal Park",
 		str_desc = "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district’s famous Battle Arena.\nVandal Park’s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you’ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill.",
-		coord = (28, 28),
-		coord_alias = [
-			(24, 26),
-			(25, 26),
-			(26, 26),
-			(27, 26),
-			(28, 26),
-			(29, 26),
-			(30, 26),
-			(31, 26),
-			(32, 26),
-			(28, 27),
-			(28, 29),
-			(24, 30),
-			(25, 30),
-			(26, 30),
-			(27, 30),
-			(28, 30),
-			(29, 30),
-			(30, 30),
-			(31, 30),
-			(32, 30)
-		],
+		coord = (15, 17),
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
@@ -7752,29 +7656,7 @@ poi_list = [
 		],
 		str_name = "Glocksbury",
 		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains Glocksbury Comics, and the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts.",
-		coord = (27, 38),
-		coord_alias = [
-			(23, 36),
-			(24, 36),
-			(25, 36),
-			(26, 36),
-			(27, 36),
-			(28, 36),
-			(29, 36),
-			(30, 36),
-			(31, 36),
-			(27, 37),
-			(27, 39),
-			(23, 40),
-			(24, 40),
-			(25, 40),
-			(26, 40),
-			(27, 40),
-			(28, 40),
-			(29, 40),
-			(30, 40),
-			(31, 40)
-		],
+		coord = (14, 21),
 		channel = "glocksbury",
 		role = "Glocksbury",
 		property_class = property_class_c,
@@ -7793,29 +7675,7 @@ poi_list = [
 		],
 		str_name = "North Sleezeborough",
 		str_desc = "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn’t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough.",
-		coord = (29, 46),
-		coord_alias = [
-			(25, 44),
-			(26, 44),
-			(27, 44),
-			(28, 44),
-			(29, 44),
-			(30, 44),
-			(31, 44),
-			(32, 44),
-			(33, 44),
-			(29, 45),
-			(29, 47),
-			(25, 48),
-			(26, 48),
-			(27, 48),
-			(28, 48),
-			(29, 48),
-			(30, 48),
-			(31, 48),
-			(32, 48),
-			(33, 48)
-		],
+		coord = (16, 24),
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
 		property_class = property_class_b,
@@ -7834,29 +7694,7 @@ poi_list = [
 		],
 		str_name = "South Sleezeborough",
 		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
-		coord = (29, 57),
-		coord_alias = [
-			(27, 53),
-			(27, 54),
-			(27, 55),
-			(27, 56),
-			(27, 57),
-			(27, 58),
-			(27, 59),
-			(27, 60),
-			(27, 61),
-			(28, 57),
-			(30, 57),
-			(31, 53),
-			(31, 54),
-			(31, 55),
-			(31, 56),
-			(31, 57),
-			(31, 58),
-			(31, 59),
-			(31, 60),
-			(31, 61)
-		],
+		coord = (17, 27),
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
 		property_class = property_class_b,
@@ -7871,29 +7709,7 @@ poi_list = [
 		],
 		str_name = "Ooze Gardens",
 		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
-		coord = (37, 62),
-		coord_alias = [
-			(35, 58),
-			(35, 59),
-			(35, 60),
-			(35, 61),
-			(35, 62),
-			(35, 63),
-			(35, 64),
-			(35, 65),
-			(35, 66),
-			(36, 62),
-			(38, 62),
-			(39, 58),
-			(39, 59),
-			(39, 60),
-			(39, 61),
-			(39, 62),
-			(39, 63),
-			(39, 64),
-			(39, 65),
-			(39, 66)
-		],
+		coord = (19, 30),
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
@@ -7908,29 +7724,7 @@ poi_list = [
 		],
 		str_name = "Cratersville",
 		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
-		coord = (48, 64),
-		coord_alias = [
-			(44, 62),
-			(45, 62),
-			(46, 62),
-			(47, 62),
-			(48, 62),
-			(49, 62),
-			(50, 62),
-			(51, 62),
-			(52, 62),
-			(48, 63),
-			(48, 65),
-			(44, 66),
-			(45, 66),
-			(46, 66),
-			(47, 66),
-			(48, 66),
-			(49, 66),
-			(50, 66),
-			(51, 66),
-			(52, 66)
-		],
+		coord = (24, 33),
 		channel = "cratersville",
 		role = "Cratersville",
 		property_class = property_class_c,
@@ -7946,29 +7740,7 @@ poi_list = [
 		],
 		str_name = "Wreckington",
 		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
-		coord = (63, 60),
-		coord_alias = [
-			(59, 58),
-			(60, 58),
-			(61, 58),
-			(62, 58),
-			(63, 58),
-			(64, 58),
-			(65, 58),
-			(66, 58),
-			(67, 58),
-			(63, 59),
-			(63, 61),
-			(59, 62),
-			(60, 62),
-			(61, 62),
-			(62, 62),
-			(63, 62),
-			(64, 62),
-			(65, 62),
-			(66, 62),
-			(67, 62)
-		],
+		coord = (32, 29),
 		channel = "wreckington",
 		role = "Wreckington",
 		property_class = property_class_c,
@@ -7983,29 +7755,7 @@ poi_list = [
 		],
 		str_name = "Juvie's Row",
 		str_desc = "The landscape of this district is completely defined by it containing the city’s largest mineshafts. Almost the entire district is has been dug up, the earth overturned by a crazed populace trying to soak up every drop of slime it can get its hands on. There are few permanent structures here, and even less infrastructure. Swathes of juveniles have constructed shanty houses out of discarded building materials, suffering from the intense pollution and poor living conditions just to be closer to the mine shaft entrances that jut out of the otherwise useless, rugged terrain. Makeshift bazaars and other rudimentary amenities have popped up in the horribly overcrowded tent cities.\nJuvie’s Row might just be the most populous district of the city, with every ambitious juvenile spending at least some of their formative days toiling underground to eke out a pitiful existence. Seeing all the gang unaligned juvies here fills you with pity, as well as disgust.\n\nThis area contains the Juvie's Row Mines, the Juvie's Row Farms and the Juvie's Row Subway Station. To the Northeast is Vagrant's Corner. To the Northwest is the Green Light District.",
-		coord = (82, 38),
-		coord_alias = [
-			(78, 36),
-			(79, 36),
-			(80, 36),
-			(81, 36),
-			(82, 36),
-			(83, 36),
-			(84, 36),
-			(85, 36),
-			(86, 36),
-			(82, 37),
-			(82, 39),
-			(78, 40),
-			(79, 40),
-			(80, 40),
-			(81, 40),
-			(82, 40),
-			(83, 40),
-			(84, 40),
-			(85, 40),
-			(86, 40)
-		],
+		coord = (37, 23),
 		channel = "juvies-row",
 		role = "Juvie's Row",
 		pvp = False,
@@ -8022,29 +7772,7 @@ poi_list = [
 		],
 		str_name = "Slime's End",
 		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner.",
-		coord = (98, 38),
-		coord_alias = [
-			(94, 36),
-			(95, 36),
-			(96, 36),
-			(97, 36),
-			(98, 36),
-			(99, 36),
-			(100, 36),
-			(101, 36),
-			(102, 36),
-			(98, 37),
-			(98, 39),
-			(94, 40),
-			(95, 40),
-			(96, 40),
-			(97, 40),
-			(98, 40),
-			(99, 40),
-			(100, 40),
-			(101, 40),
-			(102, 40)
-		],
+		coord = (45, 21),
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
@@ -8059,29 +7787,7 @@ poi_list = [
 		],
 		str_name = "Vagrant's Corner",
 		str_desc = "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant’s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you’re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
-		coord = (92, 27),
-		coord_alias = [
-			(88, 25),
-			(89, 25),
-			(90, 25),
-			(91, 25),
-			(92, 25),
-			(93, 25),
-			(94, 25),
-			(95, 25),
-			(96, 25),
-			(92, 26),
-			(92, 28),
-			(88, 29),
-			(89, 29),
-			(90, 29),
-			(91, 29),
-			(92, 29),
-			(93, 29),
-			(94, 29),
-			(95, 29),
-			(96, 29)
-		],
+		coord = (42, 16),
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
@@ -8099,29 +7805,7 @@ poi_list = [
 		],
 		str_name = "Assault Flats Beach",
 		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
-		coord = (97, 16),
-		coord_alias = [
-			(95, 12),
-			(95, 13),
-			(95, 14),
-			(95, 15),
-			(95, 16),
-			(95, 17),
-			(95, 18),
-			(95, 19),
-			(95, 20),
-			(96, 16),
-			(98, 16),
-			(99, 12),
-			(99, 13),
-			(99, 14),
-			(99, 15),
-			(99, 16),
-			(99, 17),
-			(99, 18),
-			(99, 19),
-			(99, 20)
-		],
+		coord = (45, 11),
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
@@ -8136,29 +7820,7 @@ poi_list = [
 		],
 		str_name = "New New Yonkers",
 		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
-		coord = (89, 12),
-		coord_alias = [
-			(85, 10),
-			(86, 10),
-			(87, 10),
-			(88, 10),
-			(89, 10),
-			(90, 10),
-			(91, 10),
-			(92, 10),
-			(93, 10),
-			(89, 11),
-			(89, 13),
-			(85, 14),
-			(86, 14),
-			(87, 14),
-			(88, 14),
-			(89, 14),
-			(90, 14),
-			(91, 14),
-			(92, 14),
-			(93, 14)
-		],
+		coord = (41, 9),
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
@@ -8172,29 +7834,7 @@ poi_list = [
 		],
 		str_name = "Brawlden",
 		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
-		coord = (71, 8),
-		coord_alias = [
-			(67, 6),
-			(68, 6),
-			(69, 6),
-			(70, 6),
-			(71, 6),
-			(72, 6),
-			(73, 6),
-			(74, 6),
-			(75, 6),
-			(71, 7),
-			(71, 9),
-			(67, 10),
-			(68, 10),
-			(69, 10),
-			(70, 10),
-			(71, 10),
-			(72, 10),
-			(73, 10),
-			(74, 10),
-			(75, 10)
-		],
+		coord = (33, 8),
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
@@ -8211,29 +7851,7 @@ poi_list = [
 		],
 		str_name = "Toxington",
 		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park. To the North is Toxington Outskirts.",
-		coord = (27, 10),
-		coord_alias = [
-			(23, 8),
-			(24, 8),
-			(25, 8),
-			(26, 8),
-			(27, 8),
-			(28, 8),
-			(29, 8),
-			(30, 8),
-			(31, 8),
-			(27, 9),
-			(27, 11),
-			(23, 12),
-			(24, 12),
-			(25, 12),
-			(26, 12),
-			(27, 12),
-			(28, 12),
-			(29, 12),
-			(30, 12),
-			(31, 12)
-		],
+		coord = (14, 9),
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
@@ -8251,29 +7869,7 @@ poi_list = [
 		],
 		str_name = "Charcoal Park",
 		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
-		coord = (15, 10),
-		coord_alias = [
-			(11, 8),
-			(12, 8),
-			(13, 8),
-			(14, 8),
-			(15, 8),
-			(16, 8),
-			(17, 8),
-			(18, 8),
-			(19, 8),
-			(15, 9),
-			(15, 11),
-			(11, 12),
-			(12, 12),
-			(13, 12),
-			(14, 12),
-			(15, 12),
-			(16, 12),
-			(17, 12),
-			(18, 12),
-			(19, 12)
-		],
+		coord = (11, 7),
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
@@ -8289,29 +7885,7 @@ poi_list = [
 		],
 		str_name = "Polonium Hill",
 		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
-		coord = (15, 20),
-		coord_alias = [
-			(11, 18),
-			(12, 18),
-			(13, 18),
-			(14, 18),
-			(15, 18),
-			(16, 18),
-			(17, 18),
-			(18, 18),
-			(19, 18),
-			(15, 19),
-			(15, 21),
-			(11, 22),
-			(12, 22),
-			(13, 22),
-			(14, 22),
-			(15, 22),
-			(16, 22),
-			(17, 22),
-			(18, 22),
-			(19, 22)
-		],
+		coord = (11, 14),
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
@@ -8329,29 +7903,7 @@ poi_list = [
 		],
 		str_name = "West Glocksbury",
 		str_desc = "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city’s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury’s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
-		coord = (14, 34),
-		coord_alias = [
-			(10, 32),
-			(11, 32),
-			(12, 32),
-			(13, 32),
-			(14, 32),
-			(15, 32),
-			(16, 32),
-			(17, 32),
-			(18, 32),
-			(14, 33),
-			(14, 35),
-			(10, 36),
-			(11, 36),
-			(12, 36),
-			(13, 36),
-			(14, 36),
-			(15, 36),
-			(16, 36),
-			(17, 36),
-			(18, 36)
-		],
+		coord = (9, 19),
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
@@ -8368,29 +7920,7 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain",
 		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
-		coord = (13, 46),
-		coord_alias = [
-			(9, 44),
-			(10, 44),
-			(11, 44),
-			(12, 44),
-			(13, 44),
-			(14, 44),
-			(15, 44),
-			(16, 44),
-			(17, 44),
-			(13, 45),
-			(13, 47),
-			(9, 48),
-			(10, 48),
-			(11, 48),
-			(12, 48),
-			(13, 48),
-			(14, 48),
-			(15, 48),
-			(16, 48),
-			(17, 48)
-		],
+		coord = (9, 25),
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
@@ -8405,29 +7935,7 @@ poi_list = [
 		],
 		str_name = "Crookline",
 		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
-		coord = (20, 58),
-		coord_alias = [
-			(18, 54),
-			(18, 55),
-			(18, 56),
-			(18, 57),
-			(18, 58),
-			(18, 59),
-			(18, 60),
-			(18, 61),
-			(18, 62),
-			(19, 58),
-			(21, 58),
-			(22, 54),
-			(22, 55),
-			(22, 56),
-			(22, 57),
-			(22, 58),
-			(22, 59),
-			(22, 60),
-			(22, 61),
-			(22, 62)
-		],
+		coord = (14, 26),
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
@@ -8442,29 +7950,7 @@ poi_list = [
 		],
 		str_name = "Dreadford",
 		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
-		coord = (10, 53),
-		coord_alias = [
-			(6, 51),
-			(7, 51),
-			(8, 51),
-			(9, 51),
-			(10, 51),
-			(11, 51),
-			(12, 51),
-			(13, 51),
-			(14, 51),
-			(10, 52),
-			(10, 54),
-			(6, 55),
-			(7, 55),
-			(8, 55),
-			(9, 55),
-			(10, 55),
-			(11, 55),
-			(12, 55),
-			(13, 55),
-			(14, 55)
-		],
+		coord = (10, 28),
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
@@ -8491,6 +7977,38 @@ poi_list = [
 		role = "Sewers",
 		community_chest = chest_id_thesewers
 	),
+	EwPoi(  # ENDLESS WAR
+		id_poi = poi_id_endlesswar,
+		alias = [
+			"obelisk",
+			"war",
+			"ew"
+		],
+		str_in = "at the base of",
+		str_enter = "arrive at",
+		str_name = "ENDLESS WAR",
+		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
+		channel = channel_endlesswar,
+		role = "Endless War",
+		is_subzone = True,
+		mother_district = poi_id_downtown
+	),
+	EwPoi(  # slimecorp HQ
+		id_poi = poi_id_slimecorphq,
+		alias = [
+			"slimecorp",
+			"hq",
+			"corp"
+		],
+		str_in = "in the lobby of",
+		str_name = "SlimeCorp HQ",
+		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
+		channel = channel_slimecorphq,
+		role = "SlimeCorp HQ",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_downtown
+	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
 		alias = [
@@ -8510,7 +8028,6 @@ poi_list = [
 		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
 		channel = channel_stockexchange,
 		role = "Stock Exchange",
-		coord = (63, 40),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_downtown
@@ -8524,10 +8041,9 @@ poi_list = [
 			"b"
 		],
 		str_name = "The Bazaar",
-		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren.\n\nExits into Brawlden.",
+		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren, but what does catch your eye is a stall some weirdo's set up. Apparently his services include prying things off of propstands and luring fish out of their tanks.\n\nExits into Brawlden.",
 		channel = channel_bazaar,
 		role = "Bazaar",
-		coord = (57, 28),
 		pvp = False,
 		vendors = [
 			vendor_bazaar
@@ -8550,7 +8066,6 @@ poi_list = [
 		str_desc = "A delightfully run-down movie theater, with warm carpeted walls fraying ever so slightly. Films hand picked by the Rowdy Fucker and/or Cop Killer are regularly screened.\n\nExits into Astatine Heights.",
 		channel = channel_cinema,
 		role = "Cinema",
-		coord = (48, 16),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_astatineheights
@@ -8578,7 +8093,6 @@ poi_list = [
 				   "and brittle, you’ll wish you spent your time doing this more.\n\nExits into Krak Bay.",
 		channel = channel_foodcourt,
 		role = "Food Court",
-		coord = (41, 44),
 		pvp = False,
 		vendors = [
 			vendor_pizzahut,
@@ -8604,7 +8118,6 @@ poi_list = [
 		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into Gatlingsdale.",
 		channel = channel_nlacu,
 		role = "NLAC U",
-		coord = (34, 21),
 		pvp = False,
 		vendors = [
 			vendor_college
@@ -8625,7 +8138,6 @@ poi_list = [
 		str_desc = "A huge arena stadium capable of housing tens of thousands of battle enthusiasts, ringing a large field where Slimeoid Battles are held. All the seats are empty.\n\nExits into Vandal Park.",
 		channel = channel_arena,
 		role = "Arena",
-		coord = (24, 28),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_vandalpark
@@ -8644,7 +8156,6 @@ poi_list = [
 		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
 		channel = channel_dojo,
 		role = "Dojo",
-		coord = (29, 59),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_southsleezeborough,
@@ -8670,7 +8181,6 @@ poi_list = [
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
-		coord = (94, 27),
 		pvp = False,
 		vendors = [
 			vendor_bar
@@ -8693,7 +8203,6 @@ poi_list = [
 		str_desc = "The darkened derelict 7-11 stands as it always has, a steadfast pillar of NLACakaNM culture. On its dirty exterior walls are spraypainted messages about \"patch notes\", \"github\", and other unparseable nonsense.\n\nExits into Poudrin Alley.",
 		channel = channel_711,
 		role = "7-11",
-		coord = (50, 58),
 		pvp = False,
 		vendors = [
 			vendor_vendingmachine
@@ -8722,7 +8231,6 @@ poi_list = [
 		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
-		coord = (67, 8),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_brawlden
@@ -8738,7 +8246,6 @@ poi_list = [
 		],
 		str_name = "The Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Juvie's Row.",
-		coord = (84, 38),
 		channel = channel_mines,
 		role = "Mines",
 		pvp = False,
@@ -8753,11 +8260,11 @@ poi_list = [
 			"theslimecasino",
 			"tc",  # the casino
 			"cas",
-			"c"
+			"c",
+			"scs"
 		],
-		str_name = "The Casino",
-		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit.\n\nExits into Green Light District.",
-		coord = (73, 35),
+		str_name = "The SlimeCorp Casino",
+		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
 		channel = channel_casino,
 		role = "Casino",
 		pvp = False,
@@ -8777,7 +8284,6 @@ poi_list = [
 		],
 		str_name = "The Cratersville Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR.\n\nExits into Cratersville.",
-		coord = (46, 64),
 		channel = channel_cv_mines,
 		role = "Cratersville Mines",
 		pvp = False,
@@ -8796,7 +8302,6 @@ poi_list = [
 		],
 		str_name = "The Toxington Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Toxington.",
-		coord = (25, 10),
 		channel = channel_tt_mines,
 		role = "Toxington Mines",
 		pvp = False,
@@ -8817,7 +8322,6 @@ poi_list = [
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
-		coord = (65, 60),
 		channel = channel_diner,
 		role = "Smoker's Cough",
 		pvp = False,
@@ -8840,7 +8344,6 @@ poi_list = [
 		],
 		str_name = "Red Mobster Seafood",
 		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Astatine Heights.",
-		coord = (44, 16),
 		channel = channel_seafood,
 		role = "Red Mobster Seafood",
 		pvp = False,
@@ -8864,7 +8367,6 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Farms",
 		str_desc = "An array of haphazardly placed farms dot the already dense, crowded areas between mining shaft entrances and impoverished juvenile housing. Pollution is rampant here, with the numerous trash heaps and sludge refineries enjoying the majority of earth under the smoke-smuggered stars. It’s soil is irradiated and barely arable, but it will do. It has to.\n\nExits into Juvie's Row.",
-		coord = (80, 38),
 		channel = channel_jr_farms,
 		role = "Juvie's Row Farms",
 		pvp = False,
@@ -8887,7 +8389,6 @@ poi_list = [
 		],
 		str_name = "The Ooze Gardens Farms",
 		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here.\n\nExits into Ooze Gardens.",
-		coord = (37, 66),
 		channel = channel_og_farms,
 		role = "Ooze Gardens Farms",
 		pvp = False,
@@ -8908,7 +8409,6 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Farms",
 		str_desc = "A series of reedy creeks interspersed with quiet farms and burnt, black trees. It’s overcast skies make the embers from frequent forest fires glow even brighter by comparison. It’s soil is fertile with copious amounts of soot and accompanying nutrients.\n\nExits into Arsonbrook.",
-		coord = (56, 12),
 		channel = channel_ab_farms,
 		role = "Arsonbrook Farms",
 		pvp = False,
@@ -8925,7 +8425,6 @@ poi_list = [
 		],
 		str_name = "Neo Milwaukee State",
 		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it’s needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent’s ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into North Sleezeborough. ",
-		coord = (27, 46),
 		channel = channel_neomilwaukeestate,
 		role = "Neo Milwaukee State",
 		pvp = False,
@@ -8944,7 +8443,6 @@ poi_list = [
 		],
 		str_name = "The Resort",
 		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported red sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
-		coord = (97, 14),
 		channel = channel_beachresort,
 		role = "Beach Resort",
 		pvp = False,
@@ -8963,7 +8461,6 @@ poi_list = [
 		],
 		str_name = "The Country Club",
 		str_desc = "On top of a grassy hill, behind several wired/eletric fences, lies Dreadford’s famous country club. The lodge itself is a huge, old wooden lodge from the 1800s, with hundreds of knick-knacks, hunting trophies and historic photos hung up on the wall, and tacky rugs and furniture around a roaring fire in it’s center. Sprawling out from the club itself is the complex’s signature golf course, where all the pompous rich assholes go to waste their time and chit-chat with each other about cheating on their wives.\n\nExits into Dreadford.",
-		coord = (8, 53),
 		channel = channel_countryclub,
 		role = "Country Club",
 		pvp = False,
@@ -8986,7 +8483,6 @@ poi_list = [
 		],
 		str_name = "The SlimeCorp Recycling Plant",
 		str_desc = "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
-		coord = (60, 24),
 		channel = channel_recyclingplant,
 		role = "Recycling Plant",
 		pvp = False,
@@ -9002,7 +8498,6 @@ poi_list = [
 		],
 		str_name = "Toxington Pier",
 		str_desc = "A rickety, decaying pier stretching over a bubbling lake of molten slime. Use of your olfactory organs in any capacity is not recommended, the toxic fumes this district is known for originate here, from these lakes. But, there are some pretty sicknasty fuckin’ fishes down there, you bet.\n\nExits into Toxington.",
-		coord = (25, 6),
 		channel = channel_tt_pier,
 		role = "Toxington Pier",
 		pvp = False,
@@ -9020,7 +8515,6 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain Pier",
 		str_desc = "An old, sundrenched pier stretching over a lake overgrown with reeds and similar vegetation. It’s just one of the many natural beauties overlooked by the district’s perpetually twisted (a colloquialism for being drunk and high at the same time) population.\n\nExits into Jaywalker Plain.",
-		coord = (9 , 42),
 		channel = channel_jp_pier,
 		role = "Jaywalker Plain Pier",
 		pvp = False,
@@ -9039,7 +8533,6 @@ poi_list = [
 		],
 		str_name = "Crookline Pier",
 		str_desc = "A dark, modern pier stretching over a large lake on the outskirts of the district. Bait shops and other aquatic-based stores surround the water, with the occasional restaurant breaking up the monotony.\n\nExits into Crookline.",
-		coord = (16, 58),
 		channel = channel_cl_pier,
 		role = "Crookline Pier",
 		pvp = False,
@@ -9058,7 +8551,6 @@ poi_list = [
 		],
 		str_name = "Assault Flats Beach Pier",
 		str_desc = "A white, picturesque wooden pier stretching far out into the Slime Sea. This famous landmark is a common destination for robber barons on vacation, with a various roller coasters and rides occupying large parts of the pier. It’s really fucking lame, and you feel sick thinking about the astronomical slime the yuppies around you have ontained solely through inhereitance. You vow to piss on the ferris wheel if you get the proper mutations.\n\nExits into Assault Flats Beach.",
-		coord = (101, 16),
 		channel = channel_afb_pier,
 		role = "Assault Flats Beach Pier",
 		pvp = False,
@@ -9068,21 +8560,38 @@ poi_list = [
 		pier_type = fish_slime_saltwater
 
 	),
-	EwPoi(  # Vagrant's Corner Pier
-		id_poi = poi_id_vagrantscorner_pier,
+	# EwPoi(  # Vagrant's Corner Pier
+	# 	id_poi = poi_id_vagrantscorner_pier,
+	# 	alias = [
+	# 		"vagrantscornerpier",
+	# 		"vcpier",
+	# 		"vcpr",
+	# 	],
+	# 	str_name = "Vagrant's Corner Pier",
+	# 	str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+	# 	channel = channel_vc_pier,
+	# 	role = "Vagrant's Corner Pier",
+	# 	pvp = False,
+	# 	is_subzone = True,
+	# 	mother_district = poi_id_vagrantscorner,
+	# 	is_pier = True,
+	# 	pier_type = fish_slime_saltwater
+	#
+	# ),
+	EwPoi(  # Juvie's Row Pier
+		id_poi = poi_id_juviesrow_pier,
 		alias = [
-			"vagrantscornerpier",
-			"vcpier",
-			"vcpr",
+			"juviesrowpier",
+			"jrpier",
+			"jrpr",
 		],
-		str_name = "Vagrant's Corner Pier",
-		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
-		coord = (98, 25),
-		channel = channel_vc_pier,
-		role = "Vagrant's Corner Pier",
+		str_name = "Juvie's Row Pier",
+		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Juvie's Row.",
+		channel = channel_jr_pier,
+		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_district = poi_id_juviesrow,
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 
@@ -9096,7 +8605,6 @@ poi_list = [
 		],
 		str_name = "Slime's End Pier",
 		str_desc = "A lonesome pier at the very end of the Slime’s End peninsula, stretching out into the Slime Sea. From here, you’re able to clearly make out Downtown in the distance, pumping light pollution into the normally polluted air. You’re itching to get back there and punch some grandmas once you’re done wringing slime out of fish.\n\nExits into Slime's End.",
-		coord = (102, 42),
 		channel = channel_se_pier,
 		role = "Slime's End Pier",
 		pvp = False,
@@ -9127,7 +8635,6 @@ poi_list = [
 		],
 		str_name = "The Wreckington Ferry Port",
 		str_desc = "Caddy corner to Wreckington’s iconic junkyard lies its less famous shipyard, filled mostly with dozens upon dozens of different garbage barges dumping off metric tons of trash every day but also hosting this very terminal! The ferry takes you from here to Vagrant’s Corner, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Wreckington.",
-		coord = (59, 60),
 		channel = channel_wt_port,
 		role = "Wreckington Port",
 		pvp = True,
@@ -9150,7 +8657,6 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Ferry Port",
 		str_desc = "Down one of hundreds of piers on the crowded Vagrant’s Corner wharf sits this dingy dinghy terminal. The ferry takes you from here to Wreckington, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Vagrant's Corner.",
-		coord = (88, 27),
 		channel = channel_vc_port,
 		role = "Vagrant's Corner Port",
 		pvp = True,
@@ -9178,7 +8684,6 @@ poi_list = [
 		],
 		str_name = "The Toxington Subway Station",
 				str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
-		coord = (23, 10),
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
@@ -9206,7 +8711,6 @@ poi_list = [
 		],
 		str_name = "The Astatine Heights Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Astatine Heights.",
-		coord = (42, 16),
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
@@ -9234,7 +8738,6 @@ poi_list = [
 		],
 		str_name = "The Gatlingsdale Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Gatlingsdale.",
-		coord = (32, 21),
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
@@ -9262,7 +8765,6 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into Arsonbrook.",
-		coord = (56, 14),
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
@@ -9291,7 +8793,6 @@ poi_list = [
 		],
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
-		coord = (40, 32),
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
@@ -9322,7 +8823,6 @@ poi_list = [
 						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
 						"\n\n" + str_yellow_subway_station_description \
 			+ "\n\nExits into Smogsburg.",
-		coord = (55, 28),
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
@@ -9345,7 +8845,6 @@ poi_list = [
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
 		str_desc = str_downtown_station_description,
-		coord = (55, 40),
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
 		pvp = True,
@@ -9376,7 +8875,6 @@ poi_list = [
 						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
 						"\n\n" + str_yellow_subway_station_description + \
 			"\n\nExits into Krak Bay.",
-		coord = (39, 44),
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
@@ -9404,7 +8902,6 @@ poi_list = [
 		],
 		str_name = "The Glocksbury Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Glocksbury.",
-		coord = (23, 38),
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
@@ -9432,7 +8929,6 @@ poi_list = [
 		],
 		str_name = "The West Glocksbury Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into West Glocksbury.",
-		coord = (10, 34),
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
@@ -9460,7 +8956,6 @@ poi_list = [
 		],
 		str_name = "The Jaywalker Plain Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Jaywalker Plain.",
-		coord = (9, 46),
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
@@ -9489,7 +8984,6 @@ poi_list = [
 		],
 		str_name = "The North Sleezeborough Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into North Sleezeborough.",
-		coord = (25, 46),
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
@@ -9518,7 +9012,6 @@ poi_list = [
 		],
 		str_name = "The South Sleezeborough Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
-		coord = (29, 61),
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
@@ -9546,7 +9039,6 @@ poi_list = [
 		],
 		str_name = "The Cratersville Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cratersville.",
-		coord = (44, 64),
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
@@ -9574,7 +9066,6 @@ poi_list = [
 		],
 		str_name = "The Wreckington Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Wreckington.",
-		coord = (61, 60),
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
@@ -9601,7 +9092,6 @@ poi_list = [
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
-		coord = (58, 51),
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
@@ -9630,7 +9120,6 @@ poi_list = [
 		],
 		str_name = "The Green Light District Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Green Light District.",
-		coord = (73, 37),
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
@@ -9658,7 +9147,6 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Juvie's Row.",
-		coord = (78, 38),
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
@@ -9686,7 +9174,6 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Vagrant's Corner.",
-		coord = (90, 27),
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
@@ -9719,7 +9206,6 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
-		coord = (97, 18),
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
 		pvp = True,
@@ -9743,7 +9229,6 @@ poi_list = [
 		],
 		str_name = "The Dreadford Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Dreadford.",
-		coord = (6, 53),
 		channel = channel_df_blimp_tower,
 		role = "Dreadford Blimp Tower",
 		pvp = True,
@@ -9770,7 +9255,6 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.",
-		coord = (97, 20),
 		channel = channel_afb_blimp_tower,
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
@@ -9792,9 +9276,8 @@ poi_list = [
 		],
 		str_name = "SlimeCorp Real Estate Agency",
 		str_desc = "The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
-		coord = (78, 21),
 		pvp = False,
-		channel = "slimecorp-real-estate-agency",
+		channel = channel_realestateagency,
 		role = "Real Estate Agency",
 		mother_district = poi_id_oldnewyonkers,
 		is_subzone = True
@@ -9811,8 +9294,7 @@ poi_list = [
 			"card shop",
 		],
 		str_name = "Glocksbury Comics",
-		str_desc = "The walls and booths are plastered with various Secreature:tm: paraphernalia, ranging from comic books, to music CDs, to cheap plastic figurines, and of course, trading cards. This place has it all, and then some. The store itself seems to have a very labyrinthian structure, with different sections of the store devoted to secreatures merging with each other, like some kind of modern day winchester house. Near the front register, manned by a balding gentleman almost certainly in his early-to-mid 30s, you notice that they're also selling... slimecorp-brand body spray? You dread the thought of the stench such a thing emits.",
-		coord = (25, 38),
+		str_desc = "The walls and booths are plastered with various Secreature:tm: paraphernalia, ranging from comic books, to music CDs, to cheap plastic figurines, and of course, trading cards. This place has it all, and then some. The store itself seems to have a very labyrinthian structure, with different sections of the store devoted to secreatures merging with each other, like some kind of modern day winchester house. Near the front register, manned by a balding gentleman almost certainly in his early-to-mid 30s, you notice that they're also selling... slimecorp-brand body spray? You dread the thought of the stench such a thing emits.\n\nExits into Glocksbury.",
 		pvp = False,
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
@@ -9832,13 +9314,47 @@ poi_list = [
 			"candy shop",
 		],
 		str_name="Slimy Persuits",
-		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting presence and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In a post-apocalyptic hellscape like NLACakaNM, it seems some traditions have still survived.",
-		coord=(85, 12),
+		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting presence and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In a post-apocalyptic hellscape like NLACakaNM, it seems some traditions have still survived.\n\nExits into New New Yonkers.",
 		pvp=False,
 		vendors=[vendor_slimypersuits],
 		channel="slimy-persuits",
 		role="Slimy Persuits",
 		mother_district=poi_id_newnewyonkers,
+		is_subzone=True
+	),
+	EwPoi(  # Green Cake Cafe
+		id_poi=poi_id_greencakecafe,
+		alias=[
+			"gcc",
+			"cafe",
+			"greencake",
+			"green",
+			"cake"
+		],
+		str_name="Green Cake Cafe",
+		str_desc="Deeply nestled in the vandalized, sparsely populated buildings of Little Chernobyl lays a stubby building covered in vines, spray paint, and posters for criminals and concerts that have both long since passed. It seems the recently realized population of authors in the city has taken this irradiated little dump to be a safe haven from the general noisiness of the other districts in the city. Little do they know, the consequences of spending most of your time in Little Chernobyl will far exceed tinnitus in the long-term, but for now the Green Cake Cafe is where hipsters of all varieties want to write their zine opus while drinking a fresh cup of goolong tea served by the seven-eyed waitress.\n\nExits into Little Chernobyl.",
+		pvp=False,
+		vendors=[vendor_greencakecafe],
+		channel="green-cake-cafe",
+		role="Green Cake Cafe",
+		mother_district=poi_id_littlechernobyl,
+		is_subzone=True
+	),
+	EwPoi(
+		id_poi=poi_id_sodafountain,
+		alias=[
+			"tsf",
+			"soda",
+			"fountain",
+			"bicarbonate",
+			"newgameplus"
+		],
+		str_name="The Bicarbonate Soda Fountain",
+		str_desc="A sickening display of worship recently and secretly installed by those who wish to pay tribute to that blue cartoon, the one that's plagued our city for Slime Invictus knows HOW long. Legends say you can offer up your slime and !purify yourself with the deadly waters that fluctuate in, out, and around the fountain. Even THINKING about the act of doing such a thing makes you SICK... or, maybe not? There's no shame in trying something you've never tried before, you think to yourself.\n\nExits into Krak Bay.",
+		pvp=False,
+		channel=channel_sodafountain,
+		role="The Bicarbonate Soda Fountain",
+		mother_district=poi_id_krakbay,
 		is_subzone=True
 	),
 	EwPoi(  # Ferry
@@ -10417,265 +9933,291 @@ poi_list = [
 		mother_district = poi_id_slimesend,
 		pvp = True,
 		is_subzone = True,
-		coord = (98, 42),
 	),
 
 	EwPoi(  # Outskirts - 1
-		id_poi=poi_id_wreckington_outskirts,
+		id_poi=poi_id_south_outskirts,
 		alias=[
-			"wreckingtonoutskirts",
-			"wtoutskirts",
-			"wto",
+			"southoutskirts",
+			"soutskirts",
+			"so",
 		],
-		str_name="Wreckington Outskirts",
-		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
-		coord=(59, 70),
-		channel="wreckington-outskirts",
-		role="Wreckington Outskirts",
+		str_name="Southern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Wreckington, Cratersville, and Ooze Gardens. If you kept wandering, you could probably wind up in the Southwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (19, 37),
+		coord_alias = [
+			(20, 37),
+			(21, 37)
+		],
+		channel="south-outskirts",
+		role="Southern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 2
-		id_poi=poi_id_cratersville_outskirts,
+		id_poi=poi_id_southwest_outskirts,
 		alias=[
-			"cratersvilleoutskirts",
-			"cvoutskirts",
-			"cvo",
+			"southwesternoutskirts",
+			"swoutskirts",
+			"swo",
 		],
-		str_name="Cratersville Outskirts",
-		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
-		coord=(44, 70),
-		channel="cratersville-outskirts",
-		role="Cratersville Outskirts",
+		str_name="Southwestern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of South Sleezeborough, Crookline, and Dreadford. If you kept wandering, you could probably wind up in the Western or Southern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (6, 37),
+		coord_alias = [
+			(7, 37),
+			(8, 37),
+			(9, 37),
+			(10, 37)
+		],
+		channel="southwest-outskirts",
+		role="Southwestern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 3
-		id_poi=poi_id_oozegardens_outskirts,
+		id_poi=poi_id_west_outskirts,
 		alias=[
-			"oozegardensoutskirts",
-			"ogoutskirts",
-			"ogo",
+			"westernoutskirts",
+			"woutskirts",
+			"wo",
 		],
-		str_name="Ooze Gardens Outskirts",
-		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
-		coord=(35, 70),
-		channel="ooze-gardens-outskirts",
-		role="Ooze Gardens Outskirts",
+		str_name="Western Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Jaywalker Plain, West Glocksbury, and Polonium Hill. If you kept wandering, you could probably wind up in the Southwestern or Northwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (3, 10),
+		coord_alias = [
+			(3, 11),
+			(3, 12),
+			(3, 13),
+			(3, 14),
+		],
+		channel="west-outskirts",
+		role="Western Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 4
-		id_poi=poi_id_southsleezeborough_outskirts,
+		id_poi=poi_id_northwest_outskirts,
 		alias=[
-			"southsleezeboroughoutskirts",
-			"ssboutskirts",
-			"ssbo",
+			"northwesternoutskirts",
+			"nwoutskirts",
+			"nwo",
 		],
-		str_name="South Sleezeborough Outskirts",
-		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
-		coord=(27, 65),
-		channel="south-sleezeborough-outskirts",
-		role="South Sleezeborough Outskirts",
+		str_name="Northwestern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Charcoal Park, Toxington, and Astatine Heights. If you kept wandering, you could probably wind up in the Western or Northern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (22, 2),
+		coord_alias = [
+			(21, 2),
+			(20, 2),
+			(19, 2),
+			(18, 2),
+		],
+		channel="northwest-outskirts",
+		role="Northwestern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 5
-		id_poi=poi_id_crookline_outskirts,
+		id_poi=poi_id_north_outskirts,
 		alias=[
-			"crooklineoutskirts",
-			"cloutskirts",
-			"clo",
+			"northernoutskirts",
+			"noutskirts",
+			"no",
 		],
-		str_name="Crookline Outskirts",
-		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
-		coord=(18, 66),
-		channel="crookline-outskirts",
-		role="Crookline Outskirts",
+		str_name="North Outskirts",
+		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (36, 2),
+		coord_alias = [
+			(35, 2),
+			(34, 2),
+			(33, 2)
+		],
+		channel="north-outskirts",
+		role="Northern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
-	EwPoi(  # Outskirts - 6
-		id_poi=poi_id_dreadford_outskirts,
-		alias=[
-			"dreadfordoutskirts",
-			"dfoutskirts",
-			"dfo",
-		],
-		str_name="Dreadford Outskirts",
-		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
-		coord=(2, 51),
-		channel="dreadford-outskirts",
-		role="Dreadford Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 7
-		id_poi=poi_id_jaywalkerplain_outskirts,
-		alias=[
-			"jaywalkerplainoutskirts",
-			"jpoutskirts",
-			"jpo",
-		],
-		str_name="Jaywalker Plain Outskirts",
-		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
-		coord=(5, 44),
-		channel="jaywalker-plain-outskirts",
-		role="Jaywalker Plain Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 8
-		id_poi=poi_id_westglocksbury_outskirts,
-		alias=[
-			"westglocksburyoutskirts",
-			"wgboutskirts",
-			"wgbo"
-		],
-		str_name="West Glocksbury Outskirts",
-		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
-		coord=(6, 32),
-		channel="west-glocksbury-outskirts",
-		role="West Glocksbury Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 9
-		id_poi=poi_id_poloniumhill_outskirts,
-		alias=[
-			"poloniumhilloutskirts",
-			"phoutskirts",
-			"pho",
-		],
-		str_name="Polonium Hill Outskirts",
-		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
-		coord=(7, 18),
-		channel="polonium-hill-outskirts",
-		role="Polonium Hill Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 10
-		id_poi=poi_id_charcoalpark_outskirts,
-		alias=[
-			"charcoalparkoutskirts",
-			"cpoutskirts",
-			"cpo",
-		],
-		str_name="Charcoal Park Outskirts",
-		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
-		coord=(15, 4),
-		channel="charcoal-park-outskirts",
-		role="Charcoal Park Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 11
-		id_poi=poi_id_toxington_outskirts,
-		alias=[
-			"toxingtonoutskirts",
-			"ttoutskirts",
-			"tto",
-		],
-		str_name="Toxington Outskirts",
-		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
-		coord=(27, 4),
-		channel="toxington-outskirts",
-		role="Toxington Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 12
-		id_poi=poi_id_astatineheights_outskirts,
-		alias=[
-			"astatineheightsoutskirts",
-			"ahoutskirts",
-			"aho",
-		],
-		str_name="Astatine Heights Outskirts",
-		str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
-		coord=(46, 10),
-		channel="astatine-heights-outskirts",
-		role="Astatine Heights Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 13
-		id_poi=poi_id_arsonbrook_outskirts,
-		alias=[
-			"arsonbrookoutskirts",
-			"aboutskirts",
-			"abo",
-		],
-		str_name="Arsonbrook Outskirts",
-		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
-		coord=(54, 2),
-		channel="arsonbrook-outskirts",
-		role="Arsonbrook Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 14
-		id_poi=poi_id_brawlden_outskirts,
-		alias=[
-			"brawldenoutskirts",
-			"bdoutskirts",
-			"bdo",
-		],
-		str_name="Brawlden Outskirts",
-		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-		coord=(71, 2),
-		channel="brawlden-outskirts",
-		role="Brawlden Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 15
-		id_poi=poi_id_newnewyonkers_outskirts,
-		alias=[
-			"newnewyonkersoutskirts",
-			"nnyoutskirts",
-			"nnyo",
-		],
-		str_name="New New Yonkers Outskirts",
-		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
-		coord=(89, 6),
-		channel="new-new-yonkers-outskirts",
-		role="New New Yonkers Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 16
-		id_poi=poi_id_assaultflatsbeach_outskirts,
-		alias=[
-			"assaultflatsbeachoutskirts",
-			"afboutskirts",
-			"afbo",
-		],
-		str_name="Assault Flats Beach Outskirts",
-		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-		coord=(99, 8),
-		channel="assault-flats-beach-outskirts",
-		role="Assault Flats Beach Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
+	# EwPoi(  # Outskirts - 6
+	# 	id_poi=poi_id_dreadford_outskirts,
+	# 	alias=[
+	# 		"dreadfordoutskirts",
+	# 		"dfoutskirts",
+	# 		"dfo",
+	# 	],
+	# 	str_name="Dreadford Outskirts",
+	# 	str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(2, 51),
+	# 	channel="dreadford-outskirts",
+	# 	role="Dreadford Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 7
+	# 	id_poi=poi_id_jaywalkerplain_outskirts,
+	# 	alias=[
+	# 		"jaywalkerplainoutskirts",
+	# 		"jpoutskirts",
+	# 		"jpo",
+	# 	],
+	# 	str_name="Jaywalker Plain Outskirts",
+	# 	str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(5, 44),
+	# 	channel="jaywalker-plain-outskirts",
+	# 	role="Jaywalker Plain Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 8
+	# 	id_poi=poi_id_westglocksbury_outskirts,
+	# 	alias=[
+	# 		"westglocksburyoutskirts",
+	# 		"wgboutskirts",
+	# 		"wgbo"
+	# 	],
+	# 	str_name="West Glocksbury Outskirts",
+	# 	str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(6, 32),
+	# 	channel="west-glocksbury-outskirts",
+	# 	role="West Glocksbury Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 9
+	# 	id_poi=poi_id_poloniumhill_outskirts,
+	# 	alias=[
+	# 		"poloniumhilloutskirts",
+	# 		"phoutskirts",
+	# 		"pho",
+	# 	],
+	# 	str_name="Polonium Hill Outskirts",
+	# 	str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(7, 18),
+	# 	channel="polonium-hill-outskirts",
+	# 	role="Polonium Hill Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 10
+	# 	id_poi=poi_id_charcoalpark_outskirts,
+	# 	alias=[
+	# 		"charcoalparkoutskirts",
+	# 		"cpoutskirts",
+	# 		"cpo",
+	# 	],
+	# 	str_name="Charcoal Park Outskirts",
+	# 	str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(15, 4),
+	# 	channel="charcoal-park-outskirts",
+	# 	role="Charcoal Park Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 11
+	# 	id_poi=poi_id_toxington_outskirts,
+	# 	alias=[
+	# 		"toxingtonoutskirts",
+	# 		"ttoutskirts",
+	# 		"tto",
+	# 	],
+	# 	str_name="Toxington Outskirts",
+	# 	str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(27, 4),
+	# 	channel="toxington-outskirts",
+	# 	role="Toxington Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 12
+	# 	id_poi=poi_id_astatineheights_outskirts,
+	# 	alias=[
+	# 		"astatineheightsoutskirts",
+	# 		"ahoutskirts",
+	# 		"aho",
+	# 	],
+	# 	str_name="Astatine Heights Outskirts",
+	# 	str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(46, 10),
+	# 	channel="astatine-heights-outskirts",
+	# 	role="Astatine Heights Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 13
+	# 	id_poi=poi_id_arsonbrook_outskirts,
+	# 	alias=[
+	# 		"arsonbrookoutskirts",
+	# 		"aboutskirts",
+	# 		"abo",
+	# 	],
+	# 	str_name="Arsonbrook Outskirts",
+	# 	str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(54, 2),
+	# 	channel="arsonbrook-outskirts",
+	# 	role="Arsonbrook Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 14
+	# 	id_poi=poi_id_brawlden_outskirts,
+	# 	alias=[
+	# 		"brawldenoutskirts",
+	# 		"bdoutskirts",
+	# 		"bdo",
+	# 	],
+	# 	str_name="Brawlden Outskirts",
+	# 	str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(71, 2),
+	# 	channel="brawlden-outskirts",
+	# 	role="Brawlden Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 15
+	# 	id_poi=poi_id_newnewyonkers_outskirts,
+	# 	alias=[
+	# 		"newnewyonkersoutskirts",
+	# 		"nnyoutskirts",
+	# 		"nnyo",
+	# 	],
+	# 	str_name="New New Yonkers Outskirts",
+	# 	str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(89, 6),
+	# 	channel="new-new-yonkers-outskirts",
+	# 	role="New New Yonkers Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 16
+	# 	id_poi=poi_id_assaultflatsbeach_outskirts,
+	# 	alias=[
+	# 		"assaultflatsbeachoutskirts",
+	# 		"afboutskirts",
+	# 		"afbo",
+	# 	],
+	# 	str_name="Assault Flats Beach Outskirts",
+	# 	str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(99, 8),
+	# 	channel="assault-flats-beach-outskirts",
+	# 	role="Assault Flats Beach Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
 	EwPoi(  # Tutorial - 1
 		id_poi = poi_id_tutorial_classroom,
 		channel="classroom",
@@ -10694,7 +10236,15 @@ poi_list = [
 		role="Ghost Containment",
 		is_tutorial = True,
 	),
-
+	EwPoi(  # For containing people while server-wide renovations are transpiring.
+		id_poi = poi_id_thesphere,
+		str_name = "The Sphere",
+		str_desc = "A nebulous defined space for containing hazardous waste. You can't tell what's happening on the outside, but it's probably not good.",
+		coord = (54, 39),
+		channel = "the-sphere",
+		role = "The Sphere",
+		is_subzone = True
+	),
 ]
 
 debugroom = ewdebug.debugroom
@@ -10705,10 +10255,12 @@ debugfish_goal = ewdebug.debugfish_goal
 
 id_to_poi = {}
 coord_to_poi = {}
+chname_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
 transports = []
 transport_stops = []
+transport_stops_ch = []
 piers = []
 outskirts = []
 tutorial_pois = []
@@ -10737,6 +10289,7 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+		transport_stops_ch.append(poi.channel)
 
 	if poi.is_pier:
 		piers.append(poi.id_poi)
@@ -10747,12 +10300,14 @@ for poi in poi_list:
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
 
+	chname_to_poi[poi.channel] = poi
+
 landmark_pois = [
-	poi_id_countryclub,
+	poi_id_dreadford,
 	poi_id_charcoalpark,
-	poi_id_slimesend_pier,
-	poi_id_beachresort,
-	poi_id_diner,
+	poi_id_slimesend,
+	poi_id_assaultflatsbeach,
+	poi_id_wreckington,
 ]
 
 # maps districts to their immediate neighbors
@@ -11614,7 +11169,23 @@ cosmetic_items_list = [
 		rarity = "Double Halloween",
 		acquisition = "DH-bossfight",
 		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
-	)
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pileus",
+		str_name = "Pileus",
+		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
+		rarity = rarity_plebeian,
+		vendors = [vendor_bazaar],
+		price = 100,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "seacowcostume",
+		str_name = "Attractive Gray Sea Cow Mascot Costume for Adult",
+		str_desc = "Attractive. That's really all there is to say on the matter.",
+		rarity = rarity_promotional,
+		vendors = [vendor_bazaar],
+		price = 100000000,
+	),
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -13142,177 +12713,177 @@ mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_spontaneouscombustion,
-		str_describe_self = "On the surface you look calm and ready, probably unrelated to your onset of Spontaneous Combustion.",
-		str_describe_other = "On the surface they look calm and ready, probably unrelated to their onset of Spontaneous Combustion.",
-		str_acquire = "Deep inside your chest you feel a slight burning sensation. You suddenly convulse for a few moments, before… returning basically to normal. Huh, that’s weird. Oh well, I guess nothing happened. You have developed the mutation Spontaneous Combustion.",
+		str_describe_self = "On the surface you look calm and ready, probably unrelated to your onset of **Spontaneous Combustion**.",
+		str_describe_other = "On the surface they look calm and ready, probably unrelated to their onset of **Spontaneous Combustion**.",
+		str_acquire = "Deep inside your chest you feel a slight burning sensation. You suddenly convulse for a few moments, before… returning basically to normal. Huh, that’s weird. Oh well, I guess nothing happened. You have developed the mutation **Spontaneous Combustion**.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_thickerthanblood,
-		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to Thicker Than Blood.",
-		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to Thicker Than Blood.",
-		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. Its effects are diminished on hunted enemies, however.",
+		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to **Thicker Than Blood**.",
+		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to **Thicker Than Blood**.",
+		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation **Thicker Than Blood**. On a fatal blow, immediately receive the opponent’s remaining slime. Its effects are diminished on hunted enemies, however.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fungalfeaster,
-		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to Fungal Feaster.",
-		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to Fungal Feaster.",
-		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore all hunger.",
+		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to **Fungal Feaster**.",
+		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to **Fungal Feaster**.",
+		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation **Fungal Feaster**. On a fatal blow, restore all hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_sharptoother,
-		str_describe_self = "Your inhuman hand-eye-teeth coordination is the stuff of legends due to Sharptoother.",
-		str_describe_other = "Their inhuman hand-eye-teeth coordination is the stuff of legends due to Sharptoother.",
-		str_acquire = "Your pupils dilate, a cacophony of previously imperceivable noises floods into your head. Your canines pop out of your skull, making room for monstrously oversized saber-tooth replacements. Your fingers twitch frequently, begging to pull a trigger, any trigger. You have developed the mutation Sharptoother. Halved miss chance.",
+		str_describe_self = "Your inhuman hand-eye-teeth coordination is the stuff of legends due to **Sharptoother**.",
+		str_describe_other = "Their inhuman hand-eye-teeth coordination is the stuff of legends due to **Sharptoother**.",
+		str_acquire = "Your pupils dilate, a cacophony of previously imperceivable noises floods into your head. Your canines pop out of your skull, making room for monstrously oversized saber-tooth replacements. Your fingers twitch frequently, begging to pull a trigger, any trigger. You have developed the mutation **Sharptoother**. Halved miss chance.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_2ndamendment,
-		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to 2nd Amendment.",
-		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to 2nd Amendment.",
-		str_acquire = "You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation 2nd Amendment. Extra equippable gun slot.",
+		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to **2nd Amendment**.",
+		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to **2nd Amendment**.",
+		str_acquire = "You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation **2nd Amendment**. Extra equippable gun slot.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bleedingheart,
-		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to Bleeding Heart.",
-		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to Bleeding Heart.",
-		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation Bleeding Heart. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
+		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
+		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
+		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation **Bleeding Heart**. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_nosferatu,
-		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to Noseferatu.",
-		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to Noseferatu.",
-		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation Noseferatu. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
+		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to **Noseferatu**.",
+		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to **Noseferatu**.",
+		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation **Noseferatu**. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_organicfursuit,
-		str_describe_self = "Your shedding is a constant source of embarrassment due to Organic Fursuit.",
-		str_describe_other = "Their shedding is a constant source of embarrassment due to Organic Fursuit.",
-		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage dealt, 1/10th damage taken and movement speed every 31st night.",
+		str_describe_self = "Your shedding is a constant source of embarrassment due to **Organic Fursuit**.",
+		str_describe_other = "Their shedding is a constant source of embarrassment due to **Organic Fursuit**.",
+		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation **Organic Fursuit**. Double damage dealt, 1/10th damage taken and movement speed every 31st night.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lightasafeather,
-		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to Light As A Feather.",
-		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to Light As A Feather.",
-		str_acquire = "Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation Light As A Feather. Double movement speed while weather is windy.",
+		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to **Light As A Feather**.",
+		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to **Light As A Feather**.",
+		str_acquire = "Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_whitenationalist,
-		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
-		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
-		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Scavenge bonus and cannot be scouted while weather is snowy.",
+		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
+		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
+		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation **White Nationalist**. Scavenge bonus and cannot be scouted while weather is snowy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_spoiledappetite,
-		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to Spoiled Appetite.",
-		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to Spoiled Appetite.",
-		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation Spoiled Appetite. You can now eat spoiled food.",
+		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
+		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
+		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bigbones,
-		str_describe_self = "You can often be seen consuming enough calories to power a small country due to Big Bones.",
-		str_describe_other = "They can often be seen consuming enough calories to power a small country due to Big Bones.",
-		str_acquire = "Your can actively feel your brain being squeezed and your heart being nearly crushed by your rib cage as every bone in your body doubles in size. Your body fat doubles in density, requiring great strength and energy for even simple movements. You have developed the mutation Big Bones. Double food carrying capacity.",
+		str_describe_self = "You can often be seen consuming enough calories to power a small country due to **Big Bones**.",
+		str_describe_other = "They can often be seen consuming enough calories to power a small country due to **Big Bones**.",
+		str_acquire = "Your can actively feel your brain being squeezed and your heart being nearly crushed by your rib cage as every bone in your body doubles in size. Your body fat doubles in density, requiring great strength and energy for even simple movements. You have developed the mutation **Big Bones**. Double food carrying capacity.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fatchance,
-		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
-		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
-		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 50% hunger.",
+		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to **Fat Chance**.",
+		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to **Fat Chance**.",
+		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation **Fat Chance**. Take 25% less damage when above 50% hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fastmetabolism,
-		str_describe_self = "Fierce boiling and sizzling can be heard from deep inside your stomach due to Fast Metabolism.",
-		str_describe_other = "Fierce boiling and sizzling can be heard from deep inside their stomach due to Fast Metabolism.",
-		str_acquire = "An intense heat is felt in the pit of your stomach, which wails in pain as it’s dissolved from the inside out. Your gastric acid roars to an unthinkably destructive fever pitch, ready to completely annihilate whatever poor calories may enter your body before instantly turning them into pure leg muscle. You have developed the mutation Fast Metabolism. Doubled movement speed at below 50% hunger.",
+		str_describe_self = "Fierce boiling and sizzling can be heard from deep inside your stomach due to **Fast Metabolism**.",
+		str_describe_other = "Fierce boiling and sizzling can be heard from deep inside their stomach due to **Fast Metabolism**.",
+		str_acquire = "An intense heat is felt in the pit of your stomach, which wails in pain as it’s dissolved from the inside out. Your gastric acid roars to an unthinkably destructive fever pitch, ready to completely annihilate whatever poor calories may enter your body before instantly turning them into pure leg muscle. You have developed the mutation **Fast Metabolism**. Doubled movement speed at below 50% hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bingeeater,
-		str_describe_self = "You’re always one criticism away from devouring several large pizzas due to Binge Eater.",
-		str_describe_other = "They’re always one criticism away from devouring several large pizzas due to Binge Eater.",
-		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation Binge Eater. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
+		str_describe_self = "You’re always one criticism away from devouring several large pizzas due to **Binge Eater**.",
+		str_describe_other = "They’re always one criticism away from devouring several large pizzas due to **Binge Eater**.",
+		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation **Binge Eater**. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lonewolf,
-		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to Lone Wolf.",
-		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to Lone Wolf.",
-		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate and 50% damage buff when in a district alone.",
+		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to **Lone Wolf**.",
+		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to **Lone Wolf**.",
+		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation **Lone Wolf**. 20% capping discount and 50% damage buff when in a district alone.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_quantumlegs,
-		str_describe_self = "You’ve got nothing of note below the belt due to Quantum Legs.",
-		str_describe_other = "They’ve got nothing of note below the belt due to Quantum Legs.",
-		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation Quantum Legs. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
+		str_describe_self = "You’ve got nothing of note below the belt due to **Quantum Legs**.",
+		str_describe_other = "They’ve got nothing of note below the belt due to **Quantum Legs**.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_chameleonskin,
-		str_describe_self = "Your skin quickly adjusts and camouflages you in your current surroundings due to Chameleon Skin.",
-		str_describe_other = "Their skin quickly adjusts and camouflages them in their current surroundings due to Chameleon Skin.",
-		str_acquire = "You feel a scraping sensation all over your body, like you’re being sunburned and skinned alive at the same exact time. You begin to change hue rapidly, flipping through a thousand different colors, patterns, and textures. Every individual minor change in value across your entire body feels like you’re being dismembered. This transpires for several agonizing seconds before your body settles on a perfect recreation of your current surroundings. For all intents and purposes, you are transparent. You have developed the mutation Chameleon Skin. While offline, you can move and scout other districts and cannot be scouted.",
+		str_describe_self = "Your skin quickly adjusts and camouflages you in your current surroundings due to **Chameleon Skin**.",
+		str_describe_other = "Their skin quickly adjusts and camouflages them in their current surroundings due to **Chameleon Skin**.",
+		str_acquire = "You feel a scraping sensation all over your body, like you’re being sunburned and skinned alive at the same exact time. You begin to change hue rapidly, flipping through a thousand different colors, patterns, and textures. Every individual minor change in value across your entire body feels like you’re being dismembered. This transpires for several agonizing seconds before your body settles on a perfect recreation of your current surroundings. For all intents and purposes, you are transparent. You have developed the mutation **Chameleon Skin**. While offline, you can move and scout other districts and cannot be scouted.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_patriot,
-		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to Patriot.",
-		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to Patriot.",
-		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double capture rate.",
+		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to **Patriot**.",
+		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to **Patriot**.",
+		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation **Patriot**. 20% capture discount.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_socialanimal,
-		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to Social Animal.",
-		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to Social Animal.",
-		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 10% for every ally in your district.",
+		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to **Social Animal**.",
+		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to **Social Animal**.",
+		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation **Social Animal**. Your damage increases by 10% for every ally in your district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_threesashroud,
-		str_describe_self = "You tend to blend into the crowd due to Three’s A Shroud.",
-		str_describe_other = "They tend to blend into the crowd due to Three’s A Shroud.",
-		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation Three’s A Shroud. Cannot be scouted if there are more than 3 allies in your district.",
+		str_describe_self = "You tend to blend into the crowd due to **Three’s A Shroud**.",
+		str_describe_other = "They tend to blend into the crowd due to **Three’s A Shroud**.",
+		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation **Three’s A Shroud**. Cannot be scouted if there are more than 3 allies in your district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_aposematicstench,
-		str_describe_self = "A putrid stench permeates around you all hours of the day due to Aposematic Stench.",
-		str_describe_other = "A putrid stench permeates around them all hours of the day due to Aposematic Stench.",
-		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation Aposematic Stench. For every 5 levels you gain, you appear as 1 more person when being scouted.",
+		str_describe_self = "A putrid stench permeates around you all hours of the day due to **Aposematic Stench**.",
+		str_describe_other = "A putrid stench permeates around them all hours of the day due to **Aposematic Stench**.",
+		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lucky,
-		str_describe_self = "You are extremely fortunate due to Lucky.",
-		str_describe_other = "They are extremely fortunate due to Lucky.",
-		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation Lucky. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
+		str_describe_self = "You are extremely fortunate due to **Lucky**.",
+		str_describe_other = "They are extremely fortunate due to **Lucky**.",
+		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dressedtokill,
-		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to Dressed to Kill.",
-		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to Dressed to Kill.",
-		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation Dressed to Kill. Damage bonus if all available cosmetic slots are filled.",
+		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
+		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
+		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation **Dressed to Kill**. Damage bonus if all available cosmetic slots are filled.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_keensmell,
-		str_describe_self = "You have an uncanny ability to track and identify scents due to Keen Smell.",
-		str_describe_other = "They have an uncanny ability to track and identify scents due to Keen Smell.",
-		str_acquire = "You can feel your facial muscles being ripped as your skull elongates your mouth and nose, molding them into an uncanny snout. Your nostrils painfully stretch and elongate to allow for a broad range of olfactory sensations you could only have dreamed of experiencing before. Your nose twitches and you begin to growl as you pick up the scent of a nearby enemy gangster. You have developed the mutation Keen Smell. You can now use the !sniff command, allowing you to meticulously list every single player in the targeted district.",
+		str_describe_self = "You have an uncanny ability to track and identify scents due to **Keen Smell**.",
+		str_describe_other = "They have an uncanny ability to track and identify scents due to **Keen Smell**.",
+		str_acquire = "You can feel your facial muscles being ripped as your skull elongates your mouth and nose, molding them into an uncanny snout. Your nostrils painfully stretch and elongate to allow for a broad range of olfactory sensations you could only have dreamed of experiencing before. Your nose twitches and you begin to growl as you pick up the scent of a nearby enemy gangster. You have developed the mutation **Keen Smell**. You can now use the !sniff command, allowing you to meticulously list every single player in the targeted district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dumpsterdiver,
-		str_describe_self = "You are exceptionally good at picking up trash due to Dumpster Diver.",
-		str_describe_other = "They are exceptionally good at picking up trash due to Dumpster Diver.",
-		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. 10 times chance to get items while scavenging.",
+		str_describe_self = "You are exceptionally good at picking up trash due to **Dumpster Diver**.",
+		str_describe_other = "They are exceptionally good at picking up trash due to **Dumpster Diver**.",
+		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation **Dumpster Diver**. 10 times chance to get items while scavenging.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_trashmouth,
-		str_describe_self = "You have the mouth of a sailor and the vocabulary of a fourteen year old due to Trash Mouth.",
-		str_describe_other = "They have the mouth of a sailor and the vocabulary of a fourteen year old due to Trash Mouth.",
-		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation Trash Mouth. Reach maximum power scavenges faster.",
+		str_describe_self = "You have the mouth of a sailor and the vocabulary of a fourteen year old due to **Trash Mouth**.",
+		str_describe_other = "They have the mouth of a sailor and the vocabulary of a fourteen year old due to **Trash Mouth**.",
+		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation **Trash Mouth**. Reach maximum power scavenges faster.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_webbedfeet,
-		str_describe_self = "Your toes are connected by a thin layer of skin due to Webbed Feet.",
-		str_describe_other = "Their toes are connected by a thin layer of skin due to Webbed Feet.",
-		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation Webbed Feet. Your scavenging power increases the more slime there is in a district.",
+		str_describe_self = "Your toes are connected by a thin layer of skin due to **Webbed Feet**.",
+		str_describe_other = "Their toes are connected by a thin layer of skin due to **Webbed Feet**.",
+		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation **Webbed Feet**. Your scavenging power increases the more slime there is in a district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_enlargedbladder,
-		str_describe_self = "You have an enlarged bladder due to Enlarged Bladder.",
-		str_describe_other = "They have an enlarged bladder due to Enlarged Bladder.",
-		str_acquire = "You feel some mild sensation near your kidney, but you don’t really notice it. You have developed the mutation Enlarged Bladder. You may now, finally, piss.",
+		str_describe_self = "You have an enlarged bladder due to **Enlarged Bladder**.",
+		str_describe_other = "They have an enlarged bladder due to **Enlarged Bladder**.",
+		str_acquire = "You feel some mild sensation near your kidney, but you don’t really notice it. You have developed the mutation **Enlarged Bladder**. You may now, finally, piss.",
 		),
 	]
 
@@ -13711,7 +13282,7 @@ status_rerollfatigue_id = "rerollfatigue"
 status_high_id = "high"
 
 time_expire_burn = 12
-time_expire_high = 10 * 60 # 10 minutes
+time_expire_high = 30 * 60 # 30 minutes
 
 time_expire_repel_base = 60 * 60 * 3 # 3 hours
 
@@ -13860,11 +13431,11 @@ help_responses = {
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
 	"scouting": "Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even enemies. Scouting will list all players/enemies above your own level, as well as players/enemies below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district.",
 	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
-	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. What this means is that you've killed or otherwise attacked a juvenile, causing you to be persued by law enforcement, and your location is revealed to the opposing gang's base to boot. You will be 'wanted' for at least 1 hour, with an additional time of your current bounty converted to seconds (example: A player with a bounty of 3600 slimecoin will be wanted for two hours). While wanted, your movement speed is cut in half, you cannot enter subzones, drop all your slimecoin on death, cannot use !suicide or be killed by teammates, drop all your items on death, as well as drop your current weapon skill level (see !help sparring) down to zero on death. It's a brutal punishment, so try and consider if killing a certain juvie is really worth it beforehand.",
+	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. This means that you are able to be attacked by gangsters! Always be on the look out and remember to check your corners.",
 	# Ways to gain slime
 	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
-	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
-	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
+	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 15 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 15 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
+	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 50,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
 	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
@@ -13882,7 +13453,7 @@ help_responses = {
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
 	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
-	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
+	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
 	# Additional gameplay mechanics, part 4
@@ -13895,11 +13466,11 @@ help_responses = {
 	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
 	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5. After every 2 shots you will need to **!reload** it.",
 	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. Attacking with the rifle costs 4 sap. It has a damage mod of 1.25 and an attack cost mod of 1.5. It has a captcha length of 6, and a 20% chance for a crit, which does 2x damage. The rifle never misses. The rifle has sap piercing 10. After every 4 shots you will need to **!reload** it.",
-	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. Attacking with the SMG costs 3 sap. It has a damage mod of 0.2 and an attack cost mod of 1. It has a captcha length of 4 and a 10% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. Every bullet has sap crushing 1. After every 4 attacks you will need to **!reload** it.",
+	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. Attacking with the SMG costs 3 sap. It has a damage mod of 0.2 and an attack cost mod of 1. It has a captcha length of 4 and a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. Every bullet has sap crushing 1. After every 4 attacks you will need to **!reload** it.",
 	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. Attacking with the minigun costs 15 sap. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage. Every bullet has sap crushing 2.",
 	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
-	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 12 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
+	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
 	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 4 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
 	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.5 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
@@ -13933,7 +13504,7 @@ mutation_descriptions = {
 	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
-	mutation_id_2ndamendment: "One extra equippable gun slot in your inventory.",
+	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory.",
 	mutation_id_bleedingheart: "Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage instead. This does not counteract the Nosferatu mutation.",
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
@@ -13944,19 +13515,19 @@ mutation_descriptions = {
 	mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",
 	mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
 	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
-	mutation_id_lonewolf: "Double capture rate and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
+	mutation_id_lonewolf: "20% capture discount and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
 	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
 	mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
-	mutation_id_patriot: "Double capture rate. Stacks with the Lone Wolf mutation.",
+	mutation_id_patriot: "20% capture discount. Stacks with the Lone Wolf mutation.",
 	mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
 	mutation_id_threesashroud: "Cannot be scouted if there are more than 3 allies in your district. Cannot be scouted by players with the Keen Smell mutation.",
 	mutation_id_aposematicstench: "For every 5 levels you gain, you appear as 1 more person when being scouted. Cannot be scouted by players with the Keen Smell mutation.",
 	mutation_id_lucky: "33% higher chance to get slime poudrins from mining and farming.",
 	mutation_id_dressedtokill: "50% more damage if all cosmetic slots are filled. The maximum amount of cosmetic slots is calculated by your slime level, divided by 2, rounded up. Example: A level 25 player can equip 13 cosmetics.",
 	mutation_id_keensmell: "Scouting will list off the names of players and enemies within a district. Will not work on players with the Aposematic Stench or Three's A Shroud mutations.",
-	mutation_id_enlargedbladder: "You can use the !piss command.",
+	mutation_id_enlargedbladder: "You can use the !piss command, which, if targeted at a player like with !kill, spends 1 of your liquid sap, but crushes 3 of the target's hardened sap.",
 	mutation_id_dumpsterdiver: "10x chance to get items while scavenging with just '!scavenge'.",
-	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 30 seconds on scavenging is now reduced to 10 seconds.",
+	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 15 seconds on scavenging is now reduced to 5 seconds.",
 	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation.",
 }
 
@@ -14139,22 +13710,11 @@ coward_responses_hurt = [
 
 # List of outskirt districts for spawning purposes
 outskirts_districts = [
-	poi_id_wreckington_outskirts,
-	poi_id_cratersville_outskirts,
-	poi_id_oozegardens_outskirts,
-	poi_id_southsleezeborough_outskirts,
-	poi_id_crookline_outskirts,
-	poi_id_dreadford_outskirts,
-	poi_id_jaywalkerplain_outskirts,
-	poi_id_westglocksbury_outskirts,
-	poi_id_poloniumhill_outskirts,
-	poi_id_charcoalpark_outskirts,
-	poi_id_toxington_outskirts,
-	poi_id_astatineheights_outskirts,
-	poi_id_arsonbrook_outskirts,
-	poi_id_brawlden_outskirts,
-	poi_id_newnewyonkers_outskirts,
-	poi_id_assaultflatsbeach_outskirts
+	poi_id_south_outskirts,
+	poi_id_southwest_outskirts,
+	poi_id_west_outskirts,
+	poi_id_northwest_outskirts,
+	poi_id_north_outskirts
 ]
 
 # Letters that an enemy can identify themselves with
@@ -14515,6 +14075,18 @@ dungeon_tutorial = [
 
 	),
 ]
+
+pray_responses_list = [
+	"ENDLESS WAR momentarily overwhelms all of your senses by telepathically communicating with you in his eldritch tongue.",
+	"ENDLESS WAR gazes up towards the stars, longingly.",
+	"ENDLESS WAR fondly regards the good ol’ days.",
+	"ENDLESS WAR urges you to collect more slime.",
+	"ENDLESS WAR hungers for more.",
+	"ENDLESS WAR commands you to kill thy neighbor.",
+	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
+	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+]
+
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
 

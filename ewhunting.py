@@ -520,7 +520,7 @@ class EwEnemy:
 						# Player was killed. Remove its id from enemies with defender ai.
 						enemy_data.id_target = ""
 						target_data.id_killer = enemy_data.id_enemy
-						target_data.die(cause=ewcfg.cause_killing_enemy)
+
 						#target_data.change_slimes(n=-slimes_dropped / 10, source=ewcfg.source_ghostification)
 
 						kill_descriptor = "beaten to death"
@@ -555,20 +555,14 @@ class EwEnemy:
 							brain = ewcfg.brain_map.get(target_slimeoid.ai)
 							response += "\n\n" + brain.str_death.format(slimeoid_name=target_slimeoid.name)
 
-						deathreport = "You were {} by {}. {}".format(kill_descriptor, enemy_data.display_name,
-																	 ewcfg.emote_slimeskull)
-						deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(target_player, deathreport)
+						enemy_data.persist()
+						district_data.persist()
+						die_resp = target_data.die(cause=ewcfg.cause_killing_enemy) # moved after trauma definition so it can gurantee .die knows killer
+						district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 
 						target_data.persist()
-						enemy_data.persist()
-						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+						resp_cont.add_response_container(die_resp)
 						resp_cont.add_channel_response(ch_name, response)
-						if ewcfg.mutation_id_spontaneouscombustion in target_mutations:
-							explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!".format(
-								target_player.display_name)
-							resp_cont.add_channel_response(ch_name, explode_resp)
-							explosion = ewutils.explode(damage=explode_damage, district_data=district_data)
-							resp_cont.add_response_container(explosion)
 
 						# don't recreate enemy data if enemy was killed in explosion
 						if check_death(enemy_data) == False:
@@ -590,7 +584,8 @@ class EwEnemy:
 									name_target = target_player.display_name
 								))
 								if enemy_data.slimes - enemy_data.bleed_storage <= backfire_damage:
-									response += "\n\n" + drop_enemy_loot(enemy_data, district_data)
+									loot_cont = drop_enemy_loot(enemy_data, district_data)
+									resp_cont.add_response_container(loot_cont)
 									enemy_data.life_state = ewcfg.enemy_lifestate_dead
 									delete_enemy(enemy_data)
 								else:
@@ -834,7 +829,7 @@ async def enemy_perform_action(id_server):
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
 	enemydata = ewutils.execute_sql_query(
-		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s)) AND enemies.id_server = {id_server}".format(
+		"SELECT {id_enemy} FROM enemies WHERE ((enemies.poi IN (SELECT users.poi FROM users WHERE NOT (users.life_state = %s OR users.life_state = %s) AND users.id_server = {id_server})) OR (enemies.enemytype IN %s) OR (enemies.life_state = %s OR enemies.lifetime < %s) OR (enemies.id_target != '')) AND enemies.id_server = {id_server}".format(
 		id_enemy=ewcfg.col_id_enemy,
 		id_server=id_server
 	), (
@@ -1545,16 +1540,18 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
-				id_user=ewcfg.col_id_user,
-				life_state=ewcfg.col_life_state,
-				time_lastenter=ewcfg.col_time_lastenter,
-				poi=ewcfg.col_poi,
-				id_server=ewcfg.col_id_server,
-				targettimer=targettimer,
-				life_state_corpse=ewcfg.life_state_corpse,
-				life_state_kingpin=ewcfg.life_state_kingpin,
-				repel_status=ewcfg.status_repelled_id,
+			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND {time_expirpvp} > {time_now} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
+				id_user = ewcfg.col_id_user,
+				life_state = ewcfg.col_life_state,
+				time_lastenter = ewcfg.col_time_lastenter,
+				poi = ewcfg.col_poi,
+				id_server = ewcfg.col_id_server,
+				targettimer = targettimer,
+				life_state_corpse = ewcfg.life_state_corpse,
+				life_state_kingpin = ewcfg.life_state_kingpin,
+				repel_status = ewcfg.status_repelled_id,
+				time_expirpvp = ewcfg.col_time_expirpvp,
+				time_now = time_now,
 			), (
 				enemy_data.poi,
 				enemy_data.id_server
@@ -1564,17 +1561,19 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
-				id_user=ewcfg.col_id_user,
-				life_state=ewcfg.col_life_state,
-				slimes=ewcfg.col_slimes,
-				poi=ewcfg.col_poi,
-				id_server=ewcfg.col_id_server,
-				time_lastenter=ewcfg.col_time_lastenter,
-				targettimer=targettimer,
-				life_state_corpse=ewcfg.life_state_corpse,
-				life_state_kingpin=ewcfg.life_state_kingpin,
-				repel_status=ewcfg.status_repelled_id,
+			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND {time_expirpvp} > {time_now} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
+				id_user = ewcfg.col_id_user,
+				life_state = ewcfg.col_life_state,
+				slimes = ewcfg.col_slimes,
+				poi = ewcfg.col_poi,
+				id_server = ewcfg.col_id_server,
+				time_lastenter = ewcfg.col_time_lastenter,
+				targettimer = targettimer,
+				life_state_corpse = ewcfg.life_state_corpse,
+				life_state_kingpin = ewcfg.life_state_kingpin,
+				repel_status = ewcfg.status_repelled_id,
+				time_expirpvp = ewcfg.col_time_expirpvp,
+				time_now = time_now,
 			), (
 				enemy_data.poi,
 				enemy_data.id_server

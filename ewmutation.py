@@ -141,7 +141,7 @@ async def reroll_last_mutation(cmd):
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 
-	if user_data.poi != ewcfg.poi_id_slimeoidlab:
+	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -200,7 +200,7 @@ async def clear_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
-	if user_data.poi != ewcfg.poi_id_slimeoidlab:
+	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You require the advanced equipment at the Slimeoid Lab to modify your mutations."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -214,7 +214,7 @@ async def clear_mutations(cmd):
 		response = "You have not developed any specialized mutations yet."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 	if poudrin == None:
 		response = "You need a slime poudrin to replace a mutation."
