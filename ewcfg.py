@@ -2032,9 +2032,6 @@ item_list = [
 		str_name = "Slime Poudrin",
 		str_desc = "A dense, crystalized chunk of precious slime.",
 		acquisition = acquisition_mining,
-		ingredients={
-			item_id_royaltypoudrin: 2
-		}
 	),
 	EwGeneralItem(
 		id_item = "whitedye",

@@ -400,6 +400,7 @@ async def set_title(cmd):
 async def edit_page(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	response = ""
 
 	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -424,7 +425,7 @@ async def edit_page(cmd):
 		if page == "cover":
 			page = '0'
 
-		elif not page.isdigit():
+		if not page.isdigit():
 			response = "You must specify a valid page to edit."
 
 		elif int(page) not in range(0, 11):
@@ -638,7 +639,7 @@ async def read_book(cmd):
 		else:
 			page_number = 0
 
-		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_book)
 
 		if book_sought:
 			book = EwItem(id_item = book_sought.get('id_item'))
