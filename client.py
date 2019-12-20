@@ -170,12 +170,18 @@ cmd_map = {
 	ewcfg.cmd_boo: ewcmd.boo,
 	#ewcfg.cmd_spook: ewcmd.spook,
 	
+	# Juvies can dance
+	ewcfg.cmd_dance: ewcmd.dance,
+	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
 	#ewcfg.cmd_makecostume: ewitem.makecostume,
 
+	# Show the total of negative slime in the market.
+	ewcfg.cmd_negapool: ewspooky.negapool,
+	
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
 	

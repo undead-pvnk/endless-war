@@ -66,7 +66,7 @@ async def pachinko(cmd):
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 			#SLIMERNALIA
-			user_data.slimernalia_coin_gambled += value
+			user_data.festivity += slimecoin_to_festivity(value)
 
 		else:
 			value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
@@ -180,7 +180,7 @@ async def craps(cmd):
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				#SLIMERNALIA
-				user_data.slimernalia_coin_gambled += value
+				user_data.festivity += slimecoin_to_festivity(value)
 
 			else:
 				if value == -1:
@@ -267,7 +267,7 @@ async def slots(cmd):
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 			#SLIMERNALIA
-			user_data.slimernalia_coin_gambled += value
+			user_data.festivity += slimecoin_to_festivity(value)
 
 		else:
 			value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
@@ -453,7 +453,7 @@ async def roulette(cmd):
 				# subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 				#SLIMERNALIA
-				user_data.slimernalia_coin_gambled += value
+				user_data.festivity += slimecoin_to_festivity(value)
 
 			else:
 				if value == -1:
@@ -614,7 +614,7 @@ async def baccarat(cmd):
 				#subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 				#SLIMERNALIA
-				user_data.slimernalia_coin_gambled += value
+				user_data.festivity += slimecoin_to_festivity(value)
 
 			else:
 				if value == -1:
@@ -2327,3 +2327,8 @@ def slimecorp_collectfee(winnings):
 	new_winnings = int(winnings * 0.8)
 	
 	return slimecorp_fee, new_winnings
+
+def slimecoin_to_festivity(value):
+	festivity_gained = value / 1000000000000
+	
+	return festivity_gained

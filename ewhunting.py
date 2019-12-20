@@ -923,9 +923,9 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 
 	while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-		# Sand bags only spawn in the dojo
+		# Sand bags only spawn in the dojo (aka South Sleezeborough)
 		if enemytype == ewcfg.enemy_type_sandbag:
-			potential_chosen_poi = 'thedojo'
+			potential_chosen_poi = ewcfg.poi_id_southsleezeborough
 		else:
 			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
 			

@@ -595,6 +595,7 @@ cmd_exchangerate_alt3 = cmd_prefix + 'exchangerates'
 cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
+cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
@@ -659,6 +660,7 @@ cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
+cmd_dance = cmd_prefix + 'dance'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
@@ -1903,7 +1905,14 @@ item_id_whitelineticket = "ticket"
 item_id_seaweedjoint = "seaweedjoint"
 item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
 item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
-item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
+item_id_phoebuswrappingpaper = "phoebuswrappingpaper"
+item_id_slimeheartswrappingpaper = "slimeheartswrappingpaper"
+item_id_slimeskullswrappingpaper = "slimeskullswrappingpaper"
+item_id_shermanwrappingpaper = "shermanwrappingpaper"
+item_id_slimecorpwrappingpaper = "slimecorpwrappingpaper"
+item_id_pickaxewrappingpaper = "pickaxewrappingpaper"
+item_id_munchywrappingpaper = "munchywrappingpaper"
+item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 item_id_royaltypoudrin = "royaltypoudrin"
 
@@ -2373,9 +2382,9 @@ item_list = [
 			"mswp"
 		],
 		str_name="Megaslime Wrapping Paper",
-		str_desc="",
+		str_desc="Wrapping paper with Megaslimes plastered all over it. Blaargh!",
 		vendors=[vendor_glocksburycomics],
-		price = 500,
+		price = 1000,
 	),
 	EwGeneralItem(
 		id_item=item_id_greeneyesslimedragonwrappingpaper,
@@ -2384,20 +2393,97 @@ item_list = [
 			"gesdwp"
 		],
 		str_name="Green Eyes Slime Dragon Wrapping Paper",
-		str_desc="",
+		str_desc="Wrapping paper with many images of the Green Eyes Slime Dragon printed on it. Powerful...",
 		vendors=[vendor_glocksburycomics],
-		price = 500,
+		price = 1000,
 	),
 	EwGeneralItem(
-		id_item = item_id_pheobuswrappingpaper,
+		id_item = item_id_phoebuswrappingpaper,
 		context = context_wrappingpaper,
 		alias = [
 			"pwp"
 		],
 		str_name = "Phoebus Wrapping Paper",
-		str_desc = "",
+		str_desc = "A set of wrapping paper with Slime Invictus on it. Yo, Slimernalia!",
 		vendors = [vendor_glocksburycomics],
-		price = 500,
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeheartswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"shwp"
+		],
+		str_name = "Slime Hearts Wrapping Paper",
+		str_desc = "Wrapping paper decorated with slime hearts. Cute!!",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeskullswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"sswp"
+		],
+		str_name = "Slime Skulls Wrapping Paper",
+		str_desc = "A roll of wrapping paper with Slime Skulls stamped all over it. Spooky...",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_shermanwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"swp"
+		],
+		str_name = "Sherman Wrapping Paper",
+		str_desc = "Wrapping paper with Sherman, the SlimeCorp salaryman etched into it. Jesus Christ, how horrifying!",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimecorpwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"scwp"
+		],
+		str_name = "SlimeCorp Wrapping Paper",
+		str_desc = "A set of wrapping paper with that accursed logo printed all over it. What sort of corporate bootlicker would wrap a gift in this?",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_pickaxewrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"pawp"
+		],
+		str_name = "Pickaxe Wrapping Paper",
+		str_desc = "A roll of wrapping paper with a bunch of pickaxes depicted on it. Perfect for Juvies who love to toil away in the mines.",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_benwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"bwp"
+		],
+		str_name = "Ben Wrapping Paper",
+		str_desc = "Wrapping paper with the Cop Killer printed on it. !dab !dab !dab",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_munchywrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"mwp"
+		],
+		str_name = "Munchy Wrapping Paper",
+		str_desc = "Wrapping paper with the Rowdy Fucker printed on it. !THRASH !THRASH !THRASH",
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
 	),
 	EwGeneralItem(
 		id_item = item_id_gellphone,
@@ -6068,6 +6154,19 @@ food_list = [
 		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
 		vendors=[vendor_greencakecafe]
 	),
+	EwFood(
+		id_food = "juicebox",
+		alias = [
+			"juice",
+			"appyjuice",
+		],
+		recover_hunger=10,
+		price=1,
+		str_name = "Juice Box",
+		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
+		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
+		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
+	)
 ]
 
 # A map of id_food to EwFood objects.
@@ -11254,6 +11353,14 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 100000000,
 	),
+	EwCosmeticItem(
+		id_cosmetic = "wrappingpaperhat",
+		str_name = "Wrapping Paper Hat",
+		str_desc = "A hat made out of wrapping paper, fashioned in a way rather similar to a newspaper hat. How festive!",
+		rarity = rarity_plebeian,
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -14175,6 +14282,16 @@ pray_responses_list = [
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
 ]
 
+
+dance_responses = [
+	"{} busts a move. Wow, look at 'em go!",
+	"{} gets down and boogies! Groovy!",
+	"{} does a headstand and starts breakdancing!",
+	"{} starts flossing fast and hard!",
+	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+]
+
 # list of genres and aliases
 book_genres = [
 	"narrative", #0
@@ -14198,6 +14315,7 @@ rating_flavor = [
 	]
 
 zine_cost = 10000
+
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

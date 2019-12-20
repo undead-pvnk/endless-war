@@ -1344,8 +1344,8 @@ async def scout(cmd):
 			num_players += 1
 
 		# No filtering is done on enemies themselves. Enemies that pose a threat to the player are filtered instead.
-		enemies_in_district = district_data.get_enemies_in_district()
-		threats_in_district = district_data.get_enemies_in_district(min_level=min_level)
+		enemies_in_district = district_data.get_enemies_in_district(scout_used=True)
+		threats_in_district = district_data.get_enemies_in_district(min_level=min_level, scout_used=True)
 
 		num_enemies = 0
 		enemies_resp = ""
@@ -1353,10 +1353,10 @@ async def scout(cmd):
 		num_threats = len(threats_in_district)
 		threats_resp = ""
 
-		detailed_enemies_resp = "You pick up the scent of the following enemies:"
+		detailed_enemies_resp = "You pick up the scent of the following enemies:\n"
 		for enemy in enemies_in_district:
 			enemy_data = EwEnemy(id_enemy=enemy)
-			detailed_enemies_resp += "\n**{}**".format(enemy_data.display_name)
+			detailed_enemies_resp += "**{}**\n".format(enemy_data.display_name)
 			num_enemies += 1
 
 		if num_players == 0:
