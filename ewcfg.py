@@ -11274,7 +11274,7 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
