@@ -31,6 +31,8 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
 	topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
 	await ewutils.send_message(client, leaderboard_channel, topfestivity)
+	topzines = make_zines_top_board(server=server)
+	await ewutils.send_message(client, leaderboard_channel, topzines)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
@@ -68,6 +70,40 @@ def make_slimeoids_top_board(server = None):
 
 	return board
 
+def make_zines_top_board(server = None):
+	board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}\n".format(
+		zine = "<:zine:655854388761460748>"
+	)
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute((
+			"SELECT b.title, b.author, b.sales " +
+			"FROM books as b " +
+			"WHERE b.id_server = %s AND b.book_state = 1 " +
+			"ORDER BY b.sales DESC LIMIT 5"
+		), (
+			server.id,
+		))
+
+		data = cursor.fetchall()
+		if data != None:
+			for row in data:
+				board += "{} `{:_>3} | {} by {}`\n".format(
+					ewcfg.emote_blank,
+					row[2],
+					row[0].replace("`",""),
+					row[1].replace("`","")
+				)
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return board
 
 def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []

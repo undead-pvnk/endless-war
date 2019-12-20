@@ -51,6 +51,7 @@ import ewweather
 import ewworldevent
 import ewdungeons
 import ewads
+import ewbook
 import ewdebug
 
 from ewitem import EwItem
@@ -533,6 +534,32 @@ cmd_map = {
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
+
+	# BOOK COMMANDS OH YEAH
+	ewcfg.cmd_beginmanuscript: ewbook.begin_manuscript,
+	ewcfg.cmd_beginmanuscript_alt_1: ewbook.begin_manuscript,
+	ewcfg.cmd_beginmanuscript_alt_2: ewbook.begin_manuscript,
+	ewcfg.cmd_setpenname: ewbook.set_pen_name,
+	ewcfg.cmd_setpenname_alt_1: ewbook.set_pen_name,
+	ewcfg.cmd_settitle: ewbook.set_title,
+	ewcfg.cmd_settitle_alt_1: ewbook.set_title,
+	ewcfg.cmd_setgenre: ewbook.set_genre,
+	ewcfg.cmd_editpage: ewbook.edit_page,
+	ewcfg.cmd_viewpage: ewbook.view_page,
+	ewcfg.cmd_checkmanuscript: ewbook.check_manuscript,
+	ewcfg.cmd_publishmanuscript: ewbook.publish_manuscript,
+	ewcfg.cmd_readbook: ewbook.read_book,
+	ewcfg.cmd_nextpage: ewbook.next_page,
+	ewcfg.cmd_nextpage_alt_1: ewbook.next_page,
+	ewcfg.cmd_previouspage: ewbook.previous_page,
+	ewcfg.cmd_previouspage_alt_1: ewbook.previous_page,
+	ewcfg.cmd_previouspage_alt_2: ewbook.previous_page,
+	ewcfg.cmd_browsezines: ewbook.browse_zines,
+	ewcfg.cmd_buyzine: ewbook.order_zine,
+	ewcfg.cmd_buyzine_alt_1: ewbook.order_zine,
+	ewcfg.cmd_rate: ewbook.rate_zine,
+	ewcfg.cmd_rate_alt_1: ewbook.rate_zine,
+	ewcfg.cmd_rate_alt_2: ewbook.rate_zine,
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,

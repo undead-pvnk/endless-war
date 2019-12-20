@@ -431,6 +431,8 @@ channel_juviesrow = "juvies-row"
 channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
 channel_sodafountain = "the-bicarbonate-soda-fountain"
+channel_greencakecafe = "green-cake-cafe"
+channel_glocksburycomics = "glocksbury-comics"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -768,6 +770,31 @@ cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
 cmd_purify = cmd_prefix + 'purify'
+
+cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
+cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
+cmd_beginmanuscript_alt_2 = cmd_prefix + 'startmanuscript'
+cmd_setpenname = cmd_prefix + 'setpenname'
+cmd_setpenname_alt_1 = cmd_prefix + 'setauthor'
+cmd_settitle = cmd_prefix + 'settitle'
+cmd_settitle_alt_1 = cmd_prefix + 'setname'
+cmd_setgenre = cmd_prefix + 'setgenre'
+cmd_editpage = cmd_prefix + 'editpage'
+cmd_viewpage = cmd_prefix + 'viewpage'
+cmd_checkmanuscript = cmd_prefix + 'manuscript'
+cmd_publishmanuscript = cmd_prefix + 'publish'
+cmd_readbook = cmd_prefix + 'read'
+cmd_nextpage = cmd_prefix + 'nextpage'
+cmd_nextpage_alt_1 = cmd_prefix + 'flip'
+cmd_previouspage = cmd_prefix + 'previouspage'
+cmd_previouspage_alt_1 = cmd_prefix + 'pilf'
+cmd_previouspage_alt_2 = cmd_prefix + 'plif'
+cmd_browsezines = cmd_prefix + 'browse'
+cmd_buyzine = cmd_prefix + 'buyzine'
+cmd_buyzine_alt_1 = cmd_prefix + 'orderzine'
+cmd_rate = cmd_prefix + 'ratezine'
+cmd_rate_alt_1 = cmd_prefix + 'reviewzine'
+cmd_rate_alt_2 = cmd_prefix + 'review'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -1453,6 +1480,7 @@ col_visiting = "visiting"
 col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
+col_manuscript = "manuscript"
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
@@ -1591,6 +1619,24 @@ col_id_ad = 'id_ad'
 col_id_sponsor = 'id_sponsor'
 col_ad_content = 'content'
 
+# Database columns for books
+col_id_book = "id_book"
+col_title = "title"
+col_author = "author"
+col_book_state = "book_state"
+col_date_published = "date_published"
+col_genre = "genre"
+col_length = "length"
+col_sales = "sales"
+col_rating = "rating"
+col_rates = "rates"
+
+# Database columns for pages of books
+col_page = "page"
+col_contents = "contents"
+
+# Database columns for book sales
+col_bought = "bought"
 
 # Item type names
 it_item = "item"
@@ -1600,6 +1646,7 @@ it_food = "food"
 it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
 it_furniture = 'furniture'
+it_book = 'book'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -1858,6 +1905,7 @@ item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
 item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
 item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
 item_id_gellphone = "gellphone"
+item_id_royaltypoudrin = "royaltypoudrin"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1974,7 +2022,10 @@ item_list = [
 		context = "poudrin",
 		str_name = "Slime Poudrin",
 		str_desc = "A dense, crystalized chunk of precious slime.",
-		acquisition = acquisition_mining
+		acquisition = acquisition_mining,
+		ingredients={
+			item_id_royaltypoudrin: 2
+		}
 	),
 	EwGeneralItem(
 		id_item = "whitedye",
@@ -7408,7 +7459,7 @@ item_def_list = [
 			'hue': "",
 		}
 	),
-EwItemDef(
+	EwItemDef(
 		item_type = it_furniture,
 		str_name = "{furniture_name}",
 		str_desc = "{furniture_desc}",
@@ -7420,6 +7471,19 @@ EwItemDef(
 			'rarity': rarity_plebeian,
 			'vendor': None,
 
+		}
+	),
+	EwItemDef(
+		item_type = it_book,
+		str_name = "{title}",
+		str_desc = "{book_desc}",
+		soulbound = False,
+		item_props = {
+			"title": "Book",
+			"author": "Boy",
+			"date_published": 2000,
+			"id_book": 69,
+			"book_desc": "A book by AUTHOR, published on DAY."
 		}
 	),
 ]
@@ -8123,7 +8187,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale
+		mother_district = poi_id_gatlingsdale,
+		write_manuscript = True,
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -8432,7 +8497,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough
+		mother_district = poi_id_northsleezeborough,
+		write_manuscript = True,
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -9300,7 +9366,8 @@ poi_list = [
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
-		is_subzone = True
+		is_subzone = True,
+		write_manuscript = True,
 	),
 	EwPoi( # Slimy Persuits
 		id_poi=poi_id_slimypersuits,
@@ -9338,7 +9405,8 @@ poi_list = [
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
 		mother_district=poi_id_littlechernobyl,
-		is_subzone=True
+		is_subzone=True,
+		write_manuscript=True,
 	),
 	EwPoi(
 		id_poi=poi_id_sodafountain,
@@ -11461,6 +11529,20 @@ smelting_recipe_list = [
 		},
 		products = ['seaweedjoint']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "slimepoudrin",
+		str_name = "a slime poudrin",
+		alias = [
+			"poudrin",
+			"poud",
+			"pou",
+			"poodrin",
+		],
+		ingredients = {
+			'royaltypoudrin': 2
+		},
+		products = ['slimepoudrin']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -13193,6 +13275,9 @@ smelt_results = []
 for s in item_list:
 	if s.acquisition == acquisition_smelting:
 		smelt_results.append(s)
+	# So poudrins can be smelted with 2 royalty poudrins (this is obviously half-assed but i can't think of a better solution)
+	elif s.id_item == item_id_slimepoudrin:
+		smelt_results.append(s)
 	else:
 		pass
 
@@ -13458,6 +13543,8 @@ help_responses = {
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
 	# Additional gameplay mechanics, part 4
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, and journal).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with. Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
+	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference,** and **journal**), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings, it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.",
 
 	# Combat
 	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is (your slimelevel)^4 / 60 and the default damage it does to your opponent is (your slimelevel)^4 / 6. Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
@@ -13492,11 +13579,12 @@ help_responses_ordered_keys = [
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
+	"profile", "manuscripts", "zines",
 	"combat", "sap", weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
 	weapon_id_rifle, weapon_id_smg, weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana,
 	weapon_id_broadsword, weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella,
 	weapon_id_knives, weapon_id_molotov, weapon_id_grenades, weapon_id_garrote, weapon_id_minigun,
-	"profile",
+
 ]
 
 mutation_descriptions = {
@@ -14086,6 +14174,30 @@ pray_responses_list = [
 	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
 ]
+
+# list of genres and aliases
+book_genres = [
+	"narrative", #0
+	"historical", #1
+	"comic", #2
+	"porn", #3
+	"instructional", #4
+	"lore", #5
+	"reference", #6
+	"journal", #7
+	]
+
+# rating flavor text
+rating_flavor = [
+	"",
+	"Seething with hatred",
+	"Teeming with disappointment",
+	"pullulating with mild satisfaction",
+	"Brimming with respect",
+	"Glowing with admiration",
+	]
+
+zine_cost = 10000
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
