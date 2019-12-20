@@ -13303,7 +13303,7 @@ for furniture in furniture_list:
 
 
 	for vendor in furniture.vendors:
-		vendor_list.append(furniture.id_furniture)
+		vendor_list = vendor_inv.get(vendor)
 		if vendor_list == None:
 			vendor_list = []
 			vendor_inv[vendor] = vendor_list
