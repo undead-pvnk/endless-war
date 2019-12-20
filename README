@@ -53,7 +53,8 @@ CREATE TABLE users (
 	hardened_sap int NOT NULL DEFAULT '0',	
 	festivity float NOT NULL DEFAULT '0',	
 	slimernalia_coin_gambled bigint NOT NULL DEFAULT '0',
-	slimernalia_kingpin boolean NOT NULL DEFAULT false
+	slimernalia_kingpin boolean NOT NULL DEFAULT false,
+	manuscript int NOT NULL DEFAULT '-1',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -381,4 +382,42 @@ CREATE TABLE ads (
 	time_expir int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_ad)
+);
+
+CREATE TABLE books (
+    id_book int NOT NULL AUTO_INCREMENT,
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	title varchar(64) NOT NULL DEFAULT '',
+	author varchar(32) NOT NULL DEFAULT '',
+	book_state int NOT NULL DEFAULT '0',
+	date_published int NOT NULL DEFAULT '0',
+	genre int NOT NULL DEFAULT '-1',
+	length int NOT NULL DEFAULT '0',
+	sales int NOT NULL DEFAULT '0',
+	rating varchar(4) NOT NULL DEFAULT '0',
+	rates int NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_book, id_server, id_user)
+);
+
+CREATE TABLE book_pages (
+    id_book int NOT NULL,
+
+	page int NOT NULL,
+	contents varchar(2048),
+
+	FOREIGN KEY (id_book)
+		REFERENCES books(id_book)
+		ON DELETE CASCADE
+);
+
+CREATE TABLE book_sales (
+    id_book int NOT NULL,
+    id_server varchar(128) NOT NULL,
+    id_user varchar(128) NOT NULL,
+    bought int NOT NULL DEFAULT '0',
+    rating int NOT NULL DEFAULT '0',
+
+    PRIMARY KEY (id_book, id_server, id_user)
 );
