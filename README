@@ -397,6 +397,7 @@ CREATE TABLE books (
 	sales int NOT NULL DEFAULT '0',
 	rating varchar(4) NOT NULL DEFAULT '0',
 	rates int NOT NULL DEFAULT '0',
+	pages int NOT NULL DEFAULT '10',
 
 	PRIMARY KEY (id_book, id_server, id_user)
 );
