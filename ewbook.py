@@ -1155,3 +1155,33 @@ async def rate_zine(cmd):
 			response = "How many fucks do you want to give the zine? (1-5)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def take_down_zine(cmd):
+    if len(cmd.tokens) < 2:
+        response = "Specify a zine you want to delete."
+
+    else:
+        book = cmd.tokens[1]
+        author = cmd.message.author
+
+        if not author.server_permissions.administrator:
+            admin = False
+
+        else:
+            admin = True
+
+        if int_is_zine(book, cmd.message.server.id):
+            book = EwBook(id_book = book)
+
+            if ((not admin and book.id_user == cmd.message.author.id) or admin) and book.book_state > 0:
+                book.book_state = -1
+                book.persist()
+                response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
+
+            else:
+                response = "You don't have permission to delete that zine!"
+
+        else:
+            response = "Invalid Zine ID."
+
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
