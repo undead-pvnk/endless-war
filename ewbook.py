@@ -780,7 +780,7 @@ async def read_book(cmd = None, dm = False):
 	if not dm:
 		response = "ENDLESS WAR politely asks that you !read in his DMs."
 
-	if len(cmd.tokens) < 2:
+	elif len(cmd.tokens) < 2:
 		response = "What zine do you want to read?"
 
 	else:
@@ -900,7 +900,7 @@ async def previous_page(cmd = None, dm = False):
 	if not dm:
 		response = "ENDLESS WAR politely asks that you !read in his DMs."
 
-	if user_data.id_user in readers.keys():
+	elif user_data.id_user in readers.keys():
 		id_book = readers[user_data.id_user][0]
 		book = EwBook(id_book = id_book)
 		page_number = readers[user_data.id_user][1]
