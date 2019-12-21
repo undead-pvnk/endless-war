@@ -624,76 +624,98 @@ def get_page(id_book, page):
 	contents = book.book_pages.get(page, "")
 	return contents
 
-async def read_book(cmd):
+async def read_book(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+
+	if not dm:
+		response = "ENDLESS WAR politely asks that you !read in his DMs."
 
 	if len(cmd.tokens) < 2:
 		response = "What zine do you want to read?"
 
 	else:
-		book_title = cmd.tokens[1]
-
-		if len(cmd.tokens) >= 3:
-			page_number = cmd.tokens[2]
-
-			if page_number.isdigit():
-				page_number = int(page_number)
-
-			if page_number not in range(0, 11):
-				page_number = 0
-		else:
+		if len(cmd.tokens) < 3:
+			book_title = ewutils.flattenTokenListToString(cmd.tokens)
 			page_number = 0
+		else:
+			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
+			page_number = ewutils.getIntToken(cmd.tokens)
 
 		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_book)
 
 		if book_sought:
 			book = EwItem(id_item = book_sought.get('id_item'))
 			id_book = book.item_props.get("id_book")
-			nsfw = False
 			book = EwBook(id_book=id_book)
+
+			if page_number not in range(0, book.pages+1):
+				page_number = 0
+
+			accepted = True
 			if book.genre == 3:
-				nsfw = True
-			page_contents = get_page(id_book, page_number)
 
-			if page_number == 0 and page_contents == "":
-				page_contents = get_page(id_book, 1)
+				accepted = False
+				response = "ENDLESS WAR sees you about to open up a porn zine and wants to make sure you're 18 years or older. Use **!accept** to open or **!refuse** to abstain."
 
-			page_text = "turn to page {}".format(page_number)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if page_number == 0:
-				page_text = "look at the cover"
+				try:
+					message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
-			response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
-			if nsfw:
-				response = "You {} and begin to read.\n\n\"||{}|| \"".format(page_text, page_contents)
-			readers[user_data.id_user] = (id_book, page_number)
+					if message != None:
+						if message.content.lower() == "!accept":
+							accepted = True
+						if message.content.lower() == "!refuse":
+							accepted = False
+				except:
+					accepted = False
 
-			if page_contents == "":
-				response = "You open up to page {} only to find that it's blank!".format(page_number)
+			if book.book_state == -1:
+				response = "You simply can't make out the letters on the page. Maybe it's better this way."
 
-			if page_number != 0:
-				response += "\n\nUse **!previouspage** to go back one page."
+			elif accepted:
+				page_contents = get_page(id_book, page_number)
 
-			if page_number != 10:
-				response += "\n\nUse **!nextpage** to go forward one page."
+				if page_number == 0 and page_contents == "":
+					page_contents = get_page(id_book, 1)
+
+				page_text = "turn to page {}".format(page_number)
+
+				if page_number == 0:
+					page_text = "look at the cover"
+
+				response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
+				readers[user_data.id_user] = (id_book, page_number)
+
+				if page_contents == "":
+					response = "You open up to page {} only to find that it's blank!".format(page_number)
+
+				if page_number != 0:
+					response += "\n\nUse **!previouspage** to go back one page."
+
+				if page_number != book.pages:
+					response += "\n\nUse **!nextpage** to go forward one page."
+					
+			else:
+				response = "You decide not to indulge yourself."
 
 		else:
 			response = "You don't have that zine. Make sure you use **!read [zine title] [page]**"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def next_page(cmd):
+async def next_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 
-	if user_data.id_user in readers.keys():
+	if not dm:
+		response = "ENDLESS WAR politely asks that you !read in his DMs."
+
+	elif user_data.id_user in readers.keys():
 		id_book = readers[user_data.id_user][0]
-		nsfw = False
 		book = EwBook(id_book=id_book)
-		if book.genre == 3:
-			nsfw = True
 		page_number = readers[user_data.id_user][1]
 
-		if page_number == 10:
+		if page_number == book.pages:
 			response = "You've reached the end of the zine."
 
 		else:
@@ -705,8 +727,6 @@ async def next_page(cmd):
 				page_text = "look at the cover"
 
 			response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
-			if nsfw:
-				response = "You {} and begin to read.\n\n\"||{}|| \"".format(page_text, page_contents)
 			readers[user_data.id_user] = (id_book, page_number)
 
 			if page_contents == "":
@@ -715,7 +735,7 @@ async def next_page(cmd):
 			if page_number != 0:
 				response += "\n\nUse **!previouspage** to go back one page."
 
-			if page_number != 10:
+			if page_number != book.pages:
 				response += "\n\nUse **!nextpage** to go forward one page."
 
 	else:
@@ -724,15 +744,15 @@ async def next_page(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-async def previous_page(cmd):
+async def previous_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+
+	if not dm:
+		response = "ENDLESS WAR politely asks that you !read in his DMs."
 
 	if user_data.id_user in readers.keys():
 		id_book = readers[user_data.id_user][0]
-		nsfw = False
 		book = EwBook(id_book = id_book)
-		if book.genre == 3:
-			nsfw = True
 		page_number = readers[user_data.id_user][1]
 
 		if page_number == 0:
@@ -747,8 +767,6 @@ async def previous_page(cmd):
 				page_text = "look at the cover"
 
 			response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
-			if nsfw:
-				response = "You {} and begin to read.\n\n\"||{}|| \"".format(page_text, page_contents)
 			readers[user_data.id_user] = (id_book, page_number)
 
 			if page_contents == "":
@@ -757,7 +775,7 @@ async def previous_page(cmd):
 			if page_number != 0:
 				response += "\n\nUse **!previouspage** to go back one page."
 
-			if page_number != 10:
+			if page_number != book.pages:
 				response += "\n\nUse **!nextpage** to go forward one page."
 	else:
 		response = "You haven't opened a zine yet!"
@@ -774,7 +792,7 @@ def int_is_zine(id_book, id_server):
 		cursor.execute((
 				"SELECT b.id_book " +
 				"FROM books AS b " +
-				"WHERE b.id_server = %s AND b.book_state = 1 " +
+				"WHERE b.id_server = %s AND b.book_state > 0 " +
 				"ORDER BY b.id_book"
 		), (
 			id_server,
@@ -1030,9 +1048,6 @@ async def order_zine(cmd):
 
 					if not accepted:
 						response = "No porn for you."
-
-					elif book.book_state < 1:
-						response = "Specify a zine to purchase. Find zine IDs with !browse."
 
 					elif accepted:
 						ewitem.item_create(
