@@ -1356,11 +1356,16 @@ async def take_down_zine(cmd):
 		if int_is_zine(book, cmd.message.server.id):
 			book = EwBook(id_book = book)
 
-			if ((not admin and book.id_user == cmd.message.author.id) or admin) and book.book_state > 0:
+			if (not admin and book.id_user == cmd.message.author.id) and book.book_state > 0:
 				book.book_state = -1
 				book.persist()
 				response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
 
+			elif admin and book.book_state > 0:
+				book.book_state = -2
+				book.persist()
+				response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
+				
 			else:
 				response = "You don't have permission to delete that zine!"
 
@@ -1389,14 +1394,19 @@ async def untake_down_zine(cmd):
 		if int_is_zine(book, cmd.message.server.id):
 			book = EwBook(id_book=book)
 
-			if book.book_state == -1:
+			if book.book_state >= 0:
 				response = "That zine hasn't been deleted."
 
-			elif (not admin and book.id_user == cmd.message.author.id) or admin:
+			elif not admin and book.book_state == -1:
 				book.book_state = 1
 				book.persist()
 				response = "{} by {} can be bought once more.".format(book.title, book.author)
-
+			
+			elif admin and book.book_state == -2:
+				book.book_state = 1
+				book.persist()
+				response = "{} by {} can be bought once more.".format(book.title, book.author)
+				
 			else:
 				response = "You don't have permission to undelete that zine!"
 
