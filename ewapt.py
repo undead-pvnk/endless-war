@@ -1634,9 +1634,9 @@ async def aptCommands(cmd):
 		return await store_item(cmd=cmd, dest=ewcfg.compartment_id_decorate)
 	elif cmd_text == ewcfg.cmd_undecorate:
 		return await remove_item(cmd=cmd, dest=ewcfg.compartment_id_decorate)
-	elif cmd_text == ewcfg.cmd_shelve:
+	elif cmd_text in [ewcfg.cmd_shelve, ewcfg.cmd_shelve_alt_1]:
 		return await store_item(cmd=cmd, dest=ewcfg.compartment_id_bookshelf)
-	elif cmd_text == ewcfg.cmd_unshelve:
+	elif cmd_text in [ewcfg.cmd_unshelve, ewcfg.cmd_unshelve_alt_1]:
 		return await remove_item(cmd=cmd, dest=ewcfg.compartment_id_bookshelf)
 	elif cmd_text == ewcfg.cmd_upgrade:
 		return await upgrade(cmd = cmd)
