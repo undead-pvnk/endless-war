@@ -37,8 +37,8 @@ class EwBook:
 	# The number of people who have rated the book
 	rates = 0
 
-	# The weighted rating of a book
-	weighted = 0
+	# The number of pages in a book (between 5 and 20)
+	pages = 10
 
 	# The contents of the book
 	book_pages = {}
@@ -51,6 +51,7 @@ class EwBook:
 	):
 		self.book_pages = {}
 
+		query_suffix = ""
 		if id_book is not None:
 			self.id_book = id_book
 			query_suffix = " id_book = {}".format(self.id_book)
@@ -69,7 +70,7 @@ class EwBook:
 			cursor = conn.cursor()
 
 			# Retrieve object
-			cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM books WHERE{}".format(
+			cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM books WHERE{}".format(
 				ewcfg.col_id_book,
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
@@ -82,6 +83,7 @@ class EwBook:
 				ewcfg.col_sales,
 				ewcfg.col_rating,
 				ewcfg.col_rates,
+				ewcfg.col_pages,
 				query_suffix,
 			))
 			result = cursor.fetchone();
@@ -100,6 +102,7 @@ class EwBook:
 				self.sales = result[9]
 				self.rating = result[10]
 				self.rates = result[11]
+				self.pages = result[12]
 
 				# Retrieve additional properties
 				cursor.execute("SELECT {}, {} FROM book_pages WHERE id_book = %s".format(
@@ -129,7 +132,7 @@ class EwBook:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO books({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO books({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_book,
 					ewcfg.col_id_server,
 					ewcfg.col_id_user,
@@ -142,6 +145,7 @@ class EwBook:
 					ewcfg.col_sales,
 					ewcfg.col_rating,
 					ewcfg.col_rates,
+					ewcfg.col_pages,
 				), (
 					self.id_book,
 					self.id_server,
@@ -155,6 +159,7 @@ class EwBook:
 					self.sales,
 					self.rating,
 					self.rates,
+					self.pages,
 				))
 
 			# Remove all existing property rows.

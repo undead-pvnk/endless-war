@@ -1635,6 +1635,7 @@ col_length = "length"
 col_sales = "sales"
 col_rating = "rating"
 col_rates = "rates"
+col_pages = "pages"
 
 # Database columns for pages of books
 col_page = "page"
