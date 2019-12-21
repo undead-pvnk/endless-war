@@ -402,13 +402,20 @@ async def set_title(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def edit_page(cmd):
+async def edit_page(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	response = ""
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -433,9 +440,6 @@ async def edit_page(cmd):
 		if not page.isdigit():
 			response = "You must specify a valid page to edit."
 
-		elif int(page) not in range(0, 11):
-			response = "You must specify a valid page to edit."
-
 		elif content == "":
 			response = "What are you writing down exactly?"
 
@@ -445,31 +449,36 @@ async def edit_page(cmd):
 		else:
 			page = int(page)
 			book = EwBook(member = cmd.message.author, book_state = 0)
-			accepted = True
 
-			if book.book_pages.get(page, "") != "":
-				accepted = False
-				response = "There is already writing on this page. Are you sure you want to overwrite it? **!accept** or **!refuse**"
+			if page not in range(0, book.pages + 1):
+				response = "You must specify a valid page to edit."
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-				try:
-					message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
-
-					if message != None:
-						if message.content.lower() == "!accept":
-							accepted = True
-						if message.content.lower() == "!refuse":
-							accepted = False
-				except:
-					accepted = False
-			if not accepted:
-				response = "The page remains unchanged."
 			else:
-				book.book_pages[page] = content
+				accepted = True
 
-				book.persist()
-				response = "You spend some time contemplating your ideas before scribbling them onto the page."
+				if book.book_pages.get(page, "") != "":
+					accepted = False
+					response = "There is already writing on this page. Are you sure you want to overwrite it? **!accept** or **!refuse**"
+
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					try:
+						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+
+						if message != None:
+							if message.content.lower() == "!accept":
+								accepted = True
+							if message.content.lower() == "!refuse":
+								accepted = False
+					except:
+						accepted = False
+				if not accepted:
+					response = "The page remains unchanged."
+				else:
+					book.book_pages[page] = content
+
+					book.persist()
+					response = "You spend some time contemplating your ideas before scribbling them onto the page."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
