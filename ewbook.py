@@ -372,6 +372,94 @@ async def set_genre(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def set_length(cmd = None, dm = False):
+	user_data = EwUser(member=cmd.message.author)
+
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
+
+	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
+		response = "You are just too hungry to alter the length of your masterpiece!"
+
+	elif user_data.manuscript == -1:
+		response = "You have yet to create a manuscript. Try !createmanuscript"
+
+	elif len(cmd.tokens) == 1:
+		response = "Specify how many pages you want it to be ({} and {} pages).".format(ewcfg.minimum_pages, ewcfg.maximum_pages)
+
+	else:
+		length = cmd.tokens[1]
+
+		if not length.isdigit():
+			response = "Your manuscript can be between {} and {} pages".format(ewcfg.minimum_pages, ewcfg.maximum_pages)
+
+		else:
+			book = EwBook(member = cmd.message.author, book_state = 0)
+			length = int(length)
+
+			if book.pages == length:
+				response = "Your manuscript is already {} pages long.".format(length)
+
+			elif length > ewcfg.maximum_pages or length < ewcfg.minimum_pages:
+				response = "Your manuscript can be between {} and {} pages".format(ewcfg.minimum_pages, ewcfg.maximum_pages)
+
+			else:
+				pages_with_content = []
+
+				for page in book.book_pages.keys():
+					if book.book_pages.get(page) is not None:
+						if page > length:
+							pages_with_content.append(page)
+
+				accepted = True
+
+				if len(pages_with_content) != 0:
+					accepted = False
+					page_list = ewutils.formatNiceList(pages_with_content)
+					response = "There is writing on these pages: {}. If you change the number of pages to {}, you will cut these pages out. Will you still do it? **!accept** or **!refuse**".format(page_list, length)
+
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					try:
+						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+
+						if message != None:
+							if message.content.lower() == "!accept":
+								accepted = True
+							if message.content.lower() == "!refuse":
+								accepted = False
+
+					except:
+						accepted = False
+
+				if not accepted:
+					response = "The pages remain unchanged."
+
+				else:
+					if length > book.pages:
+						response = "You haphazardly slap on a few extra pages at the end of your manuscript so you can write more bullshit."
+
+					else:
+						response = "You violently tear some pages out of your manuscript."
+
+					book.pages = length
+
+					if len(pages_with_content) != 0:
+						for page in pages_with_content:
+							del book.book_pages[page]
+
+					book.persist()
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 async def set_title(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
