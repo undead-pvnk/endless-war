@@ -800,6 +800,15 @@ cmd_buyzine_alt_1 = cmd_prefix + 'orderzine'
 cmd_rate = cmd_prefix + 'ratezine'
 cmd_rate_alt_1 = cmd_prefix + 'reviewzine'
 cmd_rate_alt_2 = cmd_prefix + 'review'
+cmd_setpages = cmd_prefix + 'setpages'
+cmd_setpages_alt_1 = cmd_prefix + 'setpage'
+cmd_setpages_alt_2 = cmd_prefix + 'setlength'
+cmd_takedown = cmd_prefix + 'takedown'
+cmd_takedown_alt_1 = cmd_prefix + 'copyrightstrike'
+cmd_takedown_alt_2 = cmd_prefix + 'deletezine'
+cmd_untakedown = cmd_prefix + 'untakedown'
+cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
+cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000

@@ -566,6 +566,15 @@ cmd_map = {
 	ewcfg.cmd_rate: ewbook.rate_zine,
 	ewcfg.cmd_rate_alt_1: ewbook.rate_zine,
 	ewcfg.cmd_rate_alt_2: ewbook.rate_zine,
+	ewcfg.cmd_setpages: ewbook.set_length,
+	ewcfg.cmd_setpages_alt_1: ewbook.set_length,
+	ewcfg.cmd_setpages_alt_2: ewbook.set_length,
+	ewcfg.cmd_takedown: ewbook.take_down_zine,
+	ewcfg.cmd_takedown_alt_1: ewbook.take_down_zine,
+	ewcfg.cmd_takedown_alt_2: ewbook.take_down_zine,
+	ewcfg.cmd_untakedown: ewbook.untake_down_zine,
+	ewcfg.cmd_untakedown_alt_1: ewbook.untake_down_zine,
+	ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
