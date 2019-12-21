@@ -526,10 +526,10 @@ async def apt_look(cmd):
 
 	resp_cont.add_channel_response(cmd.message.channel.name, response)
 
-	shelves = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_closet, id_server=playermodel.id_server)
+	shelves = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_bookshelf, id_server=playermodel.id_server)
 
 	response = ""
-	if (len(closets) > 0):
+	if (len(shelves) > 0):
 		response += "\n\nThe bookshelf holds: "
 		shelf_pile = []
 		for shelf in shelves:
