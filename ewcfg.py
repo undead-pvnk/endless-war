@@ -14331,6 +14331,8 @@ rating_flavor = [
 	]
 
 zine_cost = 10000
+minimum_pages = 5
+maximum_pages = 20
 
 # zine related commands that can be used in DMs
 zine_commands = [
