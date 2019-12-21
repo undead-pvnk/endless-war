@@ -4,6 +4,7 @@ import ewitem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
+from ewplayer import EwPlayer
 
 class EwBook:
 	id_book = 0
@@ -598,12 +599,19 @@ async def edit_page(cmd = None, dm = False):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def view_page(cmd):
+async def view_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -1390,3 +1398,43 @@ async def untake_down_zine(cmd):
             response = "Invalid Zine ID."
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def zine_dm_commands(cmd):
+    tokens_count = len(cmd.tokens)
+    cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
+    player = EwPlayer(id_user=cmd.message.author.id)
+    user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
+    server = ewcfg.server_list[user_data.id_server]
+    member_object = server.get_member(player.id_user)
+    cmd.message.author = member_object
+    cmd.message.server = server
+    dm = True
+
+    if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:
+        return await begin_manuscript(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_setpenname, ewcfg.cmd_setpenname_alt_1]:
+        return await set_pen_name(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_settitle, ewcfg.cmd_settitle_alt_1]:
+        return await set_title(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_setgenre]:
+        return await set_genre(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_editpage]:
+        return await edit_page(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_viewpage]:
+        return await view_page(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_checkmanuscript]:
+        return await check_manuscript(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_publishmanuscript]:
+        return await publish_manuscript(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_readbook]:
+        return await read_book(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_nextpage, ewcfg.cmd_nextpage_alt_1]:
+        return await next_page(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_previouspage, ewcfg.cmd_previouspage_alt_1, ewcfg.cmd_previouspage_alt_2]:
+        return await previous_page(cmd, dm)
+    elif cmd_text in [ewcfg.cmd_rate, ewcfg.cmd_rate_alt_1, ewcfg.cmd_rate_alt_2]:
+        return await rate_zine(cmd)
+    elif cmd_text in [ewcfg.cmd_accept, ewcfg.cmd_refuse]:
+        return
+    elif cmd_text in (ewcfg.cmd_setpages, ewcfg.cmd_setpages_alt_1, ewcfg.cmd_setpages_alt_2):
+        return await set_length(cmd, dm)
