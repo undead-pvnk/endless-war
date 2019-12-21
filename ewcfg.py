@@ -246,6 +246,7 @@ poi_id_tutorial_hallway = "hallway"
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
 compartment_id_decorate = "decorate"
+compartment_id_bookshelf = "bookshelf"
 location_id_empty = "empty"
 
 # Outskirts
@@ -772,6 +773,8 @@ cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
 cmd_purify = cmd_prefix + 'purify'
+cmd_shelve = cmd_prefix + 'shelve'
+cmd_unshelve = cmd_prefix + 'unshelve'
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
