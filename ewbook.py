@@ -1031,6 +1031,9 @@ async def order_zine(cmd):
 					if not accepted:
 						response = "No porn for you."
 
+					elif book.book_state < 1:
+						response = "Specify a zine to purchase. Find zine IDs with !browse."
+
 					elif accepted:
 						ewitem.item_create(
 							item_type=ewcfg.it_book,
