@@ -1135,10 +1135,14 @@ async def rate_zine(cmd):
 						if book.book_state == 1:
 							if book.rates >= 10 and float(book.rating) <= 2.0:
 								book.book_state = 2
+							elif book.rates >= 4 and float(book.rating) <= 1.5:
+								book.book_state = 2
 
 						# zine is included back into normal browsing
 						elif book.book_state == 2:
-							if float(book.rating) > 2.0:
+							if float(book.rating) > 2.0 and book.rates > 10:
+								book.book_state = 1
+							elif float(book.rating) > 1.5 and book.rates > 5:
 								book.book_state = 1
 
 						book.persist()
