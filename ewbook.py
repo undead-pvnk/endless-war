@@ -1221,6 +1221,8 @@ async def order_zine(cmd):
 								book.persist()
 
 						user_data.change_slimes(n = -(ewcfg.zine_cost), source = ewcfg.source_spending)
+						
+						user_data.persist()
 
 						author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
