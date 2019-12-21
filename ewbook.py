@@ -598,7 +598,7 @@ async def publish_manuscript(cmd = None, dm = False):
 				book.date_published = market_data.day
 				length = 0
 
-				for page in range(1, book_pages+1):
+				for page in range(1, book.pages+1):
 					length += len(book.book_pages.get(page, ""))
 
 				book.length = length
