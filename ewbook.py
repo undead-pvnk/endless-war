@@ -510,12 +510,19 @@ async def view_page(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def check_manuscript(cmd):
+async def check_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -524,9 +531,10 @@ async def check_manuscript(cmd):
 		book = EwBook(member = cmd.message.author, book_state = 0)
 		title = book.title
 		author = book.author
+		pages = book.pages
 		length = 0
 
-		for page in range(1,11):
+		for page in range(1,book.pages+1):
 			length += len(book.book_pages.get(page, ""))
 
 		cover = book.book_pages.get(0, "")
@@ -537,7 +545,7 @@ async def check_manuscript(cmd):
 		else:
 			cover_text = " The cover is {}".format(cover)
 
-		response = "{} by {}. It is {:,} characters long.{}".format(title, author, length, cover_text)
+		response = "{} by {}. It is {} pages and {:,} characters long.{}".format(title, author, pages, length, cover_text)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
