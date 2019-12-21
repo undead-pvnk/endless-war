@@ -10432,6 +10432,7 @@ transport_stops_ch = []
 piers = []
 outskirts = []
 tutorial_pois = []
+zine_mother_districts = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -10467,6 +10468,9 @@ for poi in poi_list:
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
+
+	if poi.write_manuscript:
+		zine_mother_districts.append(id_to_poi.get(poi.mother_district))
 
 	chname_to_poi[poi.channel] = poi
 
