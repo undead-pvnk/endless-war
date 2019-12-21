@@ -1337,104 +1337,110 @@ async def rate_zine(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def take_down_zine(cmd):
-    if len(cmd.tokens) < 2:
-        response = "Specify a zine you want to delete."
+	if len(cmd.tokens) < 2:
+		response = "Specify a zine you want to delete."
 
-    else:
-        book = cmd.tokens[1]
-        author = cmd.message.author
+	else:
+		book = cmd.tokens[1]
+		author = cmd.message.author
 
-        if not author.server_permissions.administrator:
-            admin = False
+		if book.isdigit():
+			book = int(book)
 
-        else:
-            admin = True
+		if not author.server_permissions.administrator:
+			admin = False
 
-        if int_is_zine(book, cmd.message.server.id):
-            book = EwBook(id_book = book)
+		else:
+			admin = True
 
-            if ((not admin and book.id_user == cmd.message.author.id) or admin) and book.book_state > 0:
-                book.book_state = -1
-                book.persist()
-                response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
+		if int_is_zine(book, cmd.message.server.id):
+			book = EwBook(id_book = book)
 
-            else:
-                response = "You don't have permission to delete that zine!"
+			if ((not admin and book.id_user == cmd.message.author.id) or admin) and book.book_state > 0:
+				book.book_state = -1
+				book.persist()
+				response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
 
-        else:
-            response = "Invalid Zine ID."
+			else:
+				response = "You don't have permission to delete that zine!"
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			response = "Invalid Zine ID."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def untake_down_zine(cmd):
-    if len(cmd.tokens) < 2:
-        response = "Specify a zine you want to undelete."
+	if len(cmd.tokens) < 2:
+		response = "Specify a zine you want to undelete."
 
-    else:
-        book = cmd.tokens[1]
-        author = cmd.message.author
+	else:
+		book = cmd.tokens[1]
+		author = cmd.message.author
 
-        if not author.server_permissions.administrator:
-            admin = False
+		if book.isdigit():
+			book = int(book)
 
-        else:
-            admin = True
+		if not author.server_permissions.administrator:
+			admin = False
 
-        if int_is_zine(book, cmd.message.server.id):
-            book = EwBook(id_book=book)
+		else:
+			admin = True
 
-            if book.book_state == -1:
-                response = "That zine hasn't been deleted."
+		if int_is_zine(book, cmd.message.server.id):
+			book = EwBook(id_book=book)
 
-            elif (not admin and book.id_user == cmd.message.author.id) or admin:
-                book.book_state = 1
-                book.persist()
-                response = "{} by {} can be bought once more.".format(book.title, book.author)
+			if book.book_state == -1:
+				response = "That zine hasn't been deleted."
 
-            else:
-                response = "You don't have permission to undelete that zine!"
+			elif (not admin and book.id_user == cmd.message.author.id) or admin:
+				book.book_state = 1
+				book.persist()
+				response = "{} by {} can be bought once more.".format(book.title, book.author)
 
-        else:
-            response = "Invalid Zine ID."
+			else:
+				response = "You don't have permission to undelete that zine!"
 
-    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		else:
+			response = "Invalid Zine ID."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def zine_dm_commands(cmd):
-    tokens_count = len(cmd.tokens)
-    cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
-    player = EwPlayer(id_user=cmd.message.author.id)
-    user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
-    server = ewcfg.server_list[user_data.id_server]
-    member_object = server.get_member(player.id_user)
-    cmd.message.author = member_object
-    cmd.message.server = server
-    dm = True
+	tokens_count = len(cmd.tokens)
+	cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
+	player = EwPlayer(id_user=cmd.message.author.id)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
+	server = ewcfg.server_list[user_data.id_server]
+	member_object = server.get_member(player.id_user)
+	cmd.message.author = member_object
+	cmd.message.server = server
+	dm = True
 
-    if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:
-        return await begin_manuscript(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_setpenname, ewcfg.cmd_setpenname_alt_1]:
-        return await set_pen_name(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_settitle, ewcfg.cmd_settitle_alt_1]:
-        return await set_title(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_setgenre]:
-        return await set_genre(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_editpage]:
-        return await edit_page(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_viewpage]:
-        return await view_page(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_checkmanuscript]:
-        return await check_manuscript(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_publishmanuscript]:
-        return await publish_manuscript(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_readbook]:
-        return await read_book(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_nextpage, ewcfg.cmd_nextpage_alt_1]:
-        return await next_page(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_previouspage, ewcfg.cmd_previouspage_alt_1, ewcfg.cmd_previouspage_alt_2]:
-        return await previous_page(cmd, dm)
-    elif cmd_text in [ewcfg.cmd_rate, ewcfg.cmd_rate_alt_1, ewcfg.cmd_rate_alt_2]:
-        return await rate_zine(cmd)
-    elif cmd_text in [ewcfg.cmd_accept, ewcfg.cmd_refuse]:
-        return
-    elif cmd_text in (ewcfg.cmd_setpages, ewcfg.cmd_setpages_alt_1, ewcfg.cmd_setpages_alt_2):
-        return await set_length(cmd, dm)
+	if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:
+		return await begin_manuscript(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_setpenname, ewcfg.cmd_setpenname_alt_1]:
+		return await set_pen_name(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_settitle, ewcfg.cmd_settitle_alt_1]:
+		return await set_title(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_setgenre]:
+		return await set_genre(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_editpage]:
+		return await edit_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_viewpage]:
+		return await view_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_checkmanuscript]:
+		return await check_manuscript(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_publishmanuscript]:
+		return await publish_manuscript(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_readbook]:
+		return await read_book(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_nextpage, ewcfg.cmd_nextpage_alt_1]:
+		return await next_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_previouspage, ewcfg.cmd_previouspage_alt_1, ewcfg.cmd_previouspage_alt_2]:
+		return await previous_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_rate, ewcfg.cmd_rate_alt_1, ewcfg.cmd_rate_alt_2]:
+		return await rate_zine(cmd)
+	elif cmd_text in [ewcfg.cmd_accept, ewcfg.cmd_refuse]:
+		return
+	elif cmd_text in (ewcfg.cmd_setpages, ewcfg.cmd_setpages_alt_1, ewcfg.cmd_setpages_alt_2):
+		return await set_length(cmd, dm)
