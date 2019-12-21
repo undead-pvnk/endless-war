@@ -1074,15 +1074,14 @@ async def rate_zine(cmd):
 		response = "What zine do you want to rate?"
 
 	else:
-		book_title = cmd.tokens[1]
-
 		if len(cmd.tokens) >= 3:
-			rating = cmd.tokens[2]
+			rating = ewutils.getIntToken(cmd.tokens)
+			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
 
-			if rating.isdigit():
-				rating = int(rating)
+			if rating == None:
+				response = "How many fucks do you want to give the zine? (1-5)"
 
-			if rating not in range(1, 6):
+			elif rating not in range(1, 6):
 				response = "Easy now, keep your fucks between 1 and 5."
 
 			else:
