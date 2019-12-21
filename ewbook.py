@@ -1020,7 +1020,7 @@ async def browse_zines(cmd):
 				more_selects = ", b.sales"
 
 			elif sort_token in ('rating', 'quality', 'ratings', 'rate', 'fucks', 'rate', 'fuck', 'toprated', 'best', 'highestrated'):
-				query_sort = "rating DESC"
+				query_sort = "rating DESC, rates DESC"
 				more_selects = ", b.rating, b.rates"
 
 			elif sort_token in ('bad', 'terrible', 'shit', 'shitty', 'worst', 'worstrated', 'bottom'):
