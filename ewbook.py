@@ -1185,3 +1185,36 @@ async def take_down_zine(cmd):
             response = "Invalid Zine ID."
 
     await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def untake_down_zine(cmd):
+    if len(cmd.tokens) < 2:
+        response = "Specify a zine you want to undelete."
+
+    else:
+        book = cmd.tokens[1]
+        author = cmd.message.author
+
+        if not author.server_permissions.administrator:
+            admin = False
+
+        else:
+            admin = True
+
+        if int_is_zine(book, cmd.message.server.id):
+            book = EwBook(id_book=book)
+
+            if book.book_state == -1:
+                response = "That zine hasn't been deleted."
+
+            elif (not admin and book.id_user == cmd.message.author.id) or admin:
+                book.book_state = 1
+                book.persist()
+                response = "{} by {} can be bought once more.".format(book.title, book.author)
+
+            else:
+                response = "You don't have permission to undelete that zine!"
+
+        else:
+            response = "Invalid Zine ID."
+
+    await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
