@@ -317,12 +317,19 @@ async def begin_manuscript(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def set_pen_name(cmd):
+async def set_pen_name(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript:
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the pen name of your masterpiece!"
