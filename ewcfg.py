@@ -14307,6 +14307,8 @@ book_genres = [
 	"lore", #5
 	"reference", #6
 	"journal", #7
+	"newspaper", #8
+	"experimental" #9
 	]
 
 # rating flavor text
