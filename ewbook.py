@@ -541,13 +541,20 @@ async def check_manuscript(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def publish_manuscript(cmd):
+async def publish_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -566,6 +573,8 @@ async def publish_manuscript(cmd):
 			response = "Who are you trying to fool? This zine is obviously too short!"
 
 		else:
+			accepted = False
+
 			response = "Are you sure you want to publish your manuscript? This cannot be undone. **!accept** or **!refuse**"
 
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -589,7 +598,7 @@ async def publish_manuscript(cmd):
 				book.date_published = market_data.day
 				length = 0
 
-				for page in range(1, 11):
+				for page in range(1, book_pages+1):
 					length += len(book.book_pages.get(page, ""))
 
 				book.length = length
@@ -607,7 +616,7 @@ async def publish_manuscript(cmd):
 						"author": book.author,
 						"date_published": book.date_published,
 						"id_book": book.id_book,
-						"book_desc": "A zine by {}, published on {}.".format(book.author, book.date_published)
+						"book_desc": "A zine by {}, published on {}. It's the author's copy.".format(book.author, book.date_published)
 					})
 
 				book_sale = EwBookSale(id_book=book.id_book, member=cmd.message.author)
@@ -695,7 +704,7 @@ async def read_book(cmd = None, dm = False):
 
 				if page_number != book.pages:
 					response += "\n\nUse **!nextpage** to go forward one page."
-					
+
 			else:
 				response = "You decide not to indulge yourself."
 
