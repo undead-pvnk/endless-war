@@ -860,6 +860,9 @@ async def browse_zines(cmd):
 
 			elif sort_token in ('all', 'every'):
 				quality = "> 0"
+				query_suffix = ""
+				query_sort = "id_book"
+				more_selects = ""
 
 			if len(cmd.tokens) > 2:
 				if cmd.tokens[2] in ('reverse', 'inverse', 'descend', 'desc', 'descending', 'backwards'):
@@ -955,10 +958,11 @@ async def browse_zines(cmd):
 				response = "\n{} is a {} zine by {}.\n".format(title, genre, author)
 
 				cover = book.book_pages.get(0, "")
+				pages = book.pages
 				length = book.length
 				date = book.date_published
 
-				response += "It is {:,} characters long and was published on Day {}. ".format(length, date)
+				response += "It is {} pages and {:,} characters long and was published on Day {}. ".format(pages, length, date)
 
 				sales = book.sales
 				rating = book.rating
