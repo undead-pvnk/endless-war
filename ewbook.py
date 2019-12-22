@@ -820,7 +820,7 @@ async def read_book(cmd = None, dm = False):
 				except:
 					accepted = False
 
-			if book.book_state == -1:
+			if book.book_state < 0:
 				response = "You simply can't make out the letters on the page. Maybe it's better this way."
 
 			elif accepted:
@@ -932,7 +932,10 @@ async def previous_page(cmd = None, dm = False):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-def int_is_zine(id_book, id_server):
+def int_is_zine(id_book = None, id_server = None, negative = False):
+	direction = '>'
+	if negative:
+		direction = '<'
 	book_list = []
 	try:
 		conn_info = ewutils.databaseConnect()
@@ -942,7 +945,7 @@ def int_is_zine(id_book, id_server):
 		cursor.execute((
 				"SELECT b.id_book " +
 				"FROM books AS b " +
-				"WHERE b.id_server = %s AND b.book_state > 0 " +
+				"WHERE b.id_server = %s AND b.book_state {} 0 ".format(direction) +
 				"ORDER BY b.id_book"
 		), (
 			id_server,
@@ -1393,7 +1396,7 @@ async def untake_down_zine(cmd):
 		else:
 			admin = True
 
-		if int_is_zine(book, cmd.message.server.id):
+		if int_is_zine(id_book = book, id_server = cmd.message.server.id, negative = True):
 			book = EwBook(id_book=book)
 
 			if book.book_state >= 0:
