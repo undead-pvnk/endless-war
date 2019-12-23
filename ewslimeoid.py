@@ -602,8 +602,8 @@ class EwSlimeoidCombatData:
 	def apply_hue_matchup(self, enemy_combat_data = None):
 		color_matchup = ewcfg.hue_neutral
 		# get color matchups
-		if self.hue.id_hue is not None:
-			color_matchup = self.hue.effectiveness.get(enemy_combat_data.hue.id_hue)
+		if self.slimeoid.hue is not None:
+			color_matchup = self.hue.effectiveness.get(enemy_combat_data.slimeoid.hue)
 
 		if color_matchup is None:
 			color_matchup = ewcfg.hue_neutral
@@ -657,6 +657,8 @@ class EwSlimeoidCombatData:
 		hp = enemy_combat_data.hp
 		hp -= damage
 
+		thrownobject = random.choice(ewcfg.thrownobjects_list)
+
 		response = "**"
 		if in_range:
 			if hp <= 0:
@@ -664,8 +666,6 @@ class EwSlimeoidCombatData:
 					active=self.name,
 					inactive=enemy_combat_data.name,
 				)
-					challenger_weakness = ""
-					challenger_splitcomplementary = ""
 			elif (self.hpmax/self.hp) > 3:
 				response += self.weapon.str_attack_weak.format(
 					active=self.name,
@@ -683,8 +683,6 @@ class EwSlimeoidCombatData:
 					inactive=enemy_combat_data.name,
 					object=thrownobject
 				)
-					challenger_weakness = ""
-					challenger_splitcomplementary = ""
 			elif (self.hpmax/self.hp) > 3:
 				response += self.special.str_special_attack_weak.format(
 					active=self.name,
@@ -702,9 +700,11 @@ class EwSlimeoidCombatData:
 
 		return response
 
-	def take_damage(self, enemy_combat_data, damage, in_range):
+	def take_damage(self, enemy_combat_data, damage, sap_crush, in_range):
 		self.hp -= damage
 		hp = self.hp
+		sap_crush = min(self.hardened_sap, sap_crush)
+		self.hardened_sap -= sap_crush
 
 		response = ""
 		if self.hp > 0:
@@ -725,6 +725,9 @@ class EwSlimeoidCombatData:
 				if self.splitcomplementary_special != "":
 					response += " {}".format(self.splitcomplementary_special)
 
+			if sap_crush > 0:
+				response += " {} loses {} hardened sap.".format(self.name, sap_crush)
+
 
 			if hp/damage > 10:
 				response += " {} barely notices the damage.".format(self.name)
@@ -740,8 +743,40 @@ class EwSlimeoidCombatData:
 		return response
 
 	def change_distance(self, enemy_combat_data, in_range):
+		response = ""
+		if in_range:
+			if (self.hpmax/self.hp) > 3:
+				response = self.legs.str_retreat_weak.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+			else:
+				response = self.legs.str_retreat.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+		else:
+			if (self.hpmax/self.hp) > 3:
+				response = self.legs.str_advance_weak.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+			else:
+				response = self.legs.str_advance.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+		return response
 
 	def harden_sap(self, dos):
+		response = ""
+		
+		sap_hardened = min(dos, self.grit - self.hardened_sap)
+
+		if sap_hardened <= 0:
+			response = ""
+		else:
+			response = "{} hardens {} sap!".format(self.name, sap_hardened)
 
 
 """
@@ -1555,7 +1590,7 @@ async def raisechutzpah(cmd):
 			response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
 		else:
-			slimeoid.intel += 
+			slimeoid.intel += 1
 			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
 			user_data.persist()
@@ -2404,7 +2439,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		hpmax = s1hpmax,
 		hp = s1hpmax,
 		sapmax = s1sapmax,
-		sap = s1sap,
+		sap = s1sapmax,
 		slimeoid = challengee_slimeoid,
 		owner = challengee,
 	)
@@ -2423,7 +2458,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		hpmax = s2hpmax,
 		hp = s2hpmax,
 		sapmax = s2sapmax,
-		sap = s2sap,
+		sap = s2sapmax,
 		slimeoid = challenger_slimeoid,
 		owner = challenger,
 	)
@@ -2470,7 +2505,6 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 		response = ""
 		battlecry = random.randrange(1,4)
-		thrownobject = ewcfg.thrownobjects_list[random.randrange(len(ewcfg.thrownobjects_list))]
 
 		first_turn = (turncounter % 2) == 1
 
