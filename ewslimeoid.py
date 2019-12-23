@@ -602,7 +602,7 @@ class EwSlimeoidCombatData:
 	def apply_hue_matchup(self, enemy_combat_data = None):
 		color_matchup = ewcfg.hue_neutral
 		# get color matchups
-		if self.slimeoid.hue is not None:
+		if self.hue is not None:
 			color_matchup = self.hue.effectiveness.get(enemy_combat_data.slimeoid.hue)
 
 		if color_matchup is None:
@@ -672,7 +672,7 @@ class EwSlimeoidCombatData:
 					inactive=enemy_combat_data.name,
 				)
 			else:
-				response += self.weapon.str_weapon_attack.format(
+				response += self.weapon.str_attack.format(
 					active=self.name,
 					inactive=enemy_combat_data.name,
 				)
@@ -778,6 +778,7 @@ class EwSlimeoidCombatData:
 		else:
 			response = "{} hardens {} sap!".format(self.name, sap_hardened)
 
+		return response
 
 """
 	Commands
@@ -2483,13 +2484,13 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			s1_active = True
 
 	if battle_type == ewcfg.battle_type_arena:
-		response = "**{} sends {} out into the Battle Arena!**".format(challenger.display_name, s2name)
+		response = "**{} sends {} out into the Battle Arena!**".format(challenger.display_name, s2_combat_data.name)
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(1)
-		response = "**{} sends {} out into the Battle Arena!**".format(challengee.display_name, s1name)
+		response = "**{} sends {} out into the Battle Arena!**".format(challengee.display_name, s1_combat_data.name)
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(1)
-		response = "\nThe crowd erupts into cheers! The battle between {} and {} has begun! :crossed_swords:".format(s1name, s2name)
+		response = "\nThe crowd erupts into cheers! The battle between {} and {} has begun! :crossed_swords:".format(s1_combat_data.name, s2_combat_data.name)
 #		response += "\n{} {} {} {} {} {}".format(str(s1moxie),str(s1grit),str(s1chutzpah),str(challengee_slimeoid.weapon),str(challengee_slimeoid.armor),str(challengee_slimeoid.special))
 #		response += "\n{} {} {} {} {} {}".format(str(s2moxie),str(s2grit),str(s2chutzpah),str(challenger_slimeoid.weapon),str(challenger_slimeoid.armor),str(challenger_slimeoid.special))
 #		response += "\n{}, {}".format(str(challengee_resistance),str(challengee_weakness))
@@ -2519,8 +2520,8 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			active_data = s2_combat_data
 			passive_data = s1_combat_data
 
-		active_strat, active_sap_spend = active_data.brain.get_strat(active = True, in_range = in_range, first_turn = first_turn, sap = active_sap)
-		passive_strat, passive_sap_spend = passive_data.brain.get_strat(active = False, in_range = in_range, first_turn = first_turn, sap = passive_sap)
+		active_strat, active_sap_spend = active_data.brain.get_strat(combat_data = active_data, active = True, in_range = in_range, first_turn = first_turn)
+		passive_strat, passive_sap_spend = passive_data.brain.get_strat(combat_data = passive_data, active = False, in_range = in_range, first_turn = first_turn)
 
 		#potentially add brain-based flavor text
 		if active_strat == ewcfg.slimeoid_strat_attack and battlecry == 1:
@@ -2541,7 +2542,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 					slimeoid_name=active_data.name
 				)
 			else:
-				response = active_data.brain.str_moveecry.format(
+				response = active_data.brain.str_movecry.format(
 					slimeoid_name=active_data.name
 				)
 			await ewutils.send_message(client, channel, response)
@@ -2614,13 +2615,13 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				if in_range:
 					damage = int(active_dos * 15 / (passive_data.grit + passive_data.hardened_sap))
 				else:
-					damage = int(active_dos * 10 / passive_data.hardened_sap)
+					damage = int(active_dos * 10 / (passive_data.hardened_sap + 1))
 
 				response = active_data.execute_attack(passive_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 
-				response = passive_data.take_damage(active_data, damage, in_range)
+				response = passive_data.take_damage(active_data, damage, active_dos, in_range)
 				if len(response) > 0:
 					await ewutils.send_message(client, channel, response)
 					await asyncio.sleep(1)
@@ -2643,13 +2644,13 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				if in_range:
 					damage = int(passive_dos * 15 / (active_data.grit + active_data.hardened_sap))
 				else:
-					damage = int(passive_dos * 10 / active_data.hardened_sap)
+					damage = int(passive_dos * 10 / (active_data.hardened_sap + 1))
 
 				response = passive_data.execute_attack(active_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 
-				response = active_data.take_damage(passive_data, damage, in_range)
+				response = active_data.take_damage(passive_data, damage, passive_dos, in_range)
 				if len(response) > 0:
 					await ewutils.send_message(client, channel, response)
 					await asyncio.sleep(1)
@@ -2658,12 +2659,12 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				response = "{} whiffs its attack!".format(passive_data.name)
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
-			elif passive_strat == ewcfg.slimeoid_strat_evade:
-				response = "{} dodges {}'s attack!".format(passive_data.name, active_data.name)
+			elif active_strat == ewcfg.slimeoid_strat_evade:
+				response = "{} dodges {}'s attack!".format(active_data.name, passive_data.name)
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
-			elif passive_strat == ewcfg.slimeoid_strat_block:
-				response = "{} blocks {}'s attack!".format(passive_data.name, active_data.name)
+			elif active_strat == ewcfg.slimeoid_strat_block:
+				response = "{} blocks {}'s attack!".format(active_data.name, passive_data.name)
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 		
