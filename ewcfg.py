@@ -12461,8 +12461,7 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 
 	else:
 		if active:
-			weight_attack *= 2
-			weight_evade *= 3
+			weight_evade *= 2
 		else:
 			weight_evade *= 5
 
@@ -12497,15 +12496,15 @@ def get_strat_b(combat_data, in_range, first_turn, active):
 		if active:
 			weight_attack *= 3
 		else:
-			weight_block *= 3
-			weight_evade *= 2
+			weight_block *= 2
+			weight_evade *= 3
 
 	else:
 		if active:
 			weight_attack *= 3
-			weight_evade *= 2
+			weight_evade *= 3
 		else:
-			weight_evade *= 2
+			weight_evade *= 3
 			weight_block *= 2
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
@@ -12667,7 +12666,7 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 
 	else:
 		if active:
-			weight_attack *= 3
+			weight_attack *= 4
 			weight_block *= 2
 		else:
 			weight_block *= 3
