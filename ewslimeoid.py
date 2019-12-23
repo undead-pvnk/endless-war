@@ -535,6 +535,7 @@ class EwSlimeoidCombatData:
 	sapmax = 0
 	sap = 0
 	hardened_sap = 0
+	shock = 0
 
 	slimeoid = None
 	owner = None
@@ -579,6 +580,7 @@ class EwSlimeoidCombatData:
 		self.sapmax = sapmax
 		self.sap = sap
 		self.hardened_sap = 0
+		self.shock = 0
 		self.slimeoid = slimeoid
 		self.owner = owner
 	
@@ -626,6 +628,9 @@ class EwSlimeoidCombatData:
 				enemy_combat_data.splitcomplementary_special = "It's Super Effective against {}!".format(enemy_combat_data.name)
 
 	def attempt_action(self, strat, sap_spend, in_range):
+		self.sap -= self.shock
+		self.sap = max(0, self.sap)
+		self.shock = 0
 		sap_spend = min(sap_spend, self.sap)
 		
 		target_number = 0
@@ -700,11 +705,13 @@ class EwSlimeoidCombatData:
 
 		return response
 
-	def take_damage(self, enemy_combat_data, damage, sap_crush, in_range):
+	def take_damage(self, enemy_combat_data, damage, active_dos, in_range):
 		self.hp -= damage
 		hp = self.hp
-		sap_crush = min(self.hardened_sap, sap_crush)
+		sap_crush = min(self.hardened_sap, active_dos)
 		self.hardened_sap -= sap_crush
+
+		self.shock += 2 * active_dos
 
 		response = ""
 		if self.hp > 0:
@@ -720,13 +727,10 @@ class EwSlimeoidCombatData:
 
 			else:
 				if self.weakness != "":
-					response = challenger_weakness
+					response = self.weakness
 
 				if self.splitcomplementary_special != "":
 					response += " {}".format(self.splitcomplementary_special)
-
-			if sap_crush > 0:
-				response += " {} loses {} hardened sap.".format(self.name, sap_crush)
 
 
 			if hp/damage > 10:
@@ -739,6 +743,10 @@ class EwSlimeoidCombatData:
 				response += " {} really felt that one!".format(self.name)
 			elif hp/damage < 3:
 				response += " {} reels from the force of the attack!!".format(self.name)
+
+			if sap_crush > 0:
+				response += " (-{} hardened sap)".format(sap_crush)
+
 
 		return response
 
@@ -2552,18 +2560,20 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		response = ""
 		if active_strat == ewcfg.slimeoid_strat_attack:
 			if in_range:
-				response = "{} attempts to strike {} in close combat, spending {} sap!".format(active_data.name, passive_data.name, active_sap_spend)
+				response = "{} attempts to strike {} in close combat!".format(active_data.name, passive_data.name)
 			else:
-				response = "{} attempts to strike {} from a distance, spending {} sap!".format(active_data.name, passive_data.name, active_sap_spend)
+				response = "{} attempts to strike {} from a distance!".format(active_data.name, passive_data.name)
 
 		elif active_strat == ewcfg.slimeoid_strat_evade:
 			if in_range:
-				response = "{} attempts to avoid being hit, while gaining distance from {}, spending {} sap.".format(active_data.name, passive_data.name, active_sap_spend)
+				response = "{} attempts to avoid being hit, while gaining distance from {}.".format(active_data.name, passive_data.name)
 			else:
-				response = "{} attempts to avoid being hit, while closing the distance to {}, spending {} sap.".format(active_data.name, passive_data.name, active_sap_spend)
+				response = "{} attempts to avoid being hit, while closing the distance to {}.".format(active_data.name, passive_data.name)
 
 		elif active_strat == ewcfg.slimeoid_strat_block:
-			response = "{} focuses on blocking incoming attacks, spending {} sap.".format(active_data.name, active_sap_spend)
+			response = "{} focuses on blocking incoming attacks.".format(active_data.name)
+
+		response += " ({} sap)".format(active_sap_spend)
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(1)
@@ -2572,28 +2582,25 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		response = ""
 		if passive_strat == ewcfg.slimeoid_strat_attack:
 			if in_range:
-				response = "{} attempts to strike {} in close combat, spending {} sap!".format(passive_data.name, active_data.name, passive_sap_spend)
+				response = "{} attempts to strike {} in close combat!".format(passive_data.name, active_data.name)
 			else:
-				response = "{} attempts to strike {} from a distance, spending {} sap!".format(passive_data.name, active_data.name, passive_sap_spend)
+				response = "{} attempts to strike {} from a distance!".format(passive_data.name, active_data.name)
 
 		elif passive_strat == ewcfg.slimeoid_strat_evade:
 			if in_range:
-				response = "{} attempts to avoid being hit, while gaining distance from {}, spending {} sap.".format(passive_data.name, active_data.name, passive_sap_spend)
+				response = "{} attempts to avoid being hit, while gaining distance from {}.".format(passive_data.name, active_data.name)
 			else:
-				response = "{} attempts to avoid being hit, while closing the distance to {}, spending {} sap.".format(passive_data.name, active_data.name, passive_sap_spend)
+				response = "{} attempts to avoid being hit, while closing the distance to {}.".format(passive_data.name, active_data.name)
 
 		elif passive_strat == ewcfg.slimeoid_strat_block:
-			response = "{} focuses on blocking incoming attacks, spending {} sap.".format(passive_data.name, passive_sap_spend)
+			response = "{} focuses on blocking incoming attacks.".format(passive_data.name)
+
+		response += " ({} sap)".format(passive_sap_spend)
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(1)
 
-		active_dos = active_data.attempt_action(strat = active_strat, sap_spend = active_sap_spend, in_range = in_range)
-		if passive_strat == ewcfg.slimeoid_strat_attack:
-			passive_data.sap -= 2
-			passive_data.sap = max(0, passive_data.sap)
-		passive_dos = passive_data.attempt_action(strat = passive_strat, sap_spend = passive_sap_spend, in_range = in_range)
-	
+
 		roll_opposed = False
 
 		if active_strat == ewcfg.slimeoid_strat_attack:
@@ -2603,12 +2610,19 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		elif active_strat == ewcfg.slimeoid_strat_block:
 			roll_opposed = passive_strat in [ewcfg.slimeoid_strat_attack]
 
-		if roll_opposed:
-			active_dos -= passive_dos
-			passive_dos = -active_dos
+		active_dos = active_data.attempt_action(strat = active_strat, sap_spend = active_sap_spend, in_range = in_range)
 
-			if active_dos < 0:
-				s1_active = not s1_active
+		if passive_strat != ewcfg.slimeoid_strat_attack:
+			passive_dos = passive_data.attempt_action(strat = passive_strat, sap_spend = passive_sap_spend, in_range = in_range)
+			if roll_opposed:
+				active_dos -= passive_dos
+				passive_dos = -active_dos
+
+				if active_dos < 0:
+					s1_active = not s1_active
+		else:
+			passive_dos = 0
+
 				
 
 		if active_strat == ewcfg.slimeoid_strat_attack:
@@ -2640,6 +2654,19 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 
+		if passive_data.hp <= 0:
+			break
+
+		if passive_strat == ewcfg.slimeoid_strat_attack:
+			passive_dos = passive_data.attempt_action(strat = passive_strat, sap_spend = passive_sap_spend, in_range = in_range)
+
+			if roll_opposed:
+				active_dos -= passive_dos
+				passive_dos = -active_dos
+
+				if active_dos < 0:
+					s1_active = not s1_active
+				
 		if passive_strat == ewcfg.slimeoid_strat_attack:
 			if passive_dos > 0:
 				if in_range:
