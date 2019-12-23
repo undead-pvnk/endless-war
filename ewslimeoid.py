@@ -636,7 +636,7 @@ class EwSlimeoidCombatData:
 				target_number = self.chutzpah
 
 		elif strat == ewcfg.slimeoid_strat_evade:
-			target_number = 5
+			target_number = 6
 		elif strat == ewcfg.slimeoid_strat_block:
 			target_number = self.grit
 
@@ -772,6 +772,7 @@ class EwSlimeoidCombatData:
 		response = ""
 		
 		sap_hardened = min(dos, self.grit - self.hardened_sap)
+		self.hardened_sap += sap_hardened
 
 		if sap_hardened <= 0:
 			response = ""
@@ -2613,9 +2614,9 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		if active_strat == ewcfg.slimeoid_strat_attack:
 			if active_dos > 0:
 				if in_range:
-					damage = int(active_dos * 15 / (passive_data.grit + passive_data.hardened_sap))
+					damage = int(active_dos * 30 / (passive_data.grit + passive_data.hardened_sap))
 				else:
-					damage = int(active_dos * 10 / (passive_data.hardened_sap + 1))
+					damage = int(active_dos * 20 / (passive_data.hardened_sap + 1))
 
 				response = active_data.execute_attack(passive_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)
@@ -2642,9 +2643,9 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		if passive_strat == ewcfg.slimeoid_strat_attack:
 			if passive_dos > 0:
 				if in_range:
-					damage = int(passive_dos * 15 / (active_data.grit + active_data.hardened_sap))
+					damage = int(passive_dos * 30 / (active_data.grit + active_data.hardened_sap))
 				else:
-					damage = int(passive_dos * 10 / (active_data.hardened_sap + 1))
+					damage = int(passive_dos * 20 / (active_data.hardened_sap + 1))
 
 				response = passive_data.execute_attack(active_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)

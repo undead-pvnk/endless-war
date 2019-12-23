@@ -12455,12 +12455,13 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_block *= 3
 
 	else:
 		if active:
+			weight_attack *= 2
 			weight_evade *= 3
 		else:
 			weight_evade *= 5
@@ -12494,14 +12495,14 @@ def get_strat_b(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_block *= 3
 			weight_evade *= 2
 
 	else:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 			weight_evade *= 2
 		else:
 			weight_evade *= 2
@@ -12536,14 +12537,14 @@ def get_strat_c(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_block *= 2
 			weight_evade *= 2
 
 	else:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_evade *= 2
 			weight_block *= 2
@@ -12577,13 +12578,13 @@ def get_strat_d(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_attack /= 2
 
 	else:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_attack /= 2
 
@@ -12616,13 +12617,13 @@ def get_strat_e(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 1
+			weight_attack *= 2
 		else:
 			weight_evade *= 4
 
 	else:
 		if active:
-			weight_attack *= 3
+			weight_attack *= 4
 		else:
 			weight_block *= 3
 
@@ -12655,14 +12656,14 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 		else:
 			weight_evade *= 3
 			weight_block *= 2
 
 	else:
 		if active:
-			weight_attack *= 2
+			weight_attack *= 3
 			weight_block *= 2
 		else:
 			weight_block *= 3
@@ -12698,13 +12699,13 @@ def get_strat_g(combat_data, in_range, first_turn, active):
 
 	if in_range:
 		if active:
-			weight_attack *= 3
+			weight_attack *= 4
 		else:
 			weight_evade *= 2
 
 	else:
 		if active:
-			weight_attack *= 3
+			weight_attack *= 4
 		else:
 			weight_evade *= 2
 
