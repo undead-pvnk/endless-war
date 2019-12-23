@@ -400,6 +400,10 @@ class EwDefense:
 	alias = []
 	str_create = ""
 	str_defense = ""
+	id_resistance = ""
+	id_weakness = ""
+	str_resistance = ""
+	str_weakness = ""
 	def __init__(
 		self,
 		id_defense = "",
@@ -407,7 +411,11 @@ class EwDefense:
 		str_create = "",
 		str_defense = "",
 		str_armor = "",
-		str_pet = ""
+		str_pet = "",
+		id_resistance = "",
+		id_weakness = "",
+		str_resistance = "",
+		str_weakness = "",
 	):
 		self.id_defense = id_defense
 		self.alias = alias
@@ -415,6 +423,30 @@ class EwDefense:
 		self.str_defense = str_defense
 		self.str_armor = str_armor
 		self.str_pet = str_pet
+		self.id_resistance = id_resistance
+		self.id_weakness = id_weakness
+		self.str_resistance = str_resistance
+		self.str_weakness = str_weakness
+
+	def get_resistance(self, offense = None):
+		if offense is None:
+			return ""
+
+		if offense.id_offense == self.id_resistance:
+			return self.str_resistance
+
+		else:
+			return ""
+
+	def get_weakness(self, special = None):
+		if special is None:
+			return ""
+
+		if special.id_special == self.id_weakness:
+			return self.str_weakness
+
+		else:
+			return ""
 
 class EwSpecial:
 	id_special = ""
@@ -465,7 +497,8 @@ class EwBrain:
 		str_kill = "",
 		str_walk = "",
 		str_pet = "",
-		str_observe = ""
+		str_observe = "",
+		get_strat = None,
 	):
 		self.id_brain = id_brain
 		self.alias = alias
@@ -484,6 +517,232 @@ class EwBrain:
 		self.str_pet = str_pet
 		self.str_walk = str_walk
 		self.str_observe = str_observe
+		self.get_strat = get_strat
+
+class EwSlimeoidCombatData:
+	name = ""
+	weapon = None
+	armor = None
+	special = None
+	legs = None
+	brain = None
+	hue = None
+	moxie = 0
+	grit = 0
+	chutzpah = 0
+	hpmax = 0
+	hp = 0
+	sapmax = 0
+	sap = 0
+	hardened_sap = 0
+
+	slimeoid = None
+	owner = None
+
+	resistance = ""
+	weakness = ""
+	
+	analogous = ""
+	splitcomplementary_physical = ""
+	splitcomplementary_special = ""
+
+	def __init__(self,
+		name = "",
+		weapon = None,
+		armor = None,
+		special = None,
+		legs = None,
+		brain = None,
+		hue = None,
+		moxie = 0,
+		grit = 0,
+		chutzpah = 0,
+		hpmax = 0,
+		hp = 0,
+		sapmax = 0,
+		sap = 0,
+		slimeoid = None,
+		owner = None
+	):
+		self.name = name
+		self.weapon = weapon
+		self.armor = armor
+		self.special = special
+		self.legs = legs
+		self.brain = brain
+		self.hue = hue
+		self.moxie = moxie
+		self.grit = grit
+		self.chutzpah = chutzpah
+		self.hpmax = hpmax
+		self.hp = hp
+		self.sapmax = sapmax
+		self.sap = sap
+		self.hardened_sap = 0
+		self.slimeoid = slimeoid
+		self.owner = owner
+	
+	def apply_weapon_matchup(self, enemy_combat_data = None):
+		challengee_slimeoid = self.slimeoid
+		challenger_slimeoid = enemy_combat_data.slimeoid
+
+		resistance = self.armor.get_resistance(enemy_combat_data.weapon)
+		weakness = self.armor.get_weakness(enemy_combat_data.special)
+
+		if len(resistance) > 0:
+			enemy_combat_data.moxie -= 2
+			enemy_combat_data.moxie = max(1, enemy_combat_data.moxie)
+
+		if len(weakness) > 0:
+			enemy_combat_data.chutzpah += 2
+
+		self.resistance = resistance.format(self.name)
+		self.weakness = weakness.format(self.name)
+
+	def apply_hue_matchup(self, enemy_combat_data = None):
+		color_matchup = ewcfg.hue_neutral
+		# get color matchups
+		if self.hue.id_hue is not None:
+			color_matchup = self.hue.effectiveness.get(enemy_combat_data.hue.id_hue)
+
+		if color_matchup is None:
+			color_matchup = ewcfg.hue_neutral
+
+		if color_matchup < 0:
+			enemy_combat_data.grit += 2
+			enemy_combat_data.analogous = "It's not very effective against {}...".format(enemy_combat_data.name)
+			
+		elif color_matchup > 0:
+			if color_matchup == ewcfg.hue_atk_complementary:
+				self.moxie += 2
+				enemy_combat_data.splitcomplementary_physical = "It's Super Effective against {}!".format(enemy_combat_data.name)
+			elif color_matchup == ewcfg.hue_special_complementary:
+				self.chutzpah += 2
+				enemy_combat_data.splitcomplementary_special = "It's Super Effective against {}!".format(enemy_combat_data.name)
+			elif color_matchup == ewcfg.hue_full_complementary:
+				self.moxie += 2
+				self.chutzpah += 2
+				enemy_combat_data.splitcomplementary_physical = "It's Super Effective against {}!".format(enemy_combat_data.name)
+				enemy_combat_data.splitcomplementary_special = "It's Super Effective against {}!".format(enemy_combat_data.name)
+
+	def attempt_action(self, strat, sap_spend, in_range):
+		sap_spend = min(sap_spend, self.sap)
+		
+		target_number = 0
+		if strat == ewcfg.slimeoid_strat_attack:
+			if in_range:
+				target_number = self.moxie
+			else:
+				target_number = self.chutzpah
+
+		elif strat == ewcfg.slimeoid_strat_evade:
+			target_number = 5
+		elif strat == ewcfg.slimeoid_strat_block:
+			target_number = self.grit
+
+		dos = 0
+		dice = []
+		for i in range(sap_spend):
+			die_roll = random.randrange(10)
+			dice.append(die_roll)
+			if (die_roll < target_number and die_roll != 9) or die_roll == 0:
+				dos += 1
+
+		ewutils.logMsg("Rolling {} check with {} sap, target number {}: {}, {} successes".format(strat, sap_spend, target_number, dice, dos))
+		self.sap -= sap_spend
+
+		return dos
+
+	def execute_attack(self, enemy_combat_data, damage, in_range):
+		hp = enemy_combat_data.hp
+		hp -= damage
+
+		response = "**"
+		if in_range:
+			if hp <= 0:
+				response += self.weapon.str_attack_coup.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+					challenger_weakness = ""
+					challenger_splitcomplementary = ""
+			elif (self.hpmax/self.hp) > 3:
+				response += self.weapon.str_attack_weak.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+			else:
+				response += self.weapon.str_weapon_attack.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+				)
+		else:
+			if hp <= 0:
+				response += self.special.str_special_attack_coup.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+					object=thrownobject
+				)
+					challenger_weakness = ""
+					challenger_splitcomplementary = ""
+			elif (self.hpmax/self.hp) > 3:
+				response += self.special.str_special_attack_weak.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+					object=thrownobject
+				)
+			else:
+				response += self.special.str_special_attack.format(
+					active=self.name,
+					inactive=enemy_combat_data.name,
+					object=thrownobject
+				)
+		response += "**"
+		response += " :boom:"
+
+		return response
+
+	def take_damage(self, enemy_combat_data, damage, in_range):
+		self.hp -= damage
+		hp = self.hp
+
+		response = ""
+		if self.hp > 0:
+			if in_range:
+				if self.resistance != "":
+					response = self.resistance
+
+				if self.analogous != "":
+					response += " {}".format(self.analogous)
+
+				if self.splitcomplementary_physical != "":
+					response += " {}".format(self.splitcomplementary_physical)
+
+			else:
+				if self.weakness != "":
+					response = challenger_weakness
+
+				if self.splitcomplementary_special != "":
+					response += " {}".format(self.splitcomplementary_special)
+
+
+			if hp/damage > 10:
+				response += " {} barely notices the damage.".format(self.name)
+			elif hp/damage > 6:
+				response += " {} is hurt, but shrugs it off.".format(self.name)
+			elif hp/damage > 4:
+				response += " {} felt that one!".format(self.name)
+			elif hp/damage >= 3:
+				response += " {} really felt that one!".format(self.name)
+			elif hp/damage < 3:
+				response += " {} reels from the force of the attack!!".format(self.name)
+
+		return response
+
+	def change_distance(self, enemy_combat_data, in_range):
+
+	def harden_sap(self, dos):
+
 
 """
 	Commands
@@ -1296,7 +1555,7 @@ async def raisechutzpah(cmd):
 			response += "\nChutzpah: {}".format(str(slimeoid.intel))
 
 		else:
-			slimeoid.intel += 1
+			slimeoid.intel += 
 			points = (slimeoid.level - slimeoid.atk - slimeoid.defense - slimeoid.intel)
 
 			user_data.persist()
@@ -2124,213 +2383,58 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	server = ewcfg.server_list.get(challengee_slimeoid.id_server)
 	channel = ewutils.get_channel(server = server, channel_name = poi_data.channel)
 	
-	s1name = str(challengee_slimeoid.name)
-	s1weapon = ewcfg.offense_map.get(challengee_slimeoid.weapon)
-	s1armor = ewcfg.defense_map.get(challengee_slimeoid.armor)
-	s1special = ewcfg.special_map.get(challengee_slimeoid.special)
-	s1legs = ewcfg.mobility_map.get(challengee_slimeoid.legs)
-	s1brain = ewcfg.brain_map.get(challengee_slimeoid.ai)
-	s1moxie = challengee_slimeoid.atk + 1
-	s1grit = challengee_slimeoid.defense + 1
-	s1chutzpah = challengee_slimeoid.intel + 1
+	s1hpmax = 50 + (challengee_slimeoid.level * 20)
 
-	s2name = str(challenger_slimeoid.name)
-	s2weapon = ewcfg.offense_map.get(challenger_slimeoid.weapon)
-	s2armor = ewcfg.defense_map.get(challenger_slimeoid.armor)
-	s2special = ewcfg.special_map.get(challenger_slimeoid.special)
-	s2legs = ewcfg.mobility_map.get(challenger_slimeoid.legs)
-	s2brain = ewcfg.brain_map.get(challenger_slimeoid.ai)
-	s2moxie = challenger_slimeoid.atk + 1
-	s2grit = challenger_slimeoid.defense + 1
-	s2chutzpah = challenger_slimeoid.intel + 1
+	s2hpmax = 50 + (challenger_slimeoid.level * 20)
 
-	challenger_resistance = ""
-	challengee_resistance = ""
-	challenger_weakness = ""
-	challengee_weakness = ""
+	s1sapmax = challengee_slimeoid.level * 2
+	s2sapmax = challenger_slimeoid.level * 2
 
-	#challengee resistance/weakness
-	if challengee_slimeoid.armor == 'scales':
-		if challenger_slimeoid.weapon == 'electricity':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {}'s scales conduct the electricity away from its vitals!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'TK':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s scales refract and amplify the disrupting brainwaves inside its skull!".format(challengee_slimeoid.name)
-	if challengee_slimeoid.armor == 'boneplates':
-		if challenger_slimeoid.weapon == 'blades':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {}'s bone plates block the worst of the damage!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'spines':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s bone plates only drive the quills deeper into its body as it moves!".format(challengee_slimeoid.name)
-	if challengee_slimeoid.armor == 'formless':
-		if challenger_slimeoid.weapon == 'bludgeon':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {}'s squishy body easily absorbs the blows!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'webs':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s squishy body easily adheres to and becomes entangled by the webs!".format(challengee_slimeoid.name)
-	if challengee_slimeoid.armor == 'regeneration':
-		if challenger_slimeoid.weapon == 'spikes':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {} quickly begins regenerating the small puncture wounds inflicted by the spikes!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'spit':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s regeneration is impeded by the corrosive chemicals!".format(challengee_slimeoid.name)
-	if challengee_slimeoid.armor == 'stench':
-		if challenger_slimeoid.weapon == 'teeth':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {}'s noxious fumes make its opponent hesitant to put its mouth anywhere near it!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'throw':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s foul odor gives away its position, making it easy to target with thrown projectiles!".format(challengee_slimeoid.name)
-	if challengee_slimeoid.armor == 'oil':
-		if challenger_slimeoid.weapon == 'grip':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {}'s slippery coating makes it extremely difficult to grab on to!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'fire':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s oily coating is flammable, igniting as it contacts the flame!".format(challengee_slimeoid.name)
-	if challengee_slimeoid.armor == 'quantumfield':
-		if challenger_slimeoid.weapon == 'slam':
-			s2moxie -= 2
-			if s2moxie <= 1:
-				s2moxie = 1
-			challengee_resistance = " {}'s quantum superposition makes it difficult to hit head-on!".format(challengee_slimeoid.name)
-		if challenger_slimeoid.special == 'laser':
-			s2chutzpah += 2
-			challengee_weakness = " {}'s quantum particles are excited by the high-frequency radiation, destabilizing its structure!".format(challengee_slimeoid.name)
+	s1_combat_data = EwSlimeoidCombatData(
+		name = str(challengee_slimeoid.name),
+		weapon = ewcfg.offense_map.get(challengee_slimeoid.weapon),
+		armor = ewcfg.defense_map.get(challengee_slimeoid.armor),
+		special = ewcfg.special_map.get(challengee_slimeoid.special),
+		legs = ewcfg.mobility_map.get(challengee_slimeoid.legs),
+		brain = ewcfg.brain_map.get(challengee_slimeoid.ai),
+		hue = ewcfg.hue_map.get(challengee_slimeoid.hue),
+		moxie = challengee_slimeoid.atk + 1,
+		grit = challengee_slimeoid.defense + 1,
+		chutzpah = challengee_slimeoid.intel + 1,
+		hpmax = s1hpmax,
+		hp = s1hpmax,
+		sapmax = s1sapmax,
+		sap = s1sap,
+		slimeoid = challengee_slimeoid,
+		owner = challengee,
+	)
 
-	#challenger resistance/weakness
-	if challenger_slimeoid.armor == 'scales':
-		if challengee_slimeoid.weapon == 'electricity':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {}'s scales conduct the electricity away from its vitals!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'TK':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s scales refract and amplify the disrupting brainwaves inside its skull!".format(challenger_slimeoid.name)
-	if challenger_slimeoid.armor == 'boneplates':
-		if challengee_slimeoid.weapon == 'blades':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {}'s bone plates block the worst of the damage!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'spines':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s bone plates only drive the quills deeper into its body as it moves!".format(challenger_slimeoid.name)
-	if challenger_slimeoid.armor == 'formless':
-		if challengee_slimeoid.weapon == 'bludgeon':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {}'s squishy body easily absorbs the blows!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'webs':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s squishy body easily adheres to and becomes entangled by the webs!".format(challenger_slimeoid.name)
-	if challenger_slimeoid.armor == 'regeneration':
-		if challengee_slimeoid.weapon == 'spikes':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {} quickly begins regenerating the small puncture wounds inflicted by the spikes!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'spit':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s regeneration is impeded by the corrosive chemicals!".format(challenger_slimeoid.name)
-	if challenger_slimeoid.armor == 'stench':
-		if challengee_slimeoid.weapon == 'teeth':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {}'s noxious fumes make its opponent hesitant to put its mouth anywhere near it!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'throw':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s foul odor gives away its position, making it easy to target with thrown projectiles!".format(challenger_slimeoid.name)
-	if challenger_slimeoid.armor == 'oil':
-		if challengee_slimeoid.weapon == 'grip':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {}'s slippery coating makes it extremely difficult to grab on to!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'fire':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s oily coating is flammable, igniting as it contacts the flame!".format(challenger_slimeoid.name)
-	if challenger_slimeoid.armor == 'quantumfield':
-		if challengee_slimeoid.weapon == 'slam':
-			s1moxie -= 2
-			if s1moxie <= 1:
-				s1moxie = 1
-			challenger_resistance = " {}'s quantum superposition makes it difficult to hit head-on!".format(challenger_slimeoid.name)
-		if challengee_slimeoid.special == 'laser':
-			s1chutzpah += 2
-			challenger_weakness = " {}'s quantum particles are excited by the high-frequency radiation, destabilizing its structure!".format(challenger_slimeoid.name)
+	s2_combat_data = EwSlimeoidCombatData(
+		name = str(challenger_slimeoid.name),
+		weapon = ewcfg.offense_map.get(challenger_slimeoid.weapon),
+		armor = ewcfg.defense_map.get(challenger_slimeoid.armor),
+		special = ewcfg.special_map.get(challenger_slimeoid.special),
+		legs = ewcfg.mobility_map.get(challenger_slimeoid.legs),
+		brain = ewcfg.brain_map.get(challenger_slimeoid.ai),
+		hue = ewcfg.hue_map.get(challenger_slimeoid.hue),
+		moxie = challenger_slimeoid.atk + 1,
+		grit = challenger_slimeoid.defense + 1,
+		chutzpah = challenger_slimeoid.intel + 1,
+		hpmax = s2hpmax,
+		hp = s2hpmax,
+		sapmax = s2sapmax,
+		sap = s2sap,
+		slimeoid = challenger_slimeoid,
+		owner = challenger,
+	)
 
-	challenger_splitcomplementary = ""
-	challenger_analogous = ""
-	challengee_splitcomplementary = ""
-	challengee_analogous = ""
+	s1_combat_data.apply_weapon_matchup(s2_combat_data)
+	s2_combat_data.apply_weapon_matchup(s1_combat_data)
 
-	s1hue = ewcfg.hue_map.get(challengee_slimeoid.hue)
-	s2hue = ewcfg.hue_map.get(challenger_slimeoid.hue)
-
-	color_matchup = ewcfg.hue_neutral
-	# get color matchups
-	if s1hue is not None:
-		color_matchup = s1hue.effectiveness.get(challenger_slimeoid.hue)
-
-	if color_matchup is None:
-		color_matchup = ewcfg.hue_neutral
-
-	if color_matchup < 0:
-		s2grit += 2
-		challenger_analogous = "It's not very effective against {}...".format(challenger_slimeoid.name)
-			
-	elif color_matchup > 0:
-		if color_matchup == ewcfg.hue_atk_complementary:
-			s1moxie += 2
-		elif color_matchup == ewcfg.hue_special_complementary:
-			s1chutzpah += 2
-		elif color_matchup == ewcfg.hue_full_complementary:
-			s1moxie += 2
-			s1chutzpah += 2
-		challenger_splitcomplementary = "It's Super Effective against {}!".format(challenger_slimeoid.name)
+	s1_combat_data.apply_hue_matchup(s2_combat_data)
+	s2_combat_data.apply_hue_matchup(s1_combat_data)
 
 
-	color_matchup = ewcfg.hue_neutral
-
-	if s2hue is not None:
-		color_matchup = s2hue.effectiveness.get(challengee_slimeoid.hue)
-
-	if color_matchup is None:
-		color_matchup = ewcfg.hue_neutral
-
-	if color_matchup < 0:
-		s1grit += 2
-		challengee_analogous = "It's not very effective against {}...".format(challengee_slimeoid.name)
-			
-	elif color_matchup > 0:
-		if color_matchup == ewcfg.hue_atk_complementary:
-			s2moxie += 2
-		elif color_matchup == ewcfg.hue_special_complementary:
-			s2chutzpah += 2
-		elif color_matchup == ewcfg.hue_full_complementary:
-			s2moxie += 2
-			s2chutzpah += 2
-		challengee_splitcomplementary = "It's Super Effective against {}!".format(challengee_slimeoid.name)
 			
 
 	s1_active = False
@@ -2359,507 +2463,229 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		await asyncio.sleep(3)
 
 
-	s1hpmax = 50 + (challengee_slimeoid.level * 20)
-
-	s2hpmax = 50 + (challenger_slimeoid.level * 20)
-
-	s1hp = s1hpmax
-	s2hp = s2hpmax
-
 	turncounter = 100
-	while s1hp > 0 and s2hp > 0 and turncounter > 0:
+	while s1_combat_data.hp > 0 and s2_combat_data.hp > 0 and turncounter > 0:
 		# Limit the number of turns in battle.
 		turncounter -= 1
 
 		response = ""
 		battlecry = random.randrange(1,4)
 		thrownobject = ewcfg.thrownobjects_list[random.randrange(len(ewcfg.thrownobjects_list))]
+
+		first_turn = (turncounter % 2) == 1
+
+		if first_turn:
+			s1_combat_data.sap = s1_combat_data.sapmax - s1_combat_data.hardened_sap
+			s2_combat_data.sap = s2_combat_data.sapmax - s2_combat_data.hardened_sap
+	
 		if s1_active:
-			if in_range == False:
-
-				#determine strat based on ai
-				if challengee_slimeoid.ai in ['a', 'g']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'attack'
-					else:
-						strat = 'move'
-				elif challengee_slimeoid.ai in ['b', 'd', 'f']:
-					ranged_strat = random.randrange(1,3)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-				elif challengee_slimeoid.ai in ['c', 'e']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-
-				#potentially add brain-based flavor text
-				if strat == 'attack' and battlecry == 1:
-					if (s1hpmax/s1hp) > 3:
-						response = s1brain.str_battlecry_weak.format(
-							slimeoid_name=s1name
-						)
-					else:
-						response = s1brain.str_battlecry.format(
-							slimeoid_name=s1name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-				elif strat == 'move' and battlecry == 1:
-					if (s1hpmax/s1hp) > 3:
-						response = s1brain.str_movecry_weak.format(
-							slimeoid_name=s1name
-						)
-					else:
-						response = s1brain.str_movecry.format(
-							slimeoid_name=s1name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-				#perform action
-				if strat == 'move':
-					if (s1hpmax/s1hp) > 3:
-						in_range = True
-						response = s1legs.str_advance_weak.format(
-							active=s1name,
-							inactive=s2name,
-						)
-					else:
-						in_range = True
-						response = s1legs.str_advance.format(
-							active=s1name,
-							inactive=s2name,
-						)
-#					response += " *s1close*"
-
-				else:
-					hp = s2hp
-					damage = (s1chutzpah * 10)
-					s2hp -= damage
-					response = "**"
-					if s2hp <= 0:
-						response += s1special.str_special_attack_coup.format(
-							active=s1name,
-							inactive=s2name,
-							object=thrownobject
-						)
-						challenger_weakness = ""
-						challenger_splitcomplementary = ""
-					elif (s1hpmax/s1hp) > 3:
-						response += s1special.str_special_attack_weak.format(
-							active=s1name,
-							inactive=s2name,
-							object=thrownobject
-						)
-					else:
-						response += s1special.str_special_attack.format(
-							active=s1name,
-							inactive=s2name,
-							object=thrownobject
-						)
-					response += "**"
-					response += " :boom:"
-#					response += " strat:{}".format(str(ranged_strat))
-
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-					if challenger_weakness != "" or challenger_splitcomplementary != "" or s2hp > 0:
-						response = ""
-						if challenger_weakness != "":
-							response = challenger_weakness
-
-						if challenger_splitcomplementary != "":
-							response += " {}".format(challenger_splitcomplementary)
-
-
-						if s2hp > 0:
-							if hp/damage > 10:
-								response += " {} barely notices the damage.".format(challenger_slimeoid.name)
-							elif hp/damage > 6:
-								response += " {} is hurt, but shrugs it off.".format(challenger_slimeoid.name)
-							elif hp/damage > 4:
-								response += " {} felt that one!".format(challenger_slimeoid.name)
-							elif hp/damage >= 3:
-								response += " {} really felt that one!".format(challenger_slimeoid.name)
-							elif hp/damage < 3:
-								response += " {} reels from the force of the attack!!".format(challenger_slimeoid.name)
-#					response += " *s1shoot{}*".format(str(damage))
-#					response += " *({}/{} s2hp)*".format(s2hp, s2hpmax)
-
-			else:
-				#determine strat based on ai
-				if challengee_slimeoid.ai in ['a', 'b', 'c']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-				elif challengee_slimeoid.ai in ['d']:
-					ranged_strat = random.randrange(1,3)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-				elif challengee_slimeoid.ai in ['e', 'f', 'g']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'attack'
-					else:
-						strat = 'move'
-
-				#potentially add brain-based flavor text
-				if strat == 'attack' and battlecry == 1:
-					if (s1hpmax/s1hp) > 3:
-						response = s1brain.str_battlecry_weak.format(
-							slimeoid_name=s1name
-						)
-					else:
-						response = s1brain.str_battlecry.format(
-							slimeoid_name=s1name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-				elif strat == 'move' and battlecry == 1:
-					if (s1hpmax/s1hp) > 3:
-						response = s1brain.str_movecry_weak.format(
-							slimeoid_name=s1name
-						)
-					else:
-						response = s1brain.str_movecry.format(
-							slimeoid_name=s1name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-				#perform action
-				if strat == 'attack':
-					hp = s2hp
-					damage = int((s1moxie / s2grit) * 15)
-					s2hp -= damage
-					response = "**"
-					if s2hp <= 0:
-						response += s1weapon.str_attack_coup.format(
-							active=s1name,
-							inactive=s2name,
-						)
-						challenger_resistance = ""
-						challenger_analogous = ""
-					elif (s1hpmax/s1hp) > 3:
-						response += s1weapon.str_attack_weak.format(
-							active=s1name,
-							inactive=s2name,
-						)
-					else:
-						response += s1weapon.str_attack.format(
-							active=s1name,
-							inactive=s2name,
-						)
-					response += "**"
-					response += " :boom:"
-#					response += " strat:{}".format(str(ranged_strat))
-
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-					if challenger_resistance != "" or challenger_analogous != "" or s2hp > 0:
-						response = ""
-						if challenger_resistance != "":
-							response += challenger_resistance
-						if challenger_analogous != "":
-							response += " {}".format(challenger_analogous)
-						if s2hp > 0:
-							if hp/damage > 10:
-								response += " {} barely notices the damage.".format(challenger_slimeoid.name)
-							elif hp/damage > 6:
-								response += " {} is hurt, but shrugs it off.".format(challenger_slimeoid.name)
-							elif hp/damage > 4:
-								response += " {} felt that one!".format(challenger_slimeoid.name)
-							elif hp/damage >= 3:
-								response += " {} really felt that one!".format(challenger_slimeoid.name)
-							elif hp/damage < 3:
-								response += " {} reels from the force of the attack!!".format(challenger_slimeoid.name)
-#					response += " *s1hit{}*".format(str(damage))
-#					response += " *({}/{}s2hp)*".format(s2hp, s2hpmax)
-
-				else:
-					if (s1hpmax/s1hp) > 3:
-						in_range = False
-						response = s1legs.str_retreat_weak.format(
-							active=s1name,
-							inactive=s2name,
-						)
-					else:
-						in_range = False
-						response = s1legs.str_retreat.format(
-							active=s1name,
-							inactive=s2name,
-						)
-#					response += " *s1flee*"
-
-			s1_active = False
-
+			active_data = s1_combat_data
+			passive_data = s2_combat_data
 		else:
-			if in_range == False:
+			active_data = s2_combat_data
+			passive_data = s1_combat_data
 
-				#determine strat based on ai
-				if challenger_slimeoid.ai in ['a', 'g']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'attack'
-					else:
-						strat = 'move'
-				elif challenger_slimeoid.ai in ['b', 'd', 'f']:
-					ranged_strat = random.randrange(1,3)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-				elif challenger_slimeoid.ai in ['c', 'e']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
+		active_strat, active_sap_spend = active_data.brain.get_strat(active = True, in_range = in_range, first_turn = first_turn, sap = active_sap)
+		passive_strat, passive_sap_spend = passive_data.brain.get_strat(active = False, in_range = in_range, first_turn = first_turn, sap = passive_sap)
 
-				#potentially add brain-based flavor text
-				if strat == 'attack' and battlecry == 1:
-					if (s2hpmax/s2hp) > 3:
-						response = s2brain.str_battlecry_weak.format(
-							slimeoid_name=s2name
-						)
-					else:
-						response = s2brain.str_battlecry.format(
-							slimeoid_name=s2name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-				elif strat == 'move' and battlecry == 1:
-					if (s2hpmax/s2hp) > 3:
-						response = s2brain.str_movecry_weak.format(
-							slimeoid_name=s2name
-						)
-					else:
-						response = s2brain.str_movecry.format(
-							slimeoid_name=s2name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-				#perform action
-				if strat == 'move':
-					if (s2hpmax/s2hp) > 3:
-						in_range = True
-						response = s2legs.str_advance_weak.format(
-							active=s2name,
-							inactive=s1name,
-						)
-					else:
-						in_range = True
-						response = s2legs.str_advance.format(
-							active=s2name,
-							inactive=s1name,
-						)
-#					response += " *s2close*"
-
-				else:
-					hp = s1hp
-					damage = (s2chutzpah * 10)
-					s1hp -= damage
-					response = "**"
-					if s1hp <= 0:
-						response += s2special.str_special_attack_coup.format(
-							active=s2name,
-							inactive=s1name,
-							object=thrownobject
-						)
-						challengee_weakness = ""
-						challengee_splitcomplementary = ""
-					elif (s2hpmax/s2hp) > 3:
-						response += s2special.str_special_attack_weak.format(
-							active=s2name,
-							inactive=s1name,
-							object=thrownobject
-						)
-					else:
-						response += s2special.str_special_attack.format(
-							active=s2name,
-							inactive=s1name,
-							object=thrownobject
-						)
-					response += "**"
-					response += " :boom:"
-#					response += " strat:{}".format(str(ranged_strat))
-
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
-
-					if challengee_weakness != "" or challengee_splitcomplementary != "" or s1hp > 0:
-						response = ""
-						if challengee_weakness != "":
-							response += challengee_weakness
-						if challengee_splitcomplementary != "":
-							response += " {}".format(challengee_splitcomplementary)
-						if s1hp > 0:
-							if hp/damage > 10:
-								response += " {} barely notices the damage.".format(challengee_slimeoid.name)
-							elif hp/damage > 6:
-								response += " {} is hurt, but shrugs it off.".format(challengee_slimeoid.name)
-							elif hp/damage > 4:
-								response += " {} felt that one!".format(challengee_slimeoid.name)
-							elif hp/damage >= 3:
-								response += " {} really felt that one!".format(challengee_slimeoid.name)
-							elif hp/damage < 3:
-								response += " {} reels from the force of the attack!!".format(challengee_slimeoid.name)
-#					response += " *s2shoot{}*".format(str(damage))
-#					response += " *({}/{} s1hp)*".format(s1hp, s1hpmax)
+		#potentially add brain-based flavor text
+		if active_strat == ewcfg.slimeoid_strat_attack and battlecry == 1:
+			if (active_data.hpmax/active_data.hp) > 3:
+				response = active_data.brain.str_battlecry_weak.format(
+					slimeoid_name=active_data.name
+				)
 			else:
+				response = active_data.brain.str_battlecry.format(
+					slimeoid_name=active_data.name
+				)
+			await ewutils.send_message(client, channel, response)
+			await asyncio.sleep(1)
 
-				#determine strat based on ai
-				if challenger_slimeoid.ai in ['a', 'b', 'c']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-				elif challenger_slimeoid.ai in ['d']:
-					ranged_strat = random.randrange(1,3)
-					if ranged_strat < 2:
-						strat = 'move'
-					else:
-						strat = 'attack'
-				elif challenger_slimeoid.ai in ['e', 'f', 'g']:
-					ranged_strat = random.randrange(1,5)
-					if ranged_strat < 2:
-						strat = 'attack'
-					else:
-						strat = 'move'
+		elif active_strat == ewcfg.slimeoid_strat_evade and battlecry == 1:
+			if (active_data.hpmax/active_data.hp) > 3:
+				response = active_data.brain.str_movecry_weak.format(
+					slimeoid_name=active_data.name
+				)
+			else:
+				response = active_data.brain.str_moveecry.format(
+					slimeoid_name=active_data.name
+				)
+			await ewutils.send_message(client, channel, response)
+			await asyncio.sleep(1)
 
-				#potentially add brain-based flavor text
-				if strat == 'attack' and battlecry == 1:
-					if (s2hpmax/s2hp) > 3:
-						response = s2brain.str_battlecry_weak.format(
-							slimeoid_name=s2name
-						)
-					else:
-						response = s2brain.str_battlecry.format(
-							slimeoid_name=s2name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
+		response = ""
+		if active_strat == ewcfg.slimeoid_strat_attack:
+			if in_range:
+				response = "{} attempts to strike {} in close combat, spending {} sap!".format(active_data.name, passive_data.name, active_sap_spend)
+			else:
+				response = "{} attempts to strike {} from a distance, spending {} sap!".format(active_data.name, passive_data.name, active_sap_spend)
 
-				elif strat == 'move' and battlecry == 1:
-					if (s2hpmax/s2hp) > 3:
-						response = s2brain.str_movecry_weak.format(
-							slimeoid_name=s2name
-						)
-					else:
-						response = s2brain.str_movecry.format(
-							slimeoid_name=s2name
-						)
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
+		elif active_strat == ewcfg.slimeoid_strat_evade:
+			if in_range:
+				response = "{} attempts to avoid being hit, while gaining distance from {}, spending {} sap.".format(active_data.name, passive_data.name, active_sap_spend)
+			else:
+				response = "{} attempts to avoid being hit, while closing the distance to {}, spending {} sap.".format(active_data.name, passive_data.name, active_sap_spend)
 
-				#perform action
-				if strat == 'attack':
-					hp = s1hp
-					damage = int((s2moxie / s1grit) * 15)
-					s1hp -= damage
-					response = "**"
-					if s1hp <= 0:
-						response += s2weapon.str_attack_coup.format(
-							active=s2name,
-							inactive=s1name,
-						)
-						challengee_resistance = ""
-						challengee_analogous = ""
-					elif (s2hpmax/s2hp) > 3:
-						response += s2weapon.str_attack_weak.format(
-							active=s2name,
-							inactive=s1name,
-						)
-					else:
-						response += s2weapon.str_attack.format(
-							active=s2name,
-							inactive=s1name,
-						)
-					response += "**"
-					response += " :boom:"
-#					response += " strat:{}".format(str(ranged_strat))
+		elif active_strat == ewcfg.slimeoid_strat_block:
+			response = "{} focuses on blocking incoming attacks, spending {} sap.".format(active_data.name, active_sap_spend)
 
-					await ewutils.send_message(client, channel, response)
-					await asyncio.sleep(1)
+		await ewutils.send_message(client, channel, response)
+		await asyncio.sleep(1)
 
-					if challengee_resistance != "" or challengee_analogous != "" or s2hp > 0:
-						response = ""
-						if challengee_resistance != "":
-							response = challengee_resistance
 
-						if challengee_analogous != "":
-							response += " {}".format(challengee_analogous)
+		response = ""
+		if passive_strat == ewcfg.slimeoid_strat_attack:
+			if in_range:
+				response = "{} attempts to strike {} in close combat, spending {} sap!".format(passive_data.name, active_data.name, passive_sap_spend)
+			else:
+				response = "{} attempts to strike {} from a distance, spending {} sap!".format(passive_data.name, active_data.name, passive_sap_spend)
 
-						if s1hp > 0:
-							if hp/damage > 10:
-								response += " {} barely notices the damage.".format(challengee_slimeoid.name)
-							elif hp/damage > 6:
-								response += " {} is hurt, but shrugs it off.".format(challengee_slimeoid.name)
-							elif hp/damage > 4:
-								response += " {} felt that one!".format(challengee_slimeoid.name)
-							elif hp/damage >= 3:
-								response += " {} really felt that one!".format(challengee_slimeoid.name)
-							elif hp/damage < 3:
-								response += " {} reels from the force of the attack!!".format(challengee_slimeoid.name)
+		elif passive_strat == ewcfg.slimeoid_strat_evade:
+			if in_range:
+				response = "{} attempts to avoid being hit, while gaining distance from {}, spending {} sap.".format(passive_data.name, active_data.name, passive_sap_spend)
+			else:
+				response = "{} attempts to avoid being hit, while closing the distance to {}, spending {} sap.".format(passive_data.name, active_data.name, passive_sap_spend)
 
-#					response += " *s2hit{}*".format(str(damage))
-#					response += " *({}/{} s1hp)*".format(s1hp, s1hpmax)
+		elif passive_strat == ewcfg.slimeoid_strat_block:
+			response = "{} focuses on blocking incoming attacks, spending {} sap.".format(passive_data.name, passive_sap_spend)
 
+		await ewutils.send_message(client, channel, response)
+		await asyncio.sleep(1)
+
+		active_dos = active_data.attempt_action(strat = active_strat, sap_spend = active_sap_spend, in_range = in_range)
+		if passive_strat == ewcfg.slimeoid_strat_attack:
+			passive_data.sap -= 2
+			passive_data.sap = max(0, passive_data.sap)
+		passive_dos = passive_data.attempt_action(strat = passive_strat, sap_spend = passive_sap_spend, in_range = in_range)
+	
+		roll_opposed = False
+
+		if active_strat == ewcfg.slimeoid_strat_attack:
+			roll_opposed = passive_strat in [ewcfg.slimeoid_strat_evade, ewcfg.slimeoid_strat_block]
+		elif active_strat == ewcfg.slimeoid_strat_evade:
+			roll_opposed = passive_strat in [ewcfg.slimeoid_strat_attack, ewcfg.slimeoid_strat_evade]
+		elif active_strat == ewcfg.slimeoid_strat_block:
+			roll_opposed = passive_strat in [ewcfg.slimeoid_strat_attack]
+
+		if roll_opposed:
+			active_dos -= passive_dos
+			passive_dos = -active_dos
+
+			if active_dos < 0:
+				s1_active = not s1_active
+				
+
+		if active_strat == ewcfg.slimeoid_strat_attack:
+			if active_dos > 0:
+				if in_range:
+					damage = int(active_dos * 15 / (passive_data.grit + passive_data.hardened_sap))
 				else:
-					if (s2hpmax/s2hp) > 3:
-						in_range = False
-						response = s2legs.str_retreat_weak.format(
-							active=s2name,
-							inactive=s1name,
-						)
-					else:
-						in_range = False
-						response = s2legs.str_retreat.format(
-							active=s2name,
-							inactive=s1name,
-						)
-#					response += " *s2flee*"
+					damage = int(active_dos * 10 / passive_data.hardened_sap)
 
-			s1_active = True
+				response = active_data.execute_attack(passive_data, damage, in_range)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+
+				response = passive_data.take_damage(active_data, damage, in_range)
+				if len(response) > 0:
+					await ewutils.send_message(client, channel, response)
+					await asyncio.sleep(1)
+		
+			elif not roll_opposed:
+				response = "{} whiffs its attack!".format(active_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+			elif passive_strat == ewcfg.slimeoid_strat_evade:
+				response = "{} dodges {}'s attack!".format(passive_data.name, active_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+			elif passive_strat == ewcfg.slimeoid_strat_block:
+				response = "{} blocks {}'s attack!".format(passive_data.name, active_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+
+		if passive_strat == ewcfg.slimeoid_strat_attack:
+			if passive_dos > 0:
+				if in_range:
+					damage = int(passive_dos * 15 / (active_data.grit + active_data.hardened_sap))
+				else:
+					damage = int(passive_dos * 10 / active_data.hardened_sap)
+
+				response = passive_data.execute_attack(active_data, damage, in_range)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+
+				response = active_data.take_damage(passive_data, damage, in_range)
+				if len(response) > 0:
+					await ewutils.send_message(client, channel, response)
+					await asyncio.sleep(1)
+		
+			elif not roll_opposed:
+				response = "{} whiffs its attack!".format(passive_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+			elif passive_strat == ewcfg.slimeoid_strat_evade:
+				response = "{} dodges {}'s attack!".format(passive_data.name, active_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+			elif passive_strat == ewcfg.slimeoid_strat_block:
+				response = "{} blocks {}'s attack!".format(passive_data.name, active_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+		
+		if active_strat == ewcfg.slimeoid_strat_evade:
+			if active_dos > 0:
+				response = active_data.change_distance(passive_data, in_range)
+				in_range = not in_range
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+			elif active_dos == 0 and passive_strat == ewcfg.slimeoid_strat_evade:
+				response = "{} and {} circle each other, looking for an opening...".format(active_data.name, passive_data.name)
+				in_range = not in_range
+		
+		if active_strat == ewcfg.slimeoid_strat_block:
+			if active_dos > 0:
+				response = active_data.harden_sap(active_dos)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+				
+		if passive_strat == ewcfg.slimeoid_strat_evade:
+			if passive_dos > 0:
+				response = passive_data.change_distance(active_data, in_range)
+				in_range = not in_range
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+
+		if passive_strat == ewcfg.slimeoid_strat_block:
+			if passive_dos > 0:
+				response = passive_data.harden_sap(passive_dos)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
+
+
 
 		challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
 		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 
+		s1_combat_data.slimeoid = challengee_slimeoid
+		s2_combat_data.slimeoid = challenger_slimeoid
+
 		# Check if slimeoids have died during the fight
 		if challenger_slimeoid.life_state == ewcfg.slimeoid_state_dead:
-			s2hp = 0
+			s2_combat_data.hp = 0
 		elif challengee_slimeoid.life_state == ewcfg.slimeoid_state_dead:
-			s1hp = 0
+			s1_combat_data.hp = 0
 
-		# Send the response to the player.
-		if s1hp > 0 and s2hp > 0:
-			await ewutils.send_message(client, channel, response)
-			await asyncio.sleep(2)
+		await asyncio.sleep(2)
 
-	if s1hp <= 0:
+	if s1_combat_data.hp <= 0:
 		result = -1
-		response = "\n" + s1legs.str_defeat.format(
-			slimeoid_name=s1name
+		response = "\n" + s1_combat_data.legs.str_defeat.format(
+			slimeoid_name=s1_combat_data.name
 		)
 		response += " {}".format(ewcfg.emote_slimeskull)
-		response += "\n" + s2brain.str_victory.format(
-			slimeoid_name=s2name
+		response += "\n" + s2_combat_data.brain.str_victory.format(
+			slimeoid_name=s2_combat_data.name
 		)
 
 		challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
@@ -2877,12 +2703,12 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		await asyncio.sleep(2)
 	else:
 		result = 1
-		response = "\n" + s2legs.str_defeat.format(
-			slimeoid_name=s2name
+		response = "\n" + s2_combat_data.legs.str_defeat.format(
+			slimeoid_name=s2_combat_data.name
 		)
 		response += " {}".format(ewcfg.emote_slimeskull)
-		response += "\n" + s1brain.str_victory.format(
-			slimeoid_name=s1name
+		response += "\n" + s1_combat_data.brain.str_victory.format(
+			slimeoid_name=s1_combat_data.name
 		)
 
 		challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
