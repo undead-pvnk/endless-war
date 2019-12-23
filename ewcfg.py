@@ -12581,12 +12581,14 @@ def get_strat_d(combat_data, in_range, first_turn, active):
 			weight_attack *= 3
 		else:
 			weight_attack /= 2
+			weight_block *= 2
 
 	else:
 		if active:
 			weight_attack *= 3
 		else:
 			weight_attack /= 2
+			weight_block *= 2
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
@@ -12618,6 +12620,7 @@ def get_strat_e(combat_data, in_range, first_turn, active):
 	if in_range:
 		if active:
 			weight_attack *= 2
+			weight_evade *= 2
 		else:
 			weight_evade *= 4
 
@@ -12636,7 +12639,7 @@ def get_strat_e(combat_data, in_range, first_turn, active):
 		strat_used = slimeoid_strat_block
 
 	if first_turn:
-		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
 
 	else:
 		sap_spend = combat_data.sap
@@ -12647,7 +12650,7 @@ def get_strat_e(combat_data, in_range, first_turn, active):
 
 def get_strat_f(combat_data, in_range, first_turn, active):
 	base_attack = 20
-	base_evade = 10
+	base_evade = 20
 	base_block = 10
 
 	weight_attack = base_attack
@@ -12657,6 +12660,7 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 	if in_range:
 		if active:
 			weight_attack *= 3
+			weight_evade *= 2
 		else:
 			weight_evade *= 3
 			weight_block *= 2
