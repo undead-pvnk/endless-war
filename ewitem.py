@@ -1393,6 +1393,10 @@ def gen_item_props(item):
 			'ingredients': item.ingredients,
 			'acquisition': item.acquisition,
 		}
+		if item.context == ewcfg.context_slimeoidfood:
+			item_props["increase"] = item.increase
+			item_props["decrease"] = item.decrease
+
 	elif item.item_type == ewcfg.it_weapon:
 		captcha = ""
 		if ewcfg.weapon_class_captcha in item.classes:

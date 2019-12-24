@@ -503,7 +503,7 @@ cmd_map = {
 	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
 	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
 	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
-	#ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
+	ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid,
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,

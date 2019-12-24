@@ -13,7 +13,7 @@ from ewfood import EwFood
 from ewitem import EwItemDef, EwGeneralItem
 from ewmap import EwPoi
 from ewmutation import EwMutationFlavor
-from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
+from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue, EwSlimeoidFood
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
@@ -1966,6 +1966,14 @@ item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
 
+#slimeoid food
+item_id_fragilecandy = "fragilecandy" #+chutzpah -grit
+item_id_rigidcandy = "rigidcandy" #+grit -chutzpah
+item_id_recklesscandy = "recklesscandy" #+moxie -grit
+item_id_reservedcandy = "reservedcandy" #+grit -moxie
+item_id_bluntcandy = "bluntcandy" #+moxie -chutzpah
+item_id_insidiouscandy = "insidiouscandy" #+chutzpah -moxie
+
 #vegetable ids
 item_id_poketubers = "poketubers"
 item_id_pulpgourds = "pulpgourds"
@@ -2511,7 +2519,79 @@ item_list = [
 		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
 		vendors = [vendor_bazaar],
 		price = 1000000
-	)
+	),
+	EwSlimeoidFood(
+		id_item = item_id_fragilecandy,
+		alias = [
+			"fragile",
+		],
+		str_name = "Fragile Candy",
+		str_desc = "Increases Chutzpah and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_rigidcandy,
+		alias = [
+			"rigid",
+		],
+		str_name = "Rigid Candy",
+		str_desc = "Increases Grit and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_chutzpah,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_reservedcandy,
+		alias = [
+			"reserved",
+		],
+		str_name = "Reserved Candy",
+		str_desc = "Increases Grit and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_recklesscandy,
+		alias = [
+			"reckless",
+		],
+		str_name = "Reckless Candy",
+		str_desc = "Increases Moxie and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_insidiouscandy,
+		alias = [
+			"insidious",
+		],
+		str_name = "Insidious Candy",
+		str_desc = "Increases Chutzpah and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_bluntcandy,
+		alias = [
+			"blunt",
+		],
+		str_name = "Blunt Candy",
+		str_desc = "Increases Moxie and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_chutzpah,
+	),
 ]
 item_list += ewdebug.debugitem_set
 
@@ -2533,6 +2613,7 @@ for c in item_list:
 	else:
 		dye_list.append(c)
 		dye_map[c.str_name] = c.id_item
+
 
 # A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
 def wef_revolver(ctn = None):
@@ -13612,7 +13693,6 @@ for item in item_list:
 	for alias in item.alias:
 		item_map[alias] = item
 
-
 # Populate food map, including all aliases.
 for food in food_list:
 	food_map[food.id_food] = food
@@ -13729,7 +13809,7 @@ for m in cosmetic_items_list:
 # List of items you can obtain via appraisal.
 appraise_results = []
 
-# Gather all items that can be the result of milling.
+# Gather all items that can be the result of bartering.
 for a in item_list:
 	if a.acquisition == acquisition_bartering:
 		appraise_results.append(a)

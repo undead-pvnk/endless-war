@@ -519,6 +519,50 @@ class EwBrain:
 		self.str_observe = str_observe
 		self.get_strat = get_strat
 
+"""
+	Slimeoid Food Items
+"""
+class EwSlimeoidFood:
+	item_type = "item"
+	id_item = " "
+	alias = []
+	context = "slimeoidfood"
+	str_name = ""
+	str_desc = ""
+	ingredients = ""
+	acquisition = ""
+	price = 0
+	vendors = []
+
+	increase = ""
+	decrease = ""
+
+	def __init__(
+		self,
+		id_item = " ",
+		alias = [],
+		str_name = "",
+		str_desc = "",
+		ingredients = "",
+		acquisition = "",
+		price = 0,
+		vendors = [],
+		increase = "",
+		decrease = "",
+	):
+		self.item_type = ewcfg.it_item
+		self.id_item = id_item
+		self.alias = alias
+		self.context = ewcfg.context_slimeoidfood
+		self.str_name = str_name
+		self.str_desc = str_desc
+		self.ingredients = ingredients
+		self.acquisition = acquisition
+		self.price = price
+		self.vendors = vendors
+		self.increase = increase
+		self.decrease = decrease
+
 class EwSlimeoidCombatData:
 	name = ""
 	weapon = None
