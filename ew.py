@@ -910,7 +910,7 @@ class EwUser:
 				ewcfg.col_sap,
 				ewcfg.col_hardened_sap,
 				ewcfg.col_festivity,
-				ewcfg.col_festivity_from_slimernalia,
+				ewcfg.col_festivity_from_slimecoin,
 				ewcfg.col_slimernalia_kingpin,
 				ewcfg.col_manuscript,
 			), (
@@ -958,7 +958,7 @@ class EwUser:
 				self.sap,
 				self.hardened_sap,
 				self.festivity,
-				self.festivity_from_slimernalia,
+				self.festivity_from_slimecoin,
 				self.slimernalia_kingpin,
 				self.manuscript,
 			))
