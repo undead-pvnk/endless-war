@@ -1499,6 +1499,7 @@ col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
 #SLIMERNALIA
 col_festivity = 'festivity'
+col_festivity_from_slimecoin = 'festivity_from_slimecoin'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 col_slimernalia_kingpin = 'slimernalia_kingpin'
 
