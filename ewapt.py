@@ -328,7 +328,11 @@ async def retire(cmd):
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			response = "You're in your apartment."
-			await ewutils.send_message(cmd.client, cmd.message.author, response)
+
+			try:
+				await ewutils.send_message(cmd.client, cmd.message.author, response)
+			except:
+				await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
 
 async def depart(cmd=None, isGoto = False, movecurrent=None):
@@ -968,7 +972,12 @@ async def knock(cmd = None):
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
 
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
-			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			try:
+				await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			except:
+				response = "They aren't taking in any visitors right now."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
 			try:
 				accepted = False
 				if user_data.rr_challenger == target_data.apt_zone:
@@ -1068,7 +1077,13 @@ async def trickortreat(cmd = None):
 
 		else:
 			response = "{} is all dressed up for Double Halloween, waiting at your doorstep. Do you pull a !trick on them, or !treat them to a piece of candy?".format(cmd.message.author.display_name)
-			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			
+			try:
+				await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			except:
+				response = "They aren't taking in any visitors right now."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			try:
 				treat = False
 				if user_data.rr_challenger == target_data.apt_zone:

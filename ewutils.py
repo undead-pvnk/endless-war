@@ -1133,6 +1133,9 @@ def get_client():
 async def send_message(client, channel, text):
 	try:
 		return await client.send_message(channel, text)
+	except discord.errors.Forbidden:
+		logMsg('Could not message user: {}\n{}'.format(channel, text))
+		raise
 	except:
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
