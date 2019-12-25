@@ -230,9 +230,13 @@ cmd_map = {
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,
+	ewcfg.cmd_shelve: ewapt.lobbywarning,
+	ewcfg.cmd_shelve_alt_1: ewapt.lobbywarning,
 	ewcfg.cmd_unfridge: ewapt.lobbywarning,
 	ewcfg.cmd_uncloset: ewapt.lobbywarning,
 	ewcfg.cmd_undecorate: ewapt.lobbywarning,
+	ewcfg.cmd_unshelve: ewapt.lobbywarning,
+	ewcfg.cmd_unshelve_alt_1: ewapt.lobbywarning,
 	ewcfg.cmd_freeze: ewapt.lobbywarning,
 	ewcfg.cmd_aptname: ewapt.lobbywarning,
 	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
@@ -566,6 +570,15 @@ cmd_map = {
 	ewcfg.cmd_rate: ewbook.rate_zine,
 	ewcfg.cmd_rate_alt_1: ewbook.rate_zine,
 	ewcfg.cmd_rate_alt_2: ewbook.rate_zine,
+	ewcfg.cmd_setpages: ewbook.set_length,
+	ewcfg.cmd_setpages_alt_1: ewbook.set_length,
+	ewcfg.cmd_setpages_alt_2: ewbook.set_length,
+	ewcfg.cmd_takedown: ewbook.take_down_zine,
+	ewcfg.cmd_takedown_alt_1: ewbook.take_down_zine,
+	ewcfg.cmd_takedown_alt_2: ewbook.take_down_zine,
+	ewcfg.cmd_untakedown: ewbook.untake_down_zine,
+	ewcfg.cmd_untakedown_alt_1: ewbook.untake_down_zine,
+	ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
@@ -1235,6 +1248,8 @@ async def on_message(message):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
+			elif cmd in ewcfg.zine_commands:
+				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:

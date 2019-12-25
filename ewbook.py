@@ -4,6 +4,7 @@ import ewitem
 from ew import EwUser
 from ewmarket import EwMarket
 from ewitem import EwItem
+from ewplayer import EwPlayer
 
 class EwBook:
 	id_book = 0
@@ -37,8 +38,8 @@ class EwBook:
 	# The number of people who have rated the book
 	rates = 0
 
-	# The weighted rating of a book
-	weighted = 0
+	# The number of pages in a book (between 5 and 20)
+	pages = 10
 
 	# The contents of the book
 	book_pages = {}
@@ -51,6 +52,7 @@ class EwBook:
 	):
 		self.book_pages = {}
 
+		query_suffix = ""
 		if id_book is not None:
 			self.id_book = id_book
 			query_suffix = " id_book = {}".format(self.id_book)
@@ -69,7 +71,7 @@ class EwBook:
 			cursor = conn.cursor()
 
 			# Retrieve object
-			cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM books WHERE{}".format(
+			cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM books WHERE{}".format(
 				ewcfg.col_id_book,
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
@@ -82,6 +84,7 @@ class EwBook:
 				ewcfg.col_sales,
 				ewcfg.col_rating,
 				ewcfg.col_rates,
+				ewcfg.col_pages,
 				query_suffix,
 			))
 			result = cursor.fetchone();
@@ -100,6 +103,7 @@ class EwBook:
 				self.sales = result[9]
 				self.rating = result[10]
 				self.rates = result[11]
+				self.pages = result[12]
 
 				# Retrieve additional properties
 				cursor.execute("SELECT {}, {} FROM book_pages WHERE id_book = %s".format(
@@ -129,7 +133,7 @@ class EwBook:
 
 			# Save the object.
 			cursor.execute(
-				"REPLACE INTO books({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+				"REPLACE INTO books({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 					ewcfg.col_id_book,
 					ewcfg.col_id_server,
 					ewcfg.col_id_user,
@@ -142,6 +146,7 @@ class EwBook:
 					ewcfg.col_sales,
 					ewcfg.col_rating,
 					ewcfg.col_rates,
+					ewcfg.col_pages,
 				), (
 					self.id_book,
 					self.id_server,
@@ -155,6 +160,7 @@ class EwBook:
 					self.sales,
 					self.rating,
 					self.rates,
+					self.pages,
 				))
 
 			# Remove all existing property rows.
@@ -273,15 +279,22 @@ def check(str):
 	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
 		return True
 
-async def begin_manuscript(cmd):
+async def begin_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
 	cost = 20000
 
-	if not poi.write_manuscript:
-		response = "You'd love to begin producing a zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.slimes < cost:
 		 response = "You don't have enough slime to create a manuscript. ({:,}/{:,})".format(user_data.slimes, cost)
@@ -312,12 +325,19 @@ async def begin_manuscript(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def set_pen_name(cmd):
+async def set_pen_name(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the pen name of your masterpiece!"
@@ -338,13 +358,20 @@ async def set_pen_name(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def set_genre(cmd):
+async def set_genre(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the title of your masterpiece!"
@@ -367,13 +394,108 @@ async def set_genre(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def set_title(cmd):
+async def set_length(cmd = None, dm = False):
+	user_data = EwUser(member=cmd.message.author)
+
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
+
+	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
+		response = "You are just too hungry to alter the length of your masterpiece!"
+
+	elif user_data.manuscript == -1:
+		response = "You have yet to create a manuscript. Try !createmanuscript"
+
+	elif len(cmd.tokens) == 1:
+		response = "Specify how many pages you want it to be ({} and {} pages).".format(ewcfg.minimum_pages, ewcfg.maximum_pages)
+
+	else:
+		length = cmd.tokens[1]
+
+		if not length.isdigit():
+			response = "Your manuscript can be between {} and {} pages".format(ewcfg.minimum_pages, ewcfg.maximum_pages)
+
+		else:
+			book = EwBook(member = cmd.message.author, book_state = 0)
+			length = int(length)
+
+			if book.pages == length:
+				response = "Your manuscript is already {} pages long.".format(length)
+
+			elif length > ewcfg.maximum_pages or length < ewcfg.minimum_pages:
+				response = "Your manuscript can be between {} and {} pages".format(ewcfg.minimum_pages, ewcfg.maximum_pages)
+
+			else:
+				pages_with_content = []
+
+				for page in book.book_pages.keys():
+					if book.book_pages.get(page) is not None:
+						if page > length:
+							pages_with_content.append(page)
+
+				accepted = True
+
+				if len(pages_with_content) != 0:
+					accepted = False
+					page_list = ewutils.formatNiceList(pages_with_content)
+					response = "There is writing on these pages: {}. If you change the number of pages to {}, you will cut these pages out. Will you still do it? **!accept** or **!refuse**".format(page_list, length)
+
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					try:
+						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+
+						if message != None:
+							if message.content.lower() == "!accept":
+								accepted = True
+							if message.content.lower() == "!refuse":
+								accepted = False
+
+					except:
+						accepted = False
+
+				if not accepted:
+					response = "The pages remain unchanged."
+
+				else:
+					if length > book.pages:
+						response = "You haphazardly slap on a few extra pages at the end of your manuscript so you can write more bullshit."
+
+					else:
+						response = "You violently tear some pages out of your manuscript."
+
+					book.pages = length
+
+					if len(pages_with_content) != 0:
+						for page in pages_with_content:
+							del book.book_pages[page]
+
+					book.persist()
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def set_title(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the title of your masterpiece!"
@@ -397,13 +519,20 @@ async def set_title(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def edit_page(cmd):
+async def edit_page(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	response = ""
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -428,9 +557,6 @@ async def edit_page(cmd):
 		if not page.isdigit():
 			response = "You must specify a valid page to edit."
 
-		elif int(page) not in range(0, 11):
-			response = "You must specify a valid page to edit."
-
 		elif content == "":
 			response = "What are you writing down exactly?"
 
@@ -440,40 +566,52 @@ async def edit_page(cmd):
 		else:
 			page = int(page)
 			book = EwBook(member = cmd.message.author, book_state = 0)
-			accepted = True
 
-			if book.book_pages.get(page, "") != "":
-				accepted = False
-				response = "There is already writing on this page. Are you sure you want to overwrite it? **!accept** or **!refuse**"
+			if page not in range(0, book.pages + 1):
+				response = "You must specify a valid page to edit."
 
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-				try:
-					message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
-
-					if message != None:
-						if message.content.lower() == "!accept":
-							accepted = True
-						if message.content.lower() == "!refuse":
-							accepted = False
-				except:
-					accepted = False
-			if not accepted:
-				response = "The page remains unchanged."
 			else:
-				book.book_pages[page] = content
+				accepted = True
 
-				book.persist()
-				response = "You spend some time contemplating your ideas before scribbling them onto the page."
+				if book.book_pages.get(page, "") != "":
+					accepted = False
+					response = "There is already writing on this page. Are you sure you want to overwrite it? **!accept** or **!refuse**"
+
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					try:
+						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+
+						if message != None:
+							if message.content.lower() == "!accept":
+								accepted = True
+							if message.content.lower() == "!refuse":
+								accepted = False
+					except:
+						accepted = False
+				if not accepted:
+					response = "The page remains unchanged."
+				else:
+					book.book_pages[page] = content
+
+					book.persist()
+					response = "You spend some time contemplating your ideas before scribbling them onto the page."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def view_page(cmd):
+async def view_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -505,12 +643,19 @@ async def view_page(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def check_manuscript(cmd):
+async def check_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -519,9 +664,10 @@ async def check_manuscript(cmd):
 		book = EwBook(member = cmd.message.author, book_state = 0)
 		title = book.title
 		author = book.author
+		pages = book.pages
 		length = 0
 
-		for page in range(1,11):
+		for page in range(1,book.pages+1):
 			length += len(book.book_pages.get(page, ""))
 
 		cover = book.book_pages.get(0, "")
@@ -532,17 +678,24 @@ async def check_manuscript(cmd):
 		else:
 			cover_text = " The cover is {}".format(cover)
 
-		response = "{} by {}. It is {:,} characters long.{}".format(title, author, length, cover_text)
+		response = "{} by {}. It is {} pages and {:,} characters long.{}".format(title, author, pages, length, cover_text)
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def publish_manuscript(cmd):
+async def publish_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 	market_data = EwMarket(id_server = user_data.id_server)
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
-	if not poi.write_manuscript:
+	if not dm:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
+
+	elif poi not in ewcfg.zine_mother_districts and dm:
+		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -561,6 +714,8 @@ async def publish_manuscript(cmd):
 			response = "Who are you trying to fool? This zine is obviously too short!"
 
 		else:
+			accepted = False
+
 			response = "Are you sure you want to publish your manuscript? This cannot be undone. **!accept** or **!refuse**"
 
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -584,7 +739,7 @@ async def publish_manuscript(cmd):
 				book.date_published = market_data.day
 				length = 0
 
-				for page in range(1, 11):
+				for page in range(1, book.pages+1):
 					length += len(book.book_pages.get(page, ""))
 
 				book.length = length
@@ -602,7 +757,7 @@ async def publish_manuscript(cmd):
 						"author": book.author,
 						"date_published": book.date_published,
 						"id_book": book.id_book,
-						"book_desc": "A zine by {}, published on {}.".format(book.author, book.date_published)
+						"book_desc": "A zine by {}, published on {}. It's the author's copy.".format(book.author, book.date_published)
 					})
 
 				book_sale = EwBookSale(id_book=book.id_book, member=cmd.message.author)
@@ -619,76 +774,98 @@ def get_page(id_book, page):
 	contents = book.book_pages.get(page, "")
 	return contents
 
-async def read_book(cmd):
+async def read_book(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 
-	if len(cmd.tokens) < 2:
+	if not dm:
+		response = "ENDLESS WAR politely asks that you !read in his DMs."
+
+	elif len(cmd.tokens) < 2:
 		response = "What zine do you want to read?"
 
 	else:
-		book_title = cmd.tokens[1]
-
-		if len(cmd.tokens) >= 3:
-			page_number = cmd.tokens[2]
-
-			if page_number.isdigit():
-				page_number = int(page_number)
-
-			if page_number not in range(0, 11):
-				page_number = 0
-		else:
+		if len(cmd.tokens) < 3:
+			book_title = ewutils.flattenTokenListToString(cmd.tokens)
 			page_number = 0
+		else:
+			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
+			page_number = ewutils.getIntToken(cmd.tokens)
 
 		book_sought = ewitem.find_item(item_search=book_title, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_book)
 
 		if book_sought:
 			book = EwItem(id_item = book_sought.get('id_item'))
 			id_book = book.item_props.get("id_book")
-			nsfw = False
 			book = EwBook(id_book=id_book)
+
+			if page_number not in range(0, book.pages+1):
+				page_number = 0
+
+			accepted = True
 			if book.genre == 3:
-				nsfw = True
-			page_contents = get_page(id_book, page_number)
 
-			if page_number == 0 and page_contents == "":
-				page_contents = get_page(id_book, 1)
+				accepted = False
+				response = "ENDLESS WAR sees you about to open up a porn zine and wants to make sure you're 18 years or older. Use **!accept** to open or **!refuse** to abstain."
 
-			page_text = "turn to page {}".format(page_number)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if page_number == 0:
-				page_text = "look at the cover"
+				try:
+					message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
 
-			response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
-			if nsfw:
-				response = "You {} and begin to read.\n\n\"||{}|| \"".format(page_text, page_contents)
-			readers[user_data.id_user] = (id_book, page_number)
+					if message != None:
+						if message.content.lower() == "!accept":
+							accepted = True
+						if message.content.lower() == "!refuse":
+							accepted = False
+				except:
+					accepted = False
 
-			if page_contents == "":
-				response = "You open up to page {} only to find that it's blank!".format(page_number)
+			if book.book_state < 0:
+				response = "You simply can't make out the letters on the page. Maybe it's better this way."
 
-			if page_number != 0:
-				response += "\n\nUse **!previouspage** to go back one page."
+			elif accepted:
+				page_contents = get_page(id_book, page_number)
 
-			if page_number != 10:
-				response += "\n\nUse **!nextpage** to go forward one page."
+				if page_number == 0 and page_contents == "":
+					page_contents = get_page(id_book, 1)
+
+				page_text = "turn to page {}".format(page_number)
+
+				if page_number == 0:
+					page_text = "look at the cover"
+
+				response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
+				readers[user_data.id_user] = (id_book, page_number)
+
+				if page_contents == "":
+					response = "You open up to page {} only to find that it's blank!".format(page_number)
+
+				if page_number != 0:
+					response += "\n\nUse **!previouspage** to go back one page."
+
+				if page_number != book.pages:
+					response += "\n\nUse **!nextpage** to go forward one page."
+
+			else:
+				response = "You decide not to indulge yourself."
 
 		else:
 			response = "You don't have that zine. Make sure you use **!read [zine title] [page]**"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def next_page(cmd):
+async def next_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 
-	if user_data.id_user in readers.keys():
+	if not dm:
+		response = "ENDLESS WAR politely asks that you !read in his DMs."
+
+	elif user_data.id_user in readers.keys():
 		id_book = readers[user_data.id_user][0]
-		nsfw = False
 		book = EwBook(id_book=id_book)
-		if book.genre == 3:
-			nsfw = True
 		page_number = readers[user_data.id_user][1]
 
-		if page_number == 10:
+		if page_number == book.pages:
 			response = "You've reached the end of the zine."
 
 		else:
@@ -700,8 +877,6 @@ async def next_page(cmd):
 				page_text = "look at the cover"
 
 			response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
-			if nsfw:
-				response = "You {} and begin to read.\n\n\"||{}|| \"".format(page_text, page_contents)
 			readers[user_data.id_user] = (id_book, page_number)
 
 			if page_contents == "":
@@ -710,7 +885,7 @@ async def next_page(cmd):
 			if page_number != 0:
 				response += "\n\nUse **!previouspage** to go back one page."
 
-			if page_number != 10:
+			if page_number != book.pages:
 				response += "\n\nUse **!nextpage** to go forward one page."
 
 	else:
@@ -719,15 +894,15 @@ async def next_page(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-async def previous_page(cmd):
+async def previous_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
 
-	if user_data.id_user in readers.keys():
+	if not dm:
+		response = "ENDLESS WAR politely asks that you !read in his DMs."
+
+	elif user_data.id_user in readers.keys():
 		id_book = readers[user_data.id_user][0]
-		nsfw = False
 		book = EwBook(id_book = id_book)
-		if book.genre == 3:
-			nsfw = True
 		page_number = readers[user_data.id_user][1]
 
 		if page_number == 0:
@@ -742,8 +917,6 @@ async def previous_page(cmd):
 				page_text = "look at the cover"
 
 			response = "You {} and begin to read.\n\n\"{} \"".format(page_text, page_contents)
-			if nsfw:
-				response = "You {} and begin to read.\n\n\"||{}|| \"".format(page_text, page_contents)
 			readers[user_data.id_user] = (id_book, page_number)
 
 			if page_contents == "":
@@ -752,14 +925,17 @@ async def previous_page(cmd):
 			if page_number != 0:
 				response += "\n\nUse **!previouspage** to go back one page."
 
-			if page_number != 10:
+			if page_number != book.pages:
 				response += "\n\nUse **!nextpage** to go forward one page."
 	else:
 		response = "You haven't opened a zine yet!"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-def int_is_zine(id_book, id_server):
+def int_is_zine(id_book = None, id_server = None, negative = False):
+	direction = '>'
+	if negative:
+		direction = '<'
 	book_list = []
 	try:
 		conn_info = ewutils.databaseConnect()
@@ -769,7 +945,7 @@ def int_is_zine(id_book, id_server):
 		cursor.execute((
 				"SELECT b.id_book " +
 				"FROM books AS b " +
-				"WHERE b.id_server = %s AND b.book_state = 1 " +
+				"WHERE b.id_server = %s AND b.book_state {} 0 ".format(direction) +
 				"ORDER BY b.id_book"
 		), (
 			id_server,
@@ -847,7 +1023,7 @@ async def browse_zines(cmd):
 				more_selects = ", b.sales"
 
 			elif sort_token in ('rating', 'quality', 'ratings', 'rate', 'fucks', 'rate', 'fuck', 'toprated', 'best', 'highestrated'):
-				query_sort = "rating DESC"
+				query_sort = "rating DESC, rates DESC"
 				more_selects = ", b.rating, b.rates"
 
 			elif sort_token in ('bad', 'terrible', 'shit', 'shitty', 'worst', 'worstrated', 'bottom'):
@@ -855,6 +1031,9 @@ async def browse_zines(cmd):
 
 			elif sort_token in ('all', 'every'):
 				quality = "> 0"
+				query_suffix = ""
+				query_sort = "id_book"
+				more_selects = ""
 
 			if len(cmd.tokens) > 2:
 				if cmd.tokens[2] in ('reverse', 'inverse', 'descend', 'desc', 'descending', 'backwards'):
@@ -950,10 +1129,11 @@ async def browse_zines(cmd):
 				response = "\n{} is a {} zine by {}.\n".format(title, genre, author)
 
 				cover = book.book_pages.get(0, "")
+				pages = book.pages
 				length = book.length
 				date = book.date_published
 
-				response += "It is {:,} characters long and was published on Day {}. ".format(length, date)
+				response += "It is {} pages and {:,} characters long and was published on Day {}. ".format(pages, length, date)
 
 				sales = book.sales
 				rating = book.rating
@@ -1044,6 +1224,8 @@ async def order_zine(cmd):
 								book.persist()
 
 						user_data.change_slimes(n = -(ewcfg.zine_cost), source = ewcfg.source_spending)
+						
+						user_data.persist()
 
 						author = EwUser(id_user = book.id_user, id_server = book.id_server)
 
@@ -1074,15 +1256,14 @@ async def rate_zine(cmd):
 		response = "What zine do you want to rate?"
 
 	else:
-		book_title = cmd.tokens[1]
-
 		if len(cmd.tokens) >= 3:
-			rating = cmd.tokens[2]
+			rating = ewutils.getIntToken(cmd.tokens)
+			book_title = ewutils.flattenTokenListToString(cmd.tokens[1:len(cmd.tokens) - 1])
 
-			if rating.isdigit():
-				rating = int(rating)
+			if rating == None:
+				response = "How many fucks do you want to give the zine? (1-5)"
 
-			if rating not in range(1, 6):
+			elif rating not in range(1, 6):
 				response = "Easy now, keep your fucks between 1 and 5."
 
 			else:
@@ -1136,10 +1317,14 @@ async def rate_zine(cmd):
 						if book.book_state == 1:
 							if book.rates >= 10 and float(book.rating) <= 2.0:
 								book.book_state = 2
+							elif book.rates >= 4 and float(book.rating) <= 1.5:
+								book.book_state = 2
 
 						# zine is included back into normal browsing
 						elif book.book_state == 2:
-							if float(book.rating) > 2.0:
+							if float(book.rating) > 2.0 and book.rates > 10:
+								book.book_state = 1
+							elif float(book.rating) > 1.5 and book.rates > 5:
 								book.book_state = 1
 
 						book.persist()
@@ -1155,3 +1340,122 @@ async def rate_zine(cmd):
 			response = "How many fucks do you want to give the zine? (1-5)"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def take_down_zine(cmd):
+	if len(cmd.tokens) < 2:
+		response = "Specify a zine you want to delete."
+
+	else:
+		book = cmd.tokens[1]
+		author = cmd.message.author
+
+		if book.isdigit():
+			book = int(book)
+
+		if not author.server_permissions.administrator:
+			admin = False
+
+		else:
+			admin = True
+
+		if int_is_zine(book, cmd.message.server.id):
+			book = EwBook(id_book = book)
+
+			if (not admin and book.id_user == cmd.message.author.id) and book.book_state > 0:
+				book.book_state = -1
+				book.persist()
+				response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
+
+			elif admin and book.book_state > 0:
+				book.book_state = -2
+				book.persist()
+				response = "{} by {} can no longer be bought. You can undo this at any time (!untakedown {}).".format(book.title, book.author, book.id_book)
+				
+			else:
+				response = "You don't have permission to delete that zine!"
+
+		else:
+			response = "Invalid Zine ID."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def untake_down_zine(cmd):
+	if len(cmd.tokens) < 2:
+		response = "Specify a zine you want to undelete."
+
+	else:
+		book = cmd.tokens[1]
+		author = cmd.message.author
+
+		if book.isdigit():
+			book = int(book)
+
+		if not author.server_permissions.administrator:
+			admin = False
+
+		else:
+			admin = True
+
+		if int_is_zine(id_book = book, id_server = cmd.message.server.id, negative = True):
+			book = EwBook(id_book=book)
+
+			if book.book_state >= 0:
+				response = "That zine hasn't been deleted."
+
+			elif not admin and book.book_state == -1:
+				book.book_state = 1
+				book.persist()
+				response = "{} by {} can be bought once more.".format(book.title, book.author)
+			
+			elif admin and book.book_state == -2:
+				book.book_state = 1
+				book.persist()
+				response = "{} by {} can be bought once more.".format(book.title, book.author)
+				
+			else:
+				response = "You don't have permission to undelete that zine!"
+
+		else:
+			response = "Invalid Zine ID."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def zine_dm_commands(cmd):
+	tokens_count = len(cmd.tokens)
+	cmd_text = cmd.tokens[0].lower() if tokens_count >= 1 else ""
+	player = EwPlayer(id_user=cmd.message.author.id)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=player.id_server)
+	server = ewcfg.server_list[user_data.id_server]
+	member_object = server.get_member(player.id_user)
+	cmd.message.author = member_object
+	cmd.message.server = server
+	dm = True
+
+	if cmd_text in [ewcfg.cmd_beginmanuscript, ewcfg.cmd_beginmanuscript_alt_1, ewcfg.cmd_beginmanuscript_alt_2]:
+		return await begin_manuscript(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_setpenname, ewcfg.cmd_setpenname_alt_1]:
+		return await set_pen_name(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_settitle, ewcfg.cmd_settitle_alt_1]:
+		return await set_title(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_setgenre]:
+		return await set_genre(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_editpage]:
+		return await edit_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_viewpage]:
+		return await view_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_checkmanuscript]:
+		return await check_manuscript(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_publishmanuscript]:
+		return await publish_manuscript(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_readbook]:
+		return await read_book(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_nextpage, ewcfg.cmd_nextpage_alt_1]:
+		return await next_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_previouspage, ewcfg.cmd_previouspage_alt_1, ewcfg.cmd_previouspage_alt_2]:
+		return await previous_page(cmd, dm)
+	elif cmd_text in [ewcfg.cmd_rate, ewcfg.cmd_rate_alt_1, ewcfg.cmd_rate_alt_2]:
+		return await rate_zine(cmd)
+	elif cmd_text in [ewcfg.cmd_accept, ewcfg.cmd_refuse]:
+		return
+	elif cmd_text in (ewcfg.cmd_setpages, ewcfg.cmd_setpages_alt_1, ewcfg.cmd_setpages_alt_2):
+		return await set_length(cmd, dm)

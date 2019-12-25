@@ -46,7 +46,7 @@ class EwUser:
 	hardened_sap = 0
 	#SLIMERNALIA
 	festivity = 0
-	slimernalia_coin_gambled = 0
+	festivity_from_slimecoin = 0
 	slimernalia_kingpin = False
 	manuscript = -1
 
@@ -666,13 +666,13 @@ class EwUser:
 
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
-		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) FROM users "\
+		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
 		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
 		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			festivity = ewcfg.col_festivity,
-			coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
 			name = ewcfg.col_name,
 			value = ewcfg.col_value,
 			id_item = ewcfg.col_id_item,
@@ -755,7 +755,7 @@ class EwUser:
 					ewcfg.col_sap,
 					ewcfg.col_hardened_sap,
 					ewcfg.col_festivity,
-					ewcfg.col_slimernalia_coin_gambled,
+					ewcfg.col_festivity_from_slimecoin,
 					ewcfg.col_slimernalia_kingpin,
 					ewcfg.col_manuscript,
 				), (
@@ -807,7 +807,7 @@ class EwUser:
 					self.sap = result[38]
 					self.hardened_sap = result[39]
 					self.festivity = result[40]
-					self.slimernalia_coin_gambled = result[41]
+					self.festivity_from_slimecoin = result[41]
 					self.slimernalia_kingpin = (result[42] == 1)
 					self.manuscript = result[43]
 				else:
@@ -910,7 +910,7 @@ class EwUser:
 				ewcfg.col_sap,
 				ewcfg.col_hardened_sap,
 				ewcfg.col_festivity,
-				ewcfg.col_slimernalia_coin_gambled,
+				ewcfg.col_festivity_from_slimecoin,
 				ewcfg.col_slimernalia_kingpin,
 				ewcfg.col_manuscript,
 			), (
@@ -958,7 +958,7 @@ class EwUser:
 				self.sap,
 				self.hardened_sap,
 				self.festivity,
-				self.slimernalia_coin_gambled,
+				self.festivity_from_slimecoin,
 				self.slimernalia_kingpin,
 				self.manuscript,
 			))

@@ -1,6 +1,7 @@
 import asyncio
 import random
 import time
+import math
 
 import ewcmd
 import ewutils
@@ -66,7 +67,7 @@ async def pachinko(cmd):
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 			#SLIMERNALIA
-			user_data.festivity += slimecoin_to_festivity(value)
+			user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 		else:
 			value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
@@ -180,7 +181,7 @@ async def craps(cmd):
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 				#SLIMERNALIA
-				user_data.festivity += slimecoin_to_festivity(value)
+				user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 			else:
 				if value == -1:
@@ -267,7 +268,7 @@ async def slots(cmd):
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 			#SLIMERNALIA
-			user_data.festivity += slimecoin_to_festivity(value)
+			user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 		else:
 			value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
@@ -453,7 +454,7 @@ async def roulette(cmd):
 				# subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 				#SLIMERNALIA
-				user_data.festivity += slimecoin_to_festivity(value)
+				user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 			else:
 				if value == -1:
@@ -614,7 +615,7 @@ async def baccarat(cmd):
 				#subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 				#SLIMERNALIA
-				user_data.festivity += slimecoin_to_festivity(value)
+				user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 			else:
 				if value == -1:
@@ -2328,7 +2329,8 @@ def slimecorp_collectfee(winnings):
 	
 	return slimecorp_fee, new_winnings
 
-def slimecoin_to_festivity(value):
-	festivity_gained = value / 1000000000000
+def slimecoin_to_festivity(value, festivity_old):
+	old_value = 1.00044 ** festivity_old
+	festivity_new = math.log(old_value + value) / math.log(1.00044)
 	
-	return festivity_gained
+	return festivity_new
