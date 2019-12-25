@@ -1356,7 +1356,7 @@ async def scout(cmd):
 		detailed_enemies_resp = "You pick up the scent of the following enemies:\n"
 		for enemy in enemies_in_district:
 			enemy_data = EwEnemy(id_enemy=enemy)
-			detailed_enemies_resp += "**{}**\n".format(enemy_data.display_name)
+			detailed_enemies_resp += "\n**{}**\n".format(enemy_data.display_name)
 			num_enemies += 1
 
 		if num_players == 0:
@@ -1410,7 +1410,7 @@ async def scout(cmd):
 		# post result to channel
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"**{}**:{}\n{} {}".format(
+			"**{}**:{}\n{}\n{}".format(
 				poi.str_name,
 				players_resp,
 				enemies_resp,
