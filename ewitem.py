@@ -1605,3 +1605,28 @@ async def makecostume(cmd):
 	
 	response = "You fashion your **{}** Double Halloween costume using the creation kit.".format(item_name)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def trash(cmd):
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	author = cmd.message.author
+	server = cmd.message.server
+
+	item_sought = find_item(item_search=item_search, id_user=author.id, id_server=server.id)
+
+	if item_sought:
+		# Load the user before the item so that the right item props are used
+		user_data = EwUser(member=author)
+
+		item = EwItem(id_item=item_sought.get('id_item'))
+
+		response = "You can't !trash an item that isn't food. Try **!drop**ing it instead."  # if it's not overwritten
+
+		if item.item_type == ewcfg.it_food:
+			response = "You throw away your {} into a nearby trash can.".format(item.item_props.get("food_name"))
+			item_delete(item.id_item)
+	else:
+		response = "Are you sure you have that item?"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
