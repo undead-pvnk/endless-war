@@ -2,6 +2,7 @@ import math
 import time
 import random
 import asyncio
+import discord
 
 import ewutils
 import ewcfg
@@ -864,6 +865,9 @@ async def inventory_print(cmd):
 	try:
 		if can_message_user:
 			msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+	except discord.errors.Forbidden:
+		response = "You'll have to allow Endless War to send you DMs to check your inventory!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	except:
 		can_message_user = False
 

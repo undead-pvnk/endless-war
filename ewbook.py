@@ -1177,32 +1177,35 @@ async def order_zine(cmd):
 			id_book = int(cmd.tokens[1])
 
 			if int_is_zine(id_book, cmd.message.server.id):
-				if user_data.slimes < ewcfg.zine_cost:
-					response = "YOU CAN'T AFFORD IT. ({:,}/{:,}})".format(user_data.slimes, ewcfg.zine_cost)
-				else:
-					book = EwBook(id_book=id_book)
-					accepted = True
-					if book.genre == 3:
+				book = EwBook(id_book=id_book)
+				accepted = True
+				if book.genre == 3:
+					accepted = False
+					response = "THIS ZINE IS PORNOGRAPHY. CONFIRM THAT YOU ARE AT LEAST 18 YEARS OLD. **!accept** or **!refuse**"
+
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					try:
+						message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+
+						if message != None:
+							if message.content.lower() == "!accept":
+								accepted = True
+							if message.content.lower() == "!refuse":
+								accepted = False
+					except:
 						accepted = False
-						response = "THIS ZINE IS PORNOGRAPHY. CONFIRM THAT YOU ARE AT LEAST 18 YEARS OLD. **!accept** or **!refuse**"
 
-						await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				if not accepted:
+					response = "No porn for you."
 
-						try:
-							message = await cmd.client.wait_for_message(timeout=20, author=cmd.message.author, check=check)
+				elif accepted:
+					user_data = EwUser(member=cmd.message.author)
 
-							if message != None:
-								if message.content.lower() == "!accept":
-									accepted = True
-								if message.content.lower() == "!refuse":
-									accepted = False
-						except:
-							accepted = False
+					if user_data.slimes < ewcfg.zine_cost:
+						response = "YOU CAN'T AFFORD IT. ({:,}/{:,})".format(user_data.slimes, ewcfg.zine_cost)
 
-					if not accepted:
-						response = "No porn for you."
-
-					elif accepted:
+					else:
 						ewitem.item_create(
 							item_type=ewcfg.it_book,
 							id_user=user_data.id_user,

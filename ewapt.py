@@ -328,7 +328,11 @@ async def retire(cmd):
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			response = "You're in your apartment."
-			await ewutils.send_message(cmd.client, cmd.message.author, response)
+
+			try:
+				await ewutils.send_message(cmd.client, cmd.message.author, response)
+			except:
+				await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
 
 
 async def depart(cmd=None, isGoto = False, movecurrent=None):
@@ -968,7 +972,12 @@ async def knock(cmd = None):
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
 
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
-			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			try:
+				await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			except:
+				response = "They aren't taking in any visitors right now."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
 			try:
 				accepted = False
 				if user_data.rr_challenger == target_data.apt_zone:
@@ -1068,7 +1077,13 @@ async def trickortreat(cmd = None):
 
 		else:
 			response = "{} is all dressed up for Double Halloween, waiting at your doorstep. Do you pull a !trick on them, or !treat them to a piece of candy?".format(cmd.message.author.display_name)
-			await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			
+			try:
+				await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
+			except:
+				response = "They aren't taking in any visitors right now."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			try:
 				treat = False
 				if user_data.rr_challenger == target_data.apt_zone:
@@ -1573,8 +1588,8 @@ async def frame(cmd):
 
 	namechange = cmd.message.content[(len(ewcfg.cmd_frame)):].strip()
 
-	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_item) and len(namechange) >= 3:
-		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_item)
+	if ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture) and len(namechange) >= 3:
+		item_sought = ewitem.find_item(item_search="pictureframe", id_user=usermodel.id_user, id_server=playermodel.id_server, item_type_filter = ewcfg.it_furniture)
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
 		item.item_props['furniture_desc'] = namechange
 		item.persist()
