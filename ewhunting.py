@@ -948,6 +948,13 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 	if chosen_poi == "":
 		return resp_cont
 	
+	# If an enemy spawns in the Nuclear Beach, it should be remade as a 'pre-historic' enemy.
+	if potential_chosen_poi == ewcfg.poi_id_nuclear_beach:
+		enemytype = random.choice(ewcfg.pre_historic_enemies)
+		# If the enemy is a raid boss, re-roll it once to make things fair
+		if enemytype in ewcfg.raid_bosses:
+			enemytype = random.choice(ewcfg.pre_historic_enemies)
+	
 	# Recursively spawn enemies that belong to groups.
 	if enemytype in ewcfg.enemy_group_leaders:
 		sub_enemies_list = ewcfg.enemy_spawn_groups[enemytype]
