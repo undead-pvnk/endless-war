@@ -442,8 +442,8 @@ class EwUser:
 	def equip(self, weapon_item = None):
 		if self.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't equip weapons."
-		#elif self.life_state == ewcfg.life_state_juvenile:
-		#	response = "Juvies can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile:
+			response = "Juvies can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
 			if weapon_item.item_props.get("married") == self.id_user:
