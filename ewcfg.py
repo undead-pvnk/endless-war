@@ -12613,7 +12613,7 @@ def get_strat_b(combat_data, in_range, first_turn, active):
 			weight_attack *= 3
 			weight_evade *= 3
 		else:
-			weight_evade *= 3
+			weight_evade *= 4
 			weight_block *= 2
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
