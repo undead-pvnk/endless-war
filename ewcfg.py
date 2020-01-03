@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.19b-yoslimernalia"
+version = "v3.20yoslimernalia"
 
 dir_msgqueue = 'msgqueue'
 
