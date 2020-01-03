@@ -11903,7 +11903,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'A'. Through the observation port, you see a dark cluster within the proto-Slimeoid begin to form into what looks like a large eye.",
 		str_head = "Its face is a single huge eye.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} swallows the {food_name} whole.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name}'s huge eye follows the ball's arc, and it makes a leap to catch it!!\n\n...only to get socked right in the eye, sending it to the floor in pain. Depth perception... it's truly a gift."
 	),
 	EwHead( # head 2
@@ -11914,7 +11914,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'B'. Through the observation port, you see an opening form in what you think is the proto-Slimeoid's face, which begins to sprout large pointed teeth.",
 		str_head = "Its face is a huge toothy mouth.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} crunches the {food_name} to paste with its huge teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} slavers and drools as it awaits the throw, and when it sees the ball start to fly, it lunges to grab it out of the air in its huge toothy maw, slicing it to shreds with its teeth in seconds."
 	),
 	EwHead( # head 3
@@ -11925,8 +11925,8 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'C'. Through the observation port, you see what you thought was the proto-Slimeoid's face suddenly sucked down into its body, as though by a black hole.",
 		str_head = "Its face is an empty black void.",
-		str_feed = "",
-		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it dissapears forever."
+		str_feed = "The {food_name} disappears into the unknowable depths of {slimeoid_name}'s face hole.",
+		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it disappears forever."
 	),
 	EwHead( # head 4
 		id_head = "beast",
@@ -11937,7 +11937,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'D'. Through the observation port, you see the beginnings of an animal-like face forming on your proto-Slimeoid, with what might be eyes, a nose, teeth... maybe.",
 		str_head = "Its face is that of a vicious beast.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} gobbles up the {food_name} greedily.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} focuses its eyes and bares its teeth, then makes a flying leap, snapping the ball clean out of the air in its jaws! It comes back to you and drops the ball at your feet. Good boy!"
 	),
 	EwHead( # head 5
@@ -11949,7 +11949,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'E'. Through the observation port, you see the proto-Slimeoid suddenly bulge with a series of hard orbs which congeal into what appear to be large compound eyes.",
 		str_head = "It has bulging insectoid eyes and mandibles.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} cuts the {food_name} into pieces with its mandibles.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} stands motionless, presumably watching the ball with its large compound eyes, before darting toward it as it sails through the air, snapping its mandibles around the ball and slicing it cleanly in two."
 	),
 	EwHead( # head 6
@@ -11960,7 +11960,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'F'. Through the observation port, you see the proto-Slimeoid's frontal features twist into a ghastly death's-head.",
 		str_head = "Its face resembles a skull.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} spills half the {food_name} on the floor trying to chew it with its exposed teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves as quickly as it can to make the catch, making it just before the ball lands! With a thunk, the ball lodges itself in {slimeoid_name}'s open eye socket. {slimeoid_name} yanks it out and tosses the ball back to you. Euughh."
 	),
 	EwHead( # head 7
@@ -11970,7 +11970,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'G'. Through the observation port, you see the proto-Slimeoid's front end melt into an indistinct mass.",
 		str_head = "It has no discernable head.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} just sort of... absorbs the {food_name} into its body.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves under the ball as it flies through the air, but makes no attempt to catch it in its mouth on account of having none. The ball lands next to {slimeoid_name}, who merely looks on. Actually, you can't tell where it's looking."
 	)
 ]
@@ -12823,6 +12823,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is snarling. You're not sure if it's angry at you, or at the world in general.",
 		str_pet = "{slimeoid_name} hisses at you.",
 		str_walk = "You wrestle {slimeoid_name} down and force a leash onto it, as it angrily snarls and hisses at you in protest.",
+		str_feed = "{slimeoid_name} almost bites your hand off as you offer the {food_name} to it! It growls at you before eating, as if to secure its prey.",
 		str_kill = "{slimeoid_name} howls with savage delight at the bloodshed!!",
 		str_death = "{slimeoid_name} howls in fury at its master's death! It tears away in a blind rage!",
 		str_victory = "{slimeoid_name} roars in triumph!!",
@@ -12847,6 +12848,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} notices you looking at it and seems delighted!",
 		str_pet = "{slimeoid_name} purrs happily.",
 		str_walk = "{slimeoid_name} is so excited for its walk, it can barely hold still enough to let you put the leash on it!",
+		str_feed = "{slimeoid_name} starts running circles around you and drooling uncontrollably in anticipation as soon as you reach for the {food_name}.",
 		str_kill = "{slimeoid_name} gives a bestial woop of excitement for your victory!",
 		str_death = "{slimeoid_name} gives a wail of grief at its master's death, streaking away from the scene.",
 		str_victory = "{slimeoid_name} woops with delight at its victory!",
@@ -12870,6 +12872,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems to be resting, possibly deep in thought.",
 		str_pet = "{slimeoid_name} doesn't react.",
 		str_walk = "{slimeoid_name} holds still as you place the leash on it. It regards the leash, seemingly pontificating.",
+		str_feed = "{slimeoid_name} shows neither happiness nor reluctance as you offer the {food_name}. It accepts the treat as though it were a mere formality.",
 		str_kill = "{slimeoid_name} regards the corpse of your former adversary with an unknowable expression.",
 		str_death = "{slimeoid_name} stares at the killer, memorizing their face before fleeing the scene.",
 		str_victory = "{slimeoid_name} silently turns away from its defeated opponent.",
@@ -12893,6 +12896,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} stares off into the distance. Who knows if it's actually looking at anything in particular.",
 		str_pet = "{slimeoid_name} is startled out of a stupor by your touch.",
 		str_walk = "{slimeoid_name} hardly seems to notice you fastening it with a leash.",
+		str_feed = "You have to literally shove the {food_name} into {slimeoid_name}'s face to get its attention. It takes a moment to recover its orientation before accepting the treat.",
 		str_kill = "{slimeoid_name} wasn't paying attention and missed the action.",
 		str_death = "{slimeoid_name} is startled to realize its master has died. It blinks in confusion before fleeing.",
 		str_victory = "{slimeoid_name} keeps attacking for a moment before realizing it's already won.",
@@ -12916,6 +12920,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is glancing around furtively, seemingly scanning for threats.",
 		str_pet = "{slimeoid_name} flinches nervously at your touch.",
 		str_walk = "{slimeoid_name} shivers in place as you're fastening the leash, then starts to pull and tug at it, seemingly perturbed.",
+		str_feed = "{slimeoid_name} backs up anxiously as you reach out with the {food_name} in your hand. You sigh and take a bite of the treat yourself to convince {slimeoid_name} that its not poisoned. It reluctantly accepts the {food_name} and starts nibbling at it.",
 		str_kill = "{slimeoid_name} peers out from behind its master, hoping the violence is over.",
 		str_death = "{slimeoid_name} is overcome with terror, skittering away from the killer in a mad panic!",
 		str_victory = "{slimeoid_name} is deeply relieved that the battle is over.",
@@ -12939,6 +12944,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is moving around, apparently searching for... something.",
 		str_pet = "{slimeoid_name} seems nonplussed, but doesn't object.",
 		str_walk = "{slimeoid_name} exasperatedly lets you fit it with a leash for a walk.",
+		str_feed = "{slimeoid_name} only seems to halfway pay attention as you offer the {food_name}. It pockets the treat for later and eats it when it thinks you aren't looking.",
 		str_kill = "{slimeoid_name} rifles through your victim's pockets for food.",
 		str_death = "{slimeoid_name} rifles through its dead master's pockets for whatever it can find before slinking away.",
 		str_victory = "{slimeoid_name} shakes itself off after the battle.",
@@ -12962,6 +12968,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems unsure of whether it wants to wander around or just stay put.",
 		str_pet = "{slimeoid_name} seems confused about how to react.",
 		str_walk = "{slimeoid_name} lets you put its leash on it, but immediately starts to trip over it and get tangled in it.",
+		str_feed = "{slimeoid_name} stares at the {food_name} like it's unfamiliar with the concept of food. You make a chewing motion with your mouth to demonstrate. It still seems confused. You lose your patience and force-feed the treat to your slimeoid.",
 		str_kill = "{slimeoid_name} seems unsure of whether to celebrate the victory or to mourn the decline of your civilization into rampant youth violence.",
 		str_death = "{slimeoid_name} starts to approach its master's body, then changes its mind and starts to run away. It trips over itself and falls on its way out.",
 		str_victory = "{slimeoid_name} looks around, apparently shocked that it somehow won.",

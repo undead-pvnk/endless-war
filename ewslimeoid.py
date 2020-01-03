@@ -498,6 +498,7 @@ class EwBrain:
 		str_walk = "",
 		str_pet = "",
 		str_observe = "",
+		str_feed = "",
 		get_strat = None,
 	):
 		self.id_brain = id_brain
@@ -517,6 +518,7 @@ class EwBrain:
 		self.str_pet = str_pet
 		self.str_walk = str_walk
 		self.str_observe = str_observe
+		self.str_feed = str_feed
 		self.get_strat = get_strat
 
 """
@@ -3140,6 +3142,7 @@ async def feedslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	time_now = int(time.time())
+	response = ""
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "Slimeoids don't fuck with ghosts."
@@ -3164,9 +3167,15 @@ async def feedslimeoid(cmd):
 				if feed_success:
 					slimeoid.persist()
 					ewitem.item_delete(id_item = item_data.id_item)
-					response = "{} eats the {}.".format(slimeoid.name, item_sought.get('name'))
+					response = "{slimeoid_name} eats the {food_name}."
+					slimeoid_brain = ewcfg.brain_map.get(slimeoid.ai)
+					slimeoid_head = ewcfg.head_map.get(slimeoid.head)
+					if slimeoid_brain != None and slimeoid_head != None:
+						response = "{} {}".format(slimeoid_brain.str_feed, slimeoid_head.str_feed)
 				else:
-					response = "{} refuses to eat the {}.".format(slimeoid.name, item_sought.get('name'))
+					response = "{slimeoid_name} refuses to eat the {food_name}."
+
+				response = response.format(slimeoid_name = slimeoid.name, food_name = item_sought.get('name'))
 			else:
 				response = "That item is not suitable for slimeoid consumption."
 			
