@@ -1521,6 +1521,8 @@ async def unwrap(cmd):
 					gift_name_type = 'cosmetic_name'
 				elif gifted_item.item_type == ewcfg.it_furniture:
 					gift_name_type = 'furniture_name'
+				elif gifted_item.item_type == ewcfg.it_book:
+					gift_name_type = 'title'
 				
 				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
 				gifted_item_message = item.item_props.get('context')

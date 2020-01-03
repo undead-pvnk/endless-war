@@ -1849,11 +1849,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if not sandbag_mode:
 		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 		
-	if sandbag_mode:
-		slimes_spent_sandbag = slimes_spent
-		slimes_spent = 0
-		slimes_dropped = 0
-
 	# Weaponized flavor text.
 	randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
@@ -1896,6 +1891,11 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		sap_ignored = ctn.sap_ignored
 		backfire_damage = ctn.backfire_damage
 		# user_data and enemy_data should be passed by reference, so there's no need to assign them back from the effect container.
+		
+		if sandbag_mode:
+			slimes_spent_sandbag = slimes_spent
+			slimes_spent = 0
+			slimes_dropped = 0
 		
 		if (slimes_spent > user_data.slimes):
 			# Not enough slime to shoot.
@@ -2248,7 +2248,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	# Persist user data.
 	# Flag the user for PvP
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	if not sandbag_mode:
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()

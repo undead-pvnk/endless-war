@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.19a-yoslimernalia"
+version = "v3.19b-yoslimernalia"
 
 dir_msgqueue = 'msgqueue'
 
@@ -272,6 +272,7 @@ poi_id_southwest_outskirts = "southwestoutskirts"
 poi_id_west_outskirts = "westoutskirts"
 poi_id_northwest_outskirts = "northwestoutskirts"
 poi_id_north_outskirts = "northoutskirts"
+poi_id_nuclear_beach = "nuclearbeach" # aka Assault Flats Beach Outskirts
 
 
 # The Sphere
@@ -695,6 +696,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
+cmd_trash = cmd_prefix + 'trash'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
@@ -1499,6 +1501,7 @@ col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
 #SLIMERNALIA
 col_festivity = 'festivity'
+col_festivity_from_slimecoin = 'festivity_from_slimecoin'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 col_slimernalia_kingpin = 'slimernalia_kingpin'
 
@@ -10289,15 +10292,38 @@ poi_list = [
 			"no",
 		],
 		str_name="North Outskirts",
-		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (36, 2),
+		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts or the Nuclear Beach too.".format(str_generic_outskirts_description),
+		coord = (37, 2),
 		coord_alias = [
+			(36, 2),
 			(35, 2),
 			(34, 2),
 			(33, 2)
 		],
 		channel="north-outskirts",
 		role="Northern Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
+	EwPoi( # Outskirts - 6
+		id_poi=poi_id_nuclear_beach,
+		alias=[
+			"nuclearbeach",
+			"nuclearbeachoutskirts",
+			"nb",
+			"nbeach",
+			"afbo",
+			"afboutskirts",
+		],
+		str_name="Nuclear Beach",
+		str_desc="{}  A place only the fiercest secreatures call home, right next to Assault Flats Beach. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here.".format(str_generic_outskirts_description),
+		coord = (47, 6),
+		coord_alias = [
+			(47, 7)
+		],
+		channel="nuclear-beach",
+		role="Nuclear Beach",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
@@ -14276,6 +14302,9 @@ uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
+# List of enemies that spawn in the Nuclear Beach
+pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
 	"Micro": [enemy_type_megaslime],
@@ -14369,7 +14398,8 @@ outskirts_districts = [
 	poi_id_southwest_outskirts,
 	poi_id_west_outskirts,
 	poi_id_northwest_outskirts,
-	poi_id_north_outskirts
+	poi_id_north_outskirts,
+	poi_id_nuclear_beach
 ]
 
 # Letters that an enemy can identify themselves with

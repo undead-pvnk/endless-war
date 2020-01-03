@@ -51,8 +51,8 @@ CREATE TABLE users (
 	has_soul int NOT NULL DEFAULT '1',
 	sap int NOT NULL DEFAULT '0',
 	hardened_sap int NOT NULL DEFAULT '0',	
-	festivity float NOT NULL DEFAULT '0',	
-	slimernalia_coin_gambled bigint NOT NULL DEFAULT '0',
+	festivity int NOT NULL DEFAULT '0',	
+	festivity_from_slimecoin int NOT NULL DEFAULT '0',
 	slimernalia_kingpin boolean NOT NULL DEFAULT false,
 	manuscript int NOT NULL DEFAULT '-1',
 
