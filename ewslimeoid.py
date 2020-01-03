@@ -2231,7 +2231,7 @@ async def slimeoidbattle(cmd):
 
 		slimecorp_fee, winnings = ewcasino.slimecorp_collectfee(bet*2)
 
-		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challenger.poi, battle_type = ewcfg.battle_type_arena)
+		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, channel = cmd.message.channel, battle_type = ewcfg.battle_type_arena)
 		if result == -1:
 			response = "\n**{} has won the Slimeoid battle!! The crowd erupts into cheers for {} and {}!!** :tada:{}".format(challenger_slimeoid.name, challenger_slimeoid.name, author.display_name, "" if bet == 0 else "\nThey recieve {:,} slime! The remaining {:,} slime goes to SlimeCorp.".format(winnings, slimecorp_fee))
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
@@ -2324,7 +2324,7 @@ async def negaslimeoidbattle(cmd):
 
 	#Start game
 	try:
-		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, poi = challengee_slimeoid.poi, battle_type = ewcfg.battle_type_nega)
+		result = await battle_slimeoids(id_s1 = challengee_slimeoid.id_slimeoid, id_s2 = challenger_slimeoid.id_slimeoid, channel = cmd.message.channel, battle_type = ewcfg.battle_type_nega)
 		if result == -1:
 			# Losing in a nega battle means death
 			district_data = EwDistrict(district = challenger.poi, id_server = cmd.message.server.id)
@@ -2526,7 +2526,7 @@ async def restoreslimeoid(cmd):
 		
 
 
-async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
+async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 
 	# fetch slimeoid data
 	challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
@@ -2536,11 +2536,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	challengee = EwPlayer(id_user = challengee_slimeoid.id_user)
 	challenger = EwPlayer(id_user = challenger_slimeoid.id_user)
 
-	poi_data = ewcfg.id_to_poi.get(poi)
-
 	client = ewutils.get_client()
-	server = ewcfg.server_list.get(challengee_slimeoid.id_server)
-	channel = ewutils.get_channel(server = server, channel_name = poi_data.channel)
 	
 	# calculate starting hp
 	s1hpmax = 50 + (challengee_slimeoid.level * 20)
@@ -2760,9 +2756,9 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			if active_dos > 0:
 				# calculate damage
 				if in_range:
-					damage = int(active_dos * 15 / (passive_data.hardened_sap + 1))
+					damage = int(active_dos * 30 / (passive_data.hardened_sap + 1))
 				else:
-					damage = int(active_dos * 10)
+					damage = int(active_dos * 20)
 
 				response = active_data.execute_attack(passive_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)
@@ -2806,9 +2802,9 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			if passive_dos > 0:
 				# calculate damage
 				if in_range:
-					damage = int(passive_dos * 15 / (active_data.hardened_sap + 1))
+					damage = int(passive_dos * 30 / (active_data.hardened_sap + 1))
 				else:
-					damage = int(passive_dos * 10)
+					damage = int(passive_dos * 20)
 
 				response = passive_data.execute_attack(active_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)

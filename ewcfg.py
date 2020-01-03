@@ -12563,6 +12563,7 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 	if in_range:
 		if active:
 			weight_attack *= 3
+			weight_block *= 2
 		else:
 			weight_block *= 3
 
@@ -12602,6 +12603,7 @@ def get_strat_b(combat_data, in_range, first_turn, active):
 	if in_range:
 		if active:
 			weight_attack *= 3
+			weight_block *= 2
 		else:
 			weight_block *= 2
 			weight_evade *= 3
@@ -12733,6 +12735,7 @@ def get_strat_e(combat_data, in_range, first_turn, active):
 	else:
 		if active:
 			weight_attack *= 4
+			weight_block *= 2
 		else:
 			weight_block *= 3
 
