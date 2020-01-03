@@ -565,32 +565,76 @@ class EwSlimeoidFood:
 		self.increase = increase
 		self.decrease = decrease
 
+# manages a slimeoid's combat stats during a slimeoid battle
 class EwSlimeoidCombatData:
+
+	# slimeoid name
 	name = ""
+
+	# slimeoid weapon object
 	weapon = None
+
+	# slimeoid armor object
 	armor = None
+
+	# slimeoid special attack object
 	special = None
+
+	# slimeoid legs object
 	legs = None
+
+	# slimeoid brain object
 	brain = None
+
+	# slimeoid hue object
 	hue = None
+
+	# slimeoid physical attack stat
 	moxie = 0
+
+	# slimeoid physical defense stat
 	grit = 0
+
+	# slimeoid special attack stat
 	chutzpah = 0
+	
+	# slimeoid maximum hp
 	hpmax = 0
+
+	# slimeoid current hp
 	hp = 0
+
+	# slimeoid maximum sap
 	sapmax = 0
+
+	# slimeoid current sap
 	sap = 0
+
+	# slimeoid current hardened sap
 	hardened_sap = 0
+
+	# slimeoid shock (reduces effective sap)
 	shock = 0
 
+	# slimeoid database object (EwSlimeoid)
 	slimeoid = None
+
+	# slimeoid owner database object (EwPlayer)
 	owner = None
 
+	# slimeoid armor weakness string
 	resistance = ""
+
+	# slimeoid armor resistance string
 	weakness = ""
 	
+	# slimeoid hue physical resistance string
 	analogous = ""
+	
+	# slimeoid hue physical weakness string
 	splitcomplementary_physical = ""
+
+	# slimeoid hue special weakness string
 	splitcomplementary_special = ""
 
 	def __init__(self,
@@ -630,6 +674,7 @@ class EwSlimeoidCombatData:
 		self.slimeoid = slimeoid
 		self.owner = owner
 	
+	# initializes the physical resistance and special weakness strings and applies corresponding stat changes
 	def apply_weapon_matchup(self, enemy_combat_data = None):
 		challengee_slimeoid = self.slimeoid
 		challenger_slimeoid = enemy_combat_data.slimeoid
@@ -647,6 +692,7 @@ class EwSlimeoidCombatData:
 		self.resistance = resistance.format(self.name)
 		self.weakness = weakness.format(self.name)
 
+	# initializes the hue resistance and weakness strings and applies corresponding stat changes
 	def apply_hue_matchup(self, enemy_combat_data = None):
 		color_matchup = ewcfg.hue_neutral
 		# get color matchups
@@ -673,12 +719,15 @@ class EwSlimeoidCombatData:
 				enemy_combat_data.splitcomplementary_physical = "It's Super Effective against {}!".format(enemy_combat_data.name)
 				enemy_combat_data.splitcomplementary_special = "It's Super Effective against {}!".format(enemy_combat_data.name)
 
+	# roll the dice on whether an action succeeds and by how many degrees of success
 	def attempt_action(self, strat, sap_spend, in_range):
+		# reduce sap available by shock
 		self.sap -= self.shock
 		self.sap = max(0, self.sap)
 		self.shock = 0
 		sap_spend = min(sap_spend, self.sap)
 		
+		# obtain target number based on the type of action attempted
 		target_number = 0
 		if strat == ewcfg.slimeoid_strat_attack:
 			if in_range:
@@ -693,17 +742,22 @@ class EwSlimeoidCombatData:
 
 		dos = 0
 		dice = []
+		# roll the dice
 		for i in range(sap_spend):
 			die_roll = random.randrange(10)
 			dice.append(die_roll)
+			# a result lower than the target number confers a degree of success. a result of 0 always succeeds and a result of 9 always fails.
 			if (die_roll < target_number and die_roll != 9) or die_roll == 0:
 				dos += 1
 
-		ewutils.logMsg("Rolling {} check with {} sap, target number {}: {}, {} successes".format(strat, sap_spend, target_number, dice, dos))
+		#ewutils.logMsg("Rolling {} check with {} sap, target number {}: {}, {} successes".format(strat, sap_spend, target_number, dice, dos))
+		# spend sap
 		self.sap -= sap_spend
 
+		# return degrees of success
 		return dos
 
+	# obtain response for attack
 	def execute_attack(self, enemy_combat_data, damage, in_range):
 		hp = enemy_combat_data.hp
 		hp -= damage
@@ -751,14 +805,23 @@ class EwSlimeoidCombatData:
 
 		return response
 
+	# apply damage and obtain response
 	def take_damage(self, enemy_combat_data, damage, active_dos, in_range):
+		
+		# apply damage
 		self.hp -= damage
 		hp = self.hp
-		sap_crush = min(self.hardened_sap, active_dos)
-		self.hardened_sap -= sap_crush
 
+		# crush sap on physical attacks only
+		sap_crush = 0
+		if in_range:
+			sap_crush = min(self.hardened_sap, active_dos)
+			self.hardened_sap -= sap_crush
+
+		# store shock taken for next turn
 		self.shock += 2 * active_dos
 
+		# get proper response
 		response = ""
 		if self.hp > 0:
 			if in_range:
@@ -796,6 +859,7 @@ class EwSlimeoidCombatData:
 
 		return response
 
+	# obtain movement response
 	def change_distance(self, enemy_combat_data, in_range):
 		response = ""
 		if in_range:
@@ -822,6 +886,7 @@ class EwSlimeoidCombatData:
 				)
 		return response
 
+	# harden sap and obtain response
 	def harden_sap(self, dos):
 		response = ""
 		
@@ -829,7 +894,7 @@ class EwSlimeoidCombatData:
 		self.hardened_sap += sap_hardened
 
 		if sap_hardened <= 0:
-			response = ""
+			response = "{} fails to harden any sap!".format(self.name)
 		else:
 			response = "{} hardens {} sap!".format(self.name, sap_hardened)
 
@@ -2463,8 +2528,11 @@ async def restoreslimeoid(cmd):
 
 async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
+	# fetch slimeoid data
 	challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 	challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
+
+	# fetch player data
 	challengee = EwPlayer(id_user = challengee_slimeoid.id_user)
 	challenger = EwPlayer(id_user = challenger_slimeoid.id_user)
 
@@ -2474,13 +2542,15 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 	server = ewcfg.server_list.get(challengee_slimeoid.id_server)
 	channel = ewutils.get_channel(server = server, channel_name = poi_data.channel)
 	
+	# calculate starting hp
 	s1hpmax = 50 + (challengee_slimeoid.level * 20)
-
 	s2hpmax = 50 + (challenger_slimeoid.level * 20)
 
+	# calculate starting sap
 	s1sapmax = challengee_slimeoid.level * 2
 	s2sapmax = challenger_slimeoid.level * 2
 
+	# initialize combat data for challengee
 	s1_combat_data = EwSlimeoidCombatData(
 		name = str(challengee_slimeoid.name),
 		weapon = ewcfg.offense_map.get(challengee_slimeoid.weapon),
@@ -2500,6 +2570,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		owner = challengee,
 	)
 
+	# initialize combat data for challenger
 	s2_combat_data = EwSlimeoidCombatData(
 		name = str(challenger_slimeoid.name),
 		weapon = ewcfg.offense_map.get(challenger_slimeoid.weapon),
@@ -2528,6 +2599,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 			
 
+	# decide which slimeoid gets to move first
 	s1_active = False
 	in_range = False
 
@@ -2538,6 +2610,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		if coinflip == 1:
 			s1_active = True
 
+	# flavor text for arena battles
 	if battle_type == ewcfg.battle_type_arena:
 		response = "**{} sends {} out into the Battle Arena!**".format(challenger.display_name, s2_combat_data.name)
 		await ewutils.send_message(client, channel, response)
@@ -2555,6 +2628,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 
 	turncounter = 100
+	# combat loop
 	while s1_combat_data.hp > 0 and s2_combat_data.hp > 0 and turncounter > 0:
 		# Limit the number of turns in battle.
 		turncounter -= 1
@@ -2564,10 +2638,12 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 		first_turn = (turncounter % 2) == 1
 
+		# slimeoids regenerate their sap every odd turn
 		if first_turn:
 			s1_combat_data.sap = s1_combat_data.sapmax - s1_combat_data.hardened_sap
 			s2_combat_data.sap = s2_combat_data.sapmax - s2_combat_data.hardened_sap
 	
+		# assign active and passive role for the turn
 		if s1_active:
 			active_data = s1_combat_data
 			passive_data = s2_combat_data
@@ -2575,6 +2651,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			active_data = s2_combat_data
 			passive_data = s1_combat_data
 
+		# obtain action and how much sap to spend on it for both slimeoids
 		active_strat, active_sap_spend = active_data.brain.get_strat(combat_data = active_data, active = True, in_range = in_range, first_turn = first_turn)
 		passive_strat, passive_sap_spend = passive_data.brain.get_strat(combat_data = passive_data, active = False, in_range = in_range, first_turn = first_turn)
 
@@ -2603,6 +2680,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 			await ewutils.send_message(client, channel, response)
 			await asyncio.sleep(1)
 
+		# announce active slimeoid's chosen action
 		response = ""
 		if active_strat == ewcfg.slimeoid_strat_attack:
 			if in_range:
@@ -2619,12 +2697,13 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		elif active_strat == ewcfg.slimeoid_strat_block:
 			response = "{} focuses on blocking incoming attacks.".format(active_data.name)
 
-		response += " ({} sap)".format(active_sap_spend)
+		response += " (**{} sap**)".format(active_sap_spend)
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(1)
 
 
+		# announce passive slimeoid's chosen action
 		response = ""
 		if passive_strat == ewcfg.slimeoid_strat_attack:
 			if in_range:
@@ -2641,12 +2720,14 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 		elif passive_strat == ewcfg.slimeoid_strat_block:
 			response = "{} focuses on blocking incoming attacks.".format(passive_data.name)
 
-		response += " ({} sap)".format(passive_sap_spend)
+		response += " (**{} sap**)".format(passive_sap_spend)
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(1)
 
 
+		# if the chosen actions are in direct competition, the roll is opposed. only one of them can succeed
+		# otherwise both actions are resolved separately
 		roll_opposed = False
 
 		if active_strat == ewcfg.slimeoid_strat_attack:
@@ -2658,12 +2739,14 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 		active_dos = active_data.attempt_action(strat = active_strat, sap_spend = active_sap_spend, in_range = in_range)
 
+		# simultaneous attacks are a special case. the passive slimeoid only rolls the dice, after the active slimeoid's attack has been resolved
 		if passive_strat != ewcfg.slimeoid_strat_attack:
 			passive_dos = passive_data.attempt_action(strat = passive_strat, sap_spend = passive_sap_spend, in_range = in_range)
 			if roll_opposed:
 				active_dos -= passive_dos
 				passive_dos = -active_dos
 
+				# on an opposed roll, priority for the next turn (the active role) is passed to the winner of the roll
 				if active_dos < 0:
 					s1_active = not s1_active
 		else:
@@ -2671,12 +2754,15 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 				
 
+		# resolve active slimeoid's attack
 		if active_strat == ewcfg.slimeoid_strat_attack:
+			# the attack was successful
 			if active_dos > 0:
+				# calculate damage
 				if in_range:
-					damage = int(active_dos * 30 / (passive_data.grit + passive_data.hardened_sap))
+					damage = int(active_dos * 15 / (passive_data.hardened_sap + 1))
 				else:
-					damage = int(active_dos * 20 / (passive_data.hardened_sap + 1))
+					damage = int(active_dos * 10)
 
 				response = active_data.execute_attack(passive_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)
@@ -2700,6 +2786,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 
+		# if the active slimeoid's attack killed the passive slimeoid
 		if passive_data.hp <= 0:
 			break
 
@@ -2712,13 +2799,16 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 				if active_dos < 0:
 					s1_active = not s1_active
-				
+		
+		# resolve passive slimeoid's attack		
 		if passive_strat == ewcfg.slimeoid_strat_attack:
+			# attack was successful
 			if passive_dos > 0:
+				# calculate damage
 				if in_range:
-					damage = int(passive_dos * 30 / (active_data.grit + active_data.hardened_sap))
+					damage = int(passive_dos * 15 / (active_data.hardened_sap + 1))
 				else:
-					damage = int(passive_dos * 20 / (active_data.hardened_sap + 1))
+					damage = int(passive_dos * 10)
 
 				response = passive_data.execute_attack(active_data, damage, in_range)
 				await ewutils.send_message(client, channel, response)
@@ -2742,6 +2832,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 		
+		# resolve active slimeoid's movement
 		if active_strat == ewcfg.slimeoid_strat_evade:
 			if active_dos > 0:
 				response = active_data.change_distance(passive_data, in_range)
@@ -2749,15 +2840,19 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 			elif active_dos == 0 and passive_strat == ewcfg.slimeoid_strat_evade:
-				response = "{} and {} circle each other, looking for an opening...".format(active_data.name, passive_data.name)
 				in_range = not in_range
+				response = "{} and {} circle each other, looking for an opening...".format(active_data.name, passive_data.name)
+				await ewutils.send_message(client, channel, response)
+				await asyncio.sleep(1)
 		
+		# resolve active slimeoid's defense
 		if active_strat == ewcfg.slimeoid_strat_block:
 			if active_dos > 0:
 				response = active_data.harden_sap(active_dos)
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
-				
+
+		# resolve passive slimeoid's movement
 		if passive_strat == ewcfg.slimeoid_strat_evade:
 			if passive_dos > 0:
 				response = passive_data.change_distance(active_data, in_range)
@@ -2765,6 +2860,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				await ewutils.send_message(client, channel, response)
 				await asyncio.sleep(1)
 
+		# resolve passive slimeoid's defense
 		if passive_strat == ewcfg.slimeoid_strat_block:
 			if passive_dos > 0:
 				response = passive_data.harden_sap(passive_dos)
@@ -2772,7 +2868,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 				await asyncio.sleep(1)
 
 
-
+		# re-fetch slimeoid data
 		challenger_slimeoid = EwSlimeoid(id_slimeoid = id_s2)
 		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 
@@ -2787,6 +2883,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 		await asyncio.sleep(2)
 
+	# the challengee has lost
 	if s1_combat_data.hp <= 0:
 		result = -1
 		response = "\n" + s1_combat_data.legs.str_defeat.format(
@@ -2810,6 +2907,7 @@ async def battle_slimeoids(id_s1, id_s2, poi, battle_type):
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(2)
+	# the challenger has lost
 	else:
 		result = 1
 		response = "\n" + s2_combat_data.legs.str_defeat.format(
