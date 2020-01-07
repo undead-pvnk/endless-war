@@ -354,17 +354,12 @@ class EwUser:
 	
 			hunger_restored = round(hunger_restored)
 
-			#SLIMERNALIA
-			old_hunger = self.hunger
-
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
 			self.inebriation += int(item_props['inebriation'])
 			if self.inebriation > 20:
 				self.inebriation = 20
-
-			self.festivity += old_hunger - self.hunger
 						
 			try:
 				if item_props['id_food'] in ["coleslaw","bloodcabbagecoleslaw"]:

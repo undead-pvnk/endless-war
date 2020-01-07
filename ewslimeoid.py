@@ -1576,7 +1576,7 @@ def slimeoid_describe(slimeoid):
 			response += " A pitiable baby, this slimeoid has no clout whatsoever."
 
 	if (int(time.time()) - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response += " It is currently incapacitated after being defeated in the Battle Arena."
+			response += " It is currently incapacitated after being defeated."
 
 	return response
 
@@ -1702,7 +1702,7 @@ async def slimeoidbattle(cmd):
 	challengee_slimeoid = EwSlimeoid(member = member)
 
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-	if bet == None:
+	if bet == None or cmd.message.channel.name != ewcfg.channel_arena:
 		bet = 0
 	elif bet == -1:
 		bet = challenger.slimes
@@ -1807,9 +1807,6 @@ async def slimeoidbattle(cmd):
 	if accepted == 1:
 		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
-
-		challengee.festivity += bet
-		challenger.festivity += bet
 
 		challengee.persist()
 		challenger.persist()

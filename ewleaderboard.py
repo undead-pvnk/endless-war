@@ -29,8 +29,8 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
-	topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
-	await ewutils.send_message(client, leaderboard_channel, topfestivity)
+	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
+	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
 	topzines = make_zines_top_board(server=server)
 	await ewutils.send_message(client, leaderboard_channel, topzines)
 

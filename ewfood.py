@@ -289,10 +289,6 @@ async def order(cmd):
 				# Kingpins eat free.
 				if (user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe) and item_type == ewcfg.it_food:
 					value = 0
-					
-				# Yo, Slimernalia!
-				if item_type == ewcfg.it_food:
-					value = 0
 
 				if value > user_data.slimes:
 					# Not enough money.
