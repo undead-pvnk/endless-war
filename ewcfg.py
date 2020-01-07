@@ -13,7 +13,7 @@ from ewfood import EwFood
 from ewitem import EwItemDef, EwGeneralItem
 from ewmap import EwPoi
 from ewmutation import EwMutationFlavor
-from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
+from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue, EwSlimeoidFood
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.19b-yoslimernalia"
+version = "v3.20yoslimernalia"
 
 dir_msgqueue = 'msgqueue'
 
@@ -1969,6 +1969,14 @@ item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
 
+#slimeoid food
+item_id_fragilecandy = "fragilecandy" #+chutzpah -grit
+item_id_rigidcandy = "rigidcandy" #+grit -chutzpah
+item_id_recklesscandy = "recklesscandy" #+moxie -grit
+item_id_reservedcandy = "reservedcandy" #+grit -moxie
+item_id_bluntcandy = "bluntcandy" #+moxie -chutzpah
+item_id_insidiouscandy = "insidiouscandy" #+chutzpah -moxie
+
 #vegetable ids
 item_id_poketubers = "poketubers"
 item_id_pulpgourds = "pulpgourds"
@@ -2514,7 +2522,79 @@ item_list = [
 		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
 		vendors = [vendor_bazaar],
 		price = 1000000
-	)
+	),
+	EwSlimeoidFood(
+		id_item = item_id_fragilecandy,
+		alias = [
+			"fragile",
+		],
+		str_name = "Fragile Candy",
+		str_desc = "Increases Chutzpah and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_rigidcandy,
+		alias = [
+			"rigid",
+		],
+		str_name = "Rigid Candy",
+		str_desc = "Increases Grit and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_chutzpah,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_reservedcandy,
+		alias = [
+			"reserved",
+		],
+		str_name = "Reserved Candy",
+		str_desc = "Increases Grit and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_recklesscandy,
+		alias = [
+			"reckless",
+		],
+		str_name = "Reckless Candy",
+		str_desc = "Increases Moxie and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_insidiouscandy,
+		alias = [
+			"insidious",
+		],
+		str_name = "Insidious Candy",
+		str_desc = "Increases Chutzpah and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_bluntcandy,
+		alias = [
+			"blunt",
+		],
+		str_name = "Blunt Candy",
+		str_desc = "Increases Moxie and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_chutzpah,
+	),
 ]
 item_list += ewdebug.debugitem_set
 
@@ -2536,6 +2616,7 @@ for c in item_list:
 	else:
 		dye_list.append(c)
 		dye_map[c.str_name] = c.id_item
+
 
 # A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
 def wef_revolver(ctn = None):
@@ -11711,6 +11792,33 @@ for recipe in smelting_recipe_list:
 
 
 # Slimeoid attributes.
+slimeoid_strat_attack = "attack"
+slimeoid_strat_evade = "evade"
+slimeoid_strat_block = "block"
+
+slimeoid_weapon_blades = "blades"
+slimeoid_weapon_teeth = "teeth"
+slimeoid_weapon_grip = "grip"
+slimeoid_weapon_bludgeon = "bludgeon"
+slimeoid_weapon_spikes = "spikes"
+slimeoid_weapon_electricity = "electricity"
+slimeoid_weapon_slam = "slam"
+
+slimeoid_armor_scales = "scales"
+slimeoid_armor_boneplates = "boneplates"
+slimeoid_armor_quantumfield = "quantumfield"
+slimeoid_armor_formless = "formless"
+slimeoid_armor_regeneration = "regeneration"
+slimeoid_armor_stench = "stench"
+slimeoid_armor_oil = "oil"
+
+slimeoid_special_spit = "spit"
+slimeoid_special_laser = "laser"
+slimeoid_special_spines = "spines"
+slimeoid_special_throw = "throw"
+slimeoid_special_TK = "TK"
+slimeoid_special_fire = "fire"
+slimeoid_special_webs = "webs"
 
 # All body attributes in the game.
 body_list = [
@@ -11821,7 +11929,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'A'. Through the observation port, you see a dark cluster within the proto-Slimeoid begin to form into what looks like a large eye.",
 		str_head = "Its face is a single huge eye.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} swallows the {food_name} whole.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name}'s huge eye follows the ball's arc, and it makes a leap to catch it!!\n\n...only to get socked right in the eye, sending it to the floor in pain. Depth perception... it's truly a gift."
 	),
 	EwHead( # head 2
@@ -11832,7 +11940,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'B'. Through the observation port, you see an opening form in what you think is the proto-Slimeoid's face, which begins to sprout large pointed teeth.",
 		str_head = "Its face is a huge toothy mouth.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} crunches the {food_name} to paste with its huge teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} slavers and drools as it awaits the throw, and when it sees the ball start to fly, it lunges to grab it out of the air in its huge toothy maw, slicing it to shreds with its teeth in seconds."
 	),
 	EwHead( # head 3
@@ -11843,8 +11951,8 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'C'. Through the observation port, you see what you thought was the proto-Slimeoid's face suddenly sucked down into its body, as though by a black hole.",
 		str_head = "Its face is an empty black void.",
-		str_feed = "",
-		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it dissapears forever."
+		str_feed = "The {food_name} disappears into the unknowable depths of {slimeoid_name}'s face hole.",
+		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it disappears forever."
 	),
 	EwHead( # head 4
 		id_head = "beast",
@@ -11855,7 +11963,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'D'. Through the observation port, you see the beginnings of an animal-like face forming on your proto-Slimeoid, with what might be eyes, a nose, teeth... maybe.",
 		str_head = "Its face is that of a vicious beast.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} gobbles up the {food_name} greedily.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} focuses its eyes and bares its teeth, then makes a flying leap, snapping the ball clean out of the air in its jaws! It comes back to you and drops the ball at your feet. Good boy!"
 	),
 	EwHead( # head 5
@@ -11867,7 +11975,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'E'. Through the observation port, you see the proto-Slimeoid suddenly bulge with a series of hard orbs which congeal into what appear to be large compound eyes.",
 		str_head = "It has bulging insectoid eyes and mandibles.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} cuts the {food_name} into pieces with its mandibles.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} stands motionless, presumably watching the ball with its large compound eyes, before darting toward it as it sails through the air, snapping its mandibles around the ball and slicing it cleanly in two."
 	),
 	EwHead( # head 6
@@ -11878,7 +11986,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'F'. Through the observation port, you see the proto-Slimeoid's frontal features twist into a ghastly death's-head.",
 		str_head = "Its face resembles a skull.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} spills half the {food_name} on the floor trying to chew it with its exposed teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves as quickly as it can to make the catch, making it just before the ball lands! With a thunk, the ball lodges itself in {slimeoid_name}'s open eye socket. {slimeoid_name} yanks it out and tosses the ball back to you. Euughh."
 	),
 	EwHead( # head 7
@@ -11888,7 +11996,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'G'. Through the observation port, you see the proto-Slimeoid's front end melt into an indistinct mass.",
 		str_head = "It has no discernable head.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} just sort of... absorbs the {food_name} into its body.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves under the ball as it flies through the air, but makes no attempt to catch it in its mouth on account of having none. The ball lands next to {slimeoid_name}, who merely looks on. Actually, you can't tell where it's looking."
 	)
 ]
@@ -12040,7 +12148,7 @@ for mobility in mobility_list:
 # All offense attributes in the game.
 offense_list = [
 	EwOffense( # offense 1
-		id_offense = "blades",
+		id_offense = slimeoid_weapon_blades,
 		alias = [
 			"edged",
 			"edges",
@@ -12057,7 +12165,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} is sharpening its retractible blades on a stone nearby."
 	),
 	EwOffense( # offense 2
-		id_offense = "teeth",
+		id_offense = slimeoid_weapon_teeth,
 		alias = [
 			"bite",
 			"biting",
@@ -12073,7 +12181,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} is idly picking its sharp teeth."
 	),
 	EwOffense( # offense 3
-		id_offense = "grip",
+		id_offense = slimeoid_weapon_grip,
 		alias = [
 			"squeeze",
 			"grab",
@@ -12092,7 +12200,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} picks up a rock off the ground and squeezes it like a stress ball."
 	),
 	EwOffense( # offense 4
-		id_offense = "bludgeon",
+		id_offense = slimeoid_weapon_bludgeon,
 		alias = [
 			"strike",
 			"striking",
@@ -12112,7 +12220,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} spots an insect on the ground nearby and smashes it."
 	),
 	EwOffense( # offense 5
-		id_offense = "spikes",
+		id_offense = slimeoid_weapon_spikes,
 		alias = [
 			"puncture",
 			"spear",
@@ -12126,7 +12234,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} carefully adjusts its position so as not to prick itself with its own spikes."
 	),
 	EwOffense( # offense 6
-		id_offense = "electricity",
+		id_offense = slimeoid_weapon_electricity,
 		alias = [
 			"strike",
 			"f"
@@ -12139,7 +12247,7 @@ offense_list = [
 		str_observe = "A fly flies a little too near {slimeoid_name} and is zapped with a tiny bolt of electricity, killing it instantly."
 	),
 	EwOffense( # offense 7
-		id_offense = "slam",
+		id_offense = slimeoid_weapon_slam,
 		alias = [
 			"bodyslam",
 			"g"
@@ -12167,10 +12275,13 @@ for offense in offense_list:
 	for alias in offense.alias:
 		offense_map[alias] = offense
 
+
+
+
 # All defense attributes in the game.
 defense_list = [
 	EwDefense( # defense 1
-		id_defense = "scales",
+		id_defense = slimeoid_armor_scales,
 		alias = [
 			"scale",
 			"scaled",
@@ -12180,10 +12291,14 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
 		str_create = "You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
-		str_armor = "It is covered in scales."
+		str_armor = "It is covered in scales.",
+		id_resistance = slimeoid_weapon_electricity,
+		id_weakness = slimeoid_special_TK,
+		str_resistance = " {}'s scales conduct the electricity away from its vitals!",
+		str_weakness = " {}'s scales refract and amplify the disrupting brainwaves inside its skull!",
 	),
 	EwDefense( # defense 2
-		id_defense = "boneplates",
+		id_defense = slimeoid_armor_boneplates,
 		alias = [
 			"bone",
 			"bony",
@@ -12197,10 +12312,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
 		str_create = "You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
-		str_armor = "It is covered in bony plates."
+		str_armor = "It is covered in bony plates.",
+		id_resistance = slimeoid_weapon_blades,
+		id_weakness = slimeoid_special_spines,
+		str_resistance = " {}'s bone plates block the worst of the damage!",
+		str_weakness = " {}'s bone plates only drive the quills deeper into its body as it moves!",
+
 	),
 	EwDefense( # defense 3
-		id_defense = "quantumfield",
+		id_defense = slimeoid_armor_quantumfield,
 		alias = [
 			"quantum",
 			"field",
@@ -12210,10 +12330,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
 		str_create = "You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
-		str_armor = "It is enveloped in a field of quantum uncertainty."
+		str_armor = "It is enveloped in a field of quantum uncertainty.",
+		id_resistance = slimeoid_weapon_slam,
+		id_weakness = slimeoid_special_laser,
+		str_resistance = " {}'s quantum superposition makes it difficult to hit head-on!",
+		str_weakness = " {}'s quantum particles are excited by the high-frequency radiation, destabilizing its structure!",
+
 	),
 	EwDefense( # defense 4
-		id_defense = "formless",
+		id_defense = slimeoid_armor_formless,
 		alias = [
 			"amorphous",
 			"shapeless",
@@ -12223,10 +12348,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
 		str_create = "You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
-		str_armor = "It is malleable and can absorb blows with ease."
+		str_armor = "It is malleable and can absorb blows with ease.",
+		id_resistance = slimeoid_weapon_bludgeon,
+		id_weakness = slimeoid_special_webs,
+		str_resistance = " {}'s squishy body easily absorbs the blows!",
+		str_weakness = " {}'s squishy body easily adheres to and becomes entangled by the webs!",
+
 	),
 	EwDefense( # defense 5
-		id_defense = "regeneration",
+		id_defense = slimeoid_armor_regeneration,
 		alias = [
 			"healing",
 			"regen",
@@ -12235,10 +12365,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
 		str_create = "You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
-		str_armor = "It can regenerate damage to its body rapidly."
+		str_armor = "It can regenerate damage to its body rapidly.",
+		id_resistance = slimeoid_weapon_spikes,
+		id_weakness = slimeoid_special_spit,
+		str_resistance = " {} quickly begins regenerating the small puncture wounds inflicted by the spikes!",
+		str_weakness = " {}'s regeneration is impeded by the corrosive chemicals!",
+
 	),
 	EwDefense( # defense 6
-		id_defense = "stench",
+		id_defense = slimeoid_armor_stench,
 		alias = [
 			"stink",
 			"smell",
@@ -12247,10 +12382,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
 		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
-		str_armor = "It exudes a horrible stench."
+		str_armor = "It exudes a horrible stench.",
+		id_resistance = slimeoid_weapon_teeth,
+		id_weakness = slimeoid_special_throw,
+		str_resistance = " {}'s noxious fumes make its opponent hesitant to put its mouth anywhere near it!",
+		str_weakness = " {}'s foul odor gives away its position, making it easy to target with thrown projectiles!",
+
 	),
 	EwDefense( # defense 7
-		id_defense = "oil",
+		id_defense = slimeoid_armor_oil,
 		alias = [
 			"slick",
 			"g"
@@ -12258,7 +12398,12 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
 		str_create = "You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
-		str_armor = "It is covered in a coating of slippery oil."
+		str_armor = "It is covered in a coating of slippery oil.",
+		id_resistance = slimeoid_weapon_grip,
+		id_weakness = slimeoid_special_fire,
+		str_resistance = " {}'s slippery coating makes it extremely difficult to grab on to!",
+		str_weakness = " {}'s oily coating is flammable, igniting as it contacts the flame!",
+
 	)
 ]
 
@@ -12279,7 +12424,7 @@ for defense in defense_list:
 # All special attributes in the game.
 special_list = [
 	EwSpecial( # special 1
-		id_special = "spit",
+		id_special = slimeoid_special_spit,
 		alias = [
 			"spitting",
 			"spray",
@@ -12302,7 +12447,7 @@ special_list = [
 		str_observe = "A bit of acidic fluid drips from {slimeoid_name} onto the ground, where it smokes and sizzles."
 	),
 	EwSpecial( # special 2
-		id_special = "laser",
+		id_special = slimeoid_special_laser,
 		alias = [
 			"beam",
 			"energy",
@@ -12317,7 +12462,7 @@ special_list = [
 		str_observe = "{slimeoid_name} suddenly glows with radioactive energy. Best not to look directly at it until it settles down..."
 	),
 	EwSpecial( # special 3
-		id_special = "spines",
+		id_special = slimeoid_special_spines,
 		alias = [
 			"spikes",
 			"spiky",
@@ -12333,7 +12478,7 @@ special_list = [
 		str_observe = "{slimeoid_name} shudders and ejects a few old quills onto the ground. You can see new ones already growing in to replace them."
 	),
 	EwSpecial( # special 4
-		id_special = "throw",
+		id_special = slimeoid_special_throw,
 		alias = [
 			"throwing",
 			"hurling",
@@ -12348,7 +12493,7 @@ special_list = [
 		str_observe = "{slimeoid_name} is idly picking up stones and seeing how far it can toss them."
 	),
 	EwSpecial( # special 5
-		id_special = "TK",
+		id_special = slimeoid_special_TK,
 		alias = [
 			"telekinesis",
 			"psychic",
@@ -12362,7 +12507,7 @@ special_list = [
 		str_observe = "You momentarily black out. When you come to, your nose is bleeding. {slimeoid_name} tries to look innocent."
 	),
 	EwSpecial( # special 6
-		id_special = "fire",
+		id_special = slimeoid_special_fire,
 		alias = [
 			"chemical",
 			"breath",
@@ -12377,7 +12522,7 @@ special_list = [
 		str_observe = "A bit of fluid drips from {slimeoid_name} onto the floor and ignites, but you manage to smother the small flame quickly before it spreads."
 	),
 	EwSpecial( # special 7
-		id_special = "webs",
+		id_special = slimeoid_special_webs,
 		alias = [
 			"webbing",
 			"web",
@@ -12406,6 +12551,294 @@ for special in special_list:
 	for alias in special.alias:
 		special_map[alias] = special
 
+def get_strat_a(combat_data, in_range, first_turn, active):
+	base_attack = 30
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_block *= 2
+		else:
+			weight_block *= 3
+
+	else:
+		if active:
+			weight_evade *= 2
+		else:
+			weight_evade *= 5
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+	
+def get_strat_b(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_block *= 2
+		else:
+			weight_block *= 2
+			weight_evade *= 3
+
+	else:
+		if active:
+			weight_attack *= 3
+			weight_evade *= 3
+		else:
+			weight_evade *= 4
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_c(combat_data, in_range, first_turn, active):
+	base_attack = 30
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_block *= 2
+			weight_evade *= 2
+
+	else:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_evade *= 2
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_d(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 5
+	base_block = 15
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_attack /= 2
+			weight_block *= 2
+
+	else:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_attack /= 2
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_e(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 2
+			weight_evade *= 2
+		else:
+			weight_evade *= 4
+
+	else:
+		if active:
+			weight_attack *= 4
+			weight_block *= 2
+		else:
+			weight_block *= 3
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_f(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 20
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_evade *= 2
+		else:
+			weight_evade *= 3
+			weight_block *= 2
+
+	else:
+		if active:
+			weight_attack *= 4
+			weight_block *= 2
+		else:
+			weight_block *= 3
+			weight_evade *= 2
+			
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_g(combat_data, in_range, first_turn, active):
+	base_attack = 10
+	base_evade = 15
+	base_block = 5
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 4
+		else:
+			weight_evade *= 2
+
+	else:
+		if active:
+			weight_attack *= 4
+		else:
+			weight_evade *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.2))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
 # All brain attributes in the game.
 brain_list = [
 	EwBrain( # brain 1
@@ -12419,6 +12852,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is snarling. You're not sure if it's angry at you, or at the world in general.",
 		str_pet = "{slimeoid_name} hisses at you.",
 		str_walk = "You wrestle {slimeoid_name} down and force a leash onto it, as it angrily snarls and hisses at you in protest.",
+		str_feed = "{slimeoid_name} almost bites your hand off as you offer the {food_name} to it! It growls at you before eating, as if to secure its prey.",
 		str_kill = "{slimeoid_name} howls with savage delight at the bloodshed!!",
 		str_death = "{slimeoid_name} howls in fury at its master's death! It tears away in a blind rage!",
 		str_victory = "{slimeoid_name} roars in triumph!!",
@@ -12428,7 +12862,9 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name}  hisses with frustrated rage! ",
 		str_revive = "{slimeoid_name} howls at your return, annoyed to have been kept waiting.",
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
-		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_a,
+
 	),
 	EwBrain( # brain 2
 		id_brain = "b",
@@ -12441,6 +12877,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} notices you looking at it and seems delighted!",
 		str_pet = "{slimeoid_name} purrs happily.",
 		str_walk = "{slimeoid_name} is so excited for its walk, it can barely hold still enough to let you put the leash on it!",
+		str_feed = "{slimeoid_name} starts running circles around you and drooling uncontrollably in anticipation as soon as you reach for the {food_name}.",
 		str_kill = "{slimeoid_name} gives a bestial woop of excitement for your victory!",
 		str_death = "{slimeoid_name} gives a wail of grief at its master's death, streaking away from the scene.",
 		str_victory = "{slimeoid_name} woops with delight at its victory!",
@@ -12450,7 +12887,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} seems a little less thrilled now... ",
 		str_revive = "{slimeoid_name} is waiting patiently downtown when you return from your time as a corpse. It knew you'd be back!",
 		str_spawn = "{slimeoid_name} gets up off the ground slowly at first, but then it notices you and leaps into your arms. It sure seems glad to see you!",
-		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_b,
 	),
 	EwBrain( # brain 3
 		id_brain = "c",
@@ -12463,6 +12901,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems to be resting, possibly deep in thought.",
 		str_pet = "{slimeoid_name} doesn't react.",
 		str_walk = "{slimeoid_name} holds still as you place the leash on it. It regards the leash, seemingly pontificating.",
+		str_feed = "{slimeoid_name} shows neither happiness nor reluctance as you offer the {food_name}. It accepts the treat as though it were a mere formality.",
 		str_kill = "{slimeoid_name} regards the corpse of your former adversary with an unknowable expression.",
 		str_death = "{slimeoid_name} stares at the killer, memorizing their face before fleeing the scene.",
 		str_victory = "{slimeoid_name} silently turns away from its defeated opponent.",
@@ -12472,7 +12911,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is losing its composure just a little! ",
 		str_revive = "{slimeoid_name} is downtown when you return from the sewers. You find it staring silently up at ENDLESS WAR.",
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
-		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_c,
 	),
 	EwBrain( # brain 4
 		id_brain = "d",
@@ -12485,6 +12925,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} stares off into the distance. Who knows if it's actually looking at anything in particular.",
 		str_pet = "{slimeoid_name} is startled out of a stupor by your touch.",
 		str_walk = "{slimeoid_name} hardly seems to notice you fastening it with a leash.",
+		str_feed = "You have to literally shove the {food_name} into {slimeoid_name}'s face to get its attention. It takes a moment to recover its orientation before accepting the treat.",
 		str_kill = "{slimeoid_name} wasn't paying attention and missed the action.",
 		str_death = "{slimeoid_name} is startled to realize its master has died. It blinks in confusion before fleeing.",
 		str_victory = "{slimeoid_name} keeps attacking for a moment before realizing it's already won.",
@@ -12494,7 +12935,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} tries to buy itself some time to think! ",
 		str_revive = "{slimeoid_name} is exactly where you left it when you died.",
 		str_spawn = "{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
-		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_d,
 	),
 	EwBrain( # brain 5
 		id_brain = "e",
@@ -12507,6 +12949,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is glancing around furtively, seemingly scanning for threats.",
 		str_pet = "{slimeoid_name} flinches nervously at your touch.",
 		str_walk = "{slimeoid_name} shivers in place as you're fastening the leash, then starts to pull and tug at it, seemingly perturbed.",
+		str_feed = "{slimeoid_name} backs up anxiously as you reach out with the {food_name} in your hand. You sigh and take a bite of the treat yourself to convince {slimeoid_name} that its not poisoned. It reluctantly accepts the {food_name} and starts nibbling at it.",
 		str_kill = "{slimeoid_name} peers out from behind its master, hoping the violence is over.",
 		str_death = "{slimeoid_name} is overcome with terror, skittering away from the killer in a mad panic!",
 		str_victory = "{slimeoid_name} is deeply relieved that the battle is over.",
@@ -12516,7 +12959,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is in a full-blown panic! ",
 		str_revive = "{slimeoid_name} peeks out from behind some trash cans before rejoining you. It seems relieved to have you back.",
 		str_spawn = "{slimeoid_name}'s eyes dart frantically around the room. Seeing you, it darts behind you, as if for cover from an unknown threat.",
-		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_e,
 	),
 	EwBrain( # brain 6
 		id_brain = "f",
@@ -12529,6 +12973,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is moving around, apparently searching for... something.",
 		str_pet = "{slimeoid_name} seems nonplussed, but doesn't object.",
 		str_walk = "{slimeoid_name} exasperatedly lets you fit it with a leash for a walk.",
+		str_feed = "{slimeoid_name} only seems to halfway pay attention as you offer the {food_name}. It pockets the treat for later and eats it when it thinks you aren't looking.",
 		str_kill = "{slimeoid_name} rifles through your victim's pockets for food.",
 		str_death = "{slimeoid_name} rifles through its dead master's pockets for whatever it can find before slinking away.",
 		str_victory = "{slimeoid_name} shakes itself off after the battle.",
@@ -12538,7 +12983,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} thinks it'd better try something else, and fast! ",
 		str_revive = "{slimeoid_name} starts following you around again not long after you have returned from the dead.",
 		str_spawn = "{slimeoid_name} picks itself up off the floor and regards you coolly. It seems as if it's gauging your usefulness.",
-		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_f,
 	),
 	EwBrain( # brain 7
 		id_brain = "g",
@@ -12551,6 +12997,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems unsure of whether it wants to wander around or just stay put.",
 		str_pet = "{slimeoid_name} seems confused about how to react.",
 		str_walk = "{slimeoid_name} lets you put its leash on it, but immediately starts to trip over it and get tangled in it.",
+		str_feed = "{slimeoid_name} stares at the {food_name} like it's unfamiliar with the concept of food. You make a chewing motion with your mouth to demonstrate. It still seems confused. You lose your patience and force-feed the treat to your slimeoid.",
 		str_kill = "{slimeoid_name} seems unsure of whether to celebrate the victory or to mourn the decline of your civilization into rampant youth violence.",
 		str_death = "{slimeoid_name} starts to approach its master's body, then changes its mind and starts to run away. It trips over itself and falls on its way out.",
 		str_victory = "{slimeoid_name} looks around, apparently shocked that it somehow won.",
@@ -12560,7 +13007,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is limping around aimlessly! ",
 		str_revive = "{slimeoid_name} wanders by, seemingly by accident, but thinks it probably ought to start following you again.",
 		str_spawn = "{slimeoid_name} starts to pick itself up off the floor, then changes its mind and lies back down. Then it gets up again. Lies down again. Up. Down. Up. Ok, this time it stays up.",
-		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_g,
 	)
 ]
 
@@ -13281,7 +13729,6 @@ for item in item_list:
 	for alias in item.alias:
 		item_map[alias] = item
 
-
 # Populate food map, including all aliases.
 for food in food_list:
 	food_map[food.id_food] = food
@@ -13398,7 +13845,7 @@ for m in cosmetic_items_list:
 # List of items you can obtain via appraisal.
 appraise_results = []
 
-# Gather all items that can be the result of milling.
+# Gather all items that can be the result of bartering.
 for a in item_list:
 	if a.acquisition == acquisition_bartering:
 		appraise_results.append(a)
