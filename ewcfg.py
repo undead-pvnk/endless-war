@@ -992,10 +992,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 5000000 # 5 megaslime
-max_capture_points_a = 3000000  # 3 megaslime
-max_capture_points_b = 2000000  # 2 megaslime
-max_capture_points_c = 1000000   # 1 megaslime
+max_capture_points_s = 500000 # 500k
+max_capture_points_a = 300000  # 300k
+max_capture_points_b = 200000  # 200k
+max_capture_points_c = 100000   # 100k
 
 # district capture rates assigned to property classes
 max_capture_points = {
