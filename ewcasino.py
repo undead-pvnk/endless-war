@@ -66,8 +66,6 @@ async def pachinko(cmd):
 
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
-			#SLIMERNALIA
-			user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 		else:
 			value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
@@ -78,9 +76,7 @@ async def pachinko(cmd):
 			
 			# subtract costs
 			user_data.change_slimes(n = -value, source = ewcfg.source_casino)
-			#SLIMERNALIA
-			user_data.festivity += value
-		
+
 		user_data.persist()
 
 		await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, "You insert {:,} {}. Balls begin to drop!".format(value, currency_used)))
@@ -180,8 +176,6 @@ async def craps(cmd):
 					response = "You don't have that much SlimeCoin to bet with."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-				#SLIMERNALIA
-				user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 			else:
 				if value == -1:
@@ -190,9 +184,6 @@ async def craps(cmd):
 				elif value > user_data.slimes:
 					response = "You don't have that much slime to bet with."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-				#SLIMERNALIA
-				user_data.festivity += value
 
 			roll1 = random.randint(1,6)
 			roll2 = random.randint(1,6)
@@ -267,8 +258,6 @@ async def slots(cmd):
 			
 			# subtract costs
 			user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
-			#SLIMERNALIA
-			user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 		else:
 			value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
@@ -279,8 +268,6 @@ async def slots(cmd):
 
 			# subtract costs
 			user_data.change_slimes(n = -value, source = ewcfg.source_casino)
-			#SLIMERNALIA
-			user_data.festivity += value
 		
 		user_data.persist()
 			
@@ -453,8 +440,6 @@ async def roulette(cmd):
 
 				# subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
-				#SLIMERNALIA
-				user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 			else:
 				if value == -1:
@@ -466,8 +451,6 @@ async def roulette(cmd):
 
 				# subtract costs
 				user_data.change_slimes(n = -value, source = ewcfg.source_casino)
-				#SLIMERNALIA
-				user_data.festivity += value
 				
 			if len(bet) == 0:
 				response = "You need to say what you're betting on. Options are: {}\n{}board.png".format(ewutils.formatNiceList(names = all_bets), img_base)
@@ -614,8 +597,6 @@ async def baccarat(cmd):
 
 				#subtract costs
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
-				#SLIMERNALIA
-				user_data.festivity_from_slimecoin = slimecoin_to_festivity(value, user_data.festivity_from_slimecoin)
 
 			else:
 				if value == -1:
@@ -627,8 +608,6 @@ async def baccarat(cmd):
 
 				#subtract costs
 				user_data.change_slimes(n = -value, source = ewcfg.source_casino)
-				#SLIMERNALIA
-				user_data.festivity += value
 
 			if len(bet) == 0:
 				response = "You must specify what hand you are betting on. Options are {}.".format(ewutils.formatNiceList(names = all_bets), img_base)
@@ -1254,9 +1233,6 @@ async def russian_roulette(cmd):
 		#SLIMERNALIA
 		challenger = EwUser(member = author)
 		challengee = EwUser(member = member)
-
-		challenger.festivity += challenger.slimes
-		challengee.festivity += challengee.slimes
 
 		challenger.persist()
 		challengee.persist()

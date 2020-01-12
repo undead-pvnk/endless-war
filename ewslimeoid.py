@@ -949,7 +949,7 @@ async def observeslimeoid(cmd):
 			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
 	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} lies totally inert, recuperating from being recently pulverized in the Arena.".format(slimeoid.name)
+			response = "{} lies totally inert, recuperating from being recently pulverized.".format(slimeoid.name)
 
 	else:
 		options = [
@@ -999,7 +999,7 @@ async def petslimeoid(cmd):
 			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
 	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} whimpers. It's still recovering from being beaten up in the Arena.".format(slimeoid.name)
+			response = "{} whimpers. It's still recovering from being beaten up.".format(slimeoid.name)
 
 	else:
 		armor = ewcfg.defense_map.get(slimeoid.armor)
@@ -1033,7 +1033,7 @@ async def walkslimeoid(cmd):
 			response = "Your Slimeoid is not yet ready. Use !spawnslimeoid to complete incubation."
 
 	elif (time_now - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response = "{} can barely move. It's still recovering from its injuries from the Arena.".format(slimeoid.name)
+			response = "{} can barely move. It's still recovering from its injuries.".format(slimeoid.name)
 
 	else:
 		brain = ewcfg.brain_map.get(slimeoid.ai)
@@ -1991,7 +1991,7 @@ def slimeoid_describe(slimeoid):
 			response += " A pitiable baby, this slimeoid has no clout whatsoever."
 
 	if (int(time.time()) - slimeoid.time_defeated) < ewcfg.cd_slimeoiddefeated:
-			response += " It is currently incapacitated after being defeated in the Battle Arena."
+			response += " It is currently incapacitated after being defeated."
 
 	return response
 
@@ -2117,7 +2117,7 @@ async def slimeoidbattle(cmd):
 	challengee_slimeoid = EwSlimeoid(member = member)
 
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-	if bet == None:
+	if bet == None or cmd.message.channel.name != ewcfg.channel_arena:
 		bet = 0
 	elif bet == -1:
 		bet = challenger.slimes
@@ -2222,9 +2222,6 @@ async def slimeoidbattle(cmd):
 	if accepted == 1:
 		challengee.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
 		challenger.change_slimes(n = -bet, source = ewcfg.source_slimeoid_betting)
-
-		challengee.festivity += bet
-		challenger.festivity += bet
 
 		challengee.persist()
 		challenger.persist()
@@ -2894,12 +2891,14 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 
 		# Losing slimeoid loses clout and has a time_defeated cooldown.
-		challengee_slimeoid.clout = calculate_clout_loss(challengee_slimeoid.clout)
+		if channel.name == ewcfg.channel_arena:
+			challengee_slimeoid.clout = calculate_clout_loss(challengee_slimeoid.clout)
 		challengee_slimeoid.time_defeated = int(time.time())
 		challengee_slimeoid.persist()
-
-		challenger_slimeoid.clout = calculate_clout_gain(challenger_slimeoid.clout)
-		challenger_slimeoid.persist()
+		
+		if channel.name == ewcfg.channel_arena:
+			challenger_slimeoid.clout = calculate_clout_gain(challenger_slimeoid.clout)
+			challenger_slimeoid.persist()
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(2)
@@ -2918,12 +2917,14 @@ async def battle_slimeoids(id_s1, id_s2, channel, battle_type):
 		challengee_slimeoid = EwSlimeoid(id_slimeoid = id_s1)
 	
 		# store defeated slimeoid's defeat time in the database
-		challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
+		if channel.name == ewcfg.channel_arena:
+			challenger_slimeoid.clout = calculate_clout_loss(challenger_slimeoid.clout)
 		challenger_slimeoid.time_defeated = int(time.time())
 		challenger_slimeoid.persist()
-
-		challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
-		challengee_slimeoid.persist()
+		
+		if channel.name == ewcfg.channel_arena:
+			challengee_slimeoid.clout = calculate_clout_gain(challengee_slimeoid.clout)
+			challengee_slimeoid.persist()
 
 		await ewutils.send_message(client, channel, response)
 		await asyncio.sleep(2)

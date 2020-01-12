@@ -1294,16 +1294,6 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
-		#Slimernalia gifting
-		if item_sought.get('item_type') == ewcfg.it_item:
-			item_data = EwItem(id_item = item_sought.get('id_item'))
-			#Slimernalia gifting
-			if item_data.item_props.get('id_item') == 'gift' and item_data.item_props.get("gifted") == "false":
-				item_data.item_props['gifted'] = "true"
-				item_data.persist()
-				user_data.festivity += ewcfg.festivity_on_gift_giving
-				user_data.persist()
-
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
 		else:
