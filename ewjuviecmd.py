@@ -29,9 +29,9 @@ toxington_mines = {}
 cratersville_mines = {}
 
 mines_map = {
-	ewcfg.poi_id_mine: juviesrow_mines,
-	ewcfg.poi_id_tt_mines: toxington_mines,
-	ewcfg.poi_id_cv_mines: cratersville_mines
+	ewcfg.channel_mines: juviesrow_mines,
+	ewcfg.channel_tt_mines: toxington_mines,
+	ewcfg.channel_cv_mines: cratersville_mines
 }
 
 
@@ -66,6 +66,7 @@ async def enlist(cmd):
 	time_now = int(time.time())
 	bans = user_data.get_bans()
 	vouchers = user_data.get_vouchers()
+	user_is_pvp = (user_data.time_expirpvp > time_now)
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
@@ -102,6 +103,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist))
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -126,6 +128,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist))
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -166,6 +169,7 @@ async def mine(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	response = ""
 	# Kingpins can't mine.
@@ -206,29 +210,33 @@ async def mine(cmd):
 				if world_events.get(id_event) == ewcfg.event_type_minecollapse:
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('id_user') == user_data.id_user and event_data.event_props.get('poi') == user_data.poi:
-						captcha = event_data.event_props.get('captcha')
-						if captcha in cmd.tokens[1:]:
+						captcha = event_data.event_props.get('captcha').lower()
+						tokens_lower = []
+						for token in cmd.tokens[1:]:
+							tokens_lower.append(token.lower())
+
+						if captcha in tokens_lower:
 							ewworldevent.delete_world_event(id_event = id_event)
 							response = "You escape from the collapsing mineshaft."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 						else:
 							return await mismine(cmd, user_data, ewcfg.event_type_minecollapse)
 
-			if user_data.poi not in mines_map:
+			if cmd.message.channel.name not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif user_data.id_server not in mines_map.get(user_data.poi):
-				init_grid(user_data.poi, user_data.id_server)
+			elif user_data.id_server not in mines_map.get(cmd.message.channel.name):
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
 
-			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+			grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 			grid = grid_cont.grid
 
 			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
 			if grid_type != grid_cont.grid_type:
-				init_grid(user_data.poi, user_data.id_server)
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
-				grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+				grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 				grid = grid_cont.grid
 
 			#minesweeper = True
@@ -238,7 +246,8 @@ async def mine(cmd):
 
 			if type(mining_yield) == type(""):
 				response = mining_yield
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				if len(response) > 0:
+					await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 				return await print_grid(cmd)
 					
 
@@ -265,7 +274,7 @@ async def mine(cmd):
 
 			# Determine if an item is found.
 			unearthed_item = False
-			unearthed_item_amount = 0
+			unearthed_item_amount = (random.randrange(3) + 5) # anywhere from 5-7 drops
 
 			# juvies get items 4 times as often as enlisted players
 			unearthed_item_chance = 1 / ewcfg.unearthed_item_rarity
@@ -288,6 +297,7 @@ async def mine(cmd):
 					event_data = EwWorldEvent(id_event = id_event)
 					if event_data.event_props.get('poi') == user_data.poi and event_data.event_props.get('id_user') == user_data.id_user:
 						unearthed_item_chance = 1
+						unearthed_item_amount = 1
 
 			if random.random() < 0.05:
 				id_event = create_mining_event(cmd)
@@ -310,12 +320,11 @@ async def mine(cmd):
 						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = event_data.event_props.get('captcha'))
 					response += str_event_start + "\n"
 				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
-					init_grid(poi = event_data.event_props.get('poi'), id_server = event_data.id_server)
+					init_grid(channel = event_data.event_props.get('channel'), id_server = event_data.id_server)
 					printgrid = True
 
 			if random.random() < unearthed_item_chance:
 				unearthed_item = True
-				unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
 
 			if unearthed_item == True:
 				# If there are multiple possible products, randomly select one.
@@ -333,9 +342,8 @@ async def mine(cmd):
 
 				if unearthed_item_amount == 1:
 					response += "You unearthed a {}! ".format(item.str_name)
-				elif unearthed_item_amount == 2:
-					response += "You unearthed two (2) {}! ".format(item.str_name)
-
+				else:
+					response += "You unearthed {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				ewstats.change_stat(user = user_data, metric = ewcfg.stat_lifetime_poudrins, n = unearthed_item_amount)
 
@@ -350,6 +358,14 @@ async def mine(cmd):
 			#alternate_yield = math.floor(200 + slime_bylevel ** (1 / math.e))
 
 			#mining_yield = min(mining_yield, alternate_yield)
+
+			if poi.is_subzone:
+				district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
+			else:
+				district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+			if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+				mining_yield *= 2
 
 			if has_pickaxe == True:
 				mining_yield *= 2
@@ -371,7 +387,13 @@ async def mine(cmd):
 			if was_levelup:
 				response += levelup_response
 
+			was_pvp = user_data.time_expirpvp > time_now
+			# Flag the user for PvP
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_mine))
+
 			user_data.persist()
+			if not was_pvp:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if printgrid:
 				await print_grid(cmd)
@@ -431,21 +453,21 @@ async def flag(cmd):
 				response = "What do you think you can flag here?"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-			if user_data.poi not in mines_map:
+			if cmd.message.channel.name not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			elif user_data.id_server not in mines_map.get(user_data.poi):
-				init_grid(user_data.poi, user_data.id_server)
+			elif user_data.id_server not in mines_map.get(cmd.message.channel.name):
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
 
-			grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+			grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 			grid = grid_cont.grid
 
 			grid_type = ewcfg.grid_type_by_mining_event.get(minigame_event)
 			if grid_type != grid_cont.grid_type:
-				init_grid(user_data.poi, user_data.id_server)
+				init_grid(cmd.message.channel.name, user_data.id_server)
 				printgrid = True
-				grid_cont = mines_map.get(user_data.poi).get(user_data.id_server)
+				grid_cont = mines_map.get(cmd.message.channel.name).get(user_data.id_server)
 				grid = grid_cont.grid
 
 			
@@ -604,7 +626,7 @@ async def scavenge(cmd):
 			if ewcfg.mutation_id_trashmouth in mutations:
 				time_since_last_scavenge *= 3
 
-			time_since_last_scavenge = min(max(1, time_since_last_scavenge), 30)
+			time_since_last_scavenge = min(max(1, time_since_last_scavenge), ewcfg.soft_cd_scavenge)
 
 
 			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
@@ -660,7 +682,13 @@ async def scavenge(cmd):
 
 			user_data.time_lastscavenge = time_now
 
+			was_pvp = user_data.time_expirpvp > time_now
+			# Flag the user for PvP
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_scavenge))
+
 			user_data.persist()
+			if not was_pvp:
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 			if not response == "":
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -670,48 +698,95 @@ async def scavenge(cmd):
 async def crush(cmd):
 	member = cmd.message.author
 	user_data = EwUser(member=member)
-	response = ""
+	response = "" # if it's not overwritten
 	crush_slimes = ewcfg.crush_slimes
-	
-	poudrin = ewitem.find_item(item_search="slimepoudrin", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+
+	crunch_used = False
+	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'crunch'):
+		crunch_used = True
 	
 	if user_data.life_state == ewcfg.life_state_corpse:
-		response = "Alas, you try to shatter the hardened slime crystal, but your ghostly form cannot firmly grasp it."
-		return 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	if poudrin is None:
-		response = "You need a slime poudrin."
+		response = "Alas, your ghostly form cannot {} anything. Lame.".format("crunch" if crunch_used else "crush")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search = item_search, id_user = user_data.id_user, id_server = user_data.id_server)
+
+	if item_sought:
+		sought_id = item_sought.get('id_item')
+		item_data = EwItem(id_item=sought_id)
+
+		response = "The item doesn't have !{} functionality".format("crunch" if crunch_used else "crush")  # if it's not overwritten
+
+		if item_data.item_props.get("id_item") == ewcfg.item_id_slimepoudrin:
+			# delete a slime poudrin from the player's inventory
+			ewitem.item_delete(id_item=sought_id)
+
+			status_effects = user_data.getStatusEffects()
+			sap_resp = ""
+			if ewcfg.status_sapfatigue_id not in status_effects:
+				sap_gain = 5
+				sap_gain = max(0, min(sap_gain, user_data.slimelevel - (user_data.hardened_sap + user_data.sap)))
+				if sap_gain > 0:
+					user_data.sap += sap_gain
+					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)
+					sap_resp = " and {} sap".format(sap_gain)
+
+			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
+			user_data.persist()
+			
+			if crunch_used:
+				response = "You crunch the hardened slime crystal with your bare teeth.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+			else:
+				response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime{}. Sick, dude!!".format(crush_slimes, sap_resp)
+			
+			if len(levelup_response) > 0:
+				response += "\n\n" + levelup_response
+
+		elif item_data.item_props.get("id_item") == ewcfg.item_id_royaltypoudrin:
+			# delete a royalty poudrin from the player's inventory
+			ewitem.item_delete(id_item=sought_id)
+			crush_slimes = 5000
+
+			levelup_response = user_data.change_slimes(n = crush_slimes, source = ewcfg.source_crush)
+			user_data.persist()
+
+			if crunch_used:
+				response = "You crunch your hard-earned slime crystal with your bare teeth.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
+			else:
+				response = "You crush your hard-earned slime crystal with your bare hands.\nYou gain {} slime. Ah, the joy of writing!".format(crush_slimes)
+
+			if len(levelup_response) > 0:
+				response += "\n\n" + levelup_response
+
 	else:
-		# delete a slime poudrin from the player's inventory
-		ewitem.item_delete(id_item=poudrin.get('id_item'))
-		
-		user_data.slimes += crush_slimes
-		user_data.persist()
-		
-		response = "You crush the hardened slime crystal with your bare hands.\nYou gain {} slime. Sick, dude!!".format(crush_slimes)
+		if item_search:  # if they didnt forget to specify an item and it just wasn't found
+			response = "You don't have one."
+		else:
+			response = "{} which item? (check **!inventory**)".format("crunch" if crunch_used else "crush")
 		
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-def init_grid(poi, id_server):
+def init_grid(channel, id_server):
 	world_events = ewworldevent.get_world_events(id_server = id_server)
 	minigame_event = None
 	for id_event in world_events:
 		if world_events.get(id_event) in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
 			event_data = EwWorldEvent(id_event = id_event)
-			if event_data.event_props.get('poi') == poi:
+			if event_data.event_props.get('channel') == channel:
 				minigame_event = event_data.event_type
 
 	if minigame_event == ewcfg.event_type_minesweeper:
-		return init_grid_minesweeper(poi, id_server)
+		return init_grid_minesweeper(channel, id_server)
 	elif minigame_event == ewcfg.event_type_pokemine:
-		return init_grid_pokemine(poi, id_server)
+		return init_grid_pokemine(channel, id_server)
 	elif minigame_event == ewcfg.event_type_bubblebreaker:
-		return init_grid_bubblebreaker(poi, id_server)
+		return init_grid_bubblebreaker(channel, id_server)
 	else:
-		return init_grid_none(poi, id_server)
+		return init_grid_none(channel, id_server)
 
-def init_grid_minesweeper(poi, id_server):
+def init_grid_minesweeper(channel, id_server):
 	grid = []
 	num_rows = 13
 	num_cols = 13
@@ -721,7 +796,7 @@ def init_grid_minesweeper(poi, id_server):
 			row.append(ewcfg.cell_empty)
 		grid.append(row)
 
-	num_mines = 30
+	num_mines = 20
 
 	row = random.randrange(num_rows)
 	col = random.randrange(num_cols)
@@ -732,14 +807,14 @@ def init_grid_minesweeper(poi, id_server):
 		grid[row][col] = ewcfg.cell_mine
 
 			
-	if poi in mines_map:
+	if channel in mines_map:
 		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_minesweeper)
-		mines_map.get(poi)[id_server] = grid_cont
+		mines_map.get(channel)[id_server] = grid_cont
 
-def init_grid_pokemine(poi,id_server):
-	return init_grid_none(poi, id_server)# TODO
+def init_grid_pokemine(channel,id_server):
+	return init_grid_none(channel, id_server)# TODO
 
-def init_grid_bubblebreaker(poi, id_server):
+def init_grid_bubblebreaker(channel, id_server):
 	grid = []
 	num_rows = 13
 	num_cols = 13
@@ -761,23 +836,24 @@ def init_grid_bubblebreaker(poi, id_server):
 
 
 			
-	if poi in mines_map:
+	if channel in mines_map:
 		grid_cont = EwMineGrid(grid = grid, grid_type = ewcfg.mine_grid_type_bubblebreaker)
-		mines_map.get(poi)[id_server] = grid_cont
+		mines_map.get(channel)[id_server] = grid_cont
 
-def init_grid_none(poi, id_server):
-	if poi in mines_map:
+def init_grid_none(channel, id_server):
+	if channel in mines_map:
 		grid_cont = EwMineGrid(grid = None, grid_type = None)
-		mines_map.get(poi)[id_server] = grid_cont
+		mines_map.get(channel)[id_server] = grid_cont
 
 async def print_grid(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
+	channel = cmd.message.channel.name
 	id_server = cmd.message.server.id
-	if poi in mines_map:
-		grid_map = mines_map.get(poi)
+	if channel in mines_map:
+		grid_map = mines_map.get(channel)
 		if id_server not in grid_map:
-			init_grid(poi, id_server)
+			init_grid(channel, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -793,12 +869,13 @@ async def print_grid_minesweeper(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
+	channel = cmd.message.channel.name
 	id_server = cmd.message.server.id
 	time_now = int(time.time())
-	if poi in mines_map:
-		grid_map = mines_map.get(poi)
+	if channel in mines_map:
+		grid_map = mines_map.get(channel)
 		if id_server not in grid_map:
-			init_grid_minesweeper(poi, id_server)
+			init_grid_minesweeper(channel, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -849,7 +926,7 @@ async def print_grid_minesweeper(cmd):
 			grid_cont.times_edited += 1
 
 		if grid_cont.wall_message == "":
-			wall_channel = ewcfg.mines_wall_map.get(poi)
+			wall_channel = ewcfg.mines_wall_map.get(channel)
 			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 			resp_cont.add_channel_response(wall_channel, grid_edit)
 			msg_handles = await resp_cont.post()
@@ -865,13 +942,14 @@ async def print_grid_bubblebreaker(cmd):
 	grid_str = ""
 	user_data = EwUser(member = cmd.message.author)
 	poi = user_data.poi
+	channel = cmd.message.channel.name
 	id_server = cmd.message.server.id
 	time_now = int(time.time())
 	use_emotes = False
-	if poi in mines_map:
-		grid_map = mines_map.get(poi)
+	if channel in mines_map:
+		grid_map = mines_map.get(channel)
 		if id_server not in grid_map:
-			init_grid(poi, id_server)
+			init_grid(channel, id_server)
 		grid_cont = grid_map.get(id_server)
 
 		grid = grid_cont.grid
@@ -914,7 +992,7 @@ async def print_grid_bubblebreaker(cmd):
 			grid_cont.times_edited += 1
 
 		if grid_cont.wall_message == "":
-			wall_channel = ewcfg.mines_wall_map.get(poi)
+			wall_channel = ewcfg.mines_wall_map.get(channel)
 			resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 			resp_cont.add_channel_response(wall_channel, grid_edit)
 			msg_handles = await resp_cont.post()
@@ -1078,6 +1156,8 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	grid = grid_cont.grid
 	grid_multiplier = grid_cont.cells_mined ** 0.4
 
+	hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
+
 	row = -1
 	col = -1
 	if cmd.tokens_count < 2:
@@ -1087,6 +1167,12 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	for token in cmd.tokens[1:]:
 				
 		coords = token.lower()
+		if coords == "reset":
+			user_data.hunger += int(ewcfg.hunger_perminereset * hunger_cost_mod)
+			user_data.persist()
+			init_grid_minesweeper(cmd.message.channel.name, user_data.id_server)
+			return ""
+
 		if col < 1:
 		
 			for char in coords:
@@ -1131,7 +1217,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 	unmined_cells = get_unmined_cell_count(grid_cont)
 
 	if unmined_cells == 0:
-		init_grid_minesweeper(user_data.poi, user_data.id_server)
+		init_grid_minesweeper(cmd.message.channel.name, user_data.id_server)
 
 	if mining_accident:
 		slimes_lost = 0.1 * grid_multiplier * user_data.slimes
@@ -1142,7 +1228,7 @@ def get_mining_yield_minesweeper(cmd, grid_cont):
 			user_data.persist()
 			response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
-		init_grid_minesweeper(user_data.poi, user_data.id_server)
+		init_grid_minesweeper(cmd.message.channel.name, user_data.id_server)
 
 		return response
 
@@ -1223,14 +1309,17 @@ def get_mining_yield_bubblebreaker(cmd, grid_cont):
 		user_data.persist()
 		response = "You have lost an arm and a leg in a mining accident. Tis but a scratch."
 
-		init_grid_bubblebreaker(user_data.poi, user_data.id_server)
+		init_grid_bubblebreaker(cmd.message.channel.name, user_data.id_server)
 
 		return response
 	else:
 		return mining_yield
 
 def get_mining_yield_default(cmd):
-	return 200
+	if cmd.message.channel.name == ewcfg.channel_mines:
+		return 50
+	else:
+		return 200
 
 def create_mining_event(cmd):
 	randomn = random.random()
@@ -1246,6 +1335,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_slimeglob,
@@ -1257,6 +1347,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_slimefrenzy,
@@ -1275,6 +1366,7 @@ def create_mining_event(cmd):
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
 			event_props['captcha'] = ewutils.generate_captcha(n = 8)
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minecollapse,
@@ -1287,6 +1379,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_poudrinfrenzy,
@@ -1303,6 +1396,7 @@ def create_mining_event(cmd):
 		if randomn < 1/2:
 			event_props = {}
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_minesweeper,
@@ -1315,6 +1409,7 @@ def create_mining_event(cmd):
 		else:
 			event_props = {}
 			event_props['poi'] = user_data.poi
+			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,
 				event_type = ewcfg.event_type_bubblebreaker,

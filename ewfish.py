@@ -4,10 +4,12 @@ import time
 import ewcfg
 import ewutils
 import ewitem
+import ewrolemgr
 
 from ewmarket import EwMarket
 from ew import EwUser
 from ewitem import EwItem
+from ewdistrict import EwDistrict
 
 class EwFisher:
 	fishing = False
@@ -16,6 +18,7 @@ class EwFisher:
 	current_size = ""
 	pier = ""
 	bait = False
+	high = False
 
 fishers = {}
 
@@ -311,6 +314,7 @@ async def cast(cmd):
 	has_reeled = False
 	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
+	statuses = user_data.getStatusEffects()
 
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
@@ -326,7 +330,7 @@ async def cast(cmd):
 		response = "You've already cast a line."
 
 	# Only fish at The Pier
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 		if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 			response = "You're too hungry to fish right now."
 
@@ -339,6 +343,8 @@ async def cast(cmd):
 				if weapon.id_weapon == "fishingrod":
 					has_fishingrod = True
 
+			if ewcfg.status_high_id in statuses:
+				fisher.high = True
 			fisher.current_fish = gen_fish(market_data, cmd, has_fishingrod)
 			fisher.fishing = True
 			fisher.bait = False
@@ -406,7 +412,7 @@ async def cast(cmd):
 				response = "You attach your {} to the hook as bait and then cast your fishing line into the ".format(str_name)
 
 
-			if cmd.message.channel.name in [ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+			if cmd.message.channel.name in [ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 				response += "vast Slime Sea."
 			else:
 				response += "glowing Slime Lake."
@@ -432,9 +438,12 @@ async def cast(cmd):
 					fun = 1
 				else:
 					damp = random.randrange(fun)
-					
-				await asyncio.sleep(60)
-				user_data = EwUser(member = cmd.message.author)
+
+				if not fisher.high:
+					await asyncio.sleep(60)
+				else:
+					await asyncio.sleep(30)
+				user_data = EwUser(member=cmd.message.author)
 
 				if user_data.poi != fisher.pier:
 					fisher.fishing = False
@@ -488,12 +497,13 @@ async def reel(cmd):
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
 	fisher = fishers[cmd.message.author.id]
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	# Ghosts cannot fish.
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You can't fish while you're dead. Try {}.".format(ewcfg.cmd_revive)
 
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 		# Players who haven't cast a line cannot reel.
 		if fisher.fishing == False:
 			response = "You haven't cast your hook yet. Try !cast."
@@ -518,7 +528,7 @@ async def reel(cmd):
 
 					item = random.choice(ewcfg.mine_results)
 				
-					unearthed_item_amount = 1 if random.randint(1, 3) != 1 else 2  # 33% chance of extra drop
+					unearthed_item_amount = (random.randrange(5) + 8) # anywhere from 8-12 drops
 
 					item_props = ewitem.gen_item_props(item)
 
@@ -530,10 +540,7 @@ async def reel(cmd):
 							item_props = item_props
 						)
 
-					if unearthed_item_amount == 1:
-						response = "You reel in a {}!".format(item.str_name)
-					else:
-						response = "You reel in two {}s!".format(item.str_name)
+					response = "You reel in {} {}s! ".format(unearthed_item_amount, item.str_name)
 
 				else:
 					item = random.choice(slimesea_inventory)
@@ -615,6 +622,21 @@ async def reel(cmd):
 				if has_fishingrod == True:
 					slime_gain = slime_gain * 2
 
+				if fisher.current_fish == "plebefish":
+					slime_gain = ewcfg.fish_gain * .5
+					value = 10
+				if poi.is_subzone:
+					district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
+				else:
+					district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+				if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+					slime_gain *= 2
+
+
+				if cmd.message.channel.name == ewcfg.channel_jr_pier:
+					slime_gain = int(slime_gain / 4)
+
 				ewitem.item_create(
 					id_user = cmd.message.author.id,
 					id_server = cmd.message.server.id,
@@ -634,8 +656,8 @@ async def reel(cmd):
 					}
 				)
 
-				response = "You reel in a {fish}! {flavor} You grab hold and wring {slime} slime from it. "\
-					.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = str(slime_gain))
+				response = "You reel in a {fish}! {flavor} You grab hold and wring {slime:,} slime from it. "\
+					.format(fish = ewcfg.fish_map[fisher.current_fish].str_name, flavor = ewcfg.fish_map[fisher.current_fish].str_desc, slime = slime_gain)
 
 				if gang_bonus == True:
 					if user_data.faction == ewcfg.faction_rowdys:
@@ -684,8 +706,12 @@ async def reel(cmd):
 				fisher.current_fish = ""
 				fisher.current_size = ""
 				fisher.pier = ""
-				
+
+				# Flag the user for PvP
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
+
 				user_data.persist()
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				
 	else:
 		response = "You cast your fishing rod unto a sidewalk. That is to say, you've accomplished nothing. Go to a pier if you want to fish."
@@ -697,14 +723,14 @@ async def appraise(cmd):
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
-	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
+	payment = ewitem.find_item(item_search = "manhattanproject", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_food)
 
 	# Checking availability of appraisal
 	#if market_data.clock < 8 or market_data.clock > 17:
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 			response = 'You ask a nearby fisherman if he could appraise this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
@@ -809,7 +835,7 @@ async def barter(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_vc_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
@@ -897,7 +923,7 @@ async def barter(cmd):
 						max_value = value * 6000 # 600,000 slime for a colossal promo fish, 120,000 for a miniscule common fish.
 						min_value = max_value / 10 # 60,000 slime for a colossal promo fish, 12,000 for a miniscule common fish.
 
-						slime_gain = random.randint(min_value, max_value)
+						slime_gain = round(random.triangular(min_value, max_value, min_value * 2))
 
 						offer.offer_receive = slime_gain
 
@@ -951,8 +977,8 @@ async def barter(cmd):
 				if fish.id_owner != user_data.id_user:
 					accepted = False
 
-				# cancel deal if the user has left the speakeasy
-				if user_data.poi != ewcfg.poi_id_speakeasy:
+				# cancel deal if the user has left Vagrant's Corner
+				if user_data.poi != ewcfg.poi_id_vagrantscorner:
 					accepted = False
 
 				# cancel deal if the offer has been deleted
@@ -1056,7 +1082,7 @@ async def embiggen(cmd):
 			if size == ewcfg.fish_size_huge:
 				poudrin_cost = 32
 
-			poudrins_owned = ewitem.find_item_all(item_search = "slimepoudrin", id_user = user_data.id_user, id_server = user_data.id_server)
+			poudrins_owned = ewitem.find_item_all(item_search = "slimepoudrin", id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
 			poudrin_amount = len(poudrins_owned)
 
 			if poudrin_cost == 0:

@@ -7,6 +7,7 @@ import ewcfg
 import ewstats
 import ewitem
 import ewstatuseffects
+import ewdistrict
 from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -14,6 +15,8 @@ class EwUser:
 	id_user = ""
 	id_server = ""
 	id_killer = ""
+
+	combatant_type = "player"
 
 	slimes = 0
 	slimecoin = 0
@@ -39,6 +42,13 @@ class EwUser:
 	arrested = False
 	active_slimeoid = -1
 	splattered_slimes = 0
+	sap = 0
+	hardened_sap = 0
+	#SLIMERNALIA
+	festivity = 0
+	festivity_from_slimecoin = 0
+	slimernalia_kingpin = False
+	manuscript = -1
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -54,7 +64,7 @@ class EwUser:
 
 	apt_zone = "empty"
 	visiting = "empty"
-	has_soul = 0
+	has_soul = 1
 
 	move_speed = 1 # not a database column
 
@@ -74,6 +84,10 @@ class EwUser:
 
 		if self.move_speed <= 0:
 			self.move_speed = 1
+
+		self.sap = max(0, min(self.sap, self.slimelevel - self.hardened_sap))
+
+		self.hardened_sap = max(0, self.hardened_sap)
 
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
@@ -127,8 +141,10 @@ class EwUser:
 			if self.life_state != ewcfg.life_state_corpse:
 				response += "You have been empowered by slime and are now a level {} slimeboi.".format(new_level)
 			for level in range(self.slimelevel+1, new_level+1):
-				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse:
-					current_mutations = self.get_mutations()
+				current_mutations = self.get_mutations()
+				
+				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse and len(current_mutations) < 10:
+					
 					new_mutation = random.choice(list(ewcfg.mutation_ids))
 					while new_mutation in current_mutations:
 						new_mutation = random.choice(list(ewcfg.mutation_ids))
@@ -151,11 +167,39 @@ class EwUser:
 
 		ewutils.end_trade(self.id_user)
 
+		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
+
+		client = ewcfg.get_client()
+		server = client.get_server(self.id_server)
+
+		deathreport = ''
+		
+
+		# Make The death report
+		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
+		resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+
+		poi = ewcfg.id_to_poi.get(self.poi)
+		if cause == ewcfg.cause_weather:
+			resp_cont.add_channel_response(poi.channel, deathreport)
+
+		# Grab necessary data for spontaneous combustion before stat reset
+		explosion_block_list = [ewcfg.cause_leftserver, ewcfg.cause_cliff]
+		user_hasCombustion = False
+		if (cause not in explosion_block_list) and (poi.pvp):
+			if ewcfg.mutation_id_spontaneouscombustion in self.get_mutations():
+				user_hasCombustion = True
+				explode_damage = ewutils.slime_bylevel(self.slimelevel) / 5
+				explode_district = ewdistrict.EwDistrict(district = self.poi, id_server = self.id_server)
+				explode_poi_channel = ewcfg.id_to_poi.get(self.poi).channel
+
 		if cause == ewcfg.cause_busted:
 			self.busted = True
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
+			
+
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -170,15 +214,6 @@ class EwUser:
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
 
-
-			if self.time_expirpvp >= time_now: # If you were Wanted.
-				if cause != ewcfg.cause_cliff:
-					ewitem.item_dropall(id_server = self.id_server, id_user = self.id_user)
-
-				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_min_onrevive)
-				self.slimecoin = 0
-				self.weaponmarried = False
-
 			if cause == ewcfg.cause_cliff:
 				pass
 			else:
@@ -187,7 +222,7 @@ class EwUser:
 					food_fraction = 4
 					cosmetic_fraction = 4
 
-				else:  # If you were mired in normal Gang Violence, meaning if you were a Rowdy and your killer was a Killer, or vice versa.
+				else:  # If you were a Gangster.
 					item_fraction = 2
 					food_fraction = 2
 					cosmetic_fraction = 2
@@ -214,12 +249,27 @@ class EwUser:
 		if cause == ewcfg.cause_leftserver:
 			ewitem.item_dropall(id_server=self.id_server, id_user=self.id_user)
 
+		self.sap = 0
+		self.hardened_sap = 0
 		ewutils.moves_active[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
+
+		self.persist()
+
+		if cause not in explosion_block_list: # Run explosion after location/stat reset, to prevent looping onto self
+			if user_hasCombustion:
+				explode_resp = "\n{} spontaneously combusts, horribly dying in a fiery explosion of slime and shrapnel!! Oh, the humanity!\n".format(server.get_member(self.id_user).display_name)
+				ewutils.logMsg("")
+				resp_cont.add_channel_response(explode_poi_channel, explode_resp)
+
+				explosion = ewutils.explode(damage = explode_damage, district_data = explode_district)
+				resp_cont.add_response_container(explosion)
 
 		#ewitem.item_destroyall(id_server = self.id_server, id_user = self.id_user)
 
 		ewutils.logMsg('server {}: {} was killed by {} - cause was {}'.format(self.id_server, self.id_user, self.id_killer, cause))
+
+		return(resp_cont)
 
 	def add_bounty(self, n = 0):
 		self.bounty += int(n)
@@ -285,6 +335,7 @@ class EwUser:
 	def eat(self, food_item = None):
 		item_props = food_item.item_props
 		mutations = self.get_mutations()
+		statuses = self.getStatusEffects()
 
 		if ewcfg.mutation_id_spoiledappetite not in mutations and float(food_item.time_expir if food_item.time_expir is not None else 0) < time.time():
 			response = "You realize that the food you were trying to eat is already spoiled. In disgust, you throw it away."
@@ -297,7 +348,12 @@ class EwUser:
 				ewutils.food_multiplier[self.id_user] += 1
 			else:
 				ewutils.food_multiplier[self.id_user] = 1
-				
+
+			if ewcfg.status_high_id in statuses:
+				hunger_restored *= 0.5			
+	
+			hunger_restored = round(hunger_restored)
+
 			self.hunger -= hunger_restored
 			if self.hunger < 0:
 				self.hunger = 0
@@ -311,6 +367,9 @@ class EwUser:
 					#Bust player if they're a ghost
 					if self.life_state == ewcfg.life_state_corpse:
 						self.die(cause = ewcfg.cause_busted)
+				if item_props['id_food'] == ewcfg.item_id_seaweedjoint:
+					self.applyStatus(id_status = ewcfg.status_high_id)
+
 			except:
 				# An exception will occur if there's no id_food prop in the database. We don't care.
 				pass
@@ -385,14 +444,26 @@ class EwUser:
 			if weapon_item.item_props.get("married") == self.id_user:
 				response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
 				self.weapon = weapon_item.id_item
+
+				weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+				if ewcfg.weapon_class_captcha in weapon.classes:
+					captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+					weapon_item.item_props["captcha"] = captcha
+					response += "\nSecurity code: **{}**".format(captcha)
 			else:
 				partner_name = current_weapon.item_props.get("weapon_name")
 				if partner_name in [None, ""]:
 					partner_name = "partner"
 				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
 		else:
-			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name"))
+			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
 			self.weapon = weapon_item.id_item
+
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				captcha = ewutils.generate_captcha(n = weapon.captcha_length)
+				weapon_item.item_props["captcha"] = captcha
+				response += "\nSecurity code: **{}**".format(captcha)
 
 		return response
 
@@ -417,7 +488,7 @@ class EwUser:
 		finally:
 			return values
 
-	def applyStatus(self, id_status = None, value = 0, source = 0, multiplier = 1):
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
 		response = ""
 		if id_status != None:
 			status = None
@@ -428,7 +499,7 @@ class EwUser:
 			if status != None:
 				statuses = self.getStatusEffects()
 
-				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source)
+				status_effect = EwStatusEffect(id_status=id_status, user_data=self, time_expire= time_expire, value=value, source=source, id_target = id_target)
 				
 				if id_status in statuses:
 					status_effect.value = value
@@ -588,8 +659,36 @@ class EwUser:
 
 		return vouchers
 
+	def get_festivity(self):
+		data = ewutils.execute_sql_query(
+		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
+		"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} "\
+		"WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} WHERE users.{id_user} = %s AND users.{id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			festivity = ewcfg.col_festivity,
+			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+			name = ewcfg.col_name,
+			value = ewcfg.col_value,
+			id_item = ewcfg.col_id_item,
+		),(
+			"id_furniture",
+			ewcfg.item_id_sigillaria,
+			self.id_user,
+			self.id_server
+		))
+		res = 0
+
+		for row in data:
+			res = row[0]
+
+		return int(res)
+
 	""" Create a new EwUser and optionally retrieve it from the database. """
 	def __init__(self, member = None, id_user = None, id_server = None):
+
+		self.combatant_type = ewcfg.combatant_type_player
+
 		if(id_user == None) and (id_server == None):
 			if(member != None):
 				id_server = member.server.id
@@ -608,7 +707,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -648,6 +747,12 @@ class EwUser:
 					ewcfg.col_visiting,
 					ewcfg.col_active_slimeoid,
 					ewcfg.col_has_soul,
+					ewcfg.col_sap,
+					ewcfg.col_hardened_sap,
+					ewcfg.col_festivity,
+					ewcfg.col_festivity_from_slimecoin,
+					ewcfg.col_slimernalia_kingpin,
+					ewcfg.col_manuscript,
 				), (
 					id_user,
 					id_server
@@ -694,15 +799,21 @@ class EwUser:
 					self.visiting = result[35]
 					self.active_slimeoid = result[36]
 					self.has_soul = result[37]
+					self.sap = result[38]
+					self.hardened_sap = result[39]
+					self.festivity = result[40]
+					self.festivity_from_slimecoin = result[41]
+					self.slimernalia_kingpin = (result[42] == 1)
+					self.manuscript = result[43]
 				else:
-					self.poi = ewcfg.poi_id_downtown
+					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
 						id_user,
 						id_server,
-						ewcfg.poi_id_downtown,
-						ewcfg.life_state_juvenile
+						self.poi,
+						self.life_state
 					))
 					
 					conn.commit()
@@ -749,7 +860,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -791,6 +902,12 @@ class EwUser:
 				ewcfg.col_visiting,
 				ewcfg.col_active_slimeoid,
 				ewcfg.col_has_soul,
+				ewcfg.col_sap,
+				ewcfg.col_hardened_sap,
+				ewcfg.col_festivity,
+				ewcfg.col_festivity_from_slimecoin,
+				ewcfg.col_slimernalia_kingpin,
+				ewcfg.col_manuscript,
 			), (
 				self.id_user,
 				self.id_server,
@@ -832,7 +949,13 @@ class EwUser:
 				self.apt_zone,
 				self.visiting,
 				self.active_slimeoid,
-				self.has_soul
+				self.has_soul,
+				self.sap,
+				self.hardened_sap,
+				self.festivity,
+				self.festivity_from_slimecoin,
+				self.slimernalia_kingpin,
+				self.manuscript,
 			))
 
 			conn.commit()
@@ -840,4 +963,3 @@ class EwUser:
 			# Clean up the database handles.
 			cursor.close()
 			ewutils.databaseClose(conn_info)
-

@@ -7,6 +7,7 @@ import discord
 import ewcfg
 import ewstats
 import ewutils
+import ewrolemgr
 from ew import EwUser
 from ewmarket import EwMarket
 
@@ -37,6 +38,8 @@ class EwDistrict:
 	# The amount of slime in the district
 	slimes = 0
 
+	# Time until the district unlocks for capture again
+	time_unlock = 0
 
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
@@ -53,12 +56,13 @@ class EwDistrict:
 			else:
 				self.max_capture_points = 0
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock} FROM districts WHERE id_server = %s AND {district} = %s".format(
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
 				capture_points = ewcfg.col_capture_points,
 				district = ewcfg.col_district,
-				slimes = ewcfg.col_district_slimes
+				slimes = ewcfg.col_district_slimes,
+				time_unlock = ewcfg.col_time_unlock,
 			), (
 				id_server,
 				district
@@ -70,6 +74,7 @@ class EwDistrict:
 				self.capturing_faction = data[0][1]
 				self.capture_points = data[0][2]
 				self.slimes = data[0][3]
+				self.time_unlock = data[0][4]
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
 				ewutils.execute_sql_query("REPLACE INTO districts ({id_server}, {district}) VALUES (%s, %s)".format(
@@ -81,19 +86,21 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}) VALUES(%s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
 			capture_points = ewcfg.col_capture_points,
-			slimes = ewcfg.col_district_slimes
+			slimes = ewcfg.col_district_slimes,
+			time_unlock = ewcfg.col_time_unlock,
 		), (
 			self.id_server,
 			self.name,
 			self.controlling_faction,
 			self.capturing_faction,
 			self.capture_points,
-			self.slimes
+			self.slimes,
+			self.time_unlock,
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -126,17 +133,25 @@ class EwDistrict:
 			life_states = [],
 			factions = [],
 			min_slimes = -math.inf,
-			max_slimes = math.inf
+			max_slimes = math.inf,
+			ignore_offline = False,
+			pvp_only = False
 		):
 		client = ewutils.get_client()
 		server = client.get_server(self.id_server)
 		if server == None:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
+		time_now = int(time.time())
 
-		players = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE id_server = %s AND {poi} = %s".format(
+		players = ewutils.execute_sql_query("SELECT {id_user}, {slimes}, {slimelevel}, {faction}, {life_state}, {time_expirpvp} FROM users WHERE id_server = %s AND {poi} = %s".format(
 			id_user = ewcfg.col_id_user,
-			poi = ewcfg.col_poi
+			slimes = ewcfg.col_slimes,
+			slimelevel = ewcfg.col_slimelevel,
+			faction = ewcfg.col_faction,
+			life_state = ewcfg.col_life_state,
+			poi = ewcfg.col_poi,
+			time_expirpvp = ewcfg.col_time_expirpvp
 		),(
 			self.id_server,
 			self.name
@@ -144,13 +159,23 @@ class EwDistrict:
 
 		filtered_players = []
 		for player in players:
-			if server.get_member(player[0]) != None:
-				user_data = EwUser(id_user = player[0], id_server = self.id_server)
-				if max_level >= user_data.slimelevel >= min_level \
-				and max_slimes >= user_data.slimes >= min_slimes \
-				and (len(life_states) == 0 or user_data.life_state in life_states) \
-				and (len(factions) == 0 or user_data.faction in factions):
-					filtered_players.append(user_data.id_user)
+			id_user = player[0]
+			slimes = player[1]
+			slimelevel = player[2]
+			faction = player[3]
+			life_state = player[4]
+			time_expirpvp = player[5]
+			
+			member = server.get_member(id_user)
+
+			if member != None:
+				if max_level >= slimelevel >= min_level \
+				and max_slimes >= slimes >= min_slimes \
+				and (len(life_states) == 0 or life_state in life_states) \
+				and (len(factions) == 0 or faction in factions) \
+				and not (ignore_offline and member.status == discord.Status.offline) \
+				and not (pvp_only and time_expirpvp < time_now):
+					filtered_players.append(id_user)
 
 		return filtered_players
 
@@ -158,7 +183,8 @@ class EwDistrict:
 			min_level = 0,
 			max_level = math.inf,
 			min_slimes = -math.inf,
-			max_slimes = math.inf
+			max_slimes = math.inf,
+			scout_used = False,
 		):
 
 		client = ewutils.get_client()
@@ -167,10 +193,11 @@ class EwDistrict:
 			ewutils.logMsg("error: couldn't find server with id {}".format(self.id_server))
 			return []
 
-		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
+		enemies = ewutils.execute_sql_query("SELECT {id_enemy}, {slimes}, {level}, {enemytype} FROM enemies WHERE id_server = %s AND {poi} = %s AND {life_state} = 1".format(
 			id_enemy = ewcfg.col_id_enemy,
 			slimes = ewcfg.col_enemy_slimes,
 			level = ewcfg.col_enemy_level,
+			enemytype = ewcfg.col_enemy_type,
 			poi = ewcfg.col_enemy_poi,
 			life_state = ewcfg.col_enemy_life_state
 		),(
@@ -184,17 +211,22 @@ class EwDistrict:
 			fetched_id_enemy = enemy_data_column[0] # data from id_enemy column in enemies table
 			fetched_slimes = enemy_data_column[1] # data from slimes column in enemies table
 			fetched_level = enemy_data_column[2] # data from level column in enemies table
+			fetched_type = enemy_data_column[3] # data from enemytype column in enemies table
 
 			# Append the enemy to the list if it meets the requirements
 			if max_level >= fetched_level >= min_level \
 			and max_slimes >= fetched_slimes >= min_slimes:
 				filtered_enemies.append(fetched_id_enemy)
+				
+			# Don't show sandbags on !scout
+			if scout_used and fetched_type == ewcfg.enemy_type_sandbag:
+				filtered_enemies.remove(fetched_id_enemy)
 
 		return filtered_enemies
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
-		if self.capture_points > 0:
+		if self.capture_points > 0 and self.time_unlock == 0:
 
 			neighbors = ewcfg.poi_neighbors[self.name]
 			all_neighbors_friendly = self.all_neighbors_friendly()
@@ -234,8 +266,58 @@ class EwDistrict:
 
 		return resp_cont_decay
 
+	def change_capture_lock(self, progress):
+		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
 
-	def change_capture_points(self, progress, actor):  # actor can either be a faction or "decay"
+		progress_before = self.time_unlock
+
+		self.time_unlock += progress
+
+		if self.time_unlock < 0:
+			self.time_unlock == 0
+
+		progress_after = self.time_unlock
+
+		if (progress_after // ewcfg.capture_lock_milestone) != (progress_before // ewcfg.capture_lock_milestone):
+			time_mins = ewutils.formatNiceTime(seconds = progress_after, round_to_minutes = True)
+			if progress < 0:
+				if progress_before >= 15 * 60 >= progress_after:
+					message = "{district} will unlock for capture in {time}.".format(
+						district = ewcfg.id_to_poi[self.name].str_name,
+						time = time_mins
+					)
+					channels = ewcfg.hideout_channels
+
+					for ch in channels:
+						resp_cont.add_channel_response(channel = ch, response = message)
+				
+				elif progress_before >= 5 * 60 >= progress_after:
+					message = "{district} will unlock for capture in {time}.".format(
+						district = ewcfg.id_to_poi[self.name].str_name,
+						time = time_mins
+					)
+					channels = ewcfg.hideout_channels
+
+					for ch in channels:
+						resp_cont.add_channel_response(channel = ch, response = message)
+				
+				message = "{district} will unlock for capture in {time}.".format(
+					district = ewcfg.id_to_poi[self.name].str_name,
+					time = time_mins
+				)
+
+				channels = [ewcfg.id_to_poi[self.name].channel]
+
+				for ch in channels:
+					resp_cont.add_channel_response(channel = ch, response = message)
+
+		if self.time_unlock == 0 and progress < 0:
+			chip_cont = self.change_capture_points(progress = -1, actor = ewcfg.actor_decay)
+			resp_cont.add_response_container(chip_cont)
+
+		return resp_cont
+
+	def change_capture_points(self, progress, actor, num_lock = 0):  # actor can either be a faction or "decay"
 		progress_percent_before = int(self.capture_points / self.max_capture_points * 100)
 
 		self.capture_points += progress
@@ -249,6 +331,18 @@ class EwDistrict:
 			self.capture_points = self.max_capture_points
 
 		progress_percent_after = int(self.capture_points / self.max_capture_points * 100)
+
+		if num_lock > 0 \
+		and self.capture_points == self.max_capture_points \
+		and progress > 0 \
+		and self.property_class in ewcfg.capture_locks \
+		and self.time_unlock == 0:
+			base_time_unlock = ewcfg.capture_locks.get(self.property_class)
+			responses = self.change_capture_lock(base_time_unlock + (num_lock - 1) * ewcfg.capture_lock_per_gangster)
+			resp_cont_change_cp.add_response_container(responses)
+
+		if progress > 0 and actor != ewcfg.actor_decay:
+			self.capturing_faction = actor
 
 		# display a message if it's reached a certain amount
 		if (progress_percent_after // ewcfg.capture_milestone) != (progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
@@ -325,7 +419,7 @@ class EwDistrict:
 							resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
 					message = "{faction}' control of {district} has decreased. Remaining control level: {progress}%".format(
-						faction = self.capturing_faction.capitalize(),
+						faction = self.controlling_faction.capitalize(),
 						district = ewcfg.id_to_poi[self.name].str_name,
 						progress = progress_percent_after
 					)
@@ -344,8 +438,11 @@ class EwDistrict:
 					for ch in channels:
 						resp_cont_change_cp.add_channel_response(channel = ch, response = message)
 
+		if progress < 0 and self.capture_points == 0:
+			self.capturing_faction = ""
+
 		# if capture_points is at its maximum value (or above), assign the district to the capturing faction
-		if self.capture_points == self.max_capture_points and self.controlling_faction != actor:
+		if self.capture_points == self.max_capture_points:
 			responses = self.change_ownership(self.capturing_faction, actor)
 			resp_cont_change_cp.add_response_container(responses)
 
@@ -393,9 +490,13 @@ class EwDistrict:
 
 			if self.controlling_faction != new_owner:  # if the controlling faction actually changed
 				if new_owner != "":  # if it was captured by a faction instead of being de-captured or decayed
-					message = "{faction} just captured {district}.".format(
+					countdown_message = ""
+					if self.time_unlock > 0:
+						countdown_message = "It will unlock for capture again in {}.".format(ewutils.formatNiceTime(seconds = self.time_unlock, round_to_minutes = True))
+					message = "{faction} just captured {district}. {countdown}".format(
 						faction = self.capturing_faction.capitalize(),
-						district = ewcfg.id_to_poi[self.name].str_name
+						district = ewcfg.id_to_poi[self.name].str_name,
+						countdown = countdown_message
 					)
 					channels = [ewcfg.id_to_poi[self.name].channel] + ewcfg.hideout_channels
 					
@@ -447,9 +548,133 @@ async def capture_progress(cmd):
 		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
 	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+
+	if district_data.time_unlock > 0:
+
+
+		response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+
+async def annex(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+	time_now = int(time.time())
+
+	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if user_data.life_state == ewcfg.life_state_corpse:
+		response = "You ineffectively try shaking your can of spraypaint to whip up some sick graffiti. Alas, you’re all outta slime. " \
+                   "They should really make these things compatible with ectoplasm."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if not (len(user_data.faction) > 0 and user_data.life_state == ewcfg.life_state_enlisted):
+		response = "Juveniles are too chickenshit to make graffiti and risk getting busted by the cops. Fuckin’ losers."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi in [ewcfg.poi_id_rowdyroughhouse, ewcfg.poi_id_copkilltown]:
+		response = "There’s no point, the rest of your gang has already covered this place in spraypaint. Focus on exporting your graffiti instead."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if user_data.poi == ewcfg.poi_id_juviesrow:
+		response = "Nah, the Rowdys and Killers have both agreed this is neutral ground. You don’t want to start a diplomatic crisis, " \
+                   "just stick to spraying down sick graffiti and splattering your rival gang across the pavement in the other districts."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if not user_data.poi in ewcfg.capturable_districts:
+		response = "This zone cannot be captured."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	district_data = EwDistrict(id_server = user_data.id_server, district = user_data.poi)
+
+	if district_data.time_unlock > 0:
+		response = "You can’t spray graffiti here yet, it’s too soon after your rival gang extended their own cultural dominance over it. Try again in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if district_data.all_neighbors_friendly():
+		response = "What the hell are you doing, dude? You can’t put down any graffiti here, it’s been completely overrun by your rival gang. " \
+                   "You can only spray districts that have at least one unfriendly neighbor, duh!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+	users_in_district = district_data.get_players_in_district(
+		life_states = [ewcfg.life_state_enlisted],
+		ignore_offline = True,
+		pvp_only = True
+	)
+
+	allies_in_district = district_data.get_players_in_district(
+		factions = [user_data.faction],
+		life_states = [ewcfg.life_state_enlisted],
+		ignore_offline = True,
+		pvp_only = True
+	)
+
+	if len(users_in_district) > len(allies_in_district):
+		response = "Holy shit, deal with your rival gangsters first! You can’t spray graffiti while they’re on the prowl!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	mutations = user_data.get_mutations()
+
+	slimes_spent = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
+	capture_discount = 1
+
+	if ewcfg.mutation_id_lonewolf in mutations:
+		if user_data.time_expirpvp > time_now:
+			if len(users_in_district) == 1:
+				capture_discount *= 0.8
+		else:
+			if len(users_in_district) == 0:
+				capture_discount *= 0.8
+
+	if ewcfg.mutation_id_patriot in mutations:
+		capture_discount *= 0.8
+
+	if slimes_spent == None:
+		response = "How much slime do you want to spend on spraying graffiti in this district?"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if slimes_spent < 0:
+		slimes_spent = user_data.slimes
+
+	if slimes_spent > user_data.slimes:
+		response = "You don't have that much slime, retard."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	num_lock = len(allies_in_district)
+	if user_data.time_expirpvp < time_now:
+		num_lock += 1
+
+	if (district_data.controlling_faction not in ["", user_data.faction]) or (district_data.capturing_faction not in ["", user_data.faction]):
+		slimes_decap = min(district_data.capture_points, int(slimes_spent / capture_discount))
+		decap_resp = district_data.change_capture_points(
+			progress = -slimes_decap,
+			actor = user_data.faction,
+			num_lock = num_lock
+		)
+		resp_cont.add_response_container(decap_resp)
 		
+		user_data.change_slimes(n = -slimes_decap * capture_discount, source = ewcfg.source_spending)
+		slimes_spent -= slimes_decap * capture_discount
+
+	slimes_cap = min(district_data.max_capture_points - district_data.capture_points, int(slimes_spent / capture_discount))
+	cap_resp = district_data.change_capture_points(
+		progress = slimes_cap,
+		actor = user_data.faction,
+		num_lock = num_lock
+	)
+	resp_cont.add_response_container(cap_resp)
 		
+	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
+
+	# Flag the user for PvP
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
+
+	user_data.persist()
+	district_data.persist()
+	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
+	return await resp_cont.post()
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
@@ -471,9 +696,21 @@ async def capture_tick(id_server):
 		for district in all_districts:
 			district_name = district
 			dist = EwDistrict(id_server = id_server, district = district_name)
+
+			if dist.time_unlock > 0 and not dist.all_neighbors_friendly():
+				responses = dist.change_capture_lock(progress = -ewcfg.capture_tick_length)
+				resp_cont_capture_tick.add_response_container(responses)
+				dist.persist()
+
+			if dist.time_unlock > 0:
+				continue
+
+			# no more automatic capping
+			continue
+
 			controlling_faction = dist.controlling_faction
 
-			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted])
+			gangsters_in_district = dist.get_players_in_district(min_slimes = ewcfg.min_slime_to_cap, life_states = [ewcfg.life_state_enlisted], ignore_offline = True)
 					
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = district_name, id_server = id_server, sltype = ewcfg.sltype_nega)
@@ -489,6 +726,9 @@ async def capture_tick(id_server):
 
 			# how much progress will be made. is higher the more people of one faction are in a district, and is 0 if both teams are present
 			capture_speed = 0
+
+			# number of players actively capturing
+			num_capturers = 0
 
 			dc_stat_increase_list = []
 
@@ -511,6 +751,7 @@ async def capture_tick(id_server):
 					if faction_capture not in [None, player_faction]:  # if someone of the opposite faction is in the district
 						faction_capture = 'both'  # standstill, gang violence has to happen
 						capture_speed = 0
+						num_capturers = 0
 						dc_stat_increase_list.clear()
 
 					else:  # if the district isn't already controlled by the player's faction and the capture isn't halted by an enemy
@@ -523,6 +764,7 @@ async def capture_tick(id_server):
 							
 
 						capture_speed += player_capture_speed
+						num_capturers += 1
 						dc_stat_increase_list.append(player_id)
 
 
@@ -541,7 +783,7 @@ async def capture_tick(id_server):
 					if faction_capture != dist.capturing_faction:
 						capture_progress *= -1
 
-					capture_speed *= ewcfg.capture_gradient * capture_progress / dist.max_capture_points + ewcfg.baseline_capture_speed
+					capture_speed *= ewcfg.baseline_capture_speed
 
 
 					if dist.capture_points < dist.max_capture_points:
@@ -554,11 +796,11 @@ async def capture_tick(id_server):
 							)
 
 					if faction_capture == dist.capturing_faction:  # if the faction is already in the process of capturing, continue
-						responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						responses = dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
 						resp_cont_capture_tick.add_response_container(responses)
 
 					elif dist.capture_points == 0 and dist.controlling_faction == "":  # if it's neutral, start the capture
-						responses =  dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture)
+						responses =  dist.change_capture_points(ewcfg.capture_tick_length * capture_speed, faction_capture, num_capturers)
 						resp_cont_capture_tick.add_response_container(responses)
 
 						dist.capturing_faction = faction_capture
@@ -619,4 +861,3 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
 	await resp_cont_decay_loop.post()
-

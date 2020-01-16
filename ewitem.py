@@ -2,6 +2,7 @@ import math
 import time
 import random
 import asyncio
+import discord
 
 import ewutils
 import ewcfg
@@ -386,14 +387,9 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 		for item in drop_candidates:
 			cosmetic_id = item.get('id_item')
 			cosmetic_item = EwItem(id_item = cosmetic_id)
-			if cosmetic_item.item_props['adorned'] == "false":
+			if cosmetic_item.item_props.get('adorned') != "true" and cosmetic_item.item_props.get('slimeoid') != "true":
 				filtered_items.append(item)
 
-			elif cosmetic_item.item_props.get('slimeoid') != None:
-				if cosmetic_item.item_props['slimeoid'] == "false":
-					filtered_items.append(item)
-			else:
-				pass
 	if item_type_filter == ewcfg.it_weapon:
 		for item in drop_candidates:
 			if item.get('id_item') != user_data.weapon:
@@ -869,6 +865,9 @@ async def inventory_print(cmd):
 	try:
 		if can_message_user:
 			msg_handle = await ewutils.send_message(cmd.client, cmd.message.author, response)
+	except discord.errors.Forbidden:
+		response = "You'll have to allow Endless War to send you DMs to check your inventory!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	except:
 		can_message_user = False
 
@@ -1093,6 +1092,16 @@ async def item_use(cmd):
 					elif context == 'maxrepel':
 						response = user_data.applyStatus(ewcfg.status_repelled_id, multiplier=4)
 					item_delete(item.id_item)
+			elif context == ewcfg.item_id_gellphone:
+
+				if item.item_props.get("active") == 'true':
+					response = "You turn off your gellphone."
+					item.item_props['active'] = 'false'
+				else:
+					response = "You turn on your gellphone."
+					item.item_props['active'] = 'true'
+				
+				item.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1151,7 +1160,7 @@ def soulbind(id_item):
 """
 	Find a single item in the player's inventory (returns either a (non-EwItem) item or None)
 """
-def find_item(item_search = None, id_user = None, id_server = None):
+def find_item(item_search = None, id_user = None, id_server = None, item_type_filter = None):
 	item_sought = None
 
 	# search for an ID instead of a name
@@ -1161,7 +1170,7 @@ def find_item(item_search = None, id_user = None, id_server = None):
 		item_search_int = None
 
 	if item_search:
-		items = inventory(id_user = id_user, id_server = id_server)
+		items = inventory(id_user = id_user, id_server = id_server, item_type_filter = item_type_filter)
 		item_sought = None
 
 		# find the first (i.e. the oldest) item that matches the search
@@ -1285,7 +1294,6 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
-
 		if item_sought.get('soulbound'):
 			response = "You can't just give away soulbound items."
 		else:
@@ -1302,6 +1310,9 @@ async def give(cmd):
 			if item_sought.get('id_item') == user_data.weapon:
 				user_data.weapon = -1
 				user_data.persist()
+
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
@@ -1335,9 +1346,11 @@ async def discard(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-				
+					
 			response = "You throw away your " + item_sought.get("name")
 			item_drop(id_item = item.id_item)
+
+			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 		else:
 			response = "You can't throw away soulbound items."
@@ -1374,13 +1387,22 @@ def gen_item_props(item):
 			'ingredients': item.ingredients,
 			'acquisition': item.acquisition,
 		}
+		if item.context == ewcfg.context_slimeoidfood:
+			item_props["increase"] = item.increase
+			item_props["decrease"] = item.decrease
+
 	elif item.item_type == ewcfg.it_weapon:
+		captcha = ""
+		if ewcfg.weapon_class_captcha in item.classes:
+			captcha = ewutils.generate_captcha(n = item.captcha_length)
+
 		item_props = {
 			"weapon_type": item.id_weapon,
 			"weapon_name": "",
 			"weapon_desc": item.str_description,
 			"married": "",
-			"ammo": item.clip_size
+			"ammo": item.clip_size,
+			"captcha": captcha
 		}
 
 	elif item.item_type == ewcfg.it_cosmetic:
@@ -1543,10 +1565,8 @@ def remove_from_trades(id_item):
 				return
 
 
-
-# TODO: Remove after Double Halloween
 async def makecostume(cmd):
-	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+	costumekit = find_item(item_search="costumekit", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
 	user_data = EwUser(member=cmd.message.author)
 	
@@ -1583,3 +1603,28 @@ async def makecostume(cmd):
 	
 	response = "You fashion your **{}** Double Halloween costume using the creation kit.".format(item_name)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+async def trash(cmd):
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	author = cmd.message.author
+	server = cmd.message.server
+
+	item_sought = find_item(item_search=item_search, id_user=author.id, id_server=server.id)
+
+	if item_sought:
+		# Load the user before the item so that the right item props are used
+		user_data = EwUser(member=author)
+
+		item = EwItem(id_item=item_sought.get('id_item'))
+
+		response = "You can't !trash an item that isn't food. Try **!drop**ing it instead."  # if it's not overwritten
+
+		if item.item_type == ewcfg.it_food:
+			response = "You throw away your {} into a nearby trash can.".format(item.item_props.get("food_name"))
+			item_delete(item.id_item)
+	else:
+		response = "Are you sure you have that item?"
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+

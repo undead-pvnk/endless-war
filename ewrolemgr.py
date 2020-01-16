@@ -3,6 +3,7 @@ import time
 
 import ewcfg
 import ewutils
+import ewitem
 
 from ew import EwUser
 
@@ -87,6 +88,15 @@ def setupRoles(client = None, id_server = ""):
 				role_data.persist()
 			except:
 				ewutils.logMsg('Failed to set up role {}'.format(faction_role))
+
+	for misc_role in ewcfg.misc_roles:
+		if misc_role in roles_map:
+			try:
+				role_data = EwRole(id_server = id_server, name = misc_role)
+				role_data.id_role = roles_map[misc_role].id
+				role_data.persist()
+			except:
+				ewutils.logMsg('Failed to set up role {}'.format(misc_role))
 
 """
 	Hide the names of poi roles behind a uniform alias
@@ -173,6 +183,7 @@ async def updateRoles(
 		ewcfg.role_kingpin,
 		ewcfg.role_grandfoe,
 		ewcfg.role_slimecorp,
+		ewcfg.role_tutorial,
 	]
 
 	# Manage faction roles.
@@ -188,9 +199,14 @@ async def updateRoles(
 			pvp_role = ewcfg.role_to_pvp_role.get(faction_role)
 			faction_roles_remove.remove(pvp_role)
 
-		if ewutils.is_otp(user_data):
-			active_role = ewcfg.role_to_active_role.get(faction_role)
-			faction_roles_remove.remove(active_role)
+		# if ewutils.is_otp(user_data):
+		# 	active_role = ewcfg.role_to_active_role.get(faction_role)
+		# 	faction_roles_remove.remove(active_role)
+
+	tutorial_role = None
+	if user_data.poi in ewcfg.tutorial_pois:
+		tutorial_role = ewcfg.role_tutorial
+		faction_roles_remove.remove(tutorial_role)
 
 	# Manage location roles.
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -204,6 +220,31 @@ async def updateRoles(
 		if poi.role != None and poi.role != poi_role:
 			poi_roles_remove.append(poi.role)
 
+	misc_roles_remove = [
+		ewcfg.role_gellphone,
+		ewcfg.role_slimernalia
+	]
+
+	# Remove user's gellphone role if they don't have a phone
+	role_gellphone = None
+	gellphones = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = user_data.id_user, id_server = user_data.id_server, item_type_filter = ewcfg.it_item)
+	gellphone_active = False
+
+	for phone in gellphones:
+		phone_data = ewitem.EwItem(id_item = phone.get('id_item'))
+		if phone_data.item_props.get('active') == 'true':
+			gellphone_active = True
+			break
+		
+	if gellphone_active == True:
+		role_gellphone = ewcfg.role_gellphone
+		misc_roles_remove.remove(ewcfg.role_gellphone)
+
+	role_slimernalia = None
+	#if user_data.slimernalia_kingpin == True:
+	#	role_slimernalia = ewcfg.role_slimernalia
+	#	misc_roles_remove.remove(ewcfg.role_slimernalia)
+
 
 	role_ids = []
 	for role_id in roles_map_user:
@@ -211,7 +252,7 @@ async def updateRoles(
 		try:
 			role_data = EwRole(id_server = id_server, id_role = role_id)
 			roleName = role_data.name
-			if roleName != None and roleName not in faction_roles_remove and roleName not in poi_roles_remove:
+			if roleName != None and roleName not in faction_roles_remove and roleName not in poi_roles_remove and roleName not in misc_roles_remove:
 				role_ids.append(role_data.id_role)
 		except:
 			ewutils.logMsg('error: couldn\'t find role with id {}'.format(role_id))
@@ -242,12 +283,36 @@ async def updateRoles(
 		ewutils.logMsg('error: couldn\'t find role {}'.format(active_role))
 
 	try:
+		role_data = EwRole(id_server = id_server, name = tutorial_role)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(tutorial_role))
+
+	try:
 		role_data = EwRole(id_server = id_server, name = poi_role)
 		if not role_data.id_role in role_ids:
 			role_ids.append(role_data.id_role)
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_role))
+
+	try:
+		role_data = EwRole(id_server = id_server, name = role_gellphone)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(role_gellphone))
+
+	try:
+		role_data = EwRole(id_server = id_server, name = role_slimernalia)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(role_slimernalia))
 
 	#if faction_role not in role_names:
 	#	role_names.append(faction_role)

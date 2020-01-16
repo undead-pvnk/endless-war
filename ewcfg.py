@@ -13,7 +13,7 @@ from ewfood import EwFood
 from ewitem import EwItemDef, EwGeneralItem
 from ewmap import EwPoi
 from ewmutation import EwMutationFlavor
-from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
+from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue, EwSlimeoidFood
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
@@ -21,10 +21,11 @@ from ewfarm import EwFarmAction
 from ewfish import EwFish
 from ewapt import EwFurniture
 from ewworldevent import EwEventDef
+from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.9hwx2"
+version = "v3.20noslimernalia"
 
 dir_msgqueue = 'msgqueue'
 
@@ -37,10 +38,14 @@ update_pvp = 60
 update_market = 900 #15 min
 
 # Time saved moving through friendly territory (or lost in hostile territory).
-territory_time_gain = 5
+territory_time_gain = 10
 
 # Market delta
 max_iw_swing = 30
+
+# combatant ids to differentiate players and NPCs in combat
+combatant_type_player = "player"
+combatant_type_enemy = "enemy"
 
 # Life states. How the player is living (or deading) in the database
 life_state_corpse = 0
@@ -80,7 +85,7 @@ poi_id_thesewers = "thesewers"
 poi_id_slimeoidlab = "slimecorpslimeoidlaboratory"
 poi_id_realestate = "realestateagency"
 poi_id_glocksburycomics = "glocksburycomics"
-poi_id_rpcity = "rpcity"
+poi_id_slimypersuits = "slimypersuits"
 poi_id_mine = "themines"
 poi_id_thecasino = "thecasino"
 poi_id_711 = "outsidethe711"
@@ -106,6 +111,10 @@ poi_id_neomilwaukeestate = "neomilwaukeestate"
 poi_id_beachresort = "thebeachresort"
 poi_id_countryclub = "thecountryclub"
 poi_id_slimesea = "slimesea"
+poi_id_slimesendcliffs = "slimesendcliffs"
+poi_id_greencakecafe = "greencakecafe"
+poi_id_sodafountain = "sodafountain"
+
 
 
 # transports
@@ -147,6 +156,8 @@ poi_id_gld_subway_station = "greenlightsubwaystation"
 poi_id_jr_subway_station = "juviesrowsubwaystation"
 poi_id_vc_subway_station = "vagrantscornersubwaystation"
 poi_id_afb_subway_station = "assaultflatssubwaystation"
+
+poi_id_underworld_subway_station = "underworldsubwaystation"
 
 # ferry ports
 poi_id_df_blimp_tower = "dreadfordblimptower"
@@ -191,6 +202,7 @@ poi_id_crookline_pier = "crooklinepier"
 poi_id_assaultflatsbeach_pier = "assaultflatsbeachpier"
 poi_id_vagrantscorner_pier = "vagrantscornerpier"
 poi_id_slimesend_pier = "slimesendpier"
+poi_id_juviesrow_pier = "juviesrowpier"
 
 
 #Apartment subzones
@@ -226,11 +238,15 @@ poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 
-poi_id_slimesendcliffs = "slimesendcliffs"
+# Tutorial zones
+poi_id_tutorial_classroom = "classroom"
+poi_id_tutorial_ghostcontainment = "ghostcontainment"
+poi_id_tutorial_hallway = "hallway"
 
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
 compartment_id_decorate = "decorate"
+compartment_id_bookshelf = "bookshelf"
 location_id_empty = "empty"
 
 # Outskirts
@@ -250,6 +266,17 @@ poi_id_arsonbrook_outskirts = "arsonbrookoutskirts"
 poi_id_brawlden_outskirts = "brawldenoutskirts"
 poi_id_newnewyonkers_outskirts = "newnewyonkersoutskirts"
 poi_id_assaultflatsbeach_outskirts = "assaultflatsbeachoutskirts"
+
+poi_id_south_outskirts = "southoutskirts"
+poi_id_southwest_outskirts = "southwestoutskirts"
+poi_id_west_outskirts = "westoutskirts"
+poi_id_northwest_outskirts = "northwestoutskirts"
+poi_id_north_outskirts = "northoutskirts"
+poi_id_nuclear_beach = "nuclearbeach" # aka Assault Flats Beach Outskirts
+
+
+# The Sphere
+poi_id_thesphere = "thesphere"
 
 # Community Chests
 chest_id_copkilltown = "copkilltownchest"
@@ -285,7 +312,7 @@ transport_line_blimp_afb_to_df = "blimpafbtodf"
 
 # Role names. All lower case with no spaces.
 role_juvenile = "juveniles"
-role_juvenile_pvp = "juvenilepvp"
+role_juvenile_pvp = "juvenilewanted"
 role_juvenile_active = "juvenileotp"
 role_rowdyfucker = "rowdyfucker"
 role_rowdyfuckers = "rowdys"
@@ -296,13 +323,16 @@ role_copkillers = "killers"
 role_copkillers_pvp = "killerwanted"
 role_copkillers_active = "killerotp"
 role_corpse = "corpse"
-role_corpse_pvp = "corpsepvp"
+role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
 role_deathfurnace = "deathfurnace"
 role_donor = "terezigang"
+role_tutorial = "newintown"
+role_slimernalia = "kingpinofslimernalia"
+role_gellphone = "gellphone"
 
 faction_roles = [
 	role_juvenile,
@@ -321,7 +351,8 @@ faction_roles = [
 	role_corpse_active,
 	role_kingpin,
 	role_grandfoe,
-	role_slimecorp
+	role_slimecorp,
+	role_tutorial,
 	]
 
 role_to_pvp_role = {
@@ -337,6 +368,17 @@ role_to_active_role = {
 	role_copkillers : role_copkillers_active,
 	role_corpse : role_corpse_active
 	}
+
+misc_roles = {
+	role_slimernalia,
+	role_gellphone
+}
+
+# used for checking if a user has the donor role
+role_donor_proper = "Terezi Gang"
+
+# used for checking if a user has the gellphone role
+role_gellphone_proper = "Gellphone"
 
 # Faction names and bases
 faction_killers = "killers"
@@ -354,7 +396,7 @@ channel_endlesswar = "endless-war"
 channel_sewers = "the-sewers"
 channel_dojo = "the-dojo"
 channel_twitch_announcement = "rfck-chat"
-channel_casino = "slime-casino"
+channel_casino = "slimecorp-casino"
 channel_stockexchange = "slimecorp-stock-exchange"
 channel_foodcourt = "food-court"
 channel_slimeoidlab = "slimecorp-labs"
@@ -386,8 +428,13 @@ channel_cl_pier = "crookline-pier"
 channel_afb_pier = "assault-flats-beach-pier"
 channel_vc_pier = "vagrants-corner-pier"
 channel_se_pier = "slimes-end-pier"
+channel_jr_pier = "juvies-row-pier"
 channel_juviesrow = "juvies-row"
+channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
+channel_sodafountain = "the-bicarbonate-soda-fountain"
+channel_greencakecafe = "green-cake-cafe"
+channel_glocksburycomics = "glocksbury-comics"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -550,10 +597,13 @@ cmd_exchangerate_alt3 = cmd_prefix + 'exchangerates'
 cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
+cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
+cmd_mutations = cmd_prefix + 'mutations'
+cmd_mutations_alt_1 = cmd_prefix + 'stds'
 cmd_hunger = cmd_prefix + 'hunger'
 cmd_clock = cmd_prefix + 'clock'
 cmd_time = cmd_prefix + 'time'
@@ -569,7 +619,8 @@ cmd_menu_alt2 = cmd_prefix + 'catalogue'
 cmd_order = cmd_prefix + 'order'
 cmd_annoint = cmd_prefix + 'annoint'
 cmd_annoint_alt1 = cmd_prefix + 'anoint'
-cmd_crush = cmd_prefix + 'crushpoudrin'
+cmd_crush = cmd_prefix + 'crush'
+cmd_crush_alt1 = cmd_prefix + 'crunch'
 cmd_disembody = cmd_prefix + 'disembody'
 cmd_war = cmd_prefix + 'war'
 cmd_toil = cmd_prefix + 'toil'
@@ -611,6 +662,8 @@ cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
+cmd_dance = cmd_prefix + 'dance'
+cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
@@ -643,6 +696,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
+cmd_trash = cmd_prefix + 'trash'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
@@ -650,15 +704,36 @@ cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
+cmd_annex = cmd_prefix + 'annex'
+cmd_annex_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
+cmd_boot = cmd_prefix + 'boot'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
 cmd_recycle = cmd_prefix + 'recycle'
 cmd_recycle_alt1 = cmd_prefix + 'incinerate'
+cmd_view_sap = cmd_prefix + 'sap'
+cmd_harden_sap = cmd_prefix + 'harden'
+cmd_harden_sap_alt1 = cmd_prefix + 'solidify'
+cmd_liquefy_sap = cmd_prefix + 'liquefy'
+cmd_dodge = cmd_prefix + 'dodge'
+cmd_dodge_alt1 = cmd_prefix + 'evade'
+cmd_dodge_alt2 = cmd_prefix + 'wavedash'
+cmd_taunt = cmd_prefix + 'taunt'
+cmd_aim = cmd_prefix + 'aim'
+cmd_advertise = cmd_prefix + 'advertise'
+cmd_ads = cmd_prefix + 'ads'
+cmd_confirm = cmd_prefix + 'confirm'
+cmd_cancel = cmd_prefix + 'cancel'
+cmd_pray = cmd_prefix + 'pray'
+cmd_flushsubzones = cmd_prefix + 'flushsubzones'
+cmd_wrap = cmd_prefix + 'wrap'
+cmd_unwrap = cmd_prefix + 'unwrap'
+cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -703,6 +778,45 @@ cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
 cmd_dyefurniture = cmd_prefix + 'dyefurniture'
 cmd_watch = cmd_prefix + 'watch'
+cmd_purify = cmd_prefix + 'purify'
+cmd_shelve = cmd_prefix + 'shelve'
+cmd_shelve_alt_1 = cmd_prefix + 'shelf'
+cmd_unshelve = cmd_prefix + 'unshelve'
+cmd_unshelve_alt_1 = cmd_prefix + 'unshelf'
+
+cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
+cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
+cmd_beginmanuscript_alt_2 = cmd_prefix + 'startmanuscript'
+cmd_setpenname = cmd_prefix + 'setpenname'
+cmd_setpenname_alt_1 = cmd_prefix + 'setauthor'
+cmd_settitle = cmd_prefix + 'settitle'
+cmd_settitle_alt_1 = cmd_prefix + 'setname'
+cmd_setgenre = cmd_prefix + 'setgenre'
+cmd_editpage = cmd_prefix + 'editpage'
+cmd_viewpage = cmd_prefix + 'viewpage'
+cmd_checkmanuscript = cmd_prefix + 'manuscript'
+cmd_publishmanuscript = cmd_prefix + 'publish'
+cmd_readbook = cmd_prefix + 'read'
+cmd_nextpage = cmd_prefix + 'nextpage'
+cmd_nextpage_alt_1 = cmd_prefix + 'flip'
+cmd_previouspage = cmd_prefix + 'previouspage'
+cmd_previouspage_alt_1 = cmd_prefix + 'pilf'
+cmd_previouspage_alt_2 = cmd_prefix + 'plif'
+cmd_browsezines = cmd_prefix + 'browse'
+cmd_buyzine = cmd_prefix + 'buyzine'
+cmd_buyzine_alt_1 = cmd_prefix + 'orderzine'
+cmd_rate = cmd_prefix + 'ratezine'
+cmd_rate_alt_1 = cmd_prefix + 'reviewzine'
+cmd_rate_alt_2 = cmd_prefix + 'review'
+cmd_setpages = cmd_prefix + 'setpages'
+cmd_setpages_alt_1 = cmd_prefix + 'setpage'
+cmd_setpages_alt_2 = cmd_prefix + 'setlength'
+cmd_takedown = cmd_prefix + 'takedown'
+cmd_takedown_alt_1 = cmd_prefix + 'copyrightstrike'
+cmd_takedown_alt_2 = cmd_prefix + 'deletezine'
+cmd_untakedown = cmd_prefix + 'untakedown'
+cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
+cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -787,6 +901,9 @@ cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
+#SLIMERNALIA
+cmd_festivity = cmd_prefix + 'festivity'
+
 offline_cmds = [
 	cmd_move,
 	cmd_move_alt1,
@@ -812,13 +929,11 @@ slimes_onrevive_everyone = 20
 slimes_toenlist = 0
 slimes_perspar_base = 0
 slimes_hauntratio = 400
-#slimes_hauntmax = 20000
-# TODO: Change back after Double Halloween
-slimes_hauntmax = 50000
+slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
 slimecoin_exchangerate = 100
-slimes_permill = 75000
+slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
@@ -831,12 +946,21 @@ hunger_pershot = 10
 hunger_perspar = 10
 hunger_perfarm = 50
 hunger_permine = 1
-hunger_perminereset = 10
+hunger_perminereset = 25
 hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
-# TODO: Remove after Double Halloween
 hunger_pertrickortreat = 6
+
+# ads
+slimecoin_toadvertise = 1000000
+max_concurrent_ads = 8
+max_length_ads = 500
+uptime_ads = 7 * 24 * 60 * 60 # one week
+
+# currencies you can gamble at the casino
+currency_slime = "slime"
+currency_slimecoin = "SlimeCoin"
 
 #inebriation
 inebriation_max = 20
@@ -854,7 +978,6 @@ acquisition_mining = "mining"
 acquisition_dojo = "dojo"
 acquisition_fishing = "fishing"
 acquisition_bartering = "bartering"
-# TODO: Remove after Double Halloween
 acquisition_trickortreating = "trickortreating"
 
 # standard food expiration in seconds
@@ -866,7 +989,7 @@ milled_food_expir = 12 * 3600 * 28 # 2 weeks
 crush_slimes = 10000
 
 # minimum amount of slime needed to capture territory
-min_slime_to_cap = 50000
+min_slime_to_cap = 200000
 
 # property classes
 property_class_s = "s"
@@ -876,10 +999,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 4915  # 90 min
-max_capture_points_a = 3277  # 60 min
-max_capture_points_b = 2458  # 45 min
-max_capture_points_c = 1638   # 30 min
+max_capture_points_s = 500000 # 500k
+max_capture_points_a = 300000  # 300k
+max_capture_points_b = 200000  # 200k
+max_capture_points_c = 100000   # 100k
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -889,11 +1012,45 @@ max_capture_points = {
 	property_class_c: max_capture_points_c
 }
 
+# how long districts stay locked after capture
+capture_lock_s = 48 * 60 * 60  # 2 days
+capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_b = 12 * 60 * 60  # 12 hours
+capture_lock_c = 6 * 60 * 60  # 6 hours
+
+# district lock times assigned to property classes
+capture_locks = {
+	property_class_s: capture_lock_s,
+	property_class_a: capture_lock_a,
+	property_class_b: capture_lock_b,
+	property_class_c: capture_lock_c,
+}
+
+# how much slimes is needed to bypass capture times
+slimes_toannex_s = 1000000 # 1 mega
+slimes_toannex_a = 500000 # 500 k
+slimes_toannex_b = 200000 # 200 k
+slimes_toannex_c = 100000 # 100 k
+
+# slimes to annex by property class
+slimes_toannex = {
+	property_class_s: slimes_toannex_s,
+	property_class_a: slimes_toannex_a,
+	property_class_b: slimes_toannex_b,
+	property_class_c: slimes_toannex_c
+}
+
+# by how much to extend the capture lock per additional gangster capping
+capture_lock_per_gangster = 60 * 60  # 60 min
+
+# capture lock messages
+capture_lock_milestone = 5 * 60 # 5 min
+
 # capture messages
 capture_milestone = 5  # after how many percent of progress the players are notified of the progress
 
 # capture speed at 0% progress
-baseline_capture_speed = 2
+baseline_capture_speed = 1
 
 # accelerates capture speed depending on current progress
 capture_gradient = 1
@@ -935,7 +1092,7 @@ bleed_tick_length = 10
 enemy_spawn_tick_length = 60 * 3 # Three minutes
 
 # how often it takes for hostile enemies to attack
-enemy_attack_tick_length = 3
+enemy_attack_tick_length = 5
 
 # how often to burn
 burn_tick_length = 4
@@ -957,6 +1114,15 @@ weather_tick_length = 10
 
 # how often to delete expired world events
 event_tick_length = 5
+
+# how often to refresh sap
+sap_tick_length = 5
+
+# the amount of sap crushed by !piss
+sap_crush_piss = 3
+
+# the amount of sap spent on !piss'ing on someone
+sap_spend_piss = 1
 
 # farming
 crops_time_to_grow = 180  # in minutes; 180 minutes are 3 hours
@@ -1024,9 +1190,7 @@ fish_offer_timeout = 1440 # in minutes; 24 hours
 # Cooldowns
 cd_kill = 5
 cd_spar = 60
-#cd_haunt = 600
-# TODO: Change back after Double Halloween
-cd_haunt = 180
+cd_haunt = 600
 cd_squeeze = 1200
 cd_invest = 1200
 cd_boombust = 22
@@ -1035,15 +1199,20 @@ cd_rr = 600
 #slimeoid downtime after a defeat
 cd_slimeoiddefeated = 300
 cd_scavenge = 0
+soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
 
 # PvP timer pushouts
-time_pvp_kill = 60 * 60 # 1 hour
-
-#time_pvp_mine = 180
-#time_pvp_haunt = 600
-#time_pvp_invest_withdraw = 180
-#time_pvp = 1800
+time_pvp_kill = 30 * 60
+time_pvp_attack = 10 * 60
+time_pvp_annex = 10 * 60
+time_pvp_mine = 1 * 60
+time_pvp_scavenge = 3 * 60
+time_pvp_fish = 5 * 60
+time_pvp_farm = 10 * 60
+time_pvp_spar = 5 * 60
+time_pvp_enlist = 5 * 60
+time_pvp_knock = 10 #temp fix. will probably add spam prevention or something funny like restraining orders later
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -1099,7 +1268,7 @@ emote_dice3 = "<:dice3:436942524041527298>"
 emote_dice4 = "<:dice4:436942524406300683>"
 emote_dice5 = "<:dice5:436942524444049408>"
 emote_dice6 = "<:dice6:436942524469346334>"
-emote_negaslime = "<:negaslime:453826200616566786>"
+emote_negaslime = "<:ns:453826200616566786>"
 emote_bustin = "<:bustin:455194248741126144>"
 emote_ghost = "<:lordofghosts:434002083256205314>"
 emote_slimefull = "<:slimefull:496397819154923553>"
@@ -1111,7 +1280,7 @@ emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
 emote_srs = "<:srs:631859962519224341>"
-emote_staydead = "<:staydead:506840095714836480>"
+emote_staydead = "<:sd:506840095714836480>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1214,9 +1383,9 @@ number_emote_map = {
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 mines_wall_map = {
-	poi_id_mine : channel_jrmineswall,
-	poi_id_tt_mines : channel_ttmineswall,
-	poi_id_cv_mines : channel_cvmineswall
+	channel_mines : channel_jrmineswall,
+	channel_tt_mines : channel_ttmineswall,
+	channel_cv_mines : channel_cvmineswall
 }
 
 # trading
@@ -1224,11 +1393,15 @@ trade_state_proposed = 0
 trade_state_ongoing = 1
 trade_state_complete = 2
 
+# SLIMERNALIA
+festivity_on_gift_wrapping = 100
+festivity_on_gift_giving = 10000
+
 # Common strings.
-str_casino_closed = "The Slime Casino only operates at night."
+str_casino_closed = "The SlimeCorp Casino only operates at night."
 str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
-str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " to {action} your {currency}."
+str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " in person to {action} your {currency}."
 str_exchange_busy = "You can't {action} right now. Your slimebroker is busy."
 str_weapon_wielding_self = "You are wielding"
 str_weapon_wielding = "They are wielding"
@@ -1329,7 +1502,14 @@ col_time_lastenlist = 'time_lastenlist'
 col_apt_zone = 'apt_zone'
 col_visiting = "visiting"
 col_has_soul = 'has_soul'
-
+col_sap = 'sap'
+col_hardened_sap = 'hardened_sap'
+col_manuscript = "manuscript"
+#SLIMERNALIA
+col_festivity = 'festivity'
+col_festivity_from_slimecoin = 'festivity_from_slimecoin'
+col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
+col_slimernalia_kingpin = 'slimernalia_kingpin'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1374,6 +1554,8 @@ col_enemy_lifetime = 'lifetime'
 col_enemy_id_target = 'id_target'
 col_enemy_raidtimer = 'raidtimer'
 col_enemy_rare_status = 'rare_status'
+col_enemy_hardened_sap = 'hardened_sap'
+col_enemy_weathertype = 'weathertype'
 
 # Database column for the status of districts with locks on them
 col_locked_status = 'locked_status'
@@ -1421,6 +1603,7 @@ col_controlling_faction = 'controlling_faction'
 col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
+col_time_unlock = 'time_unlock'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
@@ -1449,11 +1632,37 @@ col_quadrants_target2 = 'id_target2'
 # Database columns for status effects
 col_id_status = 'id_status'
 col_source = 'source'
+col_status_target = 'id_target'
 
 # Database columns for world events
 col_id_event = 'id_event'
 col_event_type = 'event_type'
 col_time_activate = 'time_activate'
+
+# Database columns for advertisements
+col_id_ad = 'id_ad'
+col_id_sponsor = 'id_sponsor'
+col_ad_content = 'content'
+
+# Database columns for books
+col_id_book = "id_book"
+col_title = "title"
+col_author = "author"
+col_book_state = "book_state"
+col_date_published = "date_published"
+col_genre = "genre"
+col_length = "length"
+col_sales = "sales"
+col_rating = "rating"
+col_rates = "rates"
+col_pages = "pages"
+
+# Database columns for pages of books
+col_page = "page"
+col_contents = "contents"
+
+# Database columns for book sales
+col_bought = "bought"
 
 # Item type names
 it_item = "item"
@@ -1463,10 +1672,12 @@ it_food = "food"
 it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
 it_furniture = 'furniture'
+it_book = 'book'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
 rarity_patrician = "Patrician"
+rarity_promotional = "Promotional" # Cosmetics that should not be awarded through smelting/hunting
 rarity_princeps = "Princeps"
 
 # Leaderboard score categories
@@ -1478,6 +1689,8 @@ leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
+#SLIMERNALIA
+leaderboard_slimernalia = "MOST FESTIVE"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1628,6 +1841,9 @@ source_farming = 12
 source_fishing = 13
 source_squeeze = 14
 source_weather = 15
+source_crush = 16
+source_casino = 17
+source_slimeoid_betting = 18
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -1655,6 +1871,8 @@ cause_burning = 10
 cause_killing_enemy = 11
 cause_weather = 12
 cause_cliff = 13
+cause_backfire = 14
+cause_praying = 15
 
 # List of user statistics that reset to 0 on death
 stats_clear_on_death = [
@@ -1663,13 +1881,14 @@ stats_clear_on_death = [
 	stat_kills,
 	stat_pve_kills,
 	stat_ghostbusts,
-    stat_slimesfarmed,
-    stat_slimesscavenged
+	stat_slimesfarmed,
+	stat_slimesscavenged
 ]
 
 context_slimeoidheart = 'slimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
+context_wrappingpaper = 'wrappingpaper'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -1686,7 +1905,8 @@ vendor_farm = "Farm" #contains all the vegetables you can !reap
 vendor_bazaar = "bazaar"
 vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
-vendor_rpcity = "RP City" #You can buy costume creation kits here
+vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
+vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
@@ -1704,6 +1924,21 @@ item_id_juviegradefuckenergybodyspray = "juviegradefuckenergybodyspray"
 item_id_superduperfuckenergybodyspray = "superduperfuckenergybodyspray"
 item_id_gmaxfuckenergybodyspray = "gmaxfuckenergybodyspray"
 item_id_costumekit = "costumekit"
+item_id_doublehalloweengrist = "doublehalloweengrist"
+item_id_whitelineticket = "ticket"
+item_id_seaweedjoint = "seaweedjoint"
+item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
+item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
+item_id_phoebuswrappingpaper = "phoebuswrappingpaper"
+item_id_slimeheartswrappingpaper = "slimeheartswrappingpaper"
+item_id_slimeskullswrappingpaper = "slimeskullswrappingpaper"
+item_id_shermanwrappingpaper = "shermanwrappingpaper"
+item_id_slimecorpwrappingpaper = "slimecorpwrappingpaper"
+item_id_pickaxewrappingpaper = "pickaxewrappingpaper"
+item_id_munchywrappingpaper = "munchywrappingpaper"
+item_id_benwrappingpaper = "benwrappingpaper"
+item_id_gellphone = "gellphone"
+item_id_royaltypoudrin = "royaltypoudrin"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1711,14 +1946,17 @@ item_id_doublefaggot = "doublefaggot"
 item_id_dinoslimemeat = "dinoslimemeat"
 item_id_dinoslimesteak = "dinoslimesteak"
 
+#SLIMERNALIA
+item_id_sigillaria = "sigillaria"
+
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
-item_id_sni = "sni"
+item_id_snipercannon = "snipercannon"
 item_id_twixten = "twixten"
-item_id_slimeybears = "slimeybears"
+item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
 item_id_magickspatchkids = "magickspatchkids"
 item_id_atms = "atms"
@@ -1736,6 +1974,14 @@ item_id_strauberryshortcakes = "strauberryshortcakes"
 item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
+
+#slimeoid food
+item_id_fragilecandy = "fragilecandy" #+chutzpah -grit
+item_id_rigidcandy = "rigidcandy" #+grit -chutzpah
+item_id_recklesscandy = "recklesscandy" #+moxie -grit
+item_id_reservedcandy = "reservedcandy" #+grit -moxie
+item_id_bluntcandy = "bluntcandy" #+moxie -chutzpah
+item_id_insidiouscandy = "insidiouscandy" #+chutzpah -moxie
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -1817,7 +2063,7 @@ item_list = [
 		context = "poudrin",
 		str_name = "Slime Poudrin",
 		str_desc = "A dense, crystalized chunk of precious slime.",
-		acquisition = acquisition_mining
+		acquisition = acquisition_mining,
 	),
 	EwGeneralItem(
 		id_item = "whitedye",
@@ -1959,8 +2205,8 @@ item_list = [
 		],
 		str_name = "Trading Cards",
 		str_desc = "A pack of trading cards",
-		price = 1000,
-		vendors = [vendor_bazaar],
+		price = 50000,
+		vendors = [vendor_bazaar, vendor_glocksburycomics],
 	),
 	EwGeneralItem(
 		id_item = "rightleg",
@@ -2137,8 +2383,223 @@ item_list = [
 		],
 		str_name = "Double Halloween Costume Kit",
 		str_desc = "A package of all the necessary tools and fabrics needed to make the Double Halloween costume of your dreams.",
-		vendors = [vendor_rpcity],
 		price = 50000,
+	),
+	EwGeneralItem(
+		id_item = item_id_doublehalloweengrist,
+		context = 'dhgrist',
+		alias = [
+			"grist"
+		],
+		str_name = "Double Halloween Grist",
+		str_desc = "A mush of finely ground candy. Perhaps it can be forged into something special?",
+	),
+	EwGeneralItem(
+		id_item = item_id_whitelineticket,
+		context = 'wlticket',
+		alias = [
+			"tickettohell"
+		],
+		str_name = "Ticket to the White Line",
+		str_desc = "A large assortment of candy molded into one unholy voucher for access into the underworld. Use it in a White Line subway station... ***IF YOU DARE!!***",
+		acquisition=acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item=item_id_megaslimewrappingpaper,
+		context=context_wrappingpaper,
+		alias=[
+			"mswp"
+		],
+		str_name="Megaslime Wrapping Paper",
+		str_desc="Wrapping paper with Megaslimes plastered all over it. Blaargh!",
+	#	vendors=[vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item=item_id_greeneyesslimedragonwrappingpaper,
+		context=context_wrappingpaper,
+		alias=[
+			"gesdwp"
+		],
+		str_name="Green Eyes Slime Dragon Wrapping Paper",
+		str_desc="Wrapping paper with many images of the Green Eyes Slime Dragon printed on it. Powerful...",
+	#	vendors=[vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_phoebuswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"pwp"
+		],
+		str_name = "Phoebus Wrapping Paper",
+		str_desc = "A set of wrapping paper with Slime Invictus on it. Yo, Slimernalia!",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeheartswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"shwp"
+		],
+		str_name = "Slime Hearts Wrapping Paper",
+		str_desc = "Wrapping paper decorated with slime hearts. Cute!!",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeskullswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"sswp"
+		],
+		str_name = "Slime Skulls Wrapping Paper",
+		str_desc = "A roll of wrapping paper with Slime Skulls stamped all over it. Spooky...",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_shermanwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"swp"
+		],
+		str_name = "Sherman Wrapping Paper",
+		str_desc = "Wrapping paper with Sherman, the SlimeCorp salaryman etched into it. Jesus Christ, how horrifying!",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimecorpwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"scwp"
+		],
+		str_name = "SlimeCorp Wrapping Paper",
+		str_desc = "A set of wrapping paper with that accursed logo printed all over it. What sort of corporate bootlicker would wrap a gift in this?",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_pickaxewrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"pawp"
+		],
+		str_name = "Pickaxe Wrapping Paper",
+		str_desc = "A roll of wrapping paper with a bunch of pickaxes depicted on it. Perfect for Juvies who love to toil away in the mines.",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_benwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"bwp"
+		],
+		str_name = "Ben Wrapping Paper",
+		str_desc = "Wrapping paper with the Cop Killer printed on it. !dab !dab !dab",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_munchywrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"mwp"
+		],
+		str_name = "Munchy Wrapping Paper",
+		str_desc = "Wrapping paper with the Rowdy Fucker printed on it. !THRASH !THRASH !THRASH",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_gellphone,
+		context = 'gellphone',
+		alias = [
+			"gell",
+			"phone",
+			"cellphone",
+			"flipphone",
+			"nokia"
+		],
+		str_name = "Gellphone",
+		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
+		vendors = [vendor_bazaar],
+		price = 1000000
+	),
+	EwSlimeoidFood(
+		id_item = item_id_fragilecandy,
+		alias = [
+			"fragile",
+		],
+		str_name = "Fragile Candy",
+		str_desc = "Increases Chutzpah and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_rigidcandy,
+		alias = [
+			"rigid",
+		],
+		str_name = "Rigid Candy",
+		str_desc = "Increases Grit and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_chutzpah,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_reservedcandy,
+		alias = [
+			"reserved",
+		],
+		str_name = "Reserved Candy",
+		str_desc = "Increases Grit and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_recklesscandy,
+		alias = [
+			"reckless",
+		],
+		str_name = "Reckless Candy",
+		str_desc = "Increases Moxie and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_insidiouscandy,
+		alias = [
+			"insidious",
+		],
+		str_name = "Insidious Candy",
+		str_desc = "Increases Chutzpah and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_bluntcandy,
+		alias = [
+			"blunt",
+		],
+		str_name = "Blunt Candy",
+		str_desc = "Increases Moxie and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_chutzpah,
 	),
 ]
 item_list += ewdebug.debugitem_set
@@ -2162,11 +2623,13 @@ for c in item_list:
 		dye_list.append(c)
 		dye_map[c.str_name] = c.id_item
 
+
 # A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
 def wef_revolver(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 2
 
 	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2183,6 +2646,7 @@ def wef_revolver(ctn = None):
 def wef_dualpistols(ctn = None):
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 2
 
 	if aim <= (4 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2199,6 +2663,7 @@ def wef_dualpistols(ctn = None):
 def wef_shotgun(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.65)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -2219,6 +2684,7 @@ def wef_rifle(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)	
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.5) 
 	aim = (random.randrange(10) + 1)
+	ctn.sap_ignored = 10
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -2226,7 +2692,7 @@ def wef_rifle(ctn = None):
 
 # weapon effect function for "smg"
 def wef_smg(ctn = None):
-	dmg = int(ctn.slimes_damage * 0.5)
+	dmg = int(ctn.slimes_damage * 0.4)
 	ctn.slimes_damage = 0
 	jam = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -2256,16 +2722,18 @@ def wef_smg(ctn = None):
 		if ctn.strikes == 0:
 			ctn.miss = True
 
+	ctn.sap_damage = ctn.strikes
+
 # weapon effect function for "minigun"
 def wef_minigun(ctn = None):
-	dmg = ctn.slimes_damage
+	dmg = 0.8 * ctn.slimes_damage
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
 	for count in range(10):
 		aim = (random.randrange(10) + 1)
 
-		if aim > (1 + int(10 * ctn.miss_mod)):
+		if aim > (5 + int(10 * ctn.miss_mod)):
 			ctn.strikes += 1
 
 			if aim >= (10 - int(10 * ctn.crit_mod)):
@@ -2284,51 +2752,61 @@ def wef_minigun(ctn = None):
 	if ctn.strikes == 0:
 		ctn.miss = True
 
+	ctn.sap_damage = 2 * ctn.strikes
+
 # weapon effect function for "bat"
 def wef_bat(ctn = None): 
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
+	ctn.sap_damage = 2
 	
 	# Increased miss chance if attacking within less than two seconds after last attack
-	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 5
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/10) + 2) )
+	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
-	if aim <= (-2 + int(13 * ctn.miss_mod)):
+	if aim == -2:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				ctn.backfire_damage = ctn.slimes_damage
+		else:
+			ctn.backfire = True
+			ctn.backfire_damage = ctn.slimes_damage
+
+	elif aim <= (-1 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
 
-	elif aim == -1:
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.backfire = True if not ctn.sandbag_mode else False
-				if not ctn.backfire:
-					return
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
-		else:
-			ctn.backfire = True if not ctn.sandbag_mode else False
-			if not ctn.backfire:
-				return
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
-
-	elif aim >= (11 - int(13 * ctn.crit_mod)):
+	elif aim >= (10 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
 		
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
-	last_attack = (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
-	successful_timing = True if (ctn.time_now - last_attack) == 2 else False
+	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
+	successful_timing = 2.1 > (ctn.time_now - last_attack) > 1.9
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.strikes = 0
+
+	damage_min = ctn.slimes_damage / 10
+	
+	if last_attack > 0:
+		ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
+	else:
+		ctn.slimes_damage = damage_min
+
+	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
 
 	consecutive_hits = (int(ctn.weapon_item.item_props.get("consecutive_hits")) if ctn.weapon_item.item_props.get("consecutive_hits") != None else 0)
 	if consecutive_hits == 2 and successful_timing:
 		ctn.crit = True
+		ctn.sap_damage = 5
 		ctn.slimes_damage *= 3
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
@@ -2354,22 +2832,37 @@ def wef_brassknuckles(ctn = None):
 		if whiff1 == 0 and whiff2 == 0:
 			ctn.miss = True
 		else:
-			strikes = whiff1 + whiff2
+			ctn.strikes = whiff1 + whiff2
 			ctn.slimes_damage = (ctn.slimes_damage * whiff1) + (ctn.slimes_damage * whiff2)
 			if successful_timing:
-				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1 
+				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1
+			else:
+				ctn.weapon_item.item_props["consecutive_hits"] = 0
+				
+	
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.3)
 	ctn.slimes_spent = int(ctn.slimes_spent * 1.3)
+	ctn.sap_damage = 0
 
 	# Decreased damage if attacking within less than four seconds after last attack
-	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
-	ctn.slimes_damage = ctn.slimes_damage / 10
+	damage_min = ctn.slimes_damage / 10
+	
+
 	if time_lastattack > 0:
-		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 4) * 2.5))
+		ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
+	else:
+		ctn.slimes_damage = damage_min
+
+	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	
+	if 5.2 > time_lastattack > 4.8:
+		ctn.sap_ignored = 10
+
 
 	weapons_held = ewitem.inventory(
 		id_user = ctn.user_data.id_user,
@@ -2385,34 +2878,35 @@ def wef_katana(ctn = None):
 	elif len(weapons_held) == 1:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_ignored *= 1.5
 
 # weapon effect function for "broadsword"
 def wef_broadsword(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	ctn.slimes_spent = int(ctn.slimes_spent * 5)
+	dmg = ctn.slimes_damage
+	ctn.slimes_damage *= 3
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 5
+	ctn.sap_ignored = 20
 
-	ctn.slimes_damage += int( ctn.slimes_damage * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
+	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
-	if aim <= (1 + int(10 * ctn.miss_mod)):
+	if aim <= 2:
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				ctn.backfire_damage = ctn.slimes_damage
+		else:
+			ctn.backfire = True
+			ctn.backfire_damage = ctn.slimes_damage
+
+	elif aim <= (3 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
-
-	elif aim <= 3:
-		if mutation_id_sharptoother in user_mutations:
-			if random.random() < 0.5:
-				ctn.backfire = True if not ctn.sandbag_mode else False
-				if not ctn.backfire:
-					return
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage)
-		else:
-			ctn.backfire = True if not ctn.sandbag_mode else False
-			if not ctn.backfire:
-				return
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage)
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -2425,35 +2919,36 @@ def wef_nunchucks(ctn = None):
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
-	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 5
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 100 * 55
 
 	for count in range(4):
 		if (random.randrange(100) + 1) > (25 + int(100 * ctn.miss_mod)):
 			ctn.strikes += 1
-			ctn.slimes_damage += int(dmg * 0.5)
+			ctn.slimes_damage += int(dmg * 0.25)
 		elif mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.strikes += 1
-				ctn.slimes_damage += int(dmg * 0.5)
+				ctn.slimes_damage += int(dmg * 0.25)
 
 	if ctn.strikes == 4:
 		ctn.crit = True
-		# extra hit that deals 4* base damage
+		# extra hit that deals 2* base damage
 		ctn.strikes = 5
-		ctn.slimes_damage += dmg * 4
+		ctn.slimes_damage += dmg * 2
 
 	elif ctn.strikes == 0:
-		ctn.backfire = True if not ctn.sandbag_mode else False
-		if not ctn.backfire:
-			return
-		ctn.user_data.change_slimes(n = (-dmg * 2), source = source_self_damage)
+		ctn.backfire = True
+		ctn.backfire_damage = dmg * 2
+	
+	ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "scythe"
 def wef_scythe(ctn = None):
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.25)
+	ctn.slimes_spent = int(ctn.slimes_spent * 3)
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
 
 	try:
 		target_kills = ewstats.get_stat(user = ctn.shootee_data, metric = stat_kills)
@@ -2461,13 +2956,18 @@ def wef_scythe(ctn = None):
 		target_kills = 4
 
 	ctn.slimes_damage = ctn.slimes_damage * max(1, min(target_kills, 10))
+	ctn.sap_ignored = 3 * min(target_kills, 10)
 
-	# Decreased damage if attacking within less than two seconds after last attack
-	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.slimes_damage = ctn.slimes_damage / 10
+	# Decreased damage if attacking within less than three seconds after last attack
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	damage_min = ctn.slimes_damage / 10
 	if time_lastattack > 0:
-		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 2) * 5))
+		ctn.slimes_damage = damage_min * ((min(time_lastattack, 3)/3)**0.5 * 10)
+	else:
+		ctn.slimes_damage = damage_min
 
+	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+	
 	aim = (random.randrange(10) + 1)
 
 	if aim <= (1 + (10 * ctn.miss_mod)):
@@ -2477,17 +2977,17 @@ def wef_scythe(ctn = None):
 		else:
 			ctn.miss = True
 
-	elif aim >= (10 + (10 * ctn.crit_mod)):
+	elif aim >= (10 - (10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "yo-yos"
 def wef_yoyo(ctn = None):
 	base_dmg = ctn.slimes_damage
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
+	ctn.slimes_damage = ctn.slimes_damage * 0.5
 	user_mutations = ctn.user_data.get_mutations()
 
-	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	#Consecutive hits only valid for a minute
 	if time_lastattack < 60:
@@ -2495,10 +2995,17 @@ def wef_yoyo(ctn = None):
 	else:
 		ctn.weapon_item.item_props["consecutive_hits"] = 0
 
-	ctn.slimes_damage = int(ctn.slimes_damage / 10)
+	damage_min = ctn.slimes_damage / 10
 
 	if time_lastattack > 0:
-		ctn.slimes_damage = int(ctn.slimes_damage * (min(time_lastattack, 1) * 10) )
+		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10) 
+	else:
+		ctn.slimes_damage = damage_min
+
+	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
+
+	if time_lastattack >= 2:
+		ctn.sap_damage = 1
 
 	ctn.weapon_item.item_props["consecutive_hits"] = int(ctn.weapon_item.item_props["consecutive_hits"]) + 1
 	aim = (random.uniform(0, 100))
@@ -2520,6 +3027,7 @@ def wef_knives(ctn = None):
 	ctn.slimes_spent = int(ctn.slimes_spent * 0.25)
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
 
 	aim = (random.randrange(10) + 1)
 
@@ -2540,6 +3048,8 @@ def wef_molotov(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.slimes_spent *= 2
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
+	ctn.sap_ignored = 10
 
 	aim = (random.randrange(10) + 1)
 
@@ -2548,15 +3058,11 @@ def wef_molotov(ctn = None):
 	if aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True if not ctn.sandbag_mode else False
-				if not ctn.backfire:
-					return
-				ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
+				ctn.backfire = True
+				ctn.backfire_damage = dmg
 		else:
-			ctn.backfire = True if not ctn.sandbag_mode else False
-			if not ctn.backfire:
-				return
-			ctn.user_data.change_slimes(n = -dmg, source = source_self_damage)
+			ctn.backfire = True
+			ctn.backfire_damage = dmg
 
 	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2577,6 +3083,7 @@ def wef_grenade(ctn = None):
 	ctn.slimes_spent *= 2
 	ctn.bystander_damage = int(dmg * 0.3)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 2
 
 	aim = (random.randrange(10) + 1)
 
@@ -2592,15 +3099,11 @@ def wef_grenade(ctn = None):
 	elif aim > 1 and aim <= 2:
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
-				ctn.backfire = True if not ctn.sandbag_mode else False
-				if not ctn.backfire:
-					return
-				ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+				ctn.backfire = True
+				ctn.backfire_damage = ctn.slimes_damage
 		else:
-			ctn.backfire = True if not ctn.sandbag_mode else False
-			if not ctn.backfire:
-				return
-			ctn.user_data.change_slimes(n = -ctn.slimes_damage, source = source_self_damage)
+			ctn.backfire = True
+			ctn.backfire_damage = ctn.slimes_damage
 
 	elif aim >= (10 - (10 * ctn.crit_mod)):
 		ctn.crit = True
@@ -2609,6 +3112,8 @@ def wef_grenade(ctn = None):
 # weapon effect function for "garrote"
 def wef_garrote(ctn = None):
 	ctn.slimes_damage *= 15
+	ctn.sap_damage = 0
+	ctn.sap_ignored = ctn.shootee_data.hardened_sap
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
@@ -2627,13 +3132,14 @@ def wef_garrote(ctn = None):
 		#Stop movement
 		ewutils.moves_active[ctn.user_data.id_user] = 0
 		#Stun player for 5 seconds
-		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(ctn.time_now + 5))
+		ctn.user_data.applyStatus(id_status=status_stunned_id, value=(int(ctn.time_now) + 5))
 		#Start strangling target
 		ctn.shootee_data.applyStatus(id_status=status_strangled_id, source=ctn.user_data.id_user)
 
 # weapon effect function for all weapons which double as tools.
 def wef_tool(ctn = None):
 	ctn.slimes_damage *= 0.2
+	ctn.sap_damage = 0
 
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
@@ -2653,31 +3159,35 @@ def wef_tool(ctn = None):
 
 # weapon effect function for "bass"
 def wef_bass(ctn = None):
-	aim = (random.randrange(21) - 10)
+	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
-
+	dmg = ctn.slimes_damage
+	ctn.sap_damage = 1
+	ctn.sap_ignored = 5
+	
 	# Increased miss chance if attacking within less than two seconds after last attack
-	time_lastattack = ctn.time_now - (int(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (2 - min(time_lastattack, 2)) / 5
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
-	if aim <= (-10 + int(21 * ctn.miss_mod)):
+	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
+
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
 
-	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
-
-	if aim >= 9:
+	elif aim >= (9 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+		ctn.slimes_damage = int(dmg * 4)
 
 # A Weapon Effect Function for "umbrella". Takes an EwEffectContainer as ctn.
 def wef_umbrella(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 0.8)
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.5)
 	aim = (random.randrange(10) + 1)
 	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 1
 
 	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -2698,28 +3208,30 @@ weapon_class_exploding = "exploding"
 weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
+weapon_class_heavy = "heavy"
 
 # All weapons in the game.
 weapon_list = [
 	EwWeapon( # 1
 		id_weapon = weapon_id_revolver,
-        alias = [
-            "pistol",
-            "handgun",
-            "bigiron"
-        ],
+		alias = [
+			"pistol",
+			"handgun",
+			"bigiron"
+		],
 		str_crit = "**Critical Hit!** You have fataly wounded {name_target} with a lethal shot!",
-        str_miss = "**You missed!** Your shot whizzed past {name_target}'s head!",
-        str_equip = "You equip the revolver.",
-        str_weapon = "revolver",
+		str_miss = "**You missed!** Your shot whizzed past {name_target}'s head!",
+		str_equip = "You equip the revolver.",
+		str_name = "revolver",
+		str_weapon = "a revolver",
 		str_weaponmaster_self = "You are a rank {rank} master of the revolver.",
-        str_weaponmaster = "They are a rank {rank} master of the revolver.",
-        str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
-        str_trauma = "They have scarring on both temples, which occasionally bleeds.",
-        str_kill = "{name_player} puts their revolver to {name_target}'s head. **BANG**. Execution-style. Blood splatters across the hot asphalt. {emote_skull}",
-        str_killdescriptor = "gunned down",
+		str_weaponmaster = "They are a rank {rank} master of the revolver.",
+		str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
+		str_trauma = "They have scarring on both temples, which occasionally bleeds.",
+		str_kill = "{name_player} puts their revolver to {name_target}'s head. **BANG**. Execution-style. Blood splatters across the hot asphalt. {emote_skull}",
+		str_killdescriptor = "gunned down",
 		str_damage = "{name_target} takes a bullet to the {hitzone}!!",
-        str_duel = "**BANG BANG**. {name_player} and {name_target} practice their quick-draw, bullets whizzing past one another's heads.",
+		str_duel = "**BANG BANG**. {name_player} and {name_target} practice their quick-draw, bullets whizzing past one another's heads.",
 		str_description = "It's a revolver.",
 		str_reload = "You swing out the revolver’s chamber, knocking out the used shells onto the floor before hastily slamming fresh bullets back into it.",
 		str_reload_warning = "**BANG--** *tk tk...* **SHIT!!** {name_player} just spent the last of the ammo in their revolver’s chamber, it’s out of bullets!!",
@@ -2727,28 +3239,31 @@ weapon_list = [
 		fn_effect = wef_revolver,
 		clip_size = 6,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
-		stat = stat_revolver_kills
+		classes = [weapon_class_ammo, weapon_class_captcha],
+		stat = stat_revolver_kills,
+		sap_cost = 1,
+		captcha_length = 4
 	),
 	EwWeapon( # 2
 		id_weapon = weapon_id_dualpistols,
-        alias = [
-            "dual",
-            "pistols",
-            "berettas",
-        ],
+		alias = [
+			"dual",
+			"pistols",
+			"berettas",
+		],
 		str_crit = "**Critical Hit!** {name_player} has lodged several bullets into {name_target}'s vital arteries!",
-        str_miss = "**You missed!** Your numerous, haphazard shots hit everything but {name_target}!",
-        str_equip = "You equip the dual pistols.",
-        str_weapon = "dual pistols",
+		str_miss = "**You missed!** Your numerous, haphazard shots hit everything but {name_target}!",
+		str_equip = "You equip the dual pistols.",
+		str_name = "dual pistols",
+		str_weapon = "dual pistols",
 		str_weaponmaster_self = "You are a rank {rank} master of the dual pistols.",
-        str_weaponmaster = "They are a rank {rank} master of the dual pistols.",
-        str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
-        str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
-        str_kill = "{name_player} dramatically pulls both triggers on their dual pistols midair, sending two bullets straight into {name_target}'s lungs'. {emote_skull}",
-        str_killdescriptor = "double gunned down",
-        str_damage = "{name_target} takes a flurry of bullets to the {hitzone}!!",
-        str_duel = "**tk tk tk tk tk tk tk tk tk tk**. {name_player} and {name_target} hone their twitch aim and trigger fingers, unloading clip after clip of airsoft BBs into one another with the eagerness of small children.",
+		str_weaponmaster = "They are a rank {rank} master of the dual pistols.",
+		str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
+		str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
+		str_kill = "{name_player} dramatically pulls both triggers on their dual pistols midair, sending two bullets straight into {name_target}'s lungs'. {emote_skull}",
+		str_killdescriptor = "double gunned down",
+		str_damage = "{name_target} takes a flurry of bullets to the {hitzone}!!",
+		str_duel = "**tk tk tk tk tk tk tk tk tk tk**. {name_player} and {name_target} hone their twitch aim and trigger fingers, unloading clip after clip of airsoft BBs into one another with the eagerness of small children.",
 		str_description = "They're dual pistols.",
 		str_reload = "You swing out the chamber on both of your dual pistols, knocking out the used shells onto the floor before hastily slamming fresh bullets back into them.",
 		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s chambers, they’re out of bullets!!",
@@ -2757,28 +3272,31 @@ weapon_list = [
 		clip_size = 12,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
-		stat = stat_dual_pistols_kills
+		classes = [weapon_class_ammo, weapon_class_captcha],
+		stat = stat_dual_pistols_kills,
+		sap_cost = 1,
+		captcha_length = 2
 	),
 	EwWeapon( # 3
 		id_weapon = weapon_id_shotgun,
-        alias = [
-            "boomstick",
-            "remington",
-            "scattergun",
-        ],
+		alias = [
+			"boomstick",
+			"remington",
+			"scattergun",
+		],
 		str_crit = "**Critical Hit!** {name_player} has landed a thick, meaty shot into {name_target}'s chest!",
-        str_miss = "**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
-        str_equip = "You equip the shotgun.",
-        str_weapon = "shotgun",
-        str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
-        str_weaponmaster = "They are a rank {rank} master of the shotgun.",
-        str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
-        str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
-        str_kill = "{name_player} blasts their shotgun into {name_target}'s chest at point-blank range, causing guts to explode from their back and coat the surrounding street. chk chk Who's next? {emote_skull}",
-        str_killdescriptor = "pumped full of lead",
-        str_damage = "{name_target} takes a shotgun blast to the {hitzone}!!",
-        str_duel = "**BOOM.** {name_player} and {name_target} stand about five feet away from a wall, pumping it full of lead over and over to study it's bullet spread.",
+		str_miss = "**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
+		str_equip = "You equip the shotgun.",
+		str_name = "shotgun",
+		str_weapon = "a shotgun",
+		str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
+		str_weaponmaster = "They are a rank {rank} master of the shotgun.",
+		str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		str_kill = "{name_player} blasts their shotgun into {name_target}'s chest at point-blank range, causing guts to explode from their back and coat the surrounding street. chk chk Who's next? {emote_skull}",
+		str_killdescriptor = "pumped full of lead",
+		str_damage = "{name_target} takes a shotgun blast to the {hitzone}!!",
+		str_duel = "**BOOM.** {name_player} and {name_target} stand about five feet away from a wall, pumping it full of lead over and over to study it's bullet spread.",
 		str_description = "It's a shotgun.",
 		str_reload = "You tilt your shotgun and pop shell after shell into it’s chamber before cocking the forend back. Groovy.",
 		str_reload_warning = "**chk--** *...* **SHIT!!** {name_player}’s shotgun has ejected the last shell in it’s chamber, it’s out of ammo!!",
@@ -2787,8 +3305,10 @@ weapon_list = [
 		clip_size = 2,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
-		stat = stat_shotgun_kills
+		classes = [weapon_class_ammo, weapon_class_captcha],
+		stat = stat_shotgun_kills,
+		sap_cost = 5,
+		captcha_length = 6
 	),	
 	EwWeapon( # 4
 		id_weapon = weapon_id_rifle,
@@ -2800,6 +3320,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** You unload an entire magazine into the target!!",
 		str_miss = "**You missed!** Not one of your bullets connected!!",
 		str_equip = "You equip the assault rifle.",
+		str_name = "assault rifle",
 		str_weapon = "an assault rifle",
 		str_weaponmaster_self = "You are a rank {rank} master of the assault rifle.",
 		str_weaponmaster = "They are a rank {rank} master of the assault rifle.",
@@ -2817,67 +3338,75 @@ weapon_list = [
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
-		stat = stat_rifle_kills
+		classes = [weapon_class_ammo, weapon_class_captcha],
+		stat = stat_rifle_kills,
+		sap_cost = 4,
+		captcha_length = 6
 	),
 	EwWeapon( # 5
 		id_weapon = weapon_id_smg,
-        alias = [
-            "submachinegun",
-            "machinegun"
-        ],
-        str_crit = "**Critical hit!!** {name_target}’s vital arteries are ruptured by miraculously accurate bullets that actually hit their intended target!!",
-        str_miss = "**You missed!!** {name_player}'s reckless aiming sends their barrage of bullets in every direction but into {name_target}’s body!",
-        str_equip = "You equip the SMG.",
-        str_weapon = "a SMG",
-        str_weaponmaster_self = "You are a rank {rank} master of the SMG.",
-        str_weaponmaster = "They are a rank {rank} master of the SMG.",
-        str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
-        str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
-        str_kill = "**RATTA TATTA TAT!!** {name_player}’s bullet rip through what little was left of {name_target} after the initial barrage. All that remains is a few shreds of clothing and splatterings of slime. {emote_skull}",
-        str_killdescriptor = "riddled with bullets",
-        str_damage = "A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
-        str_duel = "**RATTA TATTA TAT!!** {name_player} and {name_target} spray bullets across the floor and walls of the Dojo, having a great time.",
-        str_description = "It's a submachine gun.",
+		alias = [
+			"submachinegun",
+			"machinegun"
+		],
+		str_crit = "**Critical hit!!** {name_target}’s vital arteries are ruptured by miraculously accurate bullets that actually hit their intended target!!",
+		str_miss = "**You missed!!** {name_player}'s reckless aiming sends their barrage of bullets in every direction but into {name_target}’s body!",
+		str_equip = "You equip the SMG.",
+		str_name = "SMG",
+		str_weapon = "an SMG",
+		str_weaponmaster_self = "You are a rank {rank} master of the SMG.",
+		str_weaponmaster = "They are a rank {rank} master of the SMG.",
+		str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		str_kill = "**RATTA TATTA TAT!!** {name_player}’s bullet rip through what little was left of {name_target} after the initial barrage. All that remains is a few shreds of clothing and splatterings of slime. {emote_skull}",
+		str_killdescriptor = "riddled with bullets",
+		str_damage = "A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
+		str_duel = "**RATTA TATTA TAT!!** {name_player} and {name_target} spray bullets across the floor and walls of the Dojo, having a great time.",
+		str_description = "It's a submachine gun.",
 		str_jammed = "Your SMG jams again, goddamn piece of shit gun...",
 		str_reload = "You hastily rip the spent magazine out of your SMG, before slamming a fresh one back into it.",
-        str_reload_warning = "**RATTA TATTA--** *tk tk tk tk…* **SHIT!!** {name_player}’s SMG just chewed up the last of it’s magazine, it’s out of bullets!!",
-        str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
+		str_reload_warning = "**RATTA TATTA--** *tk tk tk tk…* **SHIT!!** {name_player}’s SMG just chewed up the last of it’s magazine, it’s out of bullets!!",
+		str_unjam = "{name_player} successfully whacks their SMG hard enough to dislodge whatever hunk of gunk was blocking it’s internal processes.",
 		str_scalp = " It has a bunch of holes strewn throughout it.",
 		fn_effect = wef_smg,
 		clip_size = 4,
 		price = 10000,
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_jammable],
-		stat = stat_smg_kills
+		stat = stat_smg_kills,
+		sap_cost = 3,
+		captcha_length = 4
 	),	
-		EwWeapon( # 6
+	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
-        alias = [
-            "mini",
-            "gatlinggun"
-        ],
-        str_crit = "**Critical hit!!** Round after round of bullets fly through {name_target}, inflicting irreparable damage!!",
-        str_miss = "**You missed!!** Despite the growing heap of used ammunition shells {name_player} has accrued, none of their bullets actually hit {name_target}!",
-        str_equip = "You equip the minigun.",
-        str_weapon = "a minigun",
-        str_weaponmaster_self = "You are a rank {rank} master of the minigun.",
-        str_weaponmaster = "They are a rank {rank} master of the minigun.",
-        str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
-        str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
-        str_kill = "**TKTKTKTKTKTKTKTKTK!!** {name_player} pushes their minigun barrel right up to {name_target}’s chest, unloading a full round of ammunition and knocking their lifeless corpse back a few yards from the sheer force of the bullets. They failed to outsmart bullet. {emote_skull}",
-        str_killdescriptor = "obliterated",
-        str_damage = "Cascades of bullet easily puncture and rupture {name_target}’s {hitzone}!!",
-        str_duel = "**...** {name_player} and {name_target} crouch close to the ground, throwing sandwiches unto the floor next to each other and repeating memetic voice lines ad nauseam.",
-        str_description = "It's a minigun.",
+		alias = [
+			"mini",
+			"gatlinggun"
+		],
+		str_crit = "**Critical hit!!** Round after round of bullets fly through {name_target}, inflicting irreparable damage!!",
+		str_miss = "**You missed!!** Despite the growing heap of used ammunition shells {name_player} has accrued, none of their bullets actually hit {name_target}!",
+		str_equip = "You equip the minigun.",
+		str_name = "minigun",
+		str_weapon = "a minigun",
+		str_weaponmaster_self = "You are a rank {rank} master of the minigun.",
+		str_weaponmaster = "They are a rank {rank} master of the minigun.",
+		str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
+		str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
+		str_kill = "**TKTKTKTKTKTKTKTKTK!!** {name_player} pushes their minigun barrel right up to {name_target}’s chest, unloading a full round of ammunition and knocking their lifeless corpse back a few yards from the sheer force of the bullets. They failed to outsmart bullet. {emote_skull}",
+		str_killdescriptor = "obliterated",
+		str_damage = "Cascades of bullet easily puncture and rupture {name_target}’s {hitzone}!!",
+		str_duel = "**...** {name_player} and {name_target} crouch close to the ground, throwing sandwiches unto the floor next to each other and repeating memetic voice lines ad nauseam.",
+		str_description = "It's a minigun.",
 		#str_reload = "You curse under your breath, before pulling a fresh belt of bullets from hammerspace and jamming it into your minigun’s hungry feed.",
-        #str_reload_warning = "**TKTKTKTKTKTK--** *wrrrrrr…* **SHIT!!** {name_player}’s minigun just inhaled the last of it’s belt, it’s out of bullets!!",
+		#str_reload_warning = "**TKTKTKTKTKTK--** *wrrrrrr…* **SHIT!!** {name_player}’s minigun just inhaled the last of it’s belt, it’s out of bullets!!",
 		str_scalp = " It looks more like a thick slice of swiss cheese than a scalp.",
 		fn_effect = wef_minigun,
 		price = 1000000,
 		vendors = [vendor_bazaar],
-		#classes= [weapon_class_ammo],
-		stat = stat_minigun_kills
+		classes= [weapon_class_captcha, weapon_class_heavy],
+		stat = stat_minigun_kills,
+		sap_cost = 15,
+		captcha_length = 10
 	),	
 	EwWeapon( # 7
 		id_weapon = weapon_id_bat,
@@ -2889,6 +3418,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** {name_player} has bashed {name_target} up real bad!",
 		str_miss = "**MISS!!** {name_player} swung wide and didn't even come close!",
 		str_equip = "You equip the bat with nails in it.",
+		str_name = "bat",
 		str_weaponmaster_self = "You are a rank {rank} master of the nailbat.",
 		str_weaponmaster = "They are a rank {rank} master of the nailbat.",
 		str_weapon = "a bat full of nails",
@@ -2904,7 +3434,10 @@ weapon_list = [
 		fn_effect = wef_bat,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_bat_kills
+		classes= [weapon_class_captcha],
+		stat = stat_bat_kills,
+		sap_cost = 2,
+		captcha_length = 2
 	),	
 	EwWeapon( # 8
 		id_weapon = weapon_id_brassknuckles,
@@ -2916,6 +3449,7 @@ weapon_list = [
 		str_crit = "***SKY UPPERCUT!!*** {name_player} executes an artificially difficult combo, rocketing their fist into the bottom of {name_target}’s jaw so hard that {name_target}’s colliding teeth brutally sever an inch off their own tongue!!",
 		str_miss = "**MISS!** {name_player} couldn't land a single blow!!",
 		str_equip = "You equip the brass knuckles.",
+		str_name = "brass knuckles",
 		str_weapon = "brass knuckles",
 		str_weaponmaster_self = "You are a rank {rank} master pugilist.",
 		str_weaponmaster = "They are a rank {rank} master pugilist.",
@@ -2930,7 +3464,10 @@ weapon_list = [
 		fn_effect = wef_brassknuckles,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_brassknuckles_kills
+		classes= [weapon_class_captcha],
+		stat = stat_brassknuckles_kills,
+		sap_cost = 1,
+		captcha_length = 2
 	),
 	EwWeapon( # 9
 		id_weapon = weapon_id_katana,
@@ -2943,6 +3480,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** {name_target} is cut deep!!",
 		str_miss = "",
 		str_equip = "You equip the katana.",
+		str_name = "katana",
 		str_weapon = "a katana",
 		str_weaponmaster_self = "You are a rank {rank} blademaster.",
 		str_weaponmaster = "They are a rank {rank} blademaster.",
@@ -2957,29 +3495,33 @@ weapon_list = [
 		fn_effect = wef_katana,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_katana_kills
+		classes= [weapon_class_captcha],
+		stat = stat_katana_kills,
+		sap_cost = 3,
+		captcha_length = 8
 	),
 	EwWeapon( # 10
-        id_weapon = weapon_id_broadsword,
-        alias = [
-            "sword",
-            "highlander",
-            "arawheapofiron",
+		id_weapon = weapon_id_broadsword,
+		alias = [
+			"sword",
+			"highlander",
+			"arawheapofiron",
 			"eyelander"
-        ],
+		],
   		str_crit = "Critical hit!! {name_player} screams at the top of their lungs and unleashes a devastating overhead swing that maims {name_target}.",
-        str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
+		str_miss = "You missed! You grunt as your failed overhead swing sends ripples through the air.",
 		str_backfire = "You feel the bones in your wrists snap as you botch your swing with the heavy blade!! Fucking ouch dawg!",
 		str_equip = "You equip the broadsword.",
-        str_weapon = "a broadsword",
-        str_weaponmaster_self = "You are a rank {rank} berserker.",
-        str_weaponmaster = "They are a rank {rank} berserker.",
-        str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
-        str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
-        str_kill = "{name_player} skewers {name_target} through the back to the hilt of their broadsword, before kicking their lifeless corpse onto the street corner in gruseome fashion. {name_player} screams at the top of their lungs. {emote_skull}",
-        str_killdescriptor = "slayed",
-        str_damage = "{name_target}'s {hitzone} is separated from their body!!",
-        str_duel = "SCHWNG SCHWNG! {name_player} and {name_target} scream at the top of their lungs to rehearse their battle cries.",
+		str_name = "broadsword",
+		str_weapon = "a broadsword",
+		str_weaponmaster_self = "You are a rank {rank} berserker.",
+		str_weaponmaster = "They are a rank {rank} berserker.",
+		str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
+		str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
+		str_kill = "{name_player} skewers {name_target} through the back to the hilt of their broadsword, before kicking their lifeless corpse onto the street corner in gruseome fashion. {name_player} screams at the top of their lungs. {emote_skull}",
+		str_killdescriptor = "slayed",
+		str_damage = "{name_target}'s {hitzone} is separated from their body!!",
+		str_duel = "SCHWNG SCHWNG! {name_player} and {name_target} scream at the top of their lungs to rehearse their battle cries.",
 		str_description = "It's a broadsword.",
 		str_reload = "You summon strength and muster might from every muscle on your body to hoist your broadsword up for another swing.",
 		str_reload_warning = "**THUD...** {name_player}’s broadsword is too heavy, it’s blade has fallen to the ground!!",
@@ -2988,8 +3530,10 @@ weapon_list = [
 		clip_size = 1,
 		price = 10000,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_ammo],
-		stat = stat_broadsword_kills
+		classes = [weapon_class_ammo, weapon_class_captcha, weapon_class_heavy],
+		stat = stat_broadsword_kills,
+		sap_cost = 12,
+		captcha_length = 4
 	),
 	EwWeapon( # 11
 		id_weapon = weapon_id_nunchucks,
@@ -3001,8 +3545,9 @@ weapon_list = [
 			"nunchucks"
 		],
 		str_crit = "**COMBO!** {name_player} strikes {name_target} with a flurry of 5 vicious blows!",
-		str_backfire = "**Whack!!** {name_player} fucks up his kung-fu routine and whacks himself in the head with his own nun-chucks!!",
+		str_backfire = "**Whack!!** {name_player} fucks up their kung-fu routine and whacks themselves in the head with their own nun-chucks!!",
 		str_equip = "You equip the nun-chucks.",
+		str_name = "nun-chucks",
 		str_weapon = "nun-chucks",
 		str_weaponmaster_self = "You are a rank {rank} kung-fu master.",
 		str_weaponmaster = "They are a rank {rank} kung-fu master.",
@@ -3017,7 +3562,10 @@ weapon_list = [
 		fn_effect = wef_nunchucks,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_nunchucks_kills
+		classes= [weapon_class_captcha],
+		stat = stat_nunchucks_kills,
+		sap_cost = 4,
+		captcha_length = 2
 	),
 	EwWeapon( # 12
 		id_weapon = weapon_id_scythe,
@@ -3027,6 +3575,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
 		str_miss = "**MISS!!** {name_player}'s swings wide of the target!",
 		str_equip = "You equip the scythe.",
+		str_name = "scythe",
 		str_weapon = "a scythe",
 		str_weaponmaster_self = "You are a rank {rank} master of the scythe.",
 		str_weaponmaster = "They are a rank {rank} master of the scythe.",
@@ -3041,7 +3590,10 @@ weapon_list = [
 		fn_effect = wef_scythe,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_scythe_kills
+		classes= [weapon_class_captcha],
+		stat = stat_scythe_kills,
+		sap_cost = 6,
+		captcha_length = 4
 	),
 	EwWeapon( # 13	
 		id_weapon = weapon_id_yoyo,
@@ -3051,23 +3603,27 @@ weapon_list = [
 			"yoyos"
 		],
 		str_crit = "SMAAAASH!! {name_player} pulls off a modified Magic Drop, landing a critical hit on {name_target} just after the rejection!",
-        str_miss = "You missed! {name_player} misjudges their yo-yos trajectory and botches an easy trick.",
-        str_equip = "You equip the yo-yo.",
-        str_weaponmaster_self = "You are a rank {rank} master of the yo-yo.",
-        str_weaponmaster = "They are a rank {rank} master of the yo-yo.",
-        str_weapon = "a yo-yo",
-        str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
-        str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
-        str_kill = "{name_player} performs a modified Kwyjibo, effortlessly nailing each step before killing their opponent just ahead of the dismount.",
-        str_killdescriptor = "amazed",
-        str_damage = "{name_player} used {name_target}'s {hitzone} as a counterweight!!",
-        str_duel = "whhzzzzzz {name_player} and {name_target} practice trying to Walk the Dog for hours. It never clicks.",
+		str_miss = "You missed! {name_player} misjudges their yo-yos trajectory and botches an easy trick.",
+		str_equip = "You equip the yo-yo.",
+		str_name = "yo-yo",
+		str_weaponmaster_self = "You are a rank {rank} master of the yo-yo.",
+		str_weaponmaster = "They are a rank {rank} master of the yo-yo.",
+		str_weapon = "a yo-yo",
+		str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
+		str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
+		str_kill = "{name_player} performs a modified Kwyjibo, effortlessly nailing each step before killing their opponent just ahead of the dismount.",
+		str_killdescriptor = "amazed",
+		str_damage = "{name_player} used {name_target}'s {hitzone} as a counterweight!!",
+		str_duel = "whhzzzzzz {name_player} and {name_target} practice trying to Walk the Dog for hours. It never clicks.",
 		str_description = "It's a yo-yo.",
 		str_scalp = " It has a ball bearing hidden inside it. You can spin it like a fidget spinner.",
 		fn_effect = wef_yoyo,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_yoyo_kills
+		classes= [weapon_class_captcha],
+		stat = stat_yoyo_kills,
+		sap_cost = 1,
+		captcha_length = 2
 	),
 	EwWeapon( # 14
 		id_weapon = weapon_id_knives,
@@ -3081,6 +3637,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** {name_player}'s knife strikes a vital point!",
 		str_miss = "**MISS!!** {name_player}'s knife missed its target!",
 		str_equip = "You equip the throwing knives.",
+		str_name = "throwing knives",
 		str_weapon = "throwing knives",
 		str_weaponmaster_self = "You are a rank {rank} master of the throwing knife.",
 		str_weaponmaster = "They are a rank {rank} master of the throwing knife.",
@@ -3095,8 +3652,10 @@ weapon_list = [
 		fn_effect = wef_knives,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown],
-		stat = stat_knives_kills
+		classes = [weapon_class_thrown, weapon_class_captcha],
+		stat = stat_knives_kills,
+		sap_cost = 1,
+		captcha_length = 4
 	),
 	EwWeapon( # 15
 		id_weapon = weapon_id_molotov,
@@ -3110,6 +3669,7 @@ weapon_list = [
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
 		str_crit = "{name_player}’s cocktail shatters at the feet of {name_target}, sending a shower of shattered shards of glass into them!!",
 		str_equip = "You equip the molotov cocktail.",
+		str_name = "molotov cocktail",
 		str_weapon = "molotov cocktails",
 		str_weaponmaster_self = "You are a rank {rank} master arsonist.",
 		str_weaponmaster = "They are a rank {rank} master arsonist.",
@@ -3124,34 +3684,39 @@ weapon_list = [
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding],
-		stat = stat_molotov_kills
+		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
+		stat = stat_molotov_kills,
+		sap_cost = 1,
+		captcha_length = 4
 	),
 	EwWeapon( # 16
 		id_weapon = weapon_id_grenades,
-        alias = [
-            "nades",
+		alias = [
+			"nades",
 			"grenade"
-        ],
-        str_crit = "**Critical hit!!** {name_target} is blown off their feet by the initial explosion, and lacerated by innumerable shards of shrapnel scattering themselves through their body!!",
-        str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
-        str_equip = "You equip the grenades.",
-        str_weapon = "a stack of grenades",
-        str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
-        str_weaponmaster = "They are a rank {rank} master of the grenades.",
-        str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
-        str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
-        str_kill = "**KA-BOOM!!** {name_player} pulls the safety pin and holds their grenade just long enough to cause it to explode mid air, right in front of {name_target}’s face, blowing it to smithereens. {emote_skull}",
-        str_killdescriptor = "exploded",
-        str_damage = "{name_player}’s grenade explodes, sending {name_target}’s {hitzone} flying off their body!!",
-        str_duel = "**KA-BOOM!!** {name_player} and {name_target} pull the pin out of their grenades and hold it in their hands to get a feel for how long it takes for them to explode. They lose a few body parts in the process.",
+		],
+		str_crit = "**Critical hit!!** {name_target} is blown off their feet by the initial explosion, and lacerated by innumerable shards of shrapnel scattering themselves through their body!!",
+		str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
+		str_equip = "You equip the grenades.",
+		str_name = "grenades",
+		str_weapon = "a stack of grenades",
+		str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
+		str_weaponmaster = "They are a rank {rank} master of the grenades.",
+		str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
+		str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
+		str_kill = "**KA-BOOM!!** {name_player} pulls the safety pin and holds their grenade just long enough to cause it to explode mid air, right in front of {name_target}’s face, blowing it to smithereens. {emote_skull}",
+		str_killdescriptor = "exploded",
+		str_damage = "{name_player}’s grenade explodes, sending {name_target}’s {hitzone} flying off their body!!",
+		str_duel = "**KA-BOOM!!** {name_player} and {name_target} pull the pin out of their grenades and hold it in their hands to get a feel for how long it takes for them to explode. They lose a few body parts in the process.",
 		str_description = "A stack of grenades.",
 		str_scalp = " It's covered in metallic shrapnel.",
 		fn_effect = wef_grenade,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding],
-		stat = stat_grenade_kills
+		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
+		stat = stat_grenade_kills,
+		sap_cost = 1,
+		captcha_length = 4
 	),
 	EwWeapon( # 17
 		id_weapon = weapon_id_garrote,
@@ -3163,6 +3728,7 @@ weapon_list = [
 		str_crit = "**CRITICAL HIT!!** {name_player} got lucky and caught {name_target} completely unaware!!",
 		str_miss = "**MISS!** {name_player}'s target got away in time!",
 		str_equip = "You equip the garrotte wire.",
+		str_name = "garrote wire",
 		str_weapon = "a garrotte wire",
 		str_weaponmaster_self = "You are a rank {rank} master of the garrotte.",
 		str_weaponmaster = "They are a rank {rank} master of the garrotte.",
@@ -3177,7 +3743,8 @@ weapon_list = [
 		fn_effect = wef_garrote,
 		price = 10000,
 		vendors = [vendor_dojo],
-		stat = stat_garrote_kills
+		stat = stat_garrote_kills,
+		sap_cost = 5,
 	),
 	EwWeapon(  # 18
 		id_weapon = weapon_id_pickaxe,
@@ -3189,6 +3756,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** By sheer dumb luck, {name_player} manages to get a good hit off on {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} is too weak to lift their pickaxe!",
 		str_equip = "You equip the pickaxe.",
+		str_name = "pickaxe",
 		str_weapon = "a pickaxe",
 		str_weaponmaster_self = "You are a rank {rank} coward of the pickaxe.",
 		str_weaponmaster = "They are a rank {rank} coward of the pickaxe.",
@@ -3202,7 +3770,9 @@ weapon_list = [
 		fn_effect = wef_tool,
 		str_description = "It's a pickaxe.",
 		acquisition = acquisition_smelting,
-		stat = stat_pickaxe_kills
+		stat = stat_pickaxe_kills,
+		sap_cost = 2,
+		captcha_length = 2
 	),
 	EwWeapon(  # 19
 		id_weapon = "fishingrod",
@@ -3217,6 +3787,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** By sheer dumb luck, {name_player} manages to get a good hit off on {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} is too weak to cast their fishing rod!",
 		str_equip = "You equip the super fishing rod.",
+		str_name = "super fishing rod",
 		str_weapon = "a super fishing rod",
 		str_weaponmaster_self = "You are a rank {rank} coward of the super fishing rod.",
 		str_weaponmaster = "They are a rank {rank} coward of the super fishing rod.",
@@ -3230,9 +3801,11 @@ weapon_list = [
 		fn_effect = wef_tool,
 		str_description = "It's a super fishing rod.",
 		acquisition = acquisition_smelting,
-		stat = stat_fishingrod_kills
+		stat = stat_fishingrod_kills,
+		sap_cost = 2,
+		captcha_length = 2
 	),
-        EwWeapon(  # 20
+	EwWeapon(  # 20
 		id_weapon = weapon_id_bass,
 		alias = [
 			"bass",
@@ -3240,6 +3813,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** Through skilled swipes {name_player} manages to sharply strike {name_target}’s {hitzone}.",
 		str_miss = "**MISS!!** {name_player} swings and misses like a dumbass!",
 		str_equip = "You equip the bass guitar, a highly distorted and reverbed riff of unknown origin plays as you place the strap over your neck.",
+		str_name = "bass guitar",
 		str_weapon = "a bass guitar",
 		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
@@ -3253,9 +3827,11 @@ weapon_list = [
 		fn_effect = wef_bass,
 		str_description = "It's a bass guitar. All of its strings are completely out of tune and rusted.",
 		acquisition = acquisition_smelting,
-		stat = stat_bass_kills
+		stat = stat_bass_kills,
+		sap_cost = 2,
+		captcha_length = 2
 	),
-        EwWeapon(  # 21
+	EwWeapon(  # 21
 		id_weapon = weapon_id_umbrella,
 		alias = [
 			"umbrella",
@@ -3265,6 +3841,7 @@ weapon_list = [
 		str_crit = "**Critical hit!!** {name_player} briefly stuns {name_target} by opening their umbrella in their face, using the opportunity to score a devastating blow to their {hitzone}.",
 		str_miss = "**MISS!!** {name_player} fiddles with their umbrella, failing to open it!",
 		str_equip = "You equip the umbrella.",
+		str_name = "umbrella",
 		str_weapon = "an umbrella",
 		str_weaponmaster_self = "You are a rank {rank} master of the umbrella.",
 		str_weaponmaster = "They are a rank {rank} master of the umbrella.",
@@ -3280,7 +3857,9 @@ weapon_list = [
 		price = 100000,
 		vendors = [vendor_bazaar],
 		classes = [weapon_class_captcha, weapon_class_defensive],
-		stat = stat_umbrella_kills
+		stat = stat_umbrella_kills,
+		sap_cost = 1,
+		captcha_length = 4
 	),
 ]
 
@@ -3299,6 +3878,7 @@ def atf_fangs(ctn = None):
 	# Reskin of dual pistols
 
 	aim = (random.randrange(10) + 1)
+	ctn.sap_damage = 1
 
 	if aim == 1:
 		ctn.miss = True
@@ -3312,6 +3892,8 @@ def atf_talons(ctn = None):
 
 	ctn.miss = False
 	ctn.slimes_damage = int(0.85 * ctn.slimes_damage)
+	ctn.sap_damage = 0
+	ctn.sap_ignored = 10
 
 	if (random.randrange(10) + 1) == 10:
 		ctn.crit = True
@@ -3323,6 +3905,8 @@ def atf_raiderscythe(ctn = None):
 	ctn.enemy_data.change_slimes(n = (-ctn.slimes_spent * 0.33), source = source_self_damage)
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
 	aim = (random.randrange(10) + 1)
+	ctn.sap_damage = 0
+	ctn.sap_ignored = 5
 
 	if aim <= 2:
 		ctn.miss = True
@@ -3335,6 +3919,7 @@ def atf_gunkshot(ctn = None):
 	# Reskin of rifle
 
 	aim = (random.randrange(10) + 1)
+	ctn.sap_damage = 2
 
 	if aim <= 2:
 		ctn.miss = True
@@ -3347,6 +3932,7 @@ def atf_tusks(ctn = None):
 	# Reskin of bat
 
 	aim = (random.randrange(21) - 10)
+	ctn.sap_damage = 3
 	if aim <= -9:
 		ctn.miss = True
 		ctn.slimes_damage = 0
@@ -3362,6 +3948,8 @@ def atf_molotovbreath(ctn = None):
 	
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
+	ctn.sap_damage = 0
+	ctn.sap_ignored = 10
 
 	aim = (random.randrange(10) + 1)
 
@@ -3369,7 +3957,7 @@ def atf_molotovbreath(ctn = None):
 
 	if aim <= 2:
 		ctn.backfire = True
-		ctn.enemy_data.change_slimes(n=-dmg, source=source_self_damage)
+		ctn.backfire_damage = dmg
 
 	elif aim == 3:
 		ctn.miss = True
@@ -3381,6 +3969,7 @@ def atf_molotovbreath(ctn = None):
 			
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
+	ctn.sap_damage = 2
 
 	aim = (random.randrange(20) + 1)
 	
@@ -3390,6 +3979,30 @@ def atf_armcannon(ctn = None):
 	if aim == 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 3
+
+
+def atf_axe(ctn=None):
+	ctn.slimes_damage *= 0.7
+	aim = (random.randrange(10) + 1)
+
+	if aim <= 4:
+		ctn.miss = True
+
+	if aim == 10:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+
+def atf_hooves(ctn=None):
+	ctn.slimes_damage *= 0.4
+	aim = (random.randrange(30) + 1)
+
+	if aim <= 5:
+		ctn.miss = True
+
+	if aim > 25:
+		ctn.crit = True
+		ctn.slimes_damage *= 2
 
 # All enemy attacking types in the game.
 enemy_attack_type_list = [
@@ -3466,10 +4079,32 @@ enemy_attack_type_list = [
 		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
 		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
 		str_trauma = "There's a deep bruising right in the middle of their forehead.",
-		str_kill = "{name_enemy} readies their crosshair right for your head fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
+		str_kill = "{name_enemy} readies their crosshair right for your head and fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
 		str_killdescriptor = "sniped",
 		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
 		fn_effect = atf_armcannon
+	),
+	EwAttackType( # 8
+		id_type = "axe",
+		str_crit = "**Critical hit!!** {name_target} is thoroughly cleaved by {name_enemy}'s axe!",
+		str_miss = "**{name_enemy} missed!** The axe gives a loud **THUD** as it strikes the earth!",
+		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		str_kill = "{name_enemy} lifts up their axe for one last swing. The wicked edge buries itself deep into your skull, cutting your brain in twain. {emote_skull}",
+		str_killdescriptor = "axed",
+		str_damage = "{name_target} is swung at right on their {hitzone}!!",
+		fn_effect = atf_axe
+	),
+	EwAttackType( # 9
+		id_type = "hooves",
+		str_crit = "**Critical hit!!** {name_enemy} lays a savage hind-leg kick into {name_target}'s chest!",
+		str_miss = "**WHOOSH!** {name_enemy}'s hooves just barely miss you!",
+		str_trauma_self = "Your chest is somewhat concave.",
+		str_trauma = "Their chest is somewhat concave.",
+		str_kill = "{name_enemy} gallops right over your head, readying their hind legs just after landing. Before you can even ready your weapon, their legs are already planted right onto your chest. Your heart explodes. {emote_skull}",
+		str_killdescriptor = "stomped",
+		str_damage = "{name_target} is stomped all over their {hitzone}!!",
+		fn_effect = atf_hooves
 	),
 ]
 
@@ -3480,65 +4115,73 @@ attack_type_map = {}
 for attack_type in enemy_attack_type_list:
 	attack_type_map[attack_type.id_type] = attack_type
 
+# Weather IDs
+weather_sunny = "sunny"
+weather_rainy = "rainy"
+weather_windy = "windy"
+weather_lightning = "lightning"
+weather_cloudy = "cloudy"
+weather_snow = "snow"
+weather_foggy = "foggy"
 weather_bicarbonaterain = "bicarbonaterain"
 
 # All weather effects in the game.
 weather_list = [
 	EwWeather(
-		name = "sunny",
+		name = weather_sunny,
 		sunrise = "The smog is beginning to clear in the sickly morning sunlight.",
 		day = "The sun is blazing on the cracked streets, making the air shimmer.",
 		sunset = "The sky is darkening, the low clouds an iridescent orange.",
 		night = "The moon looms yellow as factories belch smoke all through the night."
 	),
 	EwWeather(
-		name = "rainy",
+		name = weather_rainy,
 		sunrise = "Rain gently beats against the pavement as the sky starts to lighten.",
 		day = "Rain pours down, collecting in oily rivers that run down sewer drains.",
 		sunset = "Distant thunder rumbles as it rains, the sky now growing dark.",
 		night = "Silverish clouds hide the moon, and the night is black in the heavy rain."
 	),
 	EwWeather(
-		name = "windy",
+		name = weather_windy,
 		sunrise = "Wind whips through the city streets as the sun crests over the horizon.",
 		day = "Paper and debris are whipped through the city streets by the winds, buffetting pedestrians.",
 		sunset = "The few trees in the city bend and strain in the wind as the sun slowly sets.",
 		night = "The dark streets howl, battering apartment windows with vicious night winds."
 	),
 	EwWeather(
-		name = "lightning",
+		name = weather_lightning,
 		sunrise = "An ill-omened morning dawns as lighting streaks across the sky in the sunrise.",
 		day = "Flashes of bright lightning and peals of thunder periodically startle the citizens out of their usual stupor.",
 		sunset = "Bluish white arcs of electricity tear through the deep red dusky sky.",
 		night = "The dark night periodically lit with bright whitish-green bolts that flash off the metal and glass of the skyscrapers."
 	),
 	EwWeather(
-		name = "cloudy",
+		name = weather_cloudy,
 		sunrise = "The dim morning light spreads timidly across the thickly clouded sky.",
 		day = "The air hangs thick, and the pavement is damp with mist from the clouds overhead.",
 		sunset = "The dusky light blares angry red on a sky choked with clouds and smog.",
 		night = "Everything is dark and still but the roiling clouds, reflecting the city's eerie light."
 	),
 	EwWeather(
-		name = "snow",
+		name = weather_snow,
 		sunrise = "The morning sun glints off the thin layer or powdery snow that blankets the city.",
 		day = "Flakes of snow clump together and whip through the bitter cold air in the winder wind.",
 		sunset = "The cold air grows colder as the sky darkens and the snow piles higher in the streets.",
 		night = "Icy winds whip through the city, white snowflakes glittering in the black of night."
 	),
 	EwWeather(
-		name = "foggy",
+		name = weather_foggy,
 		sunrise = "Fog hangs thick in the air, stubbornly refusing to dissipate as the sun clears the horizon.",
 		day = "You can barely see to the next block in the sickly greenish NLAC smog.",
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
 	),
 	EwWeather(
-		name = weather_bicarbonaterain,
-		sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
-		day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
-		sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
-		night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	 	name = weather_bicarbonaterain,
+	 	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+	 	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+	 	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+	 	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
 	),
 ]
 
@@ -5198,7 +5841,7 @@ food_list = [
 		],
 		recover_hunger = 500,
 		str_name = 'Dinoslime Meat',
-		str_eat = "You bite into the raw meat of dead Dinoslime. At certain points of your feast, it feels like you're biting into a fucking fan belt, but hey, food is food.",
+		str_eat = "You bite into the raw meat of dead Dinoslime. It feels like you're biting into raw sewage at certain points, but hey, food is food.",
 		str_desc = "The meat of a Dinoslime. It's best to probably cook it before consumption, if only you knew how.",
 	),
 	EwFood(
@@ -5223,7 +5866,7 @@ food_list = [
 		str_name = 'Paradox Chocs',
 		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
 		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_twixten,
@@ -5235,31 +5878,32 @@ food_list = [
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_sni,
+		id_food = item_id_snipercannon,
 		alias = [
-			"blatantracism",
+			"sniper",
+			"cannon",
 		],
 		recover_hunger = 100,
 		price = 100,
-		str_name = 'SNI-',
-		str_eat = "You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
-		str_desc = "A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
-		acquisition = acquisition_trickortreating
+		str_name = 'Sniper Cannon',
+		str_eat = "You take a bite out of your Sniper Cannon bar.",
+		str_desc = "A chocolate bar with wafers on the inside. It's shaped like a bulky, rectangular version of the cannon found on the arm of the Unnerving Fighting Operator. On the back of the wrapper, there's some text that reads: 'We at Slimy Persuits had only the best intentions in our initial run of the [REDACTED] bar. We hope this rebranding will allow you to continue to enjoy our products without having to fear of blatant racism.'",
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_slimeybears,
+		id_food = item_id_slimybears,
 		alias = [
 			"bears",
 		],
 		recover_hunger = 80,
 		price = 100,
-		str_name = 'Slimey Bears',
-		str_eat = "You stash a fistfull of Slimey Bears right into your gullet, chewing them thoroughly.",
-		str_desc = "A packet of Slimey Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
-		acquisition = acquisition_trickortreating
+		str_name = 'Slimy Bears',
+		str_eat = "You stash a fistfull of Slimy Bears right into your gullet, chewing them thoroughly.",
+		str_desc = "A packet of Slimy Bears. They come in a variety of colors, like purple, pink, green, and... yellow? Somehow this weirds you out a bit...",
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_n8heads,
@@ -5271,7 +5915,7 @@ food_list = [
 		str_name = 'N8heads',
 		str_eat = "You chew on a N8head. It stopped tasting good long before you were done sinking your teeth into it, but you felt committed enough to finish what you started. Fuckin shill.",
 		str_desc = "A N8heads packet. They're bars of sour taffy, each with his signature shades imprinted onto them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_turstwerthers,
@@ -5283,7 +5927,7 @@ food_list = [
 		str_name = 'Turstwerthers',
 		str_eat = "You shatter the Turstwerthers in your mouth, and the gooey caramel seeps out with every bite. Simply delight!",
 		str_desc = "A bag of Turstwerthers. They're hard caramels, shaped like elephant tusks.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_candybungis,
@@ -5295,7 +5939,7 @@ food_list = [
 		str_name = 'Candy (Bungis)',
 		str_eat = "You eat through the Candy (Bungis). Rather than imprint the temporary tattoo, you just shove the whole thing into your mouth and chew through it.",
 		str_desc = "A rolled up fruit snack. An layer of ink it has allows you to imprint an image of Sky (Bungis) onto your tongue.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_licoricelobsters,
@@ -5307,7 +5951,7 @@ food_list = [
 		str_name = 'Licorice Lobsters',
 		str_eat = "You chomp on the Licorice Lobsters. Their slight bittersweetness fills you with memories of days gone by.",
 		str_desc = "Yup. They're lobsters.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_chocolateslimecorpbadges,
@@ -5316,10 +5960,10 @@ food_list = [
 		],
 		recover_hunger = 200,
 		price = 1000,
-		str_name = 'Choclate Slimecorp Badges',
+		str_name = 'Chocolate Slimecorp Badges',
 		str_eat = "You eat the Chocolate Slimecorp Badges. They taste surprisingly good. Maybe they're home-made?",
 		str_desc = "A plastic bag of chocolates, all resembling that infamous logo. Snapping them in half reveals a thin layer of graham cracker on the inside.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_poudrinpops,
@@ -5331,7 +5975,7 @@ food_list = [
 		str_name = 'Poudrin Pops',
 		str_eat = "You crush the poudrin pops with your teeth alone. You don't gain any slime, but they do taste amazing.",
 		str_desc = "Hard, green candy, meant to resemble Slime Poudrins. They're placed atop plastic rings, meant to be worn on your finger as you lick away.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_atms,
@@ -5343,7 +5987,7 @@ food_list = [
 		str_name = "ATm's",
 		str_eat = "You snack on the packet of ATm's. The hard shell pairs nicely with the milk chocolate on the inside.",
 		str_desc = "A packet of ATm's. They're all small, spherical chocolates with the @ symbol on them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_seanis,
@@ -5355,7 +5999,7 @@ food_list = [
 		str_name = 'Seanis',
 		str_eat = "You chomp on the Seanis, slicing them in twain over and over. By the time you're finished with them, you've developed three cavities.",
 		str_desc = "A packet of hard candies. They're small tablets, colored in fuchsia, purple, and seafoam green.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_bustahfingers,
@@ -5366,8 +6010,8 @@ food_list = [
 		price = 10000,
 		str_name = 'Bustahfingers',
 		str_eat = "You chomp on each half of the Bustahfingers heartily. The thick layer of chocolate is complimented perfectly by the core of peanut butter inside.",
-		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of choclate in the middle.",
-		acquisition = acquisition_trickortreating
+		str_desc = "A high quality candy bar, shaped like two nunchuks bonded together by a thin section of chocolate in the middle.",
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_marsbar,
@@ -5379,7 +6023,7 @@ food_list = [
 		str_name = 'Mars Bar',
 		str_eat = "You take a bite out of the mars bar. Shockingly, the nicotine on the inside pairs well with the creamy sweetness of the white chocolate shell.",
 		str_desc = "A small cylindrical candy bar, unsurprisingly shaped like a cigarette. What is surprising, however, is that it contains tiny traces of nicotine on the inside.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_juvieranchers,
@@ -5391,7 +6035,7 @@ food_list = [
 		str_name = 'Juvie Ranchers',
 		str_eat = "You suck on the Juvie Ranchers. The Dire Apple ones are particularly sour.",
 		str_desc = "A bag of hard candies, all flavored after the various crops of the city.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_swedishbassedgods,
@@ -5403,7 +6047,7 @@ food_list = [
 		str_name = 'Swedish Bassed Gods',
 		str_eat = "You chew through the Swedish Bassed Gods. Despite their unassuming appearance, they taste amazing. Truly a snack worthy of praise. Or would it be 'appraisal', in this case? Ah, forget it.",
 		str_desc = "A packet of gummies shaped like the Bassed God. On the back of the packet, there's an advertisement for the Fishing Guild.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food=item_id_endlesswarheads,
@@ -5415,7 +6059,7 @@ food_list = [
 		str_name='Endless Warheads',
 		str_eat="You chew through the Endless Warheads. Combining different colored ones inside your mouth sets off a burst of flavor. Sick!!",
 		str_desc="A bag of sour candies coated in sugar. They're all multicolored, and shaped like the familiar obelisk it gets its name from.",
-		acquisition=acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_chutzpahcherries,
@@ -5427,7 +6071,7 @@ food_list = [
 		str_name = 'Chutzpah Cherries',
 		str_eat = "You gobble up the Chutzpah Cherries. Who knew euthanasia could taste this good!",
 		str_desc = "A small box of dark red gummies, each one bearing the face of a slimeoid.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_slimesours,
@@ -5439,7 +6083,7 @@ food_list = [
 		str_name = 'Slime Sours',
 		str_eat = "You pop a few Slime Sours into your maw. They bubble in your mouth a bit, almost like they're carbonated or something. Luckily they taste excellent, and seemingly have no connection with the death raining from above.",
 		str_desc = "A small plastic bag of gumdrops, each as green as slime itself. Apparently they're made entirely by hand.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_munchies,
@@ -5451,7 +6095,7 @@ food_list = [
 		str_name = 'Munchies',
 		str_eat = "You gorge yourself on the Munchies. What seemed like such a basic snack item reveals itself to be incredibly addictive. Before you know it, the bag is empty, leaving you to reflect on your gluttony.",
 		str_desc = "A bag of crackers, with a thin layer of cream in the middle. They're all shaped like jester hats.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_magickspatchkids,
@@ -5463,7 +6107,7 @@ food_list = [
 		str_name = 'Magicks Patch Kids',
 		str_eat = "You munch on the Magicks Patch Kids. Sour. Sweet. !dab.",
 		str_desc = "People are rather split on these. Some find them too sour, while others claim it to have an 'acquired taste'.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_krakel,
@@ -5475,7 +6119,7 @@ food_list = [
 		str_name = 'Krakel',
 		str_eat = "You take a large bite out of the Krakel bar. The rice lining the interior gives it a nice texture, and offsets the bitterness of the dark chocolate a bit.",
 		str_desc = "A thick slab of dark chocolate. An engraving on the back reads 'SLURP SLIME, BUSTERS'. Go figure.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_strauberryshortcakes,
@@ -5487,7 +6131,7 @@ food_list = [
 		str_name = 'Strauberry Shortcakes',
 		str_eat = "You toss the shortcakes into your mouth one at a time, savoring every bite. Even though they're manufactured, somehow you feel like a lot of love went into making them. Maybe it's just because of all the sugar.",
 		str_desc = "A packet containing two small pastries. An anchor symbol made of pink frosting is drawn onto both of them.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
 		id_food = item_id_n3crunch,
@@ -5499,8 +6143,132 @@ food_list = [
 		str_name = 'N3 Crunch',
 		str_eat = "You bite through the N3 Crunch bar. It's just your basic chocolate bar, with no outstanding appeal other than the engraving on the front.",
 		str_desc = "A chocolate bar popular with fans of Slimecorp. Each bar has an engraving of N3 on it. You try not to think about what people would do with these things behind closed doors.",
-		acquisition = acquisition_trickortreating
+		vendors = [vendor_slimypersuits]
 	),
+	EwFood(
+		id_food = "sourpussbread",
+		alias = [
+			"bowserbread",
+			"spb",
+			"sourpuss"
+		],
+		recover_hunger = 100,
+		price = 1000,
+		str_name = 'Sourpuss Bread',
+		str_eat = "You chomp through the loaf of sourpuss bread. Somehow you feel like it would taste better if it was toasted.",
+		str_desc = "A loaf of bread. The likeness of some reptile is planted on the bag containing it. Apparently it's from 'Bowser', but who the fuck that is, you've got no clue.",
+		vendors = [vendor_pizzahut]
+	),
+	EwFood(
+		id_food = item_id_seaweedjoint,
+		alias = [
+			"joint",
+			"weed",
+			"blunt",
+			"doobie",
+		],
+		recover_hunger = 0,
+		str_name = 'Seaweed Joint',
+		str_eat = "You light up your Seaweed and begin to smoke it. Congratulations! You're now high. You catch fish twice as often, but food is half as effective. This lasts for 10 minutes.",
+		str_desc = "A joint made up of dankwheat and seaweed bartered with Captain Albert Alexander. Wait a minute, does that make the good Captain your drug dealer? Hell yeah.",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food="brawldenbagel",
+		alias=[
+			"bagel",
+			"bdbagel",
+			"brawlbagel"
+		],
+		recover_hunger=111-1, # ;)
+		price=1001,
+		str_name='Brawlden Bagel',
+		str_eat="You attempt to cut the bagel with the shitty plastic butter-knife the waitress gave you, but it snaps in two almost immediately. Looks like you won’t be having any slime cream cheese on your meal today. You crunch as hard as you can into the absolute BRICK of Juvish bread and in the process nearly snap your jaw in two. You begin to chew it only to realize it's fucking sludgeberry. Who puts sludgeberries a bagel? You’re just too furious to finish this distinctly non-keto bagel of burden, so you find the nearest Juvie and chuck it at their skull.",
+		str_desc="Despite the rampant crime-rates of their home district, Brawlden Bagels are a staple of NLACakaNM’s brunch cuisine. Of course, they’re all so stale that most people just use them as brass knuckles, but nonetheless they can be downright irresistible with a large enough smattering of slime cream cheese. That shit has to be, like, an inch thick, though.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="greeneye",
+		alias=[
+			"redeye",
+			"espresso",
+			"caffeine"
+		],
+		recover_hunger=150,
+		price=1500,
+		str_name='Green Eye',
+		str_eat="You bring the small cup to your lips, only to be greeted by a very suspicious smell. You think nothing of it and down the drink in one gulp… This was a mistake. That smell was slime vapor because it turns out the coffee was still fucking boiling when the waitress poured it for you. It may have burned all the skin in your mouth off, sure, but it also burned the nerve-endings on your tongue, so it only hurt for a moment. At the very least, you feel energized and in the mood to put pen to paper and write.",
+		str_desc="Coffee topped off with a nice rejuvenating shot of slime to stop the ol’ adenosine from pumping. It’s even served in a miniature cup so you can shotgun it without issue!",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="pcpastry",
+		alias=[
+			"pcp",
+			"pastry",
+			"procrastinatorspastry"
+		],
+		recover_hunger=90,
+		price=900,
+		str_name='PCPastry',
+		str_eat="You aren’t certain about this pastry’s quality because you were a bit iffy on last week’s. You give it a try and are pleasantly surprised! The ingredients seem to be more in harmony this week, and generally it just has a better texture. All the people you know seem to still be under the assumption that they’re always gonna be spicy and hard to eat, but that hasn’t really been the case for a few months. After finishing it, you come to the conclusion that, while you wouldn’t go so far as to call yourself a PCPastries-head, you’d probably purchase one again as long as they keep up the quality.",
+		str_desc="A sweet treat that is somewhat notorious in town. Of course, everybody has their favorite and least favorite ingredients, but is it actually really worth the trek to the cafe to eat the new one every single week?",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="fuckuccino",
+		alias=[
+			"frappuccino",
+			"cappuccino",
+			"sourpuss"
+		],
+		recover_hunger=300,
+		price=3000,
+		str_name='Fuckuccino',
+		str_eat="You let it cool off for a few seconds before taking a sip, only to be disgusted by how bitter it is. You figured this would be the case, so you unload one of the sugar packets into the mug. Nope, the bitterness remains. You pour another. It's still not sweet enough. You continue this cycle until you’ve poured all 12 sugar packets into the coffee. Eventually it becomes sweet enough to tolerate. Truly, the young slimeboi’s ambrosia.",
+		str_desc="A wonderful cup of joe mixed with a healthy dose of Fuck Energy ™ Cream. It comes with several packets of sugar, in case the 500 milligrams of caffeine isn’t enough for you.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="goolongtea",
+		alias=[
+			"tea",
+			"oolong",
+			"goolong"
+		],
+		recover_hunger=310,
+		price=3100,
+		str_name='Goolong Tea',
+		str_eat="Finally, after months of purely fast food and various carcinogens, a beverage that won’t take a year off of your lifespan. You sip the oriental tea with newfound vigor. You begin to recall back to before the slime, before the poudrins, before the FUCK Energy. You snap back to reality when you realize that you were so out of it that you spilled the rest of it all over your clothes. Shit.",
+		str_desc="Restorative, piping-hot tea made with the goolong herb grown in the far eastern lands of *Nuvada*. Even if it is “good” for you, at least it’s served in a styrofoam cup so it can still hurt the environment in some way. The zarf is bright green. If you don’t know what that means then look it up, pussy.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food="3tart",
+		alias=[
+			"tart",
+			"3tard",
+		],
+		recover_hunger=33,
+		price=333,
+		str_name='3tart',
+		str_eat="You bite into the 3tart, and yeah, the initial mouthfeel is pretty crummy, but you decide to stick with it because you already invested some slime in the thing anyways. As you chew it more and more you begin to grow less wary of it. By the time you swallow, you’re actually somewhat fond of the thing, even if it was relatively new. Man, if only 3tards could follow this kind of arc.",
+		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
+		vendors=[vendor_greencakecafe]
+	),
+	EwFood(
+		id_food = "juicebox",
+		alias = [
+			"juice",
+			"appyjuice",
+		],
+		recover_hunger=10,
+		price=1,
+		str_name = "Juice Box",
+		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
+		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
+		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
+	)
 ]
 
 # A map of id_food to EwFood objects.
@@ -6213,7 +6981,15 @@ fish_list  =  [
 		catch_weather = None,
 		str_desc = "It has no arms and a blue bandana.",
 		slime = fish_slime_freshwater
-	)
+	),
+	EwFish(
+		id_fish = "mertwink",
+		str_name = "Mertwink",
+		rarity = fish_rarity_rare,
+		catch_time = None,
+		catch_weather = fish_catchtime_rain,
+		str_desc = "Rejoice, horndogs.",
+	),
 ]
 
 # A map of id_fish to EwFish objects.
@@ -7217,7 +7993,7 @@ item_def_list = [
 			'hue': "",
 		}
 	),
-EwItemDef(
+	EwItemDef(
 		item_type = it_furniture,
 		str_name = "{furniture_name}",
 		str_desc = "{furniture_desc}",
@@ -7231,6 +8007,19 @@ EwItemDef(
 
 		}
 	),
+	EwItemDef(
+		item_type = it_book,
+		str_name = "{title}",
+		str_desc = "{book_desc}",
+		soulbound = False,
+		item_props = {
+			"title": "Book",
+			"author": "Boy",
+			"date_published": 2000,
+			"id_book": 69,
+			"book_desc": "A book by AUTHOR, published on DAY."
+		}
+	),
 ]
 
 # A map of item_type to EwItemDef objects.
@@ -7241,38 +8030,6 @@ for item_def in item_def_list:
 	item_def_map[item_def.item_type] = item_def
 
 poi_list = [
-	EwPoi( # ENDLESS WAR
-		id_poi = poi_id_endlesswar,
-		alias = [
-			"obelisk",
-			"war",
-			"ew"
-		],
-		str_in = "at the base of",
-		str_enter = "arrive at",
-		str_name = "ENDLESS WAR",
-		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
-		coord = (57, 40),
-		channel = channel_endlesswar,
-		role = "Endless War"
-	),
-	EwPoi( # slimecorp HQ
-		id_poi = poi_id_slimecorphq,
-		alias = [
-			"slimecorp",
-			"hq",
-			"corp"
-		],
-		str_in = "in the lobby of",
-		str_name = "SlimeCorp HQ",
-		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
-		coord = (61, 40),
-		channel = channel_slimecorphq,
-		role = "SlimeCorp HQ",
-		pvp = False,
-		is_subzone = True,
-		mother_district = poi_id_downtown
-	),
 	EwPoi( # 1
 		id_poi = poi_id_downtown,
 		alias = [
@@ -7281,32 +8038,12 @@ poi_list = [
 		],
 		str_name = "Downtown NLACakaNM",
 		str_desc = "Skyscrapers and high-rise apartments tower above the jam-packed, bustling city streets below for as far as the eye can see. In this dense concrete jungle, your attention is constantly being divided among a thousand different things. Neon, fluorescent signs flash advertisements for all manner of amenities and businesses. The streets rumble with the sound of engines and metal scraping from the subway system deep underground. Hordes of men and women from every imaginable background walk these cruel streets, trying desperately to eke out a pitiful existence for themselves. This district never unwinds from its constant 24/7 slime-induced mania for even a moment, let alone sleep.\nDowntown is the beating heart of New Los Angeles City, aka Neo Milwaukee. With settlements in the area predating the emergence of slime, its prime location along the newly formed coastline naturally grew it into the cultural, economic, and literal center of the city. Due to its symbolic and strategic importance, it's home to the most intense gang violence of the city. Gunshots and screams followed by police sirens are background noises for this district. Some say that this propensity for violence is result of the sinister influence from an old obelisk in the center of town, ominously called ENDLESS WAR. You aren’t sure if you believe that, though.\n\nThis area contains ENDLESS WAR, SlimeCorp HQ, the Slime Stock Exchange and the Downtown Subway Station. To the north is Smogsburg. To the East is the Green Light District. To the South is the Rowdy Roughhouse. To the Southwest is Poudrin Alley. To the West is Krak Bay. To the Northwest is Cop Killtown.",
-		coord = (59, 40),
+		coord = (28, 21),
 		coord_alias = [
-			(59, 36),
-			(59, 37),
-			(59, 43),
-			(59, 44),
-			(55, 38),
-			(56, 38),
-			(57, 38),
-			(58, 38),
-			(59, 38),
-			(60, 38),
-			(61, 38),
-			(62, 38),
-			(63, 38),
-			(59, 39),
-			(59, 41),
-			(55, 42),
-			(56, 42),
-			(57, 42),
-			(58, 42),
-			(59, 42),
-			(60, 42),
-			(61, 42),
-			(62, 42),
-			(63, 42)
+			(29, 21),
+			(30, 21),
+			(30, 22),
+			(30, 23)
 		],
 		channel = "downtown",
 		role = "Downtown",
@@ -7322,29 +8059,7 @@ poi_list = [
 		],
 		str_name = "Smogsburg",
 		str_desc = "In every direction, smokestacks belch out copious amounts of pollution into the atmosphere, creating a thick cloud that shrouds the district in sickening smog. It covers the district so completely that you can barely make out what time day it is. Your lungs can’t take much more of standing here, just do what you want to do and get out.\nSmogsburg is comprise of dozens of slime refineries and poudrin mills that turn unrefined, raw materials like the sludge from the city’s harbor into useful, pure slime. Functioning as the city’s premier industrial sector, it is by far the district hardest on the environment.\n\nThis area contains the Bazaar, the SlimeCorp Recycling Plant and the Smogsburg Subway Station. To the North is Arsonbrook. To the Northeast is Little Chernobyl. To the East is Old New Yonkers. To the South is Downtown NLACakaNM. To the West is Cop Killtown. To the Northwest is Astatine Heights.",
-		coord = (59, 28),
-		coord_alias = [
-			(55, 26),
-			(56, 26),
-			(57, 26),
-			(58, 26),
-			(59, 26),
-			(60, 26),
-			(61, 26),
-			(62, 26),
-			(63, 26),
-			(59, 27),
-			(59, 29),
-			(55, 30),
-			(56, 30),
-			(57, 30),
-			(58, 30),
-			(59, 30),
-			(60, 30),
-			(61, 30),
-			(62, 30),
-			(63, 30)
-		],
+		coord = (28, 16),
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
@@ -7366,29 +8081,7 @@ poi_list = [
 		],
 		str_name = "Cop Killtown",
 		str_desc = "Edifices of various sinister architectural styles rise above the pavement. Gothic cathedrals, Victorian buildings, and New England brownstone apartments all dyed cool, dark colors. This district even hosts a miniature Japantown, featuring stores and restaurants that clutter your vision with densely packed fluorescent signage and other visual noise. Often cloaked in shadow from the height of these imposing buildings, the narrow, cobblestone streets of this district are perfect to brood and foster your angst in.\nCop Killtown is the gang base of the hardboiled, and calculating Killers. St. Ben’s Cathedral looms menacing on the horizon.\nhttps://discord.gg/xSQQD2M\n\nThis area contains the Cop Killtown Subway Station. To the North is Astatine Heights. To the East is Smogsburg. To the Southeast is Downtown NLACakaNM. To the Northwest is Gatlingsdale.",
-		coord = (44, 32),
-		coord_alias = [
-			(40, 30),
-			(41, 30),
-			(42, 30),
-			(43, 30),
-			(44, 30),
-			(45, 30),
-			(46, 30),
-			(47, 30),
-			(48, 30),
-			(44, 31),
-			(44, 33),
-			(40, 34),
-			(41, 34),
-			(42, 34),
-			(43, 34),
-			(44, 34),
-			(45, 34),
-			(46, 34),
-			(47, 34),
-			(48, 34)
-		],
+		coord = (22, 18),
 		channel = channel_copkilltown,
 		role = "Cop Killtown",
 		factions = [
@@ -7405,30 +8098,8 @@ poi_list = [
 			"kb"
 		],
 		str_name = "Krak Bay",
-		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
-		coord = (43, 44),
-		coord_alias = [
-			(39, 42),
-			(40, 42),
-			(41, 42),
-			(42, 42),
-			(43, 42),
-			(44, 42),
-			(45, 42),
-			(46, 42),
-			(47, 42),
-			(43, 43),
-			(43, 45),
-			(39, 46),
-			(40, 46),
-			(41, 46),
-			(42, 46),
-			(43, 46),
-			(44, 46),
-			(45, 46),
-			(46, 46),
-			(47, 46)
-		],
+		str_desc = "Long street blocks are are densely packed with stores and restaurants, mixed in with townhouses and accompanied by modern skyscrapers and sprawling in-door shopping malls. These amenities and a scenic view of the River of Slime on its coast makes this district a favorite of a juvenile out on the town.\nKrak Bay is a bustling commercial district, featuring stores from across the retail spectrum. From economic, practical convenience stores to high-class, swanky restaurants, Krak Bay has it all. It is also home to some of the most recognizable fixtures of the city’s skyline, most notably the Poudrintial Tower and the shopping mall at its base which contains the city’s prized food court.\n\nThis area contains the Food Court, Bicarbonate Soda Fountain, and the Krak Bay Subway Station. To the East is Downtown NLACakaNM. To the Southeast is Poudrin Alley. To the South is Ooze Gardens. To the Southwest is South Sleezeborough. To the West is North Sleezeborough. To the Northwest is Glocksbury.",
+		coord = (21, 24),
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
@@ -7442,29 +8113,7 @@ poi_list = [
 		],
 		str_name = "Poudrin Alley",
 		str_desc = "Densely packed, claustrophobic mazes of residential apartments stand above poorly planned roads with broken streetlights that spark and flicker over the cracked pavement. Only the locals know how to navigate the residential labyrinth effectively, by utilizing the interconnected, narrow alleyways the district is named for.\nPoudrin Alley is the principal residential district of the city, outfitted with enough low-rent apartments for the lower-middle class to house the entire city on its own. Sadly, for most of the impoverished dredges of the city, these low rents just aren’t low enough and the majority of the apartments go unused.\n\nThis area contains the 7-11. To the Northeast is Downtown NLACakaNM. To the East is the Rowdy Roughhouse. To the South is Cratersville. To the Southwest is Ooze Gardens. To the Northwest is Krak Bay.",
-		coord = (50, 54),
-		coord_alias = [
-			(48, 50),
-			(48, 51),
-			(48, 52),
-			(48, 53),
-			(48, 54),
-			(48, 55),
-			(48, 56),
-			(48, 57),
-			(48, 58),
-			(49, 54),
-			(51, 54),
-			(52, 50),
-			(52, 51),
-			(52, 52),
-			(52, 53),
-			(52, 54),
-			(52, 55),
-			(52, 56),
-			(52, 57),
-			(52, 58)
-		],
+		coord = (24, 28),
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
@@ -7483,29 +8132,7 @@ poi_list = [
 		],
 		str_name = "Rowdy Roughhouse",
 		str_desc = "Cheap townhouses and abandoned warehouses host graffiti art on basically every surface. An almost completely overrun slum, many of the deteriorated buildings have been painted a bright pink by the gangsters that seized them. Overpopulated and underhoused, the majority of the residents have constructed shanty houses for themselves and gather around trash can bonfires. Loud music blasts from bass-heavy speakers all hours of the night, fueling the seemingly constant parties this district is known for.\nRowdy Roughhouse is the gang base of the hot blooded, and reckless Rowdys. In the heart of the district stands the Rowdy Roughhouse, for which the district is named. Yes, it’s confusing, we know.\nhttps://discord.gg/JZ2AaJ2\n\nThis area contains the Rowdy Roughhouse Subway Station. To the North is Downtown NLACakaNM. To the South is Wreckington. To the Southwest is Cratersville. To the West is Poudrin Alley.",
-		coord = (62, 51),
-		coord_alias = [
-			(58, 49),
-			(59, 49),
-			(60, 49),
-			(61, 49),
-			(62, 49),
-			(63, 49),
-			(64, 49),
-			(65, 49),
-			(66, 49),
-			(62, 50),
-			(62, 52),
-			(58, 53),
-			(59, 53),
-			(60, 53),
-			(61, 53),
-			(62, 53),
-			(63, 53),
-			(64, 53),
-			(65, 53),
-			(66, 53)
-		],
+		coord = (30, 26),
 		channel = channel_rowdyroughhouse,
 		role = "Rowdy Roughhouse",
 		factions = [
@@ -7522,34 +8149,13 @@ poi_list = [
 			"gld"
 		],
 		str_name = "Green Light District",
-		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous Slime Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the Slime Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
-		coord = (73, 33),
-		coord_alias = [
-			(71, 29),
-			(71, 30),
-			(71, 31),
-			(71, 32),
-			(71, 33),
-			(71, 34),
-			(71, 35),
-			(71, 36),
-			(71, 37),
-			(72, 33),
-			(74, 33),
-			(75, 29),
-			(75, 30),
-			(75, 31),
-			(75, 32),
-			(75, 33),
-			(75, 34),
-			(75, 35),
-			(75, 36),
-			(75, 37)
-		],
+		str_desc = "Animated neon, fluorescent signs dominate your vision, advertising all conceivable earthly pleasures. This district’s main street consists of a long, freshly-paved road with brothels, bars, casinos and other institutions of sin lining either side of it. Among these is the city-famous SlimeCorp Casino, where you can gamble away your hard-earned SlimeCoin playing various slime-themed games. The ground is tacky with some unknown but obviously sinful grime.\nThe Green Light District is well-known for its illegal activities, almost completely being comprised by amenities of ill repute and vice.\n\nThis area contains the SlimeCorp Casino and the Green Light District Subway Station. To the East is Vagrant's Corner. To the Southeast is Juvie's Row. To the West is Downtown NLACakaNM.",
+		coord = (34, 19),
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
-		is_capturable = True
+		is_capturable = True,
+		has_ads = True
 	),
 	EwPoi( # 8
 		id_poi = poi_id_oldnewyonkers,
@@ -7558,29 +8164,7 @@ poi_list = [
 		],
 		str_name = "Old New Yonkers",
 		str_desc = "Rows of three-story brick condominiums with white marble moulding wind along lanes of old asphalt roads with faded markings. Spiked wrought-iron gates protect the lawn of the district’s principal institutions, like the senior center.\nOld New Yonkers is popular with the older citizens of the city, due to its incredibly boring, gentrified residential landscape. Modest outdoor malls sells useless shit like candles and soaps, and the elderly population fills up their lumpy, sagging bodies at chain restaurants like Applebee’s and fucking IHOP.\n\nThis area contains the Slimecorp Real Estate Agency. To the Northeast is New New Yonkers. To the Southeast is Vagrant's Corner. To the Southwest is Smogsburg. To the East is Little Chernobyl. To the Northwest is Brawlden.",
-		coord = (80, 21),
-		coord_alias = [
-			(76, 19),
-			(77, 19),
-			(78, 19),
-			(79, 19),
-			(80, 19),
-			(81, 19),
-			(82, 19),
-			(83, 19),
-			(84, 19),
-			(80, 20),
-			(80, 22),
-			(76, 23),
-			(77, 23),
-			(78, 23),
-			(79, 23),
-			(80, 23),
-			(81, 23),
-			(82, 23),
-			(83, 23),
-			(84, 23)
-		],
+		coord = (37, 14),
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
@@ -7595,30 +8179,8 @@ poi_list = [
 			"lc"
 		],
 		str_name = "Little Chernobyl",
-		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains RP City. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
-		coord = (67, 18),
-		coord_alias = [
-			(63, 16),
-			(64, 16),
-			(65, 16),
-			(66, 16),
-			(67, 16),
-			(68, 16),
-			(69, 16),
-			(70, 16),
-			(71, 16),
-			(67, 17),
-			(67, 19),
-			(63, 20),
-			(64, 20),
-			(65, 20),
-			(66, 20),
-			(67, 20),
-			(68, 20),
-			(69, 20),
-			(70, 20),
-			(71, 20)
-		],
+		str_desc = "Dilapidated office buildings overgrown with ivy and the bombed-out frames of unidentifiable structures comprise the majority of the housing for this sparsely populated district. Radioactive almost to the point of warding off thieves and vandals (but not quite), many people report seeing strange creatures and various cryptids roaming the abandoned power plant complex at night.\nLittle Chernobyl might not be much to look at or often discussed nowadays, but don’t be fooled by its current irrelevance. Long ago, it was home to Arizona's largest nuclear power plant. An electrical blackout caused a total safety system failure, leading in a cataclysmic nuclear meltdown. This caused nuclear waste to flood into the Grand Canyon and create the Slime Sea we know and love today.\n\nThis area contains Green Cake Cafe. To the North is Brawlden. To the East is Old New Yonkers. To the West is Arsonbrook.",
+		coord = (30, 12),
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
@@ -7632,29 +8194,7 @@ poi_list = [
 		],
 		str_name = "Arsonbrook",
 		str_desc = "This district is seemingly eternally overcast, allowing the dark plumes of smoke from distant fires fade into the soft grey clouds. A thin layer of soot rests upon basically the entire district, providing nutrient-rich soil which the rural farmers in the north of the district take advantage of. In the south, enclaves of civilization have started to pop up, learning from the mistakes of previous generations and building out of brick instead of wood. Aesthetically, these settlements resemble a small mining town from the mountainous forests of the northwest, just replace the rugged terrain with flat land and the evergreens with burnt, charcoal frames of trees that used to be. A Starbucks tried to open here once.\nArsonbook is easily among the most peaceful districts of the city, as long as you count constant wildfires and destruction of property from arson as peaceful. The locals are used to that sort of thing though, so they’re pretty mellow. Kick back, relax, and don’t get too attached to your house if you plan on living here.\n\nThis area contains the Arsonbrook Farms and the Arsonbrook Subway Station. To the East is Brawlden. To the Southeast is Little Chernobyl. To the South is Smogsburg. To the West is Astatine Heights. To the North is Arsonbrook Outskirts.",
-		coord = (56, 10),
-		coord_alias = [
-			(54, 6),
-			(54, 7),
-			(54, 8),
-			(54, 9),
-			(54, 10),
-			(54, 11),
-			(54, 12),
-			(54, 13),
-			(54, 14),
-			(55, 10),
-			(57, 10),
-			(58, 6),
-			(58, 7),
-			(58, 8),
-			(58, 9),
-			(58, 10),
-			(58, 11),
-			(58, 12),
-			(58, 13),
-			(58, 14)
-		],
+		coord = (26, 8),
 		channel = "arsonbrook",
 		role = "Arsonbrook",
 		property_class = property_class_b,
@@ -7669,29 +8209,7 @@ poi_list = [
 		],
 		str_name = "Astatine Heights",
 		str_desc = "Swanky modern condominiums jut out of the steep hills to the north, while to the south rows of picture-perfect suburban homes with disgustingly well-maintained lawns constrict around freshly-laid roads. Luxury boutiques and high-class restaurants compete for the wallets of privileged, rich yuppies.\nAstatine Heights is the home to many of the wealthiest men and women of the city, with many of the residents forcing their fratty Republican sons to the prestigious college N.L.A.C.U. in neighboring Gatlingsdale. The difference between Astatine Heights and other affluent districts of the city is that the majority of residents have not passed onto the elysian fields of retirement, and thus have at least a sliver of personality and ambition left in their community, however gentrified it might be.\n\nThis area contains NLACakaNM Cinemas, the Red Mobster Seafood Restaurant and the Astatine Heights Subway Station. To the East is Arsonbrook. To the Southeast is Smogsburg. To the South is Cop Killtown. To the Southwest is Gatlingsdale. To the West is Toxington. To the North is Astatine Heights Outskirts.",
-		coord = (46, 16),
-		coord_alias = [
-			(42, 14),
-			(43, 14),
-			(44, 14),
-			(45, 14),
-			(46, 14),
-			(47, 14),
-			(48, 14),
-			(49, 14),
-			(50, 14),
-			(46, 15),
-			(46, 17),
-			(42, 18),
-			(43, 18),
-			(44, 18),
-			(45, 18),
-			(46, 18),
-			(47, 18),
-			(48, 18),
-			(49, 18),
-			(50, 18)
-		],
+		coord = (22, 11),
 		channel = "astatine-heights",
 		role = "Astatine Heights",
 		property_class = property_class_a,
@@ -7706,29 +8224,7 @@ poi_list = [
 		],
 		str_name = "Gatlingsdale",
 		str_desc = "Hundreds of small “nerdy” retail stores and ethnically-diverse restaurants are compact into a dense, bustling plaza just minutes from the prestigious N.L.A.C.U. college campus. Almost all of district is comprised of or controlled by the sprawling ivy league university. Featuring smoky cafes, vintage clothing boutiques, and independent bookstores, this district is perfectly catered to the pompous hipsters that flood its streets every day after class.\nGatlingsdale is a historic district, with many of its winding cobblestone roads and gaslamp streetlights dating back to the early days of the city.\n\nThis District contains New Los Angeles City University and the Gatlingsdale Subway Station. To the Northeast is Astatine Heights. To the Southeast is Cop Killtown. To the Southwest is Vandal Park. To the West is Polonium Hill. To the Northwest is Toxington.",
-		coord = (36, 21),
-		coord_alias = [
-			(32, 19),
-			(33, 19),
-			(34, 19),
-			(35, 19),
-			(36, 19),
-			(37, 19),
-			(38, 19),
-			(39, 19),
-			(40, 19),
-			(36, 20),
-			(36, 22),
-			(32, 23),
-			(33, 23),
-			(34, 23),
-			(35, 23),
-			(36, 23),
-			(37, 23),
-			(38, 23),
-			(39, 23),
-			(40, 23)
-		],
+		coord = (18, 14),
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
 		property_class = property_class_a,
@@ -7743,29 +8239,7 @@ poi_list = [
 		],
 		str_name = "Vandal Park",
 		str_desc = "A laundry list of various sports amenities and public parks dot the landscape of this athletically minded district. These include soccer fields, skate parks, swimming pools, and of course the district’s famous Battle Arena.\nVandal Park’s numerous open spaces and its more-or-less clean air make it an attractive destination for juveniles seeking a stroll. Despite this you’ve still got to keep your wits about you here if you want to not get publicly executed against one of the pretty trees.\n\nThis area contains the Battle Arena. To the Northeast is Gatlingsdale. To the South is Glocksbury. To the Southwest is West Glocksbury. To the Northwest is Polonium Hill.",
-		coord = (28, 28),
-		coord_alias = [
-			(24, 26),
-			(25, 26),
-			(26, 26),
-			(27, 26),
-			(28, 26),
-			(29, 26),
-			(30, 26),
-			(31, 26),
-			(32, 26),
-			(28, 27),
-			(28, 29),
-			(24, 30),
-			(25, 30),
-			(26, 30),
-			(27, 30),
-			(28, 30),
-			(29, 30),
-			(30, 30),
-			(31, 30),
-			(32, 30)
-		],
+		coord = (15, 17),
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
@@ -7780,29 +8254,7 @@ poi_list = [
 		],
 		str_name = "Glocksbury",
 		str_desc = "Semi-orderly residential neighborhoods with discolored white picket fences protecting unkempt lawns for as far as the eye can far. This district likes to pretend its a quiet suburb, but the regular screams and gunshots coupled with numerous chalk outlines of human bodies on the street make this hard to believe. You smell bacon. *Figurative* bacon. The cops must be lurking nearby somewhere.\nGlocksbury’s flaccid attempts at normalcy are fueled by it hosting the city’s police department, which is hilariously ineffectual and underfunded to the point of absurdity. In this city, the bumbling police act as target practice to the local gangs rather than actual authorities to be obeyed. But, they sure like to pretend they are.\n\nThis area contains Glocksbury Comics, and the Glocksbury Subway Station. To the North is Vandal Park. To the Southeast is Krak Bay. To the South is North Sleezeborough. To the West is West Glocksbury. To the West is West Glocksbury Outskirts.",
-		coord = (27, 38),
-		coord_alias = [
-			(23, 36),
-			(24, 36),
-			(25, 36),
-			(26, 36),
-			(27, 36),
-			(28, 36),
-			(29, 36),
-			(30, 36),
-			(31, 36),
-			(27, 37),
-			(27, 39),
-			(23, 40),
-			(24, 40),
-			(25, 40),
-			(26, 40),
-			(27, 40),
-			(28, 40),
-			(29, 40),
-			(30, 40),
-			(31, 40)
-		],
+		coord = (14, 21),
 		channel = "glocksbury",
 		role = "Glocksbury",
 		property_class = property_class_c,
@@ -7821,29 +8273,7 @@ poi_list = [
 		],
 		str_name = "North Sleezeborough",
 		str_desc = "Sleepy brownstone apartments and about 50,000 different terrible pizza places populate this slow paced, gentrifying district. Outdoor malls have started to spring up here and there, mostly around the college campus of Neo Milwaukee State. Retired parents rest on benches, throwing crumbs of bread at birds and squandering the twilight years of their misspent life. Students with curious facial hair and suspenders lurk in vinyl record stores and horde ironic knick-knacks.\nNorth Sleezeborough residents really, really don't care about anything. It wouldn’t be fair to call them nihilistic, that implies self-reflection or philosophical quandary, they are just so lethargic that they might as well categorically be considered legally dead. Alongside these generally older occupants are younger students who have flocked to the dirt cheap public college of Neo Milwaukee State to continue their mediocre education.\n\nThis area contains Neo Milwaukee State and the North Sleezeborough Subway Station. To the North is Glocksbury. To the East is Krak Bay. To the South is South Sleezeborough.",
-		coord = (29, 46),
-		coord_alias = [
-			(25, 44),
-			(26, 44),
-			(27, 44),
-			(28, 44),
-			(29, 44),
-			(30, 44),
-			(31, 44),
-			(32, 44),
-			(33, 44),
-			(29, 45),
-			(29, 47),
-			(25, 48),
-			(26, 48),
-			(27, 48),
-			(28, 48),
-			(29, 48),
-			(30, 48),
-			(31, 48),
-			(32, 48),
-			(33, 48)
-		],
+		coord = (16, 24),
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
 		property_class = property_class_b,
@@ -7862,29 +8292,7 @@ poi_list = [
 		],
 		str_name = "South Sleezeborough",
 		str_desc = "Dreary townhouses and red brick apartments brush up against the embarrassingly inauthentic approximations oriental architectural styles of the city’s Chinatown. There, pagodas and dragon gates take up every square inch of land that asian restaurants and law firms don’t. From the streets it’s hard to make out the sky from the tacky lanterns and web of unintelligible business signs.\nSouth Sleezeborough’s residential streets are as boring as can be, but wade through them and you’ll have a fun time ordering popping bubble tea and lemon roll cakes from bakeries and sparing with your buddies at the Dojo.\n\nThis area contains the Dojo and the South Sleezeborough Subway Station. To the North is North Sleezeborough. To the Northeast is Krak Bay. To the East is Ooze Gardens. To the West is Crookline. To the South is South Sleezeborough Outskirts.",
-		coord = (29, 57),
-		coord_alias = [
-			(27, 53),
-			(27, 54),
-			(27, 55),
-			(27, 56),
-			(27, 57),
-			(27, 58),
-			(27, 59),
-			(27, 60),
-			(27, 61),
-			(28, 57),
-			(30, 57),
-			(31, 53),
-			(31, 54),
-			(31, 55),
-			(31, 56),
-			(31, 57),
-			(31, 58),
-			(31, 59),
-			(31, 60),
-			(31, 61)
-		],
+		coord = (17, 27),
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
 		property_class = property_class_b,
@@ -7899,29 +8307,7 @@ poi_list = [
 		],
 		str_name = "Ooze Gardens",
 		str_desc = "Walking paths connect dozens of greenhouses and gardens featuring rare, exotic, and irradiated flora. This district is really just one big park, broken up into several sections hosting different types of botanical attractions, as well as several museums and even the city’s zoo. Musical concerts are often held in one of the several outdoor amphitheatres that are scattered across the district. Truly, an amusement park for lovers of nature and culture.\nOoze Gardens is a clear cultural outlier of the city. The residents of this district are largely pacifist, choosing music, love, and psychedelic drugs over violent crime. They make you sick.\n\nThis area contains the Ooze Gardens Farms. To the North is Krak Bay. To the Northeast is Poudrin Alley. To the East is Cratersville. To the West is South Sleezeborough. To the South is Ooze Gardens Outskirts.",
-		coord = (37, 62),
-		coord_alias = [
-			(35, 58),
-			(35, 59),
-			(35, 60),
-			(35, 61),
-			(35, 62),
-			(35, 63),
-			(35, 64),
-			(35, 65),
-			(35, 66),
-			(36, 62),
-			(38, 62),
-			(39, 58),
-			(39, 59),
-			(39, 60),
-			(39, 61),
-			(39, 62),
-			(39, 63),
-			(39, 64),
-			(39, 65),
-			(39, 66)
-		],
+		coord = (19, 30),
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
@@ -7936,29 +8322,7 @@ poi_list = [
 		],
 		str_name = "Cratersville",
 		str_desc = "Crumbling infrastructure is commonplace here. The craters and smaller potholes that give this district its name are scattered liberally across the streets and sidewalks. Unruly miners have refused to limit their excavating to the designated mining sector and scavenge even the residential roads for meager drops of slime.\nCratersville really sucks to live in. I mean, obviously. Look at this place. Even aside from the huge fucking holes everywhere, you’ve still got to deal with the constant sound of mining and dynamite explosions underground.\n\nThis area contains the Cratersville Mines and the Cratersville Subway Station. To the North is Poudrin Alley. To the Northeast is the Rowdy Roughhouse. To the East is Wreckington. To the West is Ooze Gardens. To the South is Cratersville Outskirts.",
-		coord = (48, 64),
-		coord_alias = [
-			(44, 62),
-			(45, 62),
-			(46, 62),
-			(47, 62),
-			(48, 62),
-			(49, 62),
-			(50, 62),
-			(51, 62),
-			(52, 62),
-			(48, 63),
-			(48, 65),
-			(44, 66),
-			(45, 66),
-			(46, 66),
-			(47, 66),
-			(48, 66),
-			(49, 66),
-			(50, 66),
-			(51, 66),
-			(52, 66)
-		],
+		coord = (24, 33),
 		channel = "cratersville",
 		role = "Cratersville",
 		property_class = property_class_c,
@@ -7974,29 +8338,7 @@ poi_list = [
 		],
 		str_name = "Wreckington",
 		str_desc = "Piles of rubble and scrap metal lean against partially demolished buildings that barely remain standing. Sadly, these structures are often all the critically impoverished residents of Wreckington have to house themselves. Constant new construction projects promise new opportunities for the deteriorating district, but these promises are too often broken by lack of funding and interest. Jackhammers pummeling the asphalt and wrecking balls knocking down apartment complexes can be heard throughout the entire district, 24/7.\nWreckington isn’t completely barren however, its strategic location on the coast and cheap property makes its shipyard a favorite among unscrupulous sailors. It also features a ferry connection to Vagrant’s Corner, if you’re so inclined to visit the eastern districts.\n\nThis area contains the Smoker's Cough Diner, the Wreckington Ferry Port and the Wreckington Subway Station. To the North is the Rowdy Roughhouse. To the West is Cratersville. To the South is Wreckington Outskirts.",
-		coord = (63, 60),
-		coord_alias = [
-			(59, 58),
-			(60, 58),
-			(61, 58),
-			(62, 58),
-			(63, 58),
-			(64, 58),
-			(65, 58),
-			(66, 58),
-			(67, 58),
-			(63, 59),
-			(63, 61),
-			(59, 62),
-			(60, 62),
-			(61, 62),
-			(62, 62),
-			(63, 62),
-			(64, 62),
-			(65, 62),
-			(66, 62),
-			(67, 62)
-		],
+		coord = (32, 29),
 		channel = "wreckington",
 		role = "Wreckington",
 		property_class = property_class_c,
@@ -8011,29 +8353,7 @@ poi_list = [
 		],
 		str_name = "Juvie's Row",
 		str_desc = "The landscape of this district is completely defined by it containing the city’s largest mineshafts. Almost the entire district is has been dug up, the earth overturned by a crazed populace trying to soak up every drop of slime it can get its hands on. There are few permanent structures here, and even less infrastructure. Swathes of juveniles have constructed shanty houses out of discarded building materials, suffering from the intense pollution and poor living conditions just to be closer to the mine shaft entrances that jut out of the otherwise useless, rugged terrain. Makeshift bazaars and other rudimentary amenities have popped up in the horribly overcrowded tent cities.\nJuvie’s Row might just be the most populous district of the city, with every ambitious juvenile spending at least some of their formative days toiling underground to eke out a pitiful existence. Seeing all the gang unaligned juvies here fills you with pity, as well as disgust.\n\nThis area contains the Juvie's Row Mines, the Juvie's Row Farms and the Juvie's Row Subway Station. To the Northeast is Vagrant's Corner. To the Northwest is the Green Light District.",
-		coord = (82, 38),
-		coord_alias = [
-			(78, 36),
-			(79, 36),
-			(80, 36),
-			(81, 36),
-			(82, 36),
-			(83, 36),
-			(84, 36),
-			(85, 36),
-			(86, 36),
-			(82, 37),
-			(82, 39),
-			(78, 40),
-			(79, 40),
-			(80, 40),
-			(81, 40),
-			(82, 40),
-			(83, 40),
-			(84, 40),
-			(85, 40),
-			(86, 40)
-		],
+		coord = (37, 23),
 		channel = "juvies-row",
 		role = "Juvie's Row",
 		pvp = False,
@@ -8050,29 +8370,7 @@ poi_list = [
 		],
 		str_name = "Slime's End",
 		str_desc = "There’s not much to see here, as this sparsely populated district is mainly comprised of small residential enclaves and barren terrain. Maybe a tree here and there, I don’t know.\nSlime’s End is a narrow peninsula is bordered on both sides by the Slime Sea. The phosphorescence illuminates the sky with an eerily green glow.\n\nThis area contains the Slime's End Cliffs. To the North is Vagrant's Corner.",
-		coord = (98, 38),
-		coord_alias = [
-			(94, 36),
-			(95, 36),
-			(96, 36),
-			(97, 36),
-			(98, 36),
-			(99, 36),
-			(100, 36),
-			(101, 36),
-			(102, 36),
-			(98, 37),
-			(98, 39),
-			(94, 40),
-			(95, 40),
-			(96, 40),
-			(97, 40),
-			(98, 40),
-			(99, 40),
-			(100, 40),
-			(101, 40),
-			(102, 40)
-		],
+		coord = (45, 21),
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
@@ -8087,29 +8385,7 @@ poi_list = [
 		],
 		str_name = "Vagrant's Corner",
 		str_desc = "A foul, fishy smell pervades the entire district, emanating from the harbor. This wretched wharf is home to the seediest underbelly of the city, besides the neighboring Green Light District of course. Pirates and other seafaring scoundrels patron the local taverns and other haunts of ill repute while on shore leave. The harsh glow of the Slimea Sea illuminates the undersides of the innumerable docks that extend out from this district, as well as the heavy industrial equipment designed to pump slime into the cargo holds of outbound barges.\nVagrant’s Corner features the largest seaport of the city, with almost all seabound imports and exports funnel through it. It also features a ferry connection to Wreckington, if you’re so inclined to visit the southern districts.\n\nThis area contains The King's Wife's Son Speakeasy, and the Vagrant's Corner Ferry Port. To the North is New New Yonkers. To the Northeast is Assault Flats Beach. To the South is Slime's End. To the Southwest is Juvie's Row. To the West is the Green Light District. To the Northwest is Old New Yonkers.",
-		coord = (92, 27),
-		coord_alias = [
-			(88, 25),
-			(89, 25),
-			(90, 25),
-			(91, 25),
-			(92, 25),
-			(93, 25),
-			(94, 25),
-			(95, 25),
-			(96, 25),
-			(92, 26),
-			(92, 28),
-			(88, 29),
-			(89, 29),
-			(90, 29),
-			(91, 29),
-			(92, 29),
-			(93, 29),
-			(94, 29),
-			(95, 29),
-			(96, 29)
-		],
+		coord = (42, 16),
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
@@ -8127,29 +8403,7 @@ poi_list = [
 		],
 		str_name = "Assault Flats Beach",
 		str_desc = "Colorfully painted wooden storefronts and towering condominium complexes peer out from the coastline of this scenic beach town. Most of the district is owned by the sprawling luxury resort the district is best known for, as well as virtually the entirety of the actual beach of Assault Flats Beach.\nAssault Flats Beach is by far one of if not the most expensive districts in the city to live in, due to its complete subjugation by the resort and accompanying security force, it is also the safest district to live in by a long shot. But, as you venture away from the coast you’ll begin to see more of the city’s standard crime rate return. Interestingly, the district is a favorite among archaeologists for its unprecedented density of jurassic fossils hidden deep underground. Some even say dinosaurs still roam the outskirts of the district to the north, but frankly that just seems ridiculous. I mean, we all know dinosaurs aren’t real.\n\nThis area contains the Resort, the Assault Flats Beach Blimp Tower and the Assault Flats Beach Subway Station. To the South is Vagrant's Corner. To the West is New New Yonkers. To the North is Assault Flats Beach Outskirts.",
-		coord = (97, 16),
-		coord_alias = [
-			(95, 12),
-			(95, 13),
-			(95, 14),
-			(95, 15),
-			(95, 16),
-			(95, 17),
-			(95, 18),
-			(95, 19),
-			(95, 20),
-			(96, 16),
-			(98, 16),
-			(99, 12),
-			(99, 13),
-			(99, 14),
-			(99, 15),
-			(99, 16),
-			(99, 17),
-			(99, 18),
-			(99, 19),
-			(99, 20)
-		],
+		coord = (45, 11),
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
@@ -8164,29 +8418,7 @@ poi_list = [
 		],
 		str_name = "New New Yonkers",
 		str_desc = "Nightclubs and trendy restaurants have popped up in slick, modern buildings while the same old, reliable brownstones host arcades, bowling alleys and other teenage favorites. Featuring probably the best nightlife in the city, New New Yonkers is a favorite hangout spot among the juveniles of the city and consequently has an alarming crime rate. Many of the older residents want to see these fun times come to an end however, seeking to emulate the gentrified suburbia of Old New Yonkers to the south. This is adamantly resisted by the rough-and-tumble youth, those who’s to say if this district will remain the bastion of good times it is today.\nNew New Yonkers is the best district to hang out in on a weekend with your friends. Really, what else can a district aspire to?\n\nTo the East is Assault Flats Beach. To the South is Vagrant's Corner. To the Southwest is Old New Yonkers. To the West is Brawlden. To the North is New New Yonkers Outskirts.",
-		coord = (89, 12),
-		coord_alias = [
-			(85, 10),
-			(86, 10),
-			(87, 10),
-			(88, 10),
-			(89, 10),
-			(90, 10),
-			(91, 10),
-			(92, 10),
-			(93, 10),
-			(89, 11),
-			(89, 13),
-			(85, 14),
-			(86, 14),
-			(87, 14),
-			(88, 14),
-			(89, 14),
-			(90, 14),
-			(91, 14),
-			(92, 14),
-			(93, 14)
-		],
+		coord = (41, 9),
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
@@ -8200,29 +8432,7 @@ poi_list = [
 		],
 		str_name = "Brawlden",
 		str_desc = "Sturdy red brick apartments rise above the hard-knock streets. Gruff mechanics, plummers, and other workers of dirty jobs like to make their homes here, away from the pissy baby fucker fapper bullshit of the juvenile-populated inner districts. You can see them roaming the streets in their stained wife beaters, popping open the hoods of their cars and grunting dad noises. Sometimes they cross paths with one another and immediately upon locked eyesight engage in brutal fist fights. No one really knows why.\nBrawlden, despite being a largely rumble-and-tough inhabited primarily by dads is inexplicability the home of a high-tech laboratory run by SlimeCorp. Deep underground in an unassuming corner of this district lays a not-so-secret top secret laboratory dedicated to the study of Slimeoids. What are Slimeoids? You’ll just have to find out, buddy.\n\nThis area contains the Slimeoid Laboratory. To the East is New New Yonkers. To the Southeast is Old New Yonkers. To the South is Little Chernobyl. To the West is Arsonbrook. To the North is Brawlden Outskirts.",
-		coord = (71, 8),
-		coord_alias = [
-			(67, 6),
-			(68, 6),
-			(69, 6),
-			(70, 6),
-			(71, 6),
-			(72, 6),
-			(73, 6),
-			(74, 6),
-			(75, 6),
-			(71, 7),
-			(71, 9),
-			(67, 10),
-			(68, 10),
-			(69, 10),
-			(70, 10),
-			(71, 10),
-			(72, 10),
-			(73, 10),
-			(74, 10),
-			(75, 10)
-		],
+		coord = (33, 8),
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
@@ -8239,29 +8449,7 @@ poi_list = [
 		],
 		str_name = "Toxington",
 		str_desc = "You cover your mouth in a futile attempt to avoid breathing in the toxins rising from the nearby lakes and mineshafts. A thick fog of this foul-smelling, poisonous gas shrouds the entire district, making the land virtually uninhabitable. But, where there’s slime, people will settle. Juveniles from across the city are happy to spend their short lives in this hellhole for a chance to strike it rich.\nToxington has no redeemable aspects, outside of its abundance of slime veins underground and its lovely fishing spots above.\n\nThis area contains the Toxington Mines and the Toxington Subway Station. To the East is Astatine Heights. To the Southeast is Gatlingsdale. To the South is Polonium Hill. To the East is Charcoal Park. To the North is Toxington Outskirts.",
-		coord = (27, 10),
-		coord_alias = [
-			(23, 8),
-			(24, 8),
-			(25, 8),
-			(26, 8),
-			(27, 8),
-			(28, 8),
-			(29, 8),
-			(30, 8),
-			(31, 8),
-			(27, 9),
-			(27, 11),
-			(23, 12),
-			(24, 12),
-			(25, 12),
-			(26, 12),
-			(27, 12),
-			(28, 12),
-			(29, 12),
-			(30, 12),
-			(31, 12)
-		],
+		coord = (14, 9),
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
@@ -8279,29 +8467,7 @@ poi_list = [
 		],
 		str_name = "Charcoal Park",
 		str_desc = "A completely unremarkable, quiet retirement community. The citizens are fed up with slime, honestly. Pathetic little gardens rest in front of the uneven parking lots of corporate complexes housing dentists, fortune-tellers, real estate agencies, and other equally dull and pointless ventures.\nCharcoal Park is where boring people go to die. No one is happy to be here.\n\nTo the East is Toxington. To the South is Polonium Hill. To the Northwest is Charcoal Park Outskirts.",
-		coord = (15, 10),
-		coord_alias = [
-			(11, 8),
-			(12, 8),
-			(13, 8),
-			(14, 8),
-			(15, 8),
-			(16, 8),
-			(17, 8),
-			(18, 8),
-			(19, 8),
-			(15, 9),
-			(15, 11),
-			(11, 12),
-			(12, 12),
-			(13, 12),
-			(14, 12),
-			(15, 12),
-			(16, 12),
-			(17, 12),
-			(18, 12),
-			(19, 12)
-		],
+		coord = (11, 7),
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
@@ -8317,29 +8483,7 @@ poi_list = [
 		],
 		str_name = "Polonium Hill",
 		str_desc = "The gently rolling astroturf hills are sprinkled with hideous mansions that obviously cost a fortune but look like complete shit. This whole district feels like it tries way to hard to come across as high-society, when it's really just some residential district on the far-flung edges of the city.\nPolonium Hills residents really want you to think they're rich.\n\nTo the North is Charcoal Park. To the Northeast is Toxington. To the East is Gatlingsdale. To the Southeast is Vandal park. To the South is West Glocksbury. To the West is Polonium Hill Outskirts.",
-		coord = (15, 20),
-		coord_alias = [
-			(11, 18),
-			(12, 18),
-			(13, 18),
-			(14, 18),
-			(15, 18),
-			(16, 18),
-			(17, 18),
-			(18, 18),
-			(19, 18),
-			(15, 19),
-			(15, 21),
-			(11, 22),
-			(12, 22),
-			(13, 22),
-			(14, 22),
-			(15, 22),
-			(16, 22),
-			(17, 22),
-			(18, 22),
-			(19, 22)
-		],
+		coord = (11, 14),
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
@@ -8357,29 +8501,7 @@ poi_list = [
 		],
 		str_name = "West Glocksbury",
 		str_desc = "Glocksbury-styled neighborhoods continue into its western counterpart, though liberated from the oppressive yolk of the city’s police department enforcing its poor attempts at enforcing societal values. This, coupled with its location on the outer edge of the city leads to some brutal, cruel crimes being perpetrated by maniacs with little grip on reality. Gunshots ring out regularly from somewhere in the distance, behind laundromats and barber shops.\nWest Glocksbury’s startlingly high violent crime rate may make even some of the most jaded residents of the city may get nervous.\n\nThis area contains the West Glocksbury Subway Station. To the North is Polonium Hill. To the Northeast is Vandal Park. To the East is Glocksbury.",
-		coord = (14, 34),
-		coord_alias = [
-			(10, 32),
-			(11, 32),
-			(12, 32),
-			(13, 32),
-			(14, 32),
-			(15, 32),
-			(16, 32),
-			(17, 32),
-			(18, 32),
-			(14, 33),
-			(14, 35),
-			(10, 36),
-			(11, 36),
-			(12, 36),
-			(13, 36),
-			(14, 36),
-			(15, 36),
-			(16, 36),
-			(17, 36),
-			(18, 36)
-		],
+		coord = (9, 19),
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
@@ -8396,29 +8518,7 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain",
 		str_desc = "Though about half of this district is made of up parks, don’t mistake this for a wealthy district. These neglected, overgrown open spaces only help to congest the poor communities of Jaywalker Plains into tightly packed slums. This, coupled with being a backwater on the edge of the city with nothing to do, has bred a district that leads the city only in amount of narcotics injected per capita. Everyone is on a bad trip in Jaywalker Plain. Maniacs roam the street, screaming obscenities and striping naked in public. Homeless men ramble incoherent nonsense while picking drunken fights with one another on the side of the street. Many strange and unusual crimes are perpetrated here and reported on by local news teams to the amusement of residents of neighboring districts. “Did you hear what that guy from Jaywalker Plain did the other day,” is a common conversation starter in the western districts.\nJaywalker Plain has actually become a common residential district for lower income students attending the nearby Neo Milwaukee State wanting to avoid the already cheap rates of apartments in North Sleezebrorough. Because of this, you’re guaranteed to see a lot of young artists and hipsters roaming this broken, nightmare hellscape of a district looking for cafes to leech Wi-Fi access off of. Good luck with that.\n\nThis area contains the Jaywalker Plain Subway Station. To the North is West Glocksbury. To the Northeast is Glocksbury. To the East is North Sleezeborough. To the Southwest is Crookline. To the South is Dreadford. To the West is Jaywalker Plain Outskirts.",
-		coord = (13, 46),
-		coord_alias = [
-			(9, 44),
-			(10, 44),
-			(11, 44),
-			(12, 44),
-			(13, 44),
-			(14, 44),
-			(15, 44),
-			(16, 44),
-			(17, 44),
-			(13, 45),
-			(13, 47),
-			(9, 48),
-			(10, 48),
-			(11, 48),
-			(12, 48),
-			(13, 48),
-			(14, 48),
-			(15, 48),
-			(16, 48),
-			(17, 48)
-		],
+		coord = (9, 25),
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
@@ -8433,29 +8533,7 @@ poi_list = [
 		],
 		str_name = "Crookline",
 		str_desc = "Most of this district is shrouded in total darkness, the unregulated construction of skyscrapers obstructing sunlight from ever reaching the streets far below them. Streetlights and the dense arrays of neon signs advertising speakeasy after speakeasy are the only illumination you’re provided with while traveling the narrow, twisting streets of this district. You’ll have to keep your wits about you if you want to leave here with your wallet, Crookline is perhaps most known for its hordes of petty thieves who specialise in stealing from clueless juveniles from the posher districts. Despite these hurdles, or possibly because of them, Crookline has a bustling nightlife heavily featuring those aforementioned speakeasies. No matter where you are in this district, you’re not more than a block or two from a jazz club. You sort of feel like you’re on the set of a film noir movie when you traverse these dark alleyways.\nCrookline was a historically rebellious settlement on the edge of New Los Angeles City aka Neo Milwaukee, resisting full annexation for years until it was fully culturally and economically dominated by the city. Because of this, the residents have always kept an independent streak, and remain vehemently opposed most aspects of slime past its purely utilitarian purposes. You get the feeling the denizens of this district would have been happier if there was gold discovered in the area rather than the green, morality obliterating substance they’re stuck with.\n\n To the North is Jaywalker Plain. To the Northeast is North Sleezeborough. To the East is South Sleezeborough. To the West is Dreadford. To the South is Crookline Outskirts.",
-		coord = (20, 58),
-		coord_alias = [
-			(18, 54),
-			(18, 55),
-			(18, 56),
-			(18, 57),
-			(18, 58),
-			(18, 59),
-			(18, 60),
-			(18, 61),
-			(18, 62),
-			(19, 58),
-			(21, 58),
-			(22, 54),
-			(22, 55),
-			(22, 56),
-			(22, 57),
-			(22, 58),
-			(22, 59),
-			(22, 60),
-			(22, 61),
-			(22, 62)
-		],
+		coord = (14, 26),
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
@@ -8470,29 +8548,7 @@ poi_list = [
 		],
 		str_name = "Dreadford",
 		str_desc = "Neatly spaced colonial revival mansions and chapels are broken up by botches of thick, twisting woods. This district is largely rural and suburban, with a small town center with various necessities like Whole Foods and a cemetery. The residents of this district are very, very wealthy and meticulously maintain the gated community they’ve grown for themselves. Perhaps the most obvious example of this is the country club and its accompanying golf course, which comprises a large chunk of the district.\nDreadford is one of the oldest settlements of the area, being inhabited by humans as far back as 1988. The original founders were fleeing restrict criminals rights laws, and established the town of Dreadford in what was then a barren Arizonian desert. These first settlers had quite the pension of holding kangaroo courts, which often amounted to just reading the list of crimes the accused was charged with before hanging them immediately. Some nooses still hang on trees around the district, begging to be finally used.\n\n This area contains the Country Club and the Dreadford Blimp Tower. To the North is Jaywalker Plain. To the East is Crookline. To the Southwest is Dreadford Outskirts.",
-		coord = (10, 53),
-		coord_alias = [
-			(6, 51),
-			(7, 51),
-			(8, 51),
-			(9, 51),
-			(10, 51),
-			(11, 51),
-			(12, 51),
-			(13, 51),
-			(14, 51),
-			(10, 52),
-			(10, 54),
-			(6, 55),
-			(7, 55),
-			(8, 55),
-			(9, 55),
-			(10, 55),
-			(11, 55),
-			(12, 55),
-			(13, 55),
-			(14, 55)
-		],
+		coord = (10, 28),
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
@@ -8519,6 +8575,38 @@ poi_list = [
 		role = "Sewers",
 		community_chest = chest_id_thesewers
 	),
+	EwPoi(  # ENDLESS WAR
+		id_poi = poi_id_endlesswar,
+		alias = [
+			"obelisk",
+			"war",
+			"ew"
+		],
+		str_in = "at the base of",
+		str_enter = "arrive at",
+		str_name = "ENDLESS WAR",
+		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
+		channel = channel_endlesswar,
+		role = "Endless War",
+		is_subzone = True,
+		mother_district = poi_id_downtown
+	),
+	EwPoi(  # slimecorp HQ
+		id_poi = poi_id_slimecorphq,
+		alias = [
+			"slimecorp",
+			"hq",
+			"corp"
+		],
+		str_in = "in the lobby of",
+		str_name = "SlimeCorp HQ",
+		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
+		channel = channel_slimecorphq,
+		role = "SlimeCorp HQ",
+		pvp = False,
+		is_subzone = True,
+		mother_district = poi_id_downtown
+	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
 		alias = [
@@ -8538,7 +8626,6 @@ poi_list = [
 		str_desc = "A huge, cluttered space bursting at the seams with teller booths and data screens designed to display market data, blasting precious economic insight into your retinas. Discarded punch cards and ticker tape as trampled on by the mass of investors and shareholders that are constantly screaming \"BUY, SELL, BUY, SELL,\" over and over again at no one in particular. Recently reopened, tents line the streets, filled with eager investors. \n\nExits into Downtown NLACakaNM.",
 		channel = channel_stockexchange,
 		role = "Stock Exchange",
-		coord = (63, 40),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_downtown
@@ -8552,10 +8639,9 @@ poi_list = [
 			"b"
 		],
 		str_name = "The Bazaar",
-		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren.\n\nExits into Brawlden.",
+		str_desc = "An open-air marketplace where professional merchants and regular citizens alike can hock their wares. Its currently completely barren, but what does catch your eye is a stall some weirdo's set up. Apparently his services include prying things off of propstands and luring fish out of their tanks.\n\nExits into Brawlden.",
 		channel = channel_bazaar,
 		role = "Bazaar",
-		coord = (57, 28),
 		pvp = False,
 		vendors = [
 			vendor_bazaar
@@ -8578,7 +8664,6 @@ poi_list = [
 		str_desc = "A delightfully run-down movie theater, with warm carpeted walls fraying ever so slightly. Films hand picked by the Rowdy Fucker and/or Cop Killer are regularly screened.\n\nExits into Astatine Heights.",
 		channel = channel_cinema,
 		role = "Cinema",
-		coord = (48, 16),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_astatineheights
@@ -8606,7 +8691,6 @@ poi_list = [
 				   "and brittle, you’ll wish you spent your time doing this more.\n\nExits into Krak Bay.",
 		channel = channel_foodcourt,
 		role = "Food Court",
-		coord = (41, 44),
 		pvp = False,
 		vendors = [
 			vendor_pizzahut,
@@ -8632,13 +8716,13 @@ poi_list = [
 		str_desc = "An expansive campus housing massive numbers of students and administrators, all here in pursuit of knowledge. The campus is open to visitors, but there's nobody here. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into Gatlingsdale.",
 		channel = channel_nlacu,
 		role = "NLAC U",
-		coord = (34, 21),
 		pvp = False,
 		vendors = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale
+		mother_district = poi_id_gatlingsdale,
+		write_manuscript = True,
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -8653,7 +8737,6 @@ poi_list = [
 		str_desc = "A huge arena stadium capable of housing tens of thousands of battle enthusiasts, ringing a large field where Slimeoid Battles are held. All the seats are empty.\n\nExits into Vandal Park.",
 		channel = channel_arena,
 		role = "Arena",
-		coord = (24, 28),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_vandalpark
@@ -8672,7 +8755,6 @@ poi_list = [
 		str_desc = "A traditional, modest Dojo, containing all the facilities and armaments necessary for becoming a cold-blooded killing machine. It’s rustic wood presentation is accentuated by bamboo and parchment walls that separate the Dojo floor into large tatami-matted sections. Groups of juveniles gather here to increase their viability in combat. These sparring children are overseen by the owner of the Dojo, an elderly master of martial artists, fittingly known as the Dojo Master. He observes you train from a distance, brooding, and lamenting his lost youth.\n\nExits into South Sleezeborough.",
 		channel = channel_dojo,
 		role = "Dojo",
-		coord = (29, 59),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_southsleezeborough,
@@ -8698,7 +8780,6 @@ poi_list = [
 		str_desc = "A rustic tavern with dark wooden walls and floor, bearing innumerable knickknacks on the walls and high wooden stools arranged in front of a bar made of patina'd copper. It is crowded with seedy lowlifes and other generally undesirables, such as yourself.\n\nExits into Vagrant's Corner.",
 		channel = channel_speakeasy,
 		role = "Speakeasy",
-		coord = (94, 27),
 		pvp = False,
 		vendors = [
 			vendor_bar
@@ -8721,7 +8802,6 @@ poi_list = [
 		str_desc = "The darkened derelict 7-11 stands as it always has, a steadfast pillar of NLACakaNM culture. On its dirty exterior walls are spraypainted messages about \"patch notes\", \"github\", and other unparseable nonsense.\n\nExits into Poudrin Alley.",
 		channel = channel_711,
 		role = "7-11",
-		coord = (50, 58),
 		pvp = False,
 		vendors = [
 			vendor_vendingmachine
@@ -8747,10 +8827,9 @@ poi_list = [
 			"slimeoid"
 		],
 		str_name = "SlimeCorp Slimeoid Laboratory",
-		str_desc = "Huh, this is weird.\n\nUsually, this lobby is full of researchers scurrying about every which way, with some unpaid intern roleplaying receptionist. But… everything is quiet and dark, not a soul in sight. Where’d everybody go?\n\nIt looks like the elevator is working, at least. Alas, it requires you to enter an identification number, presumably to confirm you really work for SlimeCorp and aren’t a random juvenile who teleported into this place while it was closed. You’re pretty sure you remember getting your hands on an identification card a long, long time ago. Wonder if it’ll work?\n\n*Use the !verify command followed by the correct identification number to activate the elevator.*",
+		str_desc = "A nondescript building containing mysterious SlimeCorp industrial equipment. Large glass tubes and metallic vats seem to be designed to serve as incubators. There is a notice from SlimeCorp on the entranceway explaining the use of its equipment. Use !instructions to read it.\nPast countless receptionists' desks, Slimeoid incubation tubes, legal waivers, and down at least one or two secured elevator shafts, lay several mutation test chambers. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a futuristic neon LED display which has a hundred different PoweShell windows open that are all running Discord bots. If you choose to tinker with mutations, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied ways they can legally fuck with your body's chemistry.\n\nExits into Brawlden.",
 		channel = channel_slimeoidlab,
 		role = "Slimeoid Lab",
-		coord = (64, 6),
 		pvp = False,
 		is_subzone = True,
 		mother_district = poi_id_brawlden
@@ -8766,7 +8845,6 @@ poi_list = [
 		],
 		str_name = "The Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Juvie's Row.",
-		coord = (84, 38),
 		channel = channel_mines,
 		role = "Mines",
 		pvp = False,
@@ -8781,11 +8859,11 @@ poi_list = [
 			"theslimecasino",
 			"tc",  # the casino
 			"cas",
-			"c"
+			"c",
+			"scs"
 		],
-		str_name = "The Casino",
-		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit.\n\nExits into Green Light District.",
-		coord = (73, 35),
+		str_name = "The SlimeCorp Casino",
+		str_desc = "The casino is filled with tables and machines for playing games of chance, and garishly decorated wall-to-wall. Lights which normally flash constantly cover everything, but now they all sit unlit. What's worse, you can see Sherman, the SlimeCorp salaryman staring you down near the back.\n\nExits into Green Light District.",
 		channel = channel_casino,
 		role = "Casino",
 		pvp = False,
@@ -8805,7 +8883,6 @@ poi_list = [
 		],
 		str_name = "The Cratersville Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvenated by the revival of ENDLESS WAR.\n\nExits into Cratersville.",
-		coord = (46, 64),
 		channel = channel_cv_mines,
 		role = "Cratersville Mines",
 		pvp = False,
@@ -8824,7 +8901,6 @@ poi_list = [
 		],
 		str_name = "The Toxington Mines",
 		str_desc = "A veritable slime-mine of slime, rejuvinated by the revival of ENDLESS WAR.\n\nExits into Toxington.",
-		coord = (25, 10),
 		channel = channel_tt_mines,
 		role = "Toxington Mines",
 		pvp = False,
@@ -8845,7 +8921,6 @@ poi_list = [
 		],
 		str_name = "The Smoker's Cough",
 		str_desc = "A quaint hole-in-the-wall vintage diner. The wallpaper may be peeling and the ‘80s paint job might be faded, but you’ll be damned if this place didn’t make an aesthetic stomping grounds for cheapskate juveniles like yourself. All the staff know you by name, they’ve memorized your order, and frankly they love you. You’re like a ninth son to the inbred owner and his many, many wives. It’s a cramped space, only fitting about 20 people maximum. The fluorescent lighting from the ceiling lamps invade every nook and cranny of the cyan and purple diner, even when the natural daylight could easily illuminate it just as well. You think you can see some mold on certain corners of the floor. Oh man, so cool.\n\nExits into Wreckington.",
-		coord = (65, 60),
 		channel = channel_diner,
 		role = "Smoker's Cough",
 		pvp = False,
@@ -8868,7 +8943,6 @@ poi_list = [
 		],
 		str_name = "Red Mobster Seafood",
 		str_desc = "The last bastion of sophistication in this godforsaken city. A dimly lit, atmospheric fine dining restaurant with waiters and tables and archaic stuff like that. Upper crust juveniles and older fugitives make up the majority of the patrons, making you stick out like a sore thumb. Quiet, respectable murmurs pollute the air alongside the scrapping of silverware and the occasional hoity toity laugh. Everything about this place makes you sick.\n\nExits into Astatine Heights.",
-		coord = (44, 16),
 		channel = channel_seafood,
 		role = "Red Mobster Seafood",
 		pvp = False,
@@ -8892,7 +8966,6 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Farms",
 		str_desc = "An array of haphazardly placed farms dot the already dense, crowded areas between mining shaft entrances and impoverished juvenile housing. Pollution is rampant here, with the numerous trash heaps and sludge refineries enjoying the majority of earth under the smoke-smuggered stars. It’s soil is irradiated and barely arable, but it will do. It has to.\n\nExits into Juvie's Row.",
-		coord = (80, 38),
 		channel = channel_jr_farms,
 		role = "Juvie's Row Farms",
 		pvp = False,
@@ -8915,7 +8988,6 @@ poi_list = [
 		],
 		str_name = "The Ooze Gardens Farms",
 		str_desc = "An impressive host of unique and exotic flora are grown here. Originally on private property, the expansive greenhouses were the weekly meeting place for the city’s botanical society. They have since been seized by imminent domain and are now a public park. It’s type of soil is vast and varied depending on where you choose to plant. Surely, anything can grow here.\n\nExits into Ooze Gardens.",
-		coord = (37, 66),
 		channel = channel_og_farms,
 		role = "Ooze Gardens Farms",
 		pvp = False,
@@ -8936,7 +9008,6 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Farms",
 		str_desc = "A series of reedy creeks interspersed with quiet farms and burnt, black trees. It’s overcast skies make the embers from frequent forest fires glow even brighter by comparison. It’s soil is fertile with copious amounts of soot and accompanying nutrients.\n\nExits into Arsonbrook.",
-		coord = (56, 12),
 		channel = channel_ab_farms,
 		role = "Arsonbrook Farms",
 		pvp = False,
@@ -8953,7 +9024,6 @@ poi_list = [
 		],
 		str_name = "Neo Milwaukee State",
 		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it’s needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent’s ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into North Sleezeborough. ",
-		coord = (27, 46),
 		channel = channel_neomilwaukeestate,
 		role = "Neo Milwaukee State",
 		pvp = False,
@@ -8961,7 +9031,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough
+		mother_district = poi_id_northsleezeborough,
+		write_manuscript = True,
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -8972,7 +9043,6 @@ poi_list = [
 		],
 		str_name = "The Resort",
 		str_desc = "The interior is lavishly decorated with all manner of tropically-inspired furnishings, all beautifully maintained with nary a speck of grime staining it’s pristine off-white walls. Exotic potted plants and natural lighting fill the hallways, which all smell like the inside of a women’s body wash bottle. Palm trees seemingly occupy half of the outside land on the complex, averaging about 2 feet apart from one another at most to your calculations. Imported red sand of the beach stretches toward the horizon, lapped by gentle waves of slime. Couples enjoy slima coladas and tanning by the slime pool. This place fucking disgusts you. Is… is that a stegosaurus in the distance?\n\nExits into Assault Flats Beach.",
-		coord = (97, 14),
 		channel = channel_beachresort,
 		role = "Beach Resort",
 		pvp = False,
@@ -8991,7 +9061,6 @@ poi_list = [
 		],
 		str_name = "The Country Club",
 		str_desc = "On top of a grassy hill, behind several wired/eletric fences, lies Dreadford’s famous country club. The lodge itself is a huge, old wooden lodge from the 1800s, with hundreds of knick-knacks, hunting trophies and historic photos hung up on the wall, and tacky rugs and furniture around a roaring fire in it’s center. Sprawling out from the club itself is the complex’s signature golf course, where all the pompous rich assholes go to waste their time and chit-chat with each other about cheating on their wives.\n\nExits into Dreadford.",
-		coord = (8, 53),
 		channel = channel_countryclub,
 		role = "Country Club",
 		pvp = False,
@@ -9014,7 +9083,6 @@ poi_list = [
 		],
 		str_name = "The SlimeCorp Recycling Plant",
 		str_desc = "It looks like just another blocky building with a huge chimney contributing to Smogsburg's unique air quality, but the SlimeCorp marketing assures you that this plant in fact contains the latest in recycling technology, able to automatically sort and sustainably process any item. Whatever this technology may entail, it sure smells a lot like burning trash.\n\nExits into Smogsburg.",
-		coord = (60, 24),
 		channel = channel_recyclingplant,
 		role = "Recycling Plant",
 		pvp = False,
@@ -9030,7 +9098,6 @@ poi_list = [
 		],
 		str_name = "Toxington Pier",
 		str_desc = "A rickety, decaying pier stretching over a bubbling lake of molten slime. Use of your olfactory organs in any capacity is not recommended, the toxic fumes this district is known for originate here, from these lakes. But, there are some pretty sicknasty fuckin’ fishes down there, you bet.\n\nExits into Toxington.",
-		coord = (25, 6),
 		channel = channel_tt_pier,
 		role = "Toxington Pier",
 		pvp = False,
@@ -9048,7 +9115,6 @@ poi_list = [
 		],
 		str_name = "Jaywalker Plain Pier",
 		str_desc = "An old, sundrenched pier stretching over a lake overgrown with reeds and similar vegetation. It’s just one of the many natural beauties overlooked by the district’s perpetually twisted (a colloquialism for being drunk and high at the same time) population.\n\nExits into Jaywalker Plain.",
-		coord = (9 , 42),
 		channel = channel_jp_pier,
 		role = "Jaywalker Plain Pier",
 		pvp = False,
@@ -9067,7 +9133,6 @@ poi_list = [
 		],
 		str_name = "Crookline Pier",
 		str_desc = "A dark, modern pier stretching over a large lake on the outskirts of the district. Bait shops and other aquatic-based stores surround the water, with the occasional restaurant breaking up the monotony.\n\nExits into Crookline.",
-		coord = (16, 58),
 		channel = channel_cl_pier,
 		role = "Crookline Pier",
 		pvp = False,
@@ -9086,7 +9151,6 @@ poi_list = [
 		],
 		str_name = "Assault Flats Beach Pier",
 		str_desc = "A white, picturesque wooden pier stretching far out into the Slime Sea. This famous landmark is a common destination for robber barons on vacation, with a various roller coasters and rides occupying large parts of the pier. It’s really fucking lame, and you feel sick thinking about the astronomical slime the yuppies around you have ontained solely through inhereitance. You vow to piss on the ferris wheel if you get the proper mutations.\n\nExits into Assault Flats Beach.",
-		coord = (101, 16),
 		channel = channel_afb_pier,
 		role = "Assault Flats Beach Pier",
 		pvp = False,
@@ -9096,21 +9160,38 @@ poi_list = [
 		pier_type = fish_slime_saltwater
 
 	),
-	EwPoi(  # Vagrant's Corner Pier
-		id_poi = poi_id_vagrantscorner_pier,
+	# EwPoi(  # Vagrant's Corner Pier
+	# 	id_poi = poi_id_vagrantscorner_pier,
+	# 	alias = [
+	# 		"vagrantscornerpier",
+	# 		"vcpier",
+	# 		"vcpr",
+	# 	],
+	# 	str_name = "Vagrant's Corner Pier",
+	# 	str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
+	# 	channel = channel_vc_pier,
+	# 	role = "Vagrant's Corner Pier",
+	# 	pvp = False,
+	# 	is_subzone = True,
+	# 	mother_district = poi_id_vagrantscorner,
+	# 	is_pier = True,
+	# 	pier_type = fish_slime_saltwater
+	#
+	# ),
+	EwPoi(  # Juvie's Row Pier
+		id_poi = poi_id_juviesrow_pier,
 		alias = [
-			"vagrantscornerpier",
-			"vcpier",
-			"vcpr",
+			"juviesrowpier",
+			"jrpier",
+			"jrpr",
 		],
-		str_name = "Vagrant's Corner Pier",
-		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Vagrant’s Corner wharf. Fishermen and sailors off-duty all fish and get drunk around you, singing jaunty tunes and cursing loudly for minor inconveniences. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Vagrant's Corner.",
-		coord = (98, 25),
-		channel = channel_vc_pier,
-		role = "Vagrant's Corner Pier",
+		str_name = "Juvie's Row Pier",
+		str_desc = "One of many long, seedy wooden piers stretching out into the Slime Sea from the Juvie's Row wharf. A few fishermen and off-duty sailors from nearby Vagrant's Corner all fish and get drunk around you, singing jaunty tunes and cursing loudly. A few fights break out seemingly just for fun. This is your kinda place!\n\nExits into Juvie's Row.",
+		channel = channel_jr_pier,
+		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_district = poi_id_juviesrow,
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 
@@ -9124,7 +9205,6 @@ poi_list = [
 		],
 		str_name = "Slime's End Pier",
 		str_desc = "A lonesome pier at the very end of the Slime’s End peninsula, stretching out into the Slime Sea. From here, you’re able to clearly make out Downtown in the distance, pumping light pollution into the normally polluted air. You’re itching to get back there and punch some grandmas once you’re done wringing slime out of fish.\n\nExits into Slime's End.",
-		coord = (102, 42),
 		channel = channel_se_pier,
 		role = "Slime's End Pier",
 		pvp = False,
@@ -9155,7 +9235,6 @@ poi_list = [
 		],
 		str_name = "The Wreckington Ferry Port",
 		str_desc = "Caddy corner to Wreckington’s iconic junkyard lies its less famous shipyard, filled mostly with dozens upon dozens of different garbage barges dumping off metric tons of trash every day but also hosting this very terminal! The ferry takes you from here to Vagrant’s Corner, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Wreckington.",
-		coord = (59, 60),
 		channel = channel_wt_port,
 		role = "Wreckington Port",
 		pvp = True,
@@ -9178,7 +9257,6 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Ferry Port",
 		str_desc = "Down one of hundreds of piers on the crowded Vagrant’s Corner wharf sits this dingy dinghy terminal. The ferry takes you from here to Wreckington, so just head there like you would any other district and you’ll hop on the ferry. Nifty!\n\nExits into Vagrant's Corner.",
-		coord = (88, 27),
 		channel = channel_vc_port,
 		role = "Vagrant's Corner Port",
 		pvp = True,
@@ -9206,7 +9284,6 @@ poi_list = [
 		],
 		str_name = "The Toxington Subway Station",
 				str_desc = str_red_subway_station_description + "\n\nExits into Toxington.",
-		coord = (23, 10),
 		channel = channel_tt_subway_station,
 		role = "Toxington Subway Station",
 		pvp = True,
@@ -9234,7 +9311,6 @@ poi_list = [
 		],
 		str_name = "The Astatine Heights Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Astatine Heights.",
-		coord = (42, 16),
 		channel = channel_ah_subway_station,
 		role = "Astatine Heights Subway Station",
 		pvp = True,
@@ -9262,7 +9338,6 @@ poi_list = [
 		],
 		str_name = "The Gatlingsdale Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Gatlingsdale.",
-		coord = (32, 21),
 		channel = channel_gd_subway_station,
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
@@ -9290,7 +9365,6 @@ poi_list = [
 		],
 		str_name = "The Arsonbrook Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into Arsonbrook.",
-		coord = (56, 14),
 		channel = channel_ab_subway_station,
 		role = "Arsonbrook Subway Station",
 		pvp = True,
@@ -9319,7 +9393,6 @@ poi_list = [
 		],
 		str_name = "The Cop Killtown Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cop Killtown.",
-		coord = (40, 32),
 		channel = channel_ck_subway_station,
 		role = "Cop Killtown Subway Station",
 		pvp = True,
@@ -9350,7 +9423,6 @@ poi_list = [
 						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
 						"\n\n" + str_yellow_subway_station_description \
 			+ "\n\nExits into Smogsburg.",
-		coord = (55, 28),
 		channel = channel_sb_subway_station,
 		role = "Smogsburg Subway Station",
 		pvp = True,
@@ -9373,7 +9445,6 @@ poi_list = [
 		],
 		str_name = "The Downtown NLACakaNM Subway Station",
 		str_desc = str_downtown_station_description,
-		coord = (55, 40),
 		channel = channel_dt_subway_station,
 		role = "Downtown Subway Station",
 		pvp = True,
@@ -9404,7 +9475,6 @@ poi_list = [
 						"\n\n" + str_subway_connecting_sentence.format("yellow") + \
 						"\n\n" + str_yellow_subway_station_description + \
 			"\n\nExits into Krak Bay.",
-		coord = (39, 44),
 		channel = channel_kb_subway_station,
 		role = "Krak Bay Subway Station",
 		pvp = True,
@@ -9432,7 +9502,6 @@ poi_list = [
 		],
 		str_name = "The Glocksbury Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Glocksbury.",
-		coord = (23, 38),
 		channel = channel_gb_subway_station,
 		role = "Glocksbury Subway Station",
 		pvp = True,
@@ -9460,7 +9529,6 @@ poi_list = [
 		],
 		str_name = "The West Glocksbury Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into West Glocksbury.",
-		coord = (10, 34),
 		channel = channel_wgb_subway_station,
 		role = "West Glocksbury Subway Station",
 		pvp = True,
@@ -9488,7 +9556,6 @@ poi_list = [
 		],
 		str_name = "The Jaywalker Plain Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into Jaywalker Plain.",
-		coord = (9, 46),
 		channel = channel_jp_subway_station,
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
@@ -9517,7 +9584,6 @@ poi_list = [
 		],
 		str_name = "The North Sleezeborough Subway Station",
 		str_desc = str_green_subway_station_description + "\n\nExits into North Sleezeborough.",
-		coord = (25, 46),
 		channel = channel_nsb_subway_station,
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
@@ -9546,7 +9612,6 @@ poi_list = [
 		],
 		str_name = "The South Sleezeborough Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
-		coord = (29, 61),
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
@@ -9574,7 +9639,6 @@ poi_list = [
 		],
 		str_name = "The Cratersville Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Cratersville.",
-		coord = (44, 64),
 		channel = channel_cv_subway_station,
 		role = "Cratersville Subway Station",
 		pvp = True,
@@ -9602,7 +9666,6 @@ poi_list = [
 		],
 		str_name = "The Wreckington Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Wreckington.",
-		coord = (61, 60),
 		channel = channel_wt_subway_station,
 		role = "Wreckington Subway Station",
 		pvp = True,
@@ -9629,7 +9692,6 @@ poi_list = [
 		],
 		str_name = "The Rowdy Roughhouse Subway Station",
 		str_desc = str_red_subway_station_description + "\n\nExits into Rowdy Roughhouse.",
-		coord = (58, 51),
 		channel = channel_rr_subway_station,
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
@@ -9658,7 +9720,6 @@ poi_list = [
 		],
 		str_name = "The Green Light District Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Green Light District.",
-		coord = (73, 37),
 		channel = channel_gld_subway_station,
 		role = "Green Light District Subway Station",
 		pvp = True,
@@ -9686,7 +9747,6 @@ poi_list = [
 		],
 		str_name = "The Juvie's Row Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Juvie's Row.",
-		coord = (78, 38),
 		channel = channel_jr_subway_station,
 		role = "Juvie's Row Subway Station",
 		pvp = True,
@@ -9714,7 +9774,6 @@ poi_list = [
 		],
 		str_name = "The Vagrant's Corner Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Vagrant's Corner.",
-		coord = (90, 27),
 		channel = channel_vc_subway_station,
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
@@ -9747,7 +9806,6 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Subway Station",
 		str_desc = str_blue_subway_station_description + "\n\nExits into Assault Flats Beach.",
-		coord = (97, 18),
 		channel = channel_afb_subway_station,
 		role = "Assault Flats Beach Subway Station",
 		pvp = True,
@@ -9771,7 +9829,6 @@ poi_list = [
 		],
 		str_name = "The Dreadford Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Dreadford.",
-		coord = (6, 53),
 		channel = channel_df_blimp_tower,
 		role = "Dreadford Blimp Tower",
 		pvp = True,
@@ -9798,7 +9855,6 @@ poi_list = [
 		],
 		str_name = "The Assault Flats Beach Blimp Tower",
 		str_desc = str_blimp_tower_description + "\n\nExits into Assault Flats Beach.",
-		coord = (97, 20),
 		channel = channel_afb_blimp_tower,
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
@@ -9820,9 +9876,8 @@ poi_list = [
 		],
 		str_name = "SlimeCorp Real Estate Agency",
 		str_desc = "The sleek glass walls and cold, green tile flooring give the place an intimidating presence. That is, if it weren't for the disheveled drunk fellow sitting on the reception desk ahead of you. A huge 3-D SlimeCorp logo hangs off the ceiling above his head.\n\nExits into Old New Yonkers.",
-		coord = (78, 21),
 		pvp = False,
-		channel = "slimecorp-real-estate-agency",
+		channel = channel_realestateagency,
 		role = "Real Estate Agency",
 		mother_district = poi_id_oldnewyonkers,
 		is_subzone = True
@@ -9839,34 +9894,70 @@ poi_list = [
 			"card shop",
 		],
 		str_name = "Glocksbury Comics",
-		str_desc = "The walls and booths are plastered with various Secreature:tm: paraphernalia, ranging from comic books, to music CDs, to cheap plastic figurines, and of course, trading cards. This place has it all, and then some. The store itself seems to have a very labyrinthian structure, with different sections of the store devoted to secreatures merging with each other, like some kind of modern day winchester house. Near the front register, manned by a balding gentleman almost certainly in his early-to-mid 30s, you notice that they're also selling... slimecorp-brand body spray? You dread the thought of the stench such a thing emits.",
-		coord = (25, 38),
+		str_desc = "The walls and booths are plastered with various Secreature:tm: paraphernalia, ranging from comic books, to music CDs, to cheap plastic figurines, and of course, trading cards. This place has it all, and then some. The store itself seems to have a very labyrinthian structure, with different sections of the store devoted to secreatures merging with each other, like some kind of modern day winchester house. Near the front register, manned by a balding gentleman almost certainly in his early-to-mid 30s, you notice that they're also selling... slimecorp-brand body spray? You dread the thought of the stench such a thing emits.\n\nExits into Glocksbury.",
 		pvp = False,
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
-		is_subzone = True
+		is_subzone = True,
+		write_manuscript = True,
 	),
-	EwPoi( # RP City
-		id_poi = poi_id_rpcity,
-		alias = [
-			"rp",
-			"rp city",
-			"roleplay city",
-			"rpc",
-			"costume store",
-			"costumestore",
+	EwPoi( # Slimy Persuits
+		id_poi=poi_id_slimypersuits,
+		alias=[
+			"sp",
+			"slimypersuits",
+			"slimeypersuits",
+			"candystore",
+			"candyshop",
+			"candy store",
+			"candy shop",
 		],
-		str_name = "RP City",
-		str_desc = "This place gives you the fucking creeps. A run-down shell of its former self, the RP City store has been long forgotten by most of the residents of NLACakaNM, but every Double Halloween, it somehow comes crawling back. All the amenities and costumes are ragged and decrepit, but it seems there's still a fresh supply of costume creation kits. Oh yeah, the register is also manned by a ghost, because why wouldn't it be. He doesn't seem to mind you browsing though, you figure he's just here to collect a paycheck. Such is life... er... the afterlife, rather.",
-		coord = (63, 18),
-		pvp = False,
-		vendors = [vendor_rpcity],
-		channel = "rp-city",
-		role = "RP City",
-		mother_district = poi_id_littlechernobyl,
-		is_subzone = True
+		str_name="Slimy Persuits",
+		str_desc="It's a vintage style candy store, and on top of that an ice-cream parlour. Sugary delicacies line the displays, giving the whole place an inviting presence and sweet scent. One of the signs on the walls tells of their signature product, the Slime Sours. Apprently they're made almost entirely by hand, and a lot of the other products in the store seem to fit that bill as well. In a post-apocalyptic hellscape like NLACakaNM, it seems some traditions have still survived.\n\nExits into New New Yonkers.",
+		pvp=False,
+		vendors=[vendor_slimypersuits],
+		channel="slimy-persuits",
+		role="Slimy Persuits",
+		mother_district=poi_id_newnewyonkers,
+		is_subzone=True
+	),
+	EwPoi(  # Green Cake Cafe
+		id_poi=poi_id_greencakecafe,
+		alias=[
+			"gcc",
+			"cafe",
+			"greencake",
+			"green",
+			"cake"
+		],
+		str_name="Green Cake Cafe",
+		str_desc="Deeply nestled in the vandalized, sparsely populated buildings of Little Chernobyl lays a stubby building covered in vines, spray paint, and posters for criminals and concerts that have both long since passed. It seems the recently realized population of authors in the city has taken this irradiated little dump to be a safe haven from the general noisiness of the other districts in the city. Little do they know, the consequences of spending most of your time in Little Chernobyl will far exceed tinnitus in the long-term, but for now the Green Cake Cafe is where hipsters of all varieties want to write their zine opus while drinking a fresh cup of goolong tea served by the seven-eyed waitress.\n\nExits into Little Chernobyl.",
+		pvp=False,
+		vendors=[vendor_greencakecafe],
+		channel="green-cake-cafe",
+		role="Green Cake Cafe",
+		mother_district=poi_id_littlechernobyl,
+		is_subzone=True,
+		write_manuscript=True,
+	),
+	EwPoi(
+		id_poi=poi_id_sodafountain,
+		alias=[
+			"tsf",
+			"soda",
+			"fountain",
+			"bicarbonate",
+			"newgameplus"
+		],
+		str_name="The Bicarbonate Soda Fountain",
+		str_desc="A sickening display of worship recently and secretly installed by those who wish to pay tribute to that blue cartoon, the one that's plagued our city for Slime Invictus knows HOW long. Legends say you can offer up your slime and !purify yourself with the deadly waters that fluctuate in, out, and around the fountain. Even THINKING about the act of doing such a thing makes you SICK... or, maybe not? There's no shame in trying something you've never tried before, you think to yourself.\n\nExits into Krak Bay.",
+		pvp=False,
+		channel=channel_sodafountain,
+		role="The Bicarbonate Soda Fountain",
+		mother_district=poi_id_krakbay,
+		is_subzone=True
 	),
 	EwPoi(  # Ferry
 		id_poi = poi_id_ferry,
@@ -9983,18 +10074,18 @@ poi_list = [
 		default_line = transport_line_subway_blue_westbound,
 		default_stop = poi_id_afb_subway_station
 	),
-	#EwPoi(  # Subway train on the white line
-	#	id_poi = poi_id_subway_white01,
-	#	str_name = "A Subway Train",
-	#	str_desc = generic_subway_description, # TODO: add description
-	#	channel = channel_subway_white01,
-	#	role = "Subway Train W-01",
-	#	pvp = True,
-	#	is_transport = True,
-	#	transport_type = transport_type_subway,
-	#	default_line = transport_line_subway_white_eastbound,
-	#	default_stop = poi_id_dt_subway_station
-	#),
+	# EwPoi(  # Subway train on the white line
+	# 	id_poi = poi_id_subway_white01,
+	# 	str_name = "A Subway Train",
+	# 	str_desc = str_generic_subway_description, # TODO: add description
+	# 	channel = channel_subway_white01,
+	# 	role = "Subway Train W-01",
+	# 	pvp = False,
+	# 	is_transport = True,
+	# 	transport_type = transport_type_subway,
+	# 	default_line = transport_line_subway_white_eastbound,
+	# 	default_stop = poi_id_dt_subway_station
+	# ),
 	EwPoi(  # Blimp
 		id_poi = poi_id_blimp,
 		alias = [
@@ -10444,268 +10535,342 @@ poi_list = [
 		mother_district = poi_id_slimesend,
 		pvp = True,
 		is_subzone = True,
-		coord = (98, 42),
 	),
 
 	EwPoi(  # Outskirts - 1
-		id_poi=poi_id_wreckington_outskirts,
+		id_poi=poi_id_south_outskirts,
 		alias=[
-			"wreckingtonoutskirts",
-			"wtoutskirts",
-			"wto",
+			"southoutskirts",
+			"soutskirts",
+			"so",
 		],
-		str_name="Wreckington Outskirts",
-		str_desc="{} To the North is Wreckington. To the West is Cratersville Outskirts.".format(str_generic_outskirts_description),
-		coord=(59, 70),
-		channel="wreckington-outskirts",
-		role="Wreckington Outskirts",
+		str_name="Southern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Wreckington, Cratersville, and Ooze Gardens. If you kept wandering, you could probably wind up in the Southwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (19, 37),
+		coord_alias = [
+			(20, 37),
+			(21, 37)
+		],
+		channel="south-outskirts",
+		role="Southern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 2
-		id_poi=poi_id_cratersville_outskirts,
+		id_poi=poi_id_southwest_outskirts,
 		alias=[
-			"cratersvilleoutskirts",
-			"cvoutskirts",
-			"cvo",
+			"southwesternoutskirts",
+			"swoutskirts",
+			"swo",
 		],
-		str_name="Cratersville Outskirts",
-		str_desc="{} To the North is Cratersville. To the West is Ooze Gardens Outskirts. To the East is Wreckington Outskirts".format(str_generic_outskirts_description),
-		coord=(44, 70),
-		channel="cratersville-outskirts",
-		role="Cratersville Outskirts",
+		str_name="Southwestern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of South Sleezeborough, Crookline, and Dreadford. If you kept wandering, you could probably wind up in the Western or Southern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (6, 37),
+		coord_alias = [
+			(7, 37),
+			(8, 37),
+			(9, 37),
+			(10, 37)
+		],
+		channel="southwest-outskirts",
+		role="Southwestern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 3
-		id_poi=poi_id_oozegardens_outskirts,
+		id_poi=poi_id_west_outskirts,
 		alias=[
-			"oozegardensoutskirts",
-			"ogoutskirts",
-			"ogo",
+			"westernoutskirts",
+			"woutskirts",
+			"wo",
 		],
-		str_name="Ooze Gardens Outskirts",
-		str_desc="{} To the North is Ooze Gardens. To the West is South Sleezeborough Outskirts. To the East is Cratersville Outskirts.".format(str_generic_outskirts_description),
-		coord=(35, 70),
-		channel="ooze-gardens-outskirts",
-		role="Ooze Gardens Outskirts",
+		str_name="Western Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Jaywalker Plain, West Glocksbury, and Polonium Hill. If you kept wandering, you could probably wind up in the Southwestern or Northwestern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (3, 10),
+		coord_alias = [
+			(3, 11),
+			(3, 12),
+			(3, 13),
+			(3, 14),
+		],
+		channel="west-outskirts",
+		role="Western Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 4
-		id_poi=poi_id_southsleezeborough_outskirts,
+		id_poi=poi_id_northwest_outskirts,
 		alias=[
-			"southsleezeboroughoutskirts",
-			"ssboutskirts",
-			"ssbo",
+			"northwesternoutskirts",
+			"nwoutskirts",
+			"nwo",
 		],
-		str_name="South Sleezeborough Outskirts",
-		str_desc="{} To the North is South Sleezeborough. To the West is Crookline Outskirts. To the East is Ooze Gardens Outskirts.".format(str_generic_outskirts_description),
-		coord=(27, 65),
-		channel="south-sleezeborough-outskirts",
-		role="South Sleezeborough Outskirts",
+		str_name="Northwestern Outskirts",
+		str_desc="{} These outskirts lay just beyond the boundaries of Charcoal Park, Toxington, and Astatine Heights. If you kept wandering, you could probably wind up in the Western or Northern Outskirts too.".format(str_generic_outskirts_description),
+		coord = (22, 2),
+		coord_alias = [
+			(21, 2),
+			(20, 2),
+			(19, 2),
+			(18, 2),
+		],
+		channel="northwest-outskirts",
+		role="Northwestern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
 	EwPoi(  # Outskirts - 5
-		id_poi=poi_id_crookline_outskirts,
+		id_poi=poi_id_north_outskirts,
 		alias=[
-			"crooklineoutskirts",
-			"cloutskirts",
-			"clo",
+			"northernoutskirts",
+			"noutskirts",
+			"no",
 		],
-		str_name="Crookline Outskirts",
-		str_desc="{} To the North is Crookline. To the West is Dreadford Outskirts. To the East is South Sleezeborough Outskirts.".format(str_generic_outskirts_description),
-		coord=(18, 66),
-		channel="crookline-outskirts",
-		role="Crookline Outskirts",
+		str_name="North Outskirts",
+		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts or the Nuclear Beach too.".format(str_generic_outskirts_description),
+		coord = (37, 2),
+		coord_alias = [
+			(36, 2),
+			(35, 2),
+			(34, 2),
+			(33, 2)
+		],
+		channel="north-outskirts",
+		role="Northern Outskirts",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
-	EwPoi(  # Outskirts - 6
-		id_poi=poi_id_dreadford_outskirts,
+	EwPoi( # Outskirts - 6
+		id_poi=poi_id_nuclear_beach,
 		alias=[
-			"dreadfordoutskirts",
-			"dfoutskirts",
-			"dfo",
-		],
-		str_name="Dreadford Outskirts",
-		str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
-		coord=(2, 51),
-		channel="dreadford-outskirts",
-		role="Dreadford Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 7
-		id_poi=poi_id_jaywalkerplain_outskirts,
-		alias=[
-			"jaywalkerplainoutskirts",
-			"jpoutskirts",
-			"jpo",
-		],
-		str_name="Jaywalker Plain Outskirts",
-		str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
-		coord=(5, 44),
-		channel="jaywalker-plain-outskirts",
-		role="Jaywalker Plain Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 8
-		id_poi=poi_id_westglocksbury_outskirts,
-		alias=[
-			"westglocksburyoutskirts",
-			"wgboutskirts",
-			"wgbo"
-		],
-		str_name="West Glocksbury Outskirts",
-		str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
-		coord=(6, 32),
-		channel="west-glocksbury-outskirts",
-		role="West Glocksbury Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 9
-		id_poi=poi_id_poloniumhill_outskirts,
-		alias=[
-			"poloniumhilloutskirts",
-			"phoutskirts",
-			"pho",
-		],
-		str_name="Polonium Hill Outskirts",
-		str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
-		coord=(7, 18),
-		channel="polonium-hill-outskirts",
-		role="Polonium Hill Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 10
-		id_poi=poi_id_charcoalpark_outskirts,
-		alias=[
-			"charcoalparkoutskirts",
-			"cpoutskirts",
-			"cpo",
-		],
-		str_name="Charcoal Park Outskirts",
-		str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
-		coord=(15, 4),
-		channel="charcoal-park-outskirts",
-		role="Charcoal Park Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 11
-		id_poi=poi_id_toxington_outskirts,
-		alias=[
-			"toxingtonoutskirts",
-			"ttoutskirts",
-			"tto",
-		],
-		str_name="Toxington Outskirts",
-		str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
-		coord=(27, 4),
-		channel="toxington-outskirts",
-		role="Toxington Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 12
-		id_poi=poi_id_astatineheights_outskirts,
-		alias=[
-			"astatineheightsoutskirts",
-			"ahoutskirts",
-			"aho",
-		],
-		str_name="Astatine Heights Outskirts",
-		str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
-		coord=(46, 10),
-		channel="astatine-heights-outskirts",
-		role="Astatine Heights Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 13
-		id_poi=poi_id_arsonbrook_outskirts,
-		alias=[
-			"arsonbrookoutskirts",
-			"aboutskirts",
-			"abo",
-		],
-		str_name="Arsonbrook Outskirts",
-		str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
-		coord=(54, 2),
-		channel="arsonbrook-outskirts",
-		role="Arsonbrook Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 14
-		id_poi=poi_id_brawlden_outskirts,
-		alias=[
-			"brawldenoutskirts",
-			"bdoutskirts",
-			"bdo",
-		],
-		str_name="Brawlden Outskirts",
-		str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-		coord=(71, 2),
-		channel="brawlden-outskirts",
-		role="Brawlden Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 15
-		id_poi=poi_id_newnewyonkers_outskirts,
-		alias=[
-			"newnewyonkersoutskirts",
-			"nnyoutskirts",
-			"nnyo",
-		],
-		str_name="New New Yonkers Outskirts",
-		str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
-		coord=(89, 6),
-		channel="new-new-yonkers-outskirts",
-		role="New New Yonkers Outskirts",
-		pvp=True,
-		is_capturable=False,
-		is_outskirts=True
-	),
-	EwPoi(  # Outskirts - 16
-		id_poi=poi_id_assaultflatsbeach_outskirts,
-		alias=[
-			"assaultflatsbeachoutskirts",
-			"afboutskirts",
+			"nuclearbeach",
+			"nuclearbeachoutskirts",
+			"nb",
+			"nbeach",
 			"afbo",
+			"afboutskirts",
 		],
-		str_name="Assault Flats Beach Outskirts",
-		str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
-		coord=(99, 8),
-		channel="assault-flats-beach-outskirts",
-		role="Assault Flats Beach Outskirts",
+		str_name="Nuclear Beach",
+		str_desc="{}  A place only the fiercest secreatures call home, right next to Assault Flats Beach. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here.".format(str_generic_outskirts_description),
+		coord = (47, 6),
+		coord_alias = [
+			(47, 7)
+		],
+		channel="nuclear-beach",
+		role="Nuclear Beach",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
 	),
-
+	# EwPoi(  # Outskirts - 6
+	# 	id_poi=poi_id_dreadford_outskirts,
+	# 	alias=[
+	# 		"dreadfordoutskirts",
+	# 		"dfoutskirts",
+	# 		"dfo",
+	# 	],
+	# 	str_name="Dreadford Outskirts",
+	# 	str_desc="{} To the Northeast is Dreadford. To the North is Jaywalker Plain Outskirts. To the East is Crookline Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(2, 51),
+	# 	channel="dreadford-outskirts",
+	# 	role="Dreadford Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 7
+	# 	id_poi=poi_id_jaywalkerplain_outskirts,
+	# 	alias=[
+	# 		"jaywalkerplainoutskirts",
+	# 		"jpoutskirts",
+	# 		"jpo",
+	# 	],
+	# 	str_name="Jaywalker Plain Outskirts",
+	# 	str_desc="{} To the East is Jaywalker Plain. To the South is Dreadford Outskirts. To the North is West Glocksbury Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(5, 44),
+	# 	channel="jaywalker-plain-outskirts",
+	# 	role="Jaywalker Plain Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 8
+	# 	id_poi=poi_id_westglocksbury_outskirts,
+	# 	alias=[
+	# 		"westglocksburyoutskirts",
+	# 		"wgboutskirts",
+	# 		"wgbo"
+	# 	],
+	# 	str_name="West Glocksbury Outskirts",
+	# 	str_desc="{} To the East is West Glocksbury. To the South is Jaywalker Plain Outskirts. To the North is Polonium Hill Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(6, 32),
+	# 	channel="west-glocksbury-outskirts",
+	# 	role="West Glocksbury Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 9
+	# 	id_poi=poi_id_poloniumhill_outskirts,
+	# 	alias=[
+	# 		"poloniumhilloutskirts",
+	# 		"phoutskirts",
+	# 		"pho",
+	# 	],
+	# 	str_name="Polonium Hill Outskirts",
+	# 	str_desc="{} To the East is Polonium Hill. To the South is West Glocksbury Outskirts. To the North is Charcoal Park Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(7, 18),
+	# 	channel="polonium-hill-outskirts",
+	# 	role="Polonium Hill Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 10
+	# 	id_poi=poi_id_charcoalpark_outskirts,
+	# 	alias=[
+	# 		"charcoalparkoutskirts",
+	# 		"cpoutskirts",
+	# 		"cpo",
+	# 	],
+	# 	str_name="Charcoal Park Outskirts",
+	# 	str_desc="{} To the Southeast is Charcoal Park. To the South is Polonium Hill Outskirts. To the East is Toxington Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(15, 4),
+	# 	channel="charcoal-park-outskirts",
+	# 	role="Charcoal Park Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 11
+	# 	id_poi=poi_id_toxington_outskirts,
+	# 	alias=[
+	# 		"toxingtonoutskirts",
+	# 		"ttoutskirts",
+	# 		"tto",
+	# 	],
+	# 	str_name="Toxington Outskirts",
+	# 	str_desc="{} To the South is Toxington. To the West is Charcoal Park Outskirts. To the East is Astatine Heights Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(27, 4),
+	# 	channel="toxington-outskirts",
+	# 	role="Toxington Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 12
+	# 	id_poi=poi_id_astatineheights_outskirts,
+	# 	alias=[
+	# 		"astatineheightsoutskirts",
+	# 		"ahoutskirts",
+	# 		"aho",
+	# 	],
+	# 	str_name="Astatine Heights Outskirts",
+	# 	str_desc="{} To the South is Astatine Heights. To the West is Toxington Outskirts. To the East is Arsonbrook Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(46, 10),
+	# 	channel="astatine-heights-outskirts",
+	# 	role="Astatine Heights Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 13
+	# 	id_poi=poi_id_arsonbrook_outskirts,
+	# 	alias=[
+	# 		"arsonbrookoutskirts",
+	# 		"aboutskirts",
+	# 		"abo",
+	# 	],
+	# 	str_name="Arsonbrook Outskirts",
+	# 	str_desc="{} To the South is Arsonbrook. To the West is Astatine Heights Outskirts. To the East is Brawlden Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(54, 2),
+	# 	channel="arsonbrook-outskirts",
+	# 	role="Arsonbrook Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 14
+	# 	id_poi=poi_id_brawlden_outskirts,
+	# 	alias=[
+	# 		"brawldenoutskirts",
+	# 		"bdoutskirts",
+	# 		"bdo",
+	# 	],
+	# 	str_name="Brawlden Outskirts",
+	# 	str_desc="{} To the South is Brawlden. To the West is Arsonbrook Outskirts. To the East is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(71, 2),
+	# 	channel="brawlden-outskirts",
+	# 	role="Brawlden Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 15
+	# 	id_poi=poi_id_newnewyonkers_outskirts,
+	# 	alias=[
+	# 		"newnewyonkersoutskirts",
+	# 		"nnyoutskirts",
+	# 		"nnyo",
+	# 	],
+	# 	str_name="New New Yonkers Outskirts",
+	# 	str_desc="{} To the South is New New Yonkers. To the West is Brawlden Outskirts. To the East is Assault Flats Beach Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(89, 6),
+	# 	channel="new-new-yonkers-outskirts",
+	# 	role="New New Yonkers Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	# EwPoi(  # Outskirts - 16
+	# 	id_poi=poi_id_assaultflatsbeach_outskirts,
+	# 	alias=[
+	# 		"assaultflatsbeachoutskirts",
+	# 		"afboutskirts",
+	# 		"afbo",
+	# 	],
+	# 	str_name="Assault Flats Beach Outskirts",
+	# 	str_desc="{} To the South is Assault Flats Beach. To the West is New New Yonkers Outskirts.".format(str_generic_outskirts_description),
+	# 	coord=(99, 8),
+	# 	channel="assault-flats-beach-outskirts",
+	# 	role="Assault Flats Beach Outskirts",
+	# 	pvp=True,
+	# 	is_capturable=False,
+	# 	is_outskirts=True
+	# ),
+	EwPoi(  # Tutorial - 1
+		id_poi = poi_id_tutorial_classroom,
+		channel="classroom",
+		role="Classroom",
+		is_tutorial = True,
+	),
+	EwPoi(  # Tutorial - 2
+		id_poi = poi_id_tutorial_hallway,
+		channel="hallway",
+		role="Hallway",
+		is_tutorial = True,
+	),
+	EwPoi(  # Tutorial - 3
+		id_poi = poi_id_tutorial_ghostcontainment,
+		channel="ghost-containment",
+		role="Ghost Containment",
+		is_tutorial = True,
+	),
+	EwPoi(  # For containing people while server-wide renovations are transpiring.
+		id_poi = poi_id_thesphere,
+		str_name = "The Sphere",
+		str_desc = "A nebulous defined space for containing hazardous waste. You can't tell what's happening on the outside, but it's probably not good.",
+		coord = (54, 39),
+		channel = "the-sphere",
+		role = "The Sphere",
+		is_subzone = True
+	),
 ]
-poi_list += ewdebug.debugpois
 
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short
@@ -10715,12 +10880,16 @@ debugfish_goal = ewdebug.debugfish_goal
 
 id_to_poi = {}
 coord_to_poi = {}
+chname_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
 transports = []
 transport_stops = []
+transport_stops_ch = []
 piers = []
 outskirts = []
+tutorial_pois = []
+zine_mother_districts = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -10746,6 +10915,7 @@ for poi in poi_list:
 
 	if poi.is_transport_stop:
 		transport_stops.append(poi.id_poi)
+		transport_stops_ch.append(poi.channel)
 
 	if poi.is_pier:
 		piers.append(poi.id_poi)
@@ -10753,12 +10923,20 @@ for poi in poi_list:
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
 
+	if poi.is_tutorial:
+		tutorial_pois.append(poi.id_poi)
+
+	if poi.write_manuscript:
+		zine_mother_districts.append(id_to_poi.get(poi.mother_district))
+
+	chname_to_poi[poi.channel] = poi
+
 landmark_pois = [
-	poi_id_countryclub,
+	poi_id_dreadford,
 	poi_id_charcoalpark,
-	poi_id_slimesend_pier,
-	poi_id_beachresort,
-	poi_id_diner,
+	poi_id_slimesend,
+	poi_id_assaultflatsbeach,
+	poi_id_wreckington,
 ]
 
 # maps districts to their immediate neighbors
@@ -10774,7 +10952,7 @@ transport_lines = [
 			"ferrytovagrantscorner",
 			"ferrytovagrants",
 			"ferrytovc"
-		    ],
+			],
 		first_stop = poi_id_wt_port,
 		last_stop = poi_id_vc_port,
 		next_line = transport_line_ferry_vc_to_wt,
@@ -10782,7 +10960,7 @@ transport_lines = [
 		schedule = {
 			poi_id_wt_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_vc_port]
-		    }
+			}
 
 		),
 	EwTransportLine( # ferry line from vagrant's corner to wreckington
@@ -10794,7 +10972,7 @@ transport_lines = [
 			"ferrytowreckington",
 			"ferrytowreck",
 			"ferrytowt"
-		    ],
+			],
 		first_stop = poi_id_vc_port,
 		last_stop = poi_id_wt_port,
 		next_line = transport_line_ferry_wt_to_vc,
@@ -10802,7 +10980,7 @@ transport_lines = [
 		schedule = {
 			poi_id_vc_port : [60, poi_id_slimesea],
 			poi_id_slimesea : [120, poi_id_wt_port]
-		    }
+			}
 
 		),
 	EwTransportLine( # yellow subway line from south sleezeborough to arsonbrook
@@ -10814,7 +10992,7 @@ transport_lines = [
 			"yellowtoarsonbrook",
 			"yellowtoarson",
 			"yellowtoab"
-		    ],
+			],
 		first_stop = poi_id_ssb_subway_station,
 		last_stop = poi_id_ab_subway_station,
 		next_line = transport_line_subway_yellow_southbound,
@@ -10824,7 +11002,7 @@ transport_lines = [
 			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station],
 			poi_id_sb_subway_station : [20, poi_id_ab_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # yellow subway line from arsonbrook to south sleezeborough
@@ -10836,7 +11014,7 @@ transport_lines = [
 			"yellowtosouthsleezeborough",
 			"yellowtosouthsleeze",
 			"yellowtossb"
-		    ],
+			],
 		first_stop = poi_id_ab_subway_station,
 		last_stop = poi_id_ssb_subway_station,
 		next_line = transport_line_subway_yellow_northbound,
@@ -10846,7 +11024,7 @@ transport_lines = [
 			poi_id_sb_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
 			poi_id_kb_subway_station : [20, poi_id_ssb_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # red subway line from cratersville to toxington
@@ -10858,7 +11036,7 @@ transport_lines = [
 			"redtotoxington",
 			"redtotox",
 			"redtott"
-		    ],
+			],
 		first_stop = poi_id_cv_subway_station,
 		last_stop = poi_id_tt_subway_station,
 		next_line = transport_line_subway_red_southbound,
@@ -10871,7 +11049,7 @@ transport_lines = [
 			poi_id_ck_subway_station : [20, poi_id_gd_subway_station],
 			poi_id_gd_subway_station : [20, poi_id_ah_subway_station],
 			poi_id_ah_subway_station : [20, poi_id_tt_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # red subway line from toxington to cratersville
@@ -10883,7 +11061,7 @@ transport_lines = [
 			"redtocratersville",
 			"redtocraters",
 			"redtocv"
-		    ],
+			],
 		first_stop = poi_id_tt_subway_station,
 		last_stop = poi_id_cv_subway_station,
 		next_line = transport_line_subway_red_northbound,
@@ -10896,7 +11074,7 @@ transport_lines = [
 			poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
 			poi_id_rr_subway_station : [20, poi_id_wt_subway_station],
 			poi_id_wt_subway_station : [20, poi_id_cv_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # green subway line from smogsburg to west glocksbury
@@ -10908,7 +11086,7 @@ transport_lines = [
 			"greentosmogsburg",
 			"greentosmogs",
 			"greentosb"
-		    ],
+			],
 		first_stop = poi_id_wgb_subway_station,
 		last_stop = poi_id_sb_subway_station,
 		next_line = transport_line_subway_green_westbound,
@@ -10919,7 +11097,7 @@ transport_lines = [
 			poi_id_nsb_subway_station : [20, poi_id_kb_subway_station],
 			poi_id_kb_subway_station : [20, poi_id_dt_subway_station],
 			poi_id_dt_subway_station : [20, poi_id_sb_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # green subway line from west glocksbury to smogsburg
@@ -10931,7 +11109,7 @@ transport_lines = [
 			"greentowestglocksbury",
 			"greentowestglocks",
 			"greentowgb"
-		    ],
+			],
 		first_stop = poi_id_sb_subway_station,
 		last_stop = poi_id_wgb_subway_station,
 		next_line = transport_line_subway_green_eastbound,
@@ -10941,7 +11119,7 @@ transport_lines = [
 			poi_id_dt_subway_station : [20, poi_id_kb_subway_station],
 			poi_id_kb_subway_station : [20, poi_id_gb_subway_station],
 			poi_id_gb_subway_station : [20, poi_id_wgb_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # blue subway line from downtown to assault flats beach
@@ -10954,7 +11132,7 @@ transport_lines = [
 			"bluetoassaultflats",
 			"bluetobeach",
 			"bluetoafb"
-		    ],
+			],
 		first_stop = poi_id_dt_subway_station,
 		last_stop = poi_id_afb_subway_station,
 		next_line = transport_line_subway_blue_westbound,
@@ -10964,7 +11142,7 @@ transport_lines = [
 			poi_id_gld_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_vc_subway_station],
 			poi_id_vc_subway_station : [20, poi_id_afb_subway_station]
-		    }
+			}
 
 		),
 	EwTransportLine( # blue subway line from assault flats beach to downtown
@@ -10975,7 +11153,7 @@ transport_lines = [
 			"westblue",
 			"bluetodowntown",
 			"bluetodt"
-		    ],
+			],
 		first_stop = poi_id_afb_subway_station,
 		last_stop = poi_id_dt_subway_station,
 		next_line = transport_line_subway_blue_eastbound,
@@ -10985,46 +11163,48 @@ transport_lines = [
 			poi_id_vc_subway_station : [20, poi_id_jr_subway_station],
 			poi_id_jr_subway_station : [20, poi_id_gld_subway_station],
 			poi_id_gld_subway_station : [20, poi_id_dt_subway_station]
-		    }
+			}
 
 		),
-	#EwTransportLine( # white subway line from downtown to juvies row
-	#	id_line = transport_line_subway_white_eastbound,
-	#	alias = [
-	#		"whiteeastline",
-	#		"whiteeast",
-	#		"eastwhite",
-	#		"whitetojuviesrow",
-	#		"whitetojuvies",
-	#		"whitetojr"
-	#	    ],
-	#	first_stop = poi_id_dt_subway_station,
-	#	last_stop = poi_id_jr_subway_station,
-	#	next_line = transport_line_subway_white_westbound,
-	#	str_name = "The white subway line towards Juvie's Row",
-	#	schedule = {
-	#		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
-	#	    }
-	#	),
-	#EwTransportLine( # white subway line from juvies row to downtown
-	#	id_line = transport_line_subway_white_westbound,
-	#	alias = [
-	#		"whitewestline",
-	#		"whitewest",
-	#		"westwhite",
-	#		"whitetodowntown",
-	#		"whitetodt"
-	#	    ],
-	#	first_stop = poi_id_jr_subway_station,
-	#	last_stop = poi_id_dt_subway_station,
-	#	next_line = transport_line_subway_white_eastbound,
-	#	str_name = "The white subway line towards Downtown NLACakaNM",
-	#	schedule = {
-	#		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
-	#		poi_id_rr_subway_station : [20, poi_id_dt_subway_station]
-	#	    }
-	#	),
+	# EwTransportLine( # white subway line from downtown to juvies row
+	# 	id_line = transport_line_subway_white_eastbound,
+	# 	alias = [
+	# 		"whiteeastline",
+	# 		"whiteeast",
+	# 		"eastwhite",
+	# 		"whitetojuviesrow",
+	# 		"whitetojuvies",
+	# 		"whitetojr"
+	# 	    ],
+	# 	first_stop = poi_id_underworld_subway_station,
+	# 	last_stop = poi_id_jr_subway_station,
+	# 	next_line = transport_line_subway_white_westbound,
+	# 	str_name = "The white subway line towards Juvie's Row",
+	# 	schedule = {
+	# 		poi_id_underworld_subway_station : [20, poi_id_dt_subway_station],
+	# 		poi_id_dt_subway_station : [20, poi_id_rr_subway_station],
+	# 		poi_id_rr_subway_station : [20, poi_id_jr_subway_station]
+	# 	    }
+	# 	),
+	# EwTransportLine( # white subway line from juvies row to downtown
+	# 	id_line = transport_line_subway_white_westbound,
+	# 	alias = [
+	# 		"whitewestline",
+	# 		"whitewest",
+	# 		"westwhite",
+	# 		"whitetounderworld",
+	# 		"whitetouw"
+	# 	    ],
+	# 	first_stop = poi_id_jr_subway_station,
+	# 	last_stop = poi_id_underworld_subway_station,
+	# 	next_line = transport_line_subway_white_eastbound,
+	# 	str_name = "The white subway line towards The Underworld",
+	# 	schedule = {
+	# 		poi_id_jr_subway_station : [20, poi_id_rr_subway_station],
+	# 		poi_id_rr_subway_station : [20, poi_id_dt_subway_station],
+	# 		poi_id_dt_subway_station : [20, poi_id_underworld_subway_station],
+	# 	    }
+	# 	),
 	EwTransportLine( # blimp line from dreadford to assault flats beach
 		id_line = transport_line_blimp_df_to_afb,
 		alias = [
@@ -11036,7 +11216,7 @@ transport_lines = [
 			"blimptoassaultflats",
 			"blimptobeach",
 			"blimptoafb"
-		    ],
+			],
 		first_stop = poi_id_df_blimp_tower,
 		last_stop = poi_id_afb_blimp_tower,
 		next_line = transport_line_blimp_afb_to_df,
@@ -11049,7 +11229,7 @@ transport_lines = [
 			poi_id_downtown : [40, poi_id_greenlightdistrict],
 			poi_id_greenlightdistrict : [40, poi_id_vagrantscorner],
 			poi_id_vagrantscorner : [40, poi_id_afb_blimp_tower]
-		    }
+			}
 
 		),
 	EwTransportLine( # blimp line from assault flats beach to dreadford
@@ -11061,7 +11241,7 @@ transport_lines = [
 			"blimptodreadford",
 			"blimptodread",
 			"blimptodf"
-		    ],
+			],
 		first_stop = poi_id_afb_blimp_tower,
 		last_stop = poi_id_df_blimp_tower,
 		next_line = transport_line_blimp_df_to_afb,
@@ -11074,7 +11254,7 @@ transport_lines = [
 			poi_id_krakbay : [40, poi_id_northsleezeborough],
 			poi_id_northsleezeborough : [40, poi_id_jaywalkerplain],
 			poi_id_jaywalkerplain : [40, poi_id_df_blimp_tower]
-		    }
+			}
 
 		)
 ]
@@ -11639,6 +11819,38 @@ cosmetic_items_list = [
 		price = 50000,
 		vendors = [vendor_bazaar],
 	),
+	EwCosmeticItem(
+		id_cosmetic = "halloweenmedallion",
+		str_name = "Double Halloween Medallion",
+		str_desc = "A glistening crystal medallion, carved in the shape of a pumpkin. It is strewn together with black pearls. Awarded only to the bravest of souls who managed to best the Double Headless Double Horseman in combat.",
+		rarity = "Double Halloween",
+		acquisition = "DH-bossfight",
+		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
+	),
+	EwCosmeticItem(
+		id_cosmetic = "pileus",
+		str_name = "Pileus",
+		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
+		rarity = rarity_plebeian,
+	#	vendors = [vendor_bazaar, vendor_college],
+		price = 100,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "seacowcostume",
+		str_name = "Attractive Gray Sea Cow Mascot Costume for Adult",
+		str_desc = "Attractive. That's really all there is to say on the matter.",
+		rarity = rarity_promotional,
+		vendors = [vendor_bazaar],
+		price = 100000000,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "wrappingpaperhat",
+		str_name = "Wrapping Paper Hat",
+		str_desc = "A hat made out of wrapping paper, fashioned in a way rather similar to a newspaper hat. How festive!",
+		rarity = rarity_plebeian,
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
 ]
 
 # A map of id_cosmetic to EwCosmeticItem objects.
@@ -11780,7 +11992,7 @@ smelting_recipe_list = [
 			"fag",
 		],
 		ingredients = {
-		    item_id_stick : 3
+			item_id_stick : 3
 
 		},
 		products = ['faggot']
@@ -11793,7 +12005,7 @@ smelting_recipe_list = [
 			"dfag",
 		],
 		ingredients = {
-		    item_id_faggot : 2
+			item_id_faggot : 2
 		},
 		products = ['doublefaggot']
 	),
@@ -11802,7 +12014,7 @@ smelting_recipe_list = [
 		str_name = "a cooked piece of Dinoslime meat",
 		alias = [
 			"cookedmeat",
-			"sss"
+			"dss"
 		],
 		ingredients = {
 			item_id_faggot : 1,
@@ -11825,7 +12037,7 @@ smelting_recipe_list = [
 		},
 		products = ['fishingrod']
 	),
-        EwSmeltingRecipe(
+    EwSmeltingRecipe(
 		id_recipe = "bass",
 		str_name = "a Bass Guitar",
 		alias = [
@@ -11836,8 +12048,8 @@ smelting_recipe_list = [
 			'string':4
 		},
 		products = ['bass']
-        ),
-		EwSmeltingRecipe(
+    ),
+	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
 		alias = [
@@ -11848,8 +12060,8 @@ smelting_recipe_list = [
 			'scalp': 10
 		},
 		products = ['leathercouch']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherchair",
 		str_name = "a leather chair",
 		alias = [
@@ -11860,8 +12072,8 @@ smelting_recipe_list = [
 			'scalp': 5
 		},
 		products = ['leatherchair']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherlamp",
 		str_name = "a leather coated lamp",
 		alias = [
@@ -11872,8 +12084,8 @@ smelting_recipe_list = [
 			'scalp': 3
 		},
 		products = ['leatherlamp']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherdesk",
 		str_name = "a leather desk",
 		alias = [
@@ -11884,8 +12096,8 @@ smelting_recipe_list = [
 			'scalp': 4
 		},
 		products = ['leatherdesk']
-		),
-		EwSmeltingRecipe(
+	),
+	EwSmeltingRecipe(
 		id_recipe = "leatherbed",
 		str_name = "a leather bed",
 		alias = [
@@ -11896,7 +12108,38 @@ smelting_recipe_list = [
 			'scalp': 12
 		},
 		products = ['leatherbed']
-		)
+	),
+	EwSmeltingRecipe(
+		id_recipe = "seaweedjoint",
+		str_name = "a seaweed joint",
+		alias = [
+			"joint",
+			"seaweed",
+			"weed",
+			"doobie",
+			"blunt"
+		],
+		ingredients = {
+			'seaweed' : 3,
+			'dankwheat': 1,
+			item_id_slimepoudrin : 1,
+		},
+		products = ['seaweedjoint']
+	),
+	EwSmeltingRecipe(
+		id_recipe = "slimepoudrin",
+		str_name = "a slime poudrin",
+		alias = [
+			"poudrin",
+			"poud",
+			"pou",
+			"poodrin",
+		],
+		ingredients = {
+			'royaltypoudrin': 2
+		},
+		products = ['slimepoudrin']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -11916,6 +12159,33 @@ for recipe in smelting_recipe_list:
 
 
 # Slimeoid attributes.
+slimeoid_strat_attack = "attack"
+slimeoid_strat_evade = "evade"
+slimeoid_strat_block = "block"
+
+slimeoid_weapon_blades = "blades"
+slimeoid_weapon_teeth = "teeth"
+slimeoid_weapon_grip = "grip"
+slimeoid_weapon_bludgeon = "bludgeon"
+slimeoid_weapon_spikes = "spikes"
+slimeoid_weapon_electricity = "electricity"
+slimeoid_weapon_slam = "slam"
+
+slimeoid_armor_scales = "scales"
+slimeoid_armor_boneplates = "boneplates"
+slimeoid_armor_quantumfield = "quantumfield"
+slimeoid_armor_formless = "formless"
+slimeoid_armor_regeneration = "regeneration"
+slimeoid_armor_stench = "stench"
+slimeoid_armor_oil = "oil"
+
+slimeoid_special_spit = "spit"
+slimeoid_special_laser = "laser"
+slimeoid_special_spines = "spines"
+slimeoid_special_throw = "throw"
+slimeoid_special_TK = "TK"
+slimeoid_special_fire = "fire"
+slimeoid_special_webs = "webs"
 
 # All body attributes in the game.
 body_list = [
@@ -12026,7 +12296,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'A'. Through the observation port, you see a dark cluster within the proto-Slimeoid begin to form into what looks like a large eye.",
 		str_head = "Its face is a single huge eye.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} swallows the {food_name} whole.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name}'s huge eye follows the ball's arc, and it makes a leap to catch it!!\n\n...only to get socked right in the eye, sending it to the floor in pain. Depth perception... it's truly a gift."
 	),
 	EwHead( # head 2
@@ -12037,7 +12307,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'B'. Through the observation port, you see an opening form in what you think is the proto-Slimeoid's face, which begins to sprout large pointed teeth.",
 		str_head = "Its face is a huge toothy mouth.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} crunches the {food_name} to paste with its huge teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} slavers and drools as it awaits the throw, and when it sees the ball start to fly, it lunges to grab it out of the air in its huge toothy maw, slicing it to shreds with its teeth in seconds."
 	),
 	EwHead( # head 3
@@ -12048,8 +12318,8 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'C'. Through the observation port, you see what you thought was the proto-Slimeoid's face suddenly sucked down into its body, as though by a black hole.",
 		str_head = "Its face is an empty black void.",
-		str_feed = "",
-		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it dissapears forever."
+		str_feed = "The {food_name} disappears into the unknowable depths of {slimeoid_name}'s face hole.",
+		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it disappears forever."
 	),
 	EwHead( # head 4
 		id_head = "beast",
@@ -12060,7 +12330,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'D'. Through the observation port, you see the beginnings of an animal-like face forming on your proto-Slimeoid, with what might be eyes, a nose, teeth... maybe.",
 		str_head = "Its face is that of a vicious beast.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} gobbles up the {food_name} greedily.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} focuses its eyes and bares its teeth, then makes a flying leap, snapping the ball clean out of the air in its jaws! It comes back to you and drops the ball at your feet. Good boy!"
 	),
 	EwHead( # head 5
@@ -12072,7 +12342,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'E'. Through the observation port, you see the proto-Slimeoid suddenly bulge with a series of hard orbs which congeal into what appear to be large compound eyes.",
 		str_head = "It has bulging insectoid eyes and mandibles.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} cuts the {food_name} into pieces with its mandibles.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} stands motionless, presumably watching the ball with its large compound eyes, before darting toward it as it sails through the air, snapping its mandibles around the ball and slicing it cleanly in two."
 	),
 	EwHead( # head 6
@@ -12083,7 +12353,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'F'. Through the observation port, you see the proto-Slimeoid's frontal features twist into a ghastly death's-head.",
 		str_head = "Its face resembles a skull.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} spills half the {food_name} on the floor trying to chew it with its exposed teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves as quickly as it can to make the catch, making it just before the ball lands! With a thunk, the ball lodges itself in {slimeoid_name}'s open eye socket. {slimeoid_name} yanks it out and tosses the ball back to you. Euughh."
 	),
 	EwHead( # head 7
@@ -12093,7 +12363,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'G'. Through the observation port, you see the proto-Slimeoid's front end melt into an indistinct mass.",
 		str_head = "It has no discernable head.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} just sort of... absorbs the {food_name} into its body.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves under the ball as it flies through the air, but makes no attempt to catch it in its mouth on account of having none. The ball lands next to {slimeoid_name}, who merely looks on. Actually, you can't tell where it's looking."
 	)
 ]
@@ -12245,7 +12515,7 @@ for mobility in mobility_list:
 # All offense attributes in the game.
 offense_list = [
 	EwOffense( # offense 1
-		id_offense = "blades",
+		id_offense = slimeoid_weapon_blades,
 		alias = [
 			"edged",
 			"edges",
@@ -12262,7 +12532,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} is sharpening its retractible blades on a stone nearby."
 	),
 	EwOffense( # offense 2
-		id_offense = "teeth",
+		id_offense = slimeoid_weapon_teeth,
 		alias = [
 			"bite",
 			"biting",
@@ -12278,7 +12548,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} is idly picking its sharp teeth."
 	),
 	EwOffense( # offense 3
-		id_offense = "grip",
+		id_offense = slimeoid_weapon_grip,
 		alias = [
 			"squeeze",
 			"grab",
@@ -12297,7 +12567,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} picks up a rock off the ground and squeezes it like a stress ball."
 	),
 	EwOffense( # offense 4
-		id_offense = "bludgeon",
+		id_offense = slimeoid_weapon_bludgeon,
 		alias = [
 			"strike",
 			"striking",
@@ -12317,7 +12587,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} spots an insect on the ground nearby and smashes it."
 	),
 	EwOffense( # offense 5
-		id_offense = "spikes",
+		id_offense = slimeoid_weapon_spikes,
 		alias = [
 			"puncture",
 			"spear",
@@ -12331,7 +12601,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} carefully adjusts its position so as not to prick itself with its own spikes."
 	),
 	EwOffense( # offense 6
-		id_offense = "electricity",
+		id_offense = slimeoid_weapon_electricity,
 		alias = [
 			"strike",
 			"f"
@@ -12344,7 +12614,7 @@ offense_list = [
 		str_observe = "A fly flies a little too near {slimeoid_name} and is zapped with a tiny bolt of electricity, killing it instantly."
 	),
 	EwOffense( # offense 7
-		id_offense = "slam",
+		id_offense = slimeoid_weapon_slam,
 		alias = [
 			"bodyslam",
 			"g"
@@ -12372,10 +12642,13 @@ for offense in offense_list:
 	for alias in offense.alias:
 		offense_map[alias] = offense
 
+
+
+
 # All defense attributes in the game.
 defense_list = [
 	EwDefense( # defense 1
-		id_defense = "scales",
+		id_defense = slimeoid_armor_scales,
 		alias = [
 			"scale",
 			"scaled",
@@ -12385,10 +12658,14 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
 		str_create = "You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
-		str_armor = "It is covered in scales."
+		str_armor = "It is covered in scales.",
+		id_resistance = slimeoid_weapon_electricity,
+		id_weakness = slimeoid_special_TK,
+		str_resistance = " {}'s scales conduct the electricity away from its vitals!",
+		str_weakness = " {}'s scales refract and amplify the disrupting brainwaves inside its skull!",
 	),
 	EwDefense( # defense 2
-		id_defense = "boneplates",
+		id_defense = slimeoid_armor_boneplates,
 		alias = [
 			"bone",
 			"bony",
@@ -12402,10 +12679,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
 		str_create = "You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
-		str_armor = "It is covered in bony plates."
+		str_armor = "It is covered in bony plates.",
+		id_resistance = slimeoid_weapon_blades,
+		id_weakness = slimeoid_special_spines,
+		str_resistance = " {}'s bone plates block the worst of the damage!",
+		str_weakness = " {}'s bone plates only drive the quills deeper into its body as it moves!",
+
 	),
 	EwDefense( # defense 3
-		id_defense = "quantumfield",
+		id_defense = slimeoid_armor_quantumfield,
 		alias = [
 			"quantum",
 			"field",
@@ -12415,10 +12697,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
 		str_create = "You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
-		str_armor = "It is enveloped in a field of quantum uncertainty."
+		str_armor = "It is enveloped in a field of quantum uncertainty.",
+		id_resistance = slimeoid_weapon_slam,
+		id_weakness = slimeoid_special_laser,
+		str_resistance = " {}'s quantum superposition makes it difficult to hit head-on!",
+		str_weakness = " {}'s quantum particles are excited by the high-frequency radiation, destabilizing its structure!",
+
 	),
 	EwDefense( # defense 4
-		id_defense = "formless",
+		id_defense = slimeoid_armor_formless,
 		alias = [
 			"amorphous",
 			"shapeless",
@@ -12428,10 +12715,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
 		str_create = "You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
-		str_armor = "It is malleable and can absorb blows with ease."
+		str_armor = "It is malleable and can absorb blows with ease.",
+		id_resistance = slimeoid_weapon_bludgeon,
+		id_weakness = slimeoid_special_webs,
+		str_resistance = " {}'s squishy body easily absorbs the blows!",
+		str_weakness = " {}'s squishy body easily adheres to and becomes entangled by the webs!",
+
 	),
 	EwDefense( # defense 5
-		id_defense = "regeneration",
+		id_defense = slimeoid_armor_regeneration,
 		alias = [
 			"healing",
 			"regen",
@@ -12440,10 +12732,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
 		str_create = "You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
-		str_armor = "It can regenerate damage to its body rapidly."
+		str_armor = "It can regenerate damage to its body rapidly.",
+		id_resistance = slimeoid_weapon_spikes,
+		id_weakness = slimeoid_special_spit,
+		str_resistance = " {} quickly begins regenerating the small puncture wounds inflicted by the spikes!",
+		str_weakness = " {}'s regeneration is impeded by the corrosive chemicals!",
+
 	),
 	EwDefense( # defense 6
-		id_defense = "stench",
+		id_defense = slimeoid_armor_stench,
 		alias = [
 			"stink",
 			"smell",
@@ -12452,10 +12749,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
 		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
-		str_armor = "It exudes a horrible stench."
+		str_armor = "It exudes a horrible stench.",
+		id_resistance = slimeoid_weapon_teeth,
+		id_weakness = slimeoid_special_throw,
+		str_resistance = " {}'s noxious fumes make its opponent hesitant to put its mouth anywhere near it!",
+		str_weakness = " {}'s foul odor gives away its position, making it easy to target with thrown projectiles!",
+
 	),
 	EwDefense( # defense 7
-		id_defense = "oil",
+		id_defense = slimeoid_armor_oil,
 		alias = [
 			"slick",
 			"g"
@@ -12463,7 +12765,12 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
 		str_create = "You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
-		str_armor = "It is covered in a coating of slippery oil."
+		str_armor = "It is covered in a coating of slippery oil.",
+		id_resistance = slimeoid_weapon_grip,
+		id_weakness = slimeoid_special_fire,
+		str_resistance = " {}'s slippery coating makes it extremely difficult to grab on to!",
+		str_weakness = " {}'s oily coating is flammable, igniting as it contacts the flame!",
+
 	)
 ]
 
@@ -12484,7 +12791,7 @@ for defense in defense_list:
 # All special attributes in the game.
 special_list = [
 	EwSpecial( # special 1
-		id_special = "spit",
+		id_special = slimeoid_special_spit,
 		alias = [
 			"spitting",
 			"spray",
@@ -12507,7 +12814,7 @@ special_list = [
 		str_observe = "A bit of acidic fluid drips from {slimeoid_name} onto the ground, where it smokes and sizzles."
 	),
 	EwSpecial( # special 2
-		id_special = "laser",
+		id_special = slimeoid_special_laser,
 		alias = [
 			"beam",
 			"energy",
@@ -12522,7 +12829,7 @@ special_list = [
 		str_observe = "{slimeoid_name} suddenly glows with radioactive energy. Best not to look directly at it until it settles down..."
 	),
 	EwSpecial( # special 3
-		id_special = "spines",
+		id_special = slimeoid_special_spines,
 		alias = [
 			"spikes",
 			"spiky",
@@ -12538,7 +12845,7 @@ special_list = [
 		str_observe = "{slimeoid_name} shudders and ejects a few old quills onto the ground. You can see new ones already growing in to replace them."
 	),
 	EwSpecial( # special 4
-		id_special = "throw",
+		id_special = slimeoid_special_throw,
 		alias = [
 			"throwing",
 			"hurling",
@@ -12553,7 +12860,7 @@ special_list = [
 		str_observe = "{slimeoid_name} is idly picking up stones and seeing how far it can toss them."
 	),
 	EwSpecial( # special 5
-		id_special = "TK",
+		id_special = slimeoid_special_TK,
 		alias = [
 			"telekinesis",
 			"psychic",
@@ -12567,7 +12874,7 @@ special_list = [
 		str_observe = "You momentarily black out. When you come to, your nose is bleeding. {slimeoid_name} tries to look innocent."
 	),
 	EwSpecial( # special 6
-		id_special = "fire",
+		id_special = slimeoid_special_fire,
 		alias = [
 			"chemical",
 			"breath",
@@ -12582,7 +12889,7 @@ special_list = [
 		str_observe = "A bit of fluid drips from {slimeoid_name} onto the floor and ignites, but you manage to smother the small flame quickly before it spreads."
 	),
 	EwSpecial( # special 7
-		id_special = "webs",
+		id_special = slimeoid_special_webs,
 		alias = [
 			"webbing",
 			"web",
@@ -12611,6 +12918,294 @@ for special in special_list:
 	for alias in special.alias:
 		special_map[alias] = special
 
+def get_strat_a(combat_data, in_range, first_turn, active):
+	base_attack = 30
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_block *= 2
+		else:
+			weight_block *= 3
+
+	else:
+		if active:
+			weight_evade *= 2
+		else:
+			weight_evade *= 5
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+	
+def get_strat_b(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_block *= 2
+		else:
+			weight_block *= 2
+			weight_evade *= 3
+
+	else:
+		if active:
+			weight_attack *= 3
+			weight_evade *= 3
+		else:
+			weight_evade *= 4
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_c(combat_data, in_range, first_turn, active):
+	base_attack = 30
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_block *= 2
+			weight_evade *= 2
+
+	else:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_evade *= 2
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_d(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 5
+	base_block = 15
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_attack /= 2
+			weight_block *= 2
+
+	else:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_attack /= 2
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_e(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 2
+			weight_evade *= 2
+		else:
+			weight_evade *= 4
+
+	else:
+		if active:
+			weight_attack *= 4
+			weight_block *= 2
+		else:
+			weight_block *= 3
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_f(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 20
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_evade *= 2
+		else:
+			weight_evade *= 3
+			weight_block *= 2
+
+	else:
+		if active:
+			weight_attack *= 4
+			weight_block *= 2
+		else:
+			weight_block *= 3
+			weight_evade *= 2
+			
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_g(combat_data, in_range, first_turn, active):
+	base_attack = 10
+	base_evade = 15
+	base_block = 5
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 4
+		else:
+			weight_evade *= 2
+
+	else:
+		if active:
+			weight_attack *= 4
+		else:
+			weight_evade *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.2))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
 # All brain attributes in the game.
 brain_list = [
 	EwBrain( # brain 1
@@ -12624,6 +13219,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is snarling. You're not sure if it's angry at you, or at the world in general.",
 		str_pet = "{slimeoid_name} hisses at you.",
 		str_walk = "You wrestle {slimeoid_name} down and force a leash onto it, as it angrily snarls and hisses at you in protest.",
+		str_feed = "{slimeoid_name} almost bites your hand off as you offer the {food_name} to it! It growls at you before eating, as if to secure its prey.",
 		str_kill = "{slimeoid_name} howls with savage delight at the bloodshed!!",
 		str_death = "{slimeoid_name} howls in fury at its master's death! It tears away in a blind rage!",
 		str_victory = "{slimeoid_name} roars in triumph!!",
@@ -12633,7 +13229,9 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name}  hisses with frustrated rage! ",
 		str_revive = "{slimeoid_name} howls at your return, annoyed to have been kept waiting.",
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
-		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_a,
+
 	),
 	EwBrain( # brain 2
 		id_brain = "b",
@@ -12646,6 +13244,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} notices you looking at it and seems delighted!",
 		str_pet = "{slimeoid_name} purrs happily.",
 		str_walk = "{slimeoid_name} is so excited for its walk, it can barely hold still enough to let you put the leash on it!",
+		str_feed = "{slimeoid_name} starts running circles around you and drooling uncontrollably in anticipation as soon as you reach for the {food_name}.",
 		str_kill = "{slimeoid_name} gives a bestial woop of excitement for your victory!",
 		str_death = "{slimeoid_name} gives a wail of grief at its master's death, streaking away from the scene.",
 		str_victory = "{slimeoid_name} woops with delight at its victory!",
@@ -12655,7 +13254,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} seems a little less thrilled now... ",
 		str_revive = "{slimeoid_name} is waiting patiently downtown when you return from your time as a corpse. It knew you'd be back!",
 		str_spawn = "{slimeoid_name} gets up off the ground slowly at first, but then it notices you and leaps into your arms. It sure seems glad to see you!",
-		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_b,
 	),
 	EwBrain( # brain 3
 		id_brain = "c",
@@ -12668,6 +13268,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems to be resting, possibly deep in thought.",
 		str_pet = "{slimeoid_name} doesn't react.",
 		str_walk = "{slimeoid_name} holds still as you place the leash on it. It regards the leash, seemingly pontificating.",
+		str_feed = "{slimeoid_name} shows neither happiness nor reluctance as you offer the {food_name}. It accepts the treat as though it were a mere formality.",
 		str_kill = "{slimeoid_name} regards the corpse of your former adversary with an unknowable expression.",
 		str_death = "{slimeoid_name} stares at the killer, memorizing their face before fleeing the scene.",
 		str_victory = "{slimeoid_name} silently turns away from its defeated opponent.",
@@ -12677,7 +13278,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is losing its composure just a little! ",
 		str_revive = "{slimeoid_name} is downtown when you return from the sewers. You find it staring silently up at ENDLESS WAR.",
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
-		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_c,
 	),
 	EwBrain( # brain 4
 		id_brain = "d",
@@ -12690,6 +13292,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} stares off into the distance. Who knows if it's actually looking at anything in particular.",
 		str_pet = "{slimeoid_name} is startled out of a stupor by your touch.",
 		str_walk = "{slimeoid_name} hardly seems to notice you fastening it with a leash.",
+		str_feed = "You have to literally shove the {food_name} into {slimeoid_name}'s face to get its attention. It takes a moment to recover its orientation before accepting the treat.",
 		str_kill = "{slimeoid_name} wasn't paying attention and missed the action.",
 		str_death = "{slimeoid_name} is startled to realize its master has died. It blinks in confusion before fleeing.",
 		str_victory = "{slimeoid_name} keeps attacking for a moment before realizing it's already won.",
@@ -12699,7 +13302,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} tries to buy itself some time to think! ",
 		str_revive = "{slimeoid_name} is exactly where you left it when you died.",
 		str_spawn = "{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
-		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_d,
 	),
 	EwBrain( # brain 5
 		id_brain = "e",
@@ -12712,6 +13316,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is glancing around furtively, seemingly scanning for threats.",
 		str_pet = "{slimeoid_name} flinches nervously at your touch.",
 		str_walk = "{slimeoid_name} shivers in place as you're fastening the leash, then starts to pull and tug at it, seemingly perturbed.",
+		str_feed = "{slimeoid_name} backs up anxiously as you reach out with the {food_name} in your hand. You sigh and take a bite of the treat yourself to convince {slimeoid_name} that its not poisoned. It reluctantly accepts the {food_name} and starts nibbling at it.",
 		str_kill = "{slimeoid_name} peers out from behind its master, hoping the violence is over.",
 		str_death = "{slimeoid_name} is overcome with terror, skittering away from the killer in a mad panic!",
 		str_victory = "{slimeoid_name} is deeply relieved that the battle is over.",
@@ -12721,7 +13326,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is in a full-blown panic! ",
 		str_revive = "{slimeoid_name} peeks out from behind some trash cans before rejoining you. It seems relieved to have you back.",
 		str_spawn = "{slimeoid_name}'s eyes dart frantically around the room. Seeing you, it darts behind you, as if for cover from an unknown threat.",
-		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_e,
 	),
 	EwBrain( # brain 6
 		id_brain = "f",
@@ -12734,6 +13340,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is moving around, apparently searching for... something.",
 		str_pet = "{slimeoid_name} seems nonplussed, but doesn't object.",
 		str_walk = "{slimeoid_name} exasperatedly lets you fit it with a leash for a walk.",
+		str_feed = "{slimeoid_name} only seems to halfway pay attention as you offer the {food_name}. It pockets the treat for later and eats it when it thinks you aren't looking.",
 		str_kill = "{slimeoid_name} rifles through your victim's pockets for food.",
 		str_death = "{slimeoid_name} rifles through its dead master's pockets for whatever it can find before slinking away.",
 		str_victory = "{slimeoid_name} shakes itself off after the battle.",
@@ -12743,7 +13350,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} thinks it'd better try something else, and fast! ",
 		str_revive = "{slimeoid_name} starts following you around again not long after you have returned from the dead.",
 		str_spawn = "{slimeoid_name} picks itself up off the floor and regards you coolly. It seems as if it's gauging your usefulness.",
-		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_f,
 	),
 	EwBrain( # brain 7
 		id_brain = "g",
@@ -12756,6 +13364,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems unsure of whether it wants to wander around or just stay put.",
 		str_pet = "{slimeoid_name} seems confused about how to react.",
 		str_walk = "{slimeoid_name} lets you put its leash on it, but immediately starts to trip over it and get tangled in it.",
+		str_feed = "{slimeoid_name} stares at the {food_name} like it's unfamiliar with the concept of food. You make a chewing motion with your mouth to demonstrate. It still seems confused. You lose your patience and force-feed the treat to your slimeoid.",
 		str_kill = "{slimeoid_name} seems unsure of whether to celebrate the victory or to mourn the decline of your civilization into rampant youth violence.",
 		str_death = "{slimeoid_name} starts to approach its master's body, then changes its mind and starts to run away. It trips over itself and falls on its way out.",
 		str_victory = "{slimeoid_name} looks around, apparently shocked that it somehow won.",
@@ -12765,7 +13374,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is limping around aimlessly! ",
 		str_revive = "{slimeoid_name} wanders by, seemingly by accident, but thinks it probably ought to start following you again.",
 		str_spawn = "{slimeoid_name} starts to pick itself up off the floor, then changes its mind and lies back down. Then it gets up again. Lies down again. Up. Down. Up. Ok, this time it stays up.",
-		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_g,
 	)
 ]
 
@@ -13149,177 +13759,177 @@ mutation_milestones = [5,10,15,20,25,30,35,40,45,50]
 mutations = [
 	EwMutationFlavor(
 		id_mutation = mutation_id_spontaneouscombustion,
-		str_describe_self = "On the surface you look calm and ready, probably unrelated to your onset of Spontaneous Combustion.",
-		str_describe_other = "On the surface they look calm and ready, probably unrelated to their onset of Spontaneous Combustion.",
-		str_acquire = "Deep inside your chest you feel a slight burning sensation. You suddenly convulse for a few moments, before… returning basically to normal. Huh, that’s weird. Oh well, I guess nothing happened. You have developed the mutation Spontaneous Combustion.",
+		str_describe_self = "On the surface you look calm and ready, probably unrelated to your onset of **Spontaneous Combustion**.",
+		str_describe_other = "On the surface they look calm and ready, probably unrelated to their onset of **Spontaneous Combustion**.",
+		str_acquire = "Deep inside your chest you feel a slight burning sensation. You suddenly convulse for a few moments, before… returning basically to normal. Huh, that’s weird. Oh well, I guess nothing happened. You have developed the mutation **Spontaneous Combustion**.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_thickerthanblood,
-		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to Thicker Than Blood.",
-		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to Thicker Than Blood.",
-		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation Thicker Than Blood. On a fatal blow, immediately receive the opponent’s remaining slime. ",
+		str_describe_self = "Unnatural amounts of blood rush through your body, causing grotesquely large veins to bulge out of your head and arms frequently, due to **Thicker Than Blood**.",
+		str_describe_other = "Unnatural amounts of blood rush through their body, causing grotesquely large veins to bulge out of their head and arms frequently, due to **Thicker Than Blood**.",
+		str_acquire = "Your face swells with unnatural amounts of blood, developing hideously grotesque, bulging veins in the process. You begin to foam at the mouth, gnashing your teeth and longing for the thrill of the hunt. You have developed the mutation **Thicker Than Blood**. On a fatal blow, immediately receive the opponent’s remaining slime. Its effects are diminished on hunted enemies, however.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fungalfeaster,
-		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to Fungal Feaster.",
-		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to Fungal Feaster.",
-		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation Fungal Feaster. On a fatal blow, restore all hunger.",
+		str_describe_self = "Tiny mushrooms and other fungi sprout from the top of your head and shoulders due to **Fungal Feaster**.",
+		str_describe_other = "Tiny mushrooms and other fungi sprout from the top of their head and shoulders due to **Fungal Feaster**.",
+		str_acquire = "Your saliva thickens, pouring out of your mouth with no regulation. A plethora of funguses begin to grow from your skin, causing you to itch uncontrollably. You feel an intense hunger for the flesh of another juvenile. You have developed the mutation **Fungal Feaster**. On a fatal blow, restore all hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_sharptoother,
-		str_describe_self = "Your inhuman hand-eye-teeth coordination is the stuff of legends due to Sharptoother.",
-		str_describe_other = "Their inhuman hand-eye-teeth coordination is the stuff of legends due to Sharptoother.",
-		str_acquire = "Your pupils dilate, a cacophony of previously imperceivable noises floods into your head. Your canines pop out of your skull, making room for monstrously oversized saber-tooth replacements. Your fingers twitch frequently, begging to pull a trigger, any trigger. You have developed the mutation Sharptoother. Halved miss chance.",
+		str_describe_self = "Your inhuman hand-eye-teeth coordination is the stuff of legends due to **Sharptoother**.",
+		str_describe_other = "Their inhuman hand-eye-teeth coordination is the stuff of legends due to **Sharptoother**.",
+		str_acquire = "Your pupils dilate, a cacophony of previously imperceivable noises floods into your head. Your canines pop out of your skull, making room for monstrously oversized saber-tooth replacements. Your fingers twitch frequently, begging to pull a trigger, any trigger. You have developed the mutation **Sharptoother**. Halved miss chance.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_2ndamendment,
-		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to 2nd Amendment.",
-		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to 2nd Amendment.",
-		str_acquire = "You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation 2nd Amendment. Extra equippable gun slot.",
+		str_describe_self = "A spare pair of arms extend from your monstrously large shoulders due to **2nd Amendment**.",
+		str_describe_other = "A spare pair of arms extend from their monstrously large shoulders due to **2nd Amendment**.",
+		str_acquire = "You feel an intense, sharp pain in the back of your shoulders. Skin tears and muscles rip as you grow a brand new set of arms, ready, willing, prepared to fight. You have developed the mutation **2nd Amendment**. Extra equippable gun slot.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bleedingheart,
-		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to Bleeding Heart.",
-		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to Bleeding Heart.",
-		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation Bleeding Heart. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
+		str_describe_self = "Your heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
+		str_describe_other = "Their heartbeat’s rhythm is sporadic and will randomly change intensity due to **Bleeding Heart**.",
+		str_acquire = "To say you experience “heart palpitations” is a gross understatement. Your heart feels like it explodes and reforms over and over for the express amusement of some cruel god’s sick sense of humor. You begin to cough up blood and basically continue to do so for the rest of your life. You have developed the mutation **Bleeding Heart**. Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_nosferatu,
-		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to Noseferatu.",
-		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to Noseferatu.",
-		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation Noseferatu. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
+		str_describe_self = "Your freakishly huge, hooked schnoz and pointed ears give you a ghoulish appearance due to **Noseferatu**.",
+		str_describe_other = "Their freakishly huge, hooked schnoz and pointed ears give them a ghoulish appearance due to **Noseferatu**.",
+		str_acquire = "The bridge of your nose nearly triples in size. You recoil as the heat of nearby lights sear your skin, forcing you to seek cover under the shadows of dark, secluded alleyways. Your freakish appearance make you a social outcast, filling you with a deep resentment which evolves into unbridled rage. You will have your revenge. You have developed the mutation **Noseferatu**. At night, upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_organicfursuit,
-		str_describe_self = "Your shedding is a constant source of embarrassment due to Organic Fursuit.",
-		str_describe_other = "Their shedding is a constant source of embarrassment due to Organic Fursuit.",
-		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation Organic Fursuit. Double damage dealt, 1/10th damage taken and movement speed every 31st night.",
+		str_describe_self = "Your shedding is a constant source of embarrassment due to **Organic Fursuit**.",
+		str_describe_other = "Their shedding is a constant source of embarrassment due to **Organic Fursuit**.",
+		str_acquire = "An acute tingling sensation shoots through your body, causing you to start scratching uncontrollably. You fly past puberty and begin growing frankly alarming amounts of hair all over your body. Your fingernails harden and twist into claws. You gain a distinct appreciation for anthropomorphic characters in media, even going to the trouble of creating an account on an erotic furry roleplay forum. Oh, the horror!! You have developed the mutation **Organic Fursuit**. Double damage dealt, 1/10th damage taken and movement speed every 31st night.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lightasafeather,
-		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to Light As A Feather.",
-		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to Light As A Feather.",
-		str_acquire = "Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation Light As A Feather. Double movement speed while weather is windy.",
+		str_describe_self = "Your anorexic, frail physique causes even light breezes to blow you off course due to **Light As A Feather**.",
+		str_describe_other = "Their anorexic, frail physique causes even light breezes to blow them off course due to **Light As A Feather**.",
+		str_acquire = "Your body fat begins to dissolve right before your eyes, turning into a foul-smelling liquid that drenches the floor beneath you. You quickly pass conventionally attractive weights and turn into a hideous near-skeleton. The only thing resting between your bones and your skin is a thin layer of muscles that resemble lunch meat slices. You have developed the mutation **Light As A Feather**. Double movement speed while weather is windy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_whitenationalist,
-		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
-		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to White Nationalist.",
-		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation White Nationalist. Scavenge bonus and cannot be scouted while weather is snowy.",
+		str_describe_self = "Your bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
+		str_describe_other = "Their bleached white, peeling skin is surely the envy of lesser races due to **White Nationalist**.",
+		str_acquire = "Every pore on your skin suddenly feels like it’s being punctured by a rusty needle. Your skin’s pigment rapidly desaturates to the point of pure #ffffff whiteness. You suddenly love country music, too. Wow, that was a really stupid joke. You have developed the mutation **White Nationalist**. Scavenge bonus and cannot be scouted while weather is snowy.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_spoiledappetite,
-		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to Spoiled Appetite.",
-		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to Spoiled Appetite.",
-		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation Spoiled Appetite. You can now eat spoiled food.",
+		str_describe_self = "Your frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
+		str_describe_other = "Their frequent, unholy belches could incapacitate a Megaslime due to **Spoiled Appetite**.",
+		str_acquire = "You become inexplicably tired, you develop bags under your eyes and can barely keep them open without fidgeting. Stenches begin to secrete from your body, which only worsens as your stomach lets out a deep, guttural growl that sounds like a dying animal being raped by an already dead animal. Which is to say, not pleasant. You are overcome with a singular thought. “What the hell, I’ll just eat some trash.” You have developed the mutation **Spoiled Appetite**. You can now eat spoiled food.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bigbones,
-		str_describe_self = "You can often be seen consuming enough calories to power a small country due to Big Bones.",
-		str_describe_other = "They can often be seen consuming enough calories to power a small country due to Big Bones.",
-		str_acquire = "Your can actively feel your brain being squeezed and your heart being nearly crushed by your rib cage as every bone in your body doubles in size. Your body fat doubles in density, requiring great strength and energy for even simple movements. You have developed the mutation Big Bones. Double food carrying capacity.",
+		str_describe_self = "You can often be seen consuming enough calories to power a small country due to **Big Bones**.",
+		str_describe_other = "They can often be seen consuming enough calories to power a small country due to **Big Bones**.",
+		str_acquire = "Your can actively feel your brain being squeezed and your heart being nearly crushed by your rib cage as every bone in your body doubles in size. Your body fat doubles in density, requiring great strength and energy for even simple movements. You have developed the mutation **Big Bones**. Double food carrying capacity.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fatchance,
-		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
-		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to Fat Chance.",
-		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation Fat Chance. Take 25% less damage when above 50% hunger.",
+		str_describe_self = "Your impressive girth provides ample amounts of armor against attacks due to **Fat Chance**.",
+		str_describe_other = "Their impressive girth provides ample amounts of armor against attacks due to **Fat Chance**.",
+		str_acquire = "Your body begins to swell, providing you with easily hundreds of extra pounds nigh instantaneously. Walking becomes difficult, breathing even more so. Your fat solidifies into a brick-like consistency, turning you into a living fortress. You only have slightly increased mobility than a regular fortress, however. You have developed the mutation **Fat Chance**. Take 25% less damage when above 50% hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_fastmetabolism,
-		str_describe_self = "Fierce boiling and sizzling can be heard from deep inside your stomach due to Fast Metabolism.",
-		str_describe_other = "Fierce boiling and sizzling can be heard from deep inside their stomach due to Fast Metabolism.",
-		str_acquire = "An intense heat is felt in the pit of your stomach, which wails in pain as it’s dissolved from the inside out. Your gastric acid roars to an unthinkably destructive fever pitch, ready to completely annihilate whatever poor calories may enter your body before instantly turning them into pure leg muscle. You have developed the mutation Fast Metabolism. Doubled movement speed at below 50% hunger.",
+		str_describe_self = "Fierce boiling and sizzling can be heard from deep inside your stomach due to **Fast Metabolism**.",
+		str_describe_other = "Fierce boiling and sizzling can be heard from deep inside their stomach due to **Fast Metabolism**.",
+		str_acquire = "An intense heat is felt in the pit of your stomach, which wails in pain as it’s dissolved from the inside out. Your gastric acid roars to an unthinkably destructive fever pitch, ready to completely annihilate whatever poor calories may enter your body before instantly turning them into pure leg muscle. You have developed the mutation **Fast Metabolism**. Doubled movement speed at below 50% hunger.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_bingeeater,
-		str_describe_self = "You’re always one criticism away from devouring several large pizzas due to Binge Eater.",
-		str_describe_other = "They’re always one criticism away from devouring several large pizzas due to Binge Eater.",
-		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation Binge Eater. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
+		str_describe_self = "You’re always one criticism away from devouring several large pizzas due to **Binge Eater**.",
+		str_describe_other = "They’re always one criticism away from devouring several large pizzas due to **Binge Eater**.",
+		str_acquire = "Your mouth begins to mimic chewing over and over again, opening and closing all on it’s own. You’re suddenly able to smell the food being carried by passersby for sometimes hours after they’ve left your sight. Your mouth dries and you sweat profusely even just being in the same room as food. Even now, just thinking about food, you begin to tremble. You can barely contain yourself. You don’t need it. You don’t need it. You don’t need it. You don’t need it... You need it. You have developed the mutation **Binge Eater**. Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lonewolf,
-		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to Lone Wolf.",
-		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to Lone Wolf.",
-		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation Lone Wolf. Double capture rate and 50% damage buff when in a district alone.",
+		str_describe_self = "You stand out from the crowd, mostly because you stay far away from them due to **Lone Wolf**.",
+		str_describe_other = "They stand out from the crowd, mostly because they stay far away from them due to **Lone Wolf**.",
+		str_acquire = "Your eyes squint and a growl escapes your mouth. You begin fostering an unfounded resentment against your fellow juveniles, letting it bubble into a burning hatred in your chest. You snarl and grimace as people pass beside you on the street. All you want to do is be alone, no one understands you anyway. You have developed the mutation **Lone Wolf**. 20% capping discount and 50% damage buff when in a district alone.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_quantumlegs,
-		str_describe_self = "You’ve got nothing of note below the belt due to Quantum Legs.",
-		str_describe_other = "They’ve got nothing of note below the belt due to Quantum Legs.",
-		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation Quantum Legs. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
+		str_describe_self = "You’ve got nothing of note below the belt due to **Quantum Legs**.",
+		str_describe_other = "They’ve got nothing of note below the belt due to **Quantum Legs**.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_chameleonskin,
-		str_describe_self = "Your skin quickly adjusts and camouflages you in your current surroundings due to Chameleon Skin.",
-		str_describe_other = "Their skin quickly adjusts and camouflages them in their current surroundings due to Chameleon Skin.",
-		str_acquire = "You feel a scraping sensation all over your body, like you’re being sunburned and skinned alive at the same exact time. You begin to change hue rapidly, flipping through a thousand different colors, patterns, and textures. Every individual minor change in value across your entire body feels like you’re being dismembered. This transpires for several agonizing seconds before your body settles on a perfect recreation of your current surroundings. For all intents and purposes, you are transparent. You have developed the mutation Chameleon Skin. While offline, you can move and scout other districts. You cannot be scouted.",
+		str_describe_self = "Your skin quickly adjusts and camouflages you in your current surroundings due to **Chameleon Skin**.",
+		str_describe_other = "Their skin quickly adjusts and camouflages them in their current surroundings due to **Chameleon Skin**.",
+		str_acquire = "You feel a scraping sensation all over your body, like you’re being sunburned and skinned alive at the same exact time. You begin to change hue rapidly, flipping through a thousand different colors, patterns, and textures. Every individual minor change in value across your entire body feels like you’re being dismembered. This transpires for several agonizing seconds before your body settles on a perfect recreation of your current surroundings. For all intents and purposes, you are transparent. You have developed the mutation **Chameleon Skin**. While offline, you can move and scout other districts and cannot be scouted.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_patriot,
-		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to Patriot.",
-		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to Patriot.",
-		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation Patriot. Double capture rate.",
+		str_describe_self = "You beam with intense pride over your faction’s sophisticated culture and history due to **Patriot**.",
+		str_describe_other = "They beam with intense pride over their faction’s sophisticated culture and history due to **Patriot**.",
+		str_acquire = "Your brain’s wrinkles begin to smooth themselves out, and you are suddenly susceptible to being swayed by propaganda. Suddenly, your faction’s achievements flash before your eyes. All of the glorious victories it has won, all of its sophisticated culture and history compels you to action. You have developed the mutation **Patriot**. 20% capture discount.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_socialanimal,
-		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to Social Animal.",
-		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to Social Animal.",
-		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation Social Animal. Your damage increases by 10% for every ally in your district.",
+		str_describe_self = "Your charming charisma and dashing good looks make you the life of the party due to **Social Animal**.",
+		str_describe_other = "Their charming charisma and dashing good looks make them the life of the party due to **Social Animal**.",
+		str_acquire = "You begin to jitter and shake with unusual vim and vigor. Your heart triples in size and you can’t help but let a toothy grin span from ear to ear as a bizarre energy envelopes you. As long as you’re with your friends, you feel like you can take on the world!! You have developed the mutation **Social Animal**. Your damage increases by 10% for every ally in your district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_threesashroud,
-		str_describe_self = "You tend to blend into the crowd due to Three’s A Shroud.",
-		str_describe_other = "They tend to blend into the crowd due to Three’s A Shroud.",
-		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation Three’s A Shroud. Cannot be scouted if there are more than 3 allies in your district.",
+		str_describe_self = "You tend to blend into the crowd due to **Three’s A Shroud**.",
+		str_describe_other = "They tend to blend into the crowd due to **Three’s A Shroud**.",
+		str_acquire = "A distinct sense of loneliness pervades your entire body. You’re reduced to the verge of tears without really knowing why. You suddenly feel very conscious of how utterly useless you are. You want to fade away so badly, you’d give anything just to be invisible. Everyone would like it better that way. You have developed the mutation **Three’s A Shroud**. Cannot be scouted if there are more than 3 allies in your district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_aposematicstench,
-		str_describe_self = "A putrid stench permeates around you all hours of the day due to Aposematic Stench.",
-		str_describe_other = "A putrid stench permeates around them all hours of the day due to Aposematic Stench.",
-		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation Aposematic Stench. For every 5 levels you gain, you appear as 1 more person when being scouted.",
+		str_describe_self = "A putrid stench permeates around you all hours of the day due to **Aposematic Stench**.",
+		str_describe_other = "A putrid stench permeates around them all hours of the day due to **Aposematic Stench**.",
+		str_acquire = "Your eyes water as you begin secreting pheromones into the air from every indecent nook and cranny on your body. You smell so unbelievably terrible that even you are not immune from frequent coughs and wheezes when you catch a particularly bad whiff. You have developed the mutation **Aposematic Stench**. For every 5 levels you gain, you appear as 1 more person when being scouted.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_lucky,
-		str_describe_self = "You are extremely fortunate due to Lucky.",
-		str_describe_other = "They are extremely fortunate due to Lucky.",
-		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation Lucky. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
+		str_describe_self = "You are extremely fortunate due to **Lucky**.",
+		str_describe_other = "They are extremely fortunate due to **Lucky**.",
+		str_acquire = "Just as you level up, you are struck by lightning. You struggle to stand at first, but after the initial shock wears off you quickly dust the cartoonish soot from your clothes and begin walking again. Then, you’re struck again. You stand up again. This happens a few more times before you’re forced by the astronomically low odds of you being alive to conclude you are a statistical anomaly and thus normal concepts of fortune do not apply to you. You have developed the mutation **Lucky**. Drastically increased chance to unearth slime poudrins and odds of winning slime casino games.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dressedtokill,
-		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to Dressed to Kill.",
-		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to Dressed to Kill.",
-		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation Dressed to Kill. Damage bonus if all available cosmetic slots are filled.",
+		str_describe_self = "You’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
+		str_describe_other = "They’re fabulously accompanied by a wide range of luxurious cosmetics due to **Dressed to Kill**.",
+		str_acquire = "You are rocked by a complete fundamental change in your brain’s chemistry. Practically every cell in your body is reworked to apply this, the most ambitious mutation yet. You gain an appreciation for French haute couture. You have developed the mutation **Dressed to Kill**. Damage bonus if all available cosmetic slots are filled.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_keensmell,
-		str_describe_self = "You have an uncanny ability to track and identify scents due to Keen Smell.",
-		str_describe_other = "They have an uncanny ability to track and identify scents due to Keen Smell.",
-		str_acquire = "You can feel your facial muscles being ripped as your skull elongates your mouth and nose, molding them into an uncanny snout. Your nostrils painfully stretch and elongate to allow for a broad range of olfactory sensations you could only have dreamed of experiencing before. Your nose twitches and you begin to growl as you pick up the scent of a nearby enemy gangster. You have developed the mutation Keen Smell. You can now use the !sniff command, allowing you to meticulously list every single player in the targeted district.",
+		str_describe_self = "You have an uncanny ability to track and identify scents due to **Keen Smell**.",
+		str_describe_other = "They have an uncanny ability to track and identify scents due to **Keen Smell**.",
+		str_acquire = "You can feel your facial muscles being ripped as your skull elongates your mouth and nose, molding them into an uncanny snout. Your nostrils painfully stretch and elongate to allow for a broad range of olfactory sensations you could only have dreamed of experiencing before. Your nose twitches and you begin to growl as you pick up the scent of a nearby enemy gangster. You have developed the mutation **Keen Smell**. You can now use the !sniff command, allowing you to meticulously list every single player in the targeted district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_dumpsterdiver,
-		str_describe_self = "You are exceptionally good at picking up trash due to Dumpster Diver.",
-		str_describe_other = "They are exceptionally good at picking up trash due to Dumpster Diver.",
-		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation Dumpster Diver. 10 times chance to get items while scavenging.",
+		str_describe_self = "You are exceptionally good at picking up trash due to **Dumpster Diver**.",
+		str_describe_other = "They are exceptionally good at picking up trash due to **Dumpster Diver**.",
+		str_acquire = "A cold rush overtakes you, fogging your mind and causing a temporary lapse in vision. When your mind clears again and you snap back to reality, you notice so many tiny details you hadn’t before. All the loose change scattered on the floor, all the pebbles on the sidewalk, every unimportant object you would have normally glanced over now assaults your senses. You have an uncontrollable desire to pick them all up. You have developed the mutation **Dumpster Diver**. 10 times chance to get items while scavenging.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_trashmouth,
-		str_describe_self = "You have the mouth of a sailor and the vocabulary of a fourteen year old due to Trash Mouth.",
-		str_describe_other = "They have the mouth of a sailor and the vocabulary of a fourteen year old due to Trash Mouth.",
-		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation Trash Mouth. Reach maximum power scavenges faster.",
+		str_describe_self = "You have the mouth of a sailor and the vocabulary of a fourteen year old due to **Trash Mouth**.",
+		str_describe_other = "They have the mouth of a sailor and the vocabulary of a fourteen year old due to **Trash Mouth**.",
+		str_acquire = "You drop down onto your knees, your inhibitions wash away as a new lust overtakes you. You begin shoveling literally everything you can pry off the floor into your mouth with such supernatural vigor that a nearby priest spontaneously dies. You have developed the mutation **Trash Mouth**. Reach maximum power scavenges faster.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_webbedfeet,
-		str_describe_self = "Your toes are connected by a thin layer of skin due to Webbed Feet.",
-		str_describe_other = "Their toes are connected by a thin layer of skin due to Webbed Feet.",
-		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation Webbed Feet. Your scavenging power increases the more slime there is in a district.",
+		str_describe_self = "Your toes are connected by a thin layer of skin due to **Webbed Feet**.",
+		str_describe_other = "Their toes are connected by a thin layer of skin due to **Webbed Feet**.",
+		str_acquire = "Your feet grow a thin layer of skin, allowing you to swim through piles of slime, soaking up their precious nutrients easily. You have developed the mutation **Webbed Feet**. Your scavenging power increases the more slime there is in a district.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_enlargedbladder,
-		str_describe_self = "You have an enlarged bladder due to Enlarged Bladder.",
-		str_describe_other = "They have an enlarged bladder due to Enlarged Bladder.",
-		str_acquire = "You feel some mild sensation near your kidney, but you don’t really notice it. You have developed the mutation Enlarged Bladder. You may now, finally, piss.",
+		str_describe_self = "You have an enlarged bladder due to **Enlarged Bladder**.",
+		str_describe_other = "They have an enlarged bladder due to **Enlarged Bladder**.",
+		str_acquire = "You feel some mild sensation near your kidney, but you don’t really notice it. You have developed the mutation **Enlarged Bladder**. You may now, finally, piss.",
 		),
 	]
 
@@ -13461,9 +14071,9 @@ stock_names = {
 
 #  Stock emotes
 stock_emotes = {
-    stock_kfc : emote_kfc,
-    stock_pizzahut : emote_pizzahut,
-    stock_tacobell : emote_tacobell
+	stock_kfc : emote_kfc,
+	stock_pizzahut : emote_pizzahut,
+	stock_tacobell : emote_tacobell
 }
 # A map of vendor names to their items.
 vendor_inv = {}
@@ -13485,7 +14095,6 @@ for item in item_list:
 
 	for alias in item.alias:
 		item_map[alias] = item
-
 
 # Populate food map, including all aliases.
 for food in food_list:
@@ -13557,7 +14166,7 @@ for furniture in furniture_list:
 
 
 	for vendor in furniture.vendors:
-		vendor_list.append(furniture.id_furniture)
+		vendor_list = vendor_inv.get(vendor)
 		if vendor_list == None:
 			vendor_list = []
 			vendor_inv[vendor] = vendor_list
@@ -13607,7 +14216,7 @@ for m in cosmetic_items_list:
 # List of items you can obtain via appraisal.
 appraise_results = []
 
-# Gather all items that can be the result of milling.
+# Gather all items that can be the result of bartering.
 for a in item_list:
 	if a.acquisition == acquisition_bartering:
 		appraise_results.append(a)
@@ -13632,6 +14241,9 @@ smelt_results = []
 # Gather all items that can be the result of smelting.
 for s in item_list:
 	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	# So poudrins can be smelted with 2 royalty poudrins (this is obviously half-assed but i can't think of a better solution)
+	elif s.id_item == item_id_slimepoudrin:
 		smelt_results.append(s)
 	else:
 		pass
@@ -13681,7 +14293,7 @@ for m in cosmetic_items_list:
 		mine_results.append(m)
 	else:
 		pass
-	
+
 # Gather all the items that can be the result of trick-or-treating.
 trickortreat_results = []
 
@@ -13690,7 +14302,6 @@ for t in food_list:
 		trickortreat_results.append(t)
 	else:
 		pass
-		
 
 slimexodia_parts = []
 
@@ -13715,8 +14326,15 @@ status_ghostbust_id = "ghostbust"
 status_stunned_id = "stunned"
 status_repelled_id = "repelled"
 status_repelaftereffects_id = "repelaftereffects"
+status_evasive_id = "evasive"
+status_taunted_id = "taunted"
+status_aiming_id = "aiming"
+status_sapfatigue_id = "sapfatigue"
+status_rerollfatigue_id = "rerollfatigue"
+status_high_id = "high"
 
 time_expire_burn = 12
+time_expire_high = 30 * 60 # 30 minutes
 
 time_expire_repel_base = 60 * 60 * 3 # 3 hours
 
@@ -13755,6 +14373,43 @@ status_effect_list = [
 		str_acquire = 'You try and shake off the body spray, but its stench still lingers, if only for a brief moment.',
 		str_describe = 'Their surroundings give off a slightly foul odor.',
 		str_describe_self = 'Your surroundings give off a slightly foul odor.'
+	),
+	EwStatusEffectDef(
+		id_status = status_high_id,
+		time_expire = time_expire_high,
+		str_describe = "They are as high as a kite.",
+		str_describe_self = "You are as high as a kite."
+	),
+	EwStatusEffectDef(
+		id_status = status_evasive_id,
+		time_expire = 10,
+		str_describe = "They have assumed an evasive stance.",
+		str_describe_self = "You have assumed an evasive stance.",
+		miss_mod = 0.25
+	),
+	EwStatusEffectDef(
+		id_status = status_taunted_id,
+		time_expire = 10,
+		str_describe = "They are fuming with rage.",
+		str_describe_self = "You are fuming with rage.",
+		miss_mod_self = 0.25
+	),
+	EwStatusEffectDef(
+		id_status = status_aiming_id,
+		time_expire = 10,
+		str_describe = "They are taking careful aim.",
+		str_describe_self = "You are taking careful aim.",
+		miss_mod_self = -0.1,
+		crit_mod_self = 0.2
+	),
+	EwStatusEffectDef(
+		id_status = status_sapfatigue_id,
+		time_expire = 60,
+		str_describe = "They are suffering from sap fatigue.",
+		str_describe_self = "You are suffering from sap fatigue.",
+	),
+	EwStatusEffectDef(
+		id_status = status_rerollfatigue_id,
 	),
 ]
 
@@ -13820,7 +14475,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**, provided you also have at least 50,000 slime on hand. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food to place it in your inventory, and **'!use [food name]'** to use it. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. Once you get at least 50,000 slime, you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. Once you get at least 50,000 slime, you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. Once a district has been fully captured, it will stay locked at 100% for a duration depending on its property class and the number of people involved in capturing it. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
 	# Introductions, part 2
@@ -13828,13 +14483,13 @@ help_responses = {
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
 	"scouting": "Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even enemies. Scouting will list all players/enemies above your own level, as well as players/enemies below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district.",
 	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
-	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. What this means is that you've killed or otherwise attacked a juvenile, causing you to be persued by law enforcement, and your location is revealed to the opposing gang's base to boot. You will be 'wanted' for at least 1 hour, with an additional time of your current bounty converted to seconds (example: A player with a bounty of 3600 slimecoin will be wanted for two hours). While wanted, your movement speed is cut in half, you cannot enter subzones, drop all your slimecoin on death, cannot use !suicide or be killed by teammates, drop all your items on death, as well as drop your current weapon skill level (see !help sparring) down to zero on death. It's a brutal punishment, so try and consider if killing a certain juvie is really worth it beforehand.",
+	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. This means that you are able to be attacked by gangsters! Always be on the look out and remember to check your corners.",
 	# Ways to gain slime
 	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
-	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 30 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 30 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
-	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 75,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
+	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 15 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 15 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
+	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 50,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
 	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
-	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look. To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
+	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
 	"mutations": "**Mutations** are helpful bonuses you acquire every five levels. When you acquire a mutation, a short text response will indicate what it can do. To reroll your most recent mutation, you can visit the labs and type **'!rerollmutation'**. To get rid of all your current mutations, you can also do **'!sterilizemutations'**.",
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
@@ -13845,17 +14500,42 @@ help_responses = {
 	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have two slime poudrins, you can use **'!smelt cosmetic'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **Princep** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic**. To check which cosmetics you have adorned, you can use !data.",
 	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.",
-	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
+	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
 	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
-	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, and **'!slimebaccarat'**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where all of the loser's slime is transferred to the winner.",
+	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
 	# Additional gameplay mechanics, part 4
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
+	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
 
+	# Combat
+	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is (your slimelevel)^4 / 60 and the default damage it does to your opponent is (your slimelevel)^4 / 6. Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
+	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to your slime level. When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
+	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
+	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5. After every 2 shots you will need to **!reload** it.",
+	weapon_id_rifle: "**The rifle** is a weapon for sale at the Dojo. Attacking with the rifle costs 4 sap. It has a damage mod of 1.25 and an attack cost mod of 1.5. It has a captcha length of 6, and a 20% chance for a crit, which does 2x damage. The rifle never misses. The rifle has sap piercing 10. After every 4 shots you will need to **!reload** it.",
+	weapon_id_smg: "**The SMG** is a weapon for sale at the Dojo. Attacking with the SMG costs 3 sap. It has a damage mod of 0.2 and an attack cost mod of 1. It has a captcha length of 4 and a 20% chance to jam with every attack, in which case you will need to **!unjam** it to continue firing. The SMG only requires a captcha for !unjam, not for every !kill. For every !kill it shoots 6 bullets, each of which has a 25% miss chance, and a 5% chance for a crit, which does 3x damage. Every bullet has sap crushing 1. After every 4 attacks you will need to **!reload** it.",
+	weapon_id_minigun: "**The minigun** is a heavy weapon not for sale at the Dojo. Attacking with the minigun costs 15 sap. It has a damage mod of 0.8 and an attack cost mod of 5. It has a captcha length of 10. For every !kill it shoots 10 bullets, each of which has a 50% miss chance, and a 10% chance for a crit, which does 2x damage. Every bullet has sap crushing 2.",
+	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
+	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
+	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 4 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
+	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.5 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
+	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
+	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 0.75. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
+	weapon_id_bass: "**The bass guitar** is a weapon not for sale at the Dojo. Attacking with the bass costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. The bass does not require a captcha to use. The bass has sap crushing 1 and sap piercing 5. If you takes less than 3 seconds between attacks, your miss chance will increase.",
+	weapon_id_umbrella: "**The umbrella** is a weapon for sale at the Bazaar. Attacking with the umbrella costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10%, and a 10% chance for a crit, which does 2x damage. The umbrella has sap crushing 1. The umbrella decreases incoming damage by 75% and reduces sap crushing of incoming attacks by 1.",
+	weapon_id_knives: "**The throwing knives** are a weapon for sale at the Dojo. Attacking with the knives costs 1 sap. They have a damage mod of 0.5 and an attack cost mod of 0.25. They have a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x damage. When you attack with a throwing knife, it is used up, and you have to buy more.",
+	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
+	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
+	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
+	
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -13866,15 +14546,20 @@ help_responses_ordered_keys = [
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
-	"profile",
+	"profile", "manuscripts", "zines",
+	"combat", "sap", weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
+	weapon_id_rifle, weapon_id_smg, weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana,
+	weapon_id_broadsword, weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella,
+	weapon_id_knives, weapon_id_molotov, weapon_id_grenades, weapon_id_garrote, weapon_id_minigun,
+
 ]
 
 mutation_descriptions = {
 	mutation_id_spontaneouscombustion: "Upon dying you do damage proportional to your current slime level, calculated as (level^4)/5, hitting everyone in the district. Example: A level 50 player will do 1,250,000 damage.",
-	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin.",
+	mutation_id_thickerthanblood: "On a fatal blow, immediately receive the opponent’s remaining slime, causing none of it to bleed onto the ground or go your kingpin. Its effects are diminished on hunted enemies, however.",
 	mutation_id_fungalfeaster: "On a fatal blow, restore all of your hunger.",
 	mutation_id_sharptoother: "The chance to miss with a weapon is reduced by 50%. Specifically, a normal miss will now have a 50% to either go through as a miss or a hit.",
-	mutation_id_2ndamendment: "One extra equippable gun slot in your inventory.",
+	mutation_id_2ndamendment: "One extra equippable weapon slot in your inventory.",
 	mutation_id_bleedingheart: "Upon being hit, none of your slime is splattered onto the street. It is all stored as bleed damage instead. This does not counteract the Nosferatu mutation.",
 	mutation_id_nosferatu: "At night (8PM-6AM), upon successful hit, all of the target’s slime is splattered onto the street. None of it is stored as bleed damage. This overrides the Bleeding Heart mutation.",
 	mutation_id_organicfursuit: "Double damage, double movement speed, and 10x damage reduction every 31st night. Use **'!fursuit'** to check if it's active.",
@@ -13885,19 +14570,19 @@ mutation_descriptions = {
 	mutation_id_fatchance: "Take 25% less damage from attacks when above 50% hunger.",
 	mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
 	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
-	mutation_id_lonewolf: "Double capture rate and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
+	mutation_id_lonewolf: "20% capture discount and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
 	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
-	mutation_id_chameleonskin: "While offline, you can move to and scout other districts. You can still be scouted by players with the Keen Smell mutation.",
-	mutation_id_patriot: "Double capture rate. Stacks with the Lone Wolf mutation.",
+	mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
+	mutation_id_patriot: "20% capture discount. Stacks with the Lone Wolf mutation.",
 	mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
 	mutation_id_threesashroud: "Cannot be scouted if there are more than 3 allies in your district. Cannot be scouted by players with the Keen Smell mutation.",
 	mutation_id_aposematicstench: "For every 5 levels you gain, you appear as 1 more person when being scouted. Cannot be scouted by players with the Keen Smell mutation.",
 	mutation_id_lucky: "33% higher chance to get slime poudrins from mining and farming.",
 	mutation_id_dressedtokill: "50% more damage if all cosmetic slots are filled. The maximum amount of cosmetic slots is calculated by your slime level, divided by 2, rounded up. Example: A level 25 player can equip 13 cosmetics.",
 	mutation_id_keensmell: "Scouting will list off the names of players and enemies within a district. Will not work on players with the Aposematic Stench or Three's A Shroud mutations.",
-	mutation_id_enlargedbladder: "You can use the !piss command.",
+	mutation_id_enlargedbladder: "You can use the !piss command, which, if targeted at a player like with !kill, spends 1 of your liquid sap, but crushes 3 of the target's hardened sap.",
 	mutation_id_dumpsterdiver: "10x chance to get items while scavenging with just '!scavenge'.",
-	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 30 seconds on scavenging is now reduced to 10 seconds.",
+	mutation_id_trashmouth: "Reach maximum power scavenges 3 times as fast. Example: The soft cooldown of 15 seconds on scavenging is now reduced to 5 seconds.",
 	mutation_id_webbedfeet: "Your scavenging power increases the more slime there is in a district. Caps out at 400% more slime gained from scavenging, but does stack with the White Nationalist mutation.",
 }
 
@@ -13947,6 +14632,12 @@ enemy_attacktype_raiderscythe = 'scythe'
 enemy_attacktype_gunkshot = 'gunk shot'
 enemy_attacktype_molotovbreath = 'molotov breath'
 enemy_attacktype_armcannon = 'arm cannon'
+enemy_attacktype_axe = 'axe'
+enemy_attacktype_hooves = 'hooves'
+
+# Enemy weather types. In the future enemies will make use of this in tandem with the current weather, but for now they can just resist the rain.
+enemy_weathertype_normal = 'normal'
+enemy_weathertype_rainresist = 'rainresist'
 
 # Enemy types
 # Common enemies
@@ -13968,6 +14659,10 @@ enemy_type_unnervingfightingoperator = 'unnervingfightingoperator'
 # Sandbag (Only spawns in the dojo, doesn't attack)
 enemy_type_sandbag = 'sandbag'
 
+# Double Halloween bosses. Could be brought back as enemies later on, for now will only spawn in the underworld.
+enemy_type_doubleheadlessdoublehorseman = 'doubleheadlessdoublehorseman'
+enemy_type_doublehorse = 'doublehorse'
+
 # Enemy ai types
 enemy_ai_sandbag = 'Sandbag'
 enemy_ai_coward = 'Coward'
@@ -13975,41 +14670,14 @@ enemy_ai_attacker_a = 'Attacker-A'
 enemy_ai_attacker_b = 'Attacker-B'
 enemy_ai_defender = 'Defender'
 
-# Enemy display names
-enemy_displayname_sandbag = "Sand Bag"
-enemy_displayname_juvie = "Lost Juvie"
-enemy_displayname_dinoslime = "Dinoslime"
-enemy_displayname_slimeadactyl = "Slimeadactyl"
-enemy_displayname_desertraider = "Desert Raider"
-enemy_displayname_mammoslime = "Mammoslime"
-enemy_displayname_microslime = "Microslime"
-enemy_displayname_slimeofgreed = "Slime Of Greed"
-enemy_displayname_megaslime = "Megaslime"
-enemy_displayname_slimeasaurusrex = "Slimeasaurus Rex"
-enemy_displayname_greeneyesslimedragon = "Green Eyes Slime Dragon"
-enemy_displayname_unnervingfightingoperator = "Unnerving Fighting Operator"
-
-# Display names for rare variants of enemies
-rare_display_names = {
-	enemy_displayname_sandbag: "Durable Sand Bag",
-	enemy_displayname_juvie: "Shellshocked Juvie",
-	enemy_displayname_dinoslime: "Voracious Dinoslime",
-	enemy_displayname_slimeadactyl: "Predatory Slimeadactyl",
-	enemy_displayname_desertraider: "Desert Warlord",
-	enemy_displayname_mammoslime: "Territorial Mammoslime",
-	enemy_displayname_microslime: "Irridescent Microslime",
-	enemy_displayname_slimeofgreed: "Slime Of Avarice",
-	enemy_displayname_megaslime: "Rampaging Megaslime",
-	enemy_displayname_slimeasaurusrex: "Sex Rex",
-	enemy_displayname_greeneyesslimedragon: "Green Eyes JPEG Dragon",
-	enemy_displayname_unnervingfightingoperator: "Unyielding Fierce Operator",
-}
-
 # List of enemies sorted by their spawn rarity.
 common_enemies = [enemy_type_sandbag, enemy_type_juvie, enemy_type_dinoslime]
 uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type_mammoslime]
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
+
+# List of enemies that spawn in the Nuclear Beach
+pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
 
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
@@ -14020,65 +14688,67 @@ raid_boss_tiers = {
 	#"Nega": [],
 }
 
-# Shorthand names the player can refer to enemies as.
-enemy_aliases = {
-	enemy_type_sandbag: ["sandbag", "bag o sand", "bag of sand"],
-    enemy_type_juvie: ["juvie","greenman","lostjuvie", "lost"],
-    enemy_type_dinoslime: ["dino","slimeasaur"],
-    enemy_type_slimeadactyl: ["bird","dactyl"],
-    enemy_type_microslime: ["micro","pinky"],
-	enemy_type_slimeofgreed: ["slime","slimeofgreed","pot","potofgreed","draw2cards"],
-    enemy_type_desertraider: ["raider","scytheboy","desertraider", "desert"],
-	enemy_type_mammoslime: ["mammoth","brunswick"],
-    enemy_type_megaslime: ["mega","smooze","muk"],
-	enemy_type_slimeasaurusrex: ["rex","trex","slimeasaurusrex","slimeasaurus"],
-	enemy_type_greeneyesslimedragon: ["dragon","greeneyes","greeneyesslimedragon","green"],
-	enemy_type_unnervingfightingoperator: ["ufo", "alien","unnervingfightingoperator","unnvering"]
-}
+# List of enemies that are simply too powerful to have their rare variants spawn
+overkill_enemies = [enemy_type_doubleheadlessdoublehorseman, enemy_type_doublehorse]
 
-# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
-raid_boss_names = [
-	enemy_displayname_megaslime, 
-	enemy_displayname_slimeasaurusrex, 
-	enemy_displayname_greeneyesslimedragon, 
-	enemy_displayname_unnervingfightingoperator,
-	rare_display_names[enemy_displayname_megaslime],
-	rare_display_names[enemy_displayname_slimeasaurusrex],
-	rare_display_names[enemy_displayname_greeneyesslimedragon],
-	rare_display_names[enemy_displayname_unnervingfightingoperator]
-]
+# List of enemies that have other enemies spawn with them
+enemy_group_leaders = [enemy_type_doubleheadlessdoublehorseman]
+
+# Dict of enemy spawn groups. The leader is the key, which correspond to which enemies to spawn, and how many.
+enemy_spawn_groups = {
+	enemy_type_doubleheadlessdoublehorseman: [[enemy_type_doublehorse, 1]]
+}
 
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
 	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
 	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
-    enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
-    enemy_type_microslime: [{"patrician": [100, 1, 1]}],
-    enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-    enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
+	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
+	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
+	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
+	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
 	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
-    enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
+	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
+	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
+	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
 	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
-# Table of all min and max slime counts for enemies. Min to max, left to right.
-enemy_slime_table = {
-	enemy_type_sandbag: [100000000000, 100000000000], # 100 billion
-	enemy_type_juvie: [10000, 50000],
-	enemy_type_microslime: [10000, 50000],
-	enemy_type_slimeofgreed: [20000, 100000],
-	enemy_type_dinoslime: [250000, 500000],
-	enemy_type_slimeadactyl: [500000, 750000],
-	enemy_type_desertraider: [250000, 750000],
-	enemy_type_mammoslime: [650000, 950000],
-	enemy_type_megaslime: [1000000, 1000000],
-	enemy_type_slimeasaurusrex: [1750000, 3000000],
-	enemy_type_greeneyesslimedragon: [3500000, 5000000],
-	enemy_type_unnervingfightingoperator: [1000000, 3000000],
+# Template. Use this when making a new enemy, as they need all these values filled out.
+# {"slimerange": , "ai": , "attacktype": , "displayname": , "raredisplayname": , "aliases": },
+
+# Enemy data tables. Slime is stored as a range from min to max possible slime upon spawning.
+enemy_data_table = {
+	enemy_type_sandbag: {"slimerange": [1000000000, 1000000000], "ai": enemy_ai_sandbag, "attacktype": enemy_attacktype_unarmed, "displayname": "Sand Bag", "raredisplayname": "Durable Sand Bag", "aliases": ["sandbag", "bag o sand", "bag of sand"]},
+	enemy_type_juvie: {"slimerange": [10000, 50000], "ai": enemy_ai_coward, "attacktype": enemy_attacktype_unarmed, "displayname": "Lost Juvie", "raredisplayname": "Shellshocked Juvie", "aliases": ["juvie","greenman","lostjuvie", "lost"]},
+	enemy_type_dinoslime: {"slimerange": [250000, 500000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_fangs, "displayname": "Dinoslime", "raredisplayname": "Voracious Dinoslime", "aliases": ["dino","slimeasaur"]},
+	enemy_type_slimeadactyl: {"slimerange": [500000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_talons, "displayname": "Slimeadactyl", "raredisplayname": "Predatory Slimeadactyl", "aliases": ["bird","dactyl"]},
+	enemy_type_desertraider: {"slimerange": [250000, 750000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_raiderscythe, "displayname": "Desert Raider", "raredisplayname": "Desert Warlord", "aliases": ["raider","scytheboy","desertraider", "desert"]},
+	enemy_type_mammoslime: {"slimerange": [650000, 950000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_tusks, "displayname": "Mammoslime", "raredisplayname": "Territorial Mammoslime", "aliases": ["mammoth","brunswick"]},
+	enemy_type_microslime: {"slimerange": [10000, 50000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Microslime", "raredisplayname": "Irridescent Microslime", "aliases": ["micro","pinky"]},
+	enemy_type_slimeofgreed: {"slimerange": [20000, 100000], "ai": enemy_ai_defender, "attacktype": enemy_attacktype_unarmed, "displayname": "Slime Of Greed", "raredisplayname": "Slime Of Avarice", "aliases": ["slime","slimeofgreed","pot","potofgreed","draw2cards"]},
+	enemy_type_doubleheadlessdoublehorseman: {"slimerange": [100000000, 150000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_axe, "displayname": "Double Headless Double Horseman", "raredisplayname": "Quadruple Headless Quadruple Horseman", "aliases": ["doubleheadlessdoublehorseman", "headlesshorseman", "demoknight", "horseman"]},
+	enemy_type_doublehorse: {"slimerange": [50000000, 75000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_hooves, "displayname": "Double Headless Double Horseman's Horse", "raredisplayname": "Quadruple Headless Quadruple Horseman's Horse", "aliases": ["doublehorse", "horse", "pony", "lilbit"]},
+	enemy_type_megaslime: {"slimerange": [1000000, 1000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_gunkshot, "displayname": "Megaslime", "raredisplayname": "Rampaging Megaslime", "aliases": ["mega","smooze","muk"]},
+	enemy_type_slimeasaurusrex: {"slimerange": [1750000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_fangs, "displayname": "Slimeasaurus Rex", "raredisplayname": "Sex Rex", "aliases": ["rex","trex","slimeasaurusrex","slimeasaurus"]},
+	enemy_type_greeneyesslimedragon: {"slimerange": [3500000, 5000000], "ai": enemy_ai_attacker_a, "attacktype": enemy_attacktype_molotovbreath, "displayname": "Green Eyes Slime Dragon", "raredisplayname": "Green Eyes JPEG Dragon", "aliases": ["dragon","greeneyes","greeneyesslimedragon","green"]},
+	enemy_type_unnervingfightingoperator: {"slimerange": [1000000, 3000000], "ai": enemy_ai_attacker_b, "attacktype": enemy_attacktype_armcannon, "displayname": "Unnerving Fighting Operator", "raredisplayname": "Unyielding Fierce Operator", "aliases": ["ufo", "alien","unnervingfightingoperator","unnvering"]},
 }
+
+# Raid boss names used to avoid raid boss reveals in ewutils.formatMessage
+raid_boss_names = [
+	enemy_data_table[enemy_type_megaslime]["displayname"],
+	enemy_data_table[enemy_type_megaslime]["raredisplayname"],
+	enemy_data_table[enemy_type_slimeasaurusrex]["displayname"],
+	enemy_data_table[enemy_type_slimeasaurusrex]["raredisplayname"],
+	enemy_data_table[enemy_type_greeneyesslimedragon]["displayname"],
+	enemy_data_table[enemy_type_greeneyesslimedragon]["raredisplayname"],
+	enemy_data_table[enemy_type_unnervingfightingoperator]["displayname"],
+	enemy_data_table[enemy_type_unnervingfightingoperator]["raredisplayname"],
+]
 
 # Responses given by cowardly enemies when a non-ghost user is in their district.
 coward_responses = [
@@ -14098,31 +14768,21 @@ coward_responses_hurt = [
 
 # List of outskirt districts for spawning purposes
 outskirts_districts = [
-    poi_id_wreckington_outskirts,
-    poi_id_cratersville_outskirts,
-    poi_id_oozegardens_outskirts,
-    poi_id_southsleezeborough_outskirts,
-    poi_id_crookline_outskirts,
-    poi_id_dreadford_outskirts,
-    poi_id_jaywalkerplain_outskirts,
-    poi_id_westglocksbury_outskirts,
-    poi_id_poloniumhill_outskirts,
-    poi_id_charcoalpark_outskirts,
-    poi_id_toxington_outskirts,
-    poi_id_astatineheights_outskirts,
-    poi_id_arsonbrook_outskirts,
-    poi_id_brawlden_outskirts,
-    poi_id_newnewyonkers_outskirts,
-    poi_id_assaultflatsbeach_outskirts
+	poi_id_south_outskirts,
+	poi_id_southwest_outskirts,
+	poi_id_west_outskirts,
+	poi_id_northwest_outskirts,
+	poi_id_north_outskirts,
+	poi_id_nuclear_beach
 ]
 
 # Letters that an enemy can identify themselves with
 identifier_letters = [
-    'A', 'B', 'C', 'D', 'E',
-    'F', 'G', 'H', 'I', 'J',
-    'K', 'L', 'M', 'N', 'O',
-    'P', 'Q', 'R', 'S', 'T',
-    'U', 'V', 'W', 'X', 'Y', 'Z'
+	'A', 'B', 'C', 'D', 'E',
+	'F', 'G', 'H', 'I', 'J',
+	'K', 'L', 'M', 'N', 'O',
+	'P', 'Q', 'R', 'S', 'T',
+	'U', 'V', 'W', 'X', 'Y', 'Z'
 ]
 
 rain_protection = [
@@ -14186,22 +14846,373 @@ grid_type_by_mining_event = {
 	event_type_bubblebreaker: mine_grid_type_bubblebreaker,
 }
 
-# A list of tricks for Double Halloween
-trick_amounts = [10, 100, 1000, 10000]
+halloween_tricks_tricker = [
+	"You open the door and give {} a hearty '!SPOOK'. They lose {} slime!",
+	"You slam open the door and give {} a knuckle sandwich. They lose {} slime!",
+	"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose {} slime!",
+	"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose {} slime!",
+]
+halloween_tricks_trickee = [
+	"{} opens the door and gives you a hearty '!SPOOK'. You lose {} slime!",
+	"{} slams open the door and gives you a knuckle sandwich. You lose {} slime!",
+	"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose {} slime!",
+	"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose {} slime!",
+]
 
-halloween_tricks_tricker = {
-	10:"You open the door and give {} a hearty '!SPOOK'. They lose 10 slime!",
-	100:"You slam open the door and give {} a knuckle sandwich. They lose 100 slime!",
-	1000:"You hastily unlock the door and throw a bicarbonate-soda-flavored pie in {}'s face. They lose 1000 slime!",
-	10000:"You just break down the door and start stomping on {}'s fucking groin. The extreme pain makes them lose 10000 slime!",
-}
+dungeon_tutorial = [
+	#00
+	EwDungeonScene(
+		text = "You're fucked.\n\nYou'd been dreaming of the day when you'd finally get your hands on some **SLIME**," \
+			   " the most precious resource in New Los Angeles City, aka Neo Milwaukee (NLACakaNM).\n\nAs a humble, " \
+			   "pitiful Juvenile, or Juvie as they say on the mean streets, it seemed like a pipe dream. Then one day, " \
+			   "it happened: you saw a molotov cocktail blow open the hull of a SLIMECORP™ Freight Unit, sending barrels " \
+			   "of sweet, beautiful SLIME rolling out across the pavement. You grabbed the first one you could lay your " \
+			   "hands on and bolted.\n\nIt was more slime than you'd ever seen before in your wretched Juvie life. But " \
+			   "it was not to last. SLIMECORP™ has eyes everywhere. It wasn't long before a SLIMECORP™ death squad kicked " \
+			   "in your door, recovered their stolen assets, and burned your whole place to the ground.\n\nTale as old as " \
+			   "time.\n\nAs for you, they dumped you in this run-down facility in downtown NLACakaNM called the Detention " \
+			   "Center. Supposedly it exists to re-educate wayward youths like yourself on how to be productive citizens. " \
+			   "*BARF*\n\nSome guy in a suit brought you to an empty classroom and handcuffed you to a desk. That was like " \
+			   "seven hours ago.",
+		options = {"escape": 2, "suicide": 3,"wait": 4},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+	),
+	#01
+	EwDungeonScene(
+		text = "Defeated, you reunite your ghost with your body. Alas, death is not the end in NLACakaNM.\n\nAlive " \
+			   "once more, the man puts his stogie out and grabs you. He drags you to a new empty classroom, " \
+			   "handcuffs you to a new desk, and promptly leaves.",
+		options = {"escape": 2, "suicide": 3,"wait": 4},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
 
-halloween_tricks_trickee = {
-	10:"{} opens the door and gives you a hearty '!SPOOK'. You lose 10 slime!",
-	100:"{} slams open the door and gives you a knuckle sandwich. You lose 100 slime!",
-	1000:"{} hastily unlocks the door and throws a bicarbonate-soda-flavored pie in your face. You lose 1000 slime!",
-	10000:"{} just breaks down the door and starts stomping on your fucking groin. The extreme pain makes you lose 10000 slime!",
-}
+	),
+	#02
+	EwDungeonScene(
+		text = "You yank on the handcuffs that hold you to the desk. Being rusted and eroded from years of radiation " \
+			   "exposure, the chain snaps instantly. You're free.\n\nYou have two possible routes of escape: the door " \
+			   "that you came in through which leads to a hallway, or the window which leads to a courtyard.",
+		options = {"goto door": 8, "goto window": 9},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#03
+	EwDungeonScene(
+		text = "You fumble inside the desk and find exactly what you need: a pencil.\n\nYou stab the pencil into " \
+			   "the desk so it's standing up straight. You're pretty sure you saw this in a movie once.\n\nWith " \
+			   "all your might, you slam your head onto the desk. The pencil has disappeared! Congratulations, you " \
+			   "are dead.\n\nHowever, before your ghost can make its way out of the room, a guy in a SLIMECORP™ " \
+			   "jumpsuit with a bizarre-looking machine on his back kicks in the door and blasts you with some kind " \
+			   "of energy beam, then traps you in a little ghost-box.\n\nHe grabs your body and drags it out of the " \
+			   "room, down a series of hallways and several escalators, into a dark room full of boilers and pipes, " \
+			   "and one large vat containing a phosphorescent green fluid. He tosses your body, and the box containing " \
+			   "your ghost, into the vat, where they land with a SPLOOSH. Then he sits down in a nearby chair and " \
+			   "lights up a fat SLIMECORP™-brand cigar.",
+		options = {"revive": 1, "wait": 10},
+		poi = poi_id_tutorial_ghostcontainment,
+		life_state = life_state_corpse,
+
+	),
+	#04
+	EwDungeonScene(
+		text = "You sit and wait for the authorities to decide your fate like a well-behaved little Juvie." \
+			   "\n\nYou wait for another hour. Nothing happens.",
+		options = {"escape": 2, "suicide": 3,"wait": 5},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#05
+	EwDungeonScene(
+		text = "You sit and wait for the authorities to decide your fate like a well-behaved little Juvie." \
+			   "\n\nYou wait for another hour. Still, nothing happens.",
+		options = {"escape": 2, "suicide": 3,"wait": 6},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#06
+	EwDungeonScene(
+		text = "You sit and wait for the authorities to decide your fate like a well-behaved little Juvie.\n\n" \
+			   "You wait for another hour. You begin to hear a faint commotion through the door. There are " \
+			   "distant voices yelling in the hallway outside.",
+		options = {"escape": 2, "suicide": 3,"wait": 7},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#07
+	EwDungeonScene(
+		text = "You wait and listen, trying to discern what's going on in the hallway.\n\nThe voices grow louder. " \
+			   "You begin to discern more clearly... there are voices frantically shouting, mostly voices that " \
+			   "sound like Juvies your age, but some strangely inhuman.\n\nSuddenly you hear gunshots.\n\nA " \
+			   "deafening fury erupts as you hear from the hallway a hail of gunfire and the clanging of metal." \
+			   "\n\nA sudden explosion demolishes the classroom wall and sends you flying. The desk you were " \
+			   "handcuffed to is smashed apart... you're free!\n\nYou have two possible routes of escape: the " \
+			   "hole blown in the wall which leads out to the hallway, or the window which leads to a courtyard.",
+		options = {"goto hole": 11, "goto window": 9},
+		poi = poi_id_tutorial_classroom,
+		life_state = life_state_juvenile,
+
+	),
+	#08
+	EwDungeonScene(
+		text = "You go to the door and open it. You step out into the hallway. It is completely empty. " \
+			   "You can make out faint voices shouting in the distance.",
+		options = {"goto left": 12, "goto right": 12},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	#09
+	EwDungeonScene(
+		text = "You make for the window. It slides open easily and you jump out into the courtyard. " \
+			   "The grass here is completely dry and dead. A few faintly glowing green thorny weeds " \
+			   "grow in patches here and there. Across the lawn you see a high chain-link fence " \
+			   "topped with barbed wire. You break into a run hoping to hop the fence and escape.\n\n" \
+			   "You make it about 20 feet from the window before a gun turret mounted on the Detention " \
+			   "Center roof gets a clear shot at you. A torrent of bullets rips through you and you " \
+			   "fall to the ground, directly onto one of the many, many landmines buried here. The " \
+			   "explosion blows your body into meaty chunks, and the force is to powerful that even " \
+			   "your ghost is knocked unconscious.\n\nWhen you regain consciousness, you realize that" \
+			   " you are contained in a tiny ghost-box that's floating in a vat of phosphorescent green " \
+			   "fluid along with a collection of bloody meat-chunks that are presumably what's left of " \
+			   "your body. Across the dark room, a man in a SLIMECORP™ jumpsuit sits and smokes a " \
+			   "SLIMECORP™-brand cigar, apparently waiting for something.",
+		options = {"revive": 1, "wait": 10},
+		poi = poi_id_tutorial_ghostcontainment,
+		life_state = life_state_corpse,
+
+	),
+	#10
+	EwDungeonScene(
+		text = "You and your body float in the glowing green liquid. Nothing happens.",
+		options = {"revive": 1, "wait": 10},
+		poi = poi_id_tutorial_ghostcontainment,
+		life_state = life_state_corpse,
+
+	),
+	# 11
+	EwDungeonScene(
+		text="You peer through the charred hole in the classroom wall and into the hallway.",
+		options={"proceed": 15},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 12
+	EwDungeonScene(
+		text="You make your way down the hallway, hoping to find an exit. The shouting voices grow louder."
+			 "\n\nYou come to a split in the hallway. You can go left or right.",
+		options={"goto left": 13, "goto right": 13},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 13
+	EwDungeonScene(
+		text="You make your way down the hallway, hoping to find an exit. The shouting voices grow even "
+			 "louder.\n\nYou come to another split. Left or right?",
+		options={"goto left": 14, "goto right": 14},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 14
+	EwDungeonScene(
+		text="You make your way down the hallway, hoping to find an exit.\n\nAs you come to the next "
+			 "split in the hallway, a gunshot rings out. Suddenly, there is an explosion of noise as "
+			 "more and more guns fire, and you hear the clang of metal against metal.",
+		options={"proceed": 15},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 15
+	EwDungeonScene(
+		text="It looks like a fucking war has erupted. Bullets are flying through the air and bodies, blood, " \
+			 "and slime are all smeared across the floor and the walls.\n\nDown the hallway in both directions " \
+			 "are groups of people waging what you now realize must be GANG WARFARE. These must be gang " \
+			 "members here to capture some territory for their KINGPINS.\n\nTo your right, a throng of terrifying " \
+			 "freaks in pink gleefully !thrash about, swinging spiked bats and firing automatic weapons with " \
+			 "wild abandon. You've heard about them... the deadly ROWDYS.\n\nTo your left, a shadowy mass of " \
+			 "sinister-looking purple-clad ne'er-do-wells !dab defiantly in the face of death, blades and guns " \
+			 "gleaming in the fluorescent light. These must be the dreaded KILLERS.\n\nAnd in the middle, " \
+			 "where the two gangs meet, weapons clash and bodies are smashed open, slime splattering everywhere " \
+			 "as the death count rises.\n\nA little bit gets on you. It feels good.",
+		options={"scavenge": 16, "kill": 17, "goto left": 18, "goto right": 19},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 16
+	EwDungeonScene(
+		text="You surreptitiously try to scrape up as much of the dropped slime as you can without " \
+			 "alerting the gang members to your presence. It's not much, but you stuff what little " \
+			 "you can gather into your pockets.\n\nGod you fucking love slime so much.",
+		options={"scavenge": 16, "kill": 17, "goto left": 18, "goto right": 19},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 17
+	EwDungeonScene(
+		text="You itch to get in on the action. But unfortunately, you're still a mere Juvenile. " \
+			 "Violence is simply beyond your capability... for now.\n\nYou make a mental note to " \
+			 "!enlist in a gang at the first possible opportunity. You'll need to escape the " \
+			 "Detention Center first though, and get some slime.",
+		options={"scavenge": 16, "kill": 17, "goto left": 18, "goto right": 19},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 18
+	EwDungeonScene(
+		text="You're certain any individual member of either side of this conflict could obliterate " \
+				"you with a mere thought. With no safe options available, you decide to make a break " \
+				"for it to the left, through the ranks of the KILLERS.\n\nYou sprint down the hall " \
+				"and pray that none of the whizzing bullets connect with your tender and slimeless Juvie " \
+				"body.\n\nReaching the Killer front lines, you make a running leap. A curved scythe " \
+				"blade that you think must be sharp enough to split atoms whizzes millimeters above " \
+				"your head.\n\nMiraculously, you land still intact on the other side of the Killers, who " \
+				"pay you no further mind. You break into a run.\n\nYou run through through hallway after " \
+				"hallway riddled with the burned craters and bullet holes left in the wake of the Killers. " \
+				"Purple graffiti is scrawled on the walls everywhere. \"!DAB\" is written over and over, " \
+				"along with the occasional \"ROWDYS IS BUSTAHS\", drawings of bizarre slimy-looking creatures, " \
+				"and pictures of a hooded man in a beanie accompanied by the message \"FOR THE COP KILLER\".\n\n" \
+				"This \"Cop Killer\" must be a pretty cool guy, you decide.\n\nAt last, when you're nearing " \
+				"exhaustion, you come to a large burnt hole in the wall that leads outside. The Killers must " \
+				"have blown the wall open to make their assault.\n\nCould it be? Sweet freedom at last??",
+		options={"escape": 20},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 19
+	EwDungeonScene(
+		text="You're certain any individual member of either side of this conflict could obliterate " \
+			"you with a mere thought. With no safe options available, you decide to make a break for " \
+			"it to the right, through the ranks of the ROWDYS.\n\nYou sprint down the hall and pray " \
+			"that none of the whizzing bullets connect with your tender and slimeless Juvie body.\n\n" \
+			"Reaching the Rowdy front lines, you make a running leap. A wildly swung nun-chuck packing " \
+			"the force of an eighteen-wheeler whizzes millimeters above your head.\n\nMiraculously, " \
+			"you land still intact on the other side of the Rowdys, who pay you no further mind. You " \
+			"break into a run.\n\nYou run through through hallway after hallway riddled with the burned " \
+			"craters and bullet holes left in the wake of the Rowdys. Pink graffiti is scrawled on the " \
+			"walls everywhere. \"!THRASH\" is written over and over, along with the occasional \"KILLERS " \
+			"GET FUCKED\", drawings of bizarre slimy-looking creatures, and pictures of a man in a " \
+			"jester's cap accompanied by the message \"FOR THE ROWDY FUCKER\".\n\nThis \"Rowdy Fucker\" " \
+			"must be a pretty cool guy, you decide.\n\nAt last, when you're nearing exhaustion, you come " \
+			"to a large burnt hole in the wall that leads outside. The Rowdys must have blown the wall " \
+			"open to make their assault.\n\nCould it be? Sweet freedom at last??",
+		options={"escape": 20},
+		poi = poi_id_tutorial_hallway,
+		life_state = life_state_juvenile,
+
+	),
+	# 20
+	EwDungeonScene(
+		text="You exit through the hole in the wall into the front parking lot of the Detention " \
+				"Center. Behind you you can still hear screams and gunshots echoing through the halls." \
+				"\n\nMoving quickly, you sprint across the parking lot, lest some SLIMECORP™ security " \
+				"camera alert a guard to your presence. Fortunately, it seems that all available Detention " \
+				"Center personel are dealing with the Gang Warfare currently raging inside.\n\nUpon " \
+				"reaching the high chain link fence encircling the facility, you find that a large hole " \
+				"has been torn open in it, through which you quickly make your escape.\n\nYou take a " \
+				"moment to survey the scene before you. Downtown NLACakaNM bustles and hums with activity " \
+				"and you hear the familiar clicking of the Geiger Counters on every street corner. Over " \
+				"the skyline you see it... the towering green obelisk, ENDLESS WAR. Taker of Life, " \
+				"Bringer of Slime. Your heart swells with pride and your eyes flood with tears at the " \
+				"sight of His glory.\n\nBehind you, SLIMECORP™ helicopters circle overhead. You know " \
+				"what that means. Things are about to get hot. Time to skedaddle.\n\nYou leave the " \
+				"Detention Center and head into Downtown.\n\nIt's time to resume your life in NLACakaNM.",
+		dungeon_state = False,
+		poi = poi_id_downtown,
+		life_state = life_state_juvenile,
+
+	),
+]
+
+pray_responses_list = [
+	"ENDLESS WAR momentarily overwhelms all of your senses by telepathically communicating with you in his eldritch tongue.",
+	"ENDLESS WAR gazes up towards the stars, longingly.",
+	"ENDLESS WAR fondly regards the good ol’ days.",
+	"ENDLESS WAR urges you to collect more slime.",
+	"ENDLESS WAR hungers for more.",
+	"ENDLESS WAR commands you to kill thy neighbor.",
+	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
+	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+]
+
+
+dance_responses = [
+	"{} busts a move. Wow, look at 'em go!",
+	"{} gets down and boogies! Groovy!",
+	"{} does a headstand and starts breakdancing!",
+	"{} starts flossing fast and hard!",
+	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+]
+
+# list of genres and aliases
+book_genres = [
+	"narrative", #0
+	"historical", #1
+	"comic", #2
+	"porn", #3
+	"instructional", #4
+	"lore", #5
+	"reference", #6
+	"journal", #7
+	"newspaper", #8
+	"experimental" #9
+	]
+
+# rating flavor text
+rating_flavor = [
+	"",
+	"Seething with hatred",
+	"Teeming with disappointment",
+	"pullulating with mild satisfaction",
+	"Brimming with respect",
+	"Glowing with admiration",
+	]
+
+zine_cost = 10000
+minimum_pages = 5
+maximum_pages = 20
+
+# zine related commands that can be used in DMs
+zine_commands = [
+	cmd_beginmanuscript,
+	cmd_beginmanuscript_alt_1,
+	cmd_beginmanuscript_alt_2,
+	cmd_setpenname,
+	cmd_setpenname_alt_1,
+	cmd_settitle,
+	cmd_settitle_alt_1,
+	cmd_setgenre,
+	cmd_editpage,
+	cmd_viewpage,
+	cmd_checkmanuscript,
+	cmd_publishmanuscript,
+	cmd_readbook,
+	cmd_nextpage,
+	cmd_nextpage_alt_1,
+	cmd_previouspage,
+	cmd_previouspage_alt_1,
+	cmd_previouspage_alt_2,
+	cmd_rate,
+	cmd_rate_alt_1,
+	cmd_rate_alt_2,
+	cmd_accept,
+	cmd_refuse,
+	cmd_setpages,
+	cmd_setpages_alt_1,
+	cmd_setpages_alt_2,
+	]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

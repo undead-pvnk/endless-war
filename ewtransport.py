@@ -226,9 +226,11 @@ async def embark(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
+	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+
 	# must be at a transport stop to enter a transport
-	if user_data.poi in ewcfg.transport_stops:
-		transport_ids = get_transports_at_stop(id_server = user_data.id_server, stop = user_data.poi)
+	if poi != None and poi.id_poi in ewcfg.transport_stops:
+		transport_ids = get_transports_at_stop(id_server = user_data.id_server, stop = poi.id_poi)
 		
 		# can't embark, when there's no vehicles to embark on
 		if len(transport_ids) == 0:
@@ -256,6 +258,7 @@ async def embark(cmd):
 
 		for transport_id in transport_ids:
 			transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
+
 			# check if one of the vehicles at the stop matches up with the line, the user wants to board
 			if transport_data.current_line == transport_line.id_line:
 				last_stop_poi = ewcfg.id_to_poi.get(transport_line.last_stop)
@@ -277,7 +280,7 @@ async def embark(cmd):
 					transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
 
 					# check if the transport is still at the same stop
-					if transport_data.current_stop == user_data.poi:
+					if transport_data.current_stop == poi.id_poi:
 						user_data.poi = transport_data.poi
 						user_data.persist()
 
@@ -313,6 +316,13 @@ async def disembark(cmd):
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
+		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
+		if stop_poi.is_subzone:
+			stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+
+		if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+
 		# schedule tasks for concurrent execution
 		message_task = asyncio.ensure_future(ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)))
 		wait_task = asyncio.ensure_future(asyncio.sleep(5))
@@ -344,12 +354,9 @@ async def disembark(cmd):
 				response = ewutils.formatMessage(cmd.message.author, response)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			user_data.poi = ewcfg.poi_id_slimesea
+			die_resp = user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
-			user_data.die(cause = ewcfg.cause_drowning)
-			user_data.persist()
-			deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
-			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
-			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
+			resp_cont.add_response_container(die_resp)
 
 			response = "{} jumps over the railing of the ferry and promptly drowns in the slime sea.".format(cmd.message.author.display_name)
 			resp_cont.add_channel_response(channel = ewcfg.channel_slimesea, response = response)
@@ -369,19 +376,23 @@ async def disembark(cmd):
 			district_data.change_slimes(n = user_data.slimes)
 			district_data.persist()
 			user_data.poi = stop_poi.id_poi
+			die_resp = user_data.die(cause = ewcfg.cause_falling)
 			user_data.persist()
-			user_data.die(cause = ewcfg.cause_falling)
-			user_data.persist()
-			deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
-			deathreport = "{} ".format(ewcfg.emote_slimeskull) + ewutils.formatMessage(cmd.message.author, deathreport)
-			resp_cont.add_channel_response(channel = ewcfg.channel_sewers, response = deathreport)
+			resp_cont.add_response_container(die_resp)
 			response = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
 			resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 			
 		# update user location, if move successful
 		else:
-			user_data.poi = transport_data.current_stop
+			if stop_poi.is_subzone:
+				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+
+			
+			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
+
+			user_data.poi = stop_poi.id_poi
 			user_data.persist()
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -392,9 +403,12 @@ async def disembark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def check_schedule(cmd):
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	response = ""
+
 
 	if poi.is_transport_stop:
 		response = "The following public transit lines stop here:"
@@ -404,7 +418,7 @@ async def check_schedule(cmd):
 	elif poi.is_transport:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = poi.id_poi)
 		transport_line = ewcfg.id_to_transport_line.get(transport_data.current_line)
-		response = "This {} is following {}.".format(transport_data.transport_type, transport_line.str_name)
+		response = "This {} is following {}.".format(transport_data.transport_type, transport_line.str_name.replace("The", "the"))
 	else:
 		response = "There is no schedule to check here."
 

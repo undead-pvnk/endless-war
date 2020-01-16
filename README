@@ -27,7 +27,7 @@ CREATE TABLE users (
 	bounty bigint NOT NULL DEFAULT '0',
 	inebriation int NOT NULL DEFAULT '0',
 	faction varchar(32) NOT NULL default '',
-	poi varchar(64) NOT NULL default 'downtown',
+	poi varchar(64) NOT NULL default 'classroom',
 	life_state int NOT NULL DEFAULT '1',
 	busted int NOT NULL DEFAULT '0',
 	rr_challenger_id varchar(128) NOT NULL DEFAULT '',
@@ -49,7 +49,12 @@ CREATE TABLE users (
 	time_lastenlist int NOT NULL DEFAULT '0',
 	active_slimeoid int NOT NULL DEFAULT '-1',
 	has_soul int NOT NULL DEFAULT '1',
-
+	sap int NOT NULL DEFAULT '0',
+	hardened_sap int NOT NULL DEFAULT '0',	
+	festivity int NOT NULL DEFAULT '0',	
+	festivity_from_slimecoin int NOT NULL DEFAULT '0',
+	slimernalia_kingpin boolean NOT NULL DEFAULT false,
+	manuscript int NOT NULL DEFAULT '-1',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -209,7 +214,7 @@ CREATE TABLE enemies (
 	ai varchar(32) NOT NULL DEFAULT '',
 	enemytype varchar(32) NOT NULL DEFAULT '',
 	attacktype varchar(32) NOT NULL DEFAULT '',
-	display_name varchar(32) NOT NULL DEFAULT '',
+	display_name varchar(256) NOT NULL DEFAULT '',
 	identifier varchar(32) NOT NULL DEFAULT '',
 	level int NOT NULL DEFAULT '0',
 	poi varchar(64) NOT NULL DEFAULT '',
@@ -221,6 +226,8 @@ CREATE TABLE enemies (
 	id_target varchar(128) NOT NULL DEFAULT '',
 	raidtimer bigint NOT NULL DEFAULT '0',
 	rare_status int NOT NULL DEFAULT '0',
+	hardened_sap int NOT NULL DEFAULT '0',
+	weathertype varchar(32) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_enemy)
 );
@@ -232,6 +239,7 @@ CREATE TABLE districts (
 	capturing_faction varchar(32) NOT NULL DEFAULT '',
 	capture_points bigint NOT NULL DEFAULT '0',
 	slimes bigint NOT NULL DEFAULT '0',
+	time_unlock int NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
 );
@@ -285,6 +293,7 @@ CREATE TABLE status_effects (
 	time_expir int NOT NULL DEFAULT '-1',
 	value varchar(255) NOT NULL DEFAULT 0,
 	source varchar(128) NOT NULL DEFAULT '',
+	id_target varchar(128) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, id_status)
 );
@@ -363,4 +372,53 @@ CREATE TABLE world_events_prop (
 	FOREIGN KEY (id_event)
 		REFERENCES world_events(id_event)
 		ON DELETE CASCADE
+);
+
+CREATE TABLE ads (
+	id_ad int NOT NULL AUTO_INCREMENT,
+	id_server varchar(128) NOT NULL,
+	id_sponsor varchar(128) NOT NULL DEFAULT '',
+	content varchar(500) NOT NULL DEFAULT '',
+	time_expir int NOT NULL DEFAULT '0',
+
+	PRIMARY KEY (id_ad)
+);
+
+CREATE TABLE books (
+    id_book int NOT NULL AUTO_INCREMENT,
+	id_server varchar(128) NOT NULL,
+	id_user varchar(128) NOT NULL,
+	title varchar(64) NOT NULL DEFAULT '',
+	author varchar(32) NOT NULL DEFAULT '',
+	book_state int NOT NULL DEFAULT '0',
+	date_published int NOT NULL DEFAULT '0',
+	genre int NOT NULL DEFAULT '-1',
+	length int NOT NULL DEFAULT '0',
+	sales int NOT NULL DEFAULT '0',
+	rating varchar(4) NOT NULL DEFAULT '0',
+	rates int NOT NULL DEFAULT '0',
+	pages int NOT NULL DEFAULT '10',
+
+	PRIMARY KEY (id_book, id_server, id_user)
+);
+
+CREATE TABLE book_pages (
+    id_book int NOT NULL,
+
+	page int NOT NULL,
+	contents varchar(2048),
+
+	FOREIGN KEY (id_book)
+		REFERENCES books(id_book)
+		ON DELETE CASCADE
+);
+
+CREATE TABLE book_sales (
+    id_book int NOT NULL,
+    id_server varchar(128) NOT NULL,
+    id_user varchar(128) NOT NULL,
+    bought int NOT NULL DEFAULT '0',
+    rating int NOT NULL DEFAULT '0',
+
+    PRIMARY KEY (id_book, id_server, id_user)
 );

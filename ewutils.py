@@ -24,8 +24,10 @@ from ewplayer import EwPlayer
 from ewhunting import EwEnemy
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
+from ewitem import EwItem
 
 TERMINATE = False
+DEBUG = False
 
 db_pool = {}
 db_pool_id = 0
@@ -245,6 +247,60 @@ def formatNiceList(names = [], conjunction = "and"):
 	
 	return ', '.join(names[0:-1]) + '{comma} {conj} '.format(comma = (',' if l > 2 else ''), conj = conjunction) + names[-1]
 
+def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False):
+	try:
+		seconds = int(seconds)
+	except:
+		seconds = 0
+
+	if round_to_minutes:
+		minutes = round(seconds / 60)
+	else:
+		minutes = int(seconds / 60)
+
+	if round_to_hours:
+		hours = round(minutes / 60)
+	else:
+		hours = int(minutes / 60)
+
+	minutes = minutes % 60
+	seconds = seconds % 60
+	time_tokens = []
+	if hours > 0:
+		if hours == 1:
+			token_hours = "1 hour"
+		else:
+			token_hours = "{} hours".format(hours)
+		time_tokens.append(token_hours)
+
+	if round_to_hours:
+		if len(time_tokens) == 0:
+			time_tokens.append("0 hours")
+		return formatNiceList(names = time_tokens, conjunction = "and")
+
+	if minutes > 0:
+		if minutes == 1:
+			token_mins = "1 minute"
+		else:
+			token_mins = "{} minutes".format(minutes)
+		time_tokens.append(token_mins)
+	
+	if round_to_minutes:
+		if len(time_tokens) == 0:
+			time_tokens.append("0 minutes")
+		return formatNiceList(names = time_tokens, conjunction = "and")
+
+	if seconds > 0:
+		if seconds == 1:
+			token_secs = "1 second"
+		else:
+			token_secs = "{} seconds".format(seconds)
+		time_tokens.append(token_secs)
+
+	if len(time_tokens) == 0:
+		time_tokens.append("0 seconds")
+	return formatNiceList(names = time_tokens, conjunction = "and")
+
 """ turn a list of Users into a list of their respective names """
 def userListToNameString(list_user):
 	names = []
@@ -406,8 +462,40 @@ def decaySlimes(id_server = None):
 		finally:
 			# Clean up the database handles.
 			cursor.close()
-			databaseClose(conn_info)	
-			
+			databaseClose(conn_info)
+
+""" Flag all users in the Outskirts for PvP """
+async def flag_outskirts(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_server(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
+			), (
+				id_server,
+				tuple(ewcfg.outskirts_districts)
+
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				# Flag the user for PvP
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp,(int(time.time()) + ewcfg.time_pvp_mine))
+				user_data.persist()
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
 """
 	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
 """
@@ -448,7 +536,6 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
 
-				district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 
 				#round up or down, randomly weighted
 				remainder = slimes_to_bleed - int(slimes_to_bleed)
@@ -459,16 +546,18 @@ async def bleedSlimes(id_server = None):
 				if slimes_to_bleed >= 1:
 					user_data.bleed_storage -= slimes_to_bleed
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
-					if user_data.slimes < 0:
-						user_data.die(cause = ewcfg.cause_bleeding)
-						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
-						deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = player_data.display_name)
-						resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
-					user_data.persist()
 
+					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
 					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
 					district_data.persist()
+
+					if user_data.slimes < 0:
+						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
+						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
+						resp_cont.add_response_container(die_resp)
+					user_data.persist()
+
 					total_bled += slimes_to_bleed
 
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
@@ -649,12 +738,10 @@ async def burnSlimes(id_server = None):
 
 				# Kill player
 				user_data.id_killer = killer_data.id_user
-				user_data.die(cause = ewcfg.cause_burning)
+				die_resp = user_data.die(cause = ewcfg.cause_burning)
 				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-			
-				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer.display_name, ewcfg.emote_slimeskull)
-				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(server.get_member(user_data.id_user), deathreport)
-				resp_cont.add_channel_response(ewcfg.channel_sewers, deathreport)
+
+				resp_cont.add_response_container(die_resp)
 
 				user_data.trauma = weapon.id_weapon
 
@@ -1047,6 +1134,9 @@ def get_client():
 async def send_message(client, channel, text):
 	try:
 		return await client.send_message(channel, text)
+	except discord.errors.Forbidden:
+		logMsg('Could not message user: {}\n{}'.format(channel, text))
+		raise
 	except:
 		logMsg('Failed to send message to channel: {}\n{}'.format(channel, text))
 
@@ -1094,12 +1184,17 @@ async def decrease_food_multiplier(id_user):
 
 async def spawn_enemies(id_server = None):
 	if random.randrange(3) == 0:
-		resp_cont = EwResponseContainer(id_server=id_server)
-		response, channel = await ewhunting.spawn_enemy(id_server)
+		weathertype = ewcfg.enemy_weathertype_normal
 
-		if response != "":
-			resp_cont.add_channel_response(channel, response)
-			await resp_cont.post()
+		market_data = EwMarket(id_server=id_server)
+		# If it's raining, an enemy has  1/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
+		if market_data.weather == ewcfg.weather_bicarbonaterain:
+			if random.randrange(2) == 0:
+				weathertype = ewcfg.enemy_weathertype_rainresist
+		
+		resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
+
+		await resp_cont.post()
 
 async def spawn_enemies_tick_loop(id_server):
 	interval = ewcfg.enemy_spawn_tick_length
@@ -1136,29 +1231,22 @@ def get_move_speed(user_data):
 	market_data = EwMarket(id_server = user_data.id_server)
 	move_speed = 1
 
-	if ewcfg.mutation_id_organicfursuit in mutations and (
-		(market_data.day % 31 == 0 and market_data.clock >= 20)
-		or (market_data.day % 31 == 1 and market_data.clock < 6)
-	):
+	if ewcfg.mutation_id_organicfursuit in mutations and check_fursuit_active(user_data.id_server):
 		move_speed *= 2
 	if ewcfg.mutation_id_lightasafeather in mutations and market_data.weather == "windy":
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 
-	if user_data.time_expirpvp >= time_now:
-		move_speed = 0.5 # Reduces movement speed to half standard movement speed, even if you have mutations that speed it up.
-		
-	# TODO: Remove after Double Halloween
-	if user_data.life_state == ewcfg.life_state_corpse:
-		move_speed *= 2
-
 	return move_speed
 
 """ Damage all players in a district """
-def explode(damage = 0, district_data = None):
+def explode(damage = 0, district_data = None, market_data = None):
 	id_server = district_data.id_server
 	poi = district_data.name
+
+	if market_data == None:
+		market_data = EwMarket(id_server = district_data.id_server)
 
 	client = get_client()
 	server = client.get_server(id_server)
@@ -1168,7 +1256,7 @@ def explode(damage = 0, district_data = None):
 	channel = ewcfg.id_to_poi.get(poi).channel
 
 	life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_executive]
-	users = district_data.get_players_in_district(life_states = life_states)
+	users = district_data.get_players_in_district(life_states = life_states, pvp_only = True)
 
 	enemies = district_data.get_enemies_in_district()
 
@@ -1177,71 +1265,91 @@ def explode(damage = 0, district_data = None):
 		user_data = EwUser(id_user = user, id_server = id_server)
 		mutations = user_data.get_mutations()
 
-		if True:
-			player_data = EwPlayer(id_user = user_data.id_user)
-			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(player_data.display_name, damage)
+		user_weapon = None
+		user_weapon_item = None
+		if user_data.weapon >= 0:
+			user_weapon_item = EwItem(id_item = user_data.weapon)
+			user_weapon = ewcfg.weapon_map.get(user_weapon_item.item_props.get("weapon_type"))
+
+		# apply defensive mods
+		slimes_damage_target = damage * ewwep.damage_mod_defend(
+			shootee_data = user_data,
+			shootee_mutations = mutations,
+			shootee_weapon = user_weapon,
+			market_data = market_data
+		)
+
+		# apply sap armor
+		sap_armor = ewwep.get_sap_armor(shootee_data = user_data, sap_ignored = 0)
+		slimes_damage_target *= sap_armor
+		slimes_damage_target = int(max(0, slimes_damage_target))
+
+		player_data = EwPlayer(id_user = user_data.id_user)
+		response = "{} is blown back by the explosion’s sheer force! They lose {:,} slime!!".format(player_data.display_name, slimes_damage_target)
+		resp_cont.add_channel_response(channel, response)
+		slimes_damage = slimes_damage_target
+		if user_data.slimes < slimes_damage + user_data.bleed_storage:
+			# die in the explosion
+			district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
+			district_data.persist()
+			slimes_dropped = user_data.totaldamage + user_data.slimes
+
+			user_data.die(cause = ewcfg.cause_killing)
+			#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
+			user_data.persist()
+
+			response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
 			resp_cont.add_channel_response(channel, response)
-			slimes_damage = damage
-			if user_data.slimes < slimes_damage + user_data.bleed_storage:
-				# die in the explosion
-				district_data.change_slimes(n = user_data.slimes, source = ewcfg.source_killing)
-				district_data.persist()
-				slimes_dropped = user_data.totaldamage + user_data.slimes
-				explode_damage = slime_bylevel(user_data.slimelevel)
 
-				user_data.die(cause = ewcfg.cause_killing)
-				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-				user_data.persist()
-
-				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(player_data.display_name)
-				resp_cont.add_channel_response(channel, response)
-
-				if ewcfg.mutation_id_spontaneouscombustion in mutations:
-					sub_explosion = explode(explode_damage, district_data)
-					resp_cont.add_response_container(sub_explosion)
-
-				resp_cont.add_member_to_update(server.get_member(user_data.id_user))
-			else:
-				# survive
-				slime_splatter = 0.5 * slimes_damage
-				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
-				district_data.persist()
-				slimes_damage -= slime_splatter
-				user_data.bleed_storage += slimes_damage
-				user_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
-				user_data.persist()
+			resp_cont.add_member_to_update(server.get_member(user_data.id_user))
+		else:
+			# survive
+			slime_splatter = 0.5 * slimes_damage
+			district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+			district_data.persist()
+			slimes_damage -= slime_splatter
+			user_data.bleed_storage += slimes_damage
+			user_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
+			user_data.persist()
 
 	# damage enemies
 	for enemy in enemies:
 		enemy_data = EwEnemy(id_enemy = enemy, id_server = id_server)
 
-		if True:
-			response = "{} is blown back by the explosion’s sheer force! They lose {} slime!!".format(enemy_data.display_name, damage)
+		response = "{} is blown back by the explosion’s sheer force! They lose {:,} slime!!".format(enemy_data.display_name, damage)
+		resp_cont.add_channel_response(channel, response)
+
+		slimes_damage_target = damage
+			
+		# apply sap armor
+		sap_armor = ewwep.get_sap_armor(shootee_data = enemy_data, sap_ignored = 0)
+		slimes_damage_target *= sap_armor
+		slimes_damage_target = int(max(0, slimes_damage_target))
+
+		slimes_damage = slimes_damage_target
+		if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
+			# die in the explosion
+			district_data.change_slimes(n = enemy_data.slimes, source = ewcfg.source_killing)
+			district_data.persist()
+			# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+			# explode_damage = ewutils.slime_bylevel(enemy_data.level)
+
+			response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
+			resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
 			resp_cont.add_channel_response(channel, response)
-			slimes_damage = damage
-			if enemy_data.slimes < slimes_damage + enemy_data.bleed_storage:
-				# die in the explosion
-				district_data.change_slimes(n = enemy_data.slimes, source = ewcfg.source_killing)
-				district_data.persist()
-				# slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
-				# explode_damage = ewutils.slime_bylevel(enemy_data.level)
 
-				response = "Alas, {} was caught too close to the blast. They are consumed by the flames, and die in the explosion.".format(enemy_data.display_name)
-				response += "\n\n" + ewhunting.drop_enemy_loot(enemy_data, district_data)
-				resp_cont.add_channel_response(channel, response)
+			enemy_data.life_state = ewcfg.enemy_lifestate_dead
+			enemy_data.persist()
 
-				enemy_data.life_state = ewcfg.enemy_lifestate_dead
-				enemy_data.persist()
-
-			else:
-				# survive
-				slime_splatter = 0.5 * slimes_damage
-				district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
-				district_data.persist()
-				slimes_damage -= slime_splatter
-				enemy_data.bleed_storage += slimes_damage
-				enemy_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
-				enemy_data.persist()
+		else:
+			# survive
+			slime_splatter = 0.5 * slimes_damage
+			district_data.change_slimes(n = slime_splatter, source = ewcfg.source_killing)
+			district_data.persist()
+			slimes_damage -= slime_splatter
+			enemy_data.bleed_storage += slimes_damage
+			enemy_data.change_slimes(n = -slime_splatter, source = ewcfg.source_killing)
+			enemy_data.persist()
 	return resp_cont
 
 def is_otp(user_data):
@@ -1258,13 +1366,16 @@ async def delete_last_message(client, last_messages, tick_length):
 	except:
 		logMsg("failed to delete last message")
 
-def check_accept_or_refuse(str):
-	if str.content.lower() == ewcfg.cmd_accept or str.content.lower() == ewcfg.cmd_refuse:
+def check_accept_or_refuse(string):
+	if string.content.lower() == ewcfg.cmd_accept or string.content.lower() == ewcfg.cmd_refuse:
+		return True
+
+def check_confirm_or_cancel(string):
+	if string.content.lower() == ewcfg.cmd_confirm or string.content.lower() == ewcfg.cmd_cancel:
 		return True
 	
-# TODO: Remove after Double Halloween
-def check_trick_or_treat(str):
-	if str.content.lower() == ewcfg.cmd_treat or str.content.lower() == ewcfg.cmd_trick:
+def check_trick_or_treat(string):
+	if string.content.lower() == ewcfg.cmd_treat or string.content.lower() == ewcfg.cmd_trick:
 		return True
 	
 def end_trade(id_user):
@@ -1284,3 +1395,213 @@ def generate_captcha(n = 4):
 		captcha += random.choice(ewcfg.alphabet)
 	return captcha.upper()
 
+async def sap_tick_loop(id_server):
+	interval = ewcfg.sap_tick_length
+	# causes a capture tick to happen exactly every 10 seconds (the "elapsed" thing might be unnecessary, depending on how long capture_tick ends up taking on average)
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		sap_tick(id_server)
+
+def sap_tick(id_server):
+
+	try:
+		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < {level}".format(
+			id_user = ewcfg.col_id_user,
+			life_state = ewcfg.col_life_state,
+			sap = ewcfg.col_sap,
+			hardened_sap = ewcfg.col_hardened_sap,
+			level = ewcfg.col_slimelevel,
+			id_server = ewcfg.col_id_server,
+		),(
+			id_server,
+		))
+
+		for user in users:
+			user_data = EwUser(id_user = user[0], id_server = id_server)
+			user_data.sap += 1
+			user_data.limit_fix()
+			user_data.persist()
+
+		enemies = execute_sql_query("SELECT {id_enemy} FROM enemies WHERE {id_server} = %s AND {hardened_sap} < {level} / 2".format(
+			id_enemy = ewcfg.col_id_enemy,
+			hardened_sap = ewcfg.col_enemy_hardened_sap,
+			level = ewcfg.col_enemy_level,
+			id_server = ewcfg.col_id_server,
+		),(
+			id_server,
+		))
+
+		for enemy in enemies:
+			if random.random() < 0.5:
+				enemy_data = EwEnemy(id_enemy = enemy[0])
+				enemy_data.hardened_sap += 1
+				enemy_data.persist()
+	except:
+		logMsg("An error occured in sap tick for server {}".format(id_server))
+
+def check_fursuit_active(id_server):
+	market_data = EwMarket(id_server=id_server)
+	if (market_data.day % 31 == 0 and market_data.clock >= 20
+	or market_data.day % 31 == 1 and market_data.clock < 6):
+		return True
+	else:
+		return False
+
+def create_death_report(cause = None, user_data = None):
+	
+	client = ewcfg.get_client()
+	server = client.get_server(user_data.id_server)
+
+	# User display name is used repeatedly later, grab now
+	user_member = server.get_member(user_data.id_user)
+	user_player = EwPlayer(id_user = user_data.id_user)
+	user_nick = user_player.display_name
+
+	deathreport = "You arrive among the dead. {}".format(ewcfg.emote_slimeskull)
+	deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+	report_requires_killer = [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning, ewcfg.cause_killing_enemy]
+	if(cause in report_requires_killer): # Only deal with enemy data if necessary
+		killer_isUser = cause in [ewcfg.cause_killing, ewcfg.cause_busted, ewcfg.cause_burning]
+		killer_isEnemy = cause in [ewcfg.cause_killing_enemy]
+		if(killer_isUser): # Generate responses for dying to another player
+			# Grab user data
+			killer_data = EwUser(id_user = user_data.id_killer, id_server = user_data.id_server)
+			player_data = EwPlayer(id_user = user_data.id_killer)		
+
+			# Get killer weapon
+			weapon_item = EwItem(id_item = killer_data.weapon)
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
+			killer_nick = player_data.display_name
+
+			if (cause == ewcfg.cause_killing) and (weapon != None): # Response for dying to another player
+				deathreport = "You were {} by {}. {}".format(weapon.str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+			if (cause == ewcfg.cause_busted): # Response for being busted
+				deathreport = "Your ghost has been busted by {}. {}".format(killer_nick, ewcfg.emote_bustin)
+				deathreport = "{} ".format(ewcfg.emote_bustin) + formatMessage(user_player, deathreport)
+
+			if (cause == ewcfg.cause_burning): # Response for burning to death
+				deathreport = "You were {} by {}. {}".format(ewcfg.weapon_map.get(ewcfg.weapon_id_molotov).str_killdescriptor, killer_nick, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+		if(killer_isEnemy): # Generate responses for being killed by enemy
+			# Grab enemy data
+			killer_data = ewhunting.EwEnemy(id_enemy = user_data.id_killer, id_server = user_data.id_server)
+
+			if killer_data.attacktype != ewcfg.enemy_attacktype_unarmed:
+				used_attacktype = ewcfg.attack_type_map.get(killer_data.attacktype)
+			else:
+				used_attacktype = ewcfg.enemy_attacktype_unarmed
+			if (cause == ewcfg.cause_killing_enemy): # Response for dying to enemy attack
+				# Get attack kill description
+				kill_descriptor = "beaten to death"
+				if used_attacktype != ewcfg.enemy_attacktype_unarmed:
+					kill_descriptor = used_attacktype.str_killdescriptor
+
+				# Format report
+				deathreport = "You were {} by {}. {}".format(kill_descriptor, killer_data.display_name, ewcfg.emote_slimeskull)
+				deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+	if (cause == ewcfg.cause_donation): # Response for overdonation
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, "You have died in a medical mishap. {}".format(ewcfg.emote_slimeskull))
+
+	if (cause == ewcfg.cause_suicide): # Response for !suicide
+		deathreport = "You arrive among the dead by your own volition. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+	if (cause == ewcfg.cause_drowning): # Response for disembarking into the slime sea
+		deathreport = "You have drowned in the slime sea. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+	if (cause == ewcfg.cause_falling): # Response for disembarking blimp over the city
+		deathreport = "You have fallen to your death. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+	if (cause == ewcfg.cause_bleeding): # Response for bleed death
+		deathreport = "{skull} *{uname}*: You have succumbed to your wounds. {skull}".format(skull = ewcfg.emote_slimeskull, uname = user_nick)
+
+	if (cause == ewcfg.cause_weather): # Response for death by bicarbonate rain
+		deathreport = "{skull} *{uname}*: You have been cleansed by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, uname = user_nick)
+
+	if (cause == ewcfg.cause_cliff): # Response for falling or being pushed off cliff
+		deathreport = "You fell off a cliff. {}".format(ewcfg.emote_slimeskull)
+		deathreport = "{} ".format(ewcfg.emote_slimeskull) + formatMessage(user_player, deathreport)
+
+	if (cause == ewcfg.cause_backfire): # Response for death by self backfire
+		weapon_item = EwItem(id_item = user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		deathreport = "{} killed themselves with their own {}. Dumbass.".format(user_nick, weapon.str_name)
+
+	if (cause == ewcfg.cause_praying): # Response for praying
+		deathreport = formatMessage(user_member, "{} owww yer frickin bones man {}".format(ewcfg.emote_slimeskull, ewcfg.emote_slimeskull))
+
+	return(deathreport)
+
+# Get the current kingpin of slimernalia
+def get_slimernalia_kingpin(server):
+	data = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {slimernalia_kingpin} = true".format(
+		id_user = ewcfg.col_id_user,
+		id_server = ewcfg.col_id_server,
+		slimernalia_kingpin = ewcfg.col_slimernalia_kingpin
+	),(
+		server.id,
+	))
+
+	if len(data) > 0:
+		return data[0][0]
+
+	return None
+
+# Get the player with the most festivity
+def get_most_festive(server):
+	data = execute_sql_query(
+	"SELECT users.{id_user}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users "\
+	"LEFT JOIN (SELECT {id_user}, {id_server}, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}, items.{id_server}) f on users.{id_user} = f.{id_user} AND users.{id_server} = f.{id_server} "\
+	"WHERE users.{id_server} = %s ORDER BY total_festivity DESC LIMIT 1".format(
+		id_user = ewcfg.col_id_user,
+		id_server = ewcfg.col_id_server,
+		festivity = ewcfg.col_festivity,
+		festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+		name = ewcfg.col_name,
+		value = ewcfg.col_value,
+		id_item = ewcfg.col_id_item,
+	),(
+		"id_furniture",
+		ewcfg.item_id_sigillaria,
+		server.id,
+	))
+
+	return data[0][0]
+
+def check_user_has_role(server, member, checked_role_name):
+
+	checked_role = discord.utils.get(server.roles, name=checked_role_name)
+	if checked_role not in member.roles:
+		return False
+	else:
+		return True
+	
+def return_server_role(server, role_name):
+	return discord.utils.get(server.roles, name=role_name)
+
+""" Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
+def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp):
+	if desired_time_expirpvp > current_time_expirpvp:
+		return desired_time_expirpvp
+
+	return current_time_expirpvp
+
+""" add the PvP flag role to a member """
+async def add_pvp_role(cmd = None):
+	member = cmd.message.author
+	roles_map_user = getRoleMap(member.roles)
+
+	if ewcfg.role_copkillers in roles_map_user and ewcfg.role_copkillers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_copkillers_pvp])
+	elif ewcfg.role_rowdyfuckers in roles_map_user and ewcfg.role_rowdyfuckers_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
+	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
+		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
