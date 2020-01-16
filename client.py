@@ -177,8 +177,10 @@ cmd_map = {
 	ewcfg.cmd_breaklease: ewapt.cancel,
 	ewcfg.cmd_aquarium: ewapt.aquarium,
 	ewcfg.cmd_propstand: ewapt.propstand,
+	ewcfg.cmd_pot: ewapt.flowerpot,
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
+	ewcfg.cmd_unpot: ewapt.unpot,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	ewcfg.cmd_frame: ewapt.frame,

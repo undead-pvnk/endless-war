@@ -528,11 +528,11 @@ async def apt_look(cmd):
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_church):
 		furn_response += random.choice(ewcfg.bible_verses) + "\n\n"
 	if all(elem in furniture_id_list for elem in ewcfg.furniture_pony):
-		furn_response += "When the Mane 6 combine their powers, kindness, generosity, loyalty, honesty, magic, and the other one, they combine to form the most powerful force known to creation: friendship. Except for slime. That's still stronger. \nhttps://www.youtube.com/watch?v=ZcBNxuKZyN4\n\n"
+		furn_response += "When the Mane 6 combine their powers, kindness, generosity, loyalty, honesty, magic, and the other one, they combine to form the most powerful force known to creation: friendship. Except for slime. That's still stronger.\n\n"
 
 	resp_cont.add_channel_response(cmd.message.channel.name, furn_response)
 
-	response = " "
+	response = ""
 	iterate = 0
 	frids = ewitem.inventory(id_user=lookObject + ewcfg.compartment_id_fridge, id_server=playermodel.id_server)
 
@@ -549,20 +549,20 @@ async def apt_look(cmd):
 	response = ""
 
 	if (len(closets) > 0):
-		response += "The closet contains: "
 		closet_pile = []
 		hatstand_pile = []
 		for closet in closets:
 			closet_obj = ewitem.EwItem(id_item=closet.get('id_item'))
-			map_obj = ewcfg.cosmetic_map(closet_obj.item_props.get('id_cosmetic'))
+			map_obj = ewcfg.cosmetic_map.get(closet_obj.item_props.get('id_cosmetic'))
 			if has_hat_stand and map_obj and map_obj.is_hat == True:
 				hatstand_pile.append(closet.get('name'))
 			else:
 				closet_pile.append(closet.get('name'))
-		response += ewutils.formatNiceList(closet_pile)
-		response = response + '.'
-
-		resp_cont.add_channel_response(cmd.message.channel.name, response)
+		if len(closet_pile) > 0:
+			response += "The closet contains: "
+			response += ewutils.formatNiceList(closet_pile)
+			response = response + '.'
+			resp_cont.add_channel_response(cmd.message.channel.name, response)
 
 		if len(hatstand_pile) > 0:
 			response = "The hat stand holds: "
@@ -657,7 +657,7 @@ async def store_item(cmd, dest):
 			response = "You store the {} in the {}.".format(name_string, destination)
 			hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user+"decorate", item_search="hatstand")
 			if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
-				map_obj = ewcfg.cosmetic_map(item.item_props.get('id_cosmetic'))
+				map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
 				if map_obj.is_hat == True and hatrack:
 					response = "You hang the {} on the rack.".format(name_string)
 
@@ -702,6 +702,7 @@ async def remove_item(cmd, dest):
 		item_sought = ewitem.find_item(item_search=item_search, id_user=recipient + ewcfg.compartment_id_decorate, id_server=playermodel.id_server)
 		destination = "apartment"
 
+
 	if item_sought:
 		name_string = item_sought.get('name')
 		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
@@ -733,7 +734,17 @@ async def remove_item(cmd, dest):
 			item.persist()
 
 		ewitem.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=cmd.message.author.id)
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You take the {} from the {}.".format(name_string, destination)))
+
+		response = "You take the {} from the {}.".format(name_string, destination)
+
+		hatrack = ewitem.find_item(id_server=playermodel.id_server, id_user=playermodel.id_user + "decorate", item_search="hatstand")
+		if destination == "closet" and item_sought.get('item_type') == ewcfg.it_cosmetic:
+			map_obj = ewcfg.cosmetic_map.get(item.item_props.get('id_cosmetic'))
+			if map_obj.is_hat == True and hatrack:
+				response = "You take the {} off the rack.".format(name_string)
+
+
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	else:
 		response = "Are you sure you have that item?"
@@ -807,7 +818,7 @@ async def watch(cmd):
 	apartment_model.persist()
 
 	poi_object = ewcfg.id_to_poi.get(poi)
-	item_sought = ewitem.find_item(id_user=user_id, id_server=player_model.id_server, item_search="television")
+	item_sought = ewitem.find_item(id_user=user_id + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
 	if item_sought:
 		item_obj = ewitem.EwItem(id_item=item_sought.get('id_item'))
 	else:
@@ -819,41 +830,36 @@ async def watch(cmd):
 		response = "There's no TV here. Give it up and go back to killing people."
 	elif item_obj and "television" not in item_obj.item_props.get('id_furniture'):
 		response = "Get your counterfeit TVs out of here before you start watching the real deal."
-	elif user_model.rr_challenger == "tvset":
-		response = "You're already watching TV."
-
 	else:
-		user_model.rr_challenger = "tvset"
 		user_model.persist()
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You begin watching TV."))
 		for x in range (0, 62):
 			await asyncio.sleep(300)
+			#await asyncio.sleep(1)
 			user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
-			if user_model.poi == poi and user_model.time_last_action < (int(time.time()) - ewcfg.time_kickout):
+
+			if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout):
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.tv_lines)))
 			else:
-				if user_model.time_last_action >= (int(time.time()) - ewcfg.time_kickout):
+				if user_model.time_last_action <= (int(time.time()) - ewcfg.time_kickout):
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You fell asleep watching TV."))
 				else:
 					return
 		await asyncio.sleep(300)
 		for lyric in ewcfg.the_slime_lyrics:
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, lyric))
-			await asyncio.sleep(3)
+			await asyncio.sleep(8)
 
 		poi = ewcfg.id_to_poi.get(user_model.poi)
-		cmd.tokens[1] = "megaslime"
-		cmd.tokens[2] = poi.mother_district
-		cmd.tokens[3] = ewcfg.tv_set_slime
-		cmd.tokens[4] = ewcfg.tv_set_level
-		cmd.tokens[5] = "The"
-		cmd.tokens[6] = "Slime"
+		token_array = ["!summonenemy" ,"megaslime", poi.mother_district, ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
+
+		cmd.tokens = token_array
+
 		await ewhunting.summon_enemy(is_bot_spawn=True, cmd=cmd)
-		response = ""
+
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
 	user_model.rr_challenger = ""
 	user_model.persist()
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, ""))
 
 def check(str):
 	if str.content == ewcfg.cmd_sign or str.content == ewcfg.cmd_rip:
@@ -1523,7 +1529,66 @@ async def propstand(cmd):
 			response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def flowerpot(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
+	if item_sought:
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		vegetable = ewcfg.food_map.get(item.item_props.get('id_food'))
+		if vegetable and ewcfg.vendor_farm in vegetable.vendors:
+
+			if float(item.item_props.get('time_expir')) < time.time():
+				response = "Whoops. The stink lines on these {} have developed sentience and are screaming in agony. Must've kept them in your pocket too long. Well, whatever. It'll air out with enough slime. You shove the {} into a pot.".format(item_sought.get('name'), item_sought.get('name'))
+			else:
+				response = "You remove the freshly picked {} from your inventory and shove them into some nearby earthenware. Ah, the circle of life. Maybe with enough time you'll be able to !harvest them after they fully grow. LOL, just kidding. We all know that doesn't work.".format(item_sought.get('name'))
+
+			fname = "Pot of {}".format(item.item_props.get('food_name'))
+			fdesc = "You gaze at your well-tended {}. {}".format(item.item_props.get('food_name'), item.item_props.get('food_desc'))
+			lookdesc = "A pot of {} sits on a shelf.".format(item.item_props.get('food_name'))
+			placedesc = "You take your flowerpot full of {} and place it on the windowsill.".format(item.item_props.get('food_name'))
+			ewitem.item_create(
+				id_user=cmd.message.author.id,
+				id_server=cmd.message.server.id,
+				item_type=ewcfg.it_furniture,
+				item_props={
+					'furniture_name': fname,
+					'id_furniture': "flowerpot",
+					'furniture_desc': fdesc,
+					'rarity': ewcfg.rarity_plebeian,
+					'acquisition': "{}".format(item_sought.get('id_item')),
+					'furniture_place_desc': placedesc,
+					'furniture_look_desc': lookdesc
+				}
+			)
+
+			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "flo", id_server=cmd.message.server.id)
+			#ewitem.item_delete(id_item=item_sought.get('id_item'))
+
+		else:
+			response = "You put a {} in the flowerpot. You then senselessly break the pot, dropping it on the ground, because {} is not a real plant and you're a knuckledragging retard.".format(item_sought.get('name'), item_sought.get('name'))
+	else:
+		if item_search == "" or item_search == None:
+			rand1 = random.randrange(100)
+			rand2 = random.randrange(5)
+			response = ""
+			if rand1 > 80:
+				response = "**"
+			for x in range (rand2+1):
+				response+="Y"
+			for x in range (rand2+1):
+				response+="E"
+			for x in range (rand2+1):
+				response+="A"
+			for x in range (rand2+1):
+				response+="H"
+			response +=" BRO!"
+			if rand1 > 80:
+				response +="**"
+		else:
+			response = "Are you sure you have that item?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def releasefish(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -1568,6 +1633,27 @@ async def releaseprop(cmd):
 	else:
 		response = "Are you sure you have that item?"
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def unpot(cmd):
+	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	if item_sought:
+		item = ewitem.EwItem(id_item=item_sought.get('id_item'))
+		if item.item_type == ewcfg.it_furniture:
+			if item.item_props.get('id_furniture') == "flowerpot" and item.item_props.get('acquisition') != ewcfg.acquisition_smelting:
+				ewitem.give_item(id_item=item.item_props.get('acquisition'), id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				response = "You yank the foliage out of the pot."
+				ewitem.item_delete(id_item=item_sought.get('id_item'))
+			else:
+				response = "Get the pot before you unpot it."
+		else:
+			response = "Get the pot before you unpot it."
+	else:
+		response = "Are you sure you have that plant?"
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 async def wash(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
@@ -1873,6 +1959,8 @@ async def aptCommands(cmd):
 		return await ewcosmeticitem.smoke(cmd=cmd)
 	elif ewcfg.cmd_squeeze == cmd_text:
 		return await ewitem.squeeze(cmd=cmd)
+	elif ewcfg.cmd_watch == cmd_text:
+		return await watch(cmd=cmd)
 	#elif cmd_text == "~bazaarupdate":
 	 #   return await bazaar_update(cmd)
 	elif cmd_text == ewcfg.cmd_help or cmd_text == ewcfg.cmd_help_alt1 or cmd_text == ewcfg.cmd_help_alt2 or cmd_text == ewcfg.cmd_help_alt3:

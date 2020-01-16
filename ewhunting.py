@@ -722,7 +722,9 @@ async def summon_enemy(cmd, is_bot_spawn = False):
 	enemy_level = None
 
 	if len(cmd.tokens) >= 3:
+		print(cmd.tokens[1])
 		enemytype = cmd.tokens[1]
+		print(cmd.tokens[2])
 		enemy_location = cmd.tokens[2]
 		if len(cmd.tokens) >= 6:
 			enemy_slimes = cmd.tokens[3]
@@ -763,8 +765,8 @@ async def summon_enemy(cmd, is_bot_spawn = False):
 		
 	else:
 		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / DISPLAYNAME"
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if not is_bot_spawn:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):

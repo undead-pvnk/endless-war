@@ -683,9 +683,11 @@ cmd_knock = cmd_prefix + 'knock'
 cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
+cmd_pot = cmd_prefix + 'pot'
 cmd_propstand = cmd_prefix + 'propstand'
 cmd_releaseprop = cmd_prefix + 'unstand'
 cmd_releasefish = cmd_prefix + 'releasefish'
+cmd_unpot = cmd_prefix + 'unpot'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
@@ -700,6 +702,7 @@ cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
 cmd_dyefurniture = cmd_prefix + 'dyefurniture'
+cmd_watch = cmd_prefix + 'watch'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -6286,7 +6289,10 @@ bible_verses = [
 
 
 tv_lines = [
-	"Breaking news! A local street performer won't come down from a gigantic pile of corpses. He refuses to eat for publicity! More to come."
+	"Breaking news! A local street performer won't come down from a gigantic pile of corpses. He refuses to eat for publicity! More to come.",
+	"Welcome, goobs and gabs, to the Live Interactive Broadcast Enquirer Line, or L.I.B.E.L. for short. In today's news, local resident N6 was arrested for her abusive and predatory behavior toward Epic. Charges include false accusations of foot fetishism, terroristic threats, and 3rd degree sloshing toward a minor.",
+	"Welcome to Mad Murderous Money, the show where stockbrokers are allowed, nay, encouraged, to jump out of buildings when the Dow Jones gets a bit pouty. Today we have a fucking ridiculous upturn for KFC, which actually got one of its supply trucks through the gang infested streets without being ransacked. Taco Bell set up a new restaraunt in New New Yonkers, but the windows aren't even bulletproof, so it's probably just gonna be a money pit for them. But my little chiclets, DO NOT invest in FUCKING PIZZA HUT. ENDLESS WAR shot a fucking laser through their kitchen and they're still in reconstruction. \n\nAs always, this is Mad Murderous Money, telling you to buy sell, die, and shill!",
+	"Hey, everybody. This is Slime Bob Ross. I'm like regular Bob Ross, only I'm a thrown together copy some Juvie made cause he wanted to fuck me. Today, we'll be painting a portrait of urban Maine on the graffiti soaked walls of urban Green Light District. Now, the first thing you do on these urban type pieces is to sign your name here in the bottom right. This is so you will receive credit even if you have to run from the police halfway through. Next"
 ]
 
 the_slime_lyrics= [
@@ -6994,9 +7000,97 @@ EwFurniture(
 		price = 460000,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "An old record player sits on the floor.",
-		furniture_place_desc = "You place the "
+		furniture_place_desc = "You place the ol' boy on the floor."
 
 
+),
+EwFurniture(
+		id_furniture = "keg",
+		str_name = "keg",
+		str_desc = "You managed to buy an entire keg of high proof liquor without even needing to show ID. NLACakaNM is the best city in the world.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 520000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The keg in the room looks dulled and dented. Standard, almost.",
+		furniture_place_desc = "You take a swig out of the keg and haphazardly roll it across the room. That'll do."
+),
+EwFurniture(
+		id_furniture = "slimecityflag",
+		str_name = "Slime City flag",
+		str_desc = "There's nothing like the good old stars n' slugs to bring a tear to an old patriot's eye.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall",
+		furniture_place_desc = "You hang the flag on your wall and sing the anthem aloud to yourself."
+),
+EwFurniture(
+		id_furniture = "slimecityconfederateflag",
+		str_name = "Slime City Confederate flag",
+		str_desc = "It's an alternate flag design the Rowdys pull out during civil wars. Long live the motherfucking south.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The NLACakaNM Confederate flag hangs defiantly on your wall.",
+		furniture_place_desc = "Shit, let's be Robert E. Lee. You confirm your support of the Confederacy by flying the flag outside your window."
+),
+EwFurniture(
+		id_furniture = "slimeoidhouse",
+		str_name = "slimeoid house",
+		str_desc = "It's a little hutch for your slimeoid to stay in. It's only knee high though, so it looks like the big ones are SOL.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 400000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "Your slimeoid just loves that slimehouse you set up.",
+		furniture_place_desc = "You have to place the slimehouse inside so that it doesn't get caught in any drive-bys. Looks pretty cozy anyway."
+),
+EwFurniture(
+		id_furniture = "humancorpse",
+		str_name = "human corpse",
+		str_desc = "It's a fresh cadaver, stitched together with the bits and bobs you find regularly on the street. What a find!",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 0,
+		vendors = [],
+		furniture_look_desc = "There's a dead body in here.",
+		furniture_place_desc = "You open the bodybag you've been lugging around and splay the corpse out on it. You're no expert on feng shui, but if Martha Stewart saw this, she would probably run the fuck away. Out of jealousy. "
+),
+EwFurniture(
+		id_furniture = "reanimatedcorpse",
+		str_name = "reanimated corpse",
+		str_desc = "It's a stitched cadaver you found, reanimated with someone's immortal soul. It cannot speak, but it's obedient enough regardless.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 0,
+		vendors = [],
+		furniture_look_desc = "A Frankenstein-like creature is chilling in here.",
+		furniture_place_desc = "You tell your thrall to kneel over there in the corner. They know what they did."
+),
+EwFurniture(
+		id_furniture = "medievaltorturedevice",
+		str_name = "medieval torture device",
+		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 0,
+		vendors = [],
+		furniture_look_desc = "A torture rack is installed in here.",
+		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
+),
+EwFurniture(
+		id_furniture = "medievaltorturedevice",
+		str_name = "medieval torture device",
+		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 0,
+		vendors = [],
+		furniture_look_desc = "A torture rack is installed in here.",
+		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
 ),
 ]
 
