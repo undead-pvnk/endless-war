@@ -231,8 +231,8 @@ async def order(cmd):
 			if item != None:
 				item_id = item.id_furniture
 				name = item.str_name
-
-				item.vendors = [ewcfg.vendor_bazaar]
+				if item_id in ewcfg.furniture_pony:
+					item.vendors = [ewcfg.vendor_bazaar]
 
 		if item == None:
 			item = ewcfg.weapon_map.get(value)

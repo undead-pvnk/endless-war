@@ -1022,9 +1022,9 @@ async def usekey(cmd):
 		ewmap.move_counter += 1
 		move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You start walking toward the apartment."))
-		print("THREE")
+
 		await asyncio.sleep(20)
-		print("TWO")
+
 
 		if move_current == ewutils.moves_active[cmd.message.author.id]:
 			user_data = EwUser(member=cmd.message.author)
@@ -1033,7 +1033,7 @@ async def usekey(cmd):
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 			response = "You're in the apartment."
-			print("ONE")
+
 			try:
 				await ewutils.send_message(cmd.client, cmd.message.author, response)
 			except:
@@ -2052,7 +2052,7 @@ async def set_alarm(cmd):
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=player_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[2:])
 	time_set = ewutils.flattenTokenListToString(cmd.tokens[1:2])
-	print(time_set)
+
 	if ((not time_set[:-2].isnumeric()) or not (time_set[-2:] == "am" or time_set[-2:] == "pm")) and time_set != "off":
 		response = "You're setting it wrong, dumbass. See, I knew you were bad at this."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

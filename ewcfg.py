@@ -7761,7 +7761,7 @@ EwFurniture(
 		price = 30000,
 		vendors = [],
 		furniture_look_desc = "You can sense brony vibes in this room.",
-		furniture_place_desc = "You place a horse figurine on the windowsill.",
+		furniture_place_desc = "You place Twilight on the bookshelf. Not that she would enjoy the kind of swill you read.",
 		furn_set = "pony"),
 EwFurniture(
 		id_furniture = "mylittleponyfigurine",
@@ -8030,7 +8030,7 @@ EwFurniture(
 EwFurniture(
 		id_furniture = "alarmclock",
 		str_name = "alarm clock set to OFF",
-		str_desc = "The annoying sound this thing perfectly explains why the bazaar sells so many broken clocks.",
+		str_desc = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 90000,
