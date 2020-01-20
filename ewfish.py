@@ -1059,7 +1059,25 @@ async def embiggen(cmd):
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		acquisition = fish.item_props.get('acquisition')
 
-		if acquisition != ewcfg.acquisition_fishing:
+		if fish.item_props.get('id_furniture') == "singingfishplaque":
+
+			poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+			poudrin_amount = len(poudrins_owned)
+
+			if poudrin_amount < 2:
+				response = "You don't have the poudrins for it."
+			else:
+				for delete in range(2):
+					poudrin = poudrins_owned.pop()
+					ewitem.item_delete(id_item = poudrin.get("id_item"))
+				fish.item_props['id_furniture'] = "colossalsingingfishplaque"
+				fish.item_props['furniture_look_desc'] = "There's a fake fish mounted on the wall. Hoo boy, it's a whopper."
+				fish.item_props['furniture_place_desc'] = "You take a nail gun to the wall to force it to hold this fish. Christ,  this thing is your fucking Ishmael. Er, Moby Dick. Whatever."
+				fish.item_props['furniture_name'] = "colossal singing fish plaque"
+				fish.item_props['furniture_desc'] = "You press the button on your gigantic plaque.\n***" + fish.item_props.get('furniture_desc')[38:-87].upper().replace(":NOTES:", ":notes:") + "***\nYou abruptly turn the fish off before you rupture an eardrum."
+				fish.persist()
+				response = "The elevator ride down to the embiggening ward feels like an eterninty. Are they going to find out the fish you're embiggening is fake? God, you hope not. But eventually, you make it down, and place the plaque in the usual reclined surgeon's chair. A stray spark from one of the defibrilators nearly gives you a heart attack. But even so, the embiggening process begins like usual. You sign the contract, and they take a butterfly needle to your beloved wall prop. And sure enough, it begins to grow. You hear the sounds of cracked plastic and grinding electronics, and catch a whiff of burnt wires. It's growing. It's 6 feet, no, 10 feet long. Good god. You were hoping for growth, but science has gone too far. Eventually, it stops. Although you raise a few eyebrows with ths anomaly, you still get back the colossal fish plaque without a hitch."
+		elif acquisition != ewcfg.acquisition_fishing:
 			response = "You can only embiggen fishes, dummy. Otherwise everyone would be walking around with colossal nunchucks and huge chicken buckets. Actually, that gives me an idea..."
 
 		else:

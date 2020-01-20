@@ -4,12 +4,14 @@ import random
 import asyncio
 import discord
 
+
 import ewutils
 import ewcfg
 import ewstats
 import ewdistrict
 import ewrolemgr
 import ewsmelting
+
 from ew import EwUser
 from ewplayer import EwPlayer
 import re
@@ -1102,7 +1104,6 @@ async def item_use(cmd):
 					item.item_props['active'] = 'true'
 				
 				item.persist()
-
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -1294,7 +1295,7 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
-		if item_sought.get('soulbound'):
+		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props["context"] != "housekey":
 			response = "You can't just give away soulbound items."
 		else:
 			give_item(
@@ -1627,4 +1628,32 @@ async def trash(cmd):
 		response = "Are you sure you have that item?"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def surrendersoul(giver = None, receiver = None, id_server=None):
+	print("DEAD\n\n\n\n\n\n\n\n\n")
+	if giver != None and receiver != None:
+		receivermodel = EwUser(id_server=id_server, id_user=receiver)
+		givermodel = EwUser(id_server=id_server, id_user=giver)
+		giverplayer = EwPlayer(id_user=givermodel.id_user)
+
+		givermodel.has_soul = 0
+		givermodel.persist()
+
+		item_id = item_create(
+			id_user=receivermodel.id_user,
+			id_server=id_server,
+			item_type=ewcfg.it_cosmetic,
+			item_props={
+				'id_cosmetic': "soul",
+				'cosmetic_name': "{}'s soul".format(giverplayer.display_name),
+				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(
+					giverplayer.display_name, givermodel.id_user),
+				'rarity': ewcfg.rarity_patrician,
+				'adorned': 'false',
+				'user_id': givermodel.id_user
+			}
+		)
+		return item_id
+
+
 

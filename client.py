@@ -250,6 +250,9 @@ cmd_map = {
 	ewcfg.cmd_freeze: ewapt.lobbywarning,
 	ewcfg.cmd_aptname: ewapt.lobbywarning,
 	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
+	ewcfg.cmd_addkey: ewapt.add_key,
+	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
+	ewcfg.cmd_setalarm:ewapt.set_alarm,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -554,6 +557,7 @@ cmd_map = {
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	ewcfg.cmd_boot: ewmap.boot,
+	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
@@ -1051,6 +1055,8 @@ async def on_ready():
 					# Persist new data.
 					market_data.persist()
 
+					await ewapt.setOffAlarms(id_server = server.id)
+
 					# Decay slime totals
 					ewutils.decaySlimes(id_server = server.id)
 
@@ -1394,6 +1400,10 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
+
+			await ewapt.setOffAlarms(id_server=message.server.id)
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
 			patrician_rarity = 20

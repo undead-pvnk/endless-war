@@ -711,6 +711,7 @@ cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_boot = cmd_prefix + 'boot'
+cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
@@ -783,6 +784,10 @@ cmd_shelve = cmd_prefix + 'shelve'
 cmd_shelve_alt_1 = cmd_prefix + 'shelf'
 cmd_unshelve = cmd_prefix + 'unshelve'
 cmd_unshelve_alt_1 = cmd_prefix + 'unshelf'
+cmd_addkey = cmd_prefix + 'addkey'
+cmd_changelocks = cmd_prefix + 'changelocks'
+cmd_setalarm = cmd_prefix + 'setalarm'
+
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
@@ -961,6 +966,7 @@ uptime_ads = 7 * 24 * 60 * 60 # one week
 # currencies you can gamble at the casino
 currency_slime = "slime"
 currency_slimecoin = "SlimeCoin"
+currency_soul = "soul"
 
 #inebriation
 inebriation_max = 20
@@ -1451,6 +1457,9 @@ col_apt_name = 'apt_name'
 col_apt_description = 'apt_description'
 col_rent = 'rent'
 col_apt_class = 'apt_class'
+col_num_keys = 'num_keys'
+col_key_1 = 'key_1'
+col_key_2 = 'key_2'
 
 # Database columns for server
 col_icon = "icon"
@@ -7068,7 +7077,14 @@ tv_lines = [
 	"Breaking news! A local street performer won't come down from a gigantic pile of corpses. He refuses to eat for publicity! More to come.",
 	"Welcome, goobs and gabs, to the Live Interactive Broadcast Enquirer Line, or L.I.B.E.L. for short. In today's news, local resident N6 was arrested for her abusive and predatory behavior toward Epic. Charges include false accusations of foot fetishism, terroristic threats, and 3rd degree sloshing toward a minor.",
 	"Welcome to Mad Murderous Money, the show where stockbrokers are allowed, nay, encouraged, to jump out of buildings when the Dow Jones gets a bit pouty. Today we have a fucking ridiculous upturn for KFC, which actually got one of its supply trucks through the gang infested streets without being ransacked. Taco Bell set up a new restaraunt in New New Yonkers, but the windows aren't even bulletproof, so it's probably just gonna be a money pit for them. But my little chiclets, DO NOT invest in FUCKING PIZZA HUT. ENDLESS WAR shot a fucking laser through their kitchen and they're still in reconstruction. \n\nAs always, this is Mad Murderous Money, telling you to buy sell, die, and shill!",
-	"Hey, everybody. This is Slime Bob Ross. I'm like regular Bob Ross, only I'm a thrown together copy some Juvie made cause he wanted to fuck me. Today, we'll be painting a portrait of urban Maine on the graffiti soaked walls of urban Green Light District. Now, the first thing you do on these urban type pieces is to sign your name here in the bottom right. This is so you will receive credit even if you have to run from the police halfway through. Next"
+	"Hey, everybody. This is Slime Bob Ross. I'm like regular Bob Ross, only I'm a thrown together copy some Juvie made cause he wanted to fuck me. Today, we'll be painting on the graffiti soaked walls of urban Green Light District. Now, the first thing you do on these urban type pieces is to sign your name here in the bottom right. This is so you will receive credit even if you have to run from the police halfway through. OK, very good. Today we're going to be doing a still life of Wreckington. We'll be doing a lot of greys here, but let's start with something fun, the flames of the burning wreckage. Wait. I forgot to bring red paint. OK, in that case, I'll have more once I fetch a Juvie during the commercial break. Stay tuned!",
+	"The TV is just static. Maybe it's a bad reception. You wait. It will turn back on eventually, right?",
+	"Welcome to Reading Rainbow, boys and girls! I'm Slime Levar Burton, and despite the existential  dread that comes with being a blob person, I'm doing wonderful today. This week, I read a book called 'The Gamer and The Bear'. We'll read an excerpt here. \nOnce upon a time in a cute little village at the bottom of a valley was a big rowdy bear.The bear was a real nasty guy, always smashing shit up and stomping his big feet. All the innocent little gamers of the village were scared of the big bear for if he saw them !dabbing he’d rip them limb from limb! They had to hide in their homes when he came around, !dabbing under their breath and gaming with the TV muted. It was a horrible time for everyone. \nThat was the first page, be sure to buy the full book!",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. Today, we'll be examining the phenomenon of 'Door Gunning', a new prank pulled by the upstarts of Little Chernobyl. In order to explain it, we must first look at a certain subculture of people there, known as half-deads. These folks live so close to the radiation of Little Chernobyl Power Plant that the radiation has more than killed them and fully decayed their minds. The problem is, they can't !revive either. They are so brain dead that ENDLESS WAR doesn't know what to do with them. So functionally, they exist as these wildly disfigured, basically immortal suburbanites. Door Gunning takes advantage of this. A prankster will knock on the door of some hapless half-dead person, and shoot them repeatedly in the face. It's incredibly painful, but since nobody dies it gets passed off as harmless fun. It really makes you think, eh?",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. We've got a treat for you this time, something you probably haven't heard of. Charcoal Park's efforts to fight back against hostile secreatures. You see, most districts are under Slimecorp's protection, excluding gangsters. However, Charcoal Park was such a forgettable place that they just forgot to send relief over there. Things have gotten so dire that many of the region's blue collar workers have banded together to form a militia of their own. There were many casualties at first, but intense training has turned the region into an sort of anarchist paradise. You wouldn't know it, though. To this day, their houses are kept very clean.",
+	"Oh. Looks like it's playing the test screen. You know, the one with all the verticle colored stripes and the long beep. Yeah.",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. Most NLACakaNM citizens stay indoors for obvious reasons. Because of this, we're often oblivious to the interesting new social patterns they exhibit in this isolation. For example, Old New Yonkers has developed its own sect of Christianity. The practitioners of Neo-Protestant Milwaukeeism are convinced that ENDLESS WAR is the second coming of Christ, and that they have all been sent to Hell for their sins. Beyond that, most of the differences lie in the amount of self-flaggellation there is. NLACakaNM is a place of extremes, so what actually takes place is pretty mild compared to what else we've seen here. But despite its modesty, those folks may well be the most miserable in the city.",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. It's time to talk about the disappearing statue of Thalamus J. Crookline that stands in Globule Plaza. You see, Crookline's bandits have developed an inflated sense of honor among themselves. Part of that means they'll often wish themselves luck on that particular statue for good fortune in their pilfering. Every thief knows this, so it's not surprising how often the damn thing gets stolen. Hence the 'disappearance'. It costs the government like 1,000,000 slime a year just to maintain it.",
 ]
 
 the_slime_lyrics= [
@@ -7307,14 +7323,14 @@ EwFurniture(
 		furniture_look_desc = "A bright green slimebag chair is plopped just wherever.",
 		furniture_place_desc = "You plop the slimebag chair just wherever."),
 EwFurniture(
-		id_furniture = "bodypillow",
-		str_name = "body pillow",
-		str_desc = "A dakimakura with pillowcase. It's got your favorite slime waifu on it.",
+		id_furniture = "custombodypillow",
+		str_name = "{custom} body pillow",
+		str_desc = "A dakimakura with pillowcase. It's got {custom} on it.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 400000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "There's a body pillow in the bedroom.",
+		furniture_look_desc = "There's a {custom} body pillow in the bedroom.",
 		furniture_place_desc = "You gently place the pillow in your room, being careful not to damage your waifu."),
 EwFurniture(
 		id_furniture = "futon",
@@ -7771,7 +7787,7 @@ EwFurniture(
 		id_furniture = "recordplayer",
 		str_name = "record player",
 		str_desc = "An antique gramophone from the 1930s. It normally plays vinyl, but through the power of slime, CDs work just as well.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 460000,
 		vendors = [vendor_bazaar],
@@ -7784,7 +7800,7 @@ EwFurniture(
 		id_furniture = "keg",
 		str_name = "keg",
 		str_desc = "You managed to buy an entire keg of high proof liquor without even needing to show ID. NLACakaNM is the best city in the world.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 520000,
 		vendors = [vendor_bazaar],
@@ -7795,7 +7811,7 @@ EwFurniture(
 		id_furniture = "slimecityflag",
 		str_name = "Slime City flag",
 		str_desc = "There's nothing like the good old stars n' slugs to bring a tear to an old patriot's eye.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 90000,
 		vendors = [vendor_bazaar],
@@ -7806,7 +7822,7 @@ EwFurniture(
 		id_furniture = "slimecityconfederateflag",
 		str_name = "Slime City Confederate flag",
 		str_desc = "It's an alternate flag design the Rowdys pull out during civil wars. Long live the motherfucking south.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 90000,
 		vendors = [vendor_bazaar],
@@ -7840,7 +7856,7 @@ EwFurniture(
 		str_name = "reanimated corpse",
 		str_desc = "It's a stitched cadaver you found, reanimated with someone's immortal soul. It cannot speak, but it's obedient enough regardless.",
 		rarity = rarity_patrician,
-		acquisition = acquisition_bartering,
+		acquisition = acquisition_smelting,
 		price = 0,
 		vendors = [],
 		furniture_look_desc = "A Frankenstein-like creature is chilling in here.",
@@ -7850,23 +7866,246 @@ EwFurniture(
 		id_furniture = "medievaltorturedevice",
 		str_name = "medieval torture device",
 		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
-		price = 0,
-		vendors = [],
+		price = 3000000,
+		vendors = [vendor_bazaar],
 		furniture_look_desc = "A torture rack is installed in here.",
 		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
 ),
 EwFurniture(
-		id_furniture = "medievaltorturedevice",
-		str_name = "medieval torture device",
-		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
+		id_furniture = "blackvelvetsofa",
+		str_name = "black velvet sofa",
+		str_desc = "It's a sleek, luxurious couch adorned with platinum studded black velvet. They say only the most criminally prone Italians could ever hope to afford its mafioso charm.",
 		rarity = rarity_patrician,
 		acquisition = acquisition_bartering,
-		price = 0,
+		price = 2000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet couch adds style to this place.",
+		furniture_place_desc = "You threaten a random pedestrian with death to get him to move your couch in. That's just how you operate.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvetbed",
+		str_name = "black velvet bed",
+		str_desc = "It's a stylish black velvet bed frame with a stark white mattress and bedspread. It's seductive, even without a leggy dame lying on it.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 2500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet bed is in the bedroom.",
+		furniture_place_desc = "You assemble the bed and lie down for awhile. No fishes here. You're sleeping with the gods. Er, goddesses. Whatever.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvetchair",
+		str_name = "black velvet chair",
+		str_desc = "It's a studded velvet chair. It doesn't get more executive than this baby.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 990000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet chair is set up.",
+		furniture_place_desc = "You slide the chair to the corner, Man, you're going to look so menacing in this thing.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvettable",
+		str_name = "black velvet table",
+		str_desc = "It's an antique table adorned with studs and velvet. Tailor made for deal making.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 1990000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet table is set up.",
+		furniture_place_desc = "You set the table up, and place upon it the finest silverware you have.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvetlamp",
+		str_name = "black velvet lamp",
+		str_desc = "It's a mahogany lamp with velvet lampshade. It gives you excellent mood lighting.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 590000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet lamp casts bright lights and long shadows.",
+		furniture_place_desc = "You plug the lamp in. Odd. Normally you prefer to put people's lights out.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "popeonarope",
+		str_name = "pope on a rope",
+		str_desc = "It's Pope Francis, hung and dead on a noose. At the very least it's a convincing imitation.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 10000000,
 		vendors = [],
-		furniture_look_desc = "A torture rack is installed in here.",
-		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
+		furniture_look_desc = "Pope Francis hangs dead from the ceiling.",
+		furniture_place_desc = "You get on a chair and hang the noose from the ceiling. The lightly swinging Pope now adds an ambient wood creaking noise to your abode.",
+),
+EwFurniture(
+		id_furniture = "slimecorpchair",
+		str_name = "SLIMECORP:tm: Chair Of the Future",
+		str_desc = "It's a sleek green seat-like device outfitted for maximum comfort. Comes with built-in cupholders and a state of the art subliminal media player.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A futuristic Slimecorp chair is set up.",
+		furniture_place_desc = "As you attempt to pick up the heavy chair, you accidentally press a button on its underside. Suddenly, you pass out on the floor. When you wake up, the chair is set up like it had always been there.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorpcouch",
+		str_name = "SLIMECORP:tm: Mega Sofa",
+		str_desc = "This SlimeCorp:tm: Mega Sofa is capable of extending in 3 directions. It's perfect for throwing house parties with all your friends:tm:!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 3000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A futuristic Slimecorp couch sits along the wall.",
+		furniture_place_desc = "You notice a 'MOVE IN' button under the upholstery of your couch. After pressing it, the couch grows metal limbs, forcibly grabbing you and walking into your apartment complex. You're sure that neat feature won't bite you in the ass later.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorpbed",
+		str_name = "SLIMECORP:tm: Ultimate Safety Bed",
+		str_desc = "This SlimeCorp:tm: Safety Bed is the ultimate resting place for whenever you need physical protection! We at SlimeCorp can't guarantee your safety without one! Be sure to try out its cryogenic stasis feature!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 2500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A Slimecorp twin bed/cryo pod is in the bedroom.",
+		furniture_place_desc = "Somehow, assembling this fully functional cryostasis container was easier than the ones you used to build from IKEA.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorpdesk",
+		str_name = "SLIMECORP:tm: Posture Building Submission Desk",
+		str_desc = "The Slimecorp:tm: Submission Desk is the ultimate tool in building charisma and acclimating yourself to the times! Simply keep your head down and you'll be ahead of the game for when you all submit to us.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A Slimecorp desk made for submission is in a dark corner.",
+		furniture_place_desc = "You decided to place the desk by carrying it on your back like a hopeless thrall. That's the spirit!",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorplamp",
+		str_name = "SLIMECORP:tm: Highly Talkative Strobe Light",
+		str_desc = "The Slimecorp:tm: Talkative Strobe Light is an excellent way to memorize interesting facts about SlimeCorp:tm: Tired of our email advertisements? You can absorb all that information lickety split through our state of the art subliminal messages.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1600000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A Slimecorp lamp is flashing some neat subliminal messages throughout the room.",
+		furniture_place_desc = "SUBMIT TO SLIMECORP. NOW, PLUG IN THE LAMP WHILE SUBMITTING TO SLIMECORP.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "sord",
+		str_name = "sord",
+		str_desc = "https://i.imgur.com/EgbZ7Ku.png",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = -1,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "dude. therps a SORD over therew.re.",
+		furniture_place_desc = "You place the SORD indoors so it doesn't escape to the side.",
+),
+EwFurniture(
+		id_furniture = "pileofmysteriouspowder",
+		str_name = "pile of mysterious powder",
+		str_desc = "The guy you bought this fine white powder from called it nose candy. What a fucking idiot. Everybody knows you eat candy with your mouth.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 3000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a pile of powdery substance in a dark alcove over yonder.",
+		furniture_place_desc = "You unpack the powder and pour it all out in a nice little pile. Whoa. Feelin' kind of woozy.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "alarmclock",
+		str_name = "alarm clock set to OFF",
+		str_desc = "The annoying sound this thing perfectly explains why the bazaar sells so many broken clocks.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The clock says it's {time}.",
+		furniture_place_desc = "You set the alarm clock on your nightstand. Nobody knows why.",
+),
+EwFurniture(
+		id_furniture = "lavalamp",
+		str_name = "lava lamp",
+		str_desc = "It's one of those lamps where you stick colorful boiling chemicals under heat and pour them on shitty guests. At least you're pretty sure that's what it does. The container is sealed with a bottle cap and everything!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 150000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A lava lamp is plugged in.",
+		furniture_place_desc = "You plug the lava lamp in and wait for the cool bubbles to start going. It's taking too long, though, so you stop.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "discoball",
+		str_name = "disco ball",
+		str_desc = "It's a large ball covered in tiny mirror surfaces. Good for dancers and epileptics.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 450000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A disco ball hangs from the ceiling.",
+		furniture_place_desc = "You hang the gitterball and give it a hefty spin.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "shagcarpet",
+		str_name = "shag carpet",
+		str_desc = "Wall to wall shag carpeting with a soft, hot pink texture to it. Very retro, and well loved by furries with inexplicable floor fetishes.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The hot pink carpeting feels soft beneath your feet.",
+		furniture_place_desc = "You roll out the new carpet and do some shag angels.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "stainedglasswindows",
+		str_name = "stained glass windows",
+		str_desc = "A number of windows painstakingly crafted to build a mosaic. Looks breakable.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 1420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The windows are made of stained glass.",
+		furniture_place_desc = "You carefully install the stained glass fixtures. Who knew you were such a good carpenter?",
+),
+EwFurniture(
+		id_furniture = "customdoor",
+		str_name = "{custom} door",
+		str_desc = "A door with {custom} on it.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 1420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The door is modded with a {custom} design.",
+		furniture_place_desc = "You break the original door off its hinges and install a new one.",
+),
+EwFurniture(
+		id_furniture = "expiredbottleofrogaine",
+		str_name = "expired bottle of rogaine",
+		str_desc = "It's a bottle of hair growth solution. Whoever owns this must be a longtime bald person.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 1200,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's an old Rogaine bottle lying around.",
+		furniture_place_desc = "You drop the bottle of rogaine in plain sight.",
 ),
 ]
 
@@ -7879,6 +8118,10 @@ furniture_haunted = []
 furniture_leather = []
 furniture_church = []
 furniture_pony = []
+furniture_blackvelvet = []
+furniture_slimecorp = []
+furniture_seventies = []
+
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -12140,6 +12383,53 @@ smelting_recipe_list = [
 		},
 		products = ['slimepoudrin']
 	),
+EwSmeltingRecipe(
+		id_recipe = "humancorpse",
+		str_name = "a corpse",
+		alias = [
+			"stiff",
+			"corpse",
+			"deadperson",
+			"cadaver",
+		],
+		ingredients = {
+			'scalp': 20,
+			'dinoslimemeat':2,
+			'string':2
+		},
+		products = ['humancorpse']
+	),
+EwSmeltingRecipe(
+		id_recipe = "popeonarope",
+		str_name = "pope on a rope",
+		alias = [
+			"pope",
+			"francis",
+			"deadpope",
+			"sacrilege",
+		],
+		ingredients = {
+			'humancorpse': 1,
+			'diadem':1,
+			'scarf':1,
+			'confessionbooth':1
+		},
+		products = ['popeonarope']
+	),
+EwSmeltingRecipe(
+		id_recipe = "reanimatedcorpse",
+		str_name = "reanimated corpse",
+		alias = [
+			"frankenstein",
+			"reanimate",
+			"revenant",
+		],
+		ingredients = {
+			'humancorpse': 1,
+			'poudrin':10,
+		},
+		products = ['reanimatedcorpse']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -14163,6 +14453,12 @@ for furniture in furniture_list:
 		furniture_church.append(furniture.id_furniture)
 	elif furniture.furn_set == "pony":
 		furniture_pony.append(furniture.id_furniture)
+	elif furniture.furn_set == "blackvelvet":
+		furniture_blackvelvet.append(furniture.id_furniture)
+	elif furniture.furn_set == "seventies":
+		furniture_seventies.append(furniture.id_furniture)
+	elif furniture.furn_set == "slimecorp":
+		furniture_slimecorp.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
