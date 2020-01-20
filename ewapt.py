@@ -924,8 +924,8 @@ async def watch(cmd):
 			await asyncio.sleep(300)
 			#await asyncio.sleep(1)
 			user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
-
-			if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout):
+			item_sought = ewitem.find_item(id_user=user_id + ewcfg.compartment_id_decorate, id_server=player_model.id_server, item_search="television")
+			if user_model.poi == poi and user_model.time_last_action > (int(time.time()) - ewcfg.time_kickout) and item_sought:
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, random.choice(ewcfg.tv_lines)))
 			else:
 				if user_model.time_last_action <= (int(time.time()) - ewcfg.time_kickout):
