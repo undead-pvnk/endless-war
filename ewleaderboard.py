@@ -29,8 +29,10 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
-	topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
-	await ewutils.send_message(client, leaderboard_channel, topfestivity)
+	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
+	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
+	topzines = make_zines_top_board(server=server)
+	await ewutils.send_message(client, leaderboard_channel, topzines)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
@@ -68,6 +70,40 @@ def make_slimeoids_top_board(server = None):
 
 	return board
 
+def make_zines_top_board(server = None):
+	board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}\n".format(
+		zine = "<:zine:655854388761460748>"
+	)
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute((
+			"SELECT b.title, b.author, b.sales " +
+			"FROM books as b " +
+			"WHERE b.id_server = %s AND b.book_state = 1 " +
+			"ORDER BY b.sales DESC LIMIT 5"
+		), (
+			server.id,
+		))
+
+		data = cursor.fetchall()
+		if data != None:
+			for row in data:
+				board += "{} `{:_>3} | {} by {}`\n".format(
+					ewcfg.emote_blank,
+					row[2],
+					row[0].replace("`",""),
+					row[1].replace("`","")
+				)
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return board
 
 def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
@@ -167,14 +203,14 @@ def make_district_control_board(id_server, title):
 def make_slimernalia_board(server, title):
 	entries = []
 	data = ewutils.execute_sql_query(
-		"SELECT {display_name}, {state}, {faction}, {festivity} + COALESCE(sigillaria, 0) + FLOOR({coin_gambled} / 1000000000000) as total_festivity FROM users "\
-		"LEFT JOIN (SELECT id_user, COUNT(*) * 100 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
+		"SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users "\
+		"LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
 		"WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
 			id_user = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server,
 			id_item = ewcfg.col_id_item,
 			festivity = ewcfg.col_festivity,
-			coin_gambled = ewcfg.col_slimernalia_coin_gambled,
+			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
 			name = ewcfg.col_name,
 			display_name = ewcfg.col_display_name,
 			value = ewcfg.col_value,

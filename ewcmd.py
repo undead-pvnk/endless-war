@@ -414,10 +414,7 @@ async def hunger(cmd):
 
 
 async def endlesswar(cmd):
-	user_data = EwUser(member=cmd.message.author)
-	id_server = user_data.id_server
-	
-	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(id_server))
+	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.message.server.id))
 	totalslimes = total[0][0]
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
@@ -507,6 +504,18 @@ async def dab(cmd):
 
 	if (user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_kingpin) and user_data.faction == ewcfg.faction_killers:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, '\n'  + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_copkiller  + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_copkiller + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_ck + '\n' + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_blank + ewcfg.emote_ck + ewcfg.emote_slime3 + ewcfg.emote_slime1 + ewcfg.emote_slime1 + ewcfg.emote_slime3 + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck + ewcfg.emote_ck + ewcfg.emote_slime1 + ewcfg.emote_ck))
+
+"""
+	Juvies DANCE
+"""
+async def dance(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	member = cmd.message.author
+	
+	if user_data.life_state == ewcfg.life_state_juvenile:
+		dance_response = random.choice(ewcfg.dance_responses).format(member.display_name)
+		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3)
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, dance_response))
 
 """
 	Ghosts BOO
@@ -623,9 +632,12 @@ async def help(cmd):
 		elif cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
 			# mine help
 			response = ewcfg.help_responses['mining']
-		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in ewcfg.channel_dojo:
+		elif (len(poi.vendors) >= 1) and not cmd.message.channel.name in [ewcfg.channel_dojo, ewcfg.channel_greencakecafe, ewcfg.channel_glocksburycomics]:
 			# food help
 			response = ewcfg.help_responses['food']
+		elif cmd.message.channel.name in [ewcfg.channel_greencakecafe, ewcfg.channel_glocksburycomics]:
+			# zines help
+			response = ewcfg.help_responses['zines']
 		elif cmd.message.channel.name in ewcfg.channel_dojo and not len(cmd.tokens) > 1:
 			# dojo help
 			response = "For general dojo information, do **'!help dojo'**. For information about the sparring and weapon rank systems, do **'!help sparring.'**. For general information about combat, do **'!help combat'**. For information about the sap system, do **'!help sap'**. For information about a specific weapon, do **'!help [weapon]'**."
@@ -1283,7 +1295,7 @@ async def toss_off_cliff(cmd):
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		return await ewitem.discard(cmd=cmd)
 
 	elif item_sought:
@@ -1473,7 +1485,6 @@ async def wrap(cmd):
 			ewitem.give_item(id_item=item_sought.get('id_item'), id_user=cmd.message.author.id + "gift", id_server=cmd.message.server.id)
 			ewitem.item_delete(id_item=paper_item.id_item)
 
-			user_data.festivity += ewcfg.festivity_on_gift_wrapping
 			user_data.persist()
 	else:
 		if item_search == "" or item_search == None:
@@ -1509,16 +1520,14 @@ async def unwrap(cmd):
 					gift_name_type = 'cosmetic_name'
 				elif gifted_item.item_type == ewcfg.it_furniture:
 					gift_name_type = 'furniture_name'
+				elif gifted_item.item_type == ewcfg.it_book:
+					gift_name_type = 'title'
 				
 				gifted_item_name = gifted_item.item_props.get('{}'.format(gift_name_type))
 				gifted_item_message = item.item_props.get('context')
 				
 				response = "You shred through the packaging formalities to reveal a {}!\nThere is a note attached: '{}'.".format(gifted_item_name, gifted_item_message)
 				ewitem.item_delete(id_item=item_sought.get('id_item'))
-
-				user_data = EwUser(member=cmd.message.author)
-				user_data.festivity += ewcfg.festivity_on_gift_wrapping
-				user_data.persist()
 			else:
 				response = "You can't unwrap something that isn't a gift, bitch."
 		else:
@@ -1541,12 +1550,12 @@ async def cancel(cmd):
 async def festivity(cmd):
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member = cmd.message.author)
-		response = "You currently have {} festivity.".format(user_data.get_festivity())
+		response = "You currently have {:,} festivity.".format(user_data.get_festivity())
 
 	else:
 		member = cmd.mentions[0]
 		user_data = EwUser(member = member)
-		response = "{} currently has {} festivity.".format(member.display_name, user_data.get_festivity())
+		response = "{} currently has {:,} festivity.".format(member.display_name, user_data.get_festivity())
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

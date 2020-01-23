@@ -51,6 +51,7 @@ import ewweather
 import ewworldevent
 import ewdungeons
 import ewads
+import ewbook
 import ewdebug
 
 from ewitem import EwItem
@@ -169,12 +170,18 @@ cmd_map = {
 	ewcfg.cmd_boo: ewcmd.boo,
 	#ewcfg.cmd_spook: ewcmd.spook,
 	
+	# Juvies can dance
+	ewcfg.cmd_dance: ewcmd.dance,
+	
 	# Terezi Gang can flip coins
 	ewcfg.cmd_coinflip: ewcmd.coinflip,
     
 	# Make a costume for Double Halloween
 	#ewcfg.cmd_makecostume: ewitem.makecostume,
 
+	# Show the total of negative slime in the market.
+	ewcfg.cmd_negapool: ewspooky.negapool,
+	
 	# Show the total of negative slime in the world.
 	ewcfg.cmd_negaslime: ewspooky.negaslime,
 	
@@ -223,9 +230,13 @@ cmd_map = {
 	ewcfg.cmd_fridge: ewapt.lobbywarning,
 	ewcfg.cmd_closet: ewapt.lobbywarning,
 	ewcfg.cmd_decorate: ewapt.lobbywarning,
+	ewcfg.cmd_shelve: ewapt.lobbywarning,
+	ewcfg.cmd_shelve_alt_1: ewapt.lobbywarning,
 	ewcfg.cmd_unfridge: ewapt.lobbywarning,
 	ewcfg.cmd_uncloset: ewapt.lobbywarning,
 	ewcfg.cmd_undecorate: ewapt.lobbywarning,
+	ewcfg.cmd_unshelve: ewapt.lobbywarning,
+	ewcfg.cmd_unshelve_alt_1: ewapt.lobbywarning,
 	ewcfg.cmd_freeze: ewapt.lobbywarning,
 	ewcfg.cmd_aptname: ewapt.lobbywarning,
 	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
@@ -433,6 +444,9 @@ cmd_map = {
 	# drop item into your current district
 	ewcfg.cmd_discard: ewitem.discard,
 	ewcfg.cmd_discard_alt1: ewitem.discard,
+	
+	# delete a food item from your inventory
+	ewcfg.cmd_trash: ewitem.trash,
 
 	# recycle your trash at the slimecorp recycling plant
 	ewcfg.cmd_recycle: ewcmd.recycle,
@@ -492,7 +506,7 @@ cmd_map = {
 	ewcfg.cmd_restoreslimeoid: ewslimeoid.restoreslimeoid,
 	ewcfg.cmd_bottleslimeoid: ewslimeoid.bottleslimeoid,
 	ewcfg.cmd_unbottleslimeoid: ewslimeoid.unbottleslimeoid,
-	#ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid, #TODO
+	ewcfg.cmd_feedslimeoid: ewslimeoid.feedslimeoid,
 	ewcfg.cmd_dress_slimeoid: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_dress_slimeoid_alt1: ewslimeoid.dress_slimeoid,
 	ewcfg.cmd_undress_slimeoid: ewslimeoid.undress_slimeoid,
@@ -534,6 +548,41 @@ cmd_map = {
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
 
+	# BOOK COMMANDS OH YEAH
+	ewcfg.cmd_beginmanuscript: ewbook.begin_manuscript,
+	ewcfg.cmd_beginmanuscript_alt_1: ewbook.begin_manuscript,
+	ewcfg.cmd_beginmanuscript_alt_2: ewbook.begin_manuscript,
+	ewcfg.cmd_setpenname: ewbook.set_pen_name,
+	ewcfg.cmd_setpenname_alt_1: ewbook.set_pen_name,
+	ewcfg.cmd_settitle: ewbook.set_title,
+	ewcfg.cmd_settitle_alt_1: ewbook.set_title,
+	ewcfg.cmd_setgenre: ewbook.set_genre,
+	ewcfg.cmd_editpage: ewbook.edit_page,
+	ewcfg.cmd_viewpage: ewbook.view_page,
+	ewcfg.cmd_checkmanuscript: ewbook.check_manuscript,
+	ewcfg.cmd_publishmanuscript: ewbook.publish_manuscript,
+	ewcfg.cmd_readbook: ewbook.read_book,
+	ewcfg.cmd_nextpage: ewbook.next_page,
+	ewcfg.cmd_nextpage_alt_1: ewbook.next_page,
+	ewcfg.cmd_previouspage: ewbook.previous_page,
+	ewcfg.cmd_previouspage_alt_1: ewbook.previous_page,
+	ewcfg.cmd_previouspage_alt_2: ewbook.previous_page,
+	ewcfg.cmd_browsezines: ewbook.browse_zines,
+	ewcfg.cmd_buyzine: ewbook.order_zine,
+	ewcfg.cmd_buyzine_alt_1: ewbook.order_zine,
+	ewcfg.cmd_rate: ewbook.rate_zine,
+	ewcfg.cmd_rate_alt_1: ewbook.rate_zine,
+	ewcfg.cmd_rate_alt_2: ewbook.rate_zine,
+	ewcfg.cmd_setpages: ewbook.set_length,
+	ewcfg.cmd_setpages_alt_1: ewbook.set_length,
+	ewcfg.cmd_setpages_alt_2: ewbook.set_length,
+	ewcfg.cmd_takedown: ewbook.take_down_zine,
+	ewcfg.cmd_takedown_alt_1: ewbook.take_down_zine,
+	ewcfg.cmd_takedown_alt_2: ewbook.take_down_zine,
+	ewcfg.cmd_untakedown: ewbook.untake_down_zine,
+	ewcfg.cmd_untakedown_alt_1: ewbook.untake_down_zine,
+	ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
+
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
@@ -570,13 +619,13 @@ cmd_map = {
 	
 	# Slimernalia
 	# Check your current festivity
-	ewcfg.cmd_festivity: ewcmd.festivity,
+	#ewcfg.cmd_festivity: ewcmd.festivity,
 	# Wrap a gift
-	ewcfg.cmd_wrap: ewcmd.wrap,
+	#ewcfg.cmd_wrap: ewcmd.wrap,
 	# Unwrap a gift
 	ewcfg.cmd_unwrap: ewcmd.unwrap,
 	# Yo, Slimernalia
-	ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
+	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
 	
 }
 
@@ -976,11 +1025,11 @@ async def on_ready():
 						if pattern_count > 1:
 							weather_old = market_data.weather
 
-							#if random.random() < 0.4:
-							#	market_data.weather = ewcfg.weather_bicarbonaterain
+							if random.random() < 0.4:
+								market_data.weather = ewcfg.weather_bicarbonaterain
 
 							# Randomly select a new weather pattern. Try again if we get the same one we currently have.
-							while market_data.weather == weather_old or market_data.weather == ewcfg.weather_bicarbonaterain:
+							while market_data.weather == weather_old:
 								pick = random.randrange(len(ewcfg.weather_list))
 								market_data.weather = ewcfg.weather_list[pick].name
 
@@ -1012,30 +1061,6 @@ async def on_ready():
 					# Post leaderboards at 6am NLACakaNM time.
 					if market_data.clock == 6:
 						await ewleaderboard.post_leaderboards(client = client, server = server)
-
-						# Depose current slimernalia kingpin
-						old_kingpin_id = ewutils.get_slimernalia_kingpin(server)
-						if old_kingpin_id != None:
-							old_kingpin = EwUser(id_user=old_kingpin_id, id_server=server.id)
-							old_kingpin.slimernalia_kingpin = False
-							old_kingpin.persist()
-							try:
-								old_kingpin_member = server.get_member(old_kingpin.id_user)
-								await ewrolemgr.updateRoles(client = client, member = old_kingpin_member)
-							except:
-								ewutils.logMsg("Error removing kingpin of slimernalia role from {} in server {}.".format(old_kingpin.id_user, server.id))
-
-						# Update the new kingpin of slimernalia
-						new_kingpin = EwUser(id_user=ewutils.get_most_festive(server), id_server=server.id)
-						new_kingpin.slimernalia_kingpin = True
-						new_kingpin.persist()
-						try:
-							new_kingpin_member = server.get_member(new_kingpin.id_user)
-							await ewrolemgr.updateRoles(client = client, member = new_kingpin_member)
-						except:
-							ewutils.logMsg("Error adding kingpin of slimernalia role to user {} in server {}.".format(new_kingpin.id_user, server.id))	
-
-
 
 		except:
 			ewutils.logMsg('An error occurred in the scheduled slime market update task:')
@@ -1202,6 +1227,8 @@ async def on_message(message):
 				return await ewitem.inventory_print(cmd_obj)
 			elif cmd == ewcfg.cmd_inspect:
 				return await ewitem.item_look(cmd_obj)
+			elif cmd in ewcfg.zine_commands:
+				return await ewbook.zine_dm_commands(cmd=cmd_obj)
 			elif poi.is_apartment:
 				return await ewapt.aptCommands(cmd=cmd_obj)
 			else:

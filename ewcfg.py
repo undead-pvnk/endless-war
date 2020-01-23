@@ -13,7 +13,7 @@ from ewfood import EwFood
 from ewitem import EwItemDef, EwGeneralItem
 from ewmap import EwPoi
 from ewmutation import EwMutationFlavor
-from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue
+from ewslimeoid import EwBody, EwHead, EwMobility, EwOffense, EwDefense, EwSpecial, EwBrain, EwHue, EwSlimeoidFood
 from ewquadrants import EwQuadrantFlavor
 from ewtransport import EwTransportLine
 from ewstatuseffects import EwStatusEffectDef
@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.18yoslimernalia"
+version = "v3.20noslimernalia"
 
 dir_msgqueue = 'msgqueue'
 
@@ -246,6 +246,7 @@ poi_id_tutorial_hallway = "hallway"
 compartment_id_closet = "closet"
 compartment_id_fridge = "fridge"
 compartment_id_decorate = "decorate"
+compartment_id_bookshelf = "bookshelf"
 location_id_empty = "empty"
 
 # Outskirts
@@ -271,6 +272,7 @@ poi_id_southwest_outskirts = "southwestoutskirts"
 poi_id_west_outskirts = "westoutskirts"
 poi_id_northwest_outskirts = "northwestoutskirts"
 poi_id_north_outskirts = "northoutskirts"
+poi_id_nuclear_beach = "nuclearbeach" # aka Assault Flats Beach Outskirts
 
 
 # The Sphere
@@ -431,6 +433,8 @@ channel_juviesrow = "juvies-row"
 channel_realestateagency = "slimecorp-real-estate-agency"
 channel_apt = "apartment"
 channel_sodafountain = "the-bicarbonate-soda-fountain"
+channel_greencakecafe = "green-cake-cafe"
+channel_glocksburycomics = "glocksbury-comics"
 
 channel_wt_port = "wreckington-port"
 channel_vc_port = "vagrants-corner-port"
@@ -593,6 +597,7 @@ cmd_exchangerate_alt3 = cmd_prefix + 'exchangerates'
 cmd_exchangerate_alt4 = cmd_prefix + 'rates'
 cmd_shares = cmd_prefix + 'shares'
 cmd_stocks = cmd_prefix + 'stocks'
+cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_equip = cmd_prefix + 'equip'
@@ -657,6 +662,7 @@ cmd_buy = cmd_prefix + 'buy'
 cmd_thrash = cmd_prefix + 'thrash'
 cmd_dab = cmd_prefix + 'dab'
 cmd_boo = cmd_prefix + 'boo'
+cmd_dance = cmd_prefix + 'dance'
 cmd_coinflip = cmd_prefix + 'co1nfl1p'
 cmd_spook = cmd_prefix + 'spook'
 cmd_makecostume = cmd_prefix + 'makecostume'
@@ -690,6 +696,7 @@ cmd_create = cmd_prefix + 'create'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
+cmd_trash = cmd_prefix + 'trash'
 cmd_leaderboard = cmd_prefix + 'leaderboard'
 cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
@@ -768,6 +775,44 @@ cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
 cmd_purify = cmd_prefix + 'purify'
+cmd_shelve = cmd_prefix + 'shelve'
+cmd_shelve_alt_1 = cmd_prefix + 'shelf'
+cmd_unshelve = cmd_prefix + 'unshelve'
+cmd_unshelve_alt_1 = cmd_prefix + 'unshelf'
+
+cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
+cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
+cmd_beginmanuscript_alt_2 = cmd_prefix + 'startmanuscript'
+cmd_setpenname = cmd_prefix + 'setpenname'
+cmd_setpenname_alt_1 = cmd_prefix + 'setauthor'
+cmd_settitle = cmd_prefix + 'settitle'
+cmd_settitle_alt_1 = cmd_prefix + 'setname'
+cmd_setgenre = cmd_prefix + 'setgenre'
+cmd_editpage = cmd_prefix + 'editpage'
+cmd_viewpage = cmd_prefix + 'viewpage'
+cmd_checkmanuscript = cmd_prefix + 'manuscript'
+cmd_publishmanuscript = cmd_prefix + 'publish'
+cmd_readbook = cmd_prefix + 'read'
+cmd_nextpage = cmd_prefix + 'nextpage'
+cmd_nextpage_alt_1 = cmd_prefix + 'flip'
+cmd_previouspage = cmd_prefix + 'previouspage'
+cmd_previouspage_alt_1 = cmd_prefix + 'pilf'
+cmd_previouspage_alt_2 = cmd_prefix + 'plif'
+cmd_browsezines = cmd_prefix + 'browse'
+cmd_buyzine = cmd_prefix + 'buyzine'
+cmd_buyzine_alt_1 = cmd_prefix + 'orderzine'
+cmd_rate = cmd_prefix + 'ratezine'
+cmd_rate_alt_1 = cmd_prefix + 'reviewzine'
+cmd_rate_alt_2 = cmd_prefix + 'review'
+cmd_setpages = cmd_prefix + 'setpages'
+cmd_setpages_alt_1 = cmd_prefix + 'setpage'
+cmd_setpages_alt_2 = cmd_prefix + 'setlength'
+cmd_takedown = cmd_prefix + 'takedown'
+cmd_takedown_alt_1 = cmd_prefix + 'copyrightstrike'
+cmd_takedown_alt_2 = cmd_prefix + 'deletezine'
+cmd_untakedown = cmd_prefix + 'untakedown'
+cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
+cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -947,10 +992,10 @@ property_class_c = "c"
 
 # district capturing
 capture_tick_length = 10  # in seconds; also affects how much progress is made per tick
-max_capture_points_s = 5000000 # 5 megaslime
-max_capture_points_a = 3000000  # 3 megaslime
-max_capture_points_b = 2000000  # 2 megaslime
-max_capture_points_c = 1000000   # 1 megaslime
+max_capture_points_s = 500000 # 500k
+max_capture_points_a = 300000  # 300k
+max_capture_points_b = 200000  # 200k
+max_capture_points_c = 100000   # 100k
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -1453,8 +1498,10 @@ col_visiting = "visiting"
 col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
+col_manuscript = "manuscript"
 #SLIMERNALIA
 col_festivity = 'festivity'
+col_festivity_from_slimecoin = 'festivity_from_slimecoin'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 col_slimernalia_kingpin = 'slimernalia_kingpin'
 
@@ -1591,6 +1638,25 @@ col_id_ad = 'id_ad'
 col_id_sponsor = 'id_sponsor'
 col_ad_content = 'content'
 
+# Database columns for books
+col_id_book = "id_book"
+col_title = "title"
+col_author = "author"
+col_book_state = "book_state"
+col_date_published = "date_published"
+col_genre = "genre"
+col_length = "length"
+col_sales = "sales"
+col_rating = "rating"
+col_rates = "rates"
+col_pages = "pages"
+
+# Database columns for pages of books
+col_page = "page"
+col_contents = "contents"
+
+# Database columns for book sales
+col_bought = "bought"
 
 # Item type names
 it_item = "item"
@@ -1600,6 +1666,7 @@ it_food = "food"
 it_weapon = "weapon"
 it_cosmetic = 'cosmetic'
 it_furniture = 'furniture'
+it_book = 'book'
 
 # Cosmetic item rarities
 rarity_plebeian = "Plebeian"
@@ -1856,8 +1923,16 @@ item_id_whitelineticket = "ticket"
 item_id_seaweedjoint = "seaweedjoint"
 item_id_megaslimewrappingpaper = "megaslimewrappingpaper"
 item_id_greeneyesslimedragonwrappingpaper = "greeneyesslimedragonwrappingpaper"
-item_id_pheobuswrappingpaper = "phoebuswrappingpaper"
+item_id_phoebuswrappingpaper = "phoebuswrappingpaper"
+item_id_slimeheartswrappingpaper = "slimeheartswrappingpaper"
+item_id_slimeskullswrappingpaper = "slimeskullswrappingpaper"
+item_id_shermanwrappingpaper = "shermanwrappingpaper"
+item_id_slimecorpwrappingpaper = "slimecorpwrappingpaper"
+item_id_pickaxewrappingpaper = "pickaxewrappingpaper"
+item_id_munchywrappingpaper = "munchywrappingpaper"
+item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
+item_id_royaltypoudrin = "royaltypoudrin"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -1893,6 +1968,14 @@ item_id_strauberryshortcakes = "strauberryshortcakes"
 item_id_chutzpahcherries = "chutzpahcherries"
 item_id_n3crunch = "n3crunch"
 item_id_slimesours = "slimesours"
+
+#slimeoid food
+item_id_fragilecandy = "fragilecandy" #+chutzpah -grit
+item_id_rigidcandy = "rigidcandy" #+grit -chutzpah
+item_id_recklesscandy = "recklesscandy" #+moxie -grit
+item_id_reservedcandy = "reservedcandy" #+grit -moxie
+item_id_bluntcandy = "bluntcandy" #+moxie -chutzpah
+item_id_insidiouscandy = "insidiouscandy" #+chutzpah -moxie
 
 #vegetable ids
 item_id_poketubers = "poketubers"
@@ -1974,7 +2057,7 @@ item_list = [
 		context = "poudrin",
 		str_name = "Slime Poudrin",
 		str_desc = "A dense, crystalized chunk of precious slime.",
-		acquisition = acquisition_mining
+		acquisition = acquisition_mining,
 	),
 	EwGeneralItem(
 		id_item = "whitedye",
@@ -2322,9 +2405,9 @@ item_list = [
 			"mswp"
 		],
 		str_name="Megaslime Wrapping Paper",
-		str_desc="",
-		vendors=[vendor_glocksburycomics],
-		price = 500,
+		str_desc="Wrapping paper with Megaslimes plastered all over it. Blaargh!",
+	#	vendors=[vendor_glocksburycomics],
+		price = 1000,
 	),
 	EwGeneralItem(
 		id_item=item_id_greeneyesslimedragonwrappingpaper,
@@ -2333,20 +2416,97 @@ item_list = [
 			"gesdwp"
 		],
 		str_name="Green Eyes Slime Dragon Wrapping Paper",
-		str_desc="",
-		vendors=[vendor_glocksburycomics],
-		price = 500,
+		str_desc="Wrapping paper with many images of the Green Eyes Slime Dragon printed on it. Powerful...",
+	#	vendors=[vendor_glocksburycomics],
+		price = 1000,
 	),
 	EwGeneralItem(
-		id_item = item_id_pheobuswrappingpaper,
+		id_item = item_id_phoebuswrappingpaper,
 		context = context_wrappingpaper,
 		alias = [
 			"pwp"
 		],
 		str_name = "Phoebus Wrapping Paper",
-		str_desc = "",
-		vendors = [vendor_glocksburycomics],
-		price = 500,
+		str_desc = "A set of wrapping paper with Slime Invictus on it. Yo, Slimernalia!",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeheartswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"shwp"
+		],
+		str_name = "Slime Hearts Wrapping Paper",
+		str_desc = "Wrapping paper decorated with slime hearts. Cute!!",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimeskullswrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"sswp"
+		],
+		str_name = "Slime Skulls Wrapping Paper",
+		str_desc = "A roll of wrapping paper with Slime Skulls stamped all over it. Spooky...",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_shermanwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"swp"
+		],
+		str_name = "Sherman Wrapping Paper",
+		str_desc = "Wrapping paper with Sherman, the SlimeCorp salaryman etched into it. Jesus Christ, how horrifying!",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_slimecorpwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"scwp"
+		],
+		str_name = "SlimeCorp Wrapping Paper",
+		str_desc = "A set of wrapping paper with that accursed logo printed all over it. What sort of corporate bootlicker would wrap a gift in this?",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_pickaxewrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"pawp"
+		],
+		str_name = "Pickaxe Wrapping Paper",
+		str_desc = "A roll of wrapping paper with a bunch of pickaxes depicted on it. Perfect for Juvies who love to toil away in the mines.",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_benwrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"bwp"
+		],
+		str_name = "Ben Wrapping Paper",
+		str_desc = "Wrapping paper with the Cop Killer printed on it. !dab !dab !dab",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
+	),
+	EwGeneralItem(
+		id_item = item_id_munchywrappingpaper,
+		context = context_wrappingpaper,
+		alias = [
+			"mwp"
+		],
+		str_name = "Munchy Wrapping Paper",
+		str_desc = "Wrapping paper with the Rowdy Fucker printed on it. !THRASH !THRASH !THRASH",
+	#	vendors = [vendor_glocksburycomics],
+		price = 1000,
 	),
 	EwGeneralItem(
 		id_item = item_id_gellphone,
@@ -2362,7 +2522,79 @@ item_list = [
 		str_desc = "A cell phone manufactured by SlimeCorp. Turning it on allows you to access various apps and games.",
 		vendors = [vendor_bazaar],
 		price = 1000000
-	)
+	),
+	EwSlimeoidFood(
+		id_item = item_id_fragilecandy,
+		alias = [
+			"fragile",
+		],
+		str_name = "Fragile Candy",
+		str_desc = "Increases Chutzpah and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_rigidcandy,
+		alias = [
+			"rigid",
+		],
+		str_name = "Rigid Candy",
+		str_desc = "Increases Grit and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_chutzpah,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_reservedcandy,
+		alias = [
+			"reserved",
+		],
+		str_name = "Reserved Candy",
+		str_desc = "Increases Grit and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_grit,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_recklesscandy,
+		alias = [
+			"reckless",
+		],
+		str_name = "Reckless Candy",
+		str_desc = "Increases Moxie and decreases Grit, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_grit,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_insidiouscandy,
+		alias = [
+			"insidious",
+		],
+		str_name = "Insidious Candy",
+		str_desc = "Increases Chutzpah and decreases Moxie, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_chutzpah,
+		decrease = slimeoid_stat_moxie,
+	),
+	EwSlimeoidFood(
+		id_item = item_id_bluntcandy,
+		alias = [
+			"blunt",
+		],
+		str_name = "Blunt Candy",
+		str_desc = "Increases Moxie and decreases Chutzpah, when fed to a slimeoid.",
+		vendors = [vendor_glocksburycomics, vendor_slimypersuits],
+		price = 100000,
+		increase = slimeoid_stat_moxie,
+		decrease = slimeoid_stat_chutzpah,
+	),
 ]
 item_list += ewdebug.debugitem_set
 
@@ -2384,6 +2616,7 @@ for c in item_list:
 	else:
 		dye_list.append(c)
 		dye_map[c.str_name] = c.id_item
+
 
 # A Weapon Effect Function for "revolver". Takes an EwEffectContainer as ctn.
 def wef_revolver(ctn = None):
@@ -3937,13 +4170,13 @@ weather_list = [
 		sunset = "Visibility only grows worse in the fog as the sun sets and the daylight fades.",
 		night = "Everything is obscured by the darkness of night and the thick city smog."
 	),
-	#EwWeather(
-	# 	name = weather_bicarbonaterain,
-	# 	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
-	# 	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
-	# 	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
-	# 	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
-	#),
+	EwWeather(
+	 	name = weather_bicarbonaterain,
+	 	sunrise = "Accursed bicarbonate soda and sugar rain blocks out the morning sun.",
+	 	day = "The bicarbonate rain won't let up. That blue weasel is going to pay for this.",
+	 	sunset = "The deadly rain keeps beating down mercilessly. You have a feeling it's going to be a long night.",
+	 	night = "Clouds of doom obscure the moon as they dispense liquid death from above."
+	),
 ]
 
 # stock ids
@@ -6017,6 +6250,19 @@ food_list = [
 		str_desc="A petite shortbread tart served with three random fruits on the top. The quality of these can vary to say the least. Most of the time, they’re so brittle that they don’t stick around long enough for you to really decide whether it had any merit to it, and other times they have such little flavor that they seem to lurk for minutes on end until you can finally remember to swallow them. But very occasionally, you find a tart that suits your fancy excellently and you’re able to cherish the taste.",
 		vendors=[vendor_greencakecafe]
 	),
+	EwFood(
+		id_food = "juicebox",
+		alias = [
+			"juice",
+			"appyjuice",
+		],
+		recover_hunger=10,
+		price=1,
+		str_name = "Juice Box",
+		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
+		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
+		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
+	)
 ]
 
 # A map of id_food to EwFood objects.
@@ -7408,7 +7654,7 @@ item_def_list = [
 			'hue': "",
 		}
 	),
-EwItemDef(
+	EwItemDef(
 		item_type = it_furniture,
 		str_name = "{furniture_name}",
 		str_desc = "{furniture_desc}",
@@ -7420,6 +7666,19 @@ EwItemDef(
 			'rarity': rarity_plebeian,
 			'vendor': None,
 
+		}
+	),
+	EwItemDef(
+		item_type = it_book,
+		str_name = "{title}",
+		str_desc = "{book_desc}",
+		soulbound = False,
+		item_props = {
+			"title": "Book",
+			"author": "Boy",
+			"date_published": 2000,
+			"id_book": 69,
+			"book_desc": "A book by AUTHOR, published on DAY."
 		}
 	),
 ]
@@ -8123,7 +8382,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale
+		mother_district = poi_id_gatlingsdale,
+		write_manuscript = True,
 	),
 	EwPoi( # battle-arena
 		id_poi = poi_id_arena,
@@ -8432,7 +8692,8 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough
+		mother_district = poi_id_northsleezeborough,
+		write_manuscript = True,
 	),
 	EwPoi(  # Assault Flats Beach Resort
 		id_poi = poi_id_beachresort,
@@ -9300,7 +9561,8 @@ poi_list = [
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
 		mother_district = poi_id_glocksbury,
-		is_subzone = True
+		is_subzone = True,
+		write_manuscript = True,
 	),
 	EwPoi( # Slimy Persuits
 		id_poi=poi_id_slimypersuits,
@@ -9338,7 +9600,8 @@ poi_list = [
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
 		mother_district=poi_id_littlechernobyl,
-		is_subzone=True
+		is_subzone=True,
+		write_manuscript=True,
 	),
 	EwPoi(
 		id_poi=poi_id_sodafountain,
@@ -10029,15 +10292,38 @@ poi_list = [
 			"no",
 		],
 		str_name="North Outskirts",
-		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts too.".format(str_generic_outskirts_description),
-		coord = (36, 2),
+		str_desc="{}  These outskirts lay just beyond the boundaries of Arsonbrook, Brawlden, and New New Yonkers. If you kept wandering, you could probably wind up in the Northwestern Outskirts or the Nuclear Beach too.".format(str_generic_outskirts_description),
+		coord = (37, 2),
 		coord_alias = [
+			(36, 2),
 			(35, 2),
 			(34, 2),
 			(33, 2)
 		],
 		channel="north-outskirts",
 		role="Northern Outskirts",
+		pvp=True,
+		is_capturable=False,
+		is_outskirts=True
+	),
+	EwPoi( # Outskirts - 6
+		id_poi=poi_id_nuclear_beach,
+		alias=[
+			"nuclearbeach",
+			"nuclearbeachoutskirts",
+			"nb",
+			"nbeach",
+			"afbo",
+			"afboutskirts",
+		],
+		str_name="Nuclear Beach",
+		str_desc="{}  A place only the fiercest secreatures call home, right next to Assault Flats Beach. Stay around too long, and you'll wind up in the jaws of god knows what lurks around here.".format(str_generic_outskirts_description),
+		coord = (47, 6),
+		coord_alias = [
+			(47, 7)
+		],
+		channel="nuclear-beach",
+		role="Nuclear Beach",
 		pvp=True,
 		is_capturable=False,
 		is_outskirts=True
@@ -10264,6 +10550,7 @@ transport_stops_ch = []
 piers = []
 outskirts = []
 tutorial_pois = []
+zine_mother_districts = []
 
 for poi in poi_list:
 	if poi.coord != None:
@@ -10299,6 +10586,9 @@ for poi in poi_list:
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
+
+	if poi.write_manuscript:
+		zine_mother_districts.append(id_to_poi.get(poi.mother_district))
 
 	chname_to_poi[poi.channel] = poi
 
@@ -11175,7 +11465,7 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
-		vendors = [vendor_bazaar],
+	#	vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
 	EwCosmeticItem(
@@ -11185,6 +11475,14 @@ cosmetic_items_list = [
 		rarity = rarity_promotional,
 		vendors = [vendor_bazaar],
 		price = 100000000,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "wrappingpaperhat",
+		str_name = "Wrapping Paper Hat",
+		str_desc = "A hat made out of wrapping paper, fashioned in a way rather similar to a newspaper hat. How festive!",
+		rarity = rarity_plebeian,
+		vendors = [vendor_glocksburycomics],
+		price = 1000,
 	),
 ]
 
@@ -11461,6 +11759,20 @@ smelting_recipe_list = [
 		},
 		products = ['seaweedjoint']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "slimepoudrin",
+		str_name = "a slime poudrin",
+		alias = [
+			"poudrin",
+			"poud",
+			"pou",
+			"poodrin",
+		],
+		ingredients = {
+			'royaltypoudrin': 2
+		},
+		products = ['slimepoudrin']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -11480,6 +11792,33 @@ for recipe in smelting_recipe_list:
 
 
 # Slimeoid attributes.
+slimeoid_strat_attack = "attack"
+slimeoid_strat_evade = "evade"
+slimeoid_strat_block = "block"
+
+slimeoid_weapon_blades = "blades"
+slimeoid_weapon_teeth = "teeth"
+slimeoid_weapon_grip = "grip"
+slimeoid_weapon_bludgeon = "bludgeon"
+slimeoid_weapon_spikes = "spikes"
+slimeoid_weapon_electricity = "electricity"
+slimeoid_weapon_slam = "slam"
+
+slimeoid_armor_scales = "scales"
+slimeoid_armor_boneplates = "boneplates"
+slimeoid_armor_quantumfield = "quantumfield"
+slimeoid_armor_formless = "formless"
+slimeoid_armor_regeneration = "regeneration"
+slimeoid_armor_stench = "stench"
+slimeoid_armor_oil = "oil"
+
+slimeoid_special_spit = "spit"
+slimeoid_special_laser = "laser"
+slimeoid_special_spines = "spines"
+slimeoid_special_throw = "throw"
+slimeoid_special_TK = "TK"
+slimeoid_special_fire = "fire"
+slimeoid_special_webs = "webs"
 
 # All body attributes in the game.
 body_list = [
@@ -11590,7 +11929,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'A'. Through the observation port, you see a dark cluster within the proto-Slimeoid begin to form into what looks like a large eye.",
 		str_head = "Its face is a single huge eye.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} swallows the {food_name} whole.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name}'s huge eye follows the ball's arc, and it makes a leap to catch it!!\n\n...only to get socked right in the eye, sending it to the floor in pain. Depth perception... it's truly a gift."
 	),
 	EwHead( # head 2
@@ -11601,7 +11940,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'B'. Through the observation port, you see an opening form in what you think is the proto-Slimeoid's face, which begins to sprout large pointed teeth.",
 		str_head = "Its face is a huge toothy mouth.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} crunches the {food_name} to paste with its huge teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} slavers and drools as it awaits the throw, and when it sees the ball start to fly, it lunges to grab it out of the air in its huge toothy maw, slicing it to shreds with its teeth in seconds."
 	),
 	EwHead( # head 3
@@ -11612,8 +11951,8 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'C'. Through the observation port, you see what you thought was the proto-Slimeoid's face suddenly sucked down into its body, as though by a black hole.",
 		str_head = "Its face is an empty black void.",
-		str_feed = "",
-		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it dissapears forever."
+		str_feed = "The {food_name} disappears into the unknowable depths of {slimeoid_name}'s face hole.",
+		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} positions itself to catch the ball in it's... face? The ball falls into the empty void of {slimeoid_name}'s face, then just keeps falling, falling, falling, down into the depths, falling so far it disappears forever."
 	),
 	EwHead( # head 4
 		id_head = "beast",
@@ -11624,7 +11963,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'D'. Through the observation port, you see the beginnings of an animal-like face forming on your proto-Slimeoid, with what might be eyes, a nose, teeth... maybe.",
 		str_head = "Its face is that of a vicious beast.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} gobbles up the {food_name} greedily.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} focuses its eyes and bares its teeth, then makes a flying leap, snapping the ball clean out of the air in its jaws! It comes back to you and drops the ball at your feet. Good boy!"
 	),
 	EwHead( # head 5
@@ -11636,7 +11975,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'E'. Through the observation port, you see the proto-Slimeoid suddenly bulge with a series of hard orbs which congeal into what appear to be large compound eyes.",
 		str_head = "It has bulging insectoid eyes and mandibles.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} cuts the {food_name} into pieces with its mandibles.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} stands motionless, presumably watching the ball with its large compound eyes, before darting toward it as it sails through the air, snapping its mandibles around the ball and slicing it cleanly in two."
 	),
 	EwHead( # head 6
@@ -11647,7 +11986,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'F'. Through the observation port, you see the proto-Slimeoid's frontal features twist into a ghastly death's-head.",
 		str_head = "Its face resembles a skull.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} spills half the {food_name} on the floor trying to chew it with its exposed teeth.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves as quickly as it can to make the catch, making it just before the ball lands! With a thunk, the ball lodges itself in {slimeoid_name}'s open eye socket. {slimeoid_name} yanks it out and tosses the ball back to you. Euughh."
 	),
 	EwHead( # head 7
@@ -11657,7 +11996,7 @@ head_list = [
 		],
 		str_create = "You press a button on the head console labelled 'G'. Through the observation port, you see the proto-Slimeoid's front end melt into an indistinct mass.",
 		str_head = "It has no discernable head.",
-		str_feed = "",
+		str_feed = "{slimeoid_name} just sort of... absorbs the {food_name} into its body.",
 		str_fetch = "You toss a ball for {slimeoid_name} to fetch. {slimeoid_name} moves under the ball as it flies through the air, but makes no attempt to catch it in its mouth on account of having none. The ball lands next to {slimeoid_name}, who merely looks on. Actually, you can't tell where it's looking."
 	)
 ]
@@ -11809,7 +12148,7 @@ for mobility in mobility_list:
 # All offense attributes in the game.
 offense_list = [
 	EwOffense( # offense 1
-		id_offense = "blades",
+		id_offense = slimeoid_weapon_blades,
 		alias = [
 			"edged",
 			"edges",
@@ -11826,7 +12165,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} is sharpening its retractible blades on a stone nearby."
 	),
 	EwOffense( # offense 2
-		id_offense = "teeth",
+		id_offense = slimeoid_weapon_teeth,
 		alias = [
 			"bite",
 			"biting",
@@ -11842,7 +12181,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} is idly picking its sharp teeth."
 	),
 	EwOffense( # offense 3
-		id_offense = "grip",
+		id_offense = slimeoid_weapon_grip,
 		alias = [
 			"squeeze",
 			"grab",
@@ -11861,7 +12200,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} picks up a rock off the ground and squeezes it like a stress ball."
 	),
 	EwOffense( # offense 4
-		id_offense = "bludgeon",
+		id_offense = slimeoid_weapon_bludgeon,
 		alias = [
 			"strike",
 			"striking",
@@ -11881,7 +12220,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} spots an insect on the ground nearby and smashes it."
 	),
 	EwOffense( # offense 5
-		id_offense = "spikes",
+		id_offense = slimeoid_weapon_spikes,
 		alias = [
 			"puncture",
 			"spear",
@@ -11895,7 +12234,7 @@ offense_list = [
 		str_observe = "{slimeoid_name} carefully adjusts its position so as not to prick itself with its own spikes."
 	),
 	EwOffense( # offense 6
-		id_offense = "electricity",
+		id_offense = slimeoid_weapon_electricity,
 		alias = [
 			"strike",
 			"f"
@@ -11908,7 +12247,7 @@ offense_list = [
 		str_observe = "A fly flies a little too near {slimeoid_name} and is zapped with a tiny bolt of electricity, killing it instantly."
 	),
 	EwOffense( # offense 7
-		id_offense = "slam",
+		id_offense = slimeoid_weapon_slam,
 		alias = [
 			"bodyslam",
 			"g"
@@ -11936,10 +12275,13 @@ for offense in offense_list:
 	for alias in offense.alias:
 		offense_map[alias] = offense
 
+
+
+
 # All defense attributes in the game.
 defense_list = [
 	EwDefense( # defense 1
-		id_defense = "scales",
+		id_defense = slimeoid_armor_scales,
 		alias = [
 			"scale",
 			"scaled",
@@ -11949,10 +12291,14 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You carefully run your hand over {slimeoid_name}'s hide, making sure to go with the grain so as not to slice your fingers open on its sharp scales.",
 		str_create = "You press a button on the armor console labelled 'A'. Through the observation port, you see the proto-Slimeoid's skin begin to glint as it sprouts roughly-edged scales.",
-		str_armor = "It is covered in scales."
+		str_armor = "It is covered in scales.",
+		id_resistance = slimeoid_weapon_electricity,
+		id_weakness = slimeoid_special_TK,
+		str_resistance = " {}'s scales conduct the electricity away from its vitals!",
+		str_weakness = " {}'s scales refract and amplify the disrupting brainwaves inside its skull!",
 	),
 	EwDefense( # defense 2
-		id_defense = "boneplates",
+		id_defense = slimeoid_armor_boneplates,
 		alias = [
 			"bone",
 			"bony",
@@ -11966,10 +12312,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat one of the hard, bony plates covering {slimeoid_name}'s skin.",
 		str_create = "You press a button on the armor console labelled 'B'. Through the observation port, you see hard bony plates begin to congeal on the proto-Slimeoid's surface.",
-		str_armor = "It is covered in bony plates."
+		str_armor = "It is covered in bony plates.",
+		id_resistance = slimeoid_weapon_blades,
+		id_weakness = slimeoid_special_spines,
+		str_resistance = " {}'s bone plates block the worst of the damage!",
+		str_weakness = " {}'s bone plates only drive the quills deeper into its body as it moves!",
+
 	),
 	EwDefense( # defense 3
-		id_defense = "quantumfield",
+		id_defense = slimeoid_armor_quantumfield,
 		alias = [
 			"quantum",
 			"field",
@@ -11979,10 +12330,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, and your hand tingles as it passes through the quantum field that surrounds its body.",
 		str_create = "You press a button on the armor console labelled 'C'. Through the observation port, start to notice the proto-Slimeoid begin to flicker, and you hear a strange humming sound.",
-		str_armor = "It is enveloped in a field of quantum uncertainty."
+		str_armor = "It is enveloped in a field of quantum uncertainty.",
+		id_resistance = slimeoid_weapon_slam,
+		id_weakness = slimeoid_special_laser,
+		str_resistance = " {}'s quantum superposition makes it difficult to hit head-on!",
+		str_weakness = " {}'s quantum particles are excited by the high-frequency radiation, destabilizing its structure!",
+
 	),
 	EwDefense( # defense 4
-		id_defense = "formless",
+		id_defense = slimeoid_armor_formless,
 		alias = [
 			"amorphous",
 			"shapeless",
@@ -11992,10 +12348,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, its fluid, shapeless body squishing and deforming in response to even slight pressure.",
 		str_create = "You press a button on the armor console labelled 'D'. Through the observation port, you see the proto-Slimeoid suddenly begin to twist itself, stretching and contracting as its shape rapidly shifts.",
-		str_armor = "It is malleable and can absorb blows with ease."
+		str_armor = "It is malleable and can absorb blows with ease.",
+		id_resistance = slimeoid_weapon_bludgeon,
+		id_weakness = slimeoid_special_webs,
+		str_resistance = " {}'s squishy body easily absorbs the blows!",
+		str_weakness = " {}'s squishy body easily adheres to and becomes entangled by the webs!",
+
 	),
 	EwDefense( # defense 5
-		id_defense = "regeneration",
+		id_defense = slimeoid_armor_regeneration,
 		alias = [
 			"healing",
 			"regen",
@@ -12004,10 +12365,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}. Its skin is hot, and you can feel it pulsing rhythmically.",
 		str_create = "You press a button on the armor console labelled 'E'. Through the observation port, you see the proto-Slimeoid begin to pulse, almost like a beating heart.",
-		str_armor = "It can regenerate damage to its body rapidly."
+		str_armor = "It can regenerate damage to its body rapidly.",
+		id_resistance = slimeoid_weapon_spikes,
+		id_weakness = slimeoid_special_spit,
+		str_resistance = " {} quickly begins regenerating the small puncture wounds inflicted by the spikes!",
+		str_weakness = " {}'s regeneration is impeded by the corrosive chemicals!",
+
 	),
 	EwDefense( # defense 6
-		id_defense = "stench",
+		id_defense = slimeoid_armor_stench,
 		alias = [
 			"stink",
 			"smell",
@@ -12016,10 +12382,15 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}, taking care not to inhale through your nose, as one whiff of its odor has been known to make people lose their lunch.",
 		str_create = "You press a button on the armor console labelled 'F'. Through the observation port, you see the proto-Slimeoid give off bubbles of foul-colored gas.",
-		str_armor = "It exudes a horrible stench."
+		str_armor = "It exudes a horrible stench.",
+		id_resistance = slimeoid_weapon_teeth,
+		id_weakness = slimeoid_special_throw,
+		str_resistance = " {}'s noxious fumes make its opponent hesitant to put its mouth anywhere near it!",
+		str_weakness = " {}'s foul odor gives away its position, making it easy to target with thrown projectiles!",
+
 	),
 	EwDefense( # defense 7
-		id_defense = "oil",
+		id_defense = slimeoid_armor_oil,
 		alias = [
 			"slick",
 			"g"
@@ -12027,7 +12398,12 @@ defense_list = [
 		str_defense = "",
 		str_pet = "You pat {slimeoid_name}'s slick wet skin, and your hand comes away coated in a viscous, slippery oil.",
 		str_create = "You press a button on the armor console labelled 'G'. Through the observation port, you see the surface of the proto-Slimeoid become shiny with some kind of oily fluid.",
-		str_armor = "It is covered in a coating of slippery oil."
+		str_armor = "It is covered in a coating of slippery oil.",
+		id_resistance = slimeoid_weapon_grip,
+		id_weakness = slimeoid_special_fire,
+		str_resistance = " {}'s slippery coating makes it extremely difficult to grab on to!",
+		str_weakness = " {}'s oily coating is flammable, igniting as it contacts the flame!",
+
 	)
 ]
 
@@ -12048,7 +12424,7 @@ for defense in defense_list:
 # All special attributes in the game.
 special_list = [
 	EwSpecial( # special 1
-		id_special = "spit",
+		id_special = slimeoid_special_spit,
 		alias = [
 			"spitting",
 			"spray",
@@ -12071,7 +12447,7 @@ special_list = [
 		str_observe = "A bit of acidic fluid drips from {slimeoid_name} onto the ground, where it smokes and sizzles."
 	),
 	EwSpecial( # special 2
-		id_special = "laser",
+		id_special = slimeoid_special_laser,
 		alias = [
 			"beam",
 			"energy",
@@ -12086,7 +12462,7 @@ special_list = [
 		str_observe = "{slimeoid_name} suddenly glows with radioactive energy. Best not to look directly at it until it settles down..."
 	),
 	EwSpecial( # special 3
-		id_special = "spines",
+		id_special = slimeoid_special_spines,
 		alias = [
 			"spikes",
 			"spiky",
@@ -12102,7 +12478,7 @@ special_list = [
 		str_observe = "{slimeoid_name} shudders and ejects a few old quills onto the ground. You can see new ones already growing in to replace them."
 	),
 	EwSpecial( # special 4
-		id_special = "throw",
+		id_special = slimeoid_special_throw,
 		alias = [
 			"throwing",
 			"hurling",
@@ -12117,7 +12493,7 @@ special_list = [
 		str_observe = "{slimeoid_name} is idly picking up stones and seeing how far it can toss them."
 	),
 	EwSpecial( # special 5
-		id_special = "TK",
+		id_special = slimeoid_special_TK,
 		alias = [
 			"telekinesis",
 			"psychic",
@@ -12131,7 +12507,7 @@ special_list = [
 		str_observe = "You momentarily black out. When you come to, your nose is bleeding. {slimeoid_name} tries to look innocent."
 	),
 	EwSpecial( # special 6
-		id_special = "fire",
+		id_special = slimeoid_special_fire,
 		alias = [
 			"chemical",
 			"breath",
@@ -12146,7 +12522,7 @@ special_list = [
 		str_observe = "A bit of fluid drips from {slimeoid_name} onto the floor and ignites, but you manage to smother the small flame quickly before it spreads."
 	),
 	EwSpecial( # special 7
-		id_special = "webs",
+		id_special = slimeoid_special_webs,
 		alias = [
 			"webbing",
 			"web",
@@ -12175,6 +12551,294 @@ for special in special_list:
 	for alias in special.alias:
 		special_map[alias] = special
 
+def get_strat_a(combat_data, in_range, first_turn, active):
+	base_attack = 30
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_block *= 2
+		else:
+			weight_block *= 3
+
+	else:
+		if active:
+			weight_evade *= 2
+		else:
+			weight_evade *= 5
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+	
+def get_strat_b(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_block *= 2
+		else:
+			weight_block *= 2
+			weight_evade *= 3
+
+	else:
+		if active:
+			weight_attack *= 3
+			weight_evade *= 3
+		else:
+			weight_evade *= 4
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_c(combat_data, in_range, first_turn, active):
+	base_attack = 30
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_block *= 2
+			weight_evade *= 2
+
+	else:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_evade *= 2
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.8))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_d(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 5
+	base_block = 15
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_attack /= 2
+			weight_block *= 2
+
+	else:
+		if active:
+			weight_attack *= 3
+		else:
+			weight_attack /= 2
+			weight_block *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_e(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 10
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 2
+			weight_evade *= 2
+		else:
+			weight_evade *= 4
+
+	else:
+		if active:
+			weight_attack *= 4
+			weight_block *= 2
+		else:
+			weight_block *= 3
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.65))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_f(combat_data, in_range, first_turn, active):
+	base_attack = 20
+	base_evade = 20
+	base_block = 10
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 3
+			weight_evade *= 2
+		else:
+			weight_evade *= 3
+			weight_block *= 2
+
+	else:
+		if active:
+			weight_attack *= 4
+			weight_block *= 2
+		else:
+			weight_block *= 3
+			weight_evade *= 2
+			
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.35))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
+
+def get_strat_g(combat_data, in_range, first_turn, active):
+	base_attack = 10
+	base_evade = 15
+	base_block = 5
+
+	weight_attack = base_attack
+	weight_evade = base_evade
+	weight_block = base_block
+
+	if in_range:
+		if active:
+			weight_attack *= 4
+		else:
+			weight_evade *= 2
+
+	else:
+		if active:
+			weight_attack *= 4
+		else:
+			weight_evade *= 2
+
+	strat = random.randrange(weight_attack + weight_evade + weight_block)
+	if strat < weight_attack:
+		strat_used = slimeoid_strat_attack
+	elif strat < weight_attack + weight_evade:
+		strat_used = slimeoid_strat_evade
+	else:
+		strat_used = slimeoid_strat_block
+
+	if first_turn:
+		sap_spend = int(random.triangular(0, combat_data.sap, int(combat_data.sap * 0.2))) + 1
+
+	else:
+		sap_spend = combat_data.sap
+
+	sap_spend = min(sap_spend, combat_data.sap)
+
+	return strat_used, sap_spend
 # All brain attributes in the game.
 brain_list = [
 	EwBrain( # brain 1
@@ -12188,6 +12852,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is snarling. You're not sure if it's angry at you, or at the world in general.",
 		str_pet = "{slimeoid_name} hisses at you.",
 		str_walk = "You wrestle {slimeoid_name} down and force a leash onto it, as it angrily snarls and hisses at you in protest.",
+		str_feed = "{slimeoid_name} almost bites your hand off as you offer the {food_name} to it! It growls at you before eating, as if to secure its prey.",
 		str_kill = "{slimeoid_name} howls with savage delight at the bloodshed!!",
 		str_death = "{slimeoid_name} howls in fury at its master's death! It tears away in a blind rage!",
 		str_victory = "{slimeoid_name} roars in triumph!!",
@@ -12197,7 +12862,9 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name}  hisses with frustrated rage! ",
 		str_revive = "{slimeoid_name} howls at your return, annoyed to have been kept waiting.",
 		str_spawn = "{slimeoid_name} shakes itself off to get rid of some excess gestation fluid, then starts to hiss at you. Seems like a real firecracker, this one.",
-		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} hisses and spits with fury as you hold it over the SlimeCorp Dissolution Vats. Come on, get in there...\n{slimeoid_name} claws at you, clutching at the edge of the vat, screeching with rage even as you hold its head under the surface and wait for the chemical soup to do its work. At last, it stops fighting.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_a,
+
 	),
 	EwBrain( # brain 2
 		id_brain = "b",
@@ -12210,6 +12877,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} notices you looking at it and seems delighted!",
 		str_pet = "{slimeoid_name} purrs happily.",
 		str_walk = "{slimeoid_name} is so excited for its walk, it can barely hold still enough to let you put the leash on it!",
+		str_feed = "{slimeoid_name} starts running circles around you and drooling uncontrollably in anticipation as soon as you reach for the {food_name}.",
 		str_kill = "{slimeoid_name} gives a bestial woop of excitement for your victory!",
 		str_death = "{slimeoid_name} gives a wail of grief at its master's death, streaking away from the scene.",
 		str_victory = "{slimeoid_name} woops with delight at its victory!",
@@ -12219,7 +12887,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} seems a little less thrilled now... ",
 		str_revive = "{slimeoid_name} is waiting patiently downtown when you return from your time as a corpse. It knew you'd be back!",
 		str_spawn = "{slimeoid_name} gets up off the ground slowly at first, but then it notices you and leaps into your arms. It sure seems glad to see you!",
-		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You order {slimeoid_name} into the Dissolution Vats. It's initially confused, but realization of what you're asking slowly crawks across its features.\nIt doesn't want to go, but after enough stern commanding, it finally pitches itself into the toxic sludge, seemingly too heartbroken to fear death.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_b,
 	),
 	EwBrain( # brain 3
 		id_brain = "c",
@@ -12232,6 +12901,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems to be resting, possibly deep in thought.",
 		str_pet = "{slimeoid_name} doesn't react.",
 		str_walk = "{slimeoid_name} holds still as you place the leash on it. It regards the leash, seemingly pontificating.",
+		str_feed = "{slimeoid_name} shows neither happiness nor reluctance as you offer the {food_name}. It accepts the treat as though it were a mere formality.",
 		str_kill = "{slimeoid_name} regards the corpse of your former adversary with an unknowable expression.",
 		str_death = "{slimeoid_name} stares at the killer, memorizing their face before fleeing the scene.",
 		str_victory = "{slimeoid_name} silently turns away from its defeated opponent.",
@@ -12241,7 +12911,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is losing its composure just a little! ",
 		str_revive = "{slimeoid_name} is downtown when you return from the sewers. You find it staring silently up at ENDLESS WAR.",
 		str_spawn = "{slimeoid_name} regards you silently from the floor. You can't tell if it likes you or not, but it starts to follow you regardless.",
-		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You pick up {slimeoid_name} and hurl it into the SlimeCorp Dissolution Vats before it starts to suspect anything. It slowly sinks into the chemical soup, kind of like Arnold at the end of Terminator 2, only instead of giving you a thumbs-up, it stares at you with an unreadable expression. Betrayal? Confusion? Hatred? Yeah, probably.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_c,
 	),
 	EwBrain( # brain 4
 		id_brain = "d",
@@ -12254,6 +12925,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} stares off into the distance. Who knows if it's actually looking at anything in particular.",
 		str_pet = "{slimeoid_name} is startled out of a stupor by your touch.",
 		str_walk = "{slimeoid_name} hardly seems to notice you fastening it with a leash.",
+		str_feed = "You have to literally shove the {food_name} into {slimeoid_name}'s face to get its attention. It takes a moment to recover its orientation before accepting the treat.",
 		str_kill = "{slimeoid_name} wasn't paying attention and missed the action.",
 		str_death = "{slimeoid_name} is startled to realize its master has died. It blinks in confusion before fleeing.",
 		str_victory = "{slimeoid_name} keeps attacking for a moment before realizing it's already won.",
@@ -12263,7 +12935,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} tries to buy itself some time to think! ",
 		str_revive = "{slimeoid_name} is exactly where you left it when you died.",
 		str_spawn = "{slimeoid_name} flops over on the floor and stares up at you. Its gaze wanders around the room for a while before it finally picks itself up to follow you.",
-		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more."
+		str_dissolve = "You lead {slimeoid_name} up to the edge of the Dissolution Vats and give a quick 'Hey, look, a distraction!'. {slimeoid_name} is immediately distracted and you shove it over the edge. Landing in the vat with a sickening *gloop* sound, it sinks quickly under the fluid surface, flailing madly in confusion and desperation.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_d,
 	),
 	EwBrain( # brain 5
 		id_brain = "e",
@@ -12276,6 +12949,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is glancing around furtively, seemingly scanning for threats.",
 		str_pet = "{slimeoid_name} flinches nervously at your touch.",
 		str_walk = "{slimeoid_name} shivers in place as you're fastening the leash, then starts to pull and tug at it, seemingly perturbed.",
+		str_feed = "{slimeoid_name} backs up anxiously as you reach out with the {food_name} in your hand. You sigh and take a bite of the treat yourself to convince {slimeoid_name} that its not poisoned. It reluctantly accepts the {food_name} and starts nibbling at it.",
 		str_kill = "{slimeoid_name} peers out from behind its master, hoping the violence is over.",
 		str_death = "{slimeoid_name} is overcome with terror, skittering away from the killer in a mad panic!",
 		str_victory = "{slimeoid_name} is deeply relieved that the battle is over.",
@@ -12285,7 +12959,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is in a full-blown panic! ",
 		str_revive = "{slimeoid_name} peeks out from behind some trash cans before rejoining you. It seems relieved to have you back.",
 		str_spawn = "{slimeoid_name}'s eyes dart frantically around the room. Seeing you, it darts behind you, as if for cover from an unknown threat.",
-		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} is looking around the lab nervously, obviously unnerved by the Slimeoid technology. Its preoccupation makes it all too easy to lead it to the Dissolution Vats and kick its legs out from under it, knocking it in. As it falls and hits the solvent chemicals, it wails and screeches in shock and terror, but the noise eventually quiets as it dissolves into a soft lump, then disintegrates altogether.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_e,
 	),
 	EwBrain( # brain 6
 		id_brain = "f",
@@ -12298,6 +12973,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} is moving around, apparently searching for... something.",
 		str_pet = "{slimeoid_name} seems nonplussed, but doesn't object.",
 		str_walk = "{slimeoid_name} exasperatedly lets you fit it with a leash for a walk.",
+		str_feed = "{slimeoid_name} only seems to halfway pay attention as you offer the {food_name}. It pockets the treat for later and eats it when it thinks you aren't looking.",
 		str_kill = "{slimeoid_name} rifles through your victim's pockets for food.",
 		str_death = "{slimeoid_name} rifles through its dead master's pockets for whatever it can find before slinking away.",
 		str_victory = "{slimeoid_name} shakes itself off after the battle.",
@@ -12307,7 +12983,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} thinks it'd better try something else, and fast! ",
 		str_revive = "{slimeoid_name} starts following you around again not long after you have returned from the dead.",
 		str_spawn = "{slimeoid_name} picks itself up off the floor and regards you coolly. It seems as if it's gauging your usefulness.",
-		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} eyes you suspiciously as you approach the Dissolution Vats. It's on to you. Before it has a chance to bolt, you grab it, hoist it up over your head, and hurl it into the chemical soup. {slimeoid_name} screeches in protest, sputtering and hissing as it thrashes around in the vat, but the chemicals work quickly and it soon dissolves into nothing.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_f,
 	),
 	EwBrain( # brain 7
 		id_brain = "g",
@@ -12320,6 +12997,7 @@ brain_list = [
 		str_observe = "{slimeoid_name} seems unsure of whether it wants to wander around or just stay put.",
 		str_pet = "{slimeoid_name} seems confused about how to react.",
 		str_walk = "{slimeoid_name} lets you put its leash on it, but immediately starts to trip over it and get tangled in it.",
+		str_feed = "{slimeoid_name} stares at the {food_name} like it's unfamiliar with the concept of food. You make a chewing motion with your mouth to demonstrate. It still seems confused. You lose your patience and force-feed the treat to your slimeoid.",
 		str_kill = "{slimeoid_name} seems unsure of whether to celebrate the victory or to mourn the decline of your civilization into rampant youth violence.",
 		str_death = "{slimeoid_name} starts to approach its master's body, then changes its mind and starts to run away. It trips over itself and falls on its way out.",
 		str_victory = "{slimeoid_name} looks around, apparently shocked that it somehow won.",
@@ -12329,7 +13007,8 @@ brain_list = [
 		str_movecry_weak = "{slimeoid_name} is limping around aimlessly! ",
 		str_revive = "{slimeoid_name} wanders by, seemingly by accident, but thinks it probably ought to start following you again.",
 		str_spawn = "{slimeoid_name} starts to pick itself up off the floor, then changes its mind and lies back down. Then it gets up again. Lies down again. Up. Down. Up. Ok, this time it stays up.",
-		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more."
+		str_dissolve = "{slimeoid_name} is perplexed by the laboratory machinery. Taking advantage of its confusion, you point it towards the Dissolution Vats, and it gormlessly meanders up the ramp and over the edge. You hear a gloopy SPLOOSH sound, then nothing. You approach the vats and peer over the edge, but see no trace of your former companion.\n\n{slimeoid_name} is no more.",
+		get_strat = get_strat_g,
 	)
 ]
 
@@ -13050,7 +13729,6 @@ for item in item_list:
 	for alias in item.alias:
 		item_map[alias] = item
 
-
 # Populate food map, including all aliases.
 for food in food_list:
 	food_map[food.id_food] = food
@@ -13117,7 +13795,7 @@ for furniture in furniture_list:
 
 
 	for vendor in furniture.vendors:
-		vendor_list.append(furniture.id_furniture)
+		vendor_list = vendor_inv.get(vendor)
 		if vendor_list == None:
 			vendor_list = []
 			vendor_inv[vendor] = vendor_list
@@ -13167,7 +13845,7 @@ for m in cosmetic_items_list:
 # List of items you can obtain via appraisal.
 appraise_results = []
 
-# Gather all items that can be the result of milling.
+# Gather all items that can be the result of bartering.
 for a in item_list:
 	if a.acquisition == acquisition_bartering:
 		appraise_results.append(a)
@@ -13192,6 +13870,9 @@ smelt_results = []
 # Gather all items that can be the result of smelting.
 for s in item_list:
 	if s.acquisition == acquisition_smelting:
+		smelt_results.append(s)
+	# So poudrins can be smelted with 2 royalty poudrins (this is obviously half-assed but i can't think of a better solution)
+	elif s.id_item == item_id_slimepoudrin:
 		smelt_results.append(s)
 	else:
 		pass
@@ -13448,7 +14129,7 @@ help_responses = {
 	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have two slime poudrins, you can use **'!smelt cosmetic'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **Princep** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic**. To check which cosmetics you have adorned, you can use !data.",
 	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.",
-	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
+	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
@@ -13458,6 +14139,8 @@ help_responses = {
 	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
 	# Additional gameplay mechanics, part 4
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
+	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
+	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
 
 	# Combat
 	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is (your slimelevel)^4 / 60 and the default damage it does to your opponent is (your slimelevel)^4 / 6. Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
@@ -13492,11 +14175,12 @@ help_responses_ordered_keys = [
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
+	"profile", "manuscripts", "zines",
 	"combat", "sap", weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
 	weapon_id_rifle, weapon_id_smg, weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana,
 	weapon_id_broadsword, weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella,
 	weapon_id_knives, weapon_id_molotov, weapon_id_grenades, weapon_id_garrote, weapon_id_minigun,
-	"profile",
+
 ]
 
 mutation_descriptions = {
@@ -13621,6 +14305,9 @@ uncommon_enemies = [enemy_type_slimeadactyl, enemy_type_desertraider, enemy_type
 rare_enemies = [enemy_type_microslime, enemy_type_slimeofgreed]
 raid_bosses = [enemy_type_megaslime, enemy_type_slimeasaurusrex, enemy_type_greeneyesslimedragon, enemy_type_unnervingfightingoperator]
 
+# List of enemies that spawn in the Nuclear Beach
+pre_historic_enemies = [enemy_type_slimeasaurusrex, enemy_type_dinoslime, enemy_type_slimeadactyl, enemy_type_mammoslime]
+
 # List of raid bosses sorted by their spawn rarity.
 raid_boss_tiers = {
 	"Micro": [enemy_type_megaslime],
@@ -13714,7 +14401,8 @@ outskirts_districts = [
 	poi_id_southwest_outskirts,
 	poi_id_west_outskirts,
 	poi_id_northwest_outskirts,
-	poi_id_north_outskirts
+	poi_id_north_outskirts,
+	poi_id_nuclear_beach
 ]
 
 # Letters that an enemy can identify themselves with
@@ -14086,6 +14774,74 @@ pray_responses_list = [
 	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
 ]
+
+
+dance_responses = [
+	"{} busts a move. Wow, look at 'em go!",
+	"{} gets down and boogies! Groovy!",
+	"{} does a headstand and starts breakdancing!",
+	"{} starts flossing fast and hard!",
+	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+]
+
+# list of genres and aliases
+book_genres = [
+	"narrative", #0
+	"historical", #1
+	"comic", #2
+	"porn", #3
+	"instructional", #4
+	"lore", #5
+	"reference", #6
+	"journal", #7
+	"newspaper", #8
+	"experimental" #9
+	]
+
+# rating flavor text
+rating_flavor = [
+	"",
+	"Seething with hatred",
+	"Teeming with disappointment",
+	"pullulating with mild satisfaction",
+	"Brimming with respect",
+	"Glowing with admiration",
+	]
+
+zine_cost = 10000
+minimum_pages = 5
+maximum_pages = 20
+
+# zine related commands that can be used in DMs
+zine_commands = [
+	cmd_beginmanuscript,
+	cmd_beginmanuscript_alt_1,
+	cmd_beginmanuscript_alt_2,
+	cmd_setpenname,
+	cmd_setpenname_alt_1,
+	cmd_settitle,
+	cmd_settitle_alt_1,
+	cmd_setgenre,
+	cmd_editpage,
+	cmd_viewpage,
+	cmd_checkmanuscript,
+	cmd_publishmanuscript,
+	cmd_readbook,
+	cmd_nextpage,
+	cmd_nextpage_alt_1,
+	cmd_previouspage,
+	cmd_previouspage_alt_1,
+	cmd_previouspage_alt_2,
+	cmd_rate,
+	cmd_rate_alt_1,
+	cmd_rate_alt_2,
+	cmd_accept,
+	cmd_refuse,
+	cmd_setpages,
+	cmd_setpages_alt_1,
+	cmd_setpages_alt_2,
+	]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

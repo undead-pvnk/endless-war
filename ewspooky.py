@@ -192,12 +192,22 @@ async def haunt(cmd):
 	await resp_cont.post()
 	#await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def negaslime(cmd):
+async def negapool(cmd):
 	# Add persisted negative slime.
 	market_data = EwMarket(id_server = cmd.message.server.id)
 	negaslime = market_data.negaslime
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(negaslime)))
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have a total of {:,} negative slime at their disposal for summoning.".format(negaslime)))
+
+async def negaslime(cmd):
+	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes < 0 AND id_server = '{}'".format(cmd.message.server.id))
+	total_negaslimes = total[0][0]
+	
+	if total_negaslimes:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The dead have amassed {:,} negative slime.".format(total_negaslimes)))
+	else:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "There is no negative slime in this world."))
+
 
 async def summon_negaslimeoid(cmd):
 	response = ""

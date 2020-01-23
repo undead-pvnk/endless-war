@@ -923,9 +923,9 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 
 	while enemies_count >= ewcfg.max_enemies and try_count < 5:
 
-		# Sand bags only spawn in the dojo
+		# Sand bags only spawn in the dojo (aka South Sleezeborough)
 		if enemytype == ewcfg.enemy_type_sandbag:
-			potential_chosen_poi = 'thedojo'
+			potential_chosen_poi = ewcfg.poi_id_southsleezeborough
 		else:
 			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
 			
@@ -947,6 +947,13 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 	# If it couldn't find a district in 5 tries or less, back out of spawning that enemy.
 	if chosen_poi == "":
 		return resp_cont
+	
+	# If an enemy spawns in the Nuclear Beach, it should be remade as a 'pre-historic' enemy.
+	if potential_chosen_poi == ewcfg.poi_id_nuclear_beach:
+		enemytype = random.choice(ewcfg.pre_historic_enemies)
+		# If the enemy is a raid boss, re-roll it once to make things fair
+		if enemytype in ewcfg.raid_bosses:
+			enemytype = random.choice(ewcfg.pre_historic_enemies)
 	
 	# Recursively spawn enemies that belong to groups.
 	if enemytype in ewcfg.enemy_group_leaders:
