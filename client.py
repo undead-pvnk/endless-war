@@ -252,7 +252,8 @@ cmd_map = {
 	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
 	ewcfg.cmd_addkey: ewapt.add_key,
 	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
-	ewcfg.cmd_setalarm:ewapt.set_alarm,
+	ewcfg.cmd_setalarm: ewapt.set_alarm,
+	ewcfg.cmd_jam: ewapt.jam,
 
 
 	# revive yourself as a juvenile after having been killed.

@@ -787,6 +787,7 @@ cmd_unshelve_alt_1 = cmd_prefix + 'unshelf'
 cmd_addkey = cmd_prefix + 'addkey'
 cmd_changelocks = cmd_prefix + 'changelocks'
 cmd_setalarm = cmd_prefix + 'setalarm'
+cmd_jam = cmd_prefix + 'jam'
 
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
@@ -7803,7 +7804,7 @@ EwFurniture(
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 520000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bar],
 		furniture_look_desc = "The keg in the room looks dulled and dented. Standard, almost.",
 		furniture_place_desc = "You take a swig out of the keg and haphazardly roll it across the room. That'll do."
 ),
@@ -8089,7 +8090,7 @@ EwFurniture(
 		id_furniture = "customdoor",
 		str_name = "{custom} door",
 		str_desc = "A door with {custom} on it.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 1420000,
 		vendors = [vendor_bazaar],
@@ -8100,12 +8101,213 @@ EwFurniture(
 		id_furniture = "expiredbottleofrogaine",
 		str_name = "expired bottle of rogaine",
 		str_desc = "It's a bottle of hair growth solution. Whoever owns this must be a longtime bald person.",
-		rarity = rarity_patrician,
+		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 1200,
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "There's an old Rogaine bottle lying around.",
 		furniture_place_desc = "You drop the bottle of rogaine in plain sight.",
+),
+EwFurniture(
+		id_furniture = "custombed",
+		str_name = "{custom} bed",
+		str_desc = "It's a {custom} themed bed. Ooh, cozy.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a {custom} bed in the bedroom.",
+		furniture_place_desc = "You assemble the bed and lop the mattress on top.",
+),
+EwFurniture(
+		id_furniture = "customflag",
+		str_name = "{custom} flag",
+		str_desc = "It's the illustrious {custom} flag. You salute it with reckless abandon.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 400000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A {custom} flag flies outside the window.",
+		furniture_place_desc = "You fly the flag outside the window.",
+),
+EwFurniture(
+		id_furniture = "brick",
+		str_name = "brick",
+		str_desc = "It's a brick. Can't build with it, can't eat it. All you can do is throw it through someone's window.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "Somebody threw a brick through the window.",
+		furniture_place_desc = "You go outside your house and throw a brick through your window. Nobody can ever say you're a fake vandal now.",
+),
+EwFurniture(
+		id_furniture = "shittychair",
+		str_name = "shitty chair",
+		str_desc = "It's a handmade chair. It's so completely botched that you wonder if you can even sit in it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a chair-like pile of plywood set up.",
+		furniture_place_desc = "You develop several pre-infected splinters just taking this out of your inventory. Fearing another bout of tetanus, you gently toss the chair on the ground.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "shittydesk",
+		str_name = "shitty desk",
+		str_desc = "This desk fucking sucks. It is an insult to the very concept of a flat surface.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a desk in here. Don't sit on it.",
+		furniture_place_desc = "After moving the desk into place, you try to sit down and write the next great American zine. The paper gets destroyed by it the moment you start.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "shittybench",
+		str_name = "shitty bench",
+		str_desc = "It's a handmade wooden bench Looking at its detailed design, torture device manufacturers should've hired you ages ago.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a...bench in here? Sorry, I couldn't tell if that thing qualifies.",
+		furniture_place_desc = "You try to move the couch in yourself. As you try, the couch snaps in two. However, it's actually more comfortable this way, so you leave it as is.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "shittybed",
+		str_name = "shitty bed",
+		str_desc = "It's a dusty pile of broken planks and springs. Wait did the item title say it was a bed? Fuck no. Don't pay attention to that.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a death bed in the bedroom.",
+		furniture_place_desc = "You try to assemble the bed, which in this case would probably involve breaking it down to bits and hoping sawdust is soft enough to sleep on.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "woodenvuvuzela",
+		str_name = "wooden vuvuzela",
+		str_desc = "You tried carving an ornate wooden clarinet, but you botched it. This dime-a-dozen consolation prize sounds like an elephant shitting out its organs.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a shitty vuvuzela here. Fuck.",
+		furniture_place_desc = "You set your vuvuzela on the shelf. Carnegie Hall, see you never.",
+
+),
+EwFurniture(
+		id_furniture = "ornatechair",
+		str_name = "ornate chair",
+		str_desc = "It's an immaculately carved wooden chair. It looks rustic, and must've cost a fortune.",
+		rarity = rarity_plebeian,
+		acquisition = rarity_patrician,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's an immaculate -*HUE*- chair set up.",
+		furniture_place_desc = "You carefully set the chair down. Wouldn't want to scratch the varnish on it, now.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "ornatedesk",
+		str_name = "ornate desk",
+		str_desc = "It's a posh looking old-style desk. The legs have some neat etchings along the side.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's an -*HUE*- ornate looking desk in the corner.",
+		furniture_place_desc = "You carry the desk to the wall, and step back to admire it.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "ornatebench",
+		str_name = "ornate bench",
+		str_desc = "The bench is so well-constructed, people forget it's made of uncomfortable unapholstered hardwood.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a wonderful -*HUE*- colored bench against the wall.",
+		furniture_place_desc = "You promise several art buyers they can look at your bench if they can help carry it to your flat. Once moved, you kick them out swiftly, and without regret.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "ornatebed",
+		str_name = "ornate bed",
+		str_desc = "This antique looking bed makes you feel like a tyrant. A whittling tyrant.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A bed with a -*HUE*- bedspread is in the bedroom.",
+		furniture_place_desc = "You had a lot of trouble finding a mattress worthy of this frame. Time to put em' together.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "craftsmansclarinet",
+		str_name = "craftsman's clarinet",
+		str_desc = "It's a handmade clarinet. Mmm. Sounds real nice.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A clarinet sits on your shelf.",
+		furniture_place_desc = "You gently set the clarinet on your shelf. You wish you bought a case for it.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "solidpoudringuitar",
+		str_name = "solid poudrin guitar",
+		str_desc = "An electric guitar whose body is built entirely out of condensed poudrins. Heavy as a meteorite, too.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A poudrin guitar is lying against the wall.",
+		furniture_place_desc = "You gently drop the guitar to set it down. Whoops. Guess Slimecorp gets to pay for that little dent in the floor.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "fishbonexylophone",
+		str_name = "fish bone xylophone",
+		str_desc = "It's a carefully carved mbila-style xylophone made out of fish. You'd think it would smell, but not really.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A fish xylophone is in here, mallets strewn about.",
+		furniture_place_desc = "You roll the instrument in and play a few notes. Nice. Ripe as the sea.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "beastskindrums",
+		str_name = "beast skin drums",
+		str_desc = "A trap set built out of the remains of fallen secreatures. The cymbals were once a dino pelvis, so that's pretty neat.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a Stone Age looking drum set in here.",
+		furniture_place_desc = "You assemble each piece into your place drum by drum. As you do your neighbors start to look pretty nervous. Ahaha.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "gourdmaracas",
+		str_name = "gourd maracas",
+		str_desc = "A neat little shaker made from a gourd and some dried vegetables. Finally, you can show off your Mexican heritage!",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "Gourd maracas are sitting on the shelf.",
+		furniture_place_desc = "You do a little maraca dance while nobody's watching and quickly toss them out of sight.",
+		furn_set = "instrument"
 ),
 ]
 
@@ -8121,6 +8323,8 @@ furniture_pony = []
 furniture_blackvelvet = []
 furniture_slimecorp = []
 furniture_seventies = []
+furniture_shitty = []
+furniture_instrument = []
 
 
 howls = [
@@ -12430,6 +12634,151 @@ EwSmeltingRecipe(
 		},
 		products = ['reanimatedcorpse']
 	),
+EwSmeltingRecipe(
+		id_recipe = "handmadechair",
+		str_name = "handmade chair",
+		alias = [
+			"woodchair",
+			"carvedchair",
+			"woodenchair",
+			"ornatechair",
+		],
+		ingredients = {
+			'stick': 5,
+			'bat':2,
+		},
+		products = ['ornatechair', 'shittychair']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadebench",
+		str_name = "handmade bench",
+		alias = [
+			"woodbench",
+			"carvedbench",
+			"woodenbench",
+			"ornatebench",
+		],
+		ingredients = {
+			'stick': 10,
+			'bat':4,
+		},
+		products = ['ornatebench', 'shittybench']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadebed",
+		str_name = "handmade bed",
+		alias = [
+			"woodbed",
+			"carvedbed",
+			"woodenbed",
+			"ornatebed",
+		],
+		ingredients = {
+			'stick': 12,
+			'bat':3,
+		},
+		products = ['ornatebed', 'shittybed']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadedesk",
+		str_name = "handmade desk",
+		alias = [
+			"wooddesk",
+			"carveddesk",
+			"woodendesk",
+			"ornatedesk",
+		],
+		ingredients = {
+			'stick': 4,
+			'bat':1,
+		},
+		products = ['ornatedesk', 'shittydesk']
+	),
+EwSmeltingRecipe(
+		id_recipe = "clarinet",
+		str_name = "clarinet",
+		alias = [
+			"flute",
+			"bennygoodmanthing",
+			"vuvuzela",
+		],
+		ingredients = {
+			'bat': 1,
+			'razornuts':1,
+			'knives':1,
+			'blacklimes':1,
+			'direappleciderfuckenergy':1,
+			'sweetfish':1,
+
+		},
+		products = ['craftsmansclarinet', 'woodenvuvuzela']
+	),
+EwSmeltingRecipe(
+		id_recipe = "guitar",
+		str_name = "solid poudrin guitar",
+		alias = [
+			"poudringuitar",
+			"electricguitar",
+			"solidpoudringuitar",
+		],
+		ingredients = {
+			'slimepoudrin': 150,
+			'string':6,
+		},
+		products = ['solidpoudringuitar']
+	),
+EwSmeltingRecipe(
+		id_recipe = "drums",
+		str_name = "beast skin drums",
+		alias = [
+			"beastskindrums",
+			"drumset",
+			"drum",
+		],
+		ingredients = {
+			'dinoslimemeat': 25,
+			'dinoslimesteak' : 5,
+			'scalp': 5,
+			'string' : 3,
+			'stick' : 2
+		},
+		products = ['beastskindrums']
+	),
+EwSmeltingRecipe(
+		id_recipe = "xylophone",
+		str_name = "fish bone xylophone",
+		alias = [
+			"xylo",
+			"metallophone",
+			"fishbonexylophone",
+		],
+		ingredients = {
+			'nuclearbream' : 1,
+			'largebonedlionfish' : 2,
+			'plebefish':3,
+			'sweetfish':1,
+			'stick':1
+		},
+		products = ['fishbonexylophone']
+	),
+EwSmeltingRecipe(
+		id_recipe = "maracas",
+		str_name = "gourd maracas",
+		alias = [
+			"gourdmaracas",
+			"shakers",
+			"rattle",
+		],
+		ingredients = {
+			'pulpgourds' : 1,
+			'suganmanuts' : 1,
+			'sludgeberries':1,
+			'razornuts':1,
+			'joybeans':1,
+			'phosphorpoppies':1
+		},
+		products = ['gourdmaracas']
+	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
 
@@ -14459,6 +14808,10 @@ for furniture in furniture_list:
 		furniture_seventies.append(furniture.id_furniture)
 	elif furniture.furn_set == "slimecorp":
 		furniture_slimecorp.append(furniture.id_furniture)
+	elif furniture.furn_set == "shitty":
+		furniture_shitty.append(furniture.id_furniture)
+	elif furniture.furn_set == "instrument":
+		furniture_instrument.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
@@ -14795,8 +15148,8 @@ help_responses = {
 	# Additional gameplay mechanics, part 2
 	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have two slime poudrins, you can use **'!smelt cosmetic'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **Princep** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic**. To check which cosmetics you have adorned, you can use !data.",
-	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.",
-	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
+	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
+	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To place crops into flower pots, do **pot [item]** and **unpot [item]** To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
