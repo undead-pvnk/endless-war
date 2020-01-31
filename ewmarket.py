@@ -1167,7 +1167,7 @@ async def trade(cmd):
 
 			ewutils.trading_offers[trade_partner.id_user] = []
 
-			response = "You both head into a shady allyway nearby to conduct your business."
+			response = "You both head into a shady alleyway nearby to conduct your business."
 
 		else:
 			ewutils.active_trades[user_data.id_user] = {}
@@ -1204,7 +1204,7 @@ async def offer_item(cmd):
 			if item_sought:
 				item = ewitem.EwItem(id_item=item_sought.get("id_item"))
 
-				if not item.soulbound:
+				if not item.soulbound or ewitem.EwItem(id_item = item_sought.get('id_item')).item_props.get("context") == "housekey":
 
 					if item.id_item == user_data.weapon and user_data.weaponmarried:
 						response = "Unfortunately for you, the contract you signed before won't let you trade your partner away. You'll have to get your cuckoldry fix from somewhere else."

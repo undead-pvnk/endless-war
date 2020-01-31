@@ -205,8 +205,7 @@ cmd_map = {
 	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
 
-	ewcfg.cmd_aquarium: ewapt.aquarium,
-	ewcfg.cmd_propstand: ewapt.propstand,
+
 	ewcfg.cmd_pot: ewapt.flowerpot,
 
 	ewcfg.cmd_aquarium: ewapt.lobbywarning,

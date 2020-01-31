@@ -153,15 +153,7 @@ class EwFurniture:
 	#furniture color
 	hue = ""
 
-	#number of housekeys on this apartment
 
-	num_keys = 0
-
-	#the item id of the first key
-	key_1 = 0
-
-	#the item id of the second key
-	key_2 = 0
 
 	def __init__(
 		self,
@@ -992,6 +984,7 @@ async def add_key(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
+			user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 			user_data.change_slimecoin(n= -apartment_data.rent, coinsource=ewcfg.coinsource_spending)
 			user_data.persist()
 
@@ -1096,9 +1089,11 @@ async def manual_changelocks(cmd):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
+			user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 			user_data.change_slimecoin(n=-(apartment_data.rent/2), coinsource=ewcfg.coinsource_spending)
 			user_data.persist()
 
+			apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 			if apartment_data.key_1 != 0:
 				ewitem.item_delete(apartment_data.key_1)
 				apartment_data.key_1 = 0

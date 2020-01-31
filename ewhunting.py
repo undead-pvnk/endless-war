@@ -779,9 +779,9 @@ async def summonenemy(cmd, is_bot_spawn = False):
 	enemy_level = None
 
 	if len(cmd.tokens) >= 3:
-		print(cmd.tokens[1])
+
 		enemytype = cmd.tokens[1]
-		print(cmd.tokens[2])
+
 		enemy_location = cmd.tokens[2]
 		if len(cmd.tokens) >= 6:
 			enemy_slimes = cmd.tokens[3]

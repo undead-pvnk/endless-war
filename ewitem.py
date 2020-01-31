@@ -1295,7 +1295,7 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
-		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props["context"] != "housekey":
+		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
 			response = "You can't just give away soulbound items."
 		else:
 			give_item(
@@ -1431,7 +1431,7 @@ def gen_item_props(item):
 async def soulextract(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
-	if usermodel.has_soul == 1:
+	if usermodel.has_soul == 1 and usermodel.rr_challenger == "":
 		item_create(
 			id_user=cmd.message.author.id,
 			id_server=cmd.message.server.id,
@@ -1448,6 +1448,8 @@ async def soulextract(cmd):
 		usermodel.has_soul = 0
 		usermodel.persist()
 		response = "You tremble at the thought of trying this. Nothing ventured, nothing gained, you suppose. With all your mental fortitude you jam your hand deep into your chest and begin to pull out the very essence of your being. Your spirit, aspirations, everything that made you who you are begins to slowly drain from your mortal effigy until you feel absolutely nothing. Your soul flickers about, taunting you from outside your body. You capture it in a jar, almost reflexively.\n\nWow. Your personality must suck now."
+	elif usermodel.has_soul == 1 and usermodel.rr_challenger != "":
+		response = "Now's not the time to be playing with your soul, dumbass! You have to focus on pointing the gun at your head!"
 	else:
 		response = "There's nothing left in you to extract. You already spent the soul you had."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
