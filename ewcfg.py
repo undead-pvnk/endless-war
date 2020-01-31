@@ -6251,14 +6251,15 @@ food_list = [
 		vendors=[vendor_greencakecafe]
 	),
 	EwFood(
-		id_food = "juicebox",
+		id_food = "direapplefrickenergy",
 		alias = [
 			"juice",
 			"appyjuice",
+			"frickenergy",
 		],
 		recover_hunger=10,
 		price=1,
-		str_name = "Juice Box",
+		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
 		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
@@ -9880,7 +9881,7 @@ poi_list = [
 		],
 		str_name = "an Arsonbrook apartment",
 		str_desc = "",
-		channel = channel_apt_oldnewyonkers,
+		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
 		mother_district = poi_id_arsonbrook,
