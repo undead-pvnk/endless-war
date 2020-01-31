@@ -1632,30 +1632,30 @@ async def trash(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 def surrendersoul(giver = None, receiver = None, id_server=None):
-	print("DEAD\n\n\n\n\n\n\n\n\n")
+
 	if giver != None and receiver != None:
 		receivermodel = EwUser(id_server=id_server, id_user=receiver)
 		givermodel = EwUser(id_server=id_server, id_user=giver)
 		giverplayer = EwPlayer(id_user=givermodel.id_user)
+		if givermodel.has_soul == 1:
+			givermodel.has_soul = 0
+			givermodel.persist()
 
-		givermodel.has_soul = 0
-		givermodel.persist()
-
-		item_id = item_create(
-			id_user=receivermodel.id_user,
-			id_server=id_server,
-			item_type=ewcfg.it_cosmetic,
-			item_props={
-				'id_cosmetic': "soul",
-				'cosmetic_name': "{}'s soul".format(giverplayer.display_name),
-				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(
-					giverplayer.display_name, givermodel.id_user),
-				'rarity': ewcfg.rarity_patrician,
-				'adorned': 'false',
-				'user_id': givermodel.id_user
-			}
-		)
-		return item_id
+			item_id = item_create(
+				id_user=receivermodel.id_user,
+				id_server=id_server,
+				item_type=ewcfg.it_cosmetic,
+				item_props={
+					'id_cosmetic': "soul",
+					'cosmetic_name': "{}'s soul".format(giverplayer.display_name),
+					'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(
+						giverplayer.display_name, givermodel.id_user),
+					'rarity': ewcfg.rarity_patrician,
+					'adorned': 'false',
+					'user_id': givermodel.id_user
+				}
+			)
+			return item_id
 
 
 
