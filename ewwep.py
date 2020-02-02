@@ -4,6 +4,7 @@ import random
 import math
 
 import ewcfg
+import ewcaptcha
 import ewutils
 import ewitem
 import ewmap
@@ -340,11 +341,11 @@ def canAttack(cmd):
 				response = "Juveniles lack the moral fiber necessary for violence."
 			else:
 				response = "You lack the moral fiber necessary for violence."
-				
+
 		elif enemy_data != None:
 			# enemy found, redirect variables to code in ewhunting
 			response = ewcfg.enemy_targeted_string
-			
+
 		else:
 			# no enemy is found within that district
 			response = "Your bloodlust is appreciated, but ENDLESS WAR couldn't find what you were trying to kill."
@@ -404,8 +405,64 @@ def canAttack(cmd):
 
 	return response
 
+
+def canCap(cmd):
+	response = ""
+	time_now_float = time.time()
+	time_now = int(time_now_float)
+	user_data = EwUser(member=cmd.message.author)
+	weapon_item = None
+	weapon = None
+	captcha = None
+
+	tokens_lower = []
+	for token in cmd.tokens:
+		tokens_lower.append(token.lower())
+
+	if user_data.weapon >= 0:
+		weapon_item = EwItem(id_item=user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		captcha = weapon_item.item_props.get('captcha')
+
+	statuses = user_data.getStatusEffects()
+
+	# if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
+	#	if user_data.life_state == ewcfg.life_state_enlisted:
+	#		response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
+	#	else:
+	#		response = "You lack the moral fiber necessary for violence."
+
+	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		response = "You can't commit violence from here."
+	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
+		response = "You must go elsewhere to commit gang violence."
+	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
+		response = "You are too exhausted for gang violence right now. Go get some grub!"
+	elif weapon != None and user_data.sap < weapon.sap_cost:
+		response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
+	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
+		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
+	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
+		response = "You're out of {}! Go buy more at the {}".format(weapon.str_weapon, ewutils.formatNiceList(names=weapon.vendors,  conjunction="or"))
+	elif weapon != None and weapon.cooldown + (
+	float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
+		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=weapon.id_weapon)
+	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
+		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name=weapon.id_weapon, unjam=ewcfg.cmd_unjam, captcha=captcha)
+	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
+		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
+
+	elif user_data.weapon == -1:
+		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
+
+	return response
+
 """ Player deals damage to another player. """
+
+
+
 async def attack(cmd):
+
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 	response = ""
@@ -2551,3 +2608,238 @@ def get_sap_armor(shootee_data, sap_ignored):
 
 	sap_armor = 10 / (10+effective_hardened_sap)
 	return sap_armor
+
+
+async def annex2(cmd):
+	time_now_float = time.time()
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	time_now = int(time_now_float)
+	# Get shooting player's info
+	user_mutations = user_data.get_mutations()
+	weapon = None
+	weapon_item = None
+
+
+	if user_data.weapon >= 0:
+		weapon_item = EwItem(id_item=user_data.weapon)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		captcha = weapon_item.item_props.get('captcha')
+	response = canCap(cmd)
+	if response == "":
+		if user_data.slimelevel <= 0:
+			user_data.slimelevel = 1
+			user_data.persist()
+
+		#Get district data
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+		district_data = EwDistrict(id_server=cmd.message.server.id, district=poi.id_poi)
+
+
+
+		miss = False
+		crit = False
+		backfire = False
+		backfire_damage = 0
+		jammed = False
+		strikes = 0
+		bystander_damage = 0
+		miss_mod = 0
+		crit_mod = 0
+		dmg_mod = 0
+		sap_damage = 0
+		sap_ignored = 0
+
+		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
+		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
+		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
+
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+		statuses = user_data.getStatusEffects()
+		if ewcfg.status_repelled_id in statuses:
+			user_data.clear_status(ewcfg.status_repelled_id)
+			after_effects_response = user_data.applyStatus(ewcfg.status_repelaftereffects_id)
+			await ewutils.send_message(cmd.client, cmd.message.channel,
+									   ewutils.formatMessage(cmd.message.author, after_effects_response))
+			slimes_damage /= 1000
+			slimes_damage = math.ceil(slimes_damage)
+
+		# If the player has cancelled a repel by attacking an enemy, make all their hits do 99% less damage for two seconds, rounded up.
+		if ewcfg.status_repelaftereffects_id in statuses:
+			slimes_damage /= 100
+			slimes_damage = math.ceil(slimes_damage)
+
+		if weapon is None:
+			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
+
+		slimes_damage += int(slimes_damage * dmg_mod)
+		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
+
+		if weapon != None and weapon.fn_effect != None:
+			# Build effect container
+			ctn = EwEffectContainer(
+				miss=miss,
+				backfire=backfire,
+				crit=crit,
+				jammed=jammed,
+				slimes_damage=slimes_damage,
+				slimes_spent=slimes_spent,
+				user_data=user_data,
+				weapon_item=weapon_item,
+				shootee_data=None,
+				time_now=time_now_float,
+				bystander_damage=bystander_damage,
+				miss_mod=miss_mod,
+				crit_mod=crit_mod,
+				sap_damage=sap_damage,
+				sap_ignored=sap_ignored,
+				backfire_damage=backfire_damage
+			)
+
+
+
+			# Make adjustments
+			if weapon.id_weapon != ewcfg.weapon_id_garrote:
+				weapon.fn_effect(ctn)
+
+			if ewcfg.weapon_class_captcha in weapon.classes:
+				slimes_damage = (slimes_damage * len(captcha)) / 8
+			else:
+				slimes_damage = slimes_damage / 8
+
+			# Apply effects for non-reference values
+			resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
+			miss = ctn.miss
+			backfire = ctn.backfire
+			crit = ctn.crit
+			jammed = ctn.jammed
+			slimes_damage = ctn.slimes_damage
+			slimes_spent = ctn.slimes_spent
+			strikes = ctn.strikes
+			bystander_damage = ctn.bystander_damage
+			sap_damage = ctn.sap_damage
+			sap_ignored = ctn.sap_ignored
+			backfire_damage = ctn.backfire_damage
+
+			if (slimes_spent > user_data.slimes):
+				# Not enough slime to shoot.
+				response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+			weapon_item.item_props['time_lastattack'] = time_now_float
+			weapon_item.persist()
+			user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source=ewcfg.source_spending)
+			user_data.persist()
+
+			user_data.sap -= weapon.sap_cost
+			user_data.limit_fix()
+
+			if weapon.id_weapon == ewcfg.weapon_id_garrote:
+				pass #TODO Create capping behavior for the garrotte
+
+			# Remove a bullet from the weapon
+			if ewcfg.weapon_class_ammo in weapon.classes:
+				weapon_item.item_props['ammo'] = int(weapon_item.item_props.get("ammo")) - 1
+
+			# Remove one item from stack
+			if ewcfg.weapon_class_thrown in weapon.classes:
+				weapon_item.stack_size -= 1
+			if miss or backfire or jammed:
+				slimes_damage = 0
+				sap_damage = 0
+				weapon_item.item_props["consecutive_hits"] = 0
+				crit = False
+
+			if crit:
+				sap_damage += 1
+
+			# Remove !revive invulnerability.
+			user_data.time_lastrevive = 0
+			market_data = EwMarket(id_server=cmd.message.server.id)
+			# apply attacker damage mods
+			slimes_damage *= damage_mod_attack(
+				user_data=user_data,
+				user_mutations=user_mutations,
+				market_data=market_data,
+				district_data=district_data
+			)
+			if weapon != None:
+				if miss:
+					response = "You try to graffiti a district with the nozzle pointed backwards! A complete miss!"
+				elif backfire:
+					response = "Backfire! The spray can explodes in your hands!"
+
+					if user_data.slimes - user_data.bleed_storage <= backfire_damage:
+						district_data.change_slimes(n=user_data.slimes)
+						district_data.persist()
+						die_resp = user_data.die(cause=ewcfg.cause_backfire)
+						district_data = EwDistrict(district=district_data.name, id_server=district_data.id_server)
+						resp_cont.add_member_to_update(cmd.message.author)
+						resp_cont.add_response_container(die_resp)
+					else:
+						district_data.change_slimes(n=backfire_damage / 2)
+						user_data.change_slimes(n=-backfire_damage / 2, source=ewcfg.source_self_damage)
+						user_data.bleed_storage += int(backfire_damage / 2)
+
+				elif jammed:
+					response = "Your spray can gets clogged with some stray sludge! Better unjam that!"
+				else:
+					response = "Your graffiti conquest earns you {} influence for the {}!".format(slimes_damage, user_data.faction)
+					if user_data.faction == "killers":
+						slimes_damage = -slimes_damage
+					district_data.influence += slimes_damage
+					if district_data.influence < 0:
+						district_data.controlling_faction = "killers"
+					else:
+						district_data.controlling_faction = "rowdys"
+					district_data.persist()
+					district_data = EwDistrict(district=district_data.name, id_server=district_data.id_server)
+
+
+
+
+					slimes_damage = abs(slimes_damage)
+					#response = weapon.str_damage.format(
+					#	name_player=cmd.message.author.display_name,
+					#	name_target=enemy_data.display_name,
+					#	hitzone=randombodypart,
+					#	strikes=strikes
+					#)
+					if crit:
+						response = "You dual wield spray cans, painting an urban masterpiece and shooting toxic chemicals into a cop's mouth. It gets you {} influence! Lordy!".format(slimes_damage)
+						#response += " {}".format(weapon.str_crit.format(
+						#	name_player=cmd.message.author.display_name,
+						#	name_target=enemy_data.display_name,
+						#	hitzone=randombodypart,
+						#))
+
+
+				if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
+					response += "\n" + weapon.str_reload_warning.format(
+						name_player=cmd.message.author.display_name)
+
+				if ewcfg.weapon_class_captcha in weapon.classes or jammed:
+					#TODO Modify captcha command
+
+					loc_array = ewcaptcha.streetcaptcha[poi.id_poi]
+					new_loc = str(random.choice(loc_array))
+					print(new_loc)
+					new_captcha = new_loc.replace('the ', '')
+					new_captcha_low = new_captcha.split(' ', 1)[0]
+					new_captcha = "**"+new_captcha_low.upper()+"**"
+					new_loc = new_loc.replace(new_captcha_low, new_captcha)
+					response += "\nNext stop is {}.".format(new_loc)
+					weapon_item.item_props['captcha'] = new_captcha_low
+					weapon_item.persist()
+			else:
+				if miss:
+					response = "You spray something so obscure nobody notices."
+				else:
+					response = "Nice vandalism! You get {damage} influence out of it!".format(
+						damage=slimes_damage
+					)
+
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+

@@ -8,7 +8,9 @@ import ewcfg
 import ewstats
 import ewutils
 import ewrolemgr
+
 from ew import EwUser
+
 from ewmarket import EwMarket
 
 """
@@ -41,6 +43,10 @@ class EwDistrict:
 	# Time until the district unlocks for capture again
 	time_unlock = 0
 
+	#Amount of influence in a district
+
+	influence = 0
+
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
 			self.id_server = id_server
@@ -56,13 +62,14 @@ class EwDistrict:
 			else:
 				self.max_capture_points = 0
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {influence} FROM districts WHERE id_server = %s AND {district} = %s".format(
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
 				capture_points = ewcfg.col_capture_points,
 				district = ewcfg.col_district,
 				slimes = ewcfg.col_district_slimes,
 				time_unlock = ewcfg.col_time_unlock,
+				influence = ewcfg.col_influence,
 			), (
 				id_server,
 				district
@@ -75,6 +82,7 @@ class EwDistrict:
 				self.capture_points = data[0][2]
 				self.slimes = data[0][3]
 				self.time_unlock = data[0][4]
+				self.influence = data[0][5]
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
 				ewutils.execute_sql_query("REPLACE INTO districts ({id_server}, {district}) VALUES (%s, %s)".format(
@@ -86,13 +94,14 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {influence}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
 			capture_points = ewcfg.col_capture_points,
 			slimes = ewcfg.col_district_slimes,
 			time_unlock = ewcfg.col_time_unlock,
+			influence = ewcfg.col_influence,
 		), (
 			self.id_server,
 			self.name,
@@ -101,6 +110,7 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes,
 			self.time_unlock,
+			self.influence
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -250,7 +260,7 @@ class EwDistrict:
 		if self.capture_points < 0:
 			self.capture_points = 0
 
-		if self.capture_points == 0:
+		if self.influence == 0:
 			if self.controlling_faction != "":  # if it was owned by a faction
 
 				message = "The {faction} have lost control over {district} because of sheer negligence.".format(
@@ -554,7 +564,7 @@ async def capture_progress(cmd):
 
 		response += "\nThis district cannot be captured currently. It will unlock in {}.".format(ewutils.formatNiceTime(seconds = district_data.time_unlock, round_to_minutes = True))
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
+
 
 async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)

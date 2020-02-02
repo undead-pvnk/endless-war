@@ -413,7 +413,8 @@ cmd_map = {
 
 	# Change your current POI capture progress
 	ewcfg.cmd_annex: ewdistrict.annex,
-	ewcfg.cmd_annex_alt1: ewdistrict.annex,
+	#ewcfg.cmd_annex_alt1: ewdistrict.annex,
+	ewcfg.cmd_annex_alt1: ewwep.annex2,
 
 	# link to the world map
 	ewcfg.cmd_map: ewcmd.map,

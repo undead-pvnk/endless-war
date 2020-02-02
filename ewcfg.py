@@ -1614,6 +1614,7 @@ col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
 col_time_unlock = 'time_unlock'
+col_influence = 'influence'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
