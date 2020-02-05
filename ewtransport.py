@@ -225,6 +225,10 @@ async def embark(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
+	
+	if user_data.rr_restriction > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 

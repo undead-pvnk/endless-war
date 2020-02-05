@@ -1192,8 +1192,7 @@ async def russian_roulette(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Players have to be enlisted
-	#SLIMERNALIA
-	playable_life_states = [ewcfg.life_state_enlisted,ewcfg.life_state_lucky,ewcfg.life_state_executive, ewcfg.life_state_juvenile]
+	playable_life_states = [ewcfg.life_state_enlisted,ewcfg.life_state_lucky,ewcfg.life_state_executive]
 	if challenger.life_state not in playable_life_states or challengee.life_state not in playable_life_states:
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "You try to grab the gun, but it falls through your hands. Ghosts can't hold weapons.".format(author.display_name).replace("@", "\{at\}")
@@ -1210,6 +1209,9 @@ async def russian_roulette(cmd):
 	#Assign a challenger so players can't be challenged
 	challenger.rr_challenger = challenger.id_user
 	challengee.rr_challenger = challenger.id_user
+	
+	challenger.rr_restriction = 1
+	challengee.rr_restriction = 1
 
 	challenger.persist()
 	challengee.persist()
@@ -1285,6 +1287,9 @@ async def russian_roulette(cmd):
 				challenger.rr_challenger = ""
 				challengee.rr_challenger = ""
 
+				challenger.rr_restriction = 0
+				challengee.rr_restriction = 0
+
 				challenger.persist()
 				challengee.persist()
 
@@ -1313,6 +1318,234 @@ async def russian_roulette(cmd):
 
 	challenger.rr_challenger = ""
 	challengee.rr_challenger = ""
+
+	challenger.rr_restriction = 0
+	challengee.rr_restriction = 0
+
+	challenger.persist()
+	challengee.persist()
+
+	return
+
+
+async def duel(cmd):
+	time_now = int(time.time())
+
+	if cmd.mentions_count != 1:
+		# Must mention only one player
+		response = "Mention the player you want to challenge."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	author = cmd.message.author
+	member = cmd.mentions[0]
+
+	if author.id == member.id:
+		response = "You might be looking for !suicide."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	challenger = EwUser(member=author)
+	challengee = EwUser(member=member)
+
+	# Players have been challenged
+	if challenger.rr_challenger != "":
+		response = "You are already in the middle of a challenge."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	if challengee.rr_challenger != "":
+		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	if challenger.poi != challengee.poi:
+		response = "Both duelers must be in the same location."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	# Players have to be enlisted
+	playable_life_states = [ewcfg.life_state_enlisted, ewcfg.life_state_lucky, ewcfg.life_state_executive]
+	if challenger.life_state not in playable_life_states or challengee.life_state not in playable_life_states:
+		if challenger.life_state == ewcfg.life_state_corpse:
+			response = "Ghosts can't duel people. Alas, they can only watch from afar and !haunt."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+		elif challengee.life_state == ewcfg.life_state_corpse:
+			response = "Ghosts can't duel people. Alas, they can only watch from afar and !haunt."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+		else:
+			response = "Juveniles are too cowardly to throw their lives away in a duel."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	# Assign a challenger so players can't be challenged
+	challenger.rr_challenger = challenger.id_user
+	challengee.rr_challenger = challenger.id_user
+	
+	# Apply restrictions to prevent movement, !tp, etc. This also lets the !accept command differentiate RR from duels.
+	challenger.rr_restriction = 2
+	challengee.rr_restriction = 2
+
+	challenger.persist()
+	challengee.persist()
+
+	response = "You have been challenged by {} to a duel. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
+
+	# Wait for an answer
+	accepted = 0
+	try:
+		msg = await cmd.client.wait_for_message(timeout=30, author=member, check=ewutils.check_accept_or_refuse)
+
+		if msg != None:
+			if msg.content == "!accept":
+				accepted = 1
+	except:
+		accepted = 0
+
+	# Start game
+	if accepted == 1:
+		challenger = EwUser(member=author)
+		challengee = EwUser(member=member)
+
+		challenger.persist()
+		challengee.persist()
+		
+		# start the countdown. if either user tries anything funny before the countdown is over, blow their heads clean off via BHB
+		countdown = 10
+		
+		while countdown != 0:
+			text_mod = ""
+			
+			if countdown > 8:
+				text_mod = ""
+			elif countdown > 6:
+				text_mod = "*"
+			elif countdown > 4:
+				text_mod = "**"
+			else:
+				text_mod = "***"
+			
+			if countdown == 10: 
+				countdown_resp = "ENDLESS WAR begins to count down...\n{}{}{}".format(text_mod, countdown, text_mod)
+			else:
+				countdown_resp = "{}{}{}".format(text_mod, countdown, text_mod)
+				
+			countdown -= 1
+			await ewutils.send_message(cmd.client, cmd.message.channel, countdown_resp)
+
+			try:
+				msg = await cmd.client.wait_for_message(timeout=1, author=author)
+
+				if msg != None:
+					
+					challenger.rr_challenger = ""
+					challengee.rr_challenger = ""
+
+					challenger.rr_restriction = 0
+					challengee.rr_restriction = 0
+
+					challengee.persist()
+					
+					die_resp = challenger.die(cause=ewcfg.cause_praying)
+					challenger.persist()
+					await ewrolemgr.updateRoles(client=cmd.client, member=author)
+					await die_resp.post()
+
+					response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam. The duel is over before it even began.".format(author.display_name).replace("@","\{at\}")
+					
+					return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+
+			except:
+				pass
+
+			try:
+				msg = await cmd.client.wait_for_message(timeout=1, author=member)
+
+				if msg != None:
+					challenger.rr_challenger = ""
+					challengee.rr_challenger = ""
+
+					challenger.rr_restriction = 0
+					challengee.rr_restriction = 0
+
+					challenger.persist()
+
+					die_resp = challengee.die(cause=ewcfg.cause_praying)
+					challengee.persist()
+					await ewrolemgr.updateRoles(client=cmd.client, member=member)
+					await die_resp.post()
+
+					response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam. The duel is over before it even began.".format(member.display_name).replace("@", "\{at\}")
+
+					return await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+			except:
+				pass
+			
+		response = "{}***DRAW!***{}".format(ewcfg.emote_slimegun, ewcfg.emote_slimegun)
+		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		
+		# start the duel
+		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
+		challengee.time_expirpvp = ewutils.calculatePvpTimer(challengee.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
+
+		challenger.persist()
+		challengee.persist()
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=author)
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		
+		duel_timer = ewcfg.time_pvp_duel
+		
+		challenger_slimes = challenger.slimes
+		challengee_slimes = challengee.slimes
+		
+		while challenger_slimes > 0 and challengee_slimes > 0 and duel_timer > 0:
+			# count down from 2 minutes, the max possible time a duel should last
+			duel_timer -= 1
+
+			# re-grab slime counts from both duelers
+			challenger = EwUser(member=author)
+			challengee = EwUser(member=member)
+			challenger_slimes = challenger.slimes
+			challengee_slimes = challengee.slimes
+
+			await asyncio.sleep(1)
+			
+		if challenger.slimes <= 0:
+			# challenger lost
+			response = "**{} has won the duel!!**".format(member.display_name).replace("@","\{at\}")
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+			challengee.time_expirpvp -= duel_timer
+
+		elif challengee.slimes <= 0:
+			# challengee lost
+			response = "**{} has won the duel!!**".format(author.display_name).replace("@","\{at\}")
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+			challenger.time_expirpvp -= duel_timer
+		
+		else:
+			# timer stall
+			response = "**Neither dueler was bloodthirsty enough to finish the job in time! The duel is over!**"
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+
+		await ewrolemgr.updateRoles(client=cmd.client, member=author)
+		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+			
+
+	# Or cancel the challenge
+	else:
+		response = "{} was too cowardly to accept your challenge.".format(member.display_name).replace("@", "\{at\}")
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+
+	challenger = EwUser(member=author)
+	challengee = EwUser(member=member)
+
+	challenger.rr_challenger = ""
+	challengee.rr_challenger = ""
+
+	challenger.rr_restriction = 0
+	challengee.rr_restriction = 0
 
 	challenger.persist()
 	challengee.persist()

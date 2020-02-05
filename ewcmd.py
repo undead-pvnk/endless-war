@@ -775,7 +775,7 @@ async def accept(cmd):
 			response = ""
 			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
-			elif cmd.message.channel.name == ewcfg.channel_casino:
+			elif cmd.message.channel.name == ewcfg.channel_casino and challenger.rr_restriction == 1:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
 
 			if len(response) > 0:
@@ -790,6 +790,7 @@ async def refuse(cmd):
 		challenger = EwUser(id_user = user.rr_challenger, id_server = user.id_server)
 
 		user.rr_challenger = ""
+		user.rr_restriction = 0
 		user.persist()
 
 		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
@@ -797,6 +798,7 @@ async def refuse(cmd):
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
 			challenger.rr_challenger = ""
+			challenger.rr_restriction = 0
 			challenger.persist()
 
 """

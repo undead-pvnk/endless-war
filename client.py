@@ -84,6 +84,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_shoot_alt3: ewwep.attack,
 	ewcfg.cmd_shoot_alt4: ewwep.attack,
+	ewcfg.cmd_shoot_alt5: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -289,6 +290,9 @@ cmd_map = {
 	ewcfg.cmd_russian: ewcasino.russian_roulette,
 	ewcfg.cmd_accept: ewcmd.accept,
 	ewcfg.cmd_refuse: ewcmd.refuse,
+	
+	# Dueling
+	ewcfg.cmd_duel: ewcasino.duel,
 
 
 	# See what's for sale in the Food Court.

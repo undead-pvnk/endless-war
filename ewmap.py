@@ -749,7 +749,11 @@ async def move(cmd = None, isApt = False):
 	member_object = server_data.get_member(player_data.id_user)
 
 	movement_method = ""
-	
+
+	if user_data.rr_restriction > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
 
@@ -1042,6 +1046,10 @@ async def teleport(cmd):
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	
+	if user_data.rr_restriction > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewcfg.id_to_poi.get(target_name)
 
