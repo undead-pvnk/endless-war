@@ -1235,7 +1235,7 @@ async def on_message(message):
 				usermodel.slimecoin = max(0, usermodel.slimecoin - 1000000000) # 1 billion slimecoin fine for swearing
 				usermodel.persist()
 			
-			response = 'ENDLESS WAR judges you harshly!\n"{}"\n\n'.format(random.choice(ewcfg.curse_responses))
+			response = 'ENDLESS WAR judges you harshly!\n"{}"'.format(random.choice(ewcfg.curse_responses))
 			await ewutils.send_message(client, message.channel, response)
 			
 			# if the message wasn't a command, we can stop here
