@@ -14805,7 +14805,7 @@ dance_responses = [
 	"{} starts flossing fast and hard!",
 	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
 	"{} cracks the whip! Watch them go at it!",
-	"{} performs the naenae! https://en.wikipedia.org/wiki/Nae_Nae",
+	"{} performs the Nae Nae! https://en.wikipedia.org/wiki/Nae_Nae",
 	"{} does the Default Dance! You hear the familiar Fortnite jingle go off in your head.",
 	"{} gets down on the floor and does the worm! Their rhythm is off the charts!",
 	"{} spins around like a Laotian Toprock dancer! Whoa, be careful not to kick anyone, big guy!",
