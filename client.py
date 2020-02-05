@@ -1180,12 +1180,13 @@ async def on_message(message):
 			user_data.clear_status(ewcfg.status_strangled_id)			
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words)):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 2)
+				user is swearing
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1214,6 +1215,28 @@ async def on_message(message):
 			client = client,
 			mentions = mentions
 		)
+		
+		"""
+			Punish the user for swearing.
+		"""
+		if any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words):
+			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+			if message.server != None:
+				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
+			else:
+				usermodel = None
+			
+			if usermodel != None:
+				usermodel.swear_jar += 1
+				usermodel.slimecoin = max(0, usermodel.slimecoin - 1000000000) # 1 billion slimecoin fine for swearing
+				usermodel.persist()
+			
+			response = 'ENDLESS WAR judges you harshly!\n"{}"\n\n'.format(random.choice(ewcfg.curse_responses))
+			await ewutils.send_message(client, message.channel, response)
+			
+			# if the message wasn't a command, we can stop here
+			if not message.content.startswith(ewcfg.cmd_prefix):
+				return
 
 		"""
 			Handle direct messages.

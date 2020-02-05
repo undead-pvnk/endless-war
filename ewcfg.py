@@ -1478,6 +1478,7 @@ col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
 col_rrchallenger = 'rr_challenger_id'
+col_rr_restriction = 'rr_restriction'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -1499,6 +1500,8 @@ col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
+col_swear_jar = 'swear_jar'
+
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_festivity_from_slimecoin = 'festivity_from_slimecoin'
@@ -5611,6 +5614,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "khaotickilliflowerfuckenergy",
+		alias = [
+			"kkfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5621,6 +5627,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "rampagingrowddishfuckenergy",
+		alias = [
+			"rrfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5631,6 +5640,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "direappleciderfuckenergy",
+		alias = [
+			"dacfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5641,6 +5653,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "ultimateurinefuckenergy",
+		alias = [
+			"uufu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5651,6 +5666,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "superwaterfuckenergy",
+		alias = [
+			"swfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -14842,7 +14860,26 @@ zine_commands = [
 	cmd_setpages,
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
-	]
+]
+
+curse_words = [ # words that the player should be punished for saying via swear jar deduction
+	"fag",
+	"shit",
+	"ass",
+	"cunt",
+	"fuck",
+	"bitch",
+	"bastard",
+	"nigger"
+]
+
+curse_responses = [ # scold the player for swearing
+	"Watch your language!",
+	"Another one for the swear jar...",
+	"Do you kiss your mother with that mouth?",
+	"Wow, try again, but be a little nicer this time, won't you?",
+	"If you don't have anything nice to say, then don't say anything at all."
+]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

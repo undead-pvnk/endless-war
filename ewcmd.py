@@ -223,8 +223,23 @@ def gen_data_text(
 					response_block += status_flavor.str_describe + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name,
-																							str(slimeoid.level))
+			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name, str(slimeoid.level))
+			
+		if user_data.swear_jar >= 500:
+			response_block += "They're going to The Underworld for the things they've said."
+		elif user_data.swear_jar >= 100:
+			response_block += "They swear like a sailor!"
+		elif user_data.swear_jar >= 50:
+			response_block += "They have quite a profane vocabulary."
+		elif user_data.swear_jar >= 10:
+			response_block += "They've said some naughty things in the past."
+		elif user_data.swear_jar >= 5:
+			response_block += "They've cussed a handfull of times here and there."
+		elif user_data.swear_jar > 0:
+			response_block += "They've sworn only a few times."
+		else:
+			response_block += "Their mouth is clean as a whistle."
+			
 		if len(response_block) > 0:
 			response += "\n" + response_block
 
@@ -345,8 +360,23 @@ async def data(cmd):
 					response_block += status_flavor.str_describe_self + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name,
-																							str(slimeoid.level))
+			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+		
+		if user_data.swear_jar >= 500:
+			response_block += "You're going to The Underworld for the things you've said."
+		elif user_data.swear_jar >= 100:
+			response_block += "You swear like a sailor!"
+		elif user_data.swear_jar >= 50:
+			response_block += "You have quite a profane vocabulary."
+		elif user_data.swear_jar >= 10:
+			response_block += "You've said some naughty things in the past."
+		elif user_data.swear_jar >= 5:
+			response_block += "You've cussed a handfull of times here and there."
+		elif user_data.swear_jar > 0:
+			response_block += "You've sworn only a few times."
+		else:
+			response_block += "Your mouth is clean as a whistle."
+			
 
 		if len(response_block) > 0:
 			response += "\n" + response_block
@@ -913,6 +943,7 @@ async def pray(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.life_state == ewcfg.life_state_kingpin:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -985,6 +1016,10 @@ async def pray(cmd):
 		probabilityofpoudrin = 10
 		probabilityofdeath = 10
 		diceroll = random.randint(1, 100)
+
+		# Redeem the player for their sins.
+		user_data.swear_jar = max(0, user_data.swear_jar - 1)
+		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
 			item = random.choice(ewcfg.mine_results)

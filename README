@@ -31,6 +31,7 @@ CREATE TABLE users (
 	life_state int NOT NULL DEFAULT '1',
 	busted int NOT NULL DEFAULT '0',
 	rr_challenger_id varchar(128) NOT NULL DEFAULT '',
+	rr_restriction int NOT NULL DEFAULT '0',
 	time_last_action bigint NOT NULL DEFAULT '0',
 	weaponmarried int NOT NULL DEFAULT '0',
 	time_lastscavenge int NOT NULL DEFAULT '0',
@@ -55,6 +56,7 @@ CREATE TABLE users (
 	festivity_from_slimecoin int NOT NULL DEFAULT '0',
 	slimernalia_kingpin boolean NOT NULL DEFAULT false,
 	manuscript int NOT NULL DEFAULT '-1',
+	swear_jar bigint NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
