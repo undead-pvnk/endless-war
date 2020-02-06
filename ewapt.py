@@ -312,10 +312,12 @@ async def retire(cmd):
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	elif user_data.apt_zone != poi.id_poi:
 		response = "You don't own an apartment here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 	else:
 		ewmap.move_counter += 1
 		move_current = ewutils.moves_active[cmd.message.author.id] = ewmap.move_counter
@@ -970,6 +972,8 @@ async def knock(cmd = None):
 
 		else:
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
 			try:
@@ -980,12 +984,11 @@ async def knock(cmd = None):
 			
 			try:
 				accepted = False
-				if user_data.rr_challenger == target_data.apt_zone:
+				if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
 					user_data = EwUser(member=cmd.message.author)
-					user_data.rr_challenger = target_data.apt_zone
-					user_data.persist()
+					ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
 					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_accept_or_refuse)
 
 					if message != None:
@@ -994,16 +997,17 @@ async def knock(cmd = None):
 						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
 					else:
-						user_data = EwUser(member=cmd.message.author)
-						if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
-							user_data.persist()
+						pass
+						#user_data = EwUser(member=cmd.message.author)
+						#if ewutils.active_target_map.get(user_data.id_user) != "": #checks if a user is knocking, records the recipient and removes it when done
+						#	user_data.persist()
 			except:
 				accepted = False
 			user_data = EwUser(member=cmd.message.author)
 			if accepted:
 				user_data.poi = target_poi.id_poi
 				user_data.visiting = target_data.id_user
-				user_data.rr_challenger = ""
+				ewutils.active_target_map[user_data.id_user] = ""
 				user_data.persist()
 				await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 				response = "You arrive in the abode of {}.".format(target.display_name)
@@ -1011,9 +1015,8 @@ async def knock(cmd = None):
 				response = "{} enters your home.".format(cmd.message.author.display_name)
 				return await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
 			else:
-				if user_data.rr_challenger != "":
-					user_data.rr_challenger = ""
-					user_data.persist()
+				if ewutils.active_target_map.get(user_data.id_user) != "":
+					ewutils.active_target_map[user_data.id_user] = ""
 	elif cmd.mentions_count == 0:
 		response = "Whose door are you knocking?"
 		return await ewutils.send_message(cmd.client, cmd.message.author, ewutils.formatMessage(cmd.message.author, response))
@@ -1086,16 +1089,14 @@ async def trickortreat(cmd = None):
 
 			try:
 				treat = False
-				if user_data.rr_challenger == target_data.apt_zone:
-					# For Double Halloween spam knocking isn't really an issue. Just clear up rr_challenger for now.
+				if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
+					# For Double Halloween spam knocking isn't really an issue. Just clear up their slot in the active target map for now.
 					print('DEBUG: Spam knock in trickortreat command.')
-					user_data.rr_challenger = ""
-					user_data.persist()
+					ewutils.active_target_map[user_data.id_user] = ""
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
 					user_data = EwUser(member=cmd.message.author)
-					user_data.rr_challenger = target_data.apt_zone
-					user_data.persist()
+					ewutils.active_target_map[user_data.id_user] = target_data.apt_zone
 					message = await cmd.client.wait_for_message(timeout=20, author=target, check=ewutils.check_trick_or_treat)
 
 					if message != None:
@@ -1105,9 +1106,9 @@ async def trickortreat(cmd = None):
 							treat = False
 					else:
 						reject = True
-						user_data = EwUser(member=cmd.message.author)
-						if user_data.rr_challenger != "": #checks if a user is knocking, records the recipient and removes it when done
-							user_data.persist()
+						#user_data = EwUser(member=cmd.message.author)
+						#if ewutils.active_target_map.get(user_data.id_user) != "": #checks if a user is knocking, records the recipient and removes it when done
+						#	user_data.persist()
 			except:
 				reject = True
 			user_data = EwUser(member=cmd.message.author)
@@ -1123,8 +1124,7 @@ async def trickortreat(cmd = None):
 			user_data.persist()
 			
 			if treat:
-				user_data.rr_challenger = ""
-				user_data.persist()
+				ewutils.active_target_map[user_data.id_user] = ""
 				
 				item = random.choice(ewcfg.trickortreat_results)
 				item_props = ewitem.gen_item_props(item)
@@ -1153,8 +1153,8 @@ async def trickortreat(cmd = None):
 				else:
 					trick_index = 3
 					
-				if user_data.rr_challenger != "":
-					user_data.rr_challenger = ""
+				if ewutils.active_target_map.get(user_data.id_user) != None and ewutils.active_target_map.get(user_data.id_user) != "":
+					ewutils.active_target_map[user_data.id_user] = ""
 				user_data.change_slimes(n = -slime_loss, source=ewcfg.source_damage)
 				if user_data.slimes <= 0:
 					client = ewutils.get_client()

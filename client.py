@@ -84,6 +84,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_shoot_alt3: ewwep.attack,
 	ewcfg.cmd_shoot_alt4: ewwep.attack,
+	ewcfg.cmd_shoot_alt5: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -289,6 +290,9 @@ cmd_map = {
 	ewcfg.cmd_russian: ewcasino.russian_roulette,
 	ewcfg.cmd_accept: ewcmd.accept,
 	ewcfg.cmd_refuse: ewcmd.refuse,
+	
+	# Dueling
+	ewcfg.cmd_duel: ewcasino.duel,
 
 
 	# See what's for sale in the Food Court.
@@ -1179,13 +1183,23 @@ async def on_message(message):
 			response = "You manage to break {}'s garrote wire!".format(source.display_name)
 			user_data.clear_status(ewcfg.status_strangled_id)			
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		
+		if ewutils.active_restrictions.get(user_data.id_user) == 3:
+			die_resp = user_data.die(cause=ewcfg.cause_praying)
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=client, member=message.author)
+			await die_resp.post()
 
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
+			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
+			return await ewutils.send_message(client, message.channel, response)
+
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words)):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 2)
+				user is swearing
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1214,6 +1228,28 @@ async def on_message(message):
 			client = client,
 			mentions = mentions
 		)
+		
+		"""
+			Punish the user for swearing.
+		"""
+		if any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words):
+			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+			if message.server != None:
+				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
+			else:
+				usermodel = None
+			
+			if usermodel != None:
+				usermodel.swear_jar += 1
+				usermodel.slimecoin = max(0, usermodel.slimecoin - 1000000000) # 1 billion slimecoin fine for swearing
+				usermodel.persist()
+			
+			response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+			await ewutils.send_message(client, message.channel, response)
+			
+			# if the message wasn't a command, we can stop here
+			if not message.content.startswith(ewcfg.cmd_prefix):
+				return
 
 		"""
 			Handle direct messages.
