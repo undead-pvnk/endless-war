@@ -14898,7 +14898,20 @@ curse_words = [ # words that the player should be punished for saying via swear 
 	"fuck",
 	"bitch",
 	"bastard",
-	"nigger"
+	"nigger",
+	"kike",
+	"cuck",
+	"chink",
+	"chinaman",
+	"gook",
+	"injun",
+	"bomboclaat",
+	"mick",
+	"pickaninny",
+	"tarbaby",
+	"towelhead",
+	"wetback",
+	"zipperhead",
 ]
 
 curse_responses = [ # scold the player for swearing
