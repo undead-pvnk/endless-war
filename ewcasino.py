@@ -1178,11 +1178,11 @@ async def russian_roulette(cmd):
 	challengee = EwUser(member = member)
 
 	#Players have been challenged
-	if challenger.rr_challenger != "":
+	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	if challengee.rr_challenger != "":
+	if ewutils.active_target_map.get(challengee.id_user) != None and ewutils.active_target_map.get(challengee.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
@@ -1197,24 +1197,25 @@ async def russian_roulette(cmd):
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "You try to grab the gun, but it falls through your hands. Ghosts can't hold weapons.".format(author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-
 		elif challengee.life_state == ewcfg.life_state_corpse:
 			response = "{} tries to grab the gun, but it falls through their hands. Ghosts can't hold weapons.".format(member.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-
+		elif challenger.life_state == ewcfg.life_state_kingpin:
+			response = "Throwing all of your gang's hard earned slime on the line strikes you as a bad idea..."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		elif challengee.life_state == ewcfg.life_state_kingpin:
+			response = "They think about accepting for a moment, but then back away, remembering all the hard work their gangsters have put forth. Bummer..."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 		else:
 			response = "Juveniles are too cowardly to gamble their lives."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	#Assign a challenger so players can't be challenged
-	challenger.rr_challenger = challenger.id_user
-	challengee.rr_challenger = challenger.id_user
+	ewutils.active_target_map[challenger.id_user] = challengee.id_user
+	ewutils.active_target_map[challengee.id_user] = challenger.id_user
 	
-	challenger.rr_restriction = 1
-	challengee.rr_restriction = 1
-
-	challenger.persist()
-	challengee.persist()
+	ewutils.active_restrictions[challenger.id_user] = 1
+	ewutils.active_restrictions[challengee.id_user] = 1
 
 	response = "You have been challenged by {} to a game of russian roulette. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
@@ -1284,11 +1285,11 @@ async def russian_roulette(cmd):
 					challengee.id_killer = challengee.id_user
 					challengee.die(cause = ewcfg.cause_suicide)
 					
-				challenger.rr_challenger = ""
-				challengee.rr_challenger = ""
+				ewutils.active_target_map[challenger.id_user] = ""
+				ewutils.active_target_map[challengee.id_user] = ""
 
-				challenger.rr_restriction = 0
-				challengee.rr_restriction = 0
+				ewutils.active_restrictions[challenger.id_user] = 0
+				ewutils.active_restrictions[challengee.id_user] = 0
 
 				challenger.persist()
 				challengee.persist()
@@ -1316,11 +1317,11 @@ async def russian_roulette(cmd):
 	challenger = EwUser(member = author)
 	challengee = EwUser(member = member)
 
-	challenger.rr_challenger = ""
-	challengee.rr_challenger = ""
+	ewutils.active_target_map[challenger.id_user] = ""
+	ewutils.active_target_map[challengee.id_user] = ""
 
-	challenger.rr_restriction = 0
-	challengee.rr_restriction = 0
+	ewutils.active_restrictions[challenger.id_user] = 0
+	ewutils.active_restrictions[challengee.id_user] = 0
 
 	challenger.persist()
 	challengee.persist()
@@ -1347,11 +1348,11 @@ async def duel(cmd):
 	challengee = EwUser(member=member)
 
 	# Players have been challenged
-	if challenger.rr_challenger != "":
+	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	if challengee.rr_challenger != "":
+	if ewutils.active_target_map.get(challengee.id_user) != None and ewutils.active_target_map.get(challengee.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
@@ -1365,25 +1366,26 @@ async def duel(cmd):
 		if challenger.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't duel people. Alas, they can only watch from afar and !haunt."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-
 		elif challengee.life_state == ewcfg.life_state_corpse:
 			response = "Ghosts can't duel people. Alas, they can only watch from afar and !haunt."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
-
+		elif challenger.life_state == ewcfg.life_state_kingpin:
+			response = "Throwing all of your gang's hard earned slime on the line strikes you as a bad idea..."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
+		elif challengee.life_state == ewcfg.life_state_kingpin:
+			response = "They think about accepting for a moment, but then back away, remembering all the hard work their gangsters have put forth. Bummer..."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 		else:
 			response = "Juveniles are too cowardly to throw their lives away in a duel."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
 	# Assign a challenger so players can't be challenged
-	challenger.rr_challenger = challenger.id_user
-	challengee.rr_challenger = challenger.id_user
+	ewutils.active_target_map[challenger.id_user] = challengee.id_user
+	ewutils.active_target_map[challengee.id_user] = challenger.id_user
 	
 	# Apply restrictions to prevent movement, !tp, etc. This also lets the !accept command differentiate RR from duels.
-	challenger.rr_restriction = 2
-	challengee.rr_restriction = 2
-
-	challenger.persist()
-	challengee.persist()
+	ewutils.active_restrictions[challenger.id_user] = 2
+	ewutils.active_restrictions[challengee.id_user] = 2
 
 	response = "You have been challenged by {} to a duel. Do you !accept or !refuse?".format(author.display_name).replace("@", "\{at\}")
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
@@ -1403,21 +1405,30 @@ async def duel(cmd):
 	if accepted == 1:
 		challenger = EwUser(member=author)
 		challengee = EwUser(member=member)
-
-		challenger.persist()
-		challengee.persist()
 		
-		# start the countdown. if either user tries anything funny before the countdown is over, blow their heads clean off via BHB
+		# Start the countdown. Set restriction level to 3, which causes either user to die if they type during the countdown. 
+		ewutils.active_restrictions[challenger.id_user] = 3
+		ewutils.active_restrictions[challengee.id_user] = 3
+		
 		countdown = 10
 		
 		while countdown != 0:
-			text_mod = ""
+			# check if either user has had their restriction level set back to 0, indicating a death.
+			if ewutils.active_restrictions[challenger.id_user] == 0 or ewutils.active_restrictions[challengee.id_user] == 0:
+				ewutils.active_target_map[challenger.id_user] = ""
+				ewutils.active_target_map[challengee.id_user] = ""
+
+				ewutils.active_restrictions[challenger.id_user] = 0
+				ewutils.active_restrictions[challengee.id_user] = 0
+				
+				response = "The duel is over before it even began."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			
 			if countdown > 8:
 				text_mod = ""
 			elif countdown > 6:
 				text_mod = "*"
-			elif countdown > 4:
+			elif countdown > 3:
 				text_mod = "**"
 			else:
 				text_mod = "***"
@@ -1429,59 +1440,17 @@ async def duel(cmd):
 				
 			countdown -= 1
 			await ewutils.send_message(cmd.client, cmd.message.channel, countdown_resp)
+			await asyncio.sleep(1)
+			challenger = EwUser(member=author)
+			challengee = EwUser(member=member)
 
-			try:
-				msg = await cmd.client.wait_for_message(timeout=1, author=author)
-
-				if msg != None:
-					
-					challenger.rr_challenger = ""
-					challengee.rr_challenger = ""
-
-					challenger.rr_restriction = 0
-					challengee.rr_restriction = 0
-
-					challengee.persist()
-					
-					die_resp = challenger.die(cause=ewcfg.cause_praying)
-					challenger.persist()
-					await ewrolemgr.updateRoles(client=cmd.client, member=author)
-					await die_resp.post()
-
-					response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam. The duel is over before it even began.".format(author.display_name).replace("@","\{at\}")
-					
-					return await ewutils.send_message(cmd.client, cmd.message.channel, response)
-
-
-			except:
-				pass
-
-			try:
-				msg = await cmd.client.wait_for_message(timeout=1, author=member)
-
-				if msg != None:
-					challenger.rr_challenger = ""
-					challengee.rr_challenger = ""
-
-					challenger.rr_restriction = 0
-					challengee.rr_restriction = 0
-
-					challenger.persist()
-
-					die_resp = challengee.die(cause=ewcfg.cause_praying)
-					challengee.persist()
-					await ewrolemgr.updateRoles(client=cmd.client, member=member)
-					await die_resp.post()
-
-					response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam. The duel is over before it even began.".format(member.display_name).replace("@", "\{at\}")
-
-					return await ewutils.send_message(cmd.client, cmd.message.channel, response)
-
-			except:
-				pass
+		ewutils.active_restrictions[challenger.id_user] = 2
+		ewutils.active_restrictions[challengee.id_user] = 2
 			
 		response = "{}***DRAW!***{}".format(ewcfg.emote_slimegun, ewcfg.emote_slimegun)
 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		challenger = EwUser(member=author)
+		challengee = EwUser(member=member)
 		
 		# start the duel
 		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
@@ -1492,6 +1461,8 @@ async def duel(cmd):
 
 		await ewrolemgr.updateRoles(client=cmd.client, member=author)
 		await ewrolemgr.updateRoles(client=cmd.client, member=member)
+		challenger = EwUser(member=author)
+		challengee = EwUser(member=member)
 		
 		duel_timer = ewcfg.time_pvp_duel
 		
@@ -1501,19 +1472,19 @@ async def duel(cmd):
 		while challenger_slimes > 0 and challengee_slimes > 0 and duel_timer > 0:
 			# count down from 2 minutes, the max possible time a duel should last
 			duel_timer -= 1
+			await asyncio.sleep(1)
 
 			# re-grab slime counts from both duelers
 			challenger = EwUser(member=author)
 			challengee = EwUser(member=member)
 			challenger_slimes = challenger.slimes
 			challengee_slimes = challengee.slimes
-
-			await asyncio.sleep(1)
 			
 		if challenger.slimes <= 0:
 			# challenger lost
 			response = "**{} has won the duel!!**".format(member.display_name).replace("@","\{at\}")
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			challengee = EwUser(member=member)
 
 			challengee.time_expirpvp -= duel_timer
 
@@ -1521,6 +1492,7 @@ async def duel(cmd):
 			# challengee lost
 			response = "**{} has won the duel!!**".format(author.display_name).replace("@","\{at\}")
 			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			challenger = EwUser(member=author)
 
 			challenger.time_expirpvp -= duel_timer
 		
@@ -1541,11 +1513,11 @@ async def duel(cmd):
 	challenger = EwUser(member=author)
 	challengee = EwUser(member=member)
 
-	challenger.rr_challenger = ""
-	challengee.rr_challenger = ""
+	ewutils.active_target_map[challenger.id_user] = ""
+	ewutils.active_target_map[challengee.id_user] = ""
 
-	challenger.rr_restriction = 0
-	challengee.rr_restriction = 0
+	ewutils.active_restrictions[challenger.id_user] = 0
+	ewutils.active_restrictions[challengee.id_user] = 0
 
 	challenger.persist()
 	challengee.persist()
@@ -1685,7 +1657,7 @@ def check_skat_bid(message):
 	content = message.content.lower()
 	if content.startswith(ewcfg.cmd_slimeskat_bid) or content.startswith(ewcfg.cmd_slimeskat_pass):
 
-	        # tokenize the message. the command should be the first word.
+			# tokenize the message. the command should be the first word.
 		try:
 			tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
 		except:
@@ -1707,7 +1679,7 @@ def check_skat_call(message):
 	content = message.content.lower()
 	if content.startswith(ewcfg.cmd_slimeskat_call) or content.startswith(ewcfg.cmd_slimeskat_pass):
 
-	        # tokenize the message. the command should be the first word.
+			# tokenize the message. the command should be the first word.
 		try:
 			tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
 		except:
@@ -1737,7 +1709,7 @@ def skat_putback(message, hand, skat):
 	content = message.content.lower()
 	putback = False
 
-        # tokenize the message. the command should be the first word.
+		# tokenize the message. the command should be the first word.
 	try:
 		tokens = shlex.split(message.content)  # it's split with shlex now because shlex regards text within quotes as a single token
 	except:
@@ -1772,7 +1744,7 @@ def check_skat_play(message):
 
 def get_skat_play(message,hand):
 	content = message.content.lower()
-        # tokenize the message. the command should be the first word.
+		# tokenize the message. the command should be the first word.
 	try:
 		tokens = shlex.split(content)  # it's split with shlex now because shlex regards text within quotes as a single token
 	except:
@@ -1908,15 +1880,15 @@ async def skat(cmd):
 			break
 
 	#Players have been challenged
-	if challenger.rr_challenger != "":
+	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	if challengee.rr_challenger != "":
+	if ewutils.active_target_map.get(challengee.id_user) != None and ewutils.active_target_map.get(challengee.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
-	if challengee2.rr_challenger != "":
+	if ewutils.active_target_map.get(challengee2.id_user) != None and ewutils.active_target_map.get(challengee2.id_user) != "":
 		response = "{} is already in the middle of a challenge.".format(member2.display_name).replace("@", "\{at\}")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 
@@ -1938,8 +1910,7 @@ async def skat(cmd):
 
 	for m in members:
 		ewuser = EwUser(member = m)
-		ewuser.rr_challenger = ""
-		ewuser.persist()
+		ewutils.active_target_map[ewuser.id_user] = ""
 
 	response = "You have been invited by {} to a game of slime skat. Do you {} or {}?".format(author.display_name,ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline).replace("@", "\{at\}")
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member, response))
@@ -1960,11 +1931,10 @@ async def skat(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 		for m in members:
 			ewuser = EwUser(member = m)
-			ewuser.rr_challenger = ""
-			ewuser.persist()
+			ewutils.active_target_map[ewuser.id_user] = ""
 
 		return
-        
+		
 	response = "You have been invited by {} to a round of slime skat. Do you {} or {}?".format(author.display_name,ewcfg.cmd_slimeskat_join,ewcfg.cmd_slimeskat_decline).replace("@", "\{at\}")
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(member2, response))
 
@@ -1978,14 +1948,13 @@ async def skat(cmd):
 				accepted = 1
 	except:
 		accepted = 0
-                
+				
 	if accepted == 0:	
 		response = "{}'s brain was too small to understand slime skat.".format(member2.display_name).replace("@", "\{at\}")
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(author, response))
 		for m in members:
 			ewuser = EwUser(member = m)
-			ewuser.rr_challenger = ""
-			ewuser.persist()
+			ewutils.active_target_map[ewuser.id_user] = ""
 
 		return
 	
@@ -2000,8 +1969,7 @@ async def skat(cmd):
 				response = "You don't have enough slimecoin to cover your potential loss. Try lowering the multiplier."
 				for m in members:
 					ewuser = EwUser(member = m)
-					ewuser.rr_challenger = ""
-					ewuser.persist()
+					ewutils.active_target_map[ewuser.id_user] = ""
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[i], response))
 
 		front_idx = (round_num + 0) % 3
@@ -2121,7 +2089,7 @@ async def skat(cmd):
 				passed = True
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx],response))
 			if passed == True:
-			    active_idx = back_idx
+				active_idx = back_idx
 
 		#potential round 3
 		if maxbid < 18:
@@ -2398,71 +2366,70 @@ async def skat(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(members[active_idx], response))
 	for m in members:
 		ewuser = EwUser(member = m)
-		ewuser.rr_challenger = ""
-		ewuser.persist()
+		ewutils.active_target_map[ewuser.id_user] = ""
 
 	return
 
 
 """ Join a slime skat round """
 async def skat_join(cmd):
-        return
+		return
 
 """ Decline joining a slime skat round """
 async def skat_decline(cmd):
-        return
+		return
 
 """ Bid in slime skat """
 async def skat_bid(cmd):
-        return
+		return
 
 """ Pass on a bid in slime skat """
 async def skat_pass(cmd):
-        return
+		return
 
 """ Call on a bid in slime skat """
 async def skat_call(cmd):
-        return
+		return
 
 """ Play a card in slime skat """
 async def skat_play(cmd):
-        return
+		return
 
 """ Play a suit game with hearts as trump in slime skat """
 async def skat_hearts(cmd):
-        return
+		return
 
 """ Play a suit game with slugs as trump in slime skat """
 async def skat_slugs(cmd):
-        return
+		return
 
 """ Play a suit game with hats as trump in slime skat """
 async def skat_hats(cmd):
-        return
+		return
 
 """ Play a suit game with shields as trump in slime skat """
 async def skat_shields(cmd):
-        return
+		return
 
 """ Play a grand game in slime skat """
 async def skat_grand(cmd):
-        return
+		return
 
 """ Play a null game in slime skat """
 async def skat_null(cmd):
-        return
+		return
 
 """ Take the skat """
 async def skat_take(cmd):
-        return
+		return
 
 """ Play hand (without the skat) in slime skat """
 async def skat_hand(cmd):
-        return
+		return
 
 """ Choose 1 or 2 cards to put back into the skat """
 async def skat_choose(cmd):
-        return
+		return
 
 async def betsoul(cmd):
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)

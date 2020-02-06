@@ -1480,8 +1480,6 @@ col_faction = 'faction'
 col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
-col_rrchallenger = 'rr_challenger_id'
-col_rr_restriction = 'rr_restriction'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -14919,7 +14917,14 @@ curse_responses = [ # scold the player for swearing
 	"Another one for the swear jar...",
 	"Do you kiss your mother with that mouth?",
 	"Wow, maybe next time be a little nicer, won't you?",
-	"If you don't have anything nice to say, then don't say anything at all."
+	"If you don't have anything nice to say, then don't say anything at all.",
+	"Wow, racist much???",
+	"Now that's just plain rude.",
+	"And just like that, a billion SlimeCoin down the drain.",
+	"Calm down that attitude of yours, will you?",
+	"Your bad manners have costed you 1 billion SlimeCoin!",
+	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
+	#"You know, don't, say, s-swears."
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id

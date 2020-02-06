@@ -30,8 +30,6 @@ CREATE TABLE users (
 	poi varchar(64) NOT NULL default 'classroom',
 	life_state int NOT NULL DEFAULT '1',
 	busted int NOT NULL DEFAULT '0',
-	rr_challenger_id varchar(128) NOT NULL DEFAULT '',
-	rr_restriction int NOT NULL DEFAULT '0',
 	time_last_action bigint NOT NULL DEFAULT '0',
 	weaponmarried int NOT NULL DEFAULT '0',
 	time_lastscavenge int NOT NULL DEFAULT '0',

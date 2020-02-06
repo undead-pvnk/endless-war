@@ -766,16 +766,15 @@ async def leaderboard(cmd):
 """ Accept a russian roulette challenge """
 async def accept(cmd):
 	user = EwUser(member = cmd.message.author)
-	if(user.rr_challenger != ""):
-		challenger = EwUser(id_user = user.rr_challenger, id_server = user.id_server)
-		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
-			challenger.rr_challenger = user.id_user
-			challenger.persist()
+	if(ewutils.active_target_map.get(user.id_user) != None and ewutils.active_target_map.get(user.id_user) != ""):
+		challenger = EwUser(id_user = ewutils.active_target_map[user.id_user], id_server = user.id_server)
+		if(ewutils.active_target_map.get(user.id_user) != user.id_user and ewutils.active_target_map.get(challenger.id_user) != user.id_user):
+			ewutils.active_target_map[challenger.id_user] = user.id_user
 			slimeoid_data = EwSlimeoid(member = cmd.message.author)
 			response = ""
 			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
-			elif cmd.message.channel.name == ewcfg.channel_casino and challenger.rr_restriction == 1:
+			elif cmd.message.channel.name == ewcfg.channel_casino and ewutils.active_restrictions[challenger.id_user] == 1:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
 
 			if len(response) > 0:
@@ -786,20 +785,18 @@ async def accept(cmd):
 async def refuse(cmd):
 	user = EwUser(member = cmd.message.author)
 
-	if(user.rr_challenger != ""):
-		challenger = EwUser(id_user = user.rr_challenger, id_server = user.id_server)
+	if(ewutils.active_target_map.get(user.id_user) != None and ewutils.active_target_map.get(user.id_user) != ""):
+		challenger = EwUser(id_user = ewutils.active_target_map[user.id_user], id_server = user.id_server)
 
-		user.rr_challenger = ""
-		user.rr_restriction = 0
-		user.persist()
+		ewutils.active_target_map[user.id_user] = ""
+		ewutils.active_restrictions[user.id_user] = 0
 
-		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
+		if(ewutils.active_target_map.get(user.id_user) != user.id_user and ewutils.active_target_map.get(challenger.id_user) != user.id_user):
 			response = "You refuse the challenge, but not before leaving a large puddle of urine beneath you."
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
-			challenger.rr_challenger = ""
-			challenger.rr_restriction = 0
-			challenger.persist()
+			ewutils.active_target_map[challenger.id_user] = ""
+			ewutils.active_restrictions[challenger.id_user] = 0
 
 """
 	Ban a player from participating in the game

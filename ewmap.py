@@ -750,7 +750,7 @@ async def move(cmd = None, isApt = False):
 
 	movement_method = ""
 
-	if user_data.rr_restriction > 0:
+	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1047,7 +1047,7 @@ async def teleport(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	
-	if user_data.rr_restriction > 0:
+	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

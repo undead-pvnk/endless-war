@@ -36,8 +36,6 @@ class EwUser:
 	poi = ""
 	life_state = 0
 	busted = False
-	rr_challenger = ""
-	rr_restriction = 0
 	time_last_action = 0
 	weaponmarried = False
 	arrested = False
@@ -254,6 +252,8 @@ class EwUser:
 		self.sap = 0
 		self.hardened_sap = 0
 		ewutils.moves_active[self.id_user] = 0
+		ewutils.active_target_map[self.id_user] = ""
+		ewutils.active_restrictions[self.id_user] = 0
 		ewstats.clear_on_death(id_server = self.id_server, id_user = self.id_user)
 
 		self.persist()
@@ -709,7 +709,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -730,8 +730,6 @@ class EwUser:
 					ewcfg.col_poi,
 					ewcfg.col_life_state,
 					ewcfg.col_busted,
-					ewcfg.col_rrchallenger,
-					ewcfg.col_rr_restriction,
 					ewcfg.col_time_last_action,
 					ewcfg.col_weaponmarried,
 					ewcfg.col_time_lastscavenge,
@@ -784,33 +782,31 @@ class EwUser:
 					self.poi = result[16]
 					self.life_state = result[17]
 					self.busted = (result[18] == 1)
-					self.rr_challenger = result[19]
-					self.rr_restriction = result[20]
-					self.time_last_action = result[21]
-					self.weaponmarried = (result[22] == 1)
-					self.time_lastscavenge = result[23]
-					self.bleed_storage = result[24]
-					self.time_lastenter = result[25]
-					self.time_lastoffline = result[26]
-					self.time_joined = result[27]
-					self.poi_death = result[28]
-					self.slime_donations = result[29]
-					self.poudrin_donations = result[30]
-					self.arrested = (result[31] == 1)
-					self.splattered_slimes = result[32]
-					self.time_expirpvp = result[33]
-					self.time_lastenlist = result[34]
-					self.apt_zone = result[35]
-					self.visiting = result[36]
-					self.active_slimeoid = result[37]
-					self.has_soul = result[38]
-					self.sap = result[39]
-					self.hardened_sap = result[40]
-					self.festivity = result[41]
-					self.festivity_from_slimecoin = result[42]
-					self.slimernalia_kingpin = (result[43] == 1)
-					self.manuscript = result[44]
-					self.swear_jar = result[45]
+					self.time_last_action = result[19]
+					self.weaponmarried = (result[20] == 1)
+					self.time_lastscavenge = result[21]
+					self.bleed_storage = result[22]
+					self.time_lastenter = result[23]
+					self.time_lastoffline = result[24]
+					self.time_joined = result[25]
+					self.poi_death = result[26]
+					self.slime_donations = result[27]
+					self.poudrin_donations = result[28]
+					self.arrested = (result[29] == 1)
+					self.splattered_slimes = result[30]
+					self.time_expirpvp = result[31]
+					self.time_lastenlist = result[32]
+					self.apt_zone = result[33]
+					self.visiting = result[34]
+					self.active_slimeoid = result[35]
+					self.has_soul = result[36]
+					self.sap = result[37]
+					self.hardened_sap = result[38]
+					self.festivity = result[39]
+					self.festivity_from_slimecoin = result[40]
+					self.slimernalia_kingpin = (result[41] == 1)
+					self.manuscript = result[42]
+					self.swear_jar = result[43]
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
@@ -866,7 +862,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -889,8 +885,6 @@ class EwUser:
 				ewcfg.col_poi,
 				ewcfg.col_life_state,
 				ewcfg.col_busted,
-				ewcfg.col_rrchallenger,
-				ewcfg.col_rr_restriction,
 				ewcfg.col_time_last_action,
 				ewcfg.col_weaponmarried,
 				ewcfg.col_time_lastscavenge,
@@ -939,8 +933,6 @@ class EwUser:
 				self.poi,
 				self.life_state,
 				(1 if self.busted else 0),
-				self.rr_challenger,
-				self.rr_restriction,
 				self.time_last_action,
 				(1 if self.weaponmarried else 0),
 				self.time_lastscavenge,

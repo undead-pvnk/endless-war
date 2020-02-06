@@ -1183,6 +1183,15 @@ async def on_message(message):
 			response = "You manage to break {}'s garrote wire!".format(source.display_name)
 			user_data.clear_status(ewcfg.status_strangled_id)			
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		
+		if ewutils.active_restrictions.get(user_data.id_user) == 3:
+			die_resp = user_data.die(cause=ewcfg.cause_praying)
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=client, member=message.author)
+			await die_resp.post()
+
+			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
+			return await ewutils.send_message(client, message.channel, response)
 
 	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words)):
 		"""
@@ -1235,7 +1244,7 @@ async def on_message(message):
 				usermodel.slimecoin = max(0, usermodel.slimecoin - 1000000000) # 1 billion slimecoin fine for swearing
 				usermodel.persist()
 			
-			response = 'ENDLESS WAR judges you harshly!\n"{}"'.format(random.choice(ewcfg.curse_responses))
+			response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
 			await ewutils.send_message(client, message.channel, response)
 			
 			# if the message wasn't a command, we can stop here
