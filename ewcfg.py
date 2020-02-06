@@ -1820,6 +1820,7 @@ stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
+stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 
 # Categories of events that change your slime total, for statistics tracking
@@ -2020,7 +2021,7 @@ weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
-
+weapon_id_bow = 'bow'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -3197,6 +3198,31 @@ def wef_umbrella(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+# weapon effect function for "minecraft bow"
+def wef_bow(ctn = None):
+	aim = (random.randrange(0, 13) - 2)
+	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
+	ctn.sap_damage = 1
+	ctn.sap_ignored = 8
+	
+	# Increased miss chance if attacking within less than two seconds after last attack
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
+
+	ctn.slimes_damage = int(ctn.slimes_damage * 4)
+
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (9 - int(16 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage = int(dmg * 10)
+
 
 vendor_dojo = "Dojo"
 
@@ -3858,6 +3884,32 @@ weapon_list = [
 		stat = stat_umbrella_kills,
 		sap_cost = 1,
 		captcha_length = 4
+	),
+        EwWeapon(  # 22
+		id_weapon = weapon_id_bow,
+		alias = [
+			"bow",
+		],
+		str_crit = "**Critical hit!!** Through measured shots {name_player} manages to stick a pixelated arrow in {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} completely misses, a pixelated arrow embeds itself into the ground!",
+		str_equip = "You equip the minecraft bow, c418 music plays in the background.",
+		str_name = "minecraft bow",
+		str_weapon = "a minecraft bow",
+		str_weaponmaster_self = "You are a rank {rank} minecraft bowmaster.",
+		str_weaponmaster = "They are a rank {rank} minecraft bowmaster.",
+		str_trauma_self = "There is a pixelated arrow in the side of your head.",
+		str_trauma = "There is a pixelated arrow in the side of their head.",
+		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as their foes life fades, riddling their body with arrows. {emote_skull}",
+		str_killdescriptor = "shot to death",
+		str_damage = "{name_target} is shot in the {hitzone}!!",
+		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
+		str_scalp = " The scalp has pixels covering it.",
+		fn_effect = wef_bow,
+		str_description = "It's a newly crafted minecraft bow, complete with a set of minecraft arrows",
+		acquisition = acquisition_smelting,
+		stat = stat_bow_kills,
+		sap_cost = 2,
+		captcha_length = 2
 	),
 ]
 
@@ -11702,6 +11754,18 @@ smelting_recipe_list = [
 		},
 		products = ['bass']
     ),
+    EwSmeltingRecipe(
+		id_recipe = "bow",
+		str_name = "a Minecraft Bow",
+		alias = [
+			"minecraft bow"
+		],
+		ingredients = {
+			'stick' : 3,
+			'string':3
+		},
+		products = ['bow']
+    ),
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
@@ -14184,7 +14248,7 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	
+        weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase."
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
