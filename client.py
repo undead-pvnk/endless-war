@@ -188,6 +188,9 @@ cmd_map = {
 	
 	# Show the total of positive slime in the world.
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
+	
+	# Show the number of swears in the global swear jar.
+	ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
@@ -1193,7 +1196,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words)):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1232,20 +1235,48 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words):
+		
+		if any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words.keys()):
+			
+			swear_count = 0
+			swear_multiplier = 0
+	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			if message.server != None:
 				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 			else:
 				usermodel = None
-			
+
+			market_data = EwMarket(id_server=message.server.id)
+
+			# gather all the swear words the user typed.
+			for swear in ewcfg.curse_words.keys():
+				
+				if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
+					continue
+				if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
+					continue
+					
+				swear_count = ewutils.flattenTokenListToString(content_tolower.split(" ")).count(swear)
+				for i in range(swear_count):
+					swear_multiplier += ewcfg.curse_words[swear]
+					
+					market_data.global_swear_jar += 1
+
+					usermodel.swear_jar += 1
+
+			market_data.persist()
+
 			if usermodel != None:
-				usermodel.swear_jar += 1
-				usermodel.slimecoin = max(0, (usermodel.slimecoin - (usermodel.swear_jar * 1000000000))) # fine the user for swearing, 1 billion slimecoin for every swear in their swear jar
+					
+				usermodel.slimecoin = max(0, (usermodel.slimecoin - (usermodel.swear_jar * swear_multiplier * 10000))) # fine the user for swearing, 1 billion slimecoin for every swear in their swear jar
 				usermodel.persist()
 			
-			response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
-			await ewutils.send_message(client, message.channel, response)
+			if swear_multiplier > 20:
+				response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+				await ewutils.send_message(client, message.channel, response)
+			else:
+				print("swear threshold not met")
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):

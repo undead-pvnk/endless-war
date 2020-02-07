@@ -601,6 +601,7 @@ cmd_stocks = cmd_prefix + 'stocks'
 cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
+cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
@@ -1491,6 +1492,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
+col_global_swear_jar = 'global_swear_jar'
 col_arrested = 'arrested'
 col_active_slimeoid = 'active_slimeoid'
 col_time_expirpvp = 'time_expirpvp'
@@ -14952,34 +14954,36 @@ zine_commands = [
 	cmd_setpages_alt_2,
 ]
 
-curse_words = [ # words that the player should be punished for saying via swear jar deduction
-	"fag",
-	"shit",
-	"asshole", # can not be shortened to 'ass' due to words like 'pass' or 'class'
-	"cunt",
-	"fuck",
-	"bitch",
-	"bastard",
-	"nigger",
-	"kike",
-	"cuck",
-	"chink",
-	"chinaman",
-	"gook",
-	"injun",
-	"bomboclaat",
-	"mick",
-	"pickaninny",
-	"tarbaby",
-	"towelhead",
-	"wetback",
-	"zipperhead",
-	"spick",
-	"dyke",
-	"tranny",
-	"dickhead",
-	"retard"
-]
+curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
+	"fag":30,
+	"shit":10,
+	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"cunt":30,
+	"fuck":10,
+	"bitch":10,
+	"bastard":5,
+	"nigger":80,
+	"kike":80,
+	"cuck":30,
+	"chink":50,
+	"chinaman":50,
+	"gook":50,
+	"injun":50,
+	"bomboclaat":80,
+	"mick":50,
+	"pickaninny":50,
+	"tarbaby":50,
+	"towelhead":50,
+	"wetback":50,
+	"zipperhead":50,
+	"spick":50,
+	"dyke":50,
+	"tranny":80,
+	"dickhead":20,
+	"retard":30,
+	"buster":100,
+	"kraker":100,
+}
 
 curse_responses = [ # scold the player for swearing
 	"Watch your language!",
