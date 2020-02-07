@@ -1192,8 +1192,8 @@ async def on_message(message):
 
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
-
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words)):
+	
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words)):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1232,7 +1232,7 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if any(swear in ewutils.flattenTokenListToString(content_tolower) for swear in ewcfg.curse_words):
+		if any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words):
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			if message.server != None:
 				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
