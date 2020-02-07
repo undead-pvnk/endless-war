@@ -1276,7 +1276,7 @@ async def on_message(message):
 
 			if usermodel != None:
 				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-				usermodel.change_slimecoin(n=-(usermodel.slimecoin - (usermodel.swear_jar * swear_multiplier * 10000)), coinsource=ewcfg.coinsource_swearjar)
+				usermodel.change_slimecoin(n=-(usermodel.swear_jar * swear_multiplier * 10000), coinsource=ewcfg.coinsource_swearjar)
 				usermodel.persist()
 			
 			if swear_multiplier > 20:
