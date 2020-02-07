@@ -1160,6 +1160,7 @@ async def on_message(message):
 		)
 
 	content_tolower = message.content.lower()
+	content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
@@ -1196,7 +1197,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1235,11 +1236,11 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		
-		if any(swear in ewutils.flattenTokenListToString(content_tolower.split(" ")) for swear in ewcfg.curse_words.keys()):
+		if (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
 			
-			swear_count = 0
 			swear_multiplier = 0
+			
+			#print(content_tolower_string)
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
 			if message.server != None:
@@ -1257,7 +1258,13 @@ async def on_message(message):
 				if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
 					continue
 					
-				swear_count = ewutils.flattenTokenListToString(content_tolower.split(" ")).count(swear)
+				swear_count = content_tolower_string.count(swear)
+				
+				# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
+				if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
+					#print('emote skipped over')
+					continue
+				
 				for i in range(swear_count):
 					swear_multiplier += ewcfg.curse_words[swear]
 					
@@ -1275,8 +1282,8 @@ async def on_message(message):
 			if swear_multiplier > 20:
 				response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
 				await ewutils.send_message(client, message.channel, response)
-			else:
-				print("swear threshold not met")
+			#else:
+			#	print("swear threshold not met")
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
