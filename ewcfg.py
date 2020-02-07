@@ -601,6 +601,7 @@ cmd_stocks = cmd_prefix + 'stocks'
 cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
+cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
@@ -1491,6 +1492,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
+col_global_swear_jar = 'global_swear_jar'
 col_arrested = 'arrested'
 col_active_slimeoid = 'active_slimeoid'
 col_time_expirpvp = 'time_expirpvp'
@@ -1776,6 +1778,7 @@ stat_lifetime_casino_losses = 'lifetime_casino_losses'
 stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
+stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -1854,6 +1857,7 @@ coinsource_transfer = 5
 coinsource_invest = 6
 coinsource_withdraw = 7
 coinsource_recycle = 8
+coinsource_swearjar = 9
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -14952,29 +14956,39 @@ zine_commands = [
 	cmd_setpages_alt_2,
 ]
 
-curse_words = [ # words that the player should be punished for saying via swear jar deduction
-	"fag",
-	"shit",
-	"asshole", # can not be shortened to 'ass' due to words like 'pass' or 'class'
-	"cunt",
-	"fuck",
-	"bitch",
-	"bastard",
-	"nigger",
-	"kike",
-	"cuck",
-	"chink",
-	"chinaman",
-	"gook",
-	"injun",
-	"bomboclaat",
-	"mick",
-	"pickaninny",
-	"tarbaby",
-	"towelhead",
-	"wetback",
-	"zipperhead",
-]
+curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
+	"fag":30,
+	"shit":10,
+	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"cunt":30,
+	"fuck":10,
+	"bitch":10,
+	"bastard":5,
+	"nigger":80,
+	"kike":80,
+	"cuck":30,
+	"chink":50,
+	"chinaman":50,
+	"gook":50,
+	"injun":50,
+	"bomboclaat":80,
+	"mick":50,
+	"pickaninny":50,
+	"tarbaby":50,
+	"towelhead":50,
+	"wetback":50,
+	"zipperhead":50,
+	"spick":50,
+	"dyke":50,
+	"tranny":80,
+	"dickhead":20,
+	"retard":30,
+	"buster":100,
+	"kraker":100,
+	"beaner":50,
+	"wanker":10,
+	"twat":10,
+}
 
 curse_responses = [ # scold the player for swearing
 	"Watch your language!",
@@ -14984,9 +14998,9 @@ curse_responses = [ # scold the player for swearing
 	"If you don't have anything nice to say, then don't say anything at all.",
 	"Wow, racist much???",
 	"Now that's just plain rude.",
-	"And just like that, a billion SlimeCoin down the drain.",
+	"And just like that, some of your precious SlimeCoin goes right down the drain.",
 	"Calm down that attitude of yours, will you?",
-	"Your bad manners have costed you 1 billion SlimeCoin!",
+	"Your bad manners have costed you a fraction of your SlimeCoin!",
 	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
 	#"You know, don't, say, s-swears."
 ]

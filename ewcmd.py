@@ -447,7 +447,22 @@ async def endlesswar(cmd):
 	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.message.server.id))
 	totalslimes = total[0][0]
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
+
+async def swearjar(cmd):
+	market_data = EwMarket(id_server=cmd.message.server.id)
+	total_swears = market_data.global_swear_jar
+	
+	response = "The swear jar has reached: **{}**".format(total_swears)
+	
+	if total_swears > 1000:
+		response += "\nThings are starting to get nasty."
+	elif total_swears > 10000:
+		response += "\nSwears? In *my* free Text-Based MMORPG playable entirely within my browser? It's more likely than you think."
+	elif total_swears > 100000:
+		response += "\nGod help us all..."
+	
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 def weather_txt(id_server):
@@ -545,7 +560,7 @@ async def dance(cmd):
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		dance_response = random.choice(ewcfg.dance_responses).format(member.display_name)
 		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, dance_response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, dance_response)
 
 """
 	Ghosts BOO
