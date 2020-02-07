@@ -1778,6 +1778,7 @@ stat_lifetime_casino_losses = 'lifetime_casino_losses'
 stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
+stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -1856,6 +1857,7 @@ coinsource_transfer = 5
 coinsource_invest = 6
 coinsource_withdraw = 7
 coinsource_recycle = 8
+coinsource_swearjar = 9
 
 # Causes of death, for statistics tracking
 cause_killing = 0

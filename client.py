@@ -1275,8 +1275,8 @@ async def on_message(message):
 			market_data.persist()
 
 			if usermodel != None:
-					
-				usermodel.slimecoin = max(0, (usermodel.slimecoin - (usermodel.swear_jar * swear_multiplier * 10000))) # fine the user for swearing, 1 billion slimecoin for every swear in their swear jar
+				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+				usermodel.change_slimecoin(n=-(usermodel.slimecoin - (usermodel.swear_jar * swear_multiplier * 10000)), coinsource=ewcfg.coinsource_swearjar)
 				usermodel.persist()
 			
 			if swear_multiplier > 20:

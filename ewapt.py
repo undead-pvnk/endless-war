@@ -992,6 +992,8 @@ async def knock(cmd = None):
 							accepted = True
 						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
+
+							user_data = EwUser(member=cmd.message.author)
 							
 							# Flag the person knocking to discourage spam
 							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))

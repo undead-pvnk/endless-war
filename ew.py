@@ -302,6 +302,8 @@ class EwUser:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_casino_losses, n = change)
 			if coinsource == ewcfg.coinsource_invest:
 				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_invested, n = change)
+			if coinsource == ewcfg.coinsource_swearjar:
+				ewstats.change_stat(user = self, metric = ewcfg.stat_total_slimecoin_from_swearing, n = change)
 
 	def add_weaponskill(self, n = 0, weapon_type = None):
 		# Save the current weapon's skill
