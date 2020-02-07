@@ -1440,9 +1440,22 @@ async def propstand(cmd):
 			if item.item_props.get('id_furniture') == "propstand":
 				response = "It's already on a prop stand."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if item.item_type == ewcfg.it_weapon and user_data.weapon == item.id_item:
+			if user_data.weaponmarried:
+				response = "You consider leaving your partner mounted on the wall and being done with it. Unfortunately for you, if you want to get separated you'll have to talk with Dojo master first."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			user_data.weapon = -1
+			user_data.persist()
+
 		if item.soulbound:
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
 		else:
+			if item.item_type == ewcfg.it_cosmetic:
+				item.item_props["adorned"] = 'false'
+				item.item_props["slimeoid"] = 'false'
+				item.persist()
+
 			fname = "{} stand".format(item_sought.get('name'))
 			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
 			lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
@@ -1454,7 +1467,6 @@ async def propstand(cmd):
 				if fdesc.find('{') >= 0:
 					fdesc = fdesc.format_map(item.item_props)
 			fdesc += " It's preserved on a mount."
-
 
 			ewitem.item_create(
 				id_user=cmd.message.author.id,
