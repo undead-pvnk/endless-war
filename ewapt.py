@@ -1431,6 +1431,7 @@ async def aquarium(cmd):
 async def propstand(cmd):
 
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
@@ -1443,6 +1444,19 @@ async def propstand(cmd):
 		if item.soulbound:
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
 		else:
+			if item.item_type == ewcfg.it_weapon and usermodel.weapon >= 0 and item.id_item == usermodel.weapon:
+				if usermodel.weaponmarried:
+					weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+					response = "Your dearly beloved? Put on a propstand? At least have the decency to get a divorce at the dojo first, you cretin.".format(weapon.str_weapon)
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				else:
+					usermodel.weapon = -1
+					usermodel.persist()
+			elif item.item_type == ewcfg.it_cosmetic:
+				item.item_props["adorned"] = "false"
+				item.item_props["slimeoid"] = 'false'
+				item.persist()
+
 			fname = "{} stand".format(item_sought.get('name'))
 			response = "You affix the {} to a wooden mount. You know this priceless trophy will last thousands of years, so you spray it down with formaldehyde to preserve it forever. Or at least until you decide to remove it.".format(item_sought.get('name'))
 			lookdesc = "A {} is mounted on the wall.".format(item_sought.get('name'))
