@@ -1396,6 +1396,8 @@ festivity_on_gift_giving = 10000
 
 # Common strings.
 str_casino_closed = "The SlimeCorp Casino only operates at night."
+str_casino_negaslime_dealer = "\"We don't deal with negaslime around here.\", says the dealer disdainfully."
+str_casino_negaslime_machine = "The machine doesn't seem to accept antislime."
 str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
 str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " in person to {action} your {currency}."
