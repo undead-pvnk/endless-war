@@ -14983,6 +14983,9 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"retard":30,
 	"buster":100,
 	"kraker":100,
+	"beaner":50,
+	"wanker":10,
+	"twat":10,
 }
 
 curse_responses = [ # scold the player for swearing
