@@ -971,10 +971,6 @@ async def knock(cmd = None):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		else:
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
-			user_data.persist()
-			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-
 			response = "{} is knocking at your door. Do you !accept their arrival, or !refuse entry?".format(cmd.message.author.display_name)
 			try:
 				await ewutils.send_message(cmd.client, target, ewutils.formatMessage(target, response))
@@ -996,6 +992,12 @@ async def knock(cmd = None):
 							accepted = True
 						if message.content.lower() == ewcfg.cmd_refuse:
 							accepted = False
+							
+							# Flag the person knocking to discourage spam
+							user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_knock))
+							user_data.persist()
+							await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "They don't want your company, and have tipped off the authorities."))
 					else:
 						pass
 						#user_data = EwUser(member=cmd.message.author)
