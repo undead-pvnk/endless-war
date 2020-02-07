@@ -1241,7 +1241,7 @@ async def on_message(message):
 			
 			if usermodel != None:
 				usermodel.swear_jar += 1
-				usermodel.slimecoin = max(0, usermodel.slimecoin - 1000000000) # 1 billion slimecoin fine for swearing
+				usermodel.slimecoin = max(0, (usermodel.slimecoin - (usermodel.swear_jar * 1000000000))) # fine the user for swearing, 1 billion slimecoin for every swear in their swear jar
 				usermodel.persist()
 			
 			response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())

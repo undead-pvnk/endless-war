@@ -14989,9 +14989,9 @@ curse_responses = [ # scold the player for swearing
 	"If you don't have anything nice to say, then don't say anything at all.",
 	"Wow, racist much???",
 	"Now that's just plain rude.",
-	"And just like that, a billion SlimeCoin down the drain.",
+	"And just like that, some of your precious SlimeCoin goes right down the drain.",
 	"Calm down that attitude of yours, will you?",
-	"Your bad manners have costed you 1 billion SlimeCoin!",
+	"Your bad manners have costed you a fraction of your SlimeCoin!",
 	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
 	#"You know, don't, say, s-swears."
 ]
