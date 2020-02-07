@@ -14977,7 +14977,8 @@ curse_words = [ # words that the player should be punished for saying via swear 
 	"spick",
 	"dyke",
 	"tranny",
-	"dickhead"
+	"dickhead",
+	"retard"
 ]
 
 curse_responses = [ # scold the player for swearing
