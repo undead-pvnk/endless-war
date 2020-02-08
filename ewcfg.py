@@ -14960,6 +14960,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"fag":30,
 	"shit":10,
 	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"dumbass": 10,
 	"cunt":30,
 	"fuck":10,
 	"bitch":10,
