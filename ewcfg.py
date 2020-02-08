@@ -14967,7 +14967,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"nigger":80,
 	"kike":80,
 	"cuck":30,
-	"chink":50,
+	#"chink":50,
 	"chinaman":50,
 	"gook":50,
 	"injun":50,
