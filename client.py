@@ -1258,9 +1258,15 @@ async def on_message(message):
 
 					swear_count = content_tolower_string.count(swear)
 
-					# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
+					# Niche scenarios. If certain words are used, don't count their components as swears.
 					if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
-						# print('emote skipped over')
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+					elif swear == "mick" and (content_tolower_string.count('gimmick') > 0):
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+					elif swear == "shit" and "shit" not in content_tolower:
+						#print('swear detection turned off for {}.'.format(swear))
 						continue
 
 					for i in range(swear_count):
