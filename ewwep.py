@@ -1048,8 +1048,8 @@ async def suicide(cmd):
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky or user_isjuvenile:
-			if user_data.rr_challenger != "":
-				response = "You can't do that now."
+			if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+				response = "You can't do that right now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
 
 			slimes_total = user_data.slimes

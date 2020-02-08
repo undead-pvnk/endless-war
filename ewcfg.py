@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.20noslimernalia"
+version = "v3.21dds"
 
 dir_msgqueue = 'msgqueue'
 
@@ -529,6 +529,7 @@ cmd_shoot_alt1 = cmd_prefix + 'bonk'
 cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
+cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -600,6 +601,7 @@ cmd_stocks = cmd_prefix + 'stocks'
 cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
+cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
@@ -669,6 +671,7 @@ cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
+cmd_duel = cmd_prefix + 'duel'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
@@ -1206,6 +1209,7 @@ time_pvp_farm = 10 * 60
 time_pvp_spar = 5 * 60
 time_pvp_enlist = 5 * 60
 time_pvp_knock = 10 #temp fix. will probably add spam prevention or something funny like restraining orders later
+time_pvp_duel = 3 * 60
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -1477,7 +1481,6 @@ col_faction = 'faction'
 col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
-col_rrchallenger = 'rr_challenger_id'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -1489,6 +1492,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
+col_global_swear_jar = 'global_swear_jar'
 col_arrested = 'arrested'
 col_active_slimeoid = 'active_slimeoid'
 col_time_expirpvp = 'time_expirpvp'
@@ -1499,6 +1503,8 @@ col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
+col_swear_jar = 'swear_jar'
+
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_festivity_from_slimecoin = 'festivity_from_slimecoin'
@@ -1772,6 +1778,7 @@ stat_lifetime_casino_losses = 'lifetime_casino_losses'
 stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
+stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -1850,6 +1857,7 @@ coinsource_transfer = 5
 coinsource_invest = 6
 coinsource_withdraw = 7
 coinsource_recycle = 8
+coinsource_swearjar = 9
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -5663,6 +5671,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "khaotickilliflowerfuckenergy",
+		alias = [
+			"kkfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5673,6 +5684,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "rampagingrowddishfuckenergy",
+		alias = [
+			"rrfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5683,6 +5697,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "direappleciderfuckenergy",
+		alias = [
+			"dacfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5693,6 +5710,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "ultimateurinefuckenergy",
+		alias = [
+			"uufu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5703,6 +5723,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "superwaterfuckenergy",
+		alias = [
+			"swfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -6303,14 +6326,15 @@ food_list = [
 		vendors=[vendor_greencakecafe]
 	),
 	EwFood(
-		id_food = "juicebox",
+		id_food = "direapplefrickenergy",
 		alias = [
 			"juice",
 			"appyjuice",
+			"frickenergy",
 		],
 		recover_hunger=10,
 		price=1,
-		str_name = "Juice Box",
+		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
 		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
@@ -9932,7 +9956,7 @@ poi_list = [
 		],
 		str_name = "an Arsonbrook apartment",
 		str_desc = "",
-		channel = channel_apt_oldnewyonkers,
+		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
 		mother_district = poi_id_arsonbrook,
@@ -14843,10 +14867,35 @@ pray_responses_list = [
 dance_responses = [
 	"{} busts a move. Wow, look at 'em go!",
 	"{} gets down and boogies! Groovy!",
-	"{} does a headstand and starts breakdancing!",
+	"{} does a headstand and does a 720 degree spin!",
 	"{} starts flossing fast and hard!",
 	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} cracks the whip! Watch them go at it!",
+	"{} performs the Nae Nae! https://en.wikipedia.org/wiki/Nae_Nae",
+	"{} does the Default Dance! You hear the familiar Fortnite jingle go off in your head.",
+	"{} gets down on the floor and does the worm! Their rhythm is off the charts!",
+	"{} spins around like a Laotian Toprock dancer! Whoa, be careful not to kick anyone, big guy!",
+	"{} does the monkey! Man, they're pretty!",
+	"{} does the charleston. What is this, the 20's? They do look kinda cool though...",
+	"{} starts breakdancing, Capoeira style! They almost knock someone's teeth out with their swift leg swings!",
+	"{} does a triple backflip! Hot diggedy!",
+	"{} performs a double Cartwheel! Not really a dance move, but we'll take it!",
+	"{} starts a Conga line! The party's over here!",
+	"{} does a moonwalk! They're smooth as heck!",
+	"{} does the robot! They manage to pull it off in a way that doesn't seem totally autistic!",
+	"{} does the carlton! It's anything BUT unusual!",
+	"{} starts tap dancing! They really start puttin' on the ritz for sure!",
+	"{} pumps their fist in the air over and over!",
+	"{} does a Flamenco dance! Their grace and elegance is unmatched!",
+	"{} walks like an Egyptian! Wow, racist much???",
+	"{} does an old-fashioned breakdance! Hot damn!",
+	"{} does the traditional Ukrainian Hopak! Their legs flail back and forth!",
+	"{} performs the Mannrobics taunt! They feel the burn!",
+	"{} gets the urge to !dab, but holds back with all their might.",
+	"{} gets the urge to !thrash, but holds back with all their might.",
+	"{} just kind of stands there, awkwardly. What did you expect?",
 	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+	# "{} does the Mayor Pete dance!", -- hm, maybe not... 
 ]
 
 # list of genres and aliases
@@ -14905,7 +14954,56 @@ zine_commands = [
 	cmd_setpages,
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
-	]
+]
+
+curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
+	"fag":30,
+	"shit":10,
+	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"cunt":30,
+	"fuck":10,
+	"bitch":10,
+	"bastard":5,
+	"nigger":80,
+	"kike":80,
+	"cuck":30,
+	"chink":50,
+	"chinaman":50,
+	"gook":50,
+	"injun":50,
+	"bomboclaat":80,
+	"mick":50,
+	"pickaninny":50,
+	"tarbaby":50,
+	"towelhead":50,
+	"wetback":50,
+	"zipperhead":50,
+	"spick":50,
+	"dyke":50,
+	"tranny":80,
+	"dickhead":20,
+	"retard":30,
+	"buster":100,
+	"kraker":100,
+	"beaner":50,
+	"wanker":10,
+	"twat":10,
+}
+
+curse_responses = [ # scold the player for swearing
+	"Watch your language!",
+	"Another one for the swear jar...",
+	"Do you kiss your mother with that mouth?",
+	"Wow, maybe next time be a little nicer, won't you?",
+	"If you don't have anything nice to say, then don't say anything at all.",
+	"Wow, racist much???",
+	"Now that's just plain rude.",
+	"And just like that, some of your precious SlimeCoin goes right down the drain.",
+	"Calm down that attitude of yours, will you?",
+	"Your bad manners have costed you a fraction of your SlimeCoin!",
+	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
+	#"You know, don't, say, s-swears."
+]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

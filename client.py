@@ -84,6 +84,7 @@ cmd_map = {
 	ewcfg.cmd_shoot_alt2: ewwep.attack,
 	ewcfg.cmd_shoot_alt3: ewwep.attack,
 	ewcfg.cmd_shoot_alt4: ewwep.attack,
+	ewcfg.cmd_shoot_alt5: ewwep.attack,
 	ewcfg.cmd_attack: ewwep.attack,
 
 	# Reload
@@ -187,6 +188,9 @@ cmd_map = {
 	
 	# Show the total of positive slime in the world.
 	ewcfg.cmd_endlesswar: ewcmd.endlesswar,
+	
+	# Show the number of swears in the global swear jar.
+	ewcfg.cmd_swear_jar: ewcmd.swearjar,
 
 	# Display the progress towards the current Quarterly Goal.
 	ewcfg.cmd_quarterlyreport: ewmarket.quarterlyreport,
@@ -289,6 +293,9 @@ cmd_map = {
 	ewcfg.cmd_russian: ewcasino.russian_roulette,
 	ewcfg.cmd_accept: ewcmd.accept,
 	ewcfg.cmd_refuse: ewcmd.refuse,
+	
+	# Dueling
+	ewcfg.cmd_duel: ewcasino.duel,
 
 
 	# See what's for sale in the Food Court.
@@ -1153,6 +1160,7 @@ async def on_message(message):
 		)
 
 	content_tolower = message.content.lower()
+	content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
@@ -1179,13 +1187,23 @@ async def on_message(message):
 			response = "You manage to break {}'s garrote wire!".format(source.display_name)
 			user_data.clear_status(ewcfg.status_strangled_id)			
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		
+		if ewutils.active_restrictions.get(user_data.id_user) == 3:
+			die_resp = user_data.die(cause=ewcfg.cause_praying)
+			user_data.persist()
+			await ewrolemgr.updateRoles(client=client, member=message.author)
+			await die_resp.post()
 
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2:
+			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
+			return await ewutils.send_message(client, message.channel, response)
+	
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
 				user is new/has no roles (len(roles) < 2)
+				user is swearing
 		"""
 
 		#Ignore users with weird characters in their name
@@ -1214,6 +1232,68 @@ async def on_message(message):
 			client = client,
 			mentions = mentions
 		)
+		
+		"""
+			Punish the user for swearing.
+		"""
+		if (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
+			
+			swear_multiplier = 0
+			
+			#print(content_tolower_string)
+	
+			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
+			if message.server != None:
+				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
+			else:
+				usermodel = None
+
+			market_data = EwMarket(id_server=message.server.id)
+
+			# gather all the swear words the user typed.
+			for swear in ewcfg.curse_words.keys():
+				
+				if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
+					continue
+				if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
+					continue
+					
+				swear_count = content_tolower_string.count(swear)
+				
+				# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
+				if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
+					#print('emote skipped over')
+					continue
+				
+				for i in range(swear_count):
+					swear_multiplier += ewcfg.curse_words[swear]
+					
+					market_data.global_swear_jar += 1
+
+					usermodel.swear_jar += 1
+
+			market_data.persist()
+
+			if usermodel != None:
+				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+				swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
+				
+				# prevent user from reaching negative slimecoin
+				if swear_jar_fee > usermodel.slimecoin:
+					swear_jar_fee = usermodel.slimecoin
+				
+				usermodel.change_slimecoin(n= -1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+				usermodel.persist()
+			
+			if swear_multiplier > 20:
+				response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+				await ewutils.send_message(client, message.channel, response)
+			#else:
+			#	print("swear threshold not met")
+			
+			# if the message wasn't a command, we can stop here
+			if not message.content.startswith(ewcfg.cmd_prefix):
+				return
 
 		"""
 			Handle direct messages.
