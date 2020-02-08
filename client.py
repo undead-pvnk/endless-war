@@ -1243,38 +1243,35 @@ async def on_message(message):
 			#print(content_tolower_string)
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
-			if message.server != None:
-				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
-			else:
-				usermodel = None
-
-			market_data = EwMarket(id_server=message.server.id)
-
-			# gather all the swear words the user typed.
-			for swear in ewcfg.curse_words.keys():
-				
-				if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
-					continue
-				if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
-					continue
-					
-				swear_count = content_tolower_string.count(swear)
-				
-				# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
-				if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
-					#print('emote skipped over')
-					continue
-				
-				for i in range(swear_count):
-					swear_multiplier += ewcfg.curse_words[swear]
-					
-					market_data.global_swear_jar += 1
-
-					usermodel.swear_jar += 1
-
-			market_data.persist()
+			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
+				market_data = EwMarket(id_server=usermodel.id_server)
+
+				# gather all the swear words the user typed.
+				for swear in ewcfg.curse_words.keys():
+
+					if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
+						continue
+					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
+						continue
+
+					swear_count = content_tolower_string.count(swear)
+
+					# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
+					if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
+						# print('emote skipped over')
+						continue
+
+					for i in range(swear_count):
+						swear_multiplier += ewcfg.curse_words[swear]
+
+						market_data.global_swear_jar += 1
+
+						usermodel.swear_jar += 1
+
+				market_data.persist()
+				
 				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
 				swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
 				
