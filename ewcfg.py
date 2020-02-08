@@ -2305,7 +2305,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = "leather",
-		str_name = "Leather",
+		str_name = "Leathert",
 		str_desc = "A strip of leather.",
 		acquisition = acquisition_smelting,
 		ingredients = "generic",
@@ -2313,7 +2313,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = "ironingot",
-		str_name = "Iron Ingot",
+		str_name = "Iton Ingot",
 		str_desc = "A bar of iron",
 		acquisition = acquisition_smelting,
 		ingredients = "generic",
@@ -11905,7 +11905,7 @@ smelting_recipe_list = [
 			'dragonsoul' : 1,
 			item_id_slimepoudrin : 5,
                         'ironingot':1,
-                        'leather':5
+                        'leather':1
 		},
 		products = ['dragonclaw']
     ),
