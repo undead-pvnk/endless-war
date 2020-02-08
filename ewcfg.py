@@ -8097,7 +8097,8 @@ poi_list = [
 		role = "Juvie's Row",
 		pvp = False,
 		property_class = property_class_b,
-		community_chest = chest_id_juviesrow
+		community_chest = chest_id_juviesrow,
+		pier_type = fish_slime_saltwater
 	),
 	EwPoi( # 21
 		id_poi = poi_id_slimesend,
@@ -8113,7 +8114,8 @@ poi_list = [
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
-		is_capturable = True
+		is_capturable = True,
+		pier_type = fish_slime_saltwater
 	),
 	EwPoi( # 22
 		id_poi = poi_id_vagrantscorner,
@@ -8146,7 +8148,8 @@ poi_list = [
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
-		is_capturable = True
+		is_capturable = True,
+		pier_type = fish_slime_saltwater
 	),
 	EwPoi( # 24
 		id_poi = poi_id_newnewyonkers,
@@ -8192,7 +8195,8 @@ poi_list = [
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
-		is_capturable = True
+		is_capturable = True,
+		pier_type = fish_slime_freshwater
 	),
 	EwPoi( # 27
 		id_poi = poi_id_charcoalpark,
@@ -8261,7 +8265,8 @@ poi_list = [
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
-		is_capturable = True
+		is_capturable = True,
+		pier_type = fish_slime_freshwater
 	),
 	EwPoi(  # 31
 		id_poi = poi_id_crookline,
@@ -8276,7 +8281,8 @@ poi_list = [
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
-		is_capturable = True
+		is_capturable = True,
+		pier_type = fish_slime_freshwater
 	),
 	EwPoi(  # 32
 		id_poi = poi_id_dreadford,

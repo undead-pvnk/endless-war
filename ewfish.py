@@ -251,12 +251,12 @@ def gen_fish(x, cmd, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
-	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "vagrants-corner-pier", "ferry"]:
+	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "juvies-row-pier", "ferry"]:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
 				fish_pool.remove(fish)
 
-	elif cmd.message.channel.name in ["jaywalker-plain-pier", "little-chernobyl-pier"]:
+	elif cmd.message.channel.name in ["jaywalker-plain-pier", "crookline-pier", "toxington-pier"]:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_saltwater:
 				fish_pool.remove(fish)
