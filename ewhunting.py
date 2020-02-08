@@ -1095,6 +1095,9 @@ def drop_enemy_loot(enemy_data, district_data):
 
 	poudrin_dropped = False
 	poudrin_amount = 0
+	
+	dragonsoul_dropped = False
+	dragonsoul_amount = 0
 
 	pleb_dropped = False
 	pleb_amount = 0
@@ -1117,11 +1120,13 @@ def drop_enemy_loot(enemy_data, district_data):
 	drop_range = None
 	
 	poudrin_values = None
+	dragonsoul_values = None
 	pleb_values = None
 	patrician_values = None
 	crop_values = None
 	meat_values = None
 	card_values = None
+	
 	
 	drop_table = ewcfg.enemy_drop_tables[enemy_data.enemytype]
 	
@@ -1157,7 +1162,12 @@ def drop_enemy_loot(enemy_data, district_data):
 				card_values = item["card"]
 		except:
 			pass
-		
+		try:
+			if item['dragonsoul']:
+				dragonsoul_values = item['dragonsoul']
+		except:
+			pass
+
 	if poudrin_values != None:
 		drop_chance = poudrin_values[0]
 		drop_min = poudrin_values[1]
@@ -1168,6 +1178,16 @@ def drop_enemy_loot(enemy_data, district_data):
 		if poudrin_dropped:
 			drop_range = list(range(drop_min, drop_max+1))
 			poudrin_amount = random.choice(drop_range)
+	if dragonsoul_values != None:
+		drop_chance = dragonsoul_values[0]
+		drop_min = dragonsoul_values[1]
+		drop_max = dragonsoul_values[2]
+		
+		dragonsoul_dropped = random.randrange(100) <= (drop_chance - 1)
+		
+		if dragonsoul_dropped:
+			drop_range = list(range(drop_min, drop_max+1))
+			dragonsoul_amount = random.choice(drop_range)
 			
 	if pleb_values != None:
 		drop_chance = pleb_values[0]
@@ -1247,7 +1267,6 @@ def drop_enemy_loot(enemy_data, district_data):
 	crop_amount = math.ceil(crop_amount * loot_multiplier)
 	meat_amount = math.ceil(meat_amount * loot_multiplier)
 	card_amount = math.ceil(card_amount * loot_multiplier)
-
 	# Drops items one-by-one
 	if poudrin_dropped:
 		item_counter = 0
@@ -1269,6 +1288,31 @@ def drop_enemy_loot(enemy_data, district_data):
 					item = EwItem(id_item=item.id_item)
 					item.persist()
 			response = "They dropped a slime poudrin!"
+			loot_resp_cont.add_channel_response(loot_poi.channel, response)
+
+			item_counter += 1
+
+			
+	if dragonsoul_dropped:
+		item_counter = 0
+
+		while item_counter < dragonsoul_amount:
+			for item in ewcfg.item_list:
+				if item.context == "dragon soul":
+					ewitem.item_create(
+						item_type=ewcfg.it_item,
+						id_user=district_data.name,
+						id_server=district_data.id_server,
+						item_props={
+							'id_item': item.id_item,
+							'context': item.context,
+							'item_name': item.str_name,
+							'item_desc': item.str_desc,
+						}
+					),
+					item = EwItem(id_item=item.id_item)
+					item.persist()
+			response = "They dropped their **SOUL!!**"
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
 			item_counter += 1

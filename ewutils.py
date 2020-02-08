@@ -367,7 +367,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck", passwd = "rfck" , db = "rfck-bot", charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -1286,7 +1286,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 		# apply sap armor
 		sap_armor = ewwep.get_sap_armor(shootee_data = user_data, sap_ignored = 0)
 		slimes_damage_target *= sap_armor
-		slimes_damage_target = int(max(0, slimes_damage_target))
+		slimes_damage_target = int(max(0, slimes_damage_target*50))
 
 		player_data = EwPlayer(id_user = user_data.id_user)
 		response = "{} is blown back by the explosion’s sheer force! They lose {:,} slime!!".format(player_data.display_name, slimes_damage_target)

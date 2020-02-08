@@ -1825,6 +1825,8 @@ stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
+stat_dclaw_kills = 'dclaw_kills'
+
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2026,6 +2028,7 @@ weapon_id_pickaxe = 'pickaxe'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
+weapon_id_dclaw = 'dclaw'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2300,6 +2303,31 @@ item_list = [
 		ingredients = "generic",
 		context = 10,
 	),
+	EwGeneralItem(
+		id_item = "leather",
+		str_name = "Leathert",
+		str_desc = "A strip of leather.",
+		acquisition = acquisition_smelting,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "ironingot",
+		str_name = "Iton Ingot",
+		str_desc = "A bar of iron",
+		acquisition = acquisition_smelting,
+		ingredients = "generic",
+		context = 10,
+	),
+        EwGeneralItem(
+                id_item = "dragonsoul",
+                str_name = "Dragon Soul",
+                str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
+                context = 'dragon soul',
+        ),
+        
+        
+                
 	EwGeneralItem(
 		id_item = "string",
 		str_name = "string",
@@ -3214,7 +3242,7 @@ def wef_bow(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * 4)
+	ctn.slimes_damage = int(ctn.slimes_damage * 3)
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -3225,8 +3253,36 @@ def wef_bow(ctn = None):
 
 	elif aim >= (9 - int(16 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 10)
+		ctn.slimes_damage = int(dmg * 6)
+		
+# weapon effect function for "Dragon Claw"
 
+def wef_dclaw(ctn = None):
+	
+	user_mutations = ctn.user_data.get_mutations()
+	if mutation_id_fastmetabolsim in user_mutations or mutation_id_lightasafeather in user_mutations:
+                ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
+                ctn.slimes_spent *= 0.5
+        else:
+                ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+                ctn.slimes_spent *= 1
+
+        #less slime cost and less damage = attacking faster I guess?
+	ctn.sap_damage = 5
+	ctn.sap_ignored = 10
+	if aim <= (random.randint(1,13):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.3:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+	elif aim >= (9 - int(13 * ctn.crit_mod)):
+		ctn.crit = True
+                if mutation_id_lucky in user_mutations:
+                        ctn.slimes_damage = int(dmg * 8)
+                else:
+                        ctn.slimes_damage = int(dmg * 4)
+                   
 
 vendor_dojo = "Dojo"
 
@@ -3915,7 +3971,34 @@ weapon_list = [
 		sap_cost = 2,
 		captcha_length = 2
 	),
+                EwWeapon(  # 23
+		id_weapon = weapon_id_dclaw,
+		alias = [
+			"dragon claw",
+		],
+		str_crit = "{name_player} runs like a madman towards {name_target}, {name_target} swings but is deftly parried by {name_player}, {name_player} hoists their dragon claw into the air and ripostes {name_target} for massive damage ***!!!Critical Hit!!!***",
+		str_miss = "{name_player} swings but {name_target} is in the middle of a dodge roll and is protected by iframes. **!!Miss!!**",
+		str_equip = "You place the core of the dragon claw on your hand and it unfolds around it, conforming to the contour of your hands, claws protude out the end of your fingers as your hand completes its transformation into the *dragon claw*.",
+		str_name = "dragon claw",
+		str_weapon = "a dragon claw",
+		str_weaponmaster_self = "You are a rank {rank} master of the dragon claw.",
+		str_weaponmaster = "They are a rank {rank} master of the dragon claw.",
+		str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames wont seem to extinguish.",
+		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames wont seem to extinguish.",
+		str_kill = "***Thwip.*** {name_player}'s dragon claw cuts the air followed by a trail of flame and blood, the camera pans out and {name_target} is shown, cut in twain. {emote_skull}",
+		str_killdescriptor = "cut to pieces",
+		str_damage = random.choice(["{name_target} is slashed across the {hitzone}!!","{name_player} furiously slashes {name_target} across the {hitzone}!!","{name_player} flicks their fingers and a jet of flame ignites from the dragon claw, burning {name_target} in the {hitzone}!!"]),
+		str_duel = "**SLICE!! SWIPE!! SLASH!!** {name_player} and {name_target} cut the fuck out of eachother, a fire extinguisher is never more than a meter away.",
+		str_scalp = "The scalp is burning and doesn't look like it's gonna stop.",
+		fn_effect = wef_dclaw,
+		str_description = "It's the core of a Dragon Claw, it will morph around whatever hand it is held by granting them the power of the elusive GREEN EYES SLIME DRAGON. If you listen closely you can hear whines of the dragon soul as it remains perpetually trapped in the weapon.",
+		acquisition = acquisition_smelting,
+		stat = stat_dclaw_kills,
+                classes = [weapon_class_exploding],
+		sap_cost = 5,
+		captcha_length = 2)
 ]
+
 
 weapon_vendors = [
 	vendor_dojo
@@ -11770,6 +11853,63 @@ smelting_recipe_list = [
 		},
 		products = ['bow']
     ),
+            EwSmeltingRecipe(
+		id_recipe = "ironingot",
+		str_name = "an Iron Ingot",
+		alias = [
+			"ingot"
+                        "metal",
+                        "ironingot",
+                        "iron ingot"
+		],
+		ingredients = {
+			'tincan':10,
+                        'faggot':1
+		},
+		products = ['ironingot']
+    ),
+            EwSmeltingRecipe(
+		id_recipe = "tanningknife",
+		str_name = "a small tanning knife",
+		alias = [
+			"knife",
+                        "tanningknife",
+                        "tanning"
+		],
+		ingredients = {
+			'iron':1
+		},
+		products = ['tanningknife']
+    ),
+            EwSmeltingRecipe(
+		id_recipe = "leather",
+		str_name = "a piece of leather",
+		alias = [
+			"leather"
+		],
+		ingredients = {
+			'oldboot':10,
+                        'tanningknife':1
+		},
+		products = ['leather']
+    ),
+            EwSmeltingRecipe(
+		id_recipe = "dclaw",
+		str_name = "a Dragon Claw",
+		alias = [
+			"dragonclaw",
+                        "claw",
+                        "dclaw"
+		],
+		ingredients = {
+			'dragonsoul' : 1,
+			item_id_slimepoudrin : 5,
+                        'ironingot':1,
+                        'leather':5
+		},
+		products = ['dragonclaw']
+    ),
+
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
@@ -14430,7 +14570,7 @@ enemy_drop_tables = {
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
-	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
+	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
