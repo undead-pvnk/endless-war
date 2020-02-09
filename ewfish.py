@@ -360,7 +360,7 @@ async def cast(cmd):
 			fisher.current_fish = gen_fish(market_data, cmd, has_fishingrod)
 			fisher.fishing = True
 			fisher.bait = False
-			fisher.pier = user_data.poi
+			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
 			server = cmd.message.server
@@ -466,7 +466,7 @@ async def cast(cmd):
 
 				user_data = EwUser(member=cmd.message.author)
 
-				if user_data.poi != fisher.pier:
+				if user_data.poi != ewcfg.id_to_poi.get(fisher.pier).mother_district:
 					fisher.fishing = False
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
