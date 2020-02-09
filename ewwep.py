@@ -2611,6 +2611,7 @@ def get_sap_armor(shootee_data, sap_ignored):
 
 
 async def annex2(cmd):
+	#await ewutils.add_pvp_role(cmd)
 	time_now_float = time.time()
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 	time_now = int(time_now_float)
@@ -2673,7 +2674,7 @@ async def annex2(cmd):
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
 
 		slimes_damage += int(slimes_damage * dmg_mod)
-		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
+		#user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 
 		if weapon != None and weapon.fn_effect != None:
 			# Build effect container
@@ -2721,6 +2722,9 @@ async def annex2(cmd):
 			sap_ignored = ctn.sap_ignored
 			backfire_damage = ctn.backfire_damage
 
+			if district_data.all_neighbors_friendly():
+				backfire = random.choice(True, True, True, False)
+
 			if (slimes_spent > user_data.slimes):
 				# Not enough slime to shoot.
 				response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
@@ -2735,7 +2739,7 @@ async def annex2(cmd):
 			user_data.limit_fix()
 
 			if weapon.id_weapon == ewcfg.weapon_id_garrote:
-				pass #TODO Create capping behavior for the garrotte
+				pass #TODO Create capping behavior for the garrote
 
 			# Remove a bullet from the weapon
 			if ewcfg.weapon_class_ammo in weapon.classes:
@@ -2785,6 +2789,8 @@ async def annex2(cmd):
 					response = "Your spray can gets clogged with some stray sludge! Better unjam that!"
 				else:
 					response = "Your graffiti conquest earns you {} influence for the {}!".format(slimes_damage, user_data.faction)
+
+
 					if user_data.faction == "killers":
 						slimes_damage = -slimes_damage
 					district_data.influence += slimes_damage
@@ -2793,10 +2799,9 @@ async def annex2(cmd):
 					else:
 						district_data.controlling_faction = "rowdys"
 					district_data.persist()
+
+
 					district_data = EwDistrict(district=district_data.name, id_server=district_data.id_server)
-
-
-
 
 					slimes_damage = abs(slimes_damage)
 					#response = weapon.str_damage.format(
@@ -2806,7 +2811,8 @@ async def annex2(cmd):
 					#	strikes=strikes
 					#)
 					if crit:
-						response = "You dual wield spray cans, painting an urban masterpiece and shooting toxic chemicals into a cop's mouth. It gets you {} influence! Lordy!".format(slimes_damage)
+						response = user_data.spray + "\n\n"
+						response += "You dual wield spray cans, painting an urban masterpiece and shooting toxic chemicals into a cop's mouth. It gets you {} influence! Lordy!".format(slimes_damage)
 						#response += " {}".format(weapon.str_crit.format(
 						#	name_player=cmd.message.author.display_name,
 						#	name_target=enemy_data.display_name,
@@ -2819,7 +2825,7 @@ async def annex2(cmd):
 						name_player=cmd.message.author.display_name)
 
 				if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-					#TODO Modify captcha command
+
 
 					loc_array = ewcaptcha.streetcaptcha[poi.id_poi]
 					new_loc = str(random.choice(loc_array))
@@ -2831,6 +2837,18 @@ async def annex2(cmd):
 					response += "\nNext stop is {}.".format(new_loc)
 					weapon_item.item_props['captcha'] = new_captcha_low
 					weapon_item.persist()
+
+				if district_data.controlling_faction == user_data.faction and abs(district_data.influence) > ewcfg.limit_influence[district_data.property_class]:
+					if user_data.faction == ewcfg.faction_rowdys:
+						color = "pink"
+					else:
+						color = "purple"
+					response += "\nYour district is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
+				elif district_data.controlling_faction == user_data.faction and abs(district_data.influence) > (ewcfg.min_influence[district_data.property_class] + ewcfg.limit_influence[district_data.property_class])/2:
+					response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
+				elif district_data.controlling_faction == user_data.faction and abs(district_data.influence) > ewcfg.min_influence[district_data.property_class]:
+					response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
+
 			else:
 				if miss:
 					response = "You spray something so obscure nobody notices."

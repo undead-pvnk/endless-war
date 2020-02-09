@@ -236,31 +236,37 @@ class EwDistrict:
 
 	def decay_capture_points(self):
 		resp_cont_decay = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
-		if self.capture_points > 0 and self.time_unlock == 0:
+		if self.influence > 0:
+				#and self.time_unlock == 0:
 
 			neighbors = ewcfg.poi_neighbors[self.name]
 			all_neighbors_friendly = self.all_neighbors_friendly()
 
-
-			decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+			decay = -math.ceil(ewcfg.limit_influence_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
+			#decay = -math.ceil(ewcfg.max_capture_points_a / (ewcfg.ticks_per_day * ewcfg.decay_modifier))
 
 			slimeoids = ewutils.get_slimeoids_in_poi(poi = self.name, id_server = self.id_server, sltype = ewcfg.sltype_nega)
 			
 			nega_present = len(slimeoids) > 0
-			
+
+
 			if nega_present:
 				decay *= 1.5
+			if self.influence > ewcfg.limit_influence[self.property_class]:
+				decay *= 2
 
+			if self.influence < 0:
+				decay *= -1
 
 			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
 				responses = self.change_capture_points(int(decay), ewcfg.actor_decay)
 				resp_cont_decay.add_response_container(responses)
 
-		if self.capture_points < 0:
-			self.capture_points = 0
+		#if self.capture_points < 0:
+		#	self.capture_points = 0
 
-		if self.influence == 0:
+		if abs(self.influence) < ewcfg.min_influence[self.property_class]/3:
 			if self.controlling_faction != "":  # if it was owned by a faction
 
 				message = "The {faction} have lost control over {district} because of sheer negligence.".format(
@@ -557,7 +563,7 @@ async def capture_progress(cmd):
 	else:
 		response += "Nobody has staked a claim to this district yet. ".format(district_data.controlling_faction.capitalize())
 
-	response += "Current capture progress: {:.3g}%".format(100 * district_data.capture_points / district_data.max_capture_points)
+	response += "Current influence: {}/{}.".format(abs(district_data.influence), ewcfg.limit_influence[district_data.property_class])
 
 	if district_data.time_unlock > 0:
 
@@ -689,6 +695,7 @@ async def annex(cmd):
 """
 	Updates/Increments the capture_points values of all districts every time it's called
 """
+
 async def capture_tick(id_server):
 	# the variables might apparently be accessed before assignment if i didn't declare them here
 	cursor = None
@@ -853,7 +860,13 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 
 				# if the kingpin is controlling this district give the kingpin slime based on the district's property class
 				if district.controlling_faction == (ewcfg.faction_killers if kingpin.faction == ewcfg.faction_killers else ewcfg.faction_rowdys):
+
+
+
 					slimegain = ewcfg.district_control_slime_yields[district.property_class]
+
+
+
 					# increase slimeyields by 10 percent per friendly neighbor
 					friendly_mod = 1 + 0.1 * district.get_number_of_friendly_neighbors()
 					total_slimegain += slimegain * friendly_mod
@@ -871,3 +884,21 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 		resp_cont_decay_loop.add_response_container(responses)
 		district.persist()
 	await resp_cont_decay_loop.post()
+
+async def change_spray(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	newspray = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	if newspray == "":
+		response = "You need to add an image link to change your spray."
+	elif len(newspray) > 400:
+		response = "Fucking christ, are you painting the Sistine Chapel? Use a shorter link."
+	else:
+		response = "Got it. Spray set."
+		user_data.spray = newspray
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+
+

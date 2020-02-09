@@ -1,63 +1,65 @@
 
 
-downtowncap = ['Fuck Street', 'Main Street', '!st Avenue', 'Slimecorp Boulevard']
+downtowncap = ['FUCK Street', 'MAIN Street', '!ST Avenue', 'SLIMECORP Boulevard']
 #plenty of busy streets, landmarks are packed and non-distinct
-smogsburgcap = ['the Oil Refineries', 'the Bazaar Kiosks', 'Park Avenue', '6th Street']
+smogsburgcap = ['the OIL Refineries', 'the BAZAAR Kiosks', 'PARK Avenue', '6TH Street']
 #major points of industry and calmer roads
-krakbaycap = ['the Mall of NLACakaNM', 'Krak Port', 'the Highway Underpass', 'Lat Bridge']
+krakbaycap = ['the MALL of NLACakaNM', 'KRAK Port', 'the HIGHWAY Underpass', 'LAT Bridge']
 #the commerce is centered around the port and the mall. most important spots are defined by it
-poudrinalleycap = ['the 711', 'Goony Infirmary', 'Lockstep Alley', 'the Corpse Gullies']
+poudrinalleycap = ['the 711', 'GOONY Infirmary', 'LOCKSTEP Alley', 'the CORPSE Gullies']
 #winding and unreachable, the misfits make the place stand out
-greenlightdistrictcap = ['777th St', 'Luxor Lane', 'N7 Megaplaza', 'Willow Street']
+greenlightdistrictcap = ['777th St', 'LUXOR Lane', 'N7 Megaplaza', 'WILLOW Street']
 #flashy names for flashy places. they sound like cheap imitation, but that's what vegas is all about.
-oldnewyonkerscap = ['the DMV', 'KP Morgan Road', 'Sequoia Boulevard', 'Old Leaf Place']
+oldnewyonkerscap = ['the DMV', 'KP Morgan Road', 'SEQUOIA Boulevard', 'OLD Leaf Place']
 #the place feels like old money.
-littlechernobylcap = ['Reactor Ground Zero', 'Geiger Street', 'Half Life Road', 'Dogwood Street']
+littlechernobylcap = ['REACTOR Ground Zero', 'GEIGER Street', 'HALF Life Road', 'DOGWOOD Street']
 #Broken dreams, half-written books, and irradiated half-deads. hence half life.
-arsonbrookcap = ['Cinder State Forest', 'Horizon Circle', 'Tilly Road', 'New Compton']
+arsonbrookcap = ['CINDER State Forest', 'HORIZON Circle', 'TILLY Road', 'NEW Compton']
 #I love to imagine a picturesque rendition of ab. forest fires, wide open sunsets, and clean mountain air. and gang violence
-astatineheightscap = ['Follywood Boulevard', 'Orange Lane', '9th Street', 'Astatine Trail']
+astatineheightscap = ['FOLLYWOOD Boulevard', 'ORANGE Lane', '9TH Street', 'ASTATINE Trail']
 #kinda quaint, expensive sounding landscape
-gatlingsdalecap = ['BlapBlap Mini Mall', 'College Campus', 'Shopping District', 'Gentry Street']
+gatlingsdalecap = ['BLAPBLAP Mini Mall', 'COLLEGE Campus', 'SHOPPING District', 'GENTRY Street']
 #it's all controlled by the college. i'm emphasizing the student demo i guess
-vandalparkcap = ['Vandal Park Stadium', 'Squickey Street', 'Sports Fields', '43rd Avenue']
+vandalparkcap = ['VANDAL Park Stadium', 'SQUICKEY Street', 'SPORTS Fields', '43RD Avenue']
 #a recreational district has pretty obvious targets
-glocksburycap = ['Pigsland Drive', 'Easy Street', '4th Street', 'the Dog Parks']
+glocksburycap = ['PIGSLAND Drive', 'EASY Street', '4TH Street', 'the DOG Parks']
 #the cops are attached at the hip to this place. officials passive aggressively renamed the streets because of it.
-northsleezeboroughcap = ['10th Street', 'Cedar Avenue', 'Bitch Street', 'Goldstein Place']
+northsleezeboroughcap = ['10TH Street', 'CEDAR Avenue', 'BITCH Street', 'GOLDSTEIN Place']
 #Bland names for the most part. Bitch street isn't the official name, there are just a lot of stupid bitches there.
-southsleezeboroughcap = ['Heiwa Avenue', 'Chikyu Drive', 'Sakana Avenue', 'Naruto Street']
+southsleezeboroughcap = ['HEIWA Avenue', 'CHIKYU Drive', 'SAKANA Avenue', 'NARUTO Street']
 #The streets weren't actually named by Japanese people, in case it wasn't obvious.
-oozegardenscap = ['Juve Orchard', 'Wine Country', 'Poudy Gardens', 'Hearth Drive']
+oozegardenscap = ['JUVE Orchard', 'WINE Country', 'POUDY Gardens', 'HEARTH Drive']
 #more gardens than roads. only enough to maintain civilization.
-cratersvillecap = ['the Caldera', 'the Crude Sludge Pools', 'Gray Quarter', 'Trailer Park']
+cratersvillecap = ['the CALDERA', 'the CRUDE Sludge Pools', 'GRAY Quarter', 'TRAILER Park']
 #so devoid of life that it feels more like fallout than a city
-wreckingtoncap = ['Crane Flatlands', 'Evel High Rises', 'Home Run Street', 'Construction Yard']
+wreckingtoncap = ['Crane FLATLANDS', 'EVEL High Rises', 'HOME Run Street', 'CONSTRUCTION Yard']
 #It has the district-wide aesthetic of a Dennys about to be demolished.
-slimesendcap = ['Makeout Point', 'Snapper Beach', '142nd Street', 'Morty Hill']
+slimesendcap = ['MAKEOUT Point', 'SNAPPER Beach', '142ND Street', 'MORTY Hill']
 #the populations start to dwindle at this end of the city. hills and coasts replace them.
-vagrantscornercap = ['the Port', '56th Avenue', 'Kelp Circle', 'Scurvy Street']
+vagrantscornercap = ['the PORT', '56TH Avenue', 'KELP Circle', 'SCURVY Street']
 #It's a smorgasboard of drinkin' and sailin'
-assaultflatsbeachcap = ['Boudoir Avenue', 'Kanway Circle', 'Boardwalk', 'Park Place']
+assaultflatsbeachcap = ['BOUDOIR Avenue', 'KANWAY Circle', 'BOARDWALK', 'PARK Place']
 #excuse the monopoly jokes. this place has some high value properties though.
-newnewyonkerscap = ['Gamer Avenue', 'Epic Street', 'Ooh Stinky Avenue', 'Fortnite Plaza']
+newnewyonkerscap = ['GAMER Avenue', 'EPIC Street', 'OOH Stinky Avenue', 'FORTNITE Plaza']
 #the hip and happening folks here left the street names to an online poll. Bad idea.
-brawldencap = ['Brawlden Private School District', 'Boxing Underworld', '53rd Street', 'Locke Avenue']
+brawldencap = ['BRAWLDEN Private School District', 'BOXING Underworld', '53RD Street', 'LOCKE Avenue']
 #Lots of intimidating fellows and strict discipline. The schools here do something to you.
-toxingtoncap = ['Full Quarantined Zones', 'Semi Quarantined Zones', 'Canary Lane', '7th Street']
+toxingtoncap = ['FULL Quarantined Zones', 'SEMI Quarantined Zones', 'CANARY Lane', '7TH Street']
 #The deeper you go the nastier things get. Capping is less about the land's value and more about pride.
-charcoalparkcap = ['the Veteran Center', '2nd Avenue', 'Western Ghost Town', '3rd Avenue']
+charcoalparkcap = ['the VETERAN Center', '2ND Avenue', 'WESTERN Ghost Town', '3RD Avenue']
 #This forgotten place gets marauded by slimeoid and gangster alike. They've lost a lot as a community.
-poloniumhillcap = ['Elm Street', 'Birch Avenue', 'Curie High School', 'the Uptown Homes']
+poloniumhillcap = ['ELM Street', 'BIRCH Avenue', 'CURIE High School', 'the UPTOWN Homes']
 #It's bland by design.
-westglocksburycap = ['Highway 89A', 'Bundy Boulevard', 'Gooze Creek', 'Birch Street']
+westglocksburycap = ['HIGHWAY 89A', 'BUNDY Boulevard', 'GOOZE Creek', 'BIRCH Street']
 #This is the main way out of town. Good luck getting past the horror show.
-jaywalkerplaincap = ['3rd Street', 'Haven Park', 'the Planned Parenthood', 'Black Alleys']
+jaywalkerplaincap = ['3RD Street', 'HAVEN Park', 'the PLANNED Parenthood', 'BLACK Alleys']
 #Full of wide parks and black market deals in the alleys. Sunny on the outside, at least.
-crooklinecap = ['Arsene Plaza', 'Moody Street', 'Dumaine Street', 'Johnnie Cochran Street']
+crooklinecap = ['ARSENE Plaza', 'MOODY Street', 'DUMAINE Street', 'JOHNNIE Cochran Street']
 #Gloomy and honor-bound to thievery.
-dreadfordcap = ['Trackpad Circle', 'Baltic Avenue', 'Noose Plains', 'Boot Hill']
+dreadfordcap = ['TRACKPAD Circle', 'BALTIC Avenue', 'NOOSE Plains', 'BOOT Hill']
 #Rich sure, but with a more Texan persuasion.
+
+riflecap = ['UP', 'DOWN', 'LEFT', 'RIGHT']
 
 
 streetcaptcha = {
