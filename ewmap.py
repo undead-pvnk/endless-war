@@ -1139,8 +1139,8 @@ async def teleport(cmd):
 			mutation_data.data = str(time_now)
 			mutation_data.persist()
 			
-			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, "You slow down before the teleportation goes through."))
-			return await resp_cont.post()
+			response = "You slow down before the teleportation goes through."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		
 		if not blj_used:
