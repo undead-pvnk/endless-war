@@ -3266,11 +3266,14 @@ def wef_dclaw(ctn = None):
         else:
                 ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
                 ctn.slimes_spent *= 1
+        time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
+	ctn.slimes_damage = int(ctn.slimes_damage * 3)
         #less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
-	if aim <= (random.randint(1,13):
+	if aim <= (random.randint(1,13*ctn.miss_mod):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.3:
 				ctn.miss = True
