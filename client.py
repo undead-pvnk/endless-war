@@ -1276,23 +1276,25 @@ async def on_message(message):
 
 						usermodel.swear_jar += 1
 
+				# don't fine the user or send out the message if there weren't enough curse words
+				if swear_multiplier > 20:
+
+					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
+
+					# prevent user from reaching negative slimecoin
+					if swear_jar_fee > usermodel.slimecoin:
+						swear_jar_fee = usermodel.slimecoin
+
+					usermodel.change_slimecoin(n=-1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+					
+					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+					await ewutils.send_message(client, message.channel, response)
+				#else:
+					#print("swear threshold not met")
+
 				market_data.persist()
-				
-				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-				swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
-				
-				# prevent user from reaching negative slimecoin
-				if swear_jar_fee > usermodel.slimecoin:
-					swear_jar_fee = usermodel.slimecoin
-				
-				usermodel.change_slimecoin(n= -1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
 				usermodel.persist()
-			
-			if swear_multiplier > 20:
-				response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
-				await ewutils.send_message(client, message.channel, response)
-			#else:
-			#	print("swear threshold not met")
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
