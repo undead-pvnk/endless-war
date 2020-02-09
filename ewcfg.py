@@ -12630,9 +12630,22 @@ EwSmeltingRecipe(
 		],
 		ingredients = {
 			'humancorpse': 1,
-			'poudrin':10,
+			'soul':1,
 		},
 		products = ['reanimatedcorpse']
+	),
+EwSmeltingRecipe(
+		id_recipe = "soul",
+		str_name = "soul",
+		alias = [
+			"spirit",
+			"essence",
+			"hippiebullshit",
+		],
+		ingredients = {
+			'reanimatedcorpse': 1,
+		},
+		products = ['soul']
 	),
 EwSmeltingRecipe(
 		id_recipe = "handmadechair",
