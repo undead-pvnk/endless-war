@@ -1139,8 +1139,12 @@ async def teleport(cmd):
 			mutation_data.data = str(time_now)
 			mutation_data.persist()
 			
+			# Get the channel for the poi the user is currently in, just in case they've moved to a different poi before the teleportation went through.
+			current_poi = ewcfg.id_to_poi.get(user_data.poi)
+			current_channel = ewutils.get_channel(cmd.message.server, current_poi.channel)
+			
 			response = "You slow down before the teleportation goes through."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await ewutils.send_message(cmd.client, current_channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		
 		if not blj_used:
