@@ -1097,6 +1097,8 @@ async def teleport(cmd):
 				
 		except:
 			windup_finished = True
+
+		user_data = EwUser(member=cmd.message.author)
 			
 		if windup_finished and user_data.poi == poi_now:
 			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
