@@ -2319,15 +2319,15 @@ item_list = [
 		ingredients = "generic",
 		context = 10,
 	),
-        EwGeneralItem(
-                id_item = "dragonsoul",
-                str_name = "Dragon Soul",
-                str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
-                context = 'dragon soul',
-        ),
-        
-        
-                
+	EwGeneralItem(
+		id_item = "dragonsoul",
+		str_name = "Dragon Soul",
+		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
+		context = 'dragon soul',
+	),
+	
+	
+		
 	EwGeneralItem(
 		id_item = "string",
 		str_name = "string",
@@ -3260,13 +3260,13 @@ def wef_dclaw(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
-                ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
-                ctn.slimes_spent *= 0.5
-        else:
-                ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
-                ctn.slimes_spent *= 1
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
+		ctn.slimes_spent *= 0.5
+	else:
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+		ctn.slimes_spent *= 1
 
-        #less slime cost and less damage = attacking faster I guess?
+	#less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -3279,11 +3279,11 @@ def wef_dclaw(ctn = None):
 			ctn.miss = True
 	elif aim >= (9 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
-                if mutation_id_lucky in user_mutations:
-                        ctn.slimes_damage = int(dmg * 8)
-                else:
-                        ctn.slimes_damage = int(dmg * 4)
-                   
+		if mutation_id_lucky in user_mutations:
+			ctn.slimes_damage = int(dmg * 8)
+		else:
+			ctn.slimes_damage = int(dmg * 4)
+		   
 
 vendor_dojo = "Dojo"
 
@@ -3946,7 +3946,7 @@ weapon_list = [
 		sap_cost = 1,
 		captcha_length = 4
 	),
-        EwWeapon(  # 22
+	EwWeapon(  # 22
 		id_weapon = weapon_id_bow,
 		alias = [
 			"bow",
@@ -3972,7 +3972,7 @@ weapon_list = [
 		sap_cost = 2,
 		captcha_length = 2
 	),
-                EwWeapon(  # 23
+		EwWeapon(  # 23
 		id_weapon = weapon_id_dclaw,
 		alias = [
 			"dragon claw",
@@ -3995,7 +3995,7 @@ weapon_list = [
 		str_description = "It's the core of a Dragon Claw, it will morph around whatever hand it is held by granting them the power of the elusive GREEN EYES SLIME DRAGON. If you listen closely you can hear whines of the dragon soul as it remains perpetually trapped in the weapon.",
 		acquisition = acquisition_smelting,
 		stat = stat_dclaw_kills,
-                classes = [weapon_class_exploding],
+		classes = [weapon_class_exploding],
 		sap_cost = 5,
 		captcha_length = 2)
 ]
@@ -6015,7 +6015,7 @@ food_list = [
 			"chocs",
 		],
 		recover_hunger = 120,
-        price = 100,
+	price = 100,
 		str_name = 'Paradox Chocs',
 		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
 		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
@@ -6027,7 +6027,7 @@ food_list = [
 			"twix",
 		],
 		recover_hunger = 150,
-        price = 100,
+	price = 100,
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
@@ -11854,35 +11854,35 @@ smelting_recipe_list = [
 		},
 		products = ['bow']
     ),
-            EwSmeltingRecipe(
+	    EwSmeltingRecipe(
 		id_recipe = "ironingot",
 		str_name = "an Iron Ingot",
 		alias = [
 			"ingot"
-                        "metal",
-                        "ironingot",
-                        "iron ingot"
+			"metal",
+			"ironingot",
+			"iron ingot"
 		],
 		ingredients = {
 			'tincan':10,
-                        'faggot':1
+			'faggot':1
 		},
 		products = ['ironingot']
     ),
-            EwSmeltingRecipe(
+	    EwSmeltingRecipe(
 		id_recipe = "tanningknife",
 		str_name = "a small tanning knife",
 		alias = [
 			"knife",
-                        "tanningknife",
-                        "tanning"
+			"tanningknife",
+			"tanning"
 		],
 		ingredients = {
 			'iron':1
 		},
 		products = ['tanningknife']
     ),
-            EwSmeltingRecipe(
+	    EwSmeltingRecipe(
 		id_recipe = "leather",
 		str_name = "a piece of leather",
 		alias = [
@@ -11890,23 +11890,23 @@ smelting_recipe_list = [
 		],
 		ingredients = {
 			'oldboot':10,
-                        'tanningknife':1
+			'tanningknife':1
 		},
 		products = ['leather']
     ),
-            EwSmeltingRecipe(
+	    EwSmeltingRecipe(
 		id_recipe = "dclaw",
 		str_name = "a Dragon Claw",
 		alias = [
 			"dragonclaw",
-                        "claw",
-                        "dclaw"
+			"claw",
+			"dclaw"
 		],
 		ingredients = {
 			'dragonsoul' : 1,
 			item_id_slimepoudrin : 5,
-                        'ironingot':1,
-                        'leather':1
+			'ironingot':1,
+			'leather':1
 		},
 		products = ['dragonclaw']
     ),
@@ -14393,7 +14393,7 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-        weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase."
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase."
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
