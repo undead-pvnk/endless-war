@@ -1042,6 +1042,7 @@ async def teleport(cmd):
 
 	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
+	poi_now = user_data.poi
 	mutations = user_data.get_mutations()
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
@@ -1082,28 +1083,70 @@ async def teleport(cmd):
 		if poi.id_poi not in valid_destinations:
 			response = "You can't {} that far.".format(cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		mutation_data.data = str(time_now)
-		mutation_data.persist()
-		ewutils.moves_active[cmd.message.author.id] = 0
-		user_data.poi = poi.id_poi
-		user_data.time_lastenter = int(time.time())
-		user_data.persist()
-		
-		if not blj_used:
-			response = "WHOOO-"
-		else:
-			response = "YAHOO! YAHOO! Y-Y-Y-Y-Y-"
+
+		# 30 second windup before teleport goes through
+		windup_finished = False
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
+		try:
+			msg = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author)
+
+			if msg != None:
+				windup_finished = False
+			else:
+				windup_finished = True
+				
+		except:
+			windup_finished = True
+
+		user_data = EwUser(member=cmd.message.author)
 			
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-		
-		if not blj_used:
-			response = "-OOOP!"
-		else:
-			response = "-AHOO!"
+		if windup_finished and user_data.poi == poi_now:
+			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
+
+			mutation_data.data = str(time_now)
+			mutation_data.persist()
 			
-		resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
-		return await resp_cont.post()
+			if not blj_used:
+				response = "WHOOO-"
+			else:
+				response = "YAHOO! YAHOO! Y-Y-Y-Y-Y-"
+				
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
+			poi_channel = ewutils.get_channel(cmd.message.server, poi.channel)
+
+			await ewutils.send_message(cmd.client, poi_channel, "A rift in time and space is pouring open! Something's coming through!!")
+			
+			await asyncio.sleep(5)
+			
+			if not blj_used:
+				response = "-OOOP!"
+			else:
+				response = "-AHOO!"
+
+			user_data = EwUser(member=cmd.message.author)
+
+			ewutils.moves_active[cmd.message.author.id] = 0
+			user_data.poi = poi.id_poi
+			user_data.time_lastenter = int(time.time())
+			user_data.persist()
+
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+				
+			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await resp_cont.post()
+		else:
+			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
+
+			mutation_data.data = str(time_now)
+			mutation_data.persist()
+			
+			# Get the channel for the poi the user is currently in, just in case they've moved to a different poi before the teleportation went through.
+			current_poi = ewcfg.id_to_poi.get(user_data.poi)
+			current_channel = ewutils.get_channel(cmd.message.server, current_poi.channel)
+			
+			response = "You slow down before the teleportation goes through."
+			return await ewutils.send_message(cmd.client, current_channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		
 		if not blj_used:

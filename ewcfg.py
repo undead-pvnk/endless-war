@@ -928,7 +928,7 @@ slimes_hauntratio = 400
 slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
-slimecoin_exchangerate = 100
+slimecoin_exchangerate = 1
 slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
@@ -15101,6 +15101,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"fag":30,
 	"shit":10,
 	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"dumbass": 10,
 	"cunt":30,
 	"fuck":10,
 	"bitch":10,
@@ -15108,7 +15109,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"nigger":80,
 	"kike":80,
 	"cuck":30,
-	"chink":50,
+	#"chink":50,
 	"chinaman":50,
 	"gook":50,
 	"injun":50,

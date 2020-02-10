@@ -1243,53 +1243,58 @@ async def on_message(message):
 			#print(content_tolower_string)
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
-			if message.server != None:
-				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
-			else:
-				usermodel = None
-
-			market_data = EwMarket(id_server=message.server.id)
-
-			# gather all the swear words the user typed.
-			for swear in ewcfg.curse_words.keys():
-				
-				if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
-					continue
-				if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
-					continue
-					
-				swear_count = content_tolower_string.count(swear)
-				
-				# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
-				if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
-					#print('emote skipped over')
-					continue
-				
-				for i in range(swear_count):
-					swear_multiplier += ewcfg.curse_words[swear]
-					
-					market_data.global_swear_jar += 1
-
-					usermodel.swear_jar += 1
-
-			market_data.persist()
+			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
-				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-				swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
-				
-				# prevent user from reaching negative slimecoin
-				if swear_jar_fee > usermodel.slimecoin:
-					swear_jar_fee = usermodel.slimecoin
-				
-				usermodel.change_slimecoin(n= -1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+				market_data = EwMarket(id_server=usermodel.id_server)
+
+				# gather all the swear words the user typed.
+				for swear in ewcfg.curse_words.keys():
+
+					if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
+						continue
+					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
+						continue
+
+					swear_count = content_tolower_string.count(swear)
+
+					# Niche scenarios. If certain words are used, don't count their components as swears.
+					if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+					elif swear == "mick" and (content_tolower_string.count('gimmick') > 0):
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+					elif swear == "shit" and "shit" not in content_tolower:
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+
+					for i in range(swear_count):
+						swear_multiplier += ewcfg.curse_words[swear]
+
+						market_data.global_swear_jar += 1
+
+						usermodel.swear_jar += 1
+
+				# don't fine the user or send out the message if there weren't enough curse words
+				if swear_multiplier > 20:
+
+					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
+
+					# prevent user from reaching negative slimecoin
+					if swear_jar_fee > usermodel.slimecoin:
+						swear_jar_fee = usermodel.slimecoin
+
+					usermodel.change_slimecoin(n=-1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+					
+					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+					await ewutils.send_message(client, message.channel, response)
+				#else:
+					#print("swear threshold not met")
+
+				market_data.persist()
 				usermodel.persist()
-			
-			if swear_multiplier > 20:
-				response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
-				await ewutils.send_message(client, message.channel, response)
-			#else:
-			#	print("swear threshold not met")
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):

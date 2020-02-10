@@ -455,12 +455,16 @@ async def swearjar(cmd):
 	
 	response = "The swear jar has reached: **{}**".format(total_swears)
 	
-	if total_swears > 1000:
+	if total_swears < 1000:
+		pass
+	elif total_swears < 10000:
 		response += "\nThings are starting to get nasty."
-	elif total_swears > 10000:
+	elif total_swears < 100000:
 		response += "\nSwears? In *my* free Text-Based MMORPG playable entirely within my browser? It's more likely than you think."
-	elif total_swears > 100000:
+	elif total_swears < 1000000:
 		response += "\nGod help us all..."
+	else:
+		response = "\nThe city is rife with mischief and vulgarity, though that's hardly a surprise when it's inhabited by lowlifes and sinners across the board."
 	
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1032,7 +1036,10 @@ async def pray(cmd):
 		diceroll = random.randint(1, 100)
 
 		# Redeem the player for their sins.
-		user_data.swear_jar = max(0, user_data.swear_jar - 1)
+		market_data = EwMarket(id_server=cmd.message.server.id)
+		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
+		market_data.persist()
+		user_data.swear_jar = max(0, user_data.swear_jar - 3)
 		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
