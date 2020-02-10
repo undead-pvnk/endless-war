@@ -342,6 +342,9 @@ CREATE TABLE apartment (
 	id_user varchar(64) NOT NULL DEFAULT '',
 	id_server varchar(64) NOT NULL DEFAULT '',
 	apt_class char NOT NULL DEFAULT 'c',
+	num_keys int NOT NULL DEFAULT 0,
+	key_1 int NOT NULL DEFAULT 0,
+	key_2 int NOT NULL DEFAULT 0,
 
 	PRIMARY KEY (id_server, id_user)
 );

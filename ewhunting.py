@@ -759,10 +759,12 @@ class EwEnemyEffectContainer:
 		self.backfire_damage = backfire_damage
 
 # Debug command. Could be used for events, perhaps?
-async def summonenemy(cmd):
+
+async def summonenemy(cmd, is_bot_spawn = False):
+
 	author = cmd.message.author
 
-	if not author.server_permissions.administrator:
+	if not author.server_permissions.administrator and is_bot_spawn == False:
 		return
 
 	time_now = int(time.time())
@@ -777,7 +779,9 @@ async def summonenemy(cmd):
 	enemy_level = None
 
 	if len(cmd.tokens) >= 3:
+
 		enemytype = cmd.tokens[1]
+
 		enemy_location = cmd.tokens[2]
 		if len(cmd.tokens) >= 6:
 			enemy_slimes = cmd.tokens[3]
@@ -819,8 +823,8 @@ async def summonenemy(cmd):
 		
 	else:
 		response = "**DEBUG**: PLEASE RE-SUMMON WITH APPLICABLE TYPING / LOCATION. ADDITIONAL OPTIONS ARE SLIME / LEVEL / DISPLAYNAME"
-
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	if not is_bot_spawn:
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # Gathers all enemies from the database (that are either raid bosses or have users in the same district as them) and has them perform an action
 async def enemy_perform_action(id_server):

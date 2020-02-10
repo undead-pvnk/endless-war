@@ -4,12 +4,14 @@ import random
 import asyncio
 import discord
 
+
 import ewutils
 import ewcfg
 import ewstats
 import ewdistrict
 import ewrolemgr
 import ewsmelting
+
 from ew import EwUser
 from ewplayer import EwPlayer
 import re
@@ -1036,7 +1038,7 @@ async def item_look(cmd):
 
 				response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)
 
-			if item.item_type == ewcfg.it_cosmetic:
+			if item.item_type == ewcfg.it_cosmetic or item.item_type == ewcfg.it_furniture:
 				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
@@ -1105,7 +1107,6 @@ async def item_use(cmd):
 					item.item_props['active'] = 'true'
 				
 				item.persist()
-
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -1297,7 +1298,7 @@ async def give(cmd):
 			item_data.item_props["adorned"] = 'false'
 			item_data.persist()
 
-		if item_sought.get('soulbound'):
+		if item_sought.get('soulbound') and EwItem(id_item = item_sought.get('id_item')).item_props.get("context") != "housekey":
 			response = "You can't just give away soulbound items."
 		else:
 			give_item(
@@ -1433,7 +1434,7 @@ def gen_item_props(item):
 async def soulextract(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
-	if usermodel.has_soul == 1:
+	if usermodel.has_soul == 1 and usermodel.rr_challenger == "":
 		item_create(
 			id_user=cmd.message.author.id,
 			id_server=cmd.message.server.id,
@@ -1450,6 +1451,8 @@ async def soulextract(cmd):
 		usermodel.has_soul = 0
 		usermodel.persist()
 		response = "You tremble at the thought of trying this. Nothing ventured, nothing gained, you suppose. With all your mental fortitude you jam your hand deep into your chest and begin to pull out the very essence of your being. Your spirit, aspirations, everything that made you who you are begins to slowly drain from your mortal effigy until you feel absolutely nothing. Your soul flickers about, taunting you from outside your body. You capture it in a jar, almost reflexively.\n\nWow. Your personality must suck now."
+	elif usermodel.has_soul == 1 and usermodel.rr_challenger != "":
+		response = "Now's not the time to be playing with your soul, dumbass! You have to focus on pointing the gun at your head!"
 	else:
 		response = "There's nothing left in you to extract. You already spent the soul you had."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1630,4 +1633,32 @@ async def trash(cmd):
 		response = "Are you sure you have that item?"
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+def surrendersoul(giver = None, receiver = None, id_server=None):
+
+	if giver != None and receiver != None:
+		receivermodel = EwUser(id_server=id_server, id_user=receiver)
+		givermodel = EwUser(id_server=id_server, id_user=giver)
+		giverplayer = EwPlayer(id_user=givermodel.id_user)
+		if givermodel.has_soul == 1:
+			givermodel.has_soul = 0
+			givermodel.persist()
+
+			item_id = item_create(
+				id_user=receivermodel.id_user,
+				id_server=id_server,
+				item_type=ewcfg.it_cosmetic,
+				item_props={
+					'id_cosmetic': "soul",
+					'cosmetic_name': "{}'s soul".format(giverplayer.display_name),
+					'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(
+						giverplayer.display_name, givermodel.id_user),
+					'rarity': ewcfg.rarity_patrician,
+					'adorned': 'false',
+					'user_id': givermodel.id_user
+				}
+			)
+			return item_id
+
+
 

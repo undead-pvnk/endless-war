@@ -208,6 +208,7 @@ async def weather_tick(id_server = None):
 					deathreport = "{skull} {name} is dissolved by the bicarbonate rain. {skull}".format(skull = ewcfg.emote_slimeskull, name = enemy_data.display_name)
 					resp_cont.add_channel_response(enemy_poi.channel, deathreport)
 
+
 			await resp_cont.post()
 
 		except:

@@ -208,10 +208,16 @@ cmd_map = {
 	ewcfg.cmd_knock: ewapt.knock,
 	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
+
+
+	ewcfg.cmd_pot: ewapt.flowerpot,
+
 	ewcfg.cmd_aquarium: ewapt.lobbywarning,
 	ewcfg.cmd_propstand: ewapt.lobbywarning,
+
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
+	ewcfg.cmd_unpot: ewapt.unpot,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	ewcfg.cmd_frame: ewapt.frame,
@@ -225,6 +231,9 @@ cmd_map = {
 	ewcfg.cmd_jump: ewcmd.jump,
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
+
+
+	ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
 
 	ewcfg.cmd_purify: ewcmd.purify,
 
@@ -244,6 +253,10 @@ cmd_map = {
 	ewcfg.cmd_freeze: ewapt.lobbywarning,
 	ewcfg.cmd_aptname: ewapt.lobbywarning,
 	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
+	ewcfg.cmd_addkey: ewapt.add_key,
+	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
+	ewcfg.cmd_setalarm: ewapt.set_alarm,
+	ewcfg.cmd_jam: ewapt.jam,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -551,6 +564,7 @@ cmd_map = {
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	ewcfg.cmd_boot: ewmap.boot,
+	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
@@ -989,6 +1003,8 @@ async def on_ready():
 
 						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
 
+						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
+
 						bw_furniture2 = None
 						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
 							bw_furniture2 = random.choice(bazaar_furniture)
@@ -1045,6 +1061,8 @@ async def on_ready():
 
 					# Persist new data.
 					market_data.persist()
+
+					await ewapt.setOffAlarms(id_server = server.id)
 
 					# Decay slime totals
 					ewutils.decaySlimes(id_server = server.id)
@@ -1243,53 +1261,58 @@ async def on_message(message):
 			#print(content_tolower_string)
 	
 			playermodel = ewplayer.EwPlayer(id_user=message.author.id)
-			if message.server != None:
-				usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
-			else:
-				usermodel = None
-
-			market_data = EwMarket(id_server=message.server.id)
-
-			# gather all the swear words the user typed.
-			for swear in ewcfg.curse_words.keys():
-				
-				if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
-					continue
-				if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
-					continue
-					
-				swear_count = content_tolower_string.count(swear)
-				
-				# A niche scenario. If the user types either of these emotes at least once, then 'fuck' will not be detected.
-				if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
-					#print('emote skipped over')
-					continue
-				
-				for i in range(swear_count):
-					swear_multiplier += ewcfg.curse_words[swear]
-					
-					market_data.global_swear_jar += 1
-
-					usermodel.swear_jar += 1
-
-			market_data.persist()
+			usermodel = EwUser(id_user=message.author.id, id_server=playermodel.id_server)
 
 			if usermodel != None:
-				# fine the user for swearing, based on how much they've sworn right now, as well as in the past
-				swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
-				
-				# prevent user from reaching negative slimecoin
-				if swear_jar_fee > usermodel.slimecoin:
-					swear_jar_fee = usermodel.slimecoin
-				
-				usermodel.change_slimecoin(n= -1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+				market_data = EwMarket(id_server=usermodel.id_server)
+
+				# gather all the swear words the user typed.
+				for swear in ewcfg.curse_words.keys():
+
+					if swear == "buster" and usermodel.faction == ewcfg.faction_rowdys:
+						continue
+					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
+						continue
+
+					swear_count = content_tolower_string.count(swear)
+
+					# Niche scenarios. If certain words are used, don't count their components as swears.
+					if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+					elif swear == "mick" and (content_tolower_string.count('gimmick') > 0):
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+					elif swear == "shit" and "shit" not in content_tolower:
+						#print('swear detection turned off for {}.'.format(swear))
+						continue
+
+					for i in range(swear_count):
+						swear_multiplier += ewcfg.curse_words[swear]
+
+						market_data.global_swear_jar += 1
+
+						usermodel.swear_jar += 1
+
+				# don't fine the user or send out the message if there weren't enough curse words
+				if swear_multiplier > 20:
+
+					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
+					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
+
+					# prevent user from reaching negative slimecoin
+					if swear_jar_fee > usermodel.slimecoin:
+						swear_jar_fee = usermodel.slimecoin
+
+					usermodel.change_slimecoin(n=-1 * swear_jar_fee, coinsource=ewcfg.coinsource_swearjar)
+					
+					response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
+					await ewutils.send_message(client, message.channel, response)
+				#else:
+					#print("swear threshold not met")
+
+				market_data.persist()
 				usermodel.persist()
-			
-			if swear_multiplier > 20:
-				response = 'ENDLESS WAR judges you harshly!\n"**{}**"'.format(random.choice(ewcfg.curse_responses).upper())
-				await ewutils.send_message(client, message.channel, response)
-			#else:
-			#	print("swear threshold not met")
 			
 			# if the message wasn't a command, we can stop here
 			if not message.content.startswith(ewcfg.cmd_prefix):
@@ -1462,6 +1485,10 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
+
+			await ewapt.setOffAlarms(id_server=message.server.id)
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
 			patrician_rarity = 20

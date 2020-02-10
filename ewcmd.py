@@ -243,8 +243,6 @@ def gen_data_text(
 		if len(response_block) > 0:
 			response += "\n" + response_block
 
-		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
-
 	return response
 
 
@@ -391,6 +389,8 @@ async def data(cmd):
 			channel_name=cmd.message.channel.name
 		)
 
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
+
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -455,12 +455,16 @@ async def swearjar(cmd):
 	
 	response = "The swear jar has reached: **{}**".format(total_swears)
 	
-	if total_swears > 1000:
+	if total_swears < 1000:
+		pass
+	elif total_swears < 10000:
 		response += "\nThings are starting to get nasty."
-	elif total_swears > 10000:
+	elif total_swears < 100000:
 		response += "\nSwears? In *my* free Text-Based MMORPG playable entirely within my browser? It's more likely than you think."
-	elif total_swears > 100000:
+	elif total_swears < 1000000:
 		response += "\nGod help us all..."
+	else:
+		response = "\nThe city is rife with mischief and vulgarity, though that's hardly a surprise when it's inhabited by lowlifes and sinners across the board."
 	
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1032,7 +1036,10 @@ async def pray(cmd):
 		diceroll = random.randint(1, 100)
 
 		# Redeem the player for their sins.
-		user_data.swear_jar = max(0, user_data.swear_jar - 1)
+		market_data = EwMarket(id_server=cmd.message.server.id)
+		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
+		market_data.persist()
+		user_data.swear_jar = max(0, user_data.swear_jar - 3)
 		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
@@ -1345,7 +1352,22 @@ async def toss_off_cliff(cmd):
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
 	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
-		return await ewitem.discard(cmd=cmd)
+		if item_sought:
+			if item_sought.get('name')=="brick" and cmd.mentions_count > 0:
+				item = EwItem(id_item=item_sought.get('id_item'))
+				target = EwUser(member = cmd.mentions[0])
+				if target.apt_zone == user_data.poi:
+					item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
+					item.persist()
+					response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
+					if ewcfg.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
+						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
+
+				else:
+					response = "There's no apartment here."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				return await ewitem.discard(cmd=cmd)
 
 	elif item_sought:
 		item_obj = EwItem(id_item=item_sought.get('id_item'))
