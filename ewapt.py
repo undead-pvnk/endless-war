@@ -1300,8 +1300,6 @@ async def knock(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	await ewutils.add_pvp_role(cmd=cmd)
-
 	if cmd.mentions_count == 1:
 		target = cmd.mentions[0]
 		target_data = EwUser(member=target)
