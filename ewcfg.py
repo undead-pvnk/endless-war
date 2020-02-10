@@ -2323,7 +2323,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = "leather",
-		str_name = "Leathert",
+		str_name = "Leather",
 		str_desc = "A strip of leather.",
 		acquisition = acquisition_smelting,
 		ingredients = "generic",
@@ -2331,7 +2331,7 @@ item_list = [
 	),
 	EwGeneralItem(
 		id_item = "ironingot",
-		str_name = "Iton Ingot",
+		str_name = "Iron Ingot",
 		str_desc = "A bar of iron",
 		acquisition = acquisition_smelting,
 		ingredients = "generic",
@@ -12694,7 +12694,7 @@ smelting_recipe_list = [
 			"tanning"
 		],
 		ingredients = {
-			'iron':1
+			'ironingot':1
 		},
 		products = ['tanningknife']
     ),
