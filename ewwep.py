@@ -797,7 +797,7 @@ async def attack(cmd):
 					)
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
-					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
+					if shootee_data.slimelevel >= user_data.slimelevel and shootee_data.slimelevel >= user_data.weaponskill:
 						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
 					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5

@@ -70,6 +70,9 @@ async def pachinko(cmd):
 		else:
 			value = ewcfg.slimes_perpachinko * ewcfg.slimecoin_exchangerate
 
+			if user_data.life_state == ewcfg.life_state_corpse:
+				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
+
 			if value > user_data.slimes:
 				response = "You don't have enough slime to play. You need {} but only have {}.".format(value, user_data.slimes)
 				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
@@ -176,8 +179,10 @@ async def craps(cmd):
 					response = "You don't have that much SlimeCoin to bet with."
 					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
 			else:
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+				
 				if value == -1:
 					value = user_data.slimes
 
@@ -211,7 +216,7 @@ async def craps(cmd):
 			if currency_used == ewcfg.currency_slimecoin:
 				user_data.change_slimecoin(n = winnings - value, coinsource = ewcfg.coinsource_casino)
 			else:
-				levelup_response = user_data.change_slimes(n = int(winnings) - value, source = ewcfg.source_casino)
+				levelup_response = user_data.change_slimes(n = winnings - value, source = ewcfg.source_casino)
 
 				if levelup_response != "":
 					response += "\n\n" + levelup_response
@@ -261,6 +266,9 @@ async def slots(cmd):
 
 		else:
 			value = ewcfg.slimes_perslot * ewcfg.slimecoin_exchangerate
+
+			if user_data.life_state == ewcfg.life_state_corpse:
+				return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_machine))
 
 			if value > user_data.slimes:
 				response = "You don't have enough slime. You need {} but only have {}.".format(value, user_data.slimes)
@@ -442,6 +450,9 @@ async def roulette(cmd):
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 
 			else:
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+
 				if value == -1:
 					value = user_data.slimes
 				
@@ -599,6 +610,9 @@ async def baccarat(cmd):
 				user_data.change_slimecoin(n = -value, coinsource = ewcfg.coinsource_casino)
 
 			else:
+				if user_data.life_state == ewcfg.life_state_corpse:
+					return await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, ewcfg.str_casino_negaslime_dealer))
+
 				if value == -1:
 					value = user_data.slimes
 

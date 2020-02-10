@@ -243,8 +243,6 @@ def gen_data_text(
 		if len(response_block) > 0:
 			response += "\n" + response_block
 
-		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
-
 	return response
 
 
@@ -390,6 +388,8 @@ async def data(cmd):
 			display_name=member.display_name,
 			channel_name=cmd.message.channel.name
 		)
+
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

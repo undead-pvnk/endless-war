@@ -625,8 +625,20 @@ async def store_item(cmd, dest):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-		if item_sought.get('item_type') == ewcfg.it_food and destination == ewcfg.compartment_id_fridge :
+		if item.item_type == ewcfg.it_food and destination == ewcfg.compartment_id_fridge :
 			item.item_props["time_fridged"] = time.time()
+			item.persist()
+
+		elif item.item_type == ewcfg.it_weapon and usermodel.weapon == item.id_item:
+			if usermodel.weaponmarried:
+				response = "If only it were that easy. But you can't just shove your lover in a {}.".format(destination)
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			usermodel.weapon = -1
+			usermodel.persist()
+
+		elif item.item_type == ewcfg.it_cosmetic:
+			item.item_props["adorned"] = 'false'
+			item.item_props["slimeoid"] = 'false'
 			item.persist()
 
 		ewitem.give_item(id_item=item.id_item, id_server=playermodel.id_server, id_user=recipient + destination)
@@ -1429,9 +1441,8 @@ async def aquarium(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def propstand(cmd):
-
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
-	usermodel = EwUser(id_user=cmd.message.author.id)
+	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
@@ -1441,6 +1452,7 @@ async def propstand(cmd):
 			if item.item_props.get('id_furniture') == "propstand":
 				response = "It's already on a prop stand."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if item.soulbound:
 			response = "Cool idea, but no. If you tried to mount a soulbound item above the fireplace you'd be stuck there too."
 		else:
@@ -1468,7 +1480,6 @@ async def propstand(cmd):
 				if fdesc.find('{') >= 0:
 					fdesc = fdesc.format_map(item.item_props)
 			fdesc += " It's preserved on a mount."
-
 
 			ewitem.item_create(
 				id_user=cmd.message.author.id,

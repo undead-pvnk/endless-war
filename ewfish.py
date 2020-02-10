@@ -19,6 +19,18 @@ class EwFisher:
 	pier = ""
 	bait = False
 	high = False
+	timer = None
+
+	def stop(self): 
+		self.fishing = False
+		self.bite = False
+		self.current_fish = ""
+		self.current_size = ""
+		self.pier = ""
+		self.bait = False
+		self.high = False
+		if self.timer is not None:
+			self.timer.cancel()
 
 fishers = {}
 
@@ -239,12 +251,12 @@ def gen_fish(x, cmd, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
-	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "vagrants-corner-pier", "ferry"]:
+	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "juvies-row-pier", "ferry"]:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
 				fish_pool.remove(fish)
 
-	elif cmd.message.channel.name in ["jaywalker-plain-pier", "little-chernobyl-pier"]:
+	elif cmd.message.channel.name in ["jaywalker-plain-pier", "crookline-pier", "toxington-pier"]:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_saltwater:
 				fish_pool.remove(fish)
@@ -348,7 +360,7 @@ async def cast(cmd):
 			fisher.current_fish = gen_fish(market_data, cmd, has_fishingrod)
 			fisher.fishing = True
 			fisher.bait = False
-			fisher.pier = user_data.poi
+			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
 			server = cmd.message.server
@@ -439,13 +451,22 @@ async def cast(cmd):
 				else:
 					damp = random.randrange(fun)
 
+				if fisher.timer is not None and fisher.timer.done() is False:
+					return
+				
 				if not fisher.high:
-					await asyncio.sleep(60)
+					fisher.timer = asyncio.ensure_future(asyncio.sleep(60))
 				else:
-					await asyncio.sleep(30)
+					fisher.timer = asyncio.ensure_future(asyncio.sleep(30))
+
+				try:
+					await fisher.timer
+				except asyncio.CancelledError:
+					return
+
 				user_data = EwUser(member=cmd.message.author)
 
-				if user_data.poi != fisher.pier:
+				if user_data.poi != ewcfg.id_to_poi.get(fisher.pier).mother_district:
 					fisher.fishing = False
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
@@ -473,11 +494,7 @@ async def cast(cmd):
 			await asyncio.sleep(8)
 
 			if fisher.bite != False:
-				fisher.fishing = False
-				fisher.bite = False
-				fisher.current_fish = ""
-				fisher.current_size = ""
-				fisher.bait = False
+				fisher.stop()
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
 			else:
 				has_reeled = True
@@ -489,7 +506,6 @@ async def cast(cmd):
 	if has_reeled == False:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-
 
 """ Reels in the fishing line.. """
 async def reel(cmd):
@@ -505,15 +521,12 @@ async def reel(cmd):
 
 	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 		# Players who haven't cast a line cannot reel.
-		if fisher.fishing == False:
+		if fisher.fishing == False:# and (fisher.timer is None or fisher.timer.done() is True):
 			response = "You haven't cast your hook yet. Try !cast."
 
 		# If a fish isn't biting, then a player reels in nothing.
-		elif fisher.bite == False and fisher.fishing == True:
-			fisher.current_fish = ""
-			fisher.current_size = ""
-			fisher.fishing = False
-			fisher.pier = ""
+		elif fisher.bite == False:# or fisher.timer.cancelled() is True:
+			fisher.stop()
 			response = "You reeled in too early! Nothing was caught."
 
 		# On successful reel.
@@ -549,11 +562,7 @@ async def reel(cmd):
 
 					response = "You reel in a {}!".format(item.get('name'))
 
-				fisher.fishing = False
-				fisher.bite = False
-				fisher.current_fish = ""
-				fisher.current_size = ""
-				fisher.pier = ""
+				fisher.stop()
 				user_data.persist()
 
 			else:
@@ -701,11 +710,7 @@ async def reel(cmd):
 					market_data.caught_fish += 1
 					market_data.persist()
 
-				fisher.fishing = False
-				fisher.bite = False
-				fisher.current_fish = ""
-				fisher.current_size = ""
-				fisher.pier = ""
+				fisher.stop()
 
 				# Flag the user for PvP
 				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
