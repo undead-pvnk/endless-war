@@ -36,6 +36,9 @@ class EwCosmeticItem:
 	# Names of the vendors selling this item.
 	vendors = []
 
+	#Whether a cosmetic is a hat or not
+	is_hat = False
+
 	def __init__(
 		self,
 		id_cosmetic = "",
@@ -46,6 +49,7 @@ class EwCosmeticItem:
 		acquisition = "",
 		price = 0,
 		vendors = [],
+		is_hat = False,
 
 	):
 		self.item_type = ewcfg.it_cosmetic
@@ -58,6 +62,7 @@ class EwCosmeticItem:
 		self.acquisition = acquisition
 		self.price = price
 		self.vendors = vendors
+		self.is_hat = is_hat
 
 async def adorn(cmd):
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])

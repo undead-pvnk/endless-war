@@ -208,10 +208,16 @@ cmd_map = {
 	ewcfg.cmd_knock: ewapt.knock,
 	#ewcfg.cmd_trickortreat: ewapt.trickortreat,
 	ewcfg.cmd_breaklease: ewapt.cancel,
+
+
+	ewcfg.cmd_pot: ewapt.flowerpot,
+
 	ewcfg.cmd_aquarium: ewapt.lobbywarning,
 	ewcfg.cmd_propstand: ewapt.lobbywarning,
+
 	ewcfg.cmd_releaseprop: ewapt.releaseprop,
 	ewcfg.cmd_releasefish: ewapt.releasefish,
+	ewcfg.cmd_unpot: ewapt.unpot,
 	ewcfg.cmd_smoke: ewcosmeticitem.smoke,
 
 	ewcfg.cmd_frame: ewapt.frame,
@@ -225,6 +231,9 @@ cmd_map = {
 	ewcfg.cmd_jump: ewcmd.jump,
 	ewcfg.cmd_push: ewcmd.push,
 	ewcfg.cmd_push_alt_1: ewcmd.push,
+
+
+	ewcfg.cmd_dyefurniture: ewapt.dyefurniture,
 
 	ewcfg.cmd_purify: ewcmd.purify,
 
@@ -244,6 +253,10 @@ cmd_map = {
 	ewcfg.cmd_freeze: ewapt.lobbywarning,
 	ewcfg.cmd_aptname: ewapt.lobbywarning,
 	ewcfg.cmd_aptdesc: ewapt.lobbywarning,
+	ewcfg.cmd_addkey: ewapt.add_key,
+	ewcfg.cmd_changelocks: ewapt.manual_changelocks,
+	ewcfg.cmd_setalarm: ewapt.set_alarm,
+	ewcfg.cmd_jam: ewapt.jam,
 
 
 	# revive yourself as a juvenile after having been killed.
@@ -551,6 +564,7 @@ cmd_map = {
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
 	ewcfg.cmd_boot: ewmap.boot,
+	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
 	ewcfg.cmd_piss: ewcmd.piss,
 	ewcfg.cmd_fursuit: ewcmd.fursuit,
@@ -989,6 +1003,8 @@ async def on_ready():
 
 						market_data.bazaar_wares['cosmetic3'] = bw_cosmetic3
 
+						market_data.bazaar_wares['furniture1'] = random.choice(bazaar_furniture)
+
 						bw_furniture2 = None
 						while bw_furniture2 is None or bw_furniture2 in market_data.bazaar_wares.values():
 							bw_furniture2 = random.choice(bazaar_furniture)
@@ -1045,6 +1061,8 @@ async def on_ready():
 
 					# Persist new data.
 					market_data.persist()
+
+					await ewapt.setOffAlarms(id_server = server.id)
 
 					# Decay slime totals
 					ewutils.decaySlimes(id_server = server.id)
@@ -1467,6 +1485,10 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Apple created."))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'weathertick'):
+
+			await ewapt.setOffAlarms(id_server=message.server.id)
 
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createhat'):
 			patrician_rarity = 20

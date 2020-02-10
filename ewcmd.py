@@ -1352,7 +1352,22 @@ async def toss_off_cliff(cmd):
 	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=user_data.id_server)
 
 	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
-		return await ewitem.discard(cmd=cmd)
+		if item_sought:
+			if item_sought.get('name')=="brick" and cmd.mentions_count > 0:
+				item = EwItem(id_item=item_sought.get('id_item'))
+				target = EwUser(member = cmd.mentions[0])
+				if target.apt_zone == user_data.poi:
+					item.id_owner = str(cmd.mentions[0].id) + ewcfg.compartment_id_decorate
+					item.persist()
+					response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
+					if ewcfg.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
+						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
+
+				else:
+					response = "There's no apartment here."
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			else:
+				return await ewitem.discard(cmd=cmd)
 
 	elif item_sought:
 		item_obj = EwItem(id_item=item_sought.get('id_item'))
