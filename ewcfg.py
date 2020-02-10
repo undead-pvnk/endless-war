@@ -3260,20 +3260,17 @@ def wef_bow(ctn = None):
 def wef_dclaw(ctn = None):
 	
 	user_mutations = ctn.user_data.get_mutations()
-	if mutation_id_fastmetabolsim in user_mutations or mutation_id_lightasafeather in user_mutations:
+	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
                 ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
                 ctn.slimes_spent *= 0.5
         else:
                 ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
                 ctn.slimes_spent *= 1
-        time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
-	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * 3)
         #less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
-	if aim <= (random.randint(1,13*ctn.miss_mod):
+	if aim <= (random.randint(1,13):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.3:
 				ctn.miss = True
@@ -3986,8 +3983,8 @@ weapon_list = [
 		str_weapon = "a dragon claw",
 		str_weaponmaster_self = "You are a rank {rank} master of the dragon claw.",
 		str_weaponmaster = "They are a rank {rank} master of the dragon claw.",
-		str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames wont seem to extinguish.",
-		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames wont seem to extinguish.",
+		str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames `won't seem to extinguish.",
+		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
 		str_kill = "***Thwip.*** {name_player}'s dragon claw cuts the air followed by a trail of flame and blood, the camera pans out and {name_target} is shown, cut in twain. {emote_skull}",
 		str_killdescriptor = "cut to pieces",
 		str_damage = random.choice(["{name_target} is slashed across the {hitzone}!!","{name_player} furiously slashes {name_target} across the {hitzone}!!","{name_player} flicks their fingers and a jet of flame ignites from the dragon claw, burning {name_target} in the {hitzone}!!"]),
