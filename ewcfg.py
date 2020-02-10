@@ -3238,7 +3238,6 @@ def wef_bow(ctn = None):
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 8
 	
-	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
@@ -3258,7 +3257,7 @@ def wef_bow(ctn = None):
 # weapon effect function for "Dragon Claw"
 
 def wef_dclaw(ctn = None):
-	
+	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
                 ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
@@ -3270,7 +3269,9 @@ def wef_dclaw(ctn = None):
         #less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
-	if aim <= (random.randint(1,13)):
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	if aim <= (random.randint(1,13*ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.3:
 				ctn.miss = True
