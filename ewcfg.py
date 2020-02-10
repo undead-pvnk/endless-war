@@ -3270,7 +3270,7 @@ def wef_dclaw(ctn = None):
         #less slime cost and less damage = attacking faster I guess?
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
-	if aim <= (random.randint(1,13):
+	if aim <= (random.randint(1,13)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.3:
 				ctn.miss = True
