@@ -177,7 +177,7 @@ class EwFish:
 
 
 # Randomly generates a fish.
-def gen_fish(x, cmd, has_fishingrod):
+def gen_fish(x, fisher, has_fishingrod):
 	fish_pool = []
 
 	rarity_number = random.randint(0, 100)
@@ -251,12 +251,12 @@ def gen_fish(x, cmd, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
-	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "juvies-row-pier", "ferry"]:
+	if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
 				fish_pool.remove(fish)
 
-	elif cmd.message.channel.name in ["jaywalker-plain-pier", "crookline-pier", "toxington-pier"]:
+	elif fisher.pier.pier_type == ewcfg.fish_slime_freshwater:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_saltwater:
 				fish_pool.remove(fish)
@@ -357,10 +357,10 @@ async def cast(cmd):
 
 			if ewcfg.status_high_id in statuses:
 				fisher.high = True
-			fisher.current_fish = gen_fish(market_data, cmd, has_fishingrod)
 			fisher.fishing = True
 			fisher.bait = False
-			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name).id_poi
+			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
 			server = cmd.message.server
@@ -424,7 +424,7 @@ async def cast(cmd):
 				response = "You attach your {} to the hook as bait and then cast your fishing line into the ".format(str_name)
 
 
-			if cmd.message.channel.name in [ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+			if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
 				response += "vast Slime Sea."
 			else:
 				response += "glowing Slime Lake."
@@ -466,7 +466,7 @@ async def cast(cmd):
 
 				user_data = EwUser(member=cmd.message.author)
 
-				if user_data.poi != ewcfg.id_to_poi.get(fisher.pier).mother_district:
+				if user_data.poi != fisher.pier.mother_district:
 					fisher.fishing = False
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
@@ -533,11 +533,9 @@ async def reel(cmd):
 		else:
 			if fisher.current_fish == "item":
 				
-				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)
-				
-				pier_poi = ewcfg.id_to_poi.get(fisher.pier)				
+				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)			
 
-				if pier_poi.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
+				if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
 
 					item = random.choice(ewcfg.mine_results)
 				
@@ -683,7 +681,7 @@ async def reel(cmd):
 					response += levelup_response
 
 				market_data = EwMarket(id_server=user_data.id_server)
-				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
+				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
 					
 					item = ewcfg.debugitem
 					
@@ -706,7 +704,7 @@ async def reel(cmd):
 					market_data.caught_fish += 1
 					market_data.persist()
 		
-				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
+				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
 					market_data.caught_fish += 1
 					market_data.persist()
 

@@ -8494,7 +8494,7 @@ furniture_slimecorp = []
 furniture_seventies = []
 furniture_shitty = []
 furniture_instrument = []
-
+furniture_specialhue = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -15063,6 +15063,8 @@ for furniture in furniture_list:
 		furniture_shitty.append(furniture.id_furniture)
 	elif furniture.furn_set == "instrument":
 		furniture_instrument.append(furniture.id_furniture)
+	elif furniture.furn_set == "specialhue":
+		furniture_specialhue.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
