@@ -12476,7 +12476,7 @@ cosmetic_items_list = [
 		is_hat = True,
 	),
 ]
-]
+
 
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
