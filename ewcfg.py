@@ -12469,7 +12469,7 @@ cosmetic_items_list = [
 	),
         EwCosmeticItem(
 		id_cosmetic = "knightarmor",
-		str_name = "Steel kngiht armor",
+		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
