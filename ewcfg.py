@@ -931,7 +931,7 @@ offline_cmds = [
 	cmd_scout_alt1,
 	cmd_scrutinize
 ]
-		
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -1024,7 +1024,7 @@ max_capture_points = {
 
 # how long districts stay locked after capture
 capture_lock_s = 48 * 60 * 60  # 2 days
-capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_a = 24 * 60 * 60  # 1 day
 capture_lock_b = 12 * 60 * 60  # 12 hours
 capture_lock_c = 6 * 60 * 60  # 6 hours
 
@@ -1191,7 +1191,7 @@ for farm_action in farm_actions:
 		cmd_to_farm_action[alias] = farm_action
 	id_to_farm_action[farm_action.id_action] = farm_action
 	farm_action_ids.append(farm_action.id_action)
-	
+
 
 # fishing
 fish_gain = 10000 # multiplied by fish size class
@@ -1376,7 +1376,7 @@ symbol_map_pokemine = {
 	11 : ";",
 	12 : "/",
 	13 : "#"
-	
+
 }
 
 number_emote_map = {
@@ -2105,6 +2105,7 @@ item_list = [
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
 	),
+
 	EwGeneralItem(
 		id_item = "orangedye",
 		context = "dye",
@@ -2343,9 +2344,15 @@ item_list = [
 		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
 		context = 'dragon soul',
 	),
-	
-	
-		
+
+	EwGeneralItem(
+		id_item = "tanningknife",
+		context = "tool",
+		str_name = "Tanning Knife",
+		str_desc = "A tanning knife",
+		acquisition = acquisition_smelting,
+	),
+
 	EwGeneralItem(
 		id_item = "string",
 		str_name = "string",
@@ -2686,7 +2693,7 @@ def wef_revolver(ctn = None):
 				ctn.miss = True
 		else:
 			ctn.miss = True
-			
+
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -2728,10 +2735,10 @@ def wef_shotgun(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "rifle" 
+# weapon effect function for "rifle"
 def wef_rifle(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)	
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5) 
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
 	aim = (random.randrange(10) + 1)
 	ctn.sap_ignored = 10
 
@@ -2804,12 +2811,12 @@ def wef_minigun(ctn = None):
 	ctn.sap_damage = 2 * ctn.strikes
 
 # weapon effect function for "bat"
-def wef_bat(ctn = None): 
+def wef_bat(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
-	
+
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
@@ -2835,7 +2842,7 @@ def wef_bat(ctn = None):
 	elif aim >= (10 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
-		
+
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
 	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
@@ -2844,7 +2851,7 @@ def wef_brassknuckles(ctn = None):
 	ctn.strikes = 0
 
 	damage_min = ctn.slimes_damage / 10
-	
+
 	if last_attack > 0:
 		ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
 	else:
@@ -2887,8 +2894,8 @@ def wef_brassknuckles(ctn = None):
 				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1
 			else:
 				ctn.weapon_item.item_props["consecutive_hits"] = 0
-				
-	
+
+
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
@@ -2900,7 +2907,7 @@ def wef_katana(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	damage_min = ctn.slimes_damage / 10
-	
+
 
 	if time_lastattack > 0:
 		ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
@@ -2908,7 +2915,7 @@ def wef_katana(ctn = None):
 		ctn.slimes_damage = damage_min
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-	
+
 	if 5.2 > time_lastattack > 4.8:
 		ctn.sap_ignored = 10
 
@@ -2964,7 +2971,7 @@ def wef_broadsword(ctn = None):
 # weapon effect function for "nun-chucks"
 def wef_nunchucks(ctn = None):
 	ctn.strikes = 0
-	dmg = ctn.slimes_damage 
+	dmg = ctn.slimes_damage
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
@@ -2989,7 +2996,7 @@ def wef_nunchucks(ctn = None):
 	elif ctn.strikes == 0:
 		ctn.backfire = True
 		ctn.backfire_damage = dmg * 2
-	
+
 	ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "scythe"
@@ -3016,7 +3023,7 @@ def wef_scythe(ctn = None):
 		ctn.slimes_damage = damage_min
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-	
+
 	aim = (random.randrange(10) + 1)
 
 	if aim <= (1 + (10 * ctn.miss_mod)):
@@ -3047,7 +3054,7 @@ def wef_yoyo(ctn = None):
 	damage_min = ctn.slimes_damage / 10
 
 	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10) 
+		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
 	else:
 		ctn.slimes_damage = damage_min
 
@@ -3171,7 +3178,7 @@ def wef_garrote(ctn = None):
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
-			ctn.miss = True 
+			ctn.miss = True
 
 	elif aim <= (1 - (100 * ctn.crit_mod)):
 		ctn.slimes_damage *= 10
@@ -3213,7 +3220,7 @@ def wef_bass(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 5
-	
+
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
@@ -3244,7 +3251,7 @@ def wef_umbrella(ctn = None):
 				ctn.miss = True
 		else:
 			ctn.miss = True
-			
+
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -3255,7 +3262,7 @@ def wef_bow(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 8
-	
+
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
@@ -3271,7 +3278,7 @@ def wef_bow(ctn = None):
 	elif aim >= (9 - int(16 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 6)
-		
+
 # weapon effect function for "Dragon Claw"
 
 def wef_dclaw(ctn = None):
@@ -3301,7 +3308,7 @@ def wef_dclaw(ctn = None):
 			ctn.slimes_damage = int(dmg * 8)
 		else:
 			ctn.slimes_damage = int(dmg * 4)
-		   
+
 
 vendor_dojo = "Dojo"
 
@@ -3412,7 +3419,7 @@ weapon_list = [
 		stat = stat_shotgun_kills,
 		sap_cost = 5,
 		captcha_length = 6
-	),	
+	),
 	EwWeapon( # 4
 		id_weapon = weapon_id_rifle,
 		alias = [
@@ -3479,7 +3486,7 @@ weapon_list = [
 		stat = stat_smg_kills,
 		sap_cost = 3,
 		captcha_length = 4
-	),	
+	),
 	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
 		alias = [
@@ -3510,7 +3517,7 @@ weapon_list = [
 		stat = stat_minigun_kills,
 		sap_cost = 15,
 		captcha_length = 10
-	),	
+	),
 	EwWeapon( # 7
 		id_weapon = weapon_id_bat,
 		alias = [
@@ -3541,7 +3548,7 @@ weapon_list = [
 		stat = stat_bat_kills,
 		sap_cost = 2,
 		captcha_length = 2
-	),	
+	),
 	EwWeapon( # 8
 		id_weapon = weapon_id_brassknuckles,
 		alias = [
@@ -3698,7 +3705,7 @@ weapon_list = [
 		sap_cost = 6,
 		captcha_length = 4
 	),
-	EwWeapon( # 13	
+	EwWeapon( # 13
 		id_weapon = weapon_id_yoyo,
 		alias = [
 			"yo-yos",
@@ -4098,10 +4105,10 @@ def atf_tusks(ctn = None):
 	if aim >= 9:
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
-		
+
 def atf_molotovbreath(ctn = None):
 	# Reskin of molotov
-	
+
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.sap_damage = 0
@@ -4122,16 +4129,16 @@ def atf_molotovbreath(ctn = None):
 	elif aim == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-			
+
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
 
 	aim = (random.randrange(20) + 1)
-	
+
 	if aim <= 2:
 		ctn.miss = True
-		
+
 	if aim == 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 3
@@ -13840,7 +13847,7 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 	sap_spend = min(sap_spend, combat_data.sap)
 
 	return strat_used, sap_spend
-	
+
 def get_strat_b(combat_data, in_range, first_turn, active):
 	base_attack = 20
 	base_evade = 10
@@ -14031,7 +14038,7 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 		else:
 			weight_block *= 3
 			weight_evade *= 2
-			
+
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
@@ -14598,11 +14605,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_spontaneouscombustion = "spontaneouscombustion"
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother" 
+mutation_id_sharptoother = "sharptoother"
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -14630,7 +14637,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill" 
+mutation_id_dressedtokill = "dressedtokill"
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"
@@ -15358,7 +15365,7 @@ nobite_text = [
     	"You see a bird carry off a Plebefish in the distance... Good riddance...",
     	"You spot a stray bullet in the distance...",
     	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..." 
+    	"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -15725,7 +15732,7 @@ world_events = [
 		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
 		str_event_end = "The wall collapses.",
 	),
-	
+
 ]
 
 event_type_to_def = {}
@@ -16071,7 +16078,7 @@ dance_responses = [
 	"{} gets the urge to !thrash, but holds back with all their might.",
 	"{} just kind of stands there, awkwardly. What did you expect?",
 	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
-	# "{} does the Mayor Pete dance!", -- hm, maybe not... 
+	# "{} does the Mayor Pete dance!", -- hm, maybe not...
 ]
 
 # list of genres and aliases
