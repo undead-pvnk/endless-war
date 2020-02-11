@@ -12466,15 +12466,6 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian,
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
-                
-	),
-                EwCosmeticItem(
-		id_cosmetic = "knightarmor",
-		str_name = "Steel kngiht armor",
-		str_desc = "A shining set of steel armor.",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		is_hat = True,
 	),
 ]
 
@@ -12495,17 +12486,6 @@ smelting_recipe_list = [
 			item_id_slimepoudrin : 2
 		},
 		products = cosmetic_names
-	),
-        EwSmeltingRecipe(
-		id_recipe = "knightarmor",
-		str_name = "Knight Armor",
-                alias = [
-			"armor",
-		],
-		ingredients = {
-			"ironingot" : 2
-		},
-		products = ["knightarmor"]
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_quadruplestuffedcrust,
@@ -15083,6 +15063,8 @@ for furniture in furniture_list:
 		furniture_shitty.append(furniture.id_furniture)
 	elif furniture.furn_set == "instrument":
 		furniture_instrument.append(furniture.id_furniture)
+	elif furniture.furn_set == "specialhue":
+		furniture_specialhue.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
