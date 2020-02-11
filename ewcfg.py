@@ -8494,7 +8494,7 @@ furniture_slimecorp = []
 furniture_seventies = []
 furniture_shitty = []
 furniture_instrument = []
-
+furniture_specialhue = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
