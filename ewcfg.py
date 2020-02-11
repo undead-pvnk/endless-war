@@ -12467,7 +12467,16 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
+        EwCosmeticItem(
+		id_cosmetic = "knightarmor",
+		str_name = "Steel knight armor",
+		str_desc = "A shining set of steel armor.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
 ]
+
 
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
@@ -12499,6 +12508,17 @@ smelting_recipe_list = [
 			item_id_doublestuffedcrust : 2
 		},
 		products = [item_id_quadruplestuffedcrust],
+	),
+        EwSmeltingRecipe(
+		id_recipe = "knightarmor",
+		str_name = "Knight Armor",
+                alias = [
+			"armor",
+		],
+		ingredients = {
+			"ironingot" : 2
+		},
+		products = ["knightarmor"]
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
@@ -12731,7 +12751,7 @@ smelting_recipe_list = [
 			'ironingot':1,
 			'leather':1
 		},
-		products = ['dragonclaw']
+		products = ['dclaw']
     ),
 
 	EwSmeltingRecipe(
