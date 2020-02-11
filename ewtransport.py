@@ -375,6 +375,7 @@ async def disembark(cmd):
 				response = ewutils.formatMessage(cmd.message.author, response)
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 				user_data.poi = stop_poi.id_poi
+				user_data.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
 			
@@ -383,6 +384,7 @@ async def disembark(cmd):
 				response = ewutils.formatMessage(cmd.message.author, response)
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 				user_data.poi = stop_poi.id_poi
+				user_data.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
 			district_data = EwDistrict(id_server = user_data.id_server, district = stop_poi.id_poi)
