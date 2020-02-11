@@ -3296,7 +3296,7 @@ def wef_dclaw(ctn = None):
 	ctn.sap_ignored = 10
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
-	if aim <= (random.randint(1,13*ctn.miss_mod)):
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.3:
 				ctn.miss = True
