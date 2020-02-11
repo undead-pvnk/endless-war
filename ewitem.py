@@ -1434,7 +1434,7 @@ def gen_item_props(item):
 async def soulextract(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	playermodel = EwPlayer(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
-	if usermodel.has_soul == 1 and usermodel.rr_challenger == "":
+	if usermodel.has_soul == 1 and (ewutils.active_target_map.get(usermodel.id_user) == None or ewutils.active_target_map.get(usermodel.id_user) == ""):
 		item_create(
 			id_user=cmd.message.author.id,
 			id_server=cmd.message.server.id,

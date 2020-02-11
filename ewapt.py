@@ -545,13 +545,13 @@ async def apt_look(cmd):
 
 
 		hue = ewcfg.hue_map.get(i.item_props.get('hue'))
-		if hue != None and i.item_props.get('furn_set') != "specialhue":
+		if hue != None and i.item_props.get('id_furniture') not in ewcfg.furniture_specialhue:
 			furn_response += " It's {}. ".format(hue.str_name)
-		elif i.item_props.get('furn_set') == "specialhue":
+		elif i.item_props.get('id_furniture') in ewcfg.furniture_specialhue:
 			if hue != None:
-				furn_response.replace("-*HUE*-", hue.str_name)
+				furn_response = furn_response.replace("-*HUE*-", hue.str_name)
 			else:
-				furn_response.replace("-*HUE*-", "white")
+				furn_response = furn_response.replace("-*HUE*-", "white")
 
 	furn_response += "\n\n"
 
@@ -1299,8 +1299,6 @@ async def customize(cmd = None, isDesc = False):
 async def knock(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
-
-	await ewutils.add_pvp_role(cmd=cmd)
 
 	if cmd.mentions_count == 1:
 		target = cmd.mentions[0]
@@ -2178,7 +2176,7 @@ async def jam(cmd):
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
-		if item.item_props.get("furn_set") == "instrument":
+		if item.item_props.get("id_furniture") in ewcfg.furniture_instrument:
 			cycle = random.randrange(20)
 			response = ""
 			for x in range(1, cycle):
