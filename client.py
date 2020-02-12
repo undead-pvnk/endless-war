@@ -604,6 +604,9 @@ cmd_map = {
 	ewcfg.cmd_untakedown_alt_1: ewbook.untake_down_zine,
 	ewcfg.cmd_untakedown_alt_2: ewbook.untake_down_zine,
 
+	# LOL
+	ewcfg.cmd_lol: ewcmd.lol,
+
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
