@@ -163,6 +163,8 @@ async def reap(cmd):
 			else: # Reaping
 				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
+					farm.time_lastsow = 0  # 0 means no seeds are currently planted
+					farm.persist()
 				else:
 					user_initial_level = user_data.slimelevel
 
@@ -246,10 +248,11 @@ async def reap(cmd):
 					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_farm))
 
 					user_data.persist()
+
+					farm.time_lastsow = 0  # 0 means no seeds are currently planted
+					farm.persist()
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
-				farm.time_lastsow = 0  # 0 means no seeds are currently planted
-				farm.persist()
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
