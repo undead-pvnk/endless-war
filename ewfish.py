@@ -19,7 +19,7 @@ class EwFisher:
 	pier = ""
 	bait = False
 	high = False
-	timer = None
+	fishing_id = 0
 
 	def stop(self): 
 		self.fishing = False
@@ -29,10 +29,9 @@ class EwFisher:
 		self.pier = ""
 		self.bait = False
 		self.high = False
-		if self.timer is not None:
-			self.timer.cancel()
 
 fishers = {}
+fishing_counter = 0
 
 class EwOffer:
 	id_server = ""
@@ -361,6 +360,11 @@ async def cast(cmd):
 			fisher.bait = False
 			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+
+			global fishing_counter
+			fishing_counter += 1
+			current_fishing_id = fisher.fishing_id = fishing_counter
+
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
 			server = cmd.message.server
@@ -450,23 +454,19 @@ async def cast(cmd):
 					fun = 1
 				else:
 					damp = random.randrange(fun)
-
-				if fisher.timer is not None and fisher.timer.done() is False:
-					return
 				
 				if not fisher.high:
-					fisher.timer = asyncio.ensure_future(asyncio.sleep(60))
+					await asyncio.sleep(60)
 				else:
-					fisher.timer = asyncio.ensure_future(asyncio.sleep(30))
+					await asyncio.sleep(30)
 
-				try:
-					await fisher.timer
-				except asyncio.CancelledError:
+				# Cancel if fishing was interrupted
+				if current_fishing_id != fisher.fishing_id:
 					return
 
 				user_data = EwUser(member=cmd.message.author)
 
-				if user_data.poi != fisher.pier.mother_district:
+				if fisher.pier == "" or user_data.poi != fisher.pier.mother_district:
 					fisher.fishing = False
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
@@ -521,11 +521,11 @@ async def reel(cmd):
 
 	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
 		# Players who haven't cast a line cannot reel.
-		if fisher.fishing == False:# and (fisher.timer is None or fisher.timer.done() is True):
+		if fisher.fishing == False:
 			response = "You haven't cast your hook yet. Try !cast."
 
 		# If a fish isn't biting, then a player reels in nothing.
-		elif fisher.bite == False:# or fisher.timer.cancelled() is True:
+		elif fisher.bite == False:
 			fisher.stop()
 			response = "You reeled in too early! Nothing was caught."
 
