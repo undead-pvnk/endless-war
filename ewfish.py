@@ -29,6 +29,7 @@ class EwFisher:
 		self.pier = ""
 		self.bait = False
 		self.high = False
+		self.fishing_id = 0
 
 fishers = {}
 fishing_counter = 0
@@ -463,16 +464,16 @@ async def cast(cmd):
 				# Cancel if fishing was interrupted
 				if current_fishing_id != fisher.fishing_id:
 					return
+				if fisher.fishing == False:
+					return
 
 				user_data = EwUser(member=cmd.message.author)
 
 				if fisher.pier == "" or user_data.poi != fisher.pier.mother_district:
-					fisher.fishing = False
+					fisher.stop()
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
-					fisher.fishing = False
-					return
-				if fisher.fishing == False:
+					fisher.stop()
 					return
 
 				if damp > 10:
