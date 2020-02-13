@@ -756,7 +756,6 @@ async def remove_item(cmd, dest):
 
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-	aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if usermodel.visiting != ewcfg.location_id_empty:
 		recipient = usermodel.visiting
 
@@ -764,6 +763,7 @@ async def remove_item(cmd, dest):
 		recipient = cmd.message.author.id
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
+	aptmodel = EwApartment(id_user=recipient, id_server=playermodel.id_server)
 	key_1 = EwItem(id_item=aptmodel.key_1)
 	key_2 = EwItem(id_item=aptmodel.key_2)
 
