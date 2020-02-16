@@ -223,12 +223,25 @@ def gen_data_text(
 					response_block += status_flavor.str_describe + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid.".format(slimeoid.name,
-																							str(slimeoid.level))
+			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+			
+		if user_data.swear_jar >= 500:
+			response_block += "They're going to The Underworld for the things they've said."
+		elif user_data.swear_jar >= 100:
+			response_block += "They swear like a sailor!"
+		elif user_data.swear_jar >= 50:
+			response_block += "They have quite a profane vocabulary."
+		elif user_data.swear_jar >= 10:
+			response_block += "They've said some naughty things in the past."
+		elif user_data.swear_jar >= 5:
+			response_block += "They've cussed a handfull of times here and there."
+		elif user_data.swear_jar > 0:
+			response_block += "They've sworn only a few times."
+		else:
+			response_block += "Their mouth is clean as a whistle."
+			
 		if len(response_block) > 0:
 			response += "\n" + response_block
-
-		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(id_user)
 
 	return response
 
@@ -345,8 +358,23 @@ async def data(cmd):
 					response_block += status_flavor.str_describe_self + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
-			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name,
-																							str(slimeoid.level))
+			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
+		
+		if user_data.swear_jar >= 500:
+			response_block += "You're going to The Underworld for the things you've said."
+		elif user_data.swear_jar >= 100:
+			response_block += "You swear like a sailor!"
+		elif user_data.swear_jar >= 50:
+			response_block += "You have quite a profane vocabulary."
+		elif user_data.swear_jar >= 10:
+			response_block += "You've said some naughty things in the past."
+		elif user_data.swear_jar >= 5:
+			response_block += "You've cussed a handfull of times here and there."
+		elif user_data.swear_jar > 0:
+			response_block += "You've sworn only a few times."
+		else:
+			response_block += "Your mouth is clean as a whistle."
+			
 
 		if len(response_block) > 0:
 			response += "\n" + response_block
@@ -360,6 +388,8 @@ async def data(cmd):
 			display_name=member.display_name,
 			channel_name=cmd.message.channel.name
 		)
+
+		response += "\n\nhttps://ew.krakissi.net/stats/player.html?pl={}".format(member.id)
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -417,7 +447,26 @@ async def endlesswar(cmd):
 	total = ewutils.execute_sql_query("SELECT SUM(slimes) FROM users WHERE slimes > 0 AND id_server = '{}'".format(cmd.message.server.id))
 	totalslimes = total[0][0]
 
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "ENDLESS WAR has amassed {:,} slime.".format(totalslimes)))
+
+async def swearjar(cmd):
+	market_data = EwMarket(id_server=cmd.message.server.id)
+	total_swears = market_data.global_swear_jar
+	
+	response = "The swear jar has reached: **{}**".format(total_swears)
+	
+	if total_swears < 1000:
+		pass
+	elif total_swears < 10000:
+		response += "\nThings are starting to get nasty."
+	elif total_swears < 100000:
+		response += "\nSwears? In *my* free Text-Based MMORPG playable entirely within my browser? It's more likely than you think."
+	elif total_swears < 1000000:
+		response += "\nGod help us all..."
+	else:
+		response = "\nThe city is rife with mischief and vulgarity, though that's hardly a surprise when it's inhabited by lowlifes and sinners across the board."
+	
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 def weather_txt(id_server):
@@ -486,6 +535,8 @@ async def unsalute(cmd):
 async def hurl(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'https://ew.krakissi.net/img/tfaaap-hurl.gif'))
 
+async def lol(cmd):
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'You laugh out loud!'))
 
 """
 	Rowdys THRASH
@@ -515,7 +566,7 @@ async def dance(cmd):
 	if user_data.life_state == ewcfg.life_state_juvenile:
 		dance_response = random.choice(ewcfg.dance_responses).format(member.display_name)
 		dance_response = "{} {} {}".format(ewcfg.emote_slime3, dance_response, ewcfg.emote_slime3)
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, dance_response))
+		await ewutils.send_message(cmd.client, cmd.message.channel, dance_response)
 
 """
 	Ghosts BOO
@@ -736,16 +787,15 @@ async def leaderboard(cmd):
 """ Accept a russian roulette challenge """
 async def accept(cmd):
 	user = EwUser(member = cmd.message.author)
-	if(user.rr_challenger != ""):
-		challenger = EwUser(id_user = user.rr_challenger, id_server = user.id_server)
-		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
-			challenger.rr_challenger = user.id_user
-			challenger.persist()
+	if(ewutils.active_target_map.get(user.id_user) != None and ewutils.active_target_map.get(user.id_user) != ""):
+		challenger = EwUser(id_user = ewutils.active_target_map[user.id_user], id_server = user.id_server)
+		if(ewutils.active_target_map.get(user.id_user) != user.id_user and ewutils.active_target_map.get(challenger.id_user) != user.id_user):
+			ewutils.active_target_map[challenger.id_user] = user.id_user
 			slimeoid_data = EwSlimeoid(member = cmd.message.author)
 			response = ""
 			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
-			elif cmd.message.channel.name == ewcfg.channel_casino:
+			elif cmd.message.channel.name == ewcfg.channel_casino and ewutils.active_restrictions[challenger.id_user] == 1:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
 
 			if len(response) > 0:
@@ -756,18 +806,18 @@ async def accept(cmd):
 async def refuse(cmd):
 	user = EwUser(member = cmd.message.author)
 
-	if(user.rr_challenger != ""):
-		challenger = EwUser(id_user = user.rr_challenger, id_server = user.id_server)
+	if(ewutils.active_target_map.get(user.id_user) != None and ewutils.active_target_map.get(user.id_user) != ""):
+		challenger = EwUser(id_user = ewutils.active_target_map[user.id_user], id_server = user.id_server)
 
-		user.rr_challenger = ""
-		user.persist()
+		ewutils.active_target_map[user.id_user] = ""
+		ewutils.active_restrictions[user.id_user] = 0
 
-		if(user.rr_challenger != user.id_user and challenger.rr_challenger != user.id_user):
+		if(ewutils.active_target_map.get(user.id_user) != user.id_user and ewutils.active_target_map.get(challenger.id_user) != user.id_user):
 			response = "You refuse the challenge, but not before leaving a large puddle of urine beneath you."
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		else:
-			challenger.rr_challenger = ""
-			challenger.persist()
+			ewutils.active_target_map[challenger.id_user] = ""
+			ewutils.active_restrictions[challenger.id_user] = 0
 
 """
 	Ban a player from participating in the game
@@ -913,6 +963,7 @@ async def pray(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.life_state == ewcfg.life_state_kingpin:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -985,6 +1036,13 @@ async def pray(cmd):
 		probabilityofpoudrin = 10
 		probabilityofdeath = 10
 		diceroll = random.randint(1, 100)
+
+		# Redeem the player for their sins.
+		market_data = EwMarket(id_server=cmd.message.server.id)
+		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
+		market_data.persist()
+		user_data.swear_jar = max(0, user_data.swear_jar - 3)
+		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
 			item = random.choice(ewcfg.mine_results)

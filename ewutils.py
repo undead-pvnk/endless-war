@@ -42,6 +42,10 @@ active_trades = {}
 # Contains the items being offered by players
 trading_offers = {}
 
+# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc. 
+active_target_map = {}
+# Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
+active_restrictions = {}
 
 class Message:
 	# Send the message to this exact channel by name.

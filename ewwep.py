@@ -797,7 +797,7 @@ async def attack(cmd):
 					)
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
-					if shootee_data.slimelevel >= user_data.slimelevel and weapon is not None:
+					if shootee_data.slimelevel >= user_data.slimelevel and shootee_data.slimelevel >= user_data.weaponskill:
 						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
 					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
@@ -1048,8 +1048,8 @@ async def suicide(cmd):
 		elif user_isgeneral:
 			response = "\*click* Alas, your gun has jammed."
 		elif user_iskillers or user_isrowdys or user_isexecutive or user_islucky or user_isjuvenile:
-			if user_data.rr_challenger != "":
-				response = "You can't do that now."
+			if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+				response = "You can't do that right now."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response)) 
 
 			slimes_total = user_data.slimes
@@ -1953,7 +1953,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 					factions = ["", user_data.faction if backfire else bystander_faction]
 					# Burn players in district
-					if weapon.id_weapon == ewcfg.weapon_id_molotov:
+					if weapon.id_weapon == ewcfg.weapon_id_molotov or weapon.id_weapon == ewcfg.weapon_id_dclaw:
 						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
 						# TODO - Make enemies work with molotovs the same way players do.
 						for bystander in bystander_users:

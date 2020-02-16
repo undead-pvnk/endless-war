@@ -32,6 +32,7 @@ class EwMarket:
 	donated_poudrins = 0
 	caught_fish = 0
 	splattered_slimes = 0
+	global_swear_jar = 0
 
 	# Dict of bazaar items available for purchase
 	bazaar_wares = None
@@ -48,7 +49,7 @@ class EwMarket:
 				cursor = conn.cursor();
 
 				# Retrieve object
-				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes} FROM markets WHERE id_server = %s".format(
+				cursor.execute("SELECT {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar} FROM markets WHERE id_server = %s".format(
 					time_lasttick = ewcfg.col_time_lasttick,
 					slimes_revivefee = ewcfg.col_slimes_revivefee,
 					negaslime = ewcfg.col_negaslime,
@@ -60,6 +61,7 @@ class EwMarket:
 					donated_poudrins = ewcfg.col_donated_poudrins,
 					caught_fish = ewcfg.col_caught_fish,
 					splattered_slimes = ewcfg.col_splattered_slimes,
+					global_swear_jar = ewcfg.col_global_swear_jar,
 				), (self.id_server, ))
 				result = cursor.fetchone();
 
@@ -76,6 +78,7 @@ class EwMarket:
 					self.donated_poudrins = result[8]
 					self.caught_fish = result[9]
 					self.splattered_slimes = result[10]
+					self.global_swear_jar = result[11]
 
 					cursor.execute("SELECT {}, {} FROM bazaar_wares WHERE {} = %s".format(
 						ewcfg.col_name,
@@ -110,7 +113,7 @@ class EwMarket:
 			cursor = conn.cursor();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO markets ({id_server}, {time_lasttick}, {slimes_revivefee}, {negaslime}, {clock}, {weather}, {day}, {decayed_slimes}, {donated_slimes}, {donated_poudrins}, {caught_fish}, {splattered_slimes}, {global_swear_jar}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				id_server = ewcfg.col_id_server,
 				time_lasttick = ewcfg.col_time_lasttick,
 				slimes_revivefee = ewcfg.col_slimes_revivefee,
@@ -123,6 +126,7 @@ class EwMarket:
 				donated_poudrins = ewcfg.col_donated_poudrins,
 				caught_fish = ewcfg.col_caught_fish,
 				splattered_slimes = ewcfg.col_splattered_slimes,
+				global_swear_jar = ewcfg.col_global_swear_jar,
 			), (
 				self.id_server,
 				self.time_lasttick,
@@ -136,6 +140,7 @@ class EwMarket:
 				self.donated_poudrins,
 				self.caught_fish,
 				self.splattered_slimes,
+				self.global_swear_jar,
 			))
 
 			cursor.execute("DELETE FROM bazaar_wares WHERE {} = %s".format(
@@ -303,7 +308,7 @@ async def invest(cmd):
 	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
-	if cmd.message.channel.name != ewcfg.channel_stockexchange or user_data.poi != ewcfg.poi_id_downtown:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange: # or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "invest")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -407,7 +412,7 @@ async def withdraw(cmd):
 		response = ewcfg.str_exchange_closed
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_stockexchange or user_data.poi != ewcfg.poi_id_downtown:
+	if cmd.message.channel.name != ewcfg.channel_stockexchange:  #or user_data.poi != ewcfg.poi_id_downtown:
 		# Only allowed in the stock exchange.
 		response = ewcfg.str_exchange_channelreq.format(currency = "SlimeCoin", action = "withdraw")
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -939,10 +944,10 @@ def get_user_shares_str(id_server = None, stock = None, id_user = None):
 
 		response = "You have {shares:,} shares in {stock}".format(shares = shares, stock = ewcfg.stock_names.get(stock.id_stock))
 
-		if user_data.poi == ewcfg.poi_id_downtown:
-			response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
-		else:
-			response += "."
+		#if user_data.poi == ewcfg.poi_id_downtown:
+		response += ", currently valued at {coin:,} SlimeCoin.".format(coin = shares_value)
+		#else:
+		#	response += "."
 		
 	return response
 
