@@ -349,13 +349,18 @@ async def order(cmd):
 								response = "Ghosts can't hold weapons."
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+					item_props = ewitem.gen_item_props(item)
+					if "custom" in item_props.get('id_furniture'):
+						if customtext == "":
+							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 
 					if company_data is not None:
 						company_data.recent_profits += value
 						company_data.persist()
 
-					item_props = ewitem.gen_item_props(item)
+
 
 					if item.str_name == "arcade cabinet":
 						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
