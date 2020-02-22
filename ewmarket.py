@@ -191,9 +191,12 @@ class EwStock:
 			stock = ewcfg.col_stock,
 		),(
 			self.id_stock,
-		)
+		))
 
 		self.total_shares = data[0][0]
+		
+		if self.total_shares == None or self.total_shares < 0:
+			self.total_shares = 0
 
 	def __init__(self, id_server = None, stock = None, timestamp = None):
 		if id_server is not None and stock is not None:
