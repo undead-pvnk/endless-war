@@ -350,7 +350,8 @@ async def order(cmd):
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 					item_props = ewitem.gen_item_props(item)
-					if "custom" in item_props.get('id_furniture'):
+
+					if item.item_type == ewcfg.it_furniture and "custom" in item_props.get('id_furniture'):
 						if customtext == "":
 							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
