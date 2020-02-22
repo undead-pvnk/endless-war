@@ -185,6 +185,16 @@ class EwStock:
 
 	previous_entry = 0
 
+	def limit_fix(self):
+		data = ewutils.execute_sql_query("SELECT SUM({shares}) FROM shares WHERE {stock} = %s".format(
+			shares = ewcfg.col_shares,
+			stock = ewcfg.col_stock,
+		),(
+			self.id_stock,
+		)
+
+		self.total_shares = data[0][0]
+
 	def __init__(self, id_server = None, stock = None, timestamp = None):
 		if id_server is not None and stock is not None:
 			self.id_server = id_server
@@ -237,6 +247,8 @@ class EwStock:
 				self.persist()
 
 	def persist(self):
+		self.limit_fix()
+
 		ewutils.execute_sql_query("INSERT INTO stocks ({id_server}, {stock}, {market_rate}, {exchange_rate}, {boombust}, {total_shares}, {timestamp}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
 			id_server = ewcfg.col_id_server,
 			stock = ewcfg.col_stock,
