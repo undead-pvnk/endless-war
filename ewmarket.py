@@ -825,7 +825,7 @@ def market_tick(stock_data, id_server):
 			majority_shareholder = get_majority_shareholder(stock = stock_data.id_stock, id_server = id_server)
 			player_data = EwPlayer(id_user = majority_shareholder)
 			shares = getUserTotalShares(stock = stock_data.id_stock, id_user = majority_shareholder, id_server = stock_data.id_server)
-			shares_lost = int(shares * 0.9)
+			shares_lost = round(shares * 0.9)
 			stock_data.total_shares -= shares_lost
 			updateUserTotalShares(stock = stock_data.id_stock, id_user = majority_shareholder, id_server = stock_data.id_server, shares = shares - shares_lost)
 			response += ' The majority shareholder {} is held responsible. SlimeCorp seizes 90% of their shares in the company to pay for the damages.'.format(player_data.display_name)
