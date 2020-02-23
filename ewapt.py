@@ -2166,7 +2166,7 @@ async def setOffAlarms(id_server = None):
 				clock_user = clock_obj.id_owner.replace("decorate", "")
 				clock_member = server.get_member(user_id=clock_user)
 				clock_player = EwUser(id_user=clock_user, id_server=id_server)
-				if isFurnished == False or ("apt" in clock_player.poi and clock_player.visiting == "empty") and clock_member:
+				if (isFurnished == False or ("apt" in clock_player.poi and clock_player.visiting == "empty")) and clock_member:
 					try:
 						await ewutils.send_message(client, clock_member, ewutils.formatMessage(clock_member, "BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP"))
 					except:
