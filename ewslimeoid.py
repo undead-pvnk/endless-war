@@ -2178,7 +2178,7 @@ async def slimeoidbattle(cmd):
 	active_slimeoidbattles[challenger_slimeoid_id] = True
 	active_slimeoidbattles[challengee_slimeoid_id] = True
 
-	challengee.rr_challenger = challenger.id_user
+	ewutils.active_target_map[challengee.id_user] = challenger.id_user
 
 	challengee.persist()
 
@@ -2201,11 +2201,11 @@ async def slimeoidbattle(cmd):
 	challenger = EwUser(member = author)
 	challengee_slimeoid = EwSlimeoid(member = member)
 
-	challengee.rr_challenger = ""
-	challenger.rr_challenger = ""
+	ewutils.active_target_map[challengee.id_user] = ""
+	ewutils.active_target_map[challenger.id_user] = ""
 
-	challengee.persist()
-	challenger.persist()
+	#challengee.persist()
+	#challenger.persist()
 
 	if challenger_slimeoid.life_state != ewcfg.slimeoid_state_active:
 		active_slimeoidbattles[challenger_slimeoid_id] = False
@@ -3329,7 +3329,7 @@ def get_slimeoid_look_string(user_id = None, server_id = None):
 				cursor.execute(sql.format(ewcfg.col_name, ewcfg.col_id_user), [user_id])
 				if cursor.rowcount > 0:
 					iterate = 0
-					finalString += " \n\nIn the freezer, you hear "
+					finalString += "In the freezer, you hear "
 					for sloid in cursor:
 						if iterate > 0:
 							finalString += ", "

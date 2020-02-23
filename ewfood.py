@@ -187,19 +187,23 @@ async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	market_data = EwMarket(id_server = cmd.message.server.id)
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
-
+	customtext = cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+2):]
 	if poi is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
 	else:
-		value = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
 		#if cmd.tokens_count > 1:
 		#	value = cmd.tokens[1]
 		#	value = value.lower()
 
 		# Finds the item if it's an EwGeneralItem.
 
+		if value == "mylittleponyfigurine":
+			value = random.choice(ewcfg.furniture_pony)
+
 		item = ewcfg.item_map.get(value)
+
 		item_type = ewcfg.it_item
 		if item != None:
 			item_id = item.id_item
@@ -227,6 +231,8 @@ async def order(cmd):
 			if item != None:
 				item_id = item.id_furniture
 				name = item.str_name
+				if item_id in ewcfg.furniture_pony:
+					item.vendors = [ewcfg.vendor_bazaar]
 
 		if item == None:
 			item = ewcfg.weapon_map.get(value)
@@ -244,10 +250,14 @@ async def order(cmd):
 			except:
 				current_vendor = None
 
+
 			# Check if the item is available in the current bazaar item rotation
 			if current_vendor == ewcfg.vendor_bazaar:
 				if item_id not in market_data.bazaar_wares.values():
-					current_vendor = None
+					if item_id in ewcfg.furniture_pony and "mylittleponyfigurine" in market_data.bazaar_wares.values():
+						pass
+					else:
+						current_vendor = None
 
 			if current_vendor is None or len(current_vendor) < 1:
 				response = "Check the {} for a list of items you can {}.".format(ewcfg.cmd_menu, ewcfg.cmd_order)
@@ -339,17 +349,29 @@ async def order(cmd):
 								response = "Ghosts can't hold weapons."
 								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+					item_props = ewitem.gen_item_props(item)
+
+					if item.item_type == ewcfg.it_furniture and "custom" in item_props.get('id_furniture'):
+						if customtext == "":
+							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 
 					if company_data is not None:
 						company_data.recent_profits += value
 						company_data.persist()
 
-					item_props = ewitem.gen_item_props(item)
+
 
 					if item.str_name == "arcade cabinet":
 						item_props['furniture_desc'] = random.choice(ewcfg.cabinets_list)
-
+					elif item.item_type == ewcfg.it_furniture:
+						if "custom" in item_props.get('id_furniture'):
+							item_props['furniture_name'] = item_props['furniture_name'].format(custom = customtext)
+							item_props['furniture_desc'] = item_props['furniture_desc'].format(custom=customtext)
+							item_props['furniture_look_desc'] = item_props['furniture_look_desc'].format(custom=customtext)
+							item_props['furniture_place_desc'] = item_props['furniture_place_desc'].format(custom=customtext)
+							item.str_name = item.str_name.format(custom = customtext)
 
 					ewitem.item_create(
 						item_type = item_type,

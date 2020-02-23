@@ -19,8 +19,20 @@ class EwFisher:
 	pier = ""
 	bait = False
 	high = False
+	fishing_id = 0
+
+	def stop(self): 
+		self.fishing = False
+		self.bite = False
+		self.current_fish = ""
+		self.current_size = ""
+		self.pier = ""
+		self.bait = False
+		self.high = False
+		self.fishing_id = 0
 
 fishers = {}
+fishing_counter = 0
 
 class EwOffer:
 	id_server = ""
@@ -165,7 +177,7 @@ class EwFish:
 
 
 # Randomly generates a fish.
-def gen_fish(x, cmd, has_fishingrod):
+def gen_fish(x, fisher, has_fishingrod):
 	fish_pool = []
 
 	rarity_number = random.randint(0, 100)
@@ -239,12 +251,12 @@ def gen_fish(x, cmd, has_fishingrod):
 			if ewcfg.fish_map[fish].catch_time != None:
 				fish_pool.remove(fish)
 
-	if cmd.message.channel.name in ["slimes-end-pier", "assault-flats-beach-pier", "vagrants-corner-pier", "ferry"]:
+	if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_freshwater:
 				fish_pool.remove(fish)
 
-	elif cmd.message.channel.name in ["jaywalker-plain-pier", "little-chernobyl-pier"]:
+	elif fisher.pier.pier_type == ewcfg.fish_slime_freshwater:
 		for fish in fish_pool:
 			if ewcfg.fish_map[fish].slime == ewcfg.fish_slime_saltwater:
 				fish_pool.remove(fish)
@@ -345,10 +357,15 @@ async def cast(cmd):
 
 			if ewcfg.status_high_id in statuses:
 				fisher.high = True
-			fisher.current_fish = gen_fish(market_data, cmd, has_fishingrod)
 			fisher.fishing = True
 			fisher.bait = False
-			fisher.pier = user_data.poi
+			fisher.pier = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+			fisher.current_fish = gen_fish(market_data, fisher, has_fishingrod)
+
+			global fishing_counter
+			fishing_counter += 1
+			current_fishing_id = fisher.fishing_id = fishing_counter
+
 			item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 			author = cmd.message.author
 			server = cmd.message.server
@@ -412,7 +429,7 @@ async def cast(cmd):
 				response = "You attach your {} to the hook as bait and then cast your fishing line into the ".format(str_name)
 
 
-			if cmd.message.channel.name in [ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+			if fisher.pier.pier_type == ewcfg.fish_slime_saltwater:
 				response += "vast Slime Sea."
 			else:
 				response += "glowing Slime Lake."
@@ -438,20 +455,25 @@ async def cast(cmd):
 					fun = 1
 				else:
 					damp = random.randrange(fun)
-
+				
 				if not fisher.high:
 					await asyncio.sleep(60)
 				else:
 					await asyncio.sleep(30)
-				user_data = EwUser(member=cmd.message.author)
 
-				if user_data.poi != fisher.pier:
-					fisher.fishing = False
-					return
-				if user_data.life_state == ewcfg.life_state_corpse:
-					fisher.fishing = False
+				# Cancel if fishing was interrupted
+				if current_fishing_id != fisher.fishing_id:
 					return
 				if fisher.fishing == False:
+					return
+
+				user_data = EwUser(member=cmd.message.author)
+
+				if fisher.pier == "" or user_data.poi != fisher.pier.mother_district:
+					fisher.stop()
+					return
+				if user_data.life_state == ewcfg.life_state_corpse:
+					fisher.stop()
 					return
 
 				if damp > 10:
@@ -473,11 +495,7 @@ async def cast(cmd):
 			await asyncio.sleep(8)
 
 			if fisher.bite != False:
-				fisher.fishing = False
-				fisher.bite = False
-				fisher.current_fish = ""
-				fisher.current_size = ""
-				fisher.bait = False
+				fisher.stop()
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "The fish got away..."))
 			else:
 				has_reeled = True
@@ -489,7 +507,6 @@ async def cast(cmd):
 	if has_reeled == False:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-
 
 """ Reels in the fishing line.. """
 async def reel(cmd):
@@ -509,22 +526,17 @@ async def reel(cmd):
 			response = "You haven't cast your hook yet. Try !cast."
 
 		# If a fish isn't biting, then a player reels in nothing.
-		elif fisher.bite == False and fisher.fishing == True:
-			fisher.current_fish = ""
-			fisher.current_size = ""
-			fisher.fishing = False
-			fisher.pier = ""
+		elif fisher.bite == False:
+			fisher.stop()
 			response = "You reeled in too early! Nothing was caught."
 
 		# On successful reel.
 		else:
 			if fisher.current_fish == "item":
 				
-				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)
-				
-				pier_poi = ewcfg.id_to_poi.get(fisher.pier)				
+				slimesea_inventory = ewitem.inventory(id_server = cmd.message.server.id, id_user = ewcfg.poi_id_slimesea)			
 
-				if pier_poi.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
+				if fisher.pier.pier_type != ewcfg.fish_slime_saltwater or len(slimesea_inventory) == 0 or random.random() < 0.5:
 
 					item = random.choice(ewcfg.mine_results)
 				
@@ -549,11 +561,7 @@ async def reel(cmd):
 
 					response = "You reel in a {}!".format(item.get('name'))
 
-				fisher.fishing = False
-				fisher.bite = False
-				fisher.current_fish = ""
-				fisher.current_size = ""
-				fisher.pier = ""
+				fisher.stop()
 				user_data.persist()
 
 			else:
@@ -674,7 +682,7 @@ async def reel(cmd):
 					response += levelup_response
 
 				market_data = EwMarket(id_server=user_data.id_server)
-				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
+				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
 					
 					item = ewcfg.debugitem
 					
@@ -697,15 +705,11 @@ async def reel(cmd):
 					market_data.caught_fish += 1
 					market_data.persist()
 		
-				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier in ewcfg.debugpiers:
+				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
 					market_data.caught_fish += 1
 					market_data.persist()
 
-				fisher.fishing = False
-				fisher.bite = False
-				fisher.current_fish = ""
-				fisher.current_size = ""
-				fisher.pier = ""
+				fisher.stop()
 
 				# Flag the user for PvP
 				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
@@ -1059,7 +1063,25 @@ async def embiggen(cmd):
 		fish = EwItem(id_item = item_sought.get('id_item'))
 		acquisition = fish.item_props.get('acquisition')
 
-		if acquisition != ewcfg.acquisition_fishing:
+		if fish.item_props.get('id_furniture') == "singingfishplaque":
+
+			poudrins_owned = ewitem.find_item_all(item_search="slimepoudrin", id_user=user_data.id_user, id_server=user_data.id_server, item_type_filter=ewcfg.it_item)
+			poudrin_amount = len(poudrins_owned)
+
+			if poudrin_amount < 2:
+				response = "You don't have the poudrins for it."
+			else:
+				for delete in range(2):
+					poudrin = poudrins_owned.pop()
+					ewitem.item_delete(id_item = poudrin.get("id_item"))
+				fish.item_props['id_furniture'] = "colossalsingingfishplaque"
+				fish.item_props['furniture_look_desc'] = "There's a fake fish mounted on the wall. Hoo boy, it's a whopper."
+				fish.item_props['furniture_place_desc'] = "You take a nail gun to the wall to force it to hold this fish. Christ,  this thing is your fucking Ishmael. Er, Moby Dick. Whatever."
+				fish.item_props['furniture_name'] = "colossal singing fish plaque"
+				fish.item_props['furniture_desc'] = "You press the button on your gigantic plaque.\n***" + fish.item_props.get('furniture_desc')[38:-87].upper().replace(":NOTES:", ":notes:") + "***\nYou abruptly turn the fish off before you rupture an eardrum."
+				fish.persist()
+				response = "The elevator ride down to the embiggening ward feels like an eterninty. Are they going to find out the fish you're embiggening is fake? God, you hope not. But eventually, you make it down, and place the plaque in the usual reclined surgeon's chair. A stray spark from one of the defibrilators nearly gives you a heart attack. But even so, the embiggening process begins like usual. You sign the contract, and they take a butterfly needle to your beloved wall prop. And sure enough, it begins to grow. You hear the sounds of cracked plastic and grinding electronics, and catch a whiff of burnt wires. It's growing. It's 6 feet, no, 10 feet long. Good god. You were hoping for growth, but science has gone too far. Eventually, it stops. Although you raise a few eyebrows with ths anomaly, you still get back the colossal fish plaque without a hitch."
+		elif acquisition != ewcfg.acquisition_fishing:
 			response = "You can only embiggen fishes, dummy. Otherwise everyone would be walking around with colossal nunchucks and huge chicken buckets. Actually, that gives me an idea..."
 
 		else:

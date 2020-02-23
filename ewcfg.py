@@ -25,7 +25,7 @@ from ewdungeons import EwDungeonScene
 import ewdebug
 
 # Global configuration options.
-version = "v3.20noslimernalia"
+version = "v3.22a"
 
 dir_msgqueue = 'msgqueue'
 
@@ -529,6 +529,7 @@ cmd_shoot_alt1 = cmd_prefix + 'bonk'
 cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
+cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -600,6 +601,7 @@ cmd_stocks = cmd_prefix + 'stocks'
 cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
+cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
@@ -669,6 +671,7 @@ cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
+cmd_duel = cmd_prefix + 'duel'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
@@ -711,6 +714,7 @@ cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
 cmd_boot = cmd_prefix + 'boot'
+cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
 cmd_piss = cmd_prefix + 'piss'
 cmd_fursuit = cmd_prefix + 'fursuit'
@@ -758,9 +762,11 @@ cmd_knock = cmd_prefix + 'knock'
 cmd_trickortreat = cmd_prefix + 'trickortreat'
 cmd_breaklease = cmd_prefix + 'breaklease'
 cmd_aquarium = cmd_prefix + 'aquarium'
+cmd_pot = cmd_prefix + 'pot'
 cmd_propstand = cmd_prefix + 'propstand'
 cmd_releaseprop = cmd_prefix + 'unstand'
 cmd_releasefish = cmd_prefix + 'releasefish'
+cmd_unpot = cmd_prefix + 'unpot'
 cmd_wash = cmd_prefix + 'wash'
 cmd_browse = cmd_prefix + 'browse'
 cmd_smoke = cmd_prefix + 'smoke'
@@ -774,11 +780,18 @@ cmd_push = cmd_prefix + 'push'
 cmd_push_alt_1 = cmd_prefix + 'bully'
 cmd_jump = cmd_prefix + 'jump'
 cmd_toss = cmd_prefix + 'toss'
+cmd_dyefurniture = cmd_prefix + 'dyefurniture'
+cmd_watch = cmd_prefix + 'watch'
 cmd_purify = cmd_prefix + 'purify'
 cmd_shelve = cmd_prefix + 'shelve'
 cmd_shelve_alt_1 = cmd_prefix + 'shelf'
 cmd_unshelve = cmd_prefix + 'unshelve'
 cmd_unshelve_alt_1 = cmd_prefix + 'unshelf'
+cmd_addkey = cmd_prefix + 'addkey'
+cmd_changelocks = cmd_prefix + 'changelocks'
+cmd_setalarm = cmd_prefix + 'setalarm'
+cmd_jam = cmd_prefix + 'jam'
+
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
@@ -813,6 +826,7 @@ cmd_takedown_alt_2 = cmd_prefix + 'deletezine'
 cmd_untakedown = cmd_prefix + 'untakedown'
 cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
 cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
+cmd_lol = cmd_prefix + 'lol'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -820,6 +834,9 @@ apartment_dt_multiplier = 3000000000
 apartment_s_multiplier = 6000000000
 
 soulprice = 500000000
+
+tv_set_slime = 5000000
+tv_set_level = 100
 
 cmd_promote = cmd_prefix + 'promote'
 
@@ -915,7 +932,7 @@ offline_cmds = [
 	cmd_scout_alt1,
 	cmd_scrutinize
 ]
-		
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -925,7 +942,7 @@ slimes_hauntratio = 400
 slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
-slimecoin_exchangerate = 100
+slimecoin_exchangerate = 1
 slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
@@ -954,6 +971,7 @@ uptime_ads = 7 * 24 * 60 * 60 # one week
 # currencies you can gamble at the casino
 currency_slime = "slime"
 currency_slimecoin = "SlimeCoin"
+currency_soul = "soul"
 
 #inebriation
 inebriation_max = 20
@@ -1007,7 +1025,7 @@ max_capture_points = {
 
 # how long districts stay locked after capture
 capture_lock_s = 48 * 60 * 60  # 2 days
-capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_a = 24 * 60 * 60  # 1 day
 capture_lock_b = 12 * 60 * 60  # 12 hours
 capture_lock_c = 6 * 60 * 60  # 6 hours
 
@@ -1174,7 +1192,7 @@ for farm_action in farm_actions:
 		cmd_to_farm_action[alias] = farm_action
 	id_to_farm_action[farm_action.id_action] = farm_action
 	farm_action_ids.append(farm_action.id_action)
-	
+
 
 # fishing
 fish_gain = 10000 # multiplied by fish size class
@@ -1206,6 +1224,7 @@ time_pvp_farm = 10 * 60
 time_pvp_spar = 5 * 60
 time_pvp_enlist = 5 * 60
 time_pvp_knock = 10 #temp fix. will probably add spam prevention or something funny like restraining orders later
+time_pvp_duel = 3 * 60
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -1358,7 +1377,7 @@ symbol_map_pokemine = {
 	11 : ";",
 	12 : "/",
 	13 : "#"
-	
+
 }
 
 number_emote_map = {
@@ -1392,6 +1411,8 @@ festivity_on_gift_giving = 10000
 
 # Common strings.
 str_casino_closed = "The SlimeCorp Casino only operates at night."
+str_casino_negaslime_dealer = "\"We don't deal with negaslime around here.\", says the dealer disdainfully."
+str_casino_negaslime_machine = "The machine doesn't seem to accept antislime."
 str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
 str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " in person to {action} your {currency}."
@@ -1444,7 +1465,9 @@ col_apt_name = 'apt_name'
 col_apt_description = 'apt_description'
 col_rent = 'rent'
 col_apt_class = 'apt_class'
-
+col_num_keys = 'num_keys'
+col_key_1 = 'key_1'
+col_key_2 = 'key_2'
 
 # Database columns for server
 col_icon = "icon"
@@ -1477,7 +1500,6 @@ col_faction = 'faction'
 col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
-col_rrchallenger = 'rr_challenger_id'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -1489,6 +1511,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
+col_global_swear_jar = 'global_swear_jar'
 col_arrested = 'arrested'
 col_active_slimeoid = 'active_slimeoid'
 col_time_expirpvp = 'time_expirpvp'
@@ -1499,6 +1522,8 @@ col_has_soul = 'has_soul'
 col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
+col_swear_jar = 'swear_jar'
+
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_festivity_from_slimecoin = 'festivity_from_slimecoin'
@@ -1772,6 +1797,7 @@ stat_lifetime_casino_losses = 'lifetime_casino_losses'
 stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
+stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -1816,7 +1842,10 @@ stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
+stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
+stat_dclaw_kills = 'dclaw_kills'
+
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1849,6 +1878,7 @@ coinsource_transfer = 5
 coinsource_invest = 6
 coinsource_withdraw = 7
 coinsource_recycle = 8
+coinsource_swearjar = 9
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -2016,7 +2046,8 @@ weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
-
+weapon_id_bow = 'bow'
+weapon_id_dclaw = 'dclaw'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2075,6 +2106,7 @@ item_list = [
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
 	),
+
 	EwGeneralItem(
 		id_item = "orangedye",
 		context = "dye",
@@ -2291,6 +2323,37 @@ item_list = [
 		ingredients = "generic",
 		context = 10,
 	),
+	EwGeneralItem(
+		id_item = "leather",
+		str_name = "Leather",
+		str_desc = "A strip of leather.",
+		acquisition = acquisition_smelting,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "ironingot",
+		str_name = "Iron Ingot",
+		str_desc = "A bar of iron",
+		acquisition = acquisition_smelting,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "dragonsoul",
+		str_name = "Dragon Soul",
+		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
+		context = 'dragon soul',
+	),
+
+	EwGeneralItem(
+		id_item = "tanningknife",
+		context = "tool",
+		str_name = "Tanning Knife",
+		str_desc = "A tanning knife",
+		acquisition = acquisition_smelting,
+	),
+
 	EwGeneralItem(
 		id_item = "string",
 		str_name = "string",
@@ -2631,7 +2694,7 @@ def wef_revolver(ctn = None):
 				ctn.miss = True
 		else:
 			ctn.miss = True
-			
+
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -2673,10 +2736,10 @@ def wef_shotgun(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
-# weapon effect function for "rifle" 
+# weapon effect function for "rifle"
 def wef_rifle(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)	
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5) 
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
 	aim = (random.randrange(10) + 1)
 	ctn.sap_ignored = 10
 
@@ -2749,12 +2812,12 @@ def wef_minigun(ctn = None):
 	ctn.sap_damage = 2 * ctn.strikes
 
 # weapon effect function for "bat"
-def wef_bat(ctn = None): 
+def wef_bat(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
-	
+
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
@@ -2780,7 +2843,7 @@ def wef_bat(ctn = None):
 	elif aim >= (10 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
-		
+
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
 	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
@@ -2789,7 +2852,7 @@ def wef_brassknuckles(ctn = None):
 	ctn.strikes = 0
 
 	damage_min = ctn.slimes_damage / 10
-	
+
 	if last_attack > 0:
 		ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
 	else:
@@ -2832,8 +2895,8 @@ def wef_brassknuckles(ctn = None):
 				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1
 			else:
 				ctn.weapon_item.item_props["consecutive_hits"] = 0
-				
-	
+
+
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
@@ -2845,7 +2908,7 @@ def wef_katana(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	damage_min = ctn.slimes_damage / 10
-	
+
 
 	if time_lastattack > 0:
 		ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
@@ -2853,7 +2916,7 @@ def wef_katana(ctn = None):
 		ctn.slimes_damage = damage_min
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-	
+
 	if 5.2 > time_lastattack > 4.8:
 		ctn.sap_ignored = 10
 
@@ -2909,7 +2972,7 @@ def wef_broadsword(ctn = None):
 # weapon effect function for "nun-chucks"
 def wef_nunchucks(ctn = None):
 	ctn.strikes = 0
-	dmg = ctn.slimes_damage 
+	dmg = ctn.slimes_damage
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
@@ -2934,7 +2997,7 @@ def wef_nunchucks(ctn = None):
 	elif ctn.strikes == 0:
 		ctn.backfire = True
 		ctn.backfire_damage = dmg * 2
-	
+
 	ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "scythe"
@@ -2961,7 +3024,7 @@ def wef_scythe(ctn = None):
 		ctn.slimes_damage = damage_min
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-	
+
 	aim = (random.randrange(10) + 1)
 
 	if aim <= (1 + (10 * ctn.miss_mod)):
@@ -2992,7 +3055,7 @@ def wef_yoyo(ctn = None):
 	damage_min = ctn.slimes_damage / 10
 
 	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10) 
+		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
 	else:
 		ctn.slimes_damage = damage_min
 
@@ -3116,7 +3179,7 @@ def wef_garrote(ctn = None):
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
-			ctn.miss = True 
+			ctn.miss = True
 
 	elif aim <= (1 - (100 * ctn.crit_mod)):
 		ctn.slimes_damage *= 10
@@ -3158,7 +3221,7 @@ def wef_bass(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 5
-	
+
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
@@ -3189,10 +3252,64 @@ def wef_umbrella(ctn = None):
 				ctn.miss = True
 		else:
 			ctn.miss = True
-			
+
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+# weapon effect function for "minecraft bow"
+def wef_bow(ctn = None):
+	aim = (random.randrange(0, 13) - 2)
+	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
+	ctn.sap_damage = 1
+	ctn.sap_ignored = 8
+
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
+
+	ctn.slimes_damage = int(ctn.slimes_damage * 3)
+
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (9 - int(16 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage = int(dmg * 6)
+
+# weapon effect function for "Dragon Claw"
+
+def wef_dclaw(ctn = None):
+	aim = (random.randrange(0, 13) - 2)
+	user_mutations = ctn.user_data.get_mutations()
+	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
+		ctn.slimes_spent *= 0.5
+	else:
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+		ctn.slimes_spent *= 1
+
+	#less slime cost and less damage = attacking faster I guess?
+	ctn.sap_damage = 5
+	ctn.sap_ignored = 10
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.3:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+	elif aim >= (9 - int(13 * ctn.crit_mod)):
+		ctn.crit = True
+		if mutation_id_lucky in user_mutations:
+			ctn.slimes_damage = int(dmg * 8)
+		else:
+			ctn.slimes_damage = int(dmg * 4)
+
 
 vendor_dojo = "Dojo"
 
@@ -3303,7 +3420,7 @@ weapon_list = [
 		stat = stat_shotgun_kills,
 		sap_cost = 5,
 		captcha_length = 6
-	),	
+	),
 	EwWeapon( # 4
 		id_weapon = weapon_id_rifle,
 		alias = [
@@ -3370,7 +3487,7 @@ weapon_list = [
 		stat = stat_smg_kills,
 		sap_cost = 3,
 		captcha_length = 4
-	),	
+	),
 	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
 		alias = [
@@ -3401,7 +3518,7 @@ weapon_list = [
 		stat = stat_minigun_kills,
 		sap_cost = 15,
 		captcha_length = 10
-	),	
+	),
 	EwWeapon( # 7
 		id_weapon = weapon_id_bat,
 		alias = [
@@ -3432,7 +3549,7 @@ weapon_list = [
 		stat = stat_bat_kills,
 		sap_cost = 2,
 		captcha_length = 2
-	),	
+	),
 	EwWeapon( # 8
 		id_weapon = weapon_id_brassknuckles,
 		alias = [
@@ -3589,7 +3706,7 @@ weapon_list = [
 		sap_cost = 6,
 		captcha_length = 4
 	),
-	EwWeapon( # 13	
+	EwWeapon( # 13
 		id_weapon = weapon_id_yoyo,
 		alias = [
 			"yo-yos",
@@ -3855,7 +3972,60 @@ weapon_list = [
 		sap_cost = 1,
 		captcha_length = 4
 	),
+	EwWeapon(  # 22
+		id_weapon = weapon_id_bow,
+		alias = [
+			"bow",
+		],
+		str_crit = "**Critical hit!!** Through measured shots {name_player} manages to stick a pixelated arrow in {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} completely misses, a pixelated arrow embeds itself into the ground!",
+		str_equip = "You equip the minecraft bow, c418 music plays in the background.",
+		str_name = "minecraft bow",
+		str_weapon = "a minecraft bow",
+		str_weaponmaster_self = "You are a rank {rank} minecraft bowmaster.",
+		str_weaponmaster = "They are a rank {rank} minecraft bowmaster.",
+		str_trauma_self = "There is a pixelated arrow in the side of your head.",
+		str_trauma = "There is a pixelated arrow in the side of their head.",
+		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as their foes life fades, riddling their body with arrows. {emote_skull}",
+		str_killdescriptor = "shot to death",
+		str_damage = "{name_target} is shot in the {hitzone}!!",
+		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
+		str_scalp = " The scalp has pixels covering it.",
+		fn_effect = wef_bow,
+		str_description = "It's a newly crafted minecraft bow, complete with a set of minecraft arrows",
+		acquisition = acquisition_smelting,
+		stat = stat_bow_kills,
+		sap_cost = 2,
+		captcha_length = 2
+	),
+		EwWeapon(  # 23
+		id_weapon = weapon_id_dclaw,
+		alias = [
+			"dragon claw",
+		],
+		str_crit = "{name_player} runs like a madman towards {name_target}, {name_target} swings but is deftly parried by {name_player}, {name_player} hoists their dragon claw into the air and ripostes {name_target} for massive damage ***!!!Critical Hit!!!***",
+		str_miss = "{name_player} swings but {name_target} is in the middle of a dodge roll and is protected by iframes. **!!Miss!!**",
+		str_equip = "You place the core of the dragon claw on your hand and it unfolds around it, conforming to the contour of your hands, claws protude out the end of your fingers as your hand completes its transformation into the *dragon claw*.",
+		str_name = "dragon claw",
+		str_weapon = "a dragon claw",
+		str_weaponmaster_self = "You are a rank {rank} master of the dragon claw.",
+		str_weaponmaster = "They are a rank {rank} master of the dragon claw.",
+		str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames `won't seem to extinguish.",
+		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
+		str_kill = "***Thwip.*** {name_player}'s dragon claw cuts the air followed by a trail of flame and blood, the camera pans out and {name_target} is shown, cut in twain. {emote_skull}",
+		str_killdescriptor = "cut to pieces",
+		str_damage = random.choice(["{name_target} is slashed across the {hitzone}!!","{name_player} furiously slashes {name_target} across the {hitzone}!!","{name_player} flicks their fingers and a jet of flame ignites from the dragon claw, burning {name_target} in the {hitzone}!!"]),
+		str_duel = "**SLICE!! SWIPE!! SLASH!!** {name_player} and {name_target} cut the fuck out of eachother, a fire extinguisher is never more than a meter away.",
+		str_scalp = "The scalp is burning and doesn't look like it's gonna stop.",
+		fn_effect = wef_dclaw,
+		str_description = "It's the core of a Dragon Claw, it will morph around whatever hand it is held by granting them the power of the elusive GREEN EYES SLIME DRAGON. If you listen closely you can hear whines of the dragon soul as it remains perpetually trapped in the weapon.",
+		acquisition = acquisition_smelting,
+		stat = stat_dclaw_kills,
+		classes = [weapon_class_exploding],
+		sap_cost = 5,
+		captcha_length = 2)
 ]
+
 
 weapon_vendors = [
 	vendor_dojo
@@ -3936,10 +4106,10 @@ def atf_tusks(ctn = None):
 	if aim >= 9:
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
-		
+
 def atf_molotovbreath(ctn = None):
 	# Reskin of molotov
-	
+
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.sap_damage = 0
@@ -3960,16 +4130,16 @@ def atf_molotovbreath(ctn = None):
 	elif aim == 10:
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-			
+
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
 
 	aim = (random.randrange(20) + 1)
-	
+
 	if aim <= 2:
 		ctn.miss = True
-		
+
 	if aim == 20:
 		ctn.crit = True
 		ctn.slimes_damage *= 3
@@ -5611,6 +5781,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "khaotickilliflowerfuckenergy",
+		alias = [
+			"kkfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5621,6 +5794,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "rampagingrowddishfuckenergy",
+		alias = [
+			"rrfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5631,6 +5807,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "direappleciderfuckenergy",
+		alias = [
+			"dacfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5641,6 +5820,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "ultimateurinefuckenergy",
+		alias = [
+			"uufu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5651,6 +5833,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "superwaterfuckenergy",
+		alias = [
+			"swfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5856,7 +6041,7 @@ food_list = [
 			"chocs",
 		],
 		recover_hunger = 120,
-        price = 100,
+	price = 100,
 		str_name = 'Paradox Chocs',
 		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
 		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
@@ -5868,7 +6053,7 @@ food_list = [
 			"twix",
 		],
 		recover_hunger = 150,
-        price = 100,
+	price = 100,
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
@@ -6251,14 +6436,15 @@ food_list = [
 		vendors=[vendor_greencakecafe]
 	),
 	EwFood(
-		id_food = "juicebox",
+		id_food = "direapplefrickenergy",
 		alias = [
 			"juice",
 			"appyjuice",
+			"frickenergy",
 		],
 		recover_hunger=10,
 		price=1,
-		str_name = "Juice Box",
+		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
 		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
@@ -7040,6 +7226,52 @@ browse_list = [
 "Y'arrr. \nhttps://discord.gg/VFcUmgc"
 ]
 
+bible_verses = [
+"And they said one to another, Go to, let us make brick, and burn them thoroughly. And they had brick for stone, and slime had they for mortar. And they said, !Goto, let us build us a city and a tower, whose top may reach unto heaven; and let us make us a name, lest we be scattered abroad upon the face of the whole earth… Genesis, 11:4 7",
+"Then he went up from there to Bethel; and as he was going up by the way, young lads came out from the city and mocked him and said to him, “Go up, you baldhead; go up, you baldhead!” When he looked behind him and saw them, he cursed them in the name of the LORD. Then two female bears came out of the woods and tore up forty-two lads of their number. And he went from there to Mount Carmel, and from there he returned to Samaria. 2 Kings 2:23-25",
+"Yet she became more and more promiscuous as she recalled the days of her youth, when she was a prostitute in Egypt. There she lusted after her lovers, whose genitals were like those of donkeys and whose emission was like that of horses. So you longed for the lewdness of your youth, when in Egypt your bosom was caressed and your young breasts fondled. Ezekiel 23:19",
+"No one whose testicles are crushed or whose male organ is cut off shall enter the assembly of the Lord. Deuteronomy 23:1",
+"Ye are the light of the world. A city that is set on an hill cannot be hid. Matthew 5:14",
+"But now they desire a better country, that is, an heavenly: wherefore God is not ashamed to be called their God: for he hath prepared for them a city. Hebrews 11:16 ",
+"Seek the prosperity of the city to which I have sent you as exiles. Pray to the LORD on its behalf, for if it prospers, you too will prosper. Jeremiah 29:7",
+"And they went up on the breadth of the earth, and compassed the camp of the saints about, and the beloved city: and fire came down from God out of heaven, and devoured them. Revelation 20:9 ",
+"And I will turn my hand upon thee, and purely purge away thy dross, and take away all thy tin: And I will restore thy judges as at the first, and thy counsellors as at the beginning: afterward thou shalt be called, The city of righteousness, the faithful city. Isaiah 1:25-26 ",
+"David rose up and went, he and his men, and struck down two hundred men among the Philistines Then David brought their foreskins, and they gave them in full number to the king, that he might become the king's son-in-law. So Saul gave him Michal his daughter for a wife. 1 Samuel 18:27 ",
+"Behold, the days come, saith the LORD, that I will punish all them which are circumcised with the uncircumcised. Jeremiah 9:25",
+"Let me gulp down some of that red stuff; I’m starving. Genesis 25:30 ",
+"Would that those who are upsetting you might also castrate themselves! Galatians 5:12",
+"Even the handle sank in after the blade, and his bowels discharged. Ehud did not pull the sword out, and the fat closed in over it. Judges 3:22 ",
+]
+
+
+tv_lines = [
+	"Breaking news! A local street performer won't come down from a gigantic pile of corpses. He refuses to eat for publicity! More to come.",
+	"Welcome, goobs and gabs, to the Live Interactive Broadcast Enquirer Line, or L.I.B.E.L. for short. In today's news, local resident N6 was arrested for her abusive and predatory behavior toward Epic. Charges include false accusations of foot fetishism, terroristic threats, and 3rd degree sloshing toward a minor.",
+	"Welcome to Mad Murderous Money, the show where stockbrokers are allowed, nay, encouraged, to jump out of buildings when the Dow Jones gets a bit pouty. Today we have a fucking ridiculous upturn for KFC, which actually got one of its supply trucks through the gang infested streets without being ransacked. Taco Bell set up a new restaraunt in New New Yonkers, but the windows aren't even bulletproof, so it's probably just gonna be a money pit for them. But my little chiclets, DO NOT invest in FUCKING PIZZA HUT. ENDLESS WAR shot a fucking laser through their kitchen and they're still in reconstruction. \n\nAs always, this is Mad Murderous Money, telling you to buy sell, die, and shill!",
+	"Hey, everybody. This is Slime Bob Ross. I'm like regular Bob Ross, only I'm a thrown together copy some Juvie made cause he wanted to fuck me. Today, we'll be painting on the graffiti soaked walls of urban Green Light District. Now, the first thing you do on these urban type pieces is to sign your name here in the bottom right. This is so you will receive credit even if you have to run from the police halfway through. OK, very good. Today we're going to be doing a still life of Wreckington. We'll be doing a lot of greys here, but let's start with something fun, the flames of the burning wreckage. Wait. I forgot to bring red paint. OK, in that case, I'll have more once I fetch a Juvie during the commercial break. Stay tuned!",
+	"The TV is just static. Maybe it's a bad reception. You wait. It will turn back on eventually, right?",
+	"Welcome to Reading Rainbow, boys and girls! I'm Slime Levar Burton, and despite the existential  dread that comes with being a blob person, I'm doing wonderful today. This week, I read a book called 'The Gamer and The Bear'. We'll read an excerpt here. \nOnce upon a time in a cute little village at the bottom of a valley was a big rowdy bear.The bear was a real nasty guy, always smashing shit up and stomping his big feet. All the innocent little gamers of the village were scared of the big bear for if he saw them !dabbing he’d rip them limb from limb! They had to hide in their homes when he came around, !dabbing under their breath and gaming with the TV muted. It was a horrible time for everyone. \nThat was the first page, be sure to buy the full book!",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. Today, we'll be examining the phenomenon of 'Door Gunning', a new prank pulled by the upstarts of Little Chernobyl. In order to explain it, we must first look at a certain subculture of people there, known as half-deads. These folks live so close to the radiation of Little Chernobyl Power Plant that the radiation has more than killed them and fully decayed their minds. The problem is, they can't !revive either. They are so brain dead that ENDLESS WAR doesn't know what to do with them. So functionally, they exist as these wildly disfigured, basically immortal suburbanites. Door Gunning takes advantage of this. A prankster will knock on the door of some hapless half-dead person, and shoot them repeatedly in the face. It's incredibly painful, but since nobody dies it gets passed off as harmless fun. It really makes you think, eh?",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. We've got a treat for you this time, something you probably haven't heard of. Charcoal Park's efforts to fight back against hostile secreatures. You see, most districts are under Slimecorp's protection, excluding gangsters. However, Charcoal Park was such a forgettable place that they just forgot to send relief over there. Things have gotten so dire that many of the region's blue collar workers have banded together to form a militia of their own. There were many casualties at first, but intense training has turned the region into an sort of anarchist paradise. You wouldn't know it, though. To this day, their houses are kept very clean.",
+	"Oh. Looks like it's playing the test screen. You know, the one with all the verticle colored stripes and the long beep. Yeah.",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. Most NLACakaNM citizens stay indoors for obvious reasons. Because of this, we're often oblivious to the interesting new social patterns they exhibit in this isolation. For example, Old New Yonkers has developed its own sect of Christianity. The practitioners of Neo-Protestant Milwaukeeism are convinced that ENDLESS WAR is the second coming of Christ, and that they have all been sent to Hell for their sins. Beyond that, most of the differences lie in the amount of self-flaggellation there is. NLACakaNM is a place of extremes, so what actually takes place is pretty mild compared to what else we've seen here. But despite its modesty, those folks may well be the most miserable in the city.",
+	"It's time for 'Our Deep Fuck City', where we run documentaries on the mystique of each district. It's time to talk about the disappearing statue of Thalamus J. Crookline that stands in Globule Plaza. You see, Crookline's bandits have developed an inflated sense of honor among themselves. Part of that means they'll often wish themselves luck on that particular statue for good fortune in their pilfering. Every thief knows this, so it's not surprising how often the damn thing gets stolen. Hence the 'disappearance'. It costs the government like 1,000,000 slime a year just to maintain it.",
+]
+
+the_slime_lyrics= [
+"https://www.youtube.com/watch?v=w-sREpqDiUo",
+"I am gross and perverted \nI'm obsessed 'n deranged \nI have existed for years\nBut very little has changed",
+"I'm the tool of the Government\nAnd industry too\nFor I am destined to rule\nAnd regulate you",
+"I may be vile and pernicious\nBut you can't look away\nI make you think I'm delicious\nWith the stuff that I say",
+"I'm the best you can get\nHave you guessed me yet?\nI'm the slime oozin' out\nFrom your TV set",
+"You will obey me while I lead you\nAnd eat the garbage that I feed you\nUntil the day that we don't need you\nDon't go for help . . . no one will heed you",
+"Your mind is totally controlled\nIt has been stuffed into my mold\nAnd you will do as you are told\nUntil the rights to you are sold",
+"That's right, folks\nDon't touch that dial",
+"Well, I am the slime from your video\nOozin' along on your livin' room floor\nI am the slime from your video\nCan't stop the slime, people, lookit me go",
+"I am the slime from your video\nOozin' along on your livin' room floor\nI am the slime from your video\nCan't stop the slime, people, lookit me go",
+"Welp, there it went. The Slime begins to wreak havoc outside your apartment. Can you believe you sat on your ass for like 6 hours?"
+]
+
 furniture_list = [
 EwFurniture(
 		id_furniture = "interrogationchair",
@@ -7262,14 +7494,14 @@ EwFurniture(
 		furniture_look_desc = "A bright green slimebag chair is plopped just wherever.",
 		furniture_place_desc = "You plop the slimebag chair just wherever."),
 EwFurniture(
-		id_furniture = "bodypillow",
-		str_name = "body pillow",
-		str_desc = "A dakimakura with pillowcase. It's got your favorite slime waifu on it.",
+		id_furniture = "custombodypillow",
+		str_name = "{custom} body pillow",
+		str_desc = "A dakimakura with pillowcase. It's got {custom} on it.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 400000,
 		vendors = [vendor_bazaar],
-		furniture_look_desc = "There's a body pillow in the bedroom.",
+		furniture_look_desc = "There's a {custom} body pillow in the bedroom.",
 		furniture_place_desc = "You gently place the pillow in your room, being careful not to damage your waifu."),
 EwFurniture(
 		id_furniture = "futon",
@@ -7372,9 +7604,10 @@ EwFurniture(
 		rarity = rarity_plebeian,
 		acquisition = acquisition_bartering,
 		price = 30000,
-		vendors = [vendor_bazaar],
+		vendors = [],
 		furniture_look_desc = "You can sense brony vibes in this room.",
-		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies."),
+		furniture_place_desc = "You set Rainbow by the windowsill, where she can daydream about taking to the skies.",
+		furn_set = "pony"),
 EwFurniture(
 		id_furniture = "diploma",
 		str_name = "framed diploma",
@@ -7530,7 +7763,722 @@ EwFurniture(
 		vendors = [vendor_bazaar],
 		furniture_look_desc = "A picture frame hangs on the wall.",
 		furniture_place_desc = "You place the picture on the wall. What did you put in there? Was it a picture of your family? I bet it was a picture of your family. Man, you suck."),
+EwFurniture(
+		id_furniture = "hammock",
+		str_name = "hammock",
+		str_desc = "It's a frayed rope hammock. Kinda looks like the worn-out fishing nets they use down at the piers, but it'll probably work just as well as the real deal.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 370000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An indoor hammock is set up in the bedroom.",
+		furniture_place_desc = "Getting this set up will be tricky. You take some industrial strength railroad spikes and drive them into each side of the wall, then use the supports to wrap the two ends until the hammock is taut. Why the fuck did you set up a hammock indoors, anyway?"),
+EwFurniture(
+		id_furniture = "juggaloposter",
+		str_name = "juggalo poster",
+		str_desc = "Violent J and Shaggy 2 Dope are depicted brutally murdering some juvie with steak knives. Their stabbing form is terrible but you can appreciate their charisma.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 100000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A poster on the wall depicts a Juggalo murder party.",
+		furniture_place_desc = "You don't have any tape to fasten the poster, so you end up using magnets instead. You're not sure how they work, though. "),
+EwFurniture(
+		id_furniture = "television",
+		str_name = "television",
+		str_desc = "It's a CRT, a pretty big one too. A bunch of adapters are frankenstein'd up to it so it takes modern cables.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An old CRT is set up.",
+		furniture_place_desc = "You drop the TV on the floor. Your parents said this stuff turns your brain to mush, but yours is already slime, so no harm done. Time to get !watching!"),
+EwFurniture(
+		id_furniture = "pottedplant",
+		str_name = "potted plant",
+		str_desc = "It's a potted plant. Currently empty.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 10000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A potted plant is on the sill.",
+		furniture_place_desc = "You set the pot where plants in it could get plenty of sunlight."),
+EwFurniture(
+		id_furniture = "airmattress",
+		str_name = "air mattress",
+		str_desc = "A vinyl air mattress. Perfect for sleepovers, or when the homeless crash at your place.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An air matress is blown up in the bedroom.",
+		furniture_place_desc = "You blow a whole bunch until your floppy piece of vinyl is a bouncy piece of vinyl."),
+EwFurniture(
+		id_furniture = "churchpew",
+		str_name = "church pew",
+		str_desc = "A long wooden bench they normally use in church services. To be completely honest, it looks really uncomfortable to sit in.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 240000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A pew is against the wall.",
+		furniture_place_desc = "You set up the pew in your flat, just in case someone wants to hear you preach.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "churchaltar",
+		str_name = "church altar",
+		str_desc = "An old-looking altar with elaborate carving on the sides. Do you do sacrifices on these?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 270000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An altar is fully adorned against the wall.",
+		furniture_place_desc = "You place a fresh tablecloth, some incense, and a bible on the altar. You say a hymn to yourself before standing up to admire the handiwork.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "churchcandles",
+		str_name = "church candles",
+		str_desc = "A 16 pack of beeswax candles and a couple brass candlesticks to go with them.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 110000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The room is dimly lit with candles.",
+		furniture_place_desc = "You arrange the candlesticks with a pleasing symmetry. Someone less pious would call this a fire hazard, but you're determined that God won't let your house burn down.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "confessionbooth",
+		str_name = "confession booth",
+		str_desc = "It's a little pair of rooms you sit in to confess your sins. Living in NLACakaNM you may have a lot of those.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 110000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A confession booth has been installed here.",
+		furniture_place_desc = "Once you get the booth in, you make sure it works by confessing to yourself. It does, that's good.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "abstinencebed",
+		str_name = "abstinence bed",
+		str_desc = "It's like a regular bed, but you're fastened to it to prevent any unneeded fornication. Paradoxically, that's actually sort of kinky.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 300000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An abstinence bed is in the bedroom.",
+		furniture_place_desc = "You place the bed down, dreaming of all that sinful poon you're going to miss out on.",
+		furn_set = "church"),
+EwFurniture(
+		id_furniture = "wallpaper",
+		str_name = "wallpaper",
+		str_desc = "It's a solid color wallpaper. Pretty plain, but dyeable.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The walls are a nice shade of -*HUE*-",
+		furniture_place_desc = "You cover the walls with wallpaper. ",
+		furn_set = "specialhue"),
+EwFurniture(
+		id_furniture = "applejackfigurine",
+		str_name = "apple jack figurine",
+		str_desc = "It's an MLP figure. She's a dirty southerner.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You place Apple Jack up on the windowsill.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "fluttershyfigurine",
+		str_name = "fluttershy figurine",
+		str_desc = "It's an MLP figure. She's a yellow pegasus, very Juvie-core.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "Fluttershy goes right here on the sill.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "rarityfigurine",
+		str_name = "rarity figurine",
+		str_desc = "It's an MLP figure. This one's known for being marginally bitchier than the others.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You set Rarity up by the window. Clearly she's above being on the ground. Fucking ornery cunt.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "pinkiepiefigurine",
+		str_name = "pinkie pie figurine",
+		str_desc = "It's an MLP figure. You may be hallucinating but its voice keeps speaking inside your head.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You sense Ponk in the room.",
+		furniture_place_desc = "You set Pinkie Pie up on the sill and try to suppress the voices in your head.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "twilightsparklefigurine",
+		str_name = "twilight sparkle figurine",
+		str_desc = "It's an MLP figure. This one talks big about friendship but has a dragon indentured servant for like the whole show. What a hypocrite!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You place Twilight on the bookshelf. Not that she would enjoy the kind of swill you read.",
+		furn_set = "pony"),
+EwFurniture(
+		id_furniture = "mylittleponyfigurine",
+		str_name = "my little pony figurine",
+		str_desc = "",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 30000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "You can sense brony vibes in this room.",
+		furniture_place_desc = "You place a horse figurine on the windowsill."),
+EwFurniture(
+		id_furniture = "hatstand",
+		str_name = "hat stand",
+		str_desc = "A hat stand is by the door.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A hat stand sits near the door.",
+		furniture_place_desc = "You prop the hat stand up and hang whatever hats you can find on top."),
+EwFurniture(
+		id_furniture = "recordplayer",
+		str_name = "record player",
+		str_desc = "An antique gramophone from the 1930s. It normally plays vinyl, but through the power of slime, CDs work just as well.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 460000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "An old record player sits on the floor.",
+		furniture_place_desc = "You place the ol' boy on the floor."
 
+
+),
+EwFurniture(
+		id_furniture = "keg",
+		str_name = "keg",
+		str_desc = "You managed to buy an entire keg of high proof liquor without even needing to show ID. NLACakaNM is the best city in the world.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 520000,
+		vendors = [vendor_bazaar, vendor_bar],
+		furniture_look_desc = "The keg in the room looks dulled and dented. Standard, almost.",
+		furniture_place_desc = "You take a swig out of the keg and haphazardly roll it across the room. That'll do."
+),
+EwFurniture(
+		id_furniture = "slimecityflag",
+		str_name = "Slime City flag",
+		str_desc = "There's nothing like the good old stars n' slugs to bring a tear to an old patriot's eye.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The NLACakaNM flag hangs proudly on the wall",
+		furniture_place_desc = "You hang the flag on your wall and sing the anthem aloud to yourself."
+),
+EwFurniture(
+		id_furniture = "slimecityconfederateflag",
+		str_name = "Slime City Confederate flag",
+		str_desc = "It's an alternate flag design the Rowdys pull out during civil wars. Long live the motherfucking south.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The NLACakaNM Confederate flag hangs defiantly on your wall.",
+		furniture_place_desc = "Shit, let's be Robert E. Lee. You confirm your support of the Confederacy by flying the flag outside your window."
+),
+EwFurniture(
+		id_furniture = "slimeoidhouse",
+		str_name = "slimeoid house",
+		str_desc = "It's a little hutch for your slimeoid to stay in. It's only knee high though, so it looks like the big ones are SOL.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 400000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "Your slimeoid just loves that slimehouse you set up.",
+		furniture_place_desc = "You have to place the slimehouse inside so that it doesn't get caught in any drive-bys. Looks pretty cozy anyway."
+),
+EwFurniture(
+		id_furniture = "humancorpse",
+		str_name = "human corpse",
+		str_desc = "It's a fresh cadaver, stitched together with the bits and bobs you find regularly on the street. What a find!",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 0,
+		vendors = [],
+		furniture_look_desc = "There's a dead body in here.",
+		furniture_place_desc = "You open the bodybag you've been lugging around and splay the corpse out on it. You're no expert on feng shui, but if Martha Stewart saw this, she would probably run the fuck away. Out of jealousy. "
+),
+EwFurniture(
+		id_furniture = "reanimatedcorpse",
+		str_name = "reanimated corpse",
+		str_desc = "It's a stitched cadaver you found, reanimated with someone's immortal soul. It cannot speak, but it's obedient enough regardless.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 0,
+		vendors = [],
+		furniture_look_desc = "A Frankenstein-like creature is chilling in here.",
+		furniture_place_desc = "You tell your thrall to kneel over there in the corner. They know what they did."
+),
+EwFurniture(
+		id_furniture = "medievaltorturedevice",
+		str_name = "medieval torture device",
+		str_desc = "It's an old-style torture machine. This one is called 'The Rack' and you use it to stretch someone until their spine begs for mercy. It usually doesn't work well on slimeoids, what with their amorphous bodies, so somebody retrofitted it with a hot plate on the seat cushion.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 3000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A torture rack is installed in here.",
+		furniture_place_desc = "You assemble the torture device and do a couple of test cranks. Putting it together was a bitch and a half because the instructions were in Old English."
+),
+EwFurniture(
+		id_furniture = "blackvelvetsofa",
+		str_name = "black velvet sofa",
+		str_desc = "It's a sleek, luxurious couch adorned with platinum studded black velvet. They say only the most criminally prone Italians could ever hope to afford its mafioso charm.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 2000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet couch adds style to this place.",
+		furniture_place_desc = "You threaten a random pedestrian with death to get him to move your couch in. That's just how you operate.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvetbed",
+		str_name = "black velvet bed",
+		str_desc = "It's a stylish black velvet bed frame with a stark white mattress and bedspread. It's seductive, even without a leggy dame lying on it.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 2500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet bed is in the bedroom.",
+		furniture_place_desc = "You assemble the bed and lie down for awhile. No fishes here. You're sleeping with the gods. Er, goddesses. Whatever.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvetchair",
+		str_name = "black velvet chair",
+		str_desc = "It's a studded velvet chair. It doesn't get more executive than this baby.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 990000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet chair is set up.",
+		furniture_place_desc = "You slide the chair to the corner, Man, you're going to look so menacing in this thing.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvettable",
+		str_name = "black velvet table",
+		str_desc = "It's an antique table adorned with studs and velvet. Tailor made for deal making.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 1990000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet table is set up.",
+		furniture_place_desc = "You set the table up, and place upon it the finest silverware you have.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "blackvelvetlamp",
+		str_name = "black velvet lamp",
+		str_desc = "It's a mahogany lamp with velvet lampshade. It gives you excellent mood lighting.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 590000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A black velvet lamp casts bright lights and long shadows.",
+		furniture_place_desc = "You plug the lamp in. Odd. Normally you prefer to put people's lights out.",
+		furn_set = "blackvelvet"
+),
+EwFurniture(
+		id_furniture = "popeonarope",
+		str_name = "pope on a rope",
+		str_desc = "It's Pope Francis, hung and dead on a noose. At the very least it's a convincing imitation.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 10000000,
+		vendors = [],
+		furniture_look_desc = "Pope Francis hangs dead from the ceiling.",
+		furniture_place_desc = "You get on a chair and hang the noose from the ceiling. The lightly swinging Pope now adds an ambient wood creaking noise to your abode.",
+),
+EwFurniture(
+		id_furniture = "slimecorpchair",
+		str_name = "SLIMECORP:tm: Chair Of the Future",
+		str_desc = "It's a sleek green seat-like device outfitted for maximum comfort. Comes with built-in cupholders and a state of the art subliminal media player.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A futuristic Slimecorp chair is set up.",
+		furniture_place_desc = "As you attempt to pick up the heavy chair, you accidentally press a button on its underside. Suddenly, you pass out on the floor. When you wake up, the chair is set up like it had always been there.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorpcouch",
+		str_name = "SLIMECORP:tm: Mega Sofa",
+		str_desc = "This SlimeCorp:tm: Mega Sofa is capable of extending in 3 directions. It's perfect for throwing house parties with all your friends:tm:!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 3000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A futuristic Slimecorp couch sits along the wall.",
+		furniture_place_desc = "You notice a 'MOVE IN' button under the upholstery of your couch. After pressing it, the couch grows metal limbs, forcibly grabbing you and walking into your apartment complex. You're sure that neat feature won't bite you in the ass later.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorpbed",
+		str_name = "SLIMECORP:tm: Ultimate Safety Bed",
+		str_desc = "This SlimeCorp:tm: Safety Bed is the ultimate resting place for whenever you need physical protection! We at SlimeCorp can't guarantee your safety without one! Be sure to try out its cryogenic stasis feature!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 2500000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A Slimecorp twin bed/cryo pod is in the bedroom.",
+		furniture_place_desc = "Somehow, assembling this fully functional cryostasis container was easier than the ones you used to build from IKEA.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorpdesk",
+		str_name = "SLIMECORP:tm: Posture Building Submission Desk",
+		str_desc = "The Slimecorp:tm: Submission Desk is the ultimate tool in building charisma and acclimating yourself to the times! Simply keep your head down and you'll be ahead of the game for when you all submit to us.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1200000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A Slimecorp desk made for submission is in a dark corner.",
+		furniture_place_desc = "You decided to place the desk by carrying it on your back like a hopeless thrall. That's the spirit!",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "slimecorplamp",
+		str_name = "SLIMECORP:tm: Highly Talkative Strobe Light",
+		str_desc = "The Slimecorp:tm: Talkative Strobe Light is an excellent way to memorize interesting facts about SlimeCorp:tm: Tired of our email advertisements? You can absorb all that information lickety split through our state of the art subliminal messages.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1600000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A Slimecorp lamp is flashing some neat subliminal messages throughout the room.",
+		furniture_place_desc = "SUBMIT TO SLIMECORP. NOW, PLUG IN THE LAMP WHILE SUBMITTING TO SLIMECORP.",
+		furn_set = "slimecorp"
+),
+EwFurniture(
+		id_furniture = "sord",
+		str_name = "sord",
+		str_desc = "https://i.imgur.com/EgbZ7Ku.png",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = -1,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "dude. therps a SORD over therew.re.",
+		furniture_place_desc = "You place the SORD indoors so it doesn't escape to the side.",
+),
+EwFurniture(
+		id_furniture = "pileofmysteriouspowder",
+		str_name = "pile of mysterious powder",
+		str_desc = "The guy you bought this fine white powder from called it nose candy. What a fucking idiot. Everybody knows you eat candy with your mouth.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 3000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a pile of powdery substance in a dark alcove over yonder.",
+		furniture_place_desc = "You unpack the powder and pour it all out in a nice little pile. Whoa. Feelin' kind of woozy.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "alarmclock",
+		str_name = "alarm clock set to OFF",
+		str_desc = "The annoying sound this thing makes perfectly explains why the bazaar sells so many broken clocks.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 90000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The clock says it's {time}.",
+		furniture_place_desc = "You set the alarm clock on your nightstand. Nobody knows why.",
+),
+EwFurniture(
+		id_furniture = "lavalamp",
+		str_name = "lava lamp",
+		str_desc = "It's one of those lamps where you stick colorful boiling chemicals under heat and pour them on shitty guests. At least you're pretty sure that's what it does. The container is sealed with a bottle cap and everything!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 150000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A lava lamp is plugged in.",
+		furniture_place_desc = "You plug the lava lamp in and wait for the cool bubbles to start going. It's taking too long, though, so you stop.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "discoball",
+		str_name = "disco ball",
+		str_desc = "It's a large ball covered in tiny mirror surfaces. Good for dancers and epileptics.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 450000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A disco ball hangs from the ceiling.",
+		furniture_place_desc = "You hang the gitterball and give it a hefty spin.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "shagcarpet",
+		str_name = "shag carpet",
+		str_desc = "Wall to wall shag carpeting with a soft, hot pink texture to it. Very retro, and well loved by furries with inexplicable floor fetishes.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The hot pink carpeting feels soft beneath your feet.",
+		furniture_place_desc = "You roll out the new carpet and do some shag angels.",
+		furn_set = "seventies"
+),
+EwFurniture(
+		id_furniture = "stainedglasswindows",
+		str_name = "stained glass windows",
+		str_desc = "A number of windows painstakingly crafted to build a mosaic. Looks breakable.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_bartering,
+		price = 1420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The windows are made of stained glass.",
+		furniture_place_desc = "You carefully install the stained glass fixtures. Who knew you were such a good carpenter?",
+),
+EwFurniture(
+		id_furniture = "customdoor",
+		str_name = "{custom} door",
+		str_desc = "A door with {custom} on it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1420000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "The door is modded with a {custom} design.",
+		furniture_place_desc = "You break the original door off its hinges and install a new one.",
+),
+EwFurniture(
+		id_furniture = "expiredbottleofrogaine",
+		str_name = "expired bottle of rogaine",
+		str_desc = "It's a bottle of hair growth solution. Whoever owns this must be a longtime bald person.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1200,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's an old Rogaine bottle lying around.",
+		furniture_place_desc = "You drop the bottle of rogaine in plain sight.",
+),
+EwFurniture(
+		id_furniture = "custombed",
+		str_name = "{custom} bed",
+		str_desc = "It's a {custom} themed bed. Ooh, cozy.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "There's a {custom} bed in the bedroom.",
+		furniture_place_desc = "You assemble the bed and lop the mattress on top.",
+),
+EwFurniture(
+		id_furniture = "customflag",
+		str_name = "{custom} flag",
+		str_desc = "It's the illustrious {custom} flag. You salute it with reckless abandon.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 400000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "A {custom} flag flies outside the window.",
+		furniture_place_desc = "You fly the flag outside the window.",
+),
+EwFurniture(
+		id_furniture = "brick",
+		str_name = "brick",
+		str_desc = "It's a brick. Can't build with it, can't eat it. All you can do is throw it through someone's window.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_bartering,
+		price = 1000,
+		vendors = [vendor_bazaar],
+		furniture_look_desc = "Somebody threw a brick through the window.",
+		furniture_place_desc = "You go outside your house and throw a brick through your window. Nobody can ever say you're a fake vandal now.",
+),
+EwFurniture(
+		id_furniture = "shittychair",
+		str_name = "shitty chair",
+		str_desc = "It's a handmade chair. It's so completely botched that you wonder if you can even sit in it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a chair-like pile of plywood set up.",
+		furniture_place_desc = "You develop several pre-infected splinters just taking this out of your inventory. Fearing another bout of tetanus, you gently toss the chair on the ground.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "shittydesk",
+		str_name = "shitty desk",
+		str_desc = "This desk fucking sucks. It is an insult to the very concept of a flat surface.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a desk in here. Don't sit on it.",
+		furniture_place_desc = "After moving the desk into place, you try to sit down and write the next great American zine. The paper gets destroyed by it the moment you start.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "shittybench",
+		str_name = "shitty bench",
+		str_desc = "It's a handmade wooden bench Looking at its detailed design, torture device manufacturers should've hired you ages ago.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a...bench in here? Sorry, I couldn't tell if that thing qualifies.",
+		furniture_place_desc = "You try to move the couch in yourself. As you try, the couch snaps in two. However, it's actually more comfortable this way, so you leave it as is.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "shittybed",
+		str_name = "shitty bed",
+		str_desc = "It's a dusty pile of broken planks and springs. Wait did the item title say it was a bed? Fuck no. Don't pay attention to that.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a death bed in the bedroom.",
+		furniture_place_desc = "You try to assemble the bed, which in this case would probably involve breaking it down to bits and hoping sawdust is soft enough to sleep on.",
+		furn_set = "shitty"
+),
+EwFurniture(
+		id_furniture = "woodenvuvuzela",
+		str_name = "wooden vuvuzela",
+		str_desc = "You tried carving an ornate wooden clarinet, but you botched it. This dime-a-dozen consolation prize sounds like an elephant shitting out its organs.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a shitty vuvuzela here. Fuck.",
+		furniture_place_desc = "You set your vuvuzela on the shelf. Carnegie Hall, see you never.",
+
+),
+EwFurniture(
+		id_furniture = "ornatechair",
+		str_name = "ornate chair",
+		str_desc = "It's an immaculately carved wooden chair. It looks rustic, and must've cost a fortune.",
+		rarity = rarity_plebeian,
+		acquisition = rarity_patrician,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's an immaculate -*HUE*- chair set up.",
+		furniture_place_desc = "You carefully set the chair down. Wouldn't want to scratch the varnish on it, now.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "ornatedesk",
+		str_name = "ornate desk",
+		str_desc = "It's a posh looking old-style desk. The legs have some neat etchings along the side.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's an -*HUE*- ornate looking desk in the corner.",
+		furniture_place_desc = "You carry the desk to the wall, and step back to admire it.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "ornatebench",
+		str_name = "ornate bench",
+		str_desc = "The bench is so well-constructed, people forget it's made of uncomfortable unapholstered hardwood.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a wonderful -*HUE*- colored bench against the wall.",
+		furniture_place_desc = "You promise several art buyers they can look at your bench if they can help carry it to your flat. Once moved, you kick them out swiftly, and without regret.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "ornatebed",
+		str_name = "ornate bed",
+		str_desc = "This antique looking bed makes you feel like a tyrant. A whittling tyrant.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A bed with a -*HUE*- bedspread is in the bedroom.",
+		furniture_place_desc = "You had a lot of trouble finding a mattress worthy of this frame. Time to put em' together.",
+		furn_set = "specialhue"
+),
+EwFurniture(
+		id_furniture = "craftsmansclarinet",
+		str_name = "craftsman's clarinet",
+		str_desc = "It's a handmade clarinet. Mmm. Sounds real nice.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A clarinet sits on your shelf.",
+		furniture_place_desc = "You gently set the clarinet on your shelf. You wish you bought a case for it.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "solidpoudringuitar",
+		str_name = "solid poudrin guitar",
+		str_desc = "An electric guitar whose body is built entirely out of condensed poudrins. Heavy as a meteorite, too.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A poudrin guitar is lying against the wall.",
+		furniture_place_desc = "You gently drop the guitar to set it down. Whoops. Guess Slimecorp gets to pay for that little dent in the floor.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "fishbonexylophone",
+		str_name = "fish bone xylophone",
+		str_desc = "It's a carefully carved mbila-style xylophone made out of fish. You'd think it would smell, but not really.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "A fish xylophone is in here, mallets strewn about.",
+		furniture_place_desc = "You roll the instrument in and play a few notes. Nice. Ripe as the sea.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "beastskindrums",
+		str_name = "beast skin drums",
+		str_desc = "A trap set built out of the remains of fallen secreatures. The cymbals were once a dino pelvis, so that's pretty neat.",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "There's a Stone Age looking drum set in here.",
+		furniture_place_desc = "You assemble each piece into your place drum by drum. As you do your neighbors start to look pretty nervous. Ahaha.",
+		furn_set = "instrument"
+),
+EwFurniture(
+		id_furniture = "gourdmaracas",
+		str_name = "gourd maracas",
+		str_desc = "A neat little shaker made from a gourd and some dried vegetables. Finally, you can show off your Mexican heritage!",
+		rarity = rarity_patrician,
+		acquisition = acquisition_smelting,
+		price = 100000000,
+		vendors = [],
+		furniture_look_desc = "Gourd maracas are sitting on the shelf.",
+		furniture_place_desc = "You do a little maraca dance while nobody's watching and quickly toss them out of sight.",
+		furn_set = "instrument"
+),
 ]
 
 
@@ -7540,6 +8488,14 @@ furniture_lgbt = []
 furniture_highclass = []
 furniture_haunted = []
 furniture_leather = []
+furniture_church = []
+furniture_pony = []
+furniture_blackvelvet = []
+furniture_slimecorp = []
+furniture_seventies = []
+furniture_shitty = []
+furniture_instrument = []
+furniture_specialhue = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -9880,7 +10836,7 @@ poi_list = [
 		],
 		str_name = "an Arsonbrook apartment",
 		str_desc = "",
-		channel = channel_apt_oldnewyonkers,
+		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
 		mother_district = poi_id_arsonbrook,
@@ -10943,6 +11899,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat = True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "mininghelmet",
@@ -10952,6 +11909,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat = True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pickelhaube",
@@ -10961,6 +11919,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "fedora",
@@ -10970,6 +11929,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "baseballcap",
@@ -10979,6 +11939,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "backwardsbaseballcap",
@@ -10988,6 +11949,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "piratehat",
@@ -10997,6 +11959,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "eyepatch",
@@ -11024,6 +11987,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "handkerchief",
@@ -11069,6 +12033,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "scarf",
@@ -11087,6 +12052,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bomberhat",
@@ -11096,6 +12062,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "tuxedo",
@@ -11114,6 +12081,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "jestershat",
@@ -11123,6 +12091,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairof3dglasses",
@@ -11150,6 +12119,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofflipflops",
@@ -11168,6 +12138,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowtie",
@@ -11186,6 +12157,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "kepi",
@@ -11204,6 +12176,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "ushanka",
@@ -11213,6 +12186,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "karategi",
@@ -11231,6 +12205,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nemes",
@@ -11240,6 +12215,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "varsityjacket",
@@ -11258,6 +12234,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "hawaiianshirt",
@@ -11294,6 +12271,7 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		price = 1000000,
 		vendors = [vendor_bazaar],
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "weddingring",
@@ -11337,6 +12315,7 @@ cosmetic_items_list = [
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_poketubers,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "juveolantern",
@@ -11344,6 +12323,7 @@ cosmetic_items_list = [
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "bowlerhat",
@@ -11351,6 +12331,7 @@ cosmetic_items_list = [
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_sourpotatoes,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cabbagetreehat",
@@ -11358,6 +12339,7 @@ cosmetic_items_list = [
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_bloodcabbages,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "braces",
@@ -11386,6 +12368,7 @@ cosmetic_items_list = [
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_pawpaw,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "cosplayhorns",
@@ -11400,6 +12383,7 @@ cosmetic_items_list = [
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
 		acquisition = acquisition_milling,
 		ingredients = item_id_suganmanuts,
+		is_hat=True,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pajamaonesie",
@@ -11484,7 +12468,16 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
+        EwCosmeticItem(
+		id_cosmetic = "knightarmor",
+		str_name = "Steel knight armor",
+		str_desc = "A shining set of steel armor.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
 ]
+
 
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
@@ -11516,6 +12509,17 @@ smelting_recipe_list = [
 			item_id_doublestuffedcrust : 2
 		},
 		products = [item_id_quadruplestuffedcrust],
+	),
+        EwSmeltingRecipe(
+		id_recipe = "knightarmor",
+		str_name = "Knight Armor",
+                alias = [
+			"armor",
+		],
+		ingredients = {
+			"ironingot" : 2
+		},
+		products = ["knightarmor"]
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
@@ -11682,6 +12686,75 @@ smelting_recipe_list = [
 		},
 		products = ['bass']
     ),
+    EwSmeltingRecipe(
+		id_recipe = "bow",
+		str_name = "a Minecraft Bow",
+		alias = [
+			"minecraft bow"
+		],
+		ingredients = {
+			'stick' : 3,
+			'string':3
+		},
+		products = ['bow']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "ironingot",
+		str_name = "an Iron Ingot",
+		alias = [
+			"ingot"
+			"metal",
+			"ironingot",
+			"iron ingot"
+		],
+		ingredients = {
+			'tincan':10,
+			'faggot':1
+		},
+		products = ['ironingot']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "tanningknife",
+		str_name = "a small tanning knife",
+		alias = [
+			"knife",
+			"tanningknife",
+			"tanning"
+		],
+		ingredients = {
+			'ironingot':1
+		},
+		products = ['tanningknife']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "leather",
+		str_name = "a piece of leather",
+		alias = [
+			"leather"
+		],
+		ingredients = {
+			'oldboot':10,
+			'tanningknife':1
+		},
+		products = ['leather']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "dclaw",
+		str_name = "a Dragon Claw",
+		alias = [
+			"dragonclaw",
+			"claw",
+			"dclaw"
+		],
+		ingredients = {
+			'dragonsoul' : 1,
+			item_id_slimepoudrin : 5,
+			'ironingot':1,
+			'leather':1
+		},
+		products = ['dclaw']
+    ),
+
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
@@ -11772,6 +12845,211 @@ smelting_recipe_list = [
 			'royaltypoudrin': 2
 		},
 		products = ['slimepoudrin']
+	),
+EwSmeltingRecipe(
+		id_recipe = "humancorpse",
+		str_name = "a corpse",
+		alias = [
+			"stiff",
+			"corpse",
+			"deadperson",
+			"cadaver",
+		],
+		ingredients = {
+			'scalp': 20,
+			'dinoslimemeat':2,
+			'string':2
+		},
+		products = ['humancorpse']
+	),
+EwSmeltingRecipe(
+		id_recipe = "popeonarope",
+		str_name = "pope on a rope",
+		alias = [
+			"pope",
+			"francis",
+			"deadpope",
+			"sacrilege",
+		],
+		ingredients = {
+			'humancorpse': 1,
+			'diadem':1,
+			'scarf':1,
+			'confessionbooth':1
+		},
+		products = ['popeonarope']
+	),
+EwSmeltingRecipe(
+		id_recipe = "reanimatedcorpse",
+		str_name = "reanimated corpse",
+		alias = [
+			"frankenstein",
+			"reanimate",
+			"revenant",
+		],
+		ingredients = {
+			'humancorpse': 1,
+			'soul':1,
+		},
+		products = ['reanimatedcorpse']
+	),
+EwSmeltingRecipe(
+		id_recipe = "soul",
+		str_name = "soul",
+		alias = [
+			"spirit",
+			"essence",
+			"hippiebullshit",
+		],
+		ingredients = {
+			'reanimatedcorpse': 1,
+		},
+		products = ['soul']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadechair",
+		str_name = "handmade chair",
+		alias = [
+			"woodchair",
+			"carvedchair",
+			"woodenchair",
+			"ornatechair",
+		],
+		ingredients = {
+			'stick': 5,
+			'bat':2,
+		},
+		products = ['ornatechair', 'shittychair']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadebench",
+		str_name = "handmade bench",
+		alias = [
+			"woodbench",
+			"carvedbench",
+			"woodenbench",
+			"ornatebench",
+		],
+		ingredients = {
+			'stick': 10,
+			'bat':4,
+		},
+		products = ['ornatebench', 'shittybench']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadebed",
+		str_name = "handmade bed",
+		alias = [
+			"woodbed",
+			"carvedbed",
+			"woodenbed",
+			"ornatebed",
+		],
+		ingredients = {
+			'stick': 12,
+			'bat':3,
+		},
+		products = ['ornatebed', 'shittybed']
+	),
+EwSmeltingRecipe(
+		id_recipe = "handmadedesk",
+		str_name = "handmade desk",
+		alias = [
+			"wooddesk",
+			"carveddesk",
+			"woodendesk",
+			"ornatedesk",
+		],
+		ingredients = {
+			'stick': 4,
+			'bat':1,
+		},
+		products = ['ornatedesk', 'shittydesk']
+	),
+EwSmeltingRecipe(
+		id_recipe = "clarinet",
+		str_name = "clarinet",
+		alias = [
+			"flute",
+			"bennygoodmanthing",
+			"vuvuzela",
+		],
+		ingredients = {
+			'bat': 1,
+			'razornuts':1,
+			'knives':1,
+			'blacklimes':1,
+			'direappleciderfuckenergy':1,
+			'sweetfish':1,
+
+		},
+		products = ['craftsmansclarinet', 'woodenvuvuzela']
+	),
+EwSmeltingRecipe(
+		id_recipe = "guitar",
+		str_name = "solid poudrin guitar",
+		alias = [
+			"poudringuitar",
+			"electricguitar",
+			"solidpoudringuitar",
+		],
+		ingredients = {
+			'slimepoudrin': 150,
+			'string':6,
+		},
+		products = ['solidpoudringuitar']
+	),
+EwSmeltingRecipe(
+		id_recipe = "drums",
+		str_name = "beast skin drums",
+		alias = [
+			"beastskindrums",
+			"drumset",
+			"drum",
+		],
+		ingredients = {
+			'dinoslimemeat': 25,
+			'dinoslimesteak' : 5,
+			'scalp': 5,
+			'string' : 3,
+			'stick' : 2
+		},
+		products = ['beastskindrums']
+	),
+EwSmeltingRecipe(
+		id_recipe = "xylophone",
+		str_name = "fish bone xylophone",
+		alias = [
+			"xylo",
+			"metallophone",
+			"fishbonexylophone",
+		],
+		ingredients = {
+			'nuclearbream' : 1,
+			'largebonedlionfish' : 2,
+			'plebefish':3,
+			'sweetfish':1,
+			'stick':1
+		},
+		products = ['fishbonexylophone']
+	),
+EwSmeltingRecipe(
+		id_recipe = "maracas",
+		str_name = "gourd maracas",
+		alias = [
+			"gourdmaracas",
+			"shakers",
+			"rattle",
+		],
+		ingredients = {
+			'pulpgourds' : 1,
+			'suganmanuts' : 1,
+			'sludgeberries':1,
+			'razornuts':1,
+			'joybeans':1,
+			'phosphorpoppies':1
+		},
+		products = ['gourdmaracas']
 	),
 ]
 smelting_recipe_list += ewdebug.debugrecipes
@@ -12590,7 +13868,7 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 	sap_spend = min(sap_spend, combat_data.sap)
 
 	return strat_used, sap_spend
-	
+
 def get_strat_b(combat_data, in_range, first_turn, active):
 	base_attack = 20
 	base_evade = 10
@@ -12781,7 +14059,7 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 		else:
 			weight_block *= 3
 			weight_evade *= 2
-			
+
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
@@ -13348,11 +14626,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_spontaneouscombustion = "spontaneouscombustion"
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother" 
+mutation_id_sharptoother = "sharptoother"
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -13380,7 +14658,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill" 
+mutation_id_dressedtokill = "dressedtokill"
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"
@@ -13792,6 +15070,22 @@ for furniture in furniture_list:
 		furniture_lgbt.append(furniture.id_furniture)
 	elif furniture.furn_set == "leather":
 		furniture_leather.append(furniture.id_furniture)
+	elif furniture.furn_set == "church":
+		furniture_church.append(furniture.id_furniture)
+	elif furniture.furn_set == "pony":
+		furniture_pony.append(furniture.id_furniture)
+	elif furniture.furn_set == "blackvelvet":
+		furniture_blackvelvet.append(furniture.id_furniture)
+	elif furniture.furn_set == "seventies":
+		furniture_seventies.append(furniture.id_furniture)
+	elif furniture.furn_set == "slimecorp":
+		furniture_slimecorp.append(furniture.id_furniture)
+	elif furniture.furn_set == "shitty":
+		furniture_shitty.append(furniture.id_furniture)
+	elif furniture.furn_set == "instrument":
+		furniture_instrument.append(furniture.id_furniture)
+	elif furniture.furn_set == "specialhue":
+		furniture_specialhue.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
@@ -14094,7 +15388,7 @@ nobite_text = [
     	"You see a bird carry off a Plebefish in the distance... Good riddance...",
     	"You spot a stray bullet in the distance...",
     	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..." 
+    	"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -14128,8 +15422,8 @@ help_responses = {
 	# Additional gameplay mechanics, part 2
 	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have two slime poudrins, you can use **'!smelt cosmetic'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **Princep** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic**. To check which cosmetics you have adorned, you can use !data.",
-	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.",
-	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
+	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
+	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To place crops into flower pots, do **pot [item]** and **unpot [item]** To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
 	"stocks":"**The Stock Exchange** is a sub-zone within downtown NLACakaNM, open only during the daytime (6AM-8PM). It allows players to **'!invest'** in various **'!stocks'**, which not only affects their own personal monetary gains, but the city's economy as well. Stocks will shift up and down value, which affects the price of food associated with the food chains of those respective stocks. The rate of exchange for stocks can be checked with **'!rates'**, and to withdraw your **'!shares'** from a stock, use **'!withdraw [amount] [stock]'** (the same logic also applies to !invest). Additionally, players may **'!transfer'** their slimecoin to other players at any time of the day while in the stock exchange, but at the cost of a 5% broker's fee and a 20 minute cooldown on subsequent transfers.",
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
@@ -14164,7 +15458,7 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase."
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -14342,7 +15636,7 @@ enemy_drop_tables = {
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
 	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
-	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
+	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
@@ -14461,7 +15755,7 @@ world_events = [
 		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
 		str_event_end = "The wall collapses.",
 	),
-	
+
 ]
 
 event_type_to_def = {}
@@ -14779,10 +16073,35 @@ pray_responses_list = [
 dance_responses = [
 	"{} busts a move. Wow, look at 'em go!",
 	"{} gets down and boogies! Groovy!",
-	"{} does a headstand and starts breakdancing!",
+	"{} does a headstand and does a 720 degree spin!",
 	"{} starts flossing fast and hard!",
 	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} cracks the whip! Watch them go at it!",
+	"{} performs the Nae Nae! https://en.wikipedia.org/wiki/Nae_Nae",
+	"{} does the Default Dance! You hear the familiar Fortnite jingle go off in your head.",
+	"{} gets down on the floor and does the worm! Their rhythm is off the charts!",
+	"{} spins around like a Laotian Toprock dancer! Whoa, be careful not to kick anyone, big guy!",
+	"{} does the monkey! Man, they're pretty!",
+	"{} does the charleston. What is this, the 20's? They do look kinda cool though...",
+	"{} starts breakdancing, Capoeira style! They almost knock someone's teeth out with their swift leg swings!",
+	"{} does a triple backflip! Hot diggedy!",
+	"{} performs a double Cartwheel! Not really a dance move, but we'll take it!",
+	"{} starts a Conga line! The party's over here!",
+	"{} does a moonwalk! They're smooth as heck!",
+	"{} does the robot! They manage to pull it off in a way that doesn't seem totally autistic!",
+	"{} does the carlton! It's anything BUT unusual!",
+	"{} starts tap dancing! They really start puttin' on the ritz for sure!",
+	"{} pumps their fist in the air over and over!",
+	"{} does a Flamenco dance! Their grace and elegance is unmatched!",
+	"{} walks like an Egyptian! Wow, racist much???",
+	"{} does an old-fashioned breakdance! Hot damn!",
+	"{} does the traditional Ukrainian Hopak! Their legs flail back and forth!",
+	"{} performs the Mannrobics taunt! They feel the burn!",
+	"{} gets the urge to !dab, but holds back with all their might.",
+	"{} gets the urge to !thrash, but holds back with all their might.",
+	"{} just kind of stands there, awkwardly. What did you expect?",
 	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+	# "{} does the Mayor Pete dance!", -- hm, maybe not...
 ]
 
 # list of genres and aliases
@@ -14841,7 +16160,57 @@ zine_commands = [
 	cmd_setpages,
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
-	]
+]
+
+curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
+	"fag":30,
+	"shit":10,
+	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"dumbass": 10,
+	"cunt":30,
+	"fuck":10,
+	"bitch":10,
+	"bastard":5,
+	"nigger":80,
+	"kike":80,
+	"cuck":30,
+	#"chink":50,
+	"chinaman":50,
+	"gook":50,
+	"injun":50,
+	"bomboclaat":80,
+	"mick":50,
+	"pickaninny":50,
+	"tarbaby":50,
+	"towelhead":50,
+	"wetback":50,
+	"zipperhead":50,
+	"spick":50,
+	"dyke":50,
+	"tranny":80,
+	"dickhead":20,
+	"retard":30,
+	"buster":100,
+	"kraker":100,
+	"beaner":50,
+	"wanker":10,
+	"twat":10,
+}
+
+curse_responses = [ # scold the player for swearing
+	"Watch your language!",
+	"Another one for the swear jar...",
+	"Do you kiss your mother with that mouth?",
+	"Wow, maybe next time be a little nicer, won't you?",
+	"If you don't have anything nice to say, then don't say anything at all.",
+	"Wow, racist much???",
+	"Now that's just plain rude.",
+	"And just like that, some of your precious SlimeCoin goes right down the drain.",
+	"Calm down that attitude of yours, will you?",
+	"Your bad manners have costed you a fraction of your SlimeCoin!",
+	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
+	#"You know, don't, say, s-swears."
+]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

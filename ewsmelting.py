@@ -45,12 +45,16 @@ class EwSmeltingRecipe:
 async def smelt(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
+
 	# Find sought recipe.
 	if cmd.tokens_count > 1:
 		sought_result = ewutils.flattenTokenListToString(cmd.tokens[1:])
 		found_recipe = ewcfg.smelting_recipe_map.get(sought_result)
 
 		if found_recipe != None:
+			if 'soul' in found_recipe.products:
+				return await smeltsoul(cmd=cmd)
+
 			# Checks what ingredients are needed to smelt the recipe.
 			necessary_ingredients = found_recipe.ingredients
 			necessary_ingredients_list = []
@@ -59,6 +63,8 @@ async def smelt(cmd):
 
 			# Seeks out the necessary ingredients in your inventory.
 			missing_ingredients = []
+
+
 			for matched_item in necessary_ingredients:
 				necessary_items = necessary_ingredients.get(matched_item)
 				necessary_str = "{} {}".format(necessary_items, matched_item)
@@ -161,15 +167,23 @@ async def smelt(cmd):
 
 					item_props = ewitem.gen_item_props(item)
 
-					ewitem.item_create(
+					newitem_id = ewitem.item_create(
 						item_type = item.item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
 						item_props = item_props
 					)
 
+
 				for id_item in owned_ingredients:
-					ewitem.item_delete(id_item = id_item)
+					item_check = ewitem.EwItem(id_item=id_item)
+					if item_check.item_props.get('id_cosmetic') != 'soul':
+						ewitem.item_delete(id_item = id_item)
+					else:
+						newitem = ewitem.EwItem(id_item=newitem_id)
+						newitem.item_props['target'] = id_item
+						newitem.persist()
+						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.message.server.id)
 
 				name = ""
 				if hasattr(item, 'str_name'):
@@ -189,6 +203,22 @@ async def smelt(cmd):
 
 	# Send response
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def smeltsoul(cmd):
+	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if not item:
+		response = "You can't rip a soul out of a nonexistent object."
+	else:
+		item_obj = ewitem.EwItem(id_item=item.get('id_item'))
+		if item_obj.item_props.get('target') != None and item_obj.item_props.get('target') != "":
+			targetid = item_obj.item_props.get('target')
+			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.message.server.id)
+			response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
+			ewitem.item_delete(id_item=item.get('id_item'))
+		else:
+			response = "That's not a reanimated corpse. It only looks like one. Get rid of the fake shit and we'll get started."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 def unwrap(id_user = None, id_server = None, item = None):
 	response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
