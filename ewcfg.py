@@ -15256,6 +15256,12 @@ status_sapfatigue_id = "sapfatigue"
 status_rerollfatigue_id = "rerollfatigue"
 status_high_id = "high"
 
+status_injury_head_id = "injury_head"
+status_injury_torso_id = "injury_torso"
+status_injury_arms_id = "injury_arms"
+status_injury_legs_id = "injury_legs"
+
+
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
 
@@ -15334,6 +15340,35 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_rerollfatigue_id,
 	),
+	EwStatusEffectDef(
+		id_status = status_injury_head_id,
+		str_describe = "Their head appears to be {severity} damaged.",
+		str_describe_self = "Your head appears to be {severity} damaged.",
+		miss_mod_self = 0.05,
+		crit_mod_self = -0.1,
+		miss_mod = -0.01,
+		crit_mod = 0.01,
+	),
+	EwStatusEffectDef(
+		id_status = status_injury_torso_id,
+		str_describe = "Their torso appears to be {severity} damaged.",
+		str_describe_self = "Your torso appears to be {severity} damaged.",
+	),
+	EwStatusEffectDef(
+		id_status = status_injury_arms_id,
+		str_describe = "Their arms appear to be {severity} damaged.",
+		str_describe_self = "Your arms appear to be {severity} damaged.",
+		miss_mod_self = 0.05,
+		crit_mod_self = -0.1,
+	),
+	EwStatusEffectDef(
+		id_status = status_injury_legs_id,
+		str_describe = "Their legs appear to be {severity} damaged.",
+		str_describe_self = "Your legs appear to be {severity} damaged.",
+		miss_mod = -0.06,
+		crit_mod = 0.03,
+	),
+	
 ]
 
 status_effects_def_map = {}
