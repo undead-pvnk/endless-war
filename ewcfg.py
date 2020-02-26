@@ -22,6 +22,7 @@ from ewfish import EwFish
 from ewapt import EwFurniture
 from ewworldevent import EwEventDef
 from ewdungeons import EwDungeonScene
+from ewtrauma import EwTrauma, EwHitzone
 import ewdebug
 
 # Global configuration options.
@@ -1732,30 +1733,6 @@ actor_decay = "decay"
 # The highest and lowest level your weaponskill may be on revive. All skills over this level reset to these.
 weaponskill_max_onrevive = 6
 weaponskill_min_onrevive = 0
-
-# Places you might get !shot
-hitzone_list = [
-	"wrist",
-	"leg",
-	"arm",
-	"upper back",
-	"foot",
-	"shoulder",
-	"neck",
-	"kneecap",
-	"obliques",
-	"solar plexus",
-	"Achilles' tendon",
-	"jaw",
-	"ankle",
-	"trapezius",
-	"thigh",
-	"chest",
-	"gut",
-	"abdomen",
-	"lower back",
-	"calf"
-]
 
 # User statistics we track
 stat_max_slimes = 'max_slimes'
@@ -15381,6 +15358,82 @@ stackable_status_effects = [
 	status_repelled_id,
 	status_repelaftereffects_id,
 ]
+
+injury_weights = {
+	status_injury_head_id : 1,
+	status_injury_torso_id : 5,
+	status_injury_arms_id : 2,
+	status_injury_legs_id : 2
+}
+
+
+# Places you might get !shot
+hitzones = [
+	EwHitzone(
+		name = "head",
+		aliases = [
+			"neck",
+			"jaw",
+			"face",
+			"nose",
+		],
+		id_injury = status_injury_head_id,
+	),
+	EwHitzone(
+		name = "torso",
+		aliases = [
+			"upper back",
+			"obliques",
+			"solar plexus",
+			"trapezius",
+			"chest",
+			"gut",
+			"abdomen",
+			"lower back",
+		],
+		id_injury = status_injury_torso_id,
+	),
+	EwHitzone(
+		name = "leg",
+		aliases = [
+			"foot",
+			"kneecap",
+			"Achilles' tendon",
+			"ankle",
+			"thigh",
+			"calf",
+		],
+		id_injury = status_injury_legs_id,
+	),
+	EwHitzone(
+		name = "arm",
+		aliases = [
+			"hand",
+			"wrist",
+			"shoulder",
+			"elbow",
+		],
+		id_injury = status_injury_arms_id,
+	),
+]
+
+hitzone_list = []
+hitzone_map = {}
+
+for hz in hitzones:
+	hitzone_list.append(hz.name)
+	hitzone_map[hz.name] = hz
+
+	for alias in hz.aliases:
+		hitzone_list.append(alias)
+		hitzone_map[alias] = hz
+
+	hitzone_map[hz.id_injury] = hz
+
+trauma_list = [
+
+]
+
 # Shitty bait that always yields Plebefish while fishing.
 plebe_bait = []
 

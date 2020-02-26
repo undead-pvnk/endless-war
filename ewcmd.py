@@ -219,8 +219,23 @@ def gen_data_text(
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
 				status_flavor = ewcfg.status_effects_def_map.get(status)
+
+				severity = ""
+				try:
+					value_int = int(status_effect.value)
+					if value_int < 3:
+						severity = "lightly"
+					elif value_int < 7:
+						severity = "moderately"
+					else:
+						severity = "severely"
+				except:
+					pass
+
+				format_status = {'severity': severity}
+
 				if status_flavor is not None:
-					response_block += status_flavor.str_describe + " "
+					response_block += status_flavor.str_describe.format_map(format_status) + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
@@ -354,8 +369,23 @@ async def data(cmd):
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
 				status_flavor = ewcfg.status_effects_def_map.get(status)
+
+				severity = ""
+				try:
+					value_int = int(status_effect.value)
+					if value_int < 3:
+						severity = "lightly"
+					elif value_int < 7:
+						severity = "moderately"
+					else:
+						severity = "severely"
+				except:
+					pass
+
+				format_status = {'severity': severity}
+
 				if status_flavor is not None:
-					response_block += status_flavor.str_describe_self + " "
+					response_block += status_flavor.str_describe_self.format_map(format_status) + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))

@@ -305,6 +305,23 @@ def formatNiceTime(seconds = 0, round_to_minutes = False, round_to_hours = False
 		time_tokens.append("0 seconds")
 	return formatNiceList(names = time_tokens, conjunction = "and")
 
+""" weighted choice. takes a dict of element -> weight and returns a random element """
+def weightedChoice(weight_map):
+	weight_sum = 0
+	elem_list = []
+	weight_sums = []
+	for elem in weight_map:
+		weight_sum += weight_map.get(elem)
+		elem_list.append(elem)
+		weight_sums.append(weight_sum)
+
+	rand = random.random() * weight_sum
+
+	for i in range(len(weight_sums)):
+		weight = weight_sums[i]
+		if rand < weight:
+			return elem_list[i]
+	
 """ turn a list of Users into a list of their respective names """
 def userListToNameString(list_user):
 	names = []

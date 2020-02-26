@@ -512,7 +512,7 @@ class EwUser:
 						status_effect.time_expire += time_expire
 						response = status.str_acquire
 
-					status_effect.persist() 
+					status_effect.persist()
 				else:
 					response = status.str_acquire
 					
@@ -554,7 +554,26 @@ class EwUser:
 				))
 		except:
 			ewutils.logMsg("Failed to clear status effects for user {}.".format(self.id_user))
-				
+		
+
+	def apply_injury(self, id_injury, severity, source):
+		statuses = self.getStatusEffects()
+
+		if id_injury in statuses:
+			status_data = EwStatusEffect(id_status = id_injury, user_data = self)
+			
+			if status_data.value > severity:
+				status_data.value += 1
+			else:
+				status_data.value = severity
+
+			status_data.source = source
+
+			status_data.persist()
+
+		else:
+			self.applyStatus(id_status = id_injury, value = severity, source = source)
+		
 	def get_weapon_capacity(self):
 		mutations = self.get_mutations()
 		base_capacity = ewutils.weapon_carry_capacity_bylevel(self.slimelevel)

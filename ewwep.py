@@ -532,7 +532,12 @@ async def attack(cmd):
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 
 			# Weaponized flavor text.
-			randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
+			hitzone = get_hitzone()
+			randombodypart = hitzone.name
+			if random.random < 0.5:
+				randombodypart = random.choice(hitzone.aliases)
+
+			#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
 			# Weapon-specific adjustments
 			if weapon != None and weapon.fn_effect != None:
@@ -685,6 +690,8 @@ async def attack(cmd):
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
+
+			injury_severity = get_injury_severity(shootee_data, slimes_damage, crit)
 
 			# Damage stats
 			ewstats.track_maximum(user = user_data, metric = ewcfg.stat_max_hitdealt, value = slimes_damage)
@@ -878,6 +885,10 @@ async def attack(cmd):
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 				else:
 					# A non-lethal blow!
+					
+					# apply injury
+					if injury_severity > 0:
+						shootee_data.apply_injury(hitzone.id_injury, injury_severity, user_data.id_user)
 
 					if weapon != None:
 						if miss:
@@ -1838,7 +1849,12 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 		
 	# Weaponized flavor text.
-	randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
+	hitzone = get_hitzone()
+	randombodypart = hitzone.name
+	if random.random < 0.5:
+		randombodypart = random.choice(hitzone.aliases)
+
+	#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
 	# Weapon-specific adjustments
 	if weapon != None and weapon.fn_effect != None:
@@ -2551,3 +2567,27 @@ def get_sap_armor(shootee_data, sap_ignored):
 
 	sap_armor = 10 / (10+effective_hardened_sap)
 	return sap_armor
+
+def get_hitzone(injury_map = None):
+	if injury_map == None:
+		injury_map = ewcfg.injury_weights
+
+	injury = ewutils.weightedChoice(injury_map)
+
+	hitzone = ewcfg.hitzone_map.get(injury)
+
+	return hitzone
+
+def get_injury_severity(shootee_data, slimes_damage, crit):
+
+	severity = 0
+	severity += slimes_damage / shootee_data.slimes
+	severity *= 10
+
+	if crit:
+		severity += 2
+
+	severity += random.randrange(-2, 3)
+	severity = max(0, round(severity))
+
+	return severity

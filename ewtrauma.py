@@ -8,18 +8,18 @@ import discord
 
 class EwTrauma:
 
-	# The mutation's name
+	# The trauma's name
 	id_trauma = ""
 
-	# String used to describe the mutation when you !data yourself
+	# String used to describe the trauma when you !data yourself
 	str_describe_self = ""
 
-	# String used to describe the mutation when you !data another player
+	# String used to describe the trauma when you !data another player
 	str_describe_other = ""
 
 
 	def __init__(self,
-		id_mutation = "",
+		id_trauma = "",
 		str_describe_self = "",
 		str_describe_other = "",
 		):
@@ -34,5 +34,23 @@ class EwTrauma:
 			str_describe_other = "They have the {} trauma.".format(self.id_trauma)
 		self.str_describe_other = str_describe_other
 
+
+class EwHitzone:
+	
+
+	name = ""
+
+	aliases = []
+
+	id_injury = ""
+
+	def __init__(self,
+		name = "",
+		aliases = [],
+		id_injury = "",
+	):
+		self.name = name
+		self.aliases = aliases
+		self.id_injury = id_injury
 
 
