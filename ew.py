@@ -90,6 +90,8 @@ class EwUser:
 
 		self.hardened_sap = max(0, self.hardened_sap)
 
+		self.degradation = max(0, self.degradation)
+
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
 		change = int(n)

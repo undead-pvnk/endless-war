@@ -44,21 +44,28 @@ async def revive(cmd):
 				#market_data.negaslime += player_data.slimes
 				player_data.change_slimes(n = -player_data.slimes) # set to 0
 
-			# Give player some initial slimes.
+			# reset slimelevel to zero
 			player_data.slimelevel = 0
-			player_data.change_slimes(n = ewcfg.slimes_onrevive)
 
 			# Set time of last revive. This used to provied spawn protection, but currently isn't used.
 			player_data.time_lastrevive = time_now
 
-			# Set life state. This is what determines whether the player is actually alive.
-			player_data.life_state = ewcfg.life_state_juvenile
-
+			
 			if player_data.degradation >= 100:
 				player_data.life_state = ewcfg.life_state_shambler
+				player_data.change_slimes(n = 0.5 * ewcfg.slimes_shambler)
+				player_data.poi = player_data.poi_death
+				if player_data.poi == "":
+					player_data.poi = ewcfg.poi_id_downtown
+			else:
+				# Set life state. This is what determines whether the player is actually alive.
+				player_data.life_state = ewcfg.life_state_juvenile
+				# Give player some initial slimes.
+				player_data.change_slimes(n = ewcfg.slimes_onrevive)
+				# Get the player out of the sewers.
+				player_data.poi = ewcfg.poi_id_downtown
 
-			# Get the player out of the sewers.
-			player_data.poi = ewcfg.poi_id_downtown
+
 
 			player_data.persist()
 			market_data.persist()

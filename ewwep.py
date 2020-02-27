@@ -315,7 +315,7 @@ def canAttack(cmd):
 	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
 
-	elif user_data.weapon == -1:
+	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
 	elif cmd.mentions_count <= 0:
 		# user is going after enemies rather than players
@@ -329,12 +329,13 @@ def canAttack(cmd):
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
 		if (time_now - user_data.time_lastkill) < ewcfg.cd_kill:
 			# disallow kill if the player has killed recently
 			response = "Take a moment to appreciate your last slaughter."
 
-		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
+		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False and user_isshambler == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				response = "Juveniles lack the moral fiber necessary for violence."
@@ -357,6 +358,7 @@ def canAttack(cmd):
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
+		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -372,7 +374,7 @@ def canAttack(cmd):
 		elif ewmap.poi_is_pvp(shootee_data.poi) == False:
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
-		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False:
+		elif user_iskillers == False and user_isrowdys == False and user_isslimecorp == False and user_isshambler == False:
 			# Only killers, rowdys, the cop killer, and rowdy fucker can shoot people.
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				response = "Juveniles lack the moral fiber necessary for violence."
@@ -391,7 +393,7 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
-		elif time_now > shootee_data.time_expirpvp:
+		elif time_now > shootee_data.time_expirpvp and shootee_data.life_state != ewcfg.life_state_shambler:
 			# Target is not flagged for PvP.
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
@@ -790,18 +792,19 @@ async def attack(cmd):
 					else:
 						scalp_text = ""
 					
-					# Drop shootee scalp
-					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
-						id_user = cmd.message.author.id,
-						id_server = cmd.message.server.id,
-						item_props = {
-							'id_cosmetic': 'scalp',
-							'cosmetic_name': "{}'s scalp".format(shootee_name),
-							'cosmetic_desc': "A scalp.{}".format(scalp_text),
-							'adorned': 'false'
-						}
-					)
+					if shootee_data.life_state != ewcfg.life_state_shambler:
+						# Drop shootee scalp
+						ewitem.item_create(
+							item_type = ewcfg.it_cosmetic,
+							id_user = cmd.message.author.id,
+							id_server = cmd.message.server.id,
+							item_props = {
+								'id_cosmetic': 'scalp',
+								'cosmetic_name': "{}'s scalp".format(shootee_name),
+								'cosmetic_desc': "A scalp.{}".format(scalp_text),
+								'adorned': 'false'
+							}
+						)
 
 					# Give a bonus to the player's weapon skill for killing a stronger player.
 					if shootee_data.slimelevel >= user_data.slimelevel and shootee_data.slimelevel >= user_data.weaponskill:
@@ -820,6 +823,9 @@ async def attack(cmd):
 					levelup_response = user_data.change_slimes(n = slimes_tokiller, source = ewcfg.source_killing)
 					if ewcfg.mutation_id_fungalfeaster in user_mutations:
 						user_data.hunger = 0
+
+					if shootee_data.life_state != ewcfg.life_state_shambler:
+						user_data.degradation -= int(shootee_data.slimelevel / 10)
 
 					user_data.persist()
 					district_data.persist()

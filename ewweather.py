@@ -105,27 +105,15 @@ async def weather_tick(id_server = None):
 
 				if not protected:
 
-					slimes_to_erase = user_data.slimes * 0.01 * ewcfg.weather_tick_length
-					slimes_to_erase = max(slimes_to_erase, ewcfg.weather_tick_length * 1000)
-					slimes_to_erase = min(user_data.slimes, slimes_to_erase)
+					if user_data.life_state == ewcfg.life_state_shambler:
+						slime_gain = (ewcfg.slimes_shambler - user_data.slimes) / 10
+						slime_gain = max(0, int(slime_gain))
+						user_data.change_slimes(n = slime_gain, source = ewcfg.source_weather)
+						
+					else:
+						if random.random() < 0.01:
+							user_data.degradation += 1
 
-					#round up or down, randomly weighted
-					remainder = slimes_to_erase - int(slimes_to_erase)
-					if random.random() < remainder: 
-						slimes_to_erase += 1 
-					slimes_to_erase = int(slimes_to_erase)
-
-					user_data.change_slimes(n = - slimes_to_erase, source = ewcfg.source_weather)
-
-					response = "*{uname}*: The bicarbonate rain dissolves {slimeloss:,} of your slime.".format(uname = player_data.display_name, slimeloss = slimes_to_erase)
-					resp_cont.add_channel_response(user_poi.channel, response)
-					if user_data.slimes <= 0:
-						die_resp = user_data.die(cause = ewcfg.cause_weather)
-						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
-						resp_cont.add_response_container(die_resp)
-						member = server.get_member(user_data.id_user)
-						if member != None:
-							resp_cont.add_member_to_update(member)
 					user_data.persist()
 
 				

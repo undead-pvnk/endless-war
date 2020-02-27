@@ -953,6 +953,7 @@ slimes_pertile = 50
 slimes_tomanifest = -100000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
+slimes_shambler = 1000000
 
 # hunger
 min_stamina = 100
