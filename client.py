@@ -675,6 +675,7 @@ async def on_member_remove(member):
 		if user_data.poi in ewcfg.tutorial_pois:
 			return
 
+		user_data.trauma = ewcfg.trauma_id_suicide
 		user_data.die(cause = ewcfg.cause_leftserver)
 		user_data.persist()
 
@@ -1210,6 +1211,7 @@ async def on_message(message):
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		
 		if ewutils.active_restrictions.get(user_data.id_user) == 3:
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause=ewcfg.cause_praying)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=client, member=message.author)

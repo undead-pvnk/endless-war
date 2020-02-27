@@ -1399,6 +1399,7 @@ async def russian_roulette(cmd):
 					ewitem.item_loot(member = author, id_user_target = member.id)
 					
 					challenger.id_killer = challenger.id_user
+					challenger.trauma = ewcfg.trauma_id_suicide
 					challenger.die(cause = ewcfg.cause_suicide)
 
 					if soulstake:
@@ -1416,6 +1417,7 @@ async def russian_roulette(cmd):
 					ewitem.item_loot(member = member, id_user_target = author.id)
 
 					challengee.id_killer = challengee.id_user
+					challenger.trauma = ewcfg.trauma_id_suicide
 					challengee.die(cause = ewcfg.cause_suicide)
 					if soulstake:
 						ewitem.surrendersoul(giver=challengee.id_user, receiver=challenger.id_user, id_server = challenger.id_server)

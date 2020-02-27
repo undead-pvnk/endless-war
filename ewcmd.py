@@ -185,10 +185,7 @@ def gen_data_text(
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
 
-		trauma = ewcfg.weapon_map.get(user_data.trauma)
-		# if trauma is not gathered from weapon_map, get it from attack_type_map
-		if trauma == None:
-			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
@@ -328,10 +325,7 @@ async def data(cmd):
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4)))
 
-		trauma = ewcfg.weapon_map.get(user_data.trauma)
-		# if trauma is not gathered from weapon_map, get it from attack_type_map
-		if trauma == None:
-			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
@@ -1094,6 +1088,7 @@ async def pray(cmd):
 			await asyncio.sleep(3)
 
 			user_data = EwUser(member = cmd.message.author)
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause = ewcfg.cause_praying)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1324,6 +1319,7 @@ async def push(cmd):
 
 
 
+		targetmodel.trauma = ewcfg.trauma_id_environment
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 
@@ -1370,6 +1366,7 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
+		targetmodel.trauma = ewcfg.trauma_id_environment
 		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)

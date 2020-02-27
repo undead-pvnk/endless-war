@@ -524,6 +524,7 @@ async def donate(cmd):
 				response = "Acid-green flashes of light and bloodcurdling screams emanate from small window of SlimeCorp HQ. Unfortunately, you did not survive the procedure. Your body is dumped down a disposal chute to the sewers."
 				market_data.donated_slimes += user_data.slimes
 				market_data.persist()
+				user_data.trauma = ewcfg.trauma_id_environment
 				die_resp = user_data.die(cause = ewcfg.cause_donation)
 				user_data.persist()
 				# Assign the corpse role to the player. He dead.
@@ -603,6 +604,8 @@ async def xfer(cmd):
 
 	if cmd.message.author.id == member.id:
 		user_data.id_killer = cmd.message.author.id
+		
+		user_data.trauma = ewcfg.trauma_id_environment
 		user_data.die(cause = ewcfg.cause_suicide)
 		user_data.persist()
 

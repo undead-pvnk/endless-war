@@ -557,6 +557,7 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
 
+				trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 				#round up or down, randomly weighted
 				remainder = slimes_to_bleed - int(slimes_to_bleed)
@@ -565,7 +566,12 @@ async def bleedSlimes(id_server = None):
 				slimes_to_bleed = int(slimes_to_bleed)
 
 				if slimes_to_bleed >= 1:
-					user_data.bleed_storage -= slimes_to_bleed
+
+					bleed_mod = 1
+					if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
+						bleed_mod -= 0.5 * user_data.degradation / 100
+
+					user_data.bleed_storage -= round(slimes_to_bleed * bleed_mod)
 					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
 
 					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
@@ -573,6 +579,7 @@ async def bleedSlimes(id_server = None):
 					district_data.persist()
 
 					if user_data.slimes < 0:
+						user_data.trauma = ewcfg.trauma_id_environment
 						die_resp = user_data.die(cause = ewcfg.cause_bleeding)
 						#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 						player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
@@ -759,6 +766,7 @@ async def burnSlimes(id_server = None):
 
 				# Kill player
 				user_data.id_killer = killer_data.id_user
+				user_data.trauma = ewcfg.trauma_id_environment
 				die_resp = user_data.die(cause = ewcfg.cause_burning)
 				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
@@ -1250,7 +1258,11 @@ def get_move_speed(user_data):
 	time_now = int(time.time())
 	mutations = user_data.get_mutations()
 	market_data = EwMarket(id_server = user_data.id_server)
+	trauma = ewcfg.trauma_map.get(user_data.trauma)
 	move_speed = 1
+
+	if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
+		move_speed *= (1 - 0.5 * user_data.degradation / 100)
 
 	if ewcfg.mutation_id_organicfursuit in mutations and check_fursuit_active(user_data.id_server):
 		move_speed *= 2
@@ -1315,6 +1327,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 			district_data.persist()
 			slimes_dropped = user_data.totaldamage + user_data.slimes
 
+			user_data.trauma = ewcfg.trauma_id_environment
 			user_data.die(cause = ewcfg.cause_killing)
 			#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 			user_data.persist()
@@ -1439,7 +1452,14 @@ def sap_tick(id_server):
 
 		for user in users:
 			user_data = EwUser(id_user = user[0], id_server = id_server)
-			user_data.sap += 1
+			trauma = ewcfg.trauma_map.get(user_data.trauma)
+			sap_chance = 1
+			if trauma != None and trauma.trauma_class == ewcfg.trauma_class_sapregeneration:
+				sap_chance -= 0.5 * user_data.degradation / 100
+
+			if random.random() < sap_chance:
+				user_data.sap += 1
+
 			user_data.limit_fix()
 			user_data.persist()
 

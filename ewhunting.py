@@ -549,7 +549,7 @@ class EwEnemy:
 							response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 								name_target=target_player.display_name)
 
-							target_data.trauma = ""
+							target_data.trauma = ewcfg.trauma_id_environment
 
 						if target_slimeoid.life_state == ewcfg.slimeoid_state_active:
 							brain = ewcfg.brain_map.get(target_slimeoid.ai)

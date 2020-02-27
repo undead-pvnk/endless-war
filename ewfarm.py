@@ -181,6 +181,12 @@ async def reap(cmd):
 					if cmd.message.channel.name == ewcfg.channel_jr_farms:
 						slime_gain = int(slime_gain / 4)
 
+					trauma = ewcfg.trauma_map.get(user_data.trauma)
+					if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+						slime_gain *= (1 - 0.5 * user_data.degradation / 100)
+
+					slime_gain = max(0, round(slime_gain))
+
 					response = "You reap what you’ve sown. Your investment has yielded {:,} slime, ".format(slime_gain)
 
 					# Determine if an item is found.

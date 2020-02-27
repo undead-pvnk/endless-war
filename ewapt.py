@@ -1522,6 +1522,7 @@ async def trickortreat(cmd = None):
 					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 
+					user_data.trauma = ewcfg.trauma_id_environment
 					user_data.die(cause=ewcfg.cause_killing)
 					deathreport = "{skull} *{uname}*: You were tricked to death. {skull}".format(skull=ewcfg.emote_slimeskull, uname=player_data.display_name)
 
@@ -1617,6 +1618,7 @@ async def trickortreat(cmd = None):
 					resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
 					player_data = EwPlayer(id_user=user_data.id_user, id_server=user_data.id_server)
 
+					user_data.trauma = ewcfg.trauma_id_environment
 					user_data.die(cause=ewcfg.cause_killing)
 					deathreport = "{skull} *{uname}*: You were tricked to death. {skull}".format(skull=ewcfg.emote_slimeskull, uname=player_data.display_name)
 

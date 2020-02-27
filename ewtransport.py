@@ -358,6 +358,7 @@ async def disembark(cmd):
 				response = ewutils.formatMessage(cmd.message.author, response)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			user_data.poi = ewcfg.poi_id_slimesea
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
 			resp_cont.add_response_container(die_resp)
@@ -391,6 +392,7 @@ async def disembark(cmd):
 			district_data.change_slimes(n = user_data.slimes)
 			district_data.persist()
 			user_data.poi = stop_poi.id_poi
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause = ewcfg.cause_falling)
 			user_data.persist()
 			resp_cont.add_response_container(die_resp)

@@ -467,9 +467,15 @@ async def attack(cmd):
 		sap_damage = 0
 		sap_ignored = 0
 
-		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
-		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
-		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data), 2)
+		# Weaponized flavor text.
+		hitzone = get_hitzone()
+		randombodypart = hitzone.name
+		if random.random < 0.5:
+			randombodypart = random.choice(hitzone.aliases)
+
+		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
 
 		if shootee_weapon != None:
 			if ewcfg.weapon_class_heavy in shootee_weapon.classes:
@@ -530,12 +536,6 @@ async def attack(cmd):
 		else:
 			#hunger drain
 			user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
-
-			# Weaponized flavor text.
-			hitzone = get_hitzone()
-			randombodypart = hitzone.name
-			if random.random < 0.5:
-				randombodypart = random.choice(hitzone.aliases)
 
 			#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
@@ -867,7 +867,10 @@ async def attack(cmd):
 					else:
 						response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
 
-						shootee_data.trauma = ""
+						shootee_data.trauma = ewcfg.trauma_id_environment
+
+					if shootee_data.faction != "" and shootee_data.faction == user_data.faction:
+						shootee_data.trauma = ewcfg.trauma_id_betrayal
 
 					if slimeoid.life_state == ewcfg.slimeoid_state_active:
 						brain = ewcfg.brain_map.get(slimeoid.ai)
@@ -906,6 +909,7 @@ async def attack(cmd):
 								district_data.change_slimes(n = user_data.slimes)
 								district_data.persist()
 								shootee_data.persist()
+								user_data.trauma = ewcfg.trauma_id_environment
 								die_resp = user_data.die(cause = ewcfg.cause_backfire)
 								district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 								shootee_data = EwUser(member = member)
@@ -1077,6 +1081,7 @@ async def suicide(cmd):
 
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
+			user_data.trauma = ewcfg.trauma_id_suicide
 			die_resp = user_data.die(cause = ewcfg.cause_suicide)
 			resp_cont.add_response_container(die_resp)
 			user_data.persist()
@@ -1226,6 +1231,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 					target_data.id_killer = user_data.id_user
 
+					target_data.trauma = ewcfg.trauma_id_environment
 					target_data.die(cause = ewcfg.cause_killing)
 					#target_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 					target_data.persist()
@@ -1736,7 +1742,7 @@ async def unjam(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 # Returns the total modifier of all statuses of a certain type and target of a given player
-def apply_combat_mods(user_data = None, desired_type = None, target = None, shooter_data = None, shootee_data = None):
+def apply_combat_mods(user_data = None, desired_type = None, target = None, shooter_data = None, shootee_data = None, hitzone = None):
 
 	modifier = 0
 	if user_data != None and desired_type != None and target != None:
@@ -1746,6 +1752,7 @@ def apply_combat_mods(user_data = None, desired_type = None, target = None, shoo
 		for status in user_statuses:
 			status_flavor = ewcfg.status_effects_def_map.get(status)
 
+			# check target for targeted status effects
 			if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
 				status_data = EwStatusEffect(id_status = status, user_data = user_data)
 				if status_data.id_target != "":
@@ -1775,6 +1782,32 @@ def apply_combat_mods(user_data = None, desired_type = None, target = None, shoo
 						modifier += status_flavor.crit_mod
 					elif desired_type == ewcfg.status_effect_type_damage:
 						modifier += status_flavor.dmg_mod
+
+			# apply hitzone damage and crit mod
+			if hitzone != None and status == hitzone.id_injury and target == ewcfg.status_effect_target_self:
+				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+				try:
+					value_int = int(status_data.value)
+					
+					if desired_type == ewcfg.status_effect_type_crit:
+						modifier += 0.5 * value_int / 10
+					elif desired_type == ewcfg.status_effect_type_damage:
+						modifier += 1 * value_int / 10
+				except:
+					ewutils.logMsg("error with int conversion")
+
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
+
+		if trauma != None:
+			if target == ewcfg.status_effect_target_self:
+				if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_movespeed:
+					modifier += 0.3 * user_data.degradation / 100
+				elif desired_type == ewcfg.status_effect_type_damage and trauma.trauma_class == ewcfg.trauma_class_damage:
+					modifier -= 0.9 * user_data.degradation / 100
+
+			elif target == ewcfg.status_effect_target_other:
+				if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+					modifier -= 0.2 * user_data.degradation / 100
 
 	return modifier
 	
@@ -2172,6 +2205,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 					district_data.change_slimes(n = user_data.slimes)
 					district_data.persist()
+					user_data.trauma = ewcfg.trauma_id_environment
 					die_resp = user_data.die(cause = ewcfg.cause_backfire)
 					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 					resp_cont.add_member_to_update(cmd.message.author)
@@ -2285,6 +2319,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 async def harden_sap(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
+	statuses = user_data.getStatusEffects()
 	response = ""
 
 	if user_data.life_state == ewcfg.life_state_corpse:
@@ -2303,7 +2338,12 @@ async def harden_sap(cmd):
 		response = "You don't have that much sap to harden."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	user_data.hardened_sap += sap_to_harden
+	harden_mod = 1
+	if ewcfg.status_injury_torso_id in statuses:
+		status_data = EwStatusEffect(id_status = ewcfg.status_injury_torso_id, user_data = user_data)
+		harden_mod -= 0.5 * status_data.value / 10
+
+	user_data.hardened_sap += max(0, int(sap_to_harden * harden_mod))
 	user_data.sap -= sap_to_harden
 
 	user_data.persist()

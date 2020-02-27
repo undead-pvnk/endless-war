@@ -12,28 +12,32 @@ class EwTrauma:
 	id_trauma = ""
 
 	# String used to describe the trauma when you !data yourself
-	str_describe_self = ""
+	str_trauma_self = ""
 
 	# String used to describe the trauma when you !data another player
-	str_describe_other = ""
+	str_trauma = ""
 
+	# the trauma's effect
+	trauma_class = ""
 
 	def __init__(self,
 		id_trauma = "",
-		str_describe_self = "",
-		str_describe_other = "",
-		):
+		str_trauma_self = "",
+		str_trauma = "",
+		trauma_class = "",
+	):
 
 		self.id_trauma = id_trauma
 
-		if str_describe_self == "":
-			str_describe_self = "You have the {} trauma.".format(self.id_trauma)
-		self.str_describe_self = str_describe_self
+		if str_trauma_self == "":
+			str_trauma_self = "You have the {} trauma.".format(self.id_trauma)
+		self.str_trauma_self = str_trauma_self
 
-		if str_describe_other == "":
-			str_describe_other = "They have the {} trauma.".format(self.id_trauma)
-		self.str_describe_other = str_describe_other
+		if str_trauma == "":
+			str_trauma = "They have the {} trauma.".format(self.id_trauma)
+		self.str_trauma = str_trauma
 
+		self.trauma_class = trauma_class
 
 class EwHitzone:
 	
