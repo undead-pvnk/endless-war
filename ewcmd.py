@@ -984,6 +984,10 @@ async def fursuit(cmd):
 
 async def pray(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if cmd.message.channel.name != ewcfg.channel_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
@@ -1111,6 +1115,10 @@ async def pray(cmd):
 """recycle your trash at the SlimeCorp Recycling plant"""
 async def recycle(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 
 	if cmd.message.channel.name != ewcfg.channel_recyclingplant:
@@ -1450,6 +1458,10 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 
 async def purify(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	
 	if cmd.message.channel.name == ewcfg.channel_sodafountain:
 		if user_data.life_state == ewcfg.life_state_corpse:

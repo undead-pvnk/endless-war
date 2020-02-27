@@ -144,7 +144,7 @@ class EwUser:
 			for level in range(self.slimelevel+1, new_level+1):
 				current_mutations = self.get_mutations()
 				
-				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse and len(current_mutations) < 10:
+				if (level in ewcfg.mutation_milestones) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (len(current_mutations) < 10):
 					
 					new_mutation = random.choice(list(ewcfg.mutation_ids))
 					while new_mutation in current_mutations:
@@ -211,6 +211,11 @@ class EwUser:
 			self.hunger = 0
 			self.inebriation = 0
 			self.bounty = 0
+			
+			if self.life_state == ewcfg.life_state_shambler:
+				self.degradation += 1
+			else:
+				self.degradation += 5
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)

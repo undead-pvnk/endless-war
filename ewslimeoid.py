@@ -1077,6 +1077,10 @@ async def instructions(cmd):
 # Create a slimeoid
 async def incubateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
 	poudrin = ewitem.find_item(item_search = ewcfg.item_id_slimepoudrin, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
@@ -1139,6 +1143,10 @@ async def incubateslimeoid(cmd):
 # Create a slimeoid
 async def dissolveslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
 
@@ -1205,6 +1213,10 @@ async def dissolveslimeoid(cmd):
 
 async def growbody(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1245,6 +1257,10 @@ async def growbody(cmd):
 # shape your slimeoid's head
 async def growhead(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1284,6 +1300,10 @@ async def growhead(cmd):
 # shape your slimeoid's legs
 async def growlegs(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1323,6 +1343,10 @@ async def growlegs(cmd):
 # shape your slimeoid's weapon
 async def growweapon(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1362,6 +1386,10 @@ async def growweapon(cmd):
 # shape your slimeoid's armor
 async def growarmor(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1401,6 +1429,10 @@ async def growarmor(cmd):
 # shape your slimeoid's special ability
 async def growspecial(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1440,6 +1472,10 @@ async def growspecial(cmd):
 # shape your slimeoid's brain.
 async def growbrain(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1480,6 +1516,10 @@ async def growbrain(cmd):
 async def nameslimeoid(cmd):
 	name = ""
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1519,6 +1559,10 @@ async def nameslimeoid(cmd):
 #allocate a point to ATK
 async def raisemoxie(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1561,6 +1605,10 @@ async def raisemoxie(cmd):
 #allocate a point to ATK
 async def lowermoxie(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1603,6 +1651,10 @@ async def lowermoxie(cmd):
 #allocate a point to DEF
 async def raisegrit(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1645,6 +1697,10 @@ async def raisegrit(cmd):
 #allocate a point to ATK
 async def lowergrit(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1687,6 +1743,10 @@ async def lowergrit(cmd):
 #allocate a point to DEF
 async def raisechutzpah(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1729,6 +1789,10 @@ async def raisechutzpah(cmd):
 #allocate a point to ATK
 async def lowerchutzpah(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
@@ -1774,6 +1838,10 @@ async def lowerchutzpah(cmd):
 # complete a slimeoid
 async def spawnslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	response = ""
 	#roles_map_user = ewutils.getRoleMap(message.author.roles)
@@ -2471,6 +2539,10 @@ async def saturateslimeoid(cmd):
 
 async def restoreslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)

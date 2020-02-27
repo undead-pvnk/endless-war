@@ -1048,6 +1048,9 @@ def get_faction(user_data = None, life_state = 0, faction = ""):
 
 	elif life_state == ewcfg.life_state_lucky:
 		faction_role = ewcfg.role_slimecorp
+	
+	elif life_state == ewcfg.life_state_shambler:
+		faction_role = ewcfg.role_shambler
 
 	return faction_role
 

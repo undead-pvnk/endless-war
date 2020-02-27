@@ -138,6 +138,10 @@ async def reroll_last_mutation(cmd):
 	last_mutation_counter = -1
 	last_mutation = ""
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 
@@ -198,6 +202,10 @@ async def reroll_last_mutation(cmd):
 
 async def clear_mutations(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	response = ""
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:

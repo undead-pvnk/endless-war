@@ -184,6 +184,7 @@ async def updateRoles(
 		ewcfg.role_grandfoe,
 		ewcfg.role_slimecorp,
 		ewcfg.role_tutorial,
+		ewcfg.role_shambler,
 	]
 
 	# Manage faction roles.

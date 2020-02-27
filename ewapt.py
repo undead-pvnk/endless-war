@@ -195,6 +195,10 @@ async def consult(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	response = ""
 
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at Slimecorp Real Estate in Old New Yonkers."))
 
@@ -243,6 +247,10 @@ async def signlease(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "What region would you like to rent?"))
 
 	user_data = EwUser(member=cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at Slimecorp Real Estate in Old New Yonkers."))
@@ -852,6 +860,10 @@ async def upgrade(cmd):
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	apt_model = EwApartment(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 
+	if usermodel.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if usermodel.apt_zone == ewcfg.location_id_empty:
 		response = "You don't have an apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -965,6 +977,10 @@ async def watch(cmd):
 async def add_key(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
@@ -1075,6 +1091,10 @@ async def usekey(cmd):
 async def manual_changelocks(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
@@ -1645,6 +1665,10 @@ async def cancel(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_server=playermodel.id_server, id_user=cmd.message.author.id)
 	aptmodel = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+
+	if usermodel.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if cmd.message.channel.name != ewcfg.channel_realestateagency:
 		response = "You can only null your lease at the Real Estate Agency."

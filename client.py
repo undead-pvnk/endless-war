@@ -1384,6 +1384,7 @@ async def on_message(message):
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)
 
+
 		if user_data.poi in ewcfg.tutorial_pois:	
 			return await ewdungeons.tutorial_cmd(cmd_obj)
 

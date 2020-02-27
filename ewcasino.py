@@ -56,6 +56,10 @@ async def pachinko(cmd):
 	else:
 		last_pachinkoed_times[cmd.message.author.id] = time_now
 		user_data = EwUser(member = cmd.message.author)
+		if user_data.life_state == ewcfg.life_state_shambler:
+			response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		
 		if currency_used == ewcfg.currency_slimecoin:
 			value = ewcfg.slimes_perpachinko
@@ -173,6 +177,10 @@ async def craps(cmd):
 
 		if value != None:
 			user_data = EwUser(member = cmd.message.author)
+			if user_data.life_state == ewcfg.life_state_shambler:
+				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			
 			if currency_used == ewcfg.currency_slimecoin:
 				if value == -1:
@@ -284,6 +292,10 @@ async def slots(cmd):
 		last_slotsed_times[cmd.message.author.id] = time_now
 
 		user_data = EwUser(member = cmd.message.author)
+		if user_data.life_state == ewcfg.life_state_shambler:
+			response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if currency_used == ewcfg.currency_slimecoin:
 			value = ewcfg.slimes_perslot
 
@@ -474,6 +486,10 @@ async def roulette(cmd):
 
 		if value != None:
 			user_data = EwUser(member = cmd.message.author)
+			if user_data.life_state == ewcfg.life_state_shambler:
+				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 			if currency_used == ewcfg.currency_slimecoin:
 				if value == -1:
@@ -666,6 +682,10 @@ async def baccarat(cmd):
 
 		if value != None:
 			user_data = EwUser(member = cmd.message.author)
+			if user_data.life_state == ewcfg.life_state_shambler:
+				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 			if currency_used == ewcfg.currency_slimecoin:
 				if value == -1:
@@ -1295,6 +1315,10 @@ async def russian_roulette(cmd):
 	challenger = EwUser(member = author)
 	challengee = EwUser(member = member)
 
+	if challenger.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	#Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
 		response = "You are already in the middle of a challenge."
@@ -1484,6 +1508,10 @@ async def duel(cmd):
 
 	challenger = EwUser(member=author)
 	challengee = EwUser(member=member)
+
+	if challenger.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	# Players have been challenged
 	if ewutils.active_target_map.get(challenger.id_user) != None and ewutils.active_target_map.get(challenger.id_user) != "":
@@ -1998,6 +2026,10 @@ async def skat(cmd):
 	challengee = EwUser(member = member)
 	challengee2 = EwUser(member = member2)
 	maxgame = multiplier * max(2*15*12, 2*8*24)
+
+	if challenger.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	gellphones_challengee1 = ewitem.find_item_all(item_search = ewcfg.item_id_gellphone, id_user = challengee.id_user, id_server = challengee.id_server, item_type_filter = ewcfg.it_item)
 	gellphone_active_challengee1 = False
@@ -2572,6 +2604,10 @@ async def skat_choose(cmd):
 async def betsoul(cmd):
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
 	user_inv = ewitem.inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
+	if usermodel.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if cmd.mentions_count == 1:
 		mention_target = cmd.mentions[0]
 	else:
@@ -2604,6 +2640,10 @@ async def betsoul(cmd):
 
 async def buysoul(cmd):
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if usermodel.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	casino_inv = ewitem.inventory(id_user="casinosouls", id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
 
 	if cmd.mentions_count == 1:

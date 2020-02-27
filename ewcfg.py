@@ -327,6 +327,7 @@ role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
+role_shambler = "shambler"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -355,6 +356,7 @@ faction_roles = [
 	role_grandfoe,
 	role_slimecorp,
 	role_tutorial,
+	role_shambler,
 	]
 
 role_to_pvp_role = {

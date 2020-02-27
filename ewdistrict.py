@@ -558,6 +558,10 @@ async def capture_progress(cmd):
 
 async def annex(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	time_now = int(time.time())

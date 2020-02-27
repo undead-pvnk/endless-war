@@ -470,7 +470,7 @@ async def attack(cmd):
 		# Weaponized flavor text.
 		hitzone = get_hitzone()
 		randombodypart = hitzone.name
-		if random.random < 0.5:
+		if random.random() < 0.5:
 			randombodypart = random.choice(hitzone.aliases)
 
 		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = shootee_data, hitzone = hitzone) + apply_combat_mods(user_data=shootee_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
@@ -1047,6 +1047,10 @@ async def suicide(cmd):
 	else:
 		# Get the user data.
 		user_data = EwUser(member = cmd.message.author)
+		if user_data.life_state == ewcfg.life_state_shambler:
+			response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 		user_iskillers = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_killers
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
@@ -1356,6 +1360,10 @@ async def spar(cmd):
 		else:
 			# Get killing player's info.
 			user_data = EwUser(member = cmd.message.author)
+			if user_data.life_state == ewcfg.life_state_shambler:
+				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 			weapon_item = EwItem(id_item = user_data.weapon)
 
 			# Get target's info.
@@ -1488,6 +1496,10 @@ async def spar(cmd):
 """ equip a weapon """
 async def equip(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	time_now = int(time.time())
 
 	if user_data.time_lastenlist > time_now:
@@ -1524,6 +1536,10 @@ async def annoint(cmd):
 			response = "That name is too long. ({:,}/32)".format(len(annoint_name))
 		else:
 			user_data = EwUser(member = cmd.message.author)
+			if user_data.life_state == ewcfg.life_state_shambler:
+				response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 			poudrin = ewitem.find_item(item_search = "slimepoudrin", id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
@@ -1566,6 +1582,10 @@ async def annoint(cmd):
 
 async def marry(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	weapon_item = EwItem(id_item = user_data.weapon)
 	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	display_name = cmd.message.author.display_name
@@ -1664,6 +1684,10 @@ async def marry(cmd):
 
 async def divorce(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	weapon_item = EwItem(id_item = user_data.weapon)
 	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 	if weapon != None:
@@ -1698,6 +1722,10 @@ async def divorce(cmd):
 
 async def reload(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if user_data.weapon > 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
@@ -1715,6 +1743,10 @@ async def reload(cmd):
 
 async def unjam(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if user_data.weapon > 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
@@ -2318,6 +2350,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 async def harden_sap(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	statuses = user_data.getStatusEffects()
 	response = ""
@@ -2353,6 +2389,10 @@ async def harden_sap(cmd):
 
 async def liquefy_sap(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	response = ""
 
@@ -2382,6 +2422,10 @@ async def liquefy_sap(cmd):
 
 async def dodge(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	response = ""
 
@@ -2429,6 +2473,10 @@ async def dodge(cmd):
 
 async def taunt(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	response = ""
 
@@ -2479,6 +2527,10 @@ async def taunt(cmd):
 
 async def aim(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	response = ""
 

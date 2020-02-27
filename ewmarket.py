@@ -320,6 +320,10 @@ class EwCompany:
 """ player invests slimecoin in the market """
 async def invest(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
@@ -420,6 +424,10 @@ async def invest(cmd):
 """ player withdraws slimecoin from the market """
 async def withdraw(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	time_now = round(time.time())
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 
@@ -497,6 +505,10 @@ async def withdraw(cmd):
 """ donate slime to slimecorp in exchange for slimecoin """
 async def donate(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 
 	time_now = round(time.time())
@@ -571,6 +583,10 @@ async def donate(cmd):
 async def xfer(cmd):
 	time_now = round(time.time())
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
@@ -651,6 +667,10 @@ async def xfer(cmd):
 """ show the current market exchange rate """
 async def rate(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
@@ -681,6 +701,10 @@ async def rate(cmd):
 """ show player's shares in a stock """
 async def shares(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	stock = ""
 	response = ""
 
@@ -704,6 +728,10 @@ async def shares(cmd):
 """ show all interactable stocks in the market """
 async def stocks(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if cmd.message.channel.name != ewcfg.channel_stockexchange:
 		# Only allowed in the stock exchange.
@@ -1035,6 +1063,10 @@ async def quarterlyreport(cmd):
 
 async def trade(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_trade = ewutils.active_trades.get(user_data.id_user)
 
 	if user_trade != None and len(user_trade) > 0:
@@ -1201,6 +1233,10 @@ async def trade(cmd):
 
 async def offer_item(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_trade = ewutils.active_trades.get(user_data.id_user)
 
 	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
@@ -1253,6 +1289,10 @@ async def offer_item(cmd):
 
 async def remove_offer(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_trade = ewutils.active_trades.get(user_data.id_user)
 
 	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
@@ -1297,6 +1337,10 @@ async def remove_offer(cmd):
 
 async def complete_trade(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_trade = ewutils.active_trades.get(user_data.id_user)
 
 	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
@@ -1401,6 +1445,10 @@ async def complete_trade(cmd):
 
 async def cancel_trade(cmd):
 	user_trade = ewutils.active_trades.get(cmd.message.author.id)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if user_trade != None and len(user_trade) > 0 and user_trade.get("state") > ewcfg.trade_state_proposed:
 		ewutils.end_trade(cmd.message.author.id)

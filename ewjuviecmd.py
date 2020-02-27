@@ -62,6 +62,10 @@ class EwMineGrid:
 """ player enlists in a faction/gang """
 async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_slimes = user_data.slimes
 	time_now = int(time.time())
 	bans = user_data.get_bans()
@@ -140,6 +144,10 @@ async def enlist(cmd):
 
 async def renounce(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
@@ -167,6 +175,10 @@ async def renounce(cmd):
 async def mine(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -417,6 +429,10 @@ async def mine(cmd):
 async def flag(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
 

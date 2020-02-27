@@ -54,6 +54,9 @@ async def revive(cmd):
 			# Set life state. This is what determines whether the player is actually alive.
 			player_data.life_state = ewcfg.life_state_juvenile
 
+			if player_data.degradation >= 100:
+				player_data.life_state = ewcfg.life_state_shambler
+
 			# Get the player out of the sewers.
 			player_data.poi = ewcfg.poi_id_downtown
 

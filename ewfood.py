@@ -94,6 +94,10 @@ class EwFood:
 """ show all available food items """
 async def menu(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = cmd.message.server.id)
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
@@ -185,6 +189,10 @@ async def menu(cmd):
 # Buy items.
 async def order(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = cmd.message.server.id)
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 	customtext = cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+2):]
