@@ -9,7 +9,6 @@ import ewrolemgr
 import ewstats
 import ewstatuseffects
 import ewmap
-import ewdistrict
 import ewslimeoid
 import ewfaction
 import ewapt
@@ -20,6 +19,7 @@ from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
 from ewhunting import find_enemy
 from ewstatuseffects import EwStatusEffect
+from ewdistrict import EwDistrict
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -1259,7 +1259,7 @@ async def view_sap(cmd):
 async def push(cmd):
 	time_now = int(time.time())
 	user_data = EwUser(member=cmd.message.author)
-	districtmodel = ewdistrict.EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
+	districtmodel = EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
 
 	if cmd.mentions_count == 0:
 		response = "You try to push a nearby building. Nope, still not strong enough to move it."
@@ -1470,7 +1470,7 @@ async def toss_off_cliff(cmd):
 
 def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	item_obj = EwItem(id_item=id_item)
-	districtmodel = ewdistrict.EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
+	districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
 	slimetotal = 0
 
 	if random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
@@ -1557,8 +1557,8 @@ async def flush_subzones(cmd):
 			cmd.message.server.id
 		))
 
-		subzone_data = ewdistrict.EwDistrict(district = subzone, id_server = cmd.message.server.id)
-		district_data = ewdistrict.EwDistrict(district = mother_district, id_server = cmd.message.server.id)
+		subzone_data = EwDistrict(district = subzone, id_server = cmd.message.server.id)
+		district_data = EwDistrict(district = mother_district, id_server = cmd.message.server.id)
 
 		district_data.change_slimes(n = subzone_data.slimes)
 		subzone_data.change_slimes(n = -subzone_data.slimes)

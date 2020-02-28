@@ -9,6 +9,7 @@ import ewcfg
 import ewrolemgr
 import ewitem
 from ew import EwUser
+from ewdistrict import EwDistrict
 
 # Map containing user IDs and the last time in UTC seconds since the pachinko
 # machine was used.

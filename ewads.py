@@ -5,6 +5,7 @@ import ewutils
 
 from ew import EwUser
 from ewplayer import EwPlayer
+from ewdistrict import EwDistrict
 
 class EwAd:
 

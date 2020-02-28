@@ -11,6 +11,7 @@ import ewcfg
 import ewstats
 from ew import EwUser
 from ewplayer import EwPlayer
+from ewdistrict import EwDistrict
 
 class EwMarket:
 	id_server = ""

@@ -21,6 +21,7 @@ import ewwep
 import ewquadrants
 
 from ewitem import EwItem
+from ewdistrict import EwDistrict
 
 class EwApartment:
 	id_user = ""
