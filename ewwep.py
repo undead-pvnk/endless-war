@@ -771,6 +771,9 @@ async def attack(cmd):
 					elif user_data.slimelevel < shootee_data.slimelevel:
 						ewstats.increment_stat(user = user_data, metric = ewcfg.stat_lifetime_takedowns)
 
+					if shootee_data.life_state == ewcfg.life_state_shambler:
+						ewstats.increment_stat(user = user_data, metric = ewcfg.stat_shamblers_killed)
+
 					if weapon != None:
 						weapon_item.item_props["kills"] = (int(weapon_item.item_props.get("kills")) if weapon_item.item_props.get("kills") != None else 0) + 1
 						weapon_item.item_props["totalkills"] = (int(weapon_item.item_props.get("totalkills"))  if weapon_item.item_props.get("totalkills") != None else 0) + 1

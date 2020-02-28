@@ -1294,6 +1294,7 @@ emote_purple = "<:purple:496397848343216138>"
 emote_pink = "<:pink:496397871180939294>"
 emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
+emote_slimeshot = "<:slimeshot:436604890928644106>"
 emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
@@ -1718,6 +1719,10 @@ leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
 #SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
+#INTERMISSION2
+leaderboard_degradation = "MOST DEGRADED"
+leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
+
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1809,6 +1814,7 @@ stat_lifetime_pve_takedowns = 'lifetime_pve_takedowns'
 stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
 stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 stat_capture_points_contributed = 'capture_points_contributed'
+stat_shamblers_killed = 'shamblers_killed'
 
 stat_revolver_kills = 'revolver_kills'
 stat_dual_pistols_kills = 'dual_pistols_kills'
@@ -1833,7 +1839,6 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
-
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
