@@ -630,7 +630,7 @@ async def attack(cmd):
 					shootee_data.persist()
 
 					if not miss:
-						life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+						life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
 						factions = ["", user_data.faction if backfire else shootee_data.faction]
 						# Burn players in district
 						if weapon.id_weapon == ewcfg.weapon_id_molotov:
@@ -662,7 +662,9 @@ async def attack(cmd):
 
 			if crit:
 				sap_damage += 1
-					
+
+			if user_data.life_state == ewcfg.life_state_shambler:
+				sap_damage += 1	
 
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
@@ -2045,7 +2047,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 				enemy_data.persist()
 
 				if not miss:
-					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted]
+					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
 					bystander_faction = ""
 					if user_data.faction == "rowdys":
 						bystander_faction = "killers"
@@ -2082,6 +2084,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		crit = False
 
 	if crit:
+		sap_damage += 1
+
+	if user_data.life_state == ewcfg.life_state_shambler:
 		sap_damage += 1
 
 	# Remove !revive invulnerability.

@@ -180,7 +180,7 @@ class EwDistrict:
 				and (len(life_states) == 0 or life_state in life_states) \
 				and (len(factions) == 0 or faction in factions) \
 				and not (ignore_offline and member.status == discord.Status.offline) \
-				and not (pvp_only and time_expirpvp < time_now):
+				and not (pvp_only and time_expirpvp < time_now and life_state != ewcfg.life_state_shambler):
 					filtered_players.append(id_user)
 
 		return filtered_players
