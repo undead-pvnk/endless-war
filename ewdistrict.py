@@ -724,9 +724,8 @@ async def shamble(cmd):
 				try:
 					await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
 				except:
-					ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic)
+					ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic))
 			
-
 """
 	Updates/Increments the capture_points values of all districts every time it's called
 """

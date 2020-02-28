@@ -1275,7 +1275,10 @@ def get_move_speed(user_data):
 
 	if ewcfg.status_injury_legs_id in statuses:
 		status_data = EwStatusEffect(id_status = ewcfg.status_injury_legs_id, user_data = user_data)
-		move_speed *= (1 - 0.2 * status_data.value / 10)
+		try:
+			move_speed *= (1 - 0.2 * int(status_data.value) / 10)
+		except:
+			logMsg("failed int conversion while getting move speed for user {}".format(user_data.id_user))
 
 	if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
 		move_speed *= (1 - 0.5 * user_data.degradation / 100)

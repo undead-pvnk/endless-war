@@ -29,7 +29,7 @@ async def revive(cmd):
 	else:
 		player_data = EwUser(member = cmd.message.author)
 
-		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now:
+		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
 		if time_until_revive > 0:
 			response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
