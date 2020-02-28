@@ -1276,12 +1276,12 @@ def get_move_speed(user_data):
 	if ewcfg.status_injury_legs_id in statuses:
 		status_data = EwStatusEffect(id_status = ewcfg.status_injury_legs_id, user_data = user_data)
 		try:
-			move_speed *= (1 - 0.2 * int(status_data.value) / 10)
+			move_speed *= max(0, (1 - 0.2 * int(status_data.value) / 10))
 		except:
 			logMsg("failed int conversion while getting move speed for user {}".format(user_data.id_user))
 
 	if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
-		move_speed *= (1 - 0.5 * user_data.degradation / 100)
+		move_speed *= max(0, (1 - 0.5 * user_data.degradation / 100))
 
 	if ewcfg.mutation_id_organicfursuit in mutations and check_fursuit_active(user_data.id_server):
 		move_speed *= 2
