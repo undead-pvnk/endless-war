@@ -530,6 +530,15 @@ class EwDistrict:
 		change = int(n)
 		self.slimes += change
 
+	""" wether the district is still functional """
+	def is_degraded(self):
+		poi = ewcfg.id_to_poi.get(self.name)
+
+		if poi is None:
+			return True
+		
+		return self.degradation >= poi.max_degradation
+
 """
 	Informs the player about their current zone's capture progress
 """

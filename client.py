@@ -637,6 +637,9 @@ cmd_map = {
 
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
+
+	# shambling
+	ewcfg.cmd_shamble: ewdistrict.shamble,
 	
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
