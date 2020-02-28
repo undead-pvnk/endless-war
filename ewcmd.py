@@ -241,7 +241,7 @@ def gen_data_text(
 					elif value_int < 11:
 						severity = "severely damaged."
 					else:
-						severity = "completely fucked up. Holy shit!"
+						severity = "completely fucked up, holy shit!"
 				except:
 					pass
 
@@ -404,7 +404,7 @@ async def data(cmd):
 					elif value_int < 11:
 						severity = "severely damaged."
 					else:
-						severity = "completely fucked up. Holy shit!"
+						severity = "completely fucked up, holy shit!"
 				except:
 					pass
 
