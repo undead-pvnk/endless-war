@@ -88,6 +88,12 @@ class EwTransport:
 		poi_data = ewcfg.id_to_poi.get(self.poi)
 		last_messages = []
 		while not ewutils.TERMINATE:
+
+			district_data = EwDistrict(district = self.poi, id_server = self.id_server)
+
+			if district_data.is_degraded():
+				return
+
 			transport_line = ewcfg.id_to_transport_line[self.current_line]
 			client = ewutils.get_client()
 			resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)
@@ -222,6 +228,13 @@ async def embark(cmd):
 	# can only use movement commands in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	user_data = EwUser(member = cmd.message.author)
 	response = ""

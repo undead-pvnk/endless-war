@@ -313,6 +313,7 @@ async def begin_manuscript(cmd = None, dm = False):
 		response = "Alright buddy, reel it in. That title is just too long. ({:,}/50)".format(len(title))
 
 	else:
+
 		if user_data.manuscript != -1:
 			response = "You already have a manuscript deployed you eager beaver!"
 		else:

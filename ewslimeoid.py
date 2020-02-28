@@ -1099,6 +1099,13 @@ async def incubateslimeoid(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = ewutils.getIntToken(tokens = cmd.tokens, allow_all = True)
@@ -1163,6 +1170,13 @@ async def dissolveslimeoid(cmd):
 		response = "You can't do that right now."
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if slimeoid.life_state == ewcfg.slimeoid_state_forming:
 			response = "You hit a large red button with a white X on it. Immediately a buzzer goes off and the half-formed body of what would have been your new Slimeoid is flushed out of the gestation tank and down a drainage tube, along with your poudrin and slime. What a waste."
 		else:
@@ -1233,6 +1247,13 @@ async def growbody(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1277,6 +1298,13 @@ async def growhead(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1320,6 +1348,13 @@ async def growlegs(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1363,6 +1398,13 @@ async def growweapon(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1406,6 +1448,13 @@ async def growarmor(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1449,6 +1498,13 @@ async def growspecial(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1492,6 +1548,13 @@ async def growbrain(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		value = None
 		if cmd.tokens_count > 1:
 			value = cmd.tokens[1]
@@ -1537,6 +1600,13 @@ async def nameslimeoid(cmd):
 
 	else:
 
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if cmd.tokens_count < 2:
 			response = "You must specify a name."
 		else:
@@ -1579,6 +1649,13 @@ async def raisemoxie(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
 			response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
@@ -1626,6 +1703,13 @@ async def lowermoxie(cmd):
 
 	else:
 
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if (slimeoid.atk <= 0):
 			response = "You cannot reduce your slimeoid's moxie any further."
 			response += "\nMoxie: {}".format(str(slimeoid.atk))
@@ -1671,6 +1755,13 @@ async def raisegrit(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
 			response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
@@ -1718,6 +1809,13 @@ async def lowergrit(cmd):
 
 	else:
 
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if (slimeoid.defense <= 0):
 			response = "You cannot reduce your slimeoid's grit any further."
 			response += "\nMoxie: {}".format(str(slimeoid.atk))
@@ -1763,6 +1861,13 @@ async def raisechutzpah(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if ((slimeoid.atk + slimeoid.defense + slimeoid.intel) >= (slimeoid.level)):
 			response = "You have allocated all of your Slimeoid's potential. Try !lowering some of its attributes first."
@@ -1810,6 +1915,13 @@ async def lowerchutzpah(cmd):
 
 	else:
 
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		if (slimeoid.intel <= 0):
 			response = "You cannot reduce your slimeoid's chutzpah any further."
 			response += "\nMoxie: {}".format(str(slimeoid.atk))
@@ -1854,6 +1966,13 @@ async def spawnslimeoid(cmd):
 
 
 	else:
+
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if slimeoid.life_state == ewcfg.slimeoid_state_active:
 			response = "You have already created a Slimeoid. Dissolve your current slimeoid before incubating a new one."
@@ -2549,6 +2668,13 @@ async def restoreslimeoid(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_slimeoidlab:
 		response = "You must go to the SlimeCorp Laboratories in Brawlden to restore a Slimeoid."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if user_data.life_state == ewcfg.life_state_corpse:

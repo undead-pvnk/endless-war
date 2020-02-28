@@ -54,6 +54,12 @@ async def pachinko(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		last_pachinkoed_times[cmd.message.author.id] = time_now
 		user_data = EwUser(member = cmd.message.author)
 		if user_data.life_state == ewcfg.life_state_shambler:
@@ -166,6 +172,12 @@ async def craps(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		last_crapsed_times[cmd.message.author.id] = time_now
 		value = None
 		winnings = 0
@@ -289,6 +301,12 @@ async def slots(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the Casino to gamble your {}.".format(currency_used)
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		last_slotsed_times[cmd.message.author.id] = time_now
 
 		user_data = EwUser(member = cmd.message.author)
@@ -474,6 +492,12 @@ async def roulette(cmd):
 		# Only allowed in the slime casino.
 		response = "You must go to the #{} to gamble your {}.".format(ewcfg.channel_casino, currency_used)
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		last_rouletted_times[cmd.message.author.id] = time_now
 		value = None
 
@@ -670,6 +694,12 @@ async def baccarat(cmd):
 		await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 		await asyncio.sleep(1)
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		last_rouletted_times[cmd.message.author.id] = time_now
 		value = None
 
@@ -1287,6 +1317,12 @@ async def russian_roulette(cmd):
 		response = "You can only play russian roulette at the casino."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	if cmd.mentions_count != 1:
 		#Must mention only one player
 		response = "Mention the player you want to challenge."
@@ -1994,6 +2030,12 @@ async def skat(cmd):
 		response = "You can only play slime skat at the casino."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	if cmd.mentions_count != 2:
 		#Must mention exactly 2 players
 		response = "Mention the two players you want to invite."
@@ -2632,6 +2674,12 @@ async def betsoul(cmd):
 	elif item_select == None:
 		response = "You don't have any souls in your inventory. !extractsoul if you want to do this properly."
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		ewitem.give_item(id_user="casinosouls", id_server=cmd.message.server.id, id_item=item_select.id_item)
 		usermodel.change_slimecoin(coinsource=ewcfg.coinsource_spending, n=ewcfg.soulprice) #current price for souls is 500 mil slimecoin
 		usermodel.persist()
@@ -2671,6 +2719,12 @@ async def buysoul(cmd):
 	elif usermodel.slimecoin < ewcfg.soulprice:
 		response = "Tough luck. You can't afford a soul. Poor you."
 	else:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		ewitem.give_item(id_user=cmd.message.author.id, id_server=cmd.message.server.id, id_item=selected_item.id_item)
 		usermodel.change_slimecoin(coinsource=ewcfg.coinsource_spending, n= -ewcfg.soulprice)  # current price for souls is 500 mil slimecoin
 		usermodel.persist()
