@@ -708,7 +708,7 @@ async def attack(cmd):
 			was_killed = False
 			was_shot = False
 
-			if shootee_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+			if shootee_data.life_state in [ewcfg.life_state_shambler, ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
 				# User can be shot.
 				if shootee_data.life_state == ewcfg.life_state_juvenile:
 					was_juvenile = True
@@ -1936,7 +1936,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Weaponized flavor text.
 	hitzone = get_hitzone()
 	randombodypart = hitzone.name
-	if random.random < 0.5:
+	if random.random() < 0.5:
 		randombodypart = random.choice(hitzone.aliases)
 
 	#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
@@ -2397,14 +2397,16 @@ async def harden_sap(cmd):
 	harden_mod = 1
 	if ewcfg.status_injury_torso_id in statuses:
 		status_data = EwStatusEffect(id_status = ewcfg.status_injury_torso_id, user_data = user_data)
-		harden_mod -= 0.5 * status_data.value / 10
+		harden_mod -= 0.5 * int(status_data.value) / 10
 
-	user_data.hardened_sap += max(0, int(sap_to_harden * harden_mod))
+	harden_real = max(0, int(sap_to_harden * harden_mod))
+
+	user_data.hardened_sap += harden_real
 	user_data.sap -= sap_to_harden
 
 	user_data.persist()
 
-	response = "You harden {} sap.".format(sap_to_harden)
+	response = "You harden {} sap.".format(harden_real)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def liquefy_sap(cmd):

@@ -62,7 +62,7 @@ async def revive(cmd):
 				player_data.change_slimes(n = 0.5 * ewcfg.slimes_shambler)
 				player_data.trauma = ""
 				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
-				if ewmap.inaccessible(poi_death, player_data):
+				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
 					player_data.poi = ewcfg.poi_id_downtown
 				else:
 					player_data.poi = poi_death.id_poi

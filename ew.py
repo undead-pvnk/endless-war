@@ -572,9 +572,14 @@ class EwUser:
 		if id_injury in statuses:
 			status_data = EwStatusEffect(id_status = id_injury, user_data = self)
 			
-			if status_data.value > severity:
-				status_data.value += 1
-			else:
+			try:
+				value_int = int(status_data.value)
+
+				if value_int > severity:
+					status_data.value = value_int + 1
+				else:
+					status_data.value = severity
+			except:
 				status_data.value = severity
 
 			status_data.source = source

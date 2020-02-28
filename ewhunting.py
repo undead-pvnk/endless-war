@@ -374,6 +374,7 @@ class EwEnemy:
 			target_isslimecorp = target_data.life_state in [ewcfg.life_state_lucky, ewcfg.life_state_executive]
 			target_isjuvie = target_data.life_state == ewcfg.life_state_juvenile
 			target_isnotdead = target_data.life_state != ewcfg.life_state_corpse
+			target_isshambler = target_data.life_state == ewcfg.life_state_shambler
 
 			if target_data.life_state == ewcfg.life_state_kingpin:
 				# Disallow killing generals.
@@ -388,11 +389,11 @@ class EwEnemy:
 				resp_cont.add_channel_response(ch_name, response)
 
 			# enemies dont fuck with ghosts, ghosts dont fuck with enemies.
-			elif (target_iskillers or target_isrowdys or target_isjuvie or target_isslimecorp) and (target_isnotdead):
+			elif (target_iskillers or target_isrowdys or target_isjuvie or target_isslimecorp or target_isshambler) and (target_isnotdead):
 				was_killed = False
 				was_hurt = False
 
-				if target_data.life_state in [ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+				if target_data.life_state in [ewcfg.life_state_shambler, ewcfg.life_state_enlisted, ewcfg.life_state_juvenile, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
 
 					# If a target is being attacked by an enemy with the defender ai, check to make sure it can be hit.
 					if (enemy_data.ai == ewcfg.enemy_ai_defender) and (ewutils.check_defender_targets(target_data, enemy_data) == False):
@@ -403,7 +404,11 @@ class EwEnemy:
 
 				if was_hurt:
 					# Weaponized flavor text.
-					randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
+					#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
+					hitzone = ewwep.get_hitzone()
+					randombodypart = hitzone.name
+					if random.random() < 0.5:
+						randombodypart = random.choice(hitzone.aliases)
 
 					# Attacking-type-specific adjustments
 					if used_attacktype != ewcfg.enemy_attacktype_unarmed and used_attacktype.fn_effect != None:
@@ -468,6 +473,7 @@ class EwEnemy:
     
 					sap_damage = min(sap_damage, target_data.hardened_sap)
 
+					injury_severity = ewwep.get_injury_severity(target_data, slimes_damage, crit)
 
 					if slimes_damage >= target_data.slimes - target_data.bleed_storage:
 						was_killed = True
@@ -571,6 +577,9 @@ class EwEnemy:
 						target_data = EwUser(id_user = target_data.id_user, id_server = target_data.id_server)
 					else:
 						# A non-lethal blow!
+						# apply injury
+						if injury_severity > 0:
+							target_data.apply_injury(hitzone.id_injury, injury_severity, enemy_data.id_enemy)
 
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
 							if miss:
@@ -1595,7 +1604,7 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_a:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND {time_expirpvp} > {time_now} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
+			"SELECT {id_user}, {life_state}, {time_lastenter} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} = {life_state_shambler}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {time_lastenter} ASC".format(
 				id_user = ewcfg.col_id_user,
 				life_state = ewcfg.col_life_state,
 				time_lastenter = ewcfg.col_time_lastenter,
@@ -1604,6 +1613,7 @@ def get_target_by_ai(enemy_data):
 				targettimer = targettimer,
 				life_state_corpse = ewcfg.life_state_corpse,
 				life_state_kingpin = ewcfg.life_state_kingpin,
+				life_state_shambler = ewcfg.life_state_shambler,
 				repel_status = ewcfg.status_repelled_id,
 				time_expirpvp = ewcfg.col_time_expirpvp,
 				time_now = time_now,
@@ -1616,7 +1626,7 @@ def get_target_by_ai(enemy_data):
 
 	elif enemy_data.ai == ewcfg.enemy_ai_attacker_b:
 		users = ewutils.execute_sql_query(
-			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND {time_expirpvp} > {time_now} AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
+			"SELECT {id_user}, {life_state}, {slimes} FROM users WHERE {poi} = %s AND {id_server} = %s AND {time_lastenter} < {targettimer} AND ({time_expirpvp} > {time_now} OR {life_state} = {life_state_shambler}) AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin} OR {id_user} IN (SELECT {id_user} FROM status_effects WHERE id_status = '{repel_status}')) ORDER BY {slimes} DESC".format(
 				id_user = ewcfg.col_id_user,
 				life_state = ewcfg.col_life_state,
 				slimes = ewcfg.col_slimes,
@@ -1626,6 +1636,7 @@ def get_target_by_ai(enemy_data):
 				targettimer = targettimer,
 				life_state_corpse = ewcfg.life_state_corpse,
 				life_state_kingpin = ewcfg.life_state_kingpin,
+				life_state_shambler = ewcfg.life_state_shambler,
 				repel_status = ewcfg.status_repelled_id,
 				time_expirpvp = ewcfg.col_time_expirpvp,
 				time_now = time_now,

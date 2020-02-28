@@ -1205,13 +1205,13 @@ async def look(cmd):
 
 	degrade_resp = ""
 	if district_data.degradation >= poi.max_degradation:
-		degrade_resp = ewcfg.str_zone_degraded + "\n\n"
+		degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
 
 
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	if poi.coords is None: # Triggers if you input the command in a sub-zone.
+	if poi.coord is None: # Triggers if you input the command in a sub-zone.
 
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
 			"You stand {} {}.\n\n{}\n\n{}".format(
