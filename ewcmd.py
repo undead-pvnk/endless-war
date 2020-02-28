@@ -183,7 +183,8 @@ def gen_data_text(
 				response += " They are walking a bit funny, because their legs are getting mushy."
 			elif user_data.degradation < 100:
 				response += " Their limbs keep falling off. It's really annoying."
-				
+			else:
+				response += " They almost look like a shambler already."
 
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
@@ -234,11 +235,13 @@ def gen_data_text(
 				try:
 					value_int = int(status_effect.value)
 					if value_int < 3:
-						severity = "lightly"
+						severity = "lightly injured."
 					elif value_int < 7:
-						severity = "moderately"
+						severity = "battered and bruised."
+					elif value_int < 11:
+						severity = "severely damaged."
 					else:
-						severity = "severely"
+						severity = "completely fucked up. Holy shit!"
 				except:
 					pass
 
@@ -333,6 +336,8 @@ async def data(cmd):
 				response += " You are walking a bit funny, because your legs are getting mushy."
 			elif user_data.degradation < 100:
 				response += " Your limbs keep falling off. It's really annoying."
+			else:
+				response += " You almost look like a shambler already."
 
 		if user_data.has_soul == 0:
 			response += " You have no soul."
@@ -393,11 +398,13 @@ async def data(cmd):
 				try:
 					value_int = int(status_effect.value)
 					if value_int < 3:
-						severity = "lightly"
+						severity = "lightly injured."
 					elif value_int < 7:
-						severity = "moderately"
+						severity = "battered and bruised."
+					elif value_int < 11:
+						severity = "severely damaged."
 					else:
-						severity = "severely"
+						severity = "completely fucked up. Holy shit!"
 				except:
 					pass
 

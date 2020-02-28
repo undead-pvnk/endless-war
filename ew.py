@@ -75,6 +75,9 @@ class EwUser:
 		if self.hunger > self.get_hunger_max():
 			self.hunger = self.get_hunger_max()
 
+		if self.life_state == ewcfg.life_state_shambler:
+			self.hunger = 0
+
 		if self.inebriation < 0:
 			self.inebriation = 0
 
@@ -92,6 +95,7 @@ class EwUser:
 		self.hardened_sap = max(0, self.hardened_sap)
 
 		self.degradation = max(0, self.degradation)
+
 
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
