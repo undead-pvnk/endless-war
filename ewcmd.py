@@ -169,8 +169,21 @@ def gen_data_text(
 		# return somebody's score
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "{} is a level {} deadboi.".format(display_name, user_data.slimelevel)
+		elif user_data.life_state == ewcfg.life_state_shambler:
+			response = "{} is a level {} shambler.".format(display_name, user_data.slimelevel)
 		else:
 			response = "{} is a level {} slimeboi.".format(display_name, user_data.slimelevel)
+			if user_data.degradation < 20:
+				pass
+			elif user_data.degradation < 40:
+				response += " Their bodily integrity is starting to slip."
+			elif user_data.degradation < 60:
+				response += " Their face seems to be melting and they periodically have to put it back in place."
+			elif user_data.degradation < 80:
+				response += " They are walking a bit funny, because their legs are getting mushy."
+			elif user_data.degradation < 100:
+				response += " Their limbs keep falling off. It's really annoying."
+				
 
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
@@ -306,8 +319,20 @@ async def data(cmd):
 		# return my data
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response += "You are a level {} deadboi.".format(user_data.slimelevel)
+		elif user_data.life_state == ewcfg.life_state_shambler:
+			response += "You are a level {} shambler.".format(user_data.slimelevel)
 		else:
 			response += "You are a level {} slimeboi.".format(user_data.slimelevel)
+			if user_data.degradation < 20:
+				pass
+			elif user_data.degradation < 40:
+				response += " Your bodily integrity is starting to slip."
+			elif user_data.degradation < 60:
+				response += " Your face seems to be melting and you periodically have to put it back in place."
+			elif user_data.degradation < 80:
+				response += " You are walking a bit funny, because your legs are getting mushy."
+			elif user_data.degradation < 100:
+				response += " Your limbs keep falling off. It's really annoying."
 
 		if user_data.has_soul == 0:
 			response += " You have no soul."

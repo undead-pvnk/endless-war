@@ -62,6 +62,7 @@ class EwUser:
 	time_joined = 0
 	time_expirpvp = 0
 	time_lastenlist = 0
+	time_lastdeath = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -213,7 +214,8 @@ class EwUser:
 			self.hunger = 0
 			self.inebriation = 0
 			self.bounty = 0
-			
+			self.time_lastdeath = time_now		
+	
 			if self.life_state == ewcfg.life_state_shambler:
 				self.degradation += 1
 			else:
@@ -738,7 +740,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -785,6 +787,7 @@ class EwUser:
 					ewcfg.col_manuscript,
 					ewcfg.col_swear_jar,
 					ewcfg.col_degradation,
+					ewcfg.col_time_lastdeath,
 				), (
 					id_user,
 					id_server
@@ -838,6 +841,7 @@ class EwUser:
 					self.manuscript = result[42]
 					self.swear_jar = result[43]
 					self.degradation = result[44]
+					self.time_lastdeath = result[45]
 				else:
 					self.poi = ewcfg.poi_id_tutorial_classroom
 					self.life_state = ewcfg.life_state_juvenile
@@ -893,7 +897,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -942,6 +946,7 @@ class EwUser:
 				ewcfg.col_manuscript,
 				ewcfg.col_swear_jar,
 				ewcfg.col_degradation,
+				ewcfg.col_time_lastdeath,
 			), (
 				self.id_user,
 				self.id_server,
@@ -991,6 +996,7 @@ class EwUser:
 				self.manuscript,
 				self.swear_jar,
 				self.degradation,
+				self.time_lastdeath,
 			))
 
 			conn.commit()

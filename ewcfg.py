@@ -742,6 +742,7 @@ cmd_flushsubzones = cmd_prefix + 'flushsubzones'
 cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
+cmd_shamble = cmd_prefix + 'shamble'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1529,6 +1530,7 @@ col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
+col_time_lastdeath = 'time_lastdeath'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1734,6 +1736,10 @@ control_topics = {
 
 # district control actors
 actor_decay = "decay"
+
+# degradation strings
+channel_topic_degraded = "(Closed indefinitely)"
+str_zone_degraded = "{poi} has been degraded too far to keep operating."
 
 # The highest and lowest level your weaponskill may be on revive. All skills over this level reset to these.
 weaponskill_max_onrevive = 6
@@ -9188,7 +9194,8 @@ poi_list = [
 		channel = channel_endlesswar,
 		role = "Endless War",
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_district = poi_id_downtown,
+		max_degradation = 10000000,
 	),
 	EwPoi(  # slimecorp HQ
 		id_poi = poi_id_slimecorphq,

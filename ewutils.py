@@ -554,10 +554,12 @@ async def bleedSlimes(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
-				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
 
 				trauma = ewcfg.trauma_map.get(user_data.trauma)
+				bleed_mod = 1
+				if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
+					bleed_mod += 0.5 * user_data.degradation / 100
 
 				#round up or down, randomly weighted
 				remainder = slimes_to_bleed - int(slimes_to_bleed)
@@ -565,17 +567,17 @@ async def bleedSlimes(id_server = None):
 					slimes_to_bleed += 1 
 				slimes_to_bleed = int(slimes_to_bleed)
 
+				slimes_to_bleed = min(slimes_to_bleed, user_data.bleed_storage)
+
 				if slimes_to_bleed >= 1:
 
-					bleed_mod = 1
-					if trauma != None and trauma.trauma_class == ewcfg.trauma_class_bleeding:
-						bleed_mod -= 0.5 * user_data.degradation / 100
+					real_bleed = round(slimes_to_bleed * bleed_mod)
 
-					user_data.bleed_storage -= round(slimes_to_bleed * bleed_mod)
-					user_data.change_slimes(n = - slimes_to_bleed, source = ewcfg.source_bleeding)
+					user_data.bleed_storage -= slimes_to_bleed
+					user_data.change_slimes(n = - real_bleed, source = ewcfg.source_bleeding)
 
 					district_data = EwDistrict(id_server = id_server, district = user_data.poi)
-					district_data.change_slimes(n = slimes_to_bleed, source = ewcfg.source_bleeding)
+					district_data.change_slimes(n = real_bleed, source = ewcfg.source_bleeding)
 					district_data.persist()
 
 					if user_data.slimes < 0:
@@ -586,7 +588,7 @@ async def bleedSlimes(id_server = None):
 						resp_cont.add_response_container(die_resp)
 					user_data.persist()
 
-					total_bled += slimes_to_bleed
+					total_bled += real_bleed
 
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 
@@ -1219,9 +1221,9 @@ async def spawn_enemies(id_server = None):
 		weathertype = ewcfg.enemy_weathertype_normal
 
 		market_data = EwMarket(id_server=id_server)
-		# If it's raining, an enemy has  1/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
+		# If it's raining, an enemy has  2/3 chance to spawn as a bicarbonate enemy, which doesn't take rain damage
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
-			if random.randrange(2) == 0:
+			if random.randrange(3) < 2:
 				weathertype = ewcfg.enemy_weathertype_rainresist
 		
 		resp_cont = ewhunting.spawn_enemy(id_server=id_server, weather=weathertype)
@@ -1260,9 +1262,20 @@ def check_defender_targets(user_data, enemy_data):
 def get_move_speed(user_data):
 	time_now = int(time.time())
 	mutations = user_data.get_mutations()
+	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
 	trauma = ewcfg.trauma_map.get(user_data.trauma)
 	move_speed = 1
+
+	if user_data.life_state == ewcfg.life_state_shambler:
+		if market_data.weather == ewcfg.weather_bicarbonaterain:
+			move_speed *= 2
+		else:
+			move_speed *= 0.5
+
+	if ewcfg.status_injury_legs_id in statuses:
+		status_data = EwStatusEffect(id_status = ewcfg.status_injury_legs_id, user_data = user_data)
+		move_speed *= (1 - 0.2 * status_data.value / 10)
 
 	if (trauma != None) and (trauma.trauma_class == ewcfg.trauma_class_movespeed):
 		move_speed *= (1 - 0.5 * user_data.degradation / 100)
@@ -1273,6 +1286,8 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+
+	move_speed = max(0.1, move_speed)
 
 	return move_speed
 

@@ -28,6 +28,12 @@ async def revive(cmd):
 		response = "Come to me. I hunger. #{}.".format(ewcfg.channel_sewers)
 	else:
 		player_data = EwUser(member = cmd.message.author)
+
+		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now:
+		if time_until_revive > 0:
+			response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 
 		if player_data.life_state == ewcfg.life_state_corpse:
@@ -54,9 +60,12 @@ async def revive(cmd):
 			if player_data.degradation >= 100:
 				player_data.life_state = ewcfg.life_state_shambler
 				player_data.change_slimes(n = 0.5 * ewcfg.slimes_shambler)
-				player_data.poi = player_data.poi_death
-				if player_data.poi == "":
+				player_data.trauma = ""
+				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
+				if ewmap.inaccessible(poi_death, player_data):
 					player_data.poi = ewcfg.poi_id_downtown
+				else:
+					player_data.poi = poi_death.id_poi
 			else:
 				# Set life state. This is what determines whether the player is actually alive.
 				player_data.life_state = ewcfg.life_state_juvenile

@@ -41,6 +41,9 @@ class EwDistrict:
 	# Time until the district unlocks for capture again
 	time_unlock = 0
 
+	# determines if the zone is functional
+	degradation = 0
+
 	def __init__(self, id_server = None, district = None):
 		if id_server is not None and district is not None:
 			self.id_server = id_server
@@ -56,13 +59,14 @@ class EwDistrict:
 			else:
 				self.max_capture_points = 0
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {degradation} FROM districts WHERE id_server = %s AND {district} = %s".format(
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
 				capture_points = ewcfg.col_capture_points,
 				district = ewcfg.col_district,
 				slimes = ewcfg.col_district_slimes,
 				time_unlock = ewcfg.col_time_unlock,
+				degradation = ewcfg.col_degradation,
 			), (
 				id_server,
 				district
@@ -75,6 +79,7 @@ class EwDistrict:
 				self.capture_points = data[0][2]
 				self.slimes = data[0][3]
 				self.time_unlock = data[0][4]
+				self.degradation = data[0][5]
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
 			else:  # create new entry
 				ewutils.execute_sql_query("REPLACE INTO districts ({id_server}, {district}) VALUES (%s, %s)".format(
@@ -86,13 +91,14 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}) VALUES(%s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {degradation}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
 			capture_points = ewcfg.col_capture_points,
 			slimes = ewcfg.col_district_slimes,
 			time_unlock = ewcfg.col_time_unlock,
+			degradation = ewcfg.col_degradation,
 		), (
 			self.id_server,
 			self.name,
@@ -101,6 +107,7 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes,
 			self.time_unlock,
+			self.degradation,
 		))
 	
 	def get_number_of_friendly_neighbors(self):
@@ -679,6 +686,37 @@ async def annex(cmd):
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	return await resp_cont.post()
+
+async def shamble(cmd):
+
+	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.life_state != ewcfg.life_state_shambler:
+		response = "You have too many higher brain functions left to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+
+	if poi is None:
+		return
+
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.degradation < poi.max_degradation:
+		district_data.degradation += 1
+		user_data.degradation += 1
+		district_data.persist()
+		user_data.persist()
+		if district_data.degradation == poi.max_degradation:
+			response = ewcfg.str_zone_degraded.format(poi.str_name)
+			await ewutils.send_message(cmd.client, cmd.message.channel, response)
+			if not (ewcfg.channel_topic_degradation in cmd.message.channel.topic):
+				new_topic = cmd.message.channel.topic + " " + ewcfg.channel_topic_degradation
+				try:
+					await cmd.client.edit_channel(channel = cmd.message.channel, topic = new_topic)
+				except:
+					ewutils.logMsg('Failed to set channel topic for {} to {}'.format(cmd.message.channel.name, new_topic)
+			
 
 """
 	Updates/Increments the capture_points values of all districts every time it's called
