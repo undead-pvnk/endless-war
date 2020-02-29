@@ -782,6 +782,10 @@ async def attack(cmd):
 						weapon_item.item_props["totalkills"] = (int(weapon_item.item_props.get("totalkills"))  if weapon_item.item_props.get("totalkills") != None else 0) + 1
 						ewstats.increment_stat(user = user_data, metric = weapon.stat)
 						
+						# Give a bonus to the player's weapon skill for killing a stronger player.
+						if shootee_data.slimelevel >= user_data.slimelevel and shootee_data.slimelevel >= user_data.weaponskill:
+							user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
+
 					# Collect bounty
 					coinbounty = int(shootee_data.bounty / ewcfg.slimecoin_exchangerate)  # 100 slime per coin
 					
@@ -814,9 +818,6 @@ async def attack(cmd):
 							}
 						)
 
-					# Give a bonus to the player's weapon skill for killing a stronger player.
-					if shootee_data.slimelevel >= user_data.slimelevel and shootee_data.slimelevel >= user_data.weaponskill:
-						user_data.add_weaponskill(n = 1, weapon_type = weapon.id_weapon)
 					
 					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
 
