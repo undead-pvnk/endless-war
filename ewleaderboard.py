@@ -152,7 +152,7 @@ def make_statdata_board(server = None, category = "", title = "", lowscores = Fa
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
 
-		cursor.execute("SELECT {name}, {state}, {faction}, stats.{category_value} FROM users, players, stats WHERE users.id_server = %s AND users.{id_user} = players.{id_user} AND stats.id_server = users.id_server AND stats.{id_user} = users.{id_user} AND stats.{category_name} = %s ORDER BY stats.{category_name} {order} LIMIT {limit}".format(
+		cursor.execute("SELECT {name}, {state}, {faction}, stats.{category_value} FROM users, players, stats WHERE users.id_server = %s AND users.{id_user} = players.{id_user} AND stats.id_server = users.id_server AND stats.{id_user} = users.{id_user} AND stats.{category_name} = %s ORDER BY stats.{category_value} {order} LIMIT {limit}".format(
 			name = ewcfg.col_display_name,
 			state = ewcfg.col_life_state,
 			faction = ewcfg.col_faction,
