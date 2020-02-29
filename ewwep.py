@@ -1165,6 +1165,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
 				target_isrowdys = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_rowdys
 				target_isjuvenile = target_data.life_state == ewcfg.life_state_juvenile	
+				target_isshambler = target_data.life_state == ewcfg.life_state_shambler
 
 				role_boss = (ewcfg.role_copkiller if user_data.faction == ewcfg.faction_killers else ewcfg.role_rowdyfucker)
 				boss_slimes = 0
@@ -1199,7 +1200,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 				sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
 
 				# move around slime as a result of the shot
-				if target_isjuvenile or user_data.faction == target_data.faction:
+				if target_isshambler or target_isjuvenile or user_data.faction == target_data.faction:
 					slimes_drained = int(3 * slimes_damage_target / 4) # 3/4
 					slimes_toboss = 0
 				else:
