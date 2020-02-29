@@ -2238,7 +2238,7 @@ async def setOffAlarms(id_server = None):
 			ampm = "pm"
 
 		item_search = "alarm clock set to {}{}".format(displaytime, ampm)
-		clockinv = ewitem.find_item_all(item_search="alarmclock", id_server=id_server)
+		clockinv = ewitem.find_item_all(item_search="alarmclock", id_server=id_server, item_type_filter = ewcfg.it_furniture)
 
 		for clock in clockinv:
 			isFurnished = False

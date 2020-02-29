@@ -580,7 +580,8 @@ class EwUser:
 				value_int = int(status_data.value)
 
 				if value_int > severity:
-					status_data.value = value_int + 1
+					if random.randrange(value_int) < severity:
+						status_data.value = value_int + 1
 				else:
 					status_data.value = severity
 			except:

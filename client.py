@@ -942,11 +942,13 @@ async def on_ready():
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
 
 					market_response = ""
+					exchange_data = EwDistrict(district = ewcfg.poi_id_stockexchange, id_server = server.id)
 
 					for stock in ewcfg.stocks:
 						s = EwStock(server.id, stock)
 						# we don't update stocks when they were just added
-						if s.timestamp != 0:
+						# or when shamblers have degraded it
+						if s.timestamp != 0 and not exchange_data.is_degraded():
 							s.timestamp = time_now
 							market_response = ewmarket.market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
