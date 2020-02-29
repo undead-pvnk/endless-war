@@ -707,6 +707,7 @@ async def attack(cmd):
 			user_inital_level = user_data.slimelevel
 
 			was_juvenile = False
+			was_shambler = False
 			was_killed = False
 			was_shot = False
 
@@ -715,6 +716,8 @@ async def attack(cmd):
 				if shootee_data.life_state == ewcfg.life_state_juvenile:
 					was_juvenile = True
 
+				if shootee_data.life_state == ewcfg.life_state_shambler:
+					was_shambler = True
 				was_shot = True
 
 			if was_shot:
@@ -732,7 +735,7 @@ async def attack(cmd):
 
 				sewer_data = EwDistrict(district = ewcfg.poi_id_thesewers, id_server = cmd.message.server.id)
 				# move around slime as a result of the shot
-				if was_juvenile or user_data.faction == shootee_data.faction:
+				if was_shambler or was_juvenile or user_data.faction == shootee_data.faction:
 					slimes_drained = int(3 * slimes_damage / 4) # 3/4
 					slimes_toboss = 0
 				else:
