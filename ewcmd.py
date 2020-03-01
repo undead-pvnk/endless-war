@@ -19,6 +19,7 @@ from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
 from ewhunting import find_enemy
 from ewstatuseffects import EwStatusEffect
+from ewstatuseffects import EwEnemyStatusEffect
 from ewdistrict import EwDistrict
 
 """ class to send general data about an interaction to a command """
@@ -288,11 +289,37 @@ async def data(cmd):
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}.".format(
+				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}. ".format(
 					enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {:,} slime.".format(enemy.display_name, enemy.level,
+				response = "{} is a level {} enemy. They have {:,} slime. ".format(enemy.display_name, enemy.level,
 																				enemy.slimes)
+		
+			statuses = enemy.getStatusEffects()
+
+			for status in statuses:
+				status_effect = EwEnemyStatusEffect(id_status=status, enemy_data=enemy)
+				if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+					status_flavor = ewcfg.status_effects_def_map.get(status)
+
+					severity = ""
+					try:
+						value_int = int(status_effect.value)
+						if value_int < 3:
+							severity = "lightly injured."
+						elif value_int < 7:
+							severity = "battered and bruised."
+						elif value_int < 11:
+							severity = "severely damaged."
+						else:
+							severity = "completely fucked up, holy shit!"
+					except:
+						pass
+
+					format_status = {'severity': severity}
+
+					if status_flavor is not None:
+						response += status_flavor.str_describe.format_map(format_status) + " "
 		else:
 			response = "ENDLESS WAR didn't understand that name."
 
