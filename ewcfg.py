@@ -26,7 +26,7 @@ from ewtrauma import EwTrauma, EwHitzone
 import ewdebug
 
 # Global configuration options.
-version = "v3.23i2"
+version = "v3.23i2k4p"
 
 dir_msgqueue = 'msgqueue'
 
