@@ -23,12 +23,20 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
-	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
-	await ewutils.send_message(client, leaderboard_channel, topbounty)
-	topdonated = make_userdata_board(server = server, category = ewcfg.col_poudrin_donations, title = ewcfg.leaderboard_donated)
-	await ewutils.send_message(client, leaderboard_channel, topdonated)
+	#topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
+	#await ewutils.send_message(client, leaderboard_channel, topbounty)
+	#topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
+	#await ewutils.send_message(client, leaderboard_channel, topdonated)
+	topdegraded = make_userdata_board(server = server, category = ewcfg.col_degradation, title = ewcfg.leaderboard_degradation)
+	await ewutils.send_message(client, leaderboard_channel, topdegraded)
+	topshamblerkills = make_statdata_board(server = server, category = ewcfg.stat_shamblers_killed, title = ewcfg.leaderboard_shamblers_killed)
+	await ewutils.send_message(client, leaderboard_channel, topshamblerkills)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
+	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
+	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
+	topzines = make_zines_top_board(server=server)
+	await ewutils.send_message(client, leaderboard_channel, topzines)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
@@ -66,6 +74,40 @@ def make_slimeoids_top_board(server = None):
 
 	return board
 
+def make_zines_top_board(server = None):
+	board = "{zine} ▓▓▓▓▓ BESTSELLING ZINES ▓▓▓▓▓ {zine}\n".format(
+		zine = "<:zine:655854388761460748>"
+	)
+
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute((
+			"SELECT b.title, b.author, b.sales " +
+			"FROM books as b " +
+			"WHERE b.id_server = %s AND b.book_state = 1 " +
+			"ORDER BY b.sales DESC LIMIT 5"
+		), (
+			server.id,
+		))
+
+		data = cursor.fetchall()
+		if data != None:
+			for row in data:
+				board += "{} `{:_>3} | {} by {}`\n".format(
+					ewcfg.emote_blank,
+					row[2],
+					row[0].replace("`",""),
+					row[1].replace("`","")
+				)
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return board
 
 def make_userdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
 	entries = []
@@ -103,6 +145,43 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 
 	return format_board(entries = entries, title = title, divide_by = divide_by)
 
+def make_statdata_board(server = None, category = "", title = "", lowscores = False, rows = 5, divide_by = 1):
+	entries = []
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute("SELECT {name}, {state}, {faction}, stats.{category_value} FROM users, players, stats WHERE users.id_server = %s AND users.{id_user} = players.{id_user} AND stats.id_server = users.id_server AND stats.{id_user} = users.{id_user} AND stats.{category_name} = %s ORDER BY stats.{category_value} {order} LIMIT {limit}".format(
+			name = ewcfg.col_display_name,
+			state = ewcfg.col_life_state,
+			faction = ewcfg.col_faction,
+			category_name = ewcfg.col_stat_metric,
+			category_value = ewcfg.col_stat_value,
+			id_user = ewcfg.col_id_user,
+			order = ('DESC' if lowscores == False else 'ASC'),
+			limit = rows
+		), (
+			server.id, 
+			category
+		))
+
+		i = 0
+		row = cursor.fetchone()
+		while (row != None) and (i < rows):
+			if row[1] == ewcfg.life_state_kingpin or row[1] == ewcfg.life_state_grandfoe or row[1] == ewcfg.life_state_lucky:
+				row = cursor.fetchone()
+			else:
+				entries.append(row)
+				row = cursor.fetchone()
+				i += 1
+
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return format_board(entries = entries, title = title, divide_by = divide_by)
 def make_kingpin_board(server = None, title = ""):
 	entries = []
 	try:
@@ -161,6 +240,35 @@ def make_district_control_board(id_server, title):
 		entry_type = ewcfg.entry_type_districts
 	)
 
+#SLIMERNALIA
+def make_slimernalia_board(server, title):
+	entries = []
+	data = ewutils.execute_sql_query(
+		"SELECT {display_name}, {state}, {faction}, FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) as total_festivity FROM users "\
+		"LEFT JOIN (SELECT id_user, COUNT(*) * 1000 as sigillaria FROM items INNER JOIN items_prop ON items.{id_item} = items_prop.{id_item} WHERE {name} = %s AND {value} = %s GROUP BY items.{id_user}) f on users.{id_user} = f.{id_user}, players "\
+		"WHERE users.{id_server} = %s AND users.{id_user} = players.{id_user} ORDER BY total_festivity DESC LIMIT 5".format(
+			id_user = ewcfg.col_id_user,
+			id_server = ewcfg.col_id_server,
+			id_item = ewcfg.col_id_item,
+			festivity = ewcfg.col_festivity,
+			festivity_from_slimecoin = ewcfg.col_festivity_from_slimecoin,
+			name = ewcfg.col_name,
+			display_name = ewcfg.col_display_name,
+			value = ewcfg.col_value,
+			state = ewcfg.col_life_state,
+			faction = ewcfg.col_faction
+		), (
+			"id_furniture",
+			ewcfg.item_id_sigillaria,
+			server.id
+		)
+	)
+
+	for row in data:
+		entries.append(row)
+	
+	return format_board(entries = entries, title = title)
+
 """
 	convert leaderboard data into a message ready string 
 """
@@ -204,6 +312,18 @@ def board_header(title):
 
 	elif title == ewcfg.leaderboard_donated:
 		emote = ewcfg.emote_slimecorp
+		bar += " "
+	
+	elif title == ewcfg.leaderboard_slimernalia:
+		emote = ewcfg.emote_slimeheart
+		bar += " "
+
+	elif title == ewcfg.leaderboard_degradation:
+		emote = ewcfg.emote_slimeskull
+		bar += " "
+
+	elif title == ewcfg.leaderboard_shamblers_killed:
+		emote = ewcfg.emote_slimeshot
 		bar += " "
 
 	return emote + bar + title + bar + emote + "\n"

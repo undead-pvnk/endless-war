@@ -5,12 +5,14 @@ import asyncio
 import ewcfg
 import ewitem
 import ewutils
+import ewrolemgr
 
 from ew import EwUser
 from ewmarket import EwMarket
 from ewfood import EwFood
 from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
+from ewdistrict import EwDistrict
 
 class EwFarm:
 	id_server = ""
@@ -126,19 +128,30 @@ class EwFarmAction:
 """
 async def reap(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 	levelup_response = ""
 	mutations = user_data.get_mutations()
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	# Checking availability of reap action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -160,11 +173,31 @@ async def reap(cmd):
 			else: # Reaping
 				if time_grown > ewcfg.crops_time_to_grow * 16:  # about 2 days
 					response = "You eagerly cultivate your crop, but what’s this? It’s dead and wilted! It seems as though you’ve let it lay fallow for far too long. Pay better attention to your farm next time. You gain no slime."
+					farm.time_lastsow = 0  # 0 means no seeds are currently planted
+					farm.persist()
 				else:
 					user_initial_level = user_data.slimelevel
 
 					slime_gain = farm.slimes_onreap
-					response = "You reap what you’ve sown. Your investment has yielded {} slime, ".format(slime_gain)
+
+					if poi.is_subzone:
+						district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
+					else:
+						district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+					if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+						slime_gain *= 2
+
+					if cmd.message.channel.name == ewcfg.channel_jr_farms:
+						slime_gain = int(slime_gain / 4)
+
+					trauma = ewcfg.trauma_map.get(user_data.trauma)
+					if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+						slime_gain *= (1 - 0.5 * user_data.degradation / 100)
+
+					slime_gain = max(0, round(slime_gain))
+
+					response = "You reap what you’ve sown. Your investment has yielded {:,} slime, ".format(slime_gain)
 
 					# Determine if an item is found.
 					unearthed_item = False
@@ -227,10 +260,15 @@ async def reap(cmd):
 						response += "\n\n" + levelup_response
 
 					user_data.hunger += ewcfg.hunger_perfarm
+					# Flag the user for PvP
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_farm))
+
 					user_data.persist()
 
-				farm.time_lastsow = 0  # 0 means no seeds are currently planted
-				farm.persist()
+					farm.time_lastsow = 0  # 0 means no seeds are currently planted
+					farm.persist()
+					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -240,18 +278,28 @@ async def reap(cmd):
 """
 async def sow(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	# Checking availability of sow action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
 
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "The cracked, filthy concrete streets around you would be a pretty terrible place for a farm. Try again on more arable land."
 
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -319,6 +367,10 @@ async def sow(cmd):
 
 async def mill(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
@@ -326,13 +378,19 @@ async def mill(cmd):
 	# Checking availability of milling
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can mill their vegetables."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Alas, there doesn’t seem to be an official SlimeCorp milling station anywhere around here. Probably because you’re in the middle of the fucking city. Try looking where you reaped your vegetable in the first place, dumbass."
 
 	elif user_data.slimes < ewcfg.slimes_permill:
 		response = "It costs {} to !mill, and you only have {}.".format(ewcfg.slimes_permill, user_data.slimes)
 
 	elif item_sought:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		items = []
 		vegetable = EwItem(id_item = item_sought.get('id_item'))
 
@@ -376,6 +434,10 @@ async def mill(cmd):
 
 async def check_farm(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 	levelup_response = ""
 	mutations = user_data.get_mutations()
@@ -383,15 +445,22 @@ async def check_farm(cmd):
 	# Checking availability of check farm action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
+
 
 		farm = EwFarm(
 			id_server = cmd.message.server.id,
@@ -426,6 +495,10 @@ async def check_farm(cmd):
 async def cultivate(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 	levelup_response = ""
 	mutations = user_data.get_mutations()
@@ -433,15 +506,22 @@ async def cultivate(cmd):
 	# Checking availability of irrigate action
 	if user_data.life_state != ewcfg.life_state_juvenile:
 		response = "Only Juveniles of pure heart and with nothing better to do can farm."
-	elif user_data.poi not in [ewcfg.poi_id_jr_farms, ewcfg.poi_id_og_farms, ewcfg.poi_id_ab_farms]:
+	elif cmd.message.channel.name not in [ewcfg.channel_jr_farms, ewcfg.channel_og_farms, ewcfg.channel_ab_farms]:
 		response = "Do you remember planting anything here in this barren wasteland? No, you don’t. Idiot."
 	else:
-		if user_data.poi == ewcfg.poi_id_jr_farms:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		if cmd.message.channel.name == ewcfg.channel_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif user_data.poi == ewcfg.poi_id_og_farms:
+		elif cmd.message.channel.name == ewcfg.channel_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
+
 
 		farm = EwFarm(
 			id_server = cmd.message.server.id,
@@ -450,7 +530,7 @@ async def cultivate(cmd):
 		)
 
 		
-		farm_action = ewcfg.cmd_to_farm_action.get(cmd.tokens[0])
+		farm_action = ewcfg.cmd_to_farm_action.get(cmd.tokens[0].lower())
 
 		if farm.time_lastsow == 0:
 			response = "You missed a step, you haven’t planted anything here yet."
