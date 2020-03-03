@@ -2977,6 +2977,7 @@ def wef_broadsword(ctn = None):
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
+		ctn.sap_damage *= 2
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "nun-chucks"
