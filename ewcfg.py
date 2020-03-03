@@ -2741,17 +2741,21 @@ def wef_shotgun(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
 
 # weapon effect function for "rifle"
 def wef_rifle(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.25)
 	aim = (random.randrange(10) + 1)
 	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_damage += 2
+		ctn.sap_ignored += 10
 
 # weapon effect function for "smg"
 def wef_smg(ctn = None):
@@ -3359,7 +3363,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_revolver_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 2
 		id_weapon = weapon_id_dualpistols,
@@ -3401,6 +3405,7 @@ weapon_list = [
 			"boomstick",
 			"remington",
 			"scattergun",
+			"r870"
 		],
 		str_crit = "**Critical Hit!** {name_player} has landed a thick, meaty shot into {name_target}'s chest!",
 		str_miss = "**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
@@ -3458,8 +3463,8 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_rifle_kills,
-		sap_cost = 4,
-		captcha_length = 6
+		sap_cost = 3,
+		captcha_length = 4
 	),
 	EwWeapon( # 5
 		id_weapon = weapon_id_smg,
@@ -3493,7 +3498,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
 		sap_cost = 3,
-		captcha_length = 4
+		captcha_length = 6
 	),
 	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
@@ -3683,7 +3688,7 @@ weapon_list = [
 		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills,
 		sap_cost = 4,
-		captcha_length = 2
+		captcha_length = 3
 	),
 	EwWeapon( # 12
 		id_weapon = weapon_id_scythe,
