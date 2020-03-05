@@ -16,7 +16,7 @@ from ewmarket import EwMarket
 from ewplayer import EwPlayer
 from ewdistrict import EwDistrict
 from ewslimeoid import EwSlimeoid
-#from ewstatuseffects import EwEnemyStatusEffect
+from ewstatuseffects import EwEnemyStatusEffect
 
 """ Enemy data model for database persistence """
 
@@ -350,7 +350,21 @@ class EwEnemy:
 			strikes = 0
 			sap_damage = 0
 			sap_ignored = 0
+			miss_mod = 0
+			crit_mod = 0
+			dmg_mod = 0
 
+			# Weaponized flavor text.
+			#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
+			hitzone = ewwep.get_hitzone()
+			randombodypart = hitzone.name
+			if random.random() < 0.5:
+				randombodypart = random.choice(hitzone.aliases)
+
+			miss_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
+			crit_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
+			dmg_mod += round(ewwep.apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = target_data, hitzone = hitzone) + ewwep.apply_combat_mods(user_data=target_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = enemy_data, hitzone = hitzone), 2)
+			
 			# maybe enemies COULD have weapon skills? could punishes players who die to the same enemy without mining up beforehand
 			# slimes_damage = int((slimes_spent * 4) * (100 + (user_data.weaponskill * 10)) / 100.0)
 
@@ -366,6 +380,8 @@ class EwEnemy:
 				
 			if enemy_data.weathertype == ewcfg.enemy_weathertype_rainresist:
 				slimes_damage *= 1.5
+
+			slimes_damage += int(slimes_damage * dmg_mod)
 
 			slimes_dropped = target_data.totaldamage + target_data.slimes
 
@@ -403,13 +419,6 @@ class EwEnemy:
 						was_hurt = True
 
 				if was_hurt:
-					# Weaponized flavor text.
-					#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
-					hitzone = ewwep.get_hitzone()
-					randombodypart = hitzone.name
-					if random.random() < 0.5:
-						randombodypart = random.choice(hitzone.aliases)
-
 					# Attacking-type-specific adjustments
 					if used_attacktype != ewcfg.enemy_attacktype_unarmed and used_attacktype.fn_effect != None:
 						# Build effect container
@@ -422,7 +431,9 @@ class EwEnemy:
 							target_data=target_data,
 							sap_damage=sap_damage,
 							sap_ignored=sap_ignored,
-							backfire_damage=backfire_damage
+							backfire_damage=backfire_damage,
+							miss_mod=miss_mod,
+							crit_mod=crit_mod
 						)
 
 						# Make adjustments
@@ -715,6 +726,203 @@ class EwEnemy:
 				self.totaldamage += change
 
 		self.persist()
+	
+	def getStatusEffects(self):
+		values = []
+
+		try:
+			data = ewutils.execute_sql_query("SELECT {id_status} FROM enemy_status_effects WHERE {id_server} = %s and {id_enemy} = %s".format(
+				id_status = ewcfg.col_id_status,
+				id_server = ewcfg.col_id_server,
+				id_enemy = ewcfg.col_id_enemy
+			), (
+				self.id_server,
+				self.id_enemy
+			))
+
+			for row in data:
+				values.append(row[0])
+
+		except:
+			pass
+		finally:
+			return values
+
+	def applyStatus(self, id_status = None, value = 0, source = "", multiplier = 1, id_target = ""):
+		response = ""
+		if id_status != None:
+			status = None
+
+			status = ewcfg.status_effects_def_map.get(id_status)
+			time_expire = status.time_expire * multiplier
+
+			if status != None:
+				statuses = self.getStatusEffects()
+
+				status_effect = EwEnemyStatusEffect(id_status=id_status, enemy_data=self, time_expire=time_expire, value=value, source=source, id_target=id_target)
+				
+				if id_status in statuses:
+					status_effect.value = value
+
+					if status.time_expire > 0 and id_status in ewcfg.stackable_status_effects:
+						status_effect.time_expire += time_expire
+						response = status.str_acquire
+
+					status_effect.persist()
+				else:
+					response = status.str_acquire
+					
+		return response		
+
+	def clear_status(self, id_status = None):
+		if id_status != None:
+			try:
+				conn_info = ewutils.databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor()
+
+				# Save the object.
+				cursor.execute("DELETE FROM enemy_status_effects WHERE {id_status} = %s and {id_enemy} = %s and {id_server} = %s".format(
+					id_status = ewcfg.col_id_status,
+					id_enemy = ewcfg.col_id_enemy,
+					id_server = ewcfg.col_id_server
+				), (
+					id_status,
+					self.id_enemy,
+					self.id_server
+				))
+
+				conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				ewutils.databaseClose(conn_info)
+
+	def clear_allstatuses(self):
+		try:
+			ewutils.execute_sql_query("DELETE FROM enemy_status_effects WHERE {id_server} = %s AND {id_enemy} = %s".format(
+					id_server = ewcfg.col_id_server,
+					id_enemy = ewcfg.col_id_enemy
+				),(
+					self.id_server,
+					self.id_enemy
+				))
+		except:
+			ewutils.logMsg("Failed to clear status effects for enemy {}.".format(self.id_enemy))
+	
+	def dodge(self):
+		enemy_data = self 
+
+		resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
+		
+		target_data = None
+
+		# Get target's info based on its AI.
+
+		if enemy_data.ai == ewcfg.enemy_ai_coward:
+			users = ewutils.execute_sql_query(
+				"SELECT {id_user}, {life_state} FROM users WHERE {poi} = %s AND {id_server} = %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
+					id_user=ewcfg.col_id_user,
+					life_state=ewcfg.col_life_state,
+					poi=ewcfg.col_poi,
+					id_server=ewcfg.col_id_server,
+					life_state_corpse=ewcfg.life_state_corpse,
+					life_state_kingpin=ewcfg.life_state_kingpin,
+				), (
+					enemy_data.poi,
+					enemy_data.id_server
+				))
+			if len(users) > 0:
+				target_data = EwUser(id_user = random.choice(users)[0], id_server = enemy_data.id_server)
+		elif enemy_data.ai == ewcfg.enemy_ai_defender:
+			if enemy_data.id_target != "":
+				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
+		else:
+			target_data = get_target_by_ai(enemy_data)
+
+		if target_data != None:
+			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
+			ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel 
+
+			id_status = ewcfg.status_evasive_id
+
+			enemy_data.clear_status(id_status = id_status)
+
+			enemy_data.applyStatus(id_status = id_status, source = enemy_data.id_enemy, id_target = (target_data.id_user if target_data.combatant_type == "player" else target_data.id_enemy))
+
+			response = "{} focuses on dodging {}'s attacks.".format(enemy_data.display_name, target.display_name)
+			resp_cont.add_channel_response(ch_name, response)
+		
+		return resp_cont
+
+	def taunt(self):
+		enemy_data = self 
+
+		resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
+		
+		target_data = None
+
+		# Get target's info based on its AI.
+
+		if enemy_data.ai == ewcfg.enemy_ai_coward:
+			return
+		elif enemy_data.ai == ewcfg.enemy_ai_defender:
+			if enemy_data.id_target != "":
+				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
+		else:
+			target_data = get_target_by_ai(enemy_data)
+
+		if target_data != None:
+			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
+			ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel 
+
+			id_status = ewcfg.status_taunted_id
+
+			target_statuses = target_data.getStatusEffects()
+
+			if id_status in target_statuses:
+				return
+				
+			target_data.applyStatus(id_status = id_status, source = enemy_data.id_enemy, id_target = enemy_data.id_enemy)
+
+			response = "{} taunts {} into attacking it.".format(enemy_data.display_name, target.display_name)
+			resp_cont.add_channel_response(ch_name, response)
+		
+		return resp_cont
+
+	def aim(self):
+		enemy_data = self 
+
+		resp_cont = ewutils.EwResponseContainer(id_server=enemy_data.id_server)
+		
+		target_data = None
+
+		# Get target's info based on its AI.
+
+		if enemy_data.ai == ewcfg.enemy_ai_coward:
+			return
+		elif enemy_data.ai == ewcfg.enemy_ai_defender:
+			if enemy_data.id_target != "":
+				target_data = EwUser(id_user=enemy_data.id_target, id_server=enemy_data.id_server)
+		else:
+			target_data = get_target_by_ai(enemy_data)
+
+		if target_data != None:
+			target = EwPlayer(id_user = target_data.id_user, id_server = enemy_data.id_server)
+			ch_name = ewcfg.id_to_poi.get(enemy_data.poi).channel 
+
+			id_status = ewcfg.status_aiming_id
+
+			enemy_data.clear_status(id_status = id_status)
+
+			enemy_data.applyStatus(id_status = id_status, source = enemy_data.id_enemy, id_target = (target_data.id_user if target_data.combatant_type == "player" else target_data.id_enemy))
+
+			enemy_data.persist()
+
+			response = "{} aims at {}'s weak spot.".format(enemy_data.display_name, target.display_name)
+			resp_cont.add_channel_response(ch_name, response)
+		
+		return resp_cont
 
 # Reskinned version of effect container from ewwep.
 class EwEnemyEffectContainer:
@@ -728,6 +936,8 @@ class EwEnemyEffectContainer:
 	target_data = None
 	sap_damage = 0
 	sap_ignored = 0
+	miss_mod = 0
+	crit_mod = 0
 
 	# Debug method to dump out the members of this object.
 	def dump(self):
@@ -753,7 +963,9 @@ class EwEnemyEffectContainer:
 			target_data=None,
 			sap_damage=0,
 			sap_ignored=0,
-			backfire_damage=0
+			backfire_damage=0,
+			miss_mod=0,
+			crit_mod=0
 	):
 		self.miss = miss
 		self.backfire = backfire
@@ -766,6 +978,8 @@ class EwEnemyEffectContainer:
 		self.sap_damage = sap_damage
 		self.sap_ignored = sap_ignored
 		self.backfire_damage = backfire_damage
+		self.miss_mod = miss_mod
+		self.crit_mod = crit_mod
 
 # Debug command. Could be used for events, perhaps?
 
@@ -839,6 +1053,8 @@ async def summonenemy(cmd, is_bot_spawn = False):
 async def enemy_perform_action(id_server):
 	#time_start = time.time()
 	
+	client = ewcfg.get_client()
+
 	despawn_timenow = int(time.time()) - ewcfg.time_despawn
 
 	enemydata = ewutils.execute_sql_query(
@@ -863,6 +1079,8 @@ async def enemy_perform_action(id_server):
 
 	for row in enemydata:
 		enemy = EwEnemy(id_enemy=row[0], id_server=id_server)
+		enemy_statuses = enemy.getStatusEffects()
+		resp_cont = ewutils.EwResponseContainer(id_server=id_server)
 
 		# If an enemy is marked for death or has been alive too long, delete it
 		if enemy.life_state == ewcfg.enemy_lifestate_dead or (enemy.lifetime < despawn_timenow):
@@ -877,7 +1095,45 @@ async def enemy_perform_action(id_server):
 
 			# If an enemy is alive and not a sandbag, make it peform the kill function.
 			if enemy.enemytype != ewcfg.enemy_type_sandbag:
-				resp_cont = await enemy.kill()
+				
+				ch_name = ewcfg.id_to_poi.get(enemy.poi).channel 
+
+				# Check if the enemy can do anything right now
+				if check_raidboss_countdown(enemy) and enemy.life_state == ewcfg.enemy_lifestate_unactivated:
+					# Raid boss has activated!
+					response = "*The ground quakes beneath your feet as slime begins to pool into one hulking, solidified mass...*" \
+							"\n{} **{} has arrived! It's level {} and has {} slime!** {}\n".format(
+						ewcfg.emote_megaslime,
+						enemy.display_name,
+						enemy.level,
+						enemy.slimes,
+						ewcfg.emote_megaslime
+					)
+					resp_cont.add_channel_response(ch_name, response)
+
+					enemy.life_state = ewcfg.enemy_lifestate_alive
+					enemy.time_lastenter = int(time.time())
+					enemy.persist()
+
+				# If a raid boss is currently counting down, delete the previous countdown message to reduce visual clutter.
+				elif check_raidboss_countdown(enemy) == False:
+					timer = (enemy.raidtimer - (int(time.time())) + ewcfg.time_raidcountdown)
+
+					if timer < ewcfg.enemy_attack_tick_length and timer != 0:
+						timer = ewcfg.enemy_attack_tick_length
+
+					countdown_response = "A sinister presence is lurking. Time remaining: {} seconds...".format(timer)
+					resp_cont.add_channel_response(ch_name, countdown_response)
+
+					#TODO: Edit the countdown message instead of deleting and reposting
+					last_messages = await resp_cont.post()
+					asyncio.ensure_future(ewutils.delete_last_message(client, last_messages, ewcfg.enemy_attack_tick_length))
+					resp_cont = None
+
+				elif any([ewcfg.status_evasive_id, ewcfg.status_aiming_id]) not in enemy_statuses and random.randrange(10) == 0:
+					resp_cont = random.choice([enemy.dodge, enemy.taunt, enemy.aim])()
+				else:
+					resp_cont = await enemy.kill()
 			else:
 				resp_cont = None
 				
@@ -1091,6 +1347,7 @@ def find_enemy(enemy_search=None, user_data=None):
 # Deletes an enemy the database.
 def delete_enemy(enemy_data):
 	# print("DEBUG - {} - {} DELETED".format(enemy_data.id_enemy, enemy_data.display_name))
+	enemy_data.clear_allstatuses()
 	ewutils.execute_sql_query("DELETE FROM enemies WHERE {id_enemy} = %s".format(
 		id_enemy=ewcfg.col_id_enemy
 	), (
@@ -1139,7 +1396,6 @@ def drop_enemy_loot(enemy_data, district_data):
 	crop_values = None
 	meat_values = None
 	card_values = None
-	
 	
 	drop_table = ewcfg.enemy_drop_tables[enemy_data.enemytype]
 	

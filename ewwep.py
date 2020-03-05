@@ -20,6 +20,7 @@ from ewdistrict import EwDistrict
 from ewplayer import EwPlayer
 from ewhunting import EwEnemy
 from ewstatuseffects import EwStatusEffect
+from ewstatuseffects import EwEnemyStatusEffect
 
 """ A weapon object which adds flavor text to kill/shoot. """
 class EwWeapon:
@@ -625,30 +626,19 @@ async def attack(cmd):
 				if ewcfg.weapon_class_thrown in weapon.classes:
 					weapon_item.stack_size -= 1
 
-				if ewcfg.weapon_class_exploding in weapon.classes:
-					user_data.persist()
-					shootee_data.persist()
+				life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
+				factions = ["", user_data.faction if backfire else shootee_data.faction]
 
+				# Burn players in district
+				if ewcfg.weapon_class_burning in weapon.classes:
 					if not miss:
-						life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
-						factions = ["", user_data.faction if backfire else shootee_data.faction]
-						# Burn players in district
-						if weapon.id_weapon == ewcfg.weapon_id_molotov:
-							bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
-							for bystander in bystander_users:
-								#print(bystander)
-								bystander_user_data = EwUser(id_user = bystander, id_server = user_data.id_server)
-								bystander_player_data = EwPlayer(id_user = bystander, id_server = user_data.id_server)
-								resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id, value=bystander_damage, source=user_data.id_user).format(name_player = bystander_player_data.display_name)
-								resp_cont.add_channel_response(cmd.message.channel.name, resp)
-						#Damage players/enemies in district
-						else:
-							resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False, sap_damage = 2)
-							resp_cont.add_response_container(resp)
+						resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
+						resp_cont.add_response_container(resp)
 
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
-
+				if ewcfg.weapon_class_exploding in weapon.classes:
+					if not miss:
+						resp = weapon_explosion(user_data=user_data, shootee_data=shootee_data, district_data=district_data, market_data = market_data, life_states=life_states, factions=factions, slimes_damage=bystander_damage, backfire=backfire, time_now=time_now, target_enemy=False, sap_damage = 2)
+						resp_cont.add_response_container(resp)
 
 			# can't hit lucky lucy
 			if shootee_data.life_state == ewcfg.life_state_lucky:
@@ -1357,6 +1347,27 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 
 		return resp_cont
 
+def burn_bystanders(user_data = None, burn_dmg = 0, life_states = None, factions = None, district_data = None):
+	if life_states != None and factions != None and district_data != None:
+		bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
+		resp_cont = ewutils.EwResponseContainer(id_server=user_data.id_server)
+		channel = ewcfg.id_to_poi.get(district_data.name).channel
+
+		for bystander in bystander_users:
+			bystander_user_data = EwUser(id_user = bystander, id_server = user_data.id_server)
+			bystander_player_data = EwPlayer(id_user = bystander, id_server = user_data.id_server)
+			resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player = bystander_player_data.display_name)
+			resp_cont.add_channel_response(channel, resp)
+
+		bystander_enemies = district_data.get_enemies_in_district()
+
+		for bystander in bystander_enemies:
+			bystander_enemy_data = EwEnemy(id_enemy=bystander, id_server=user_data.id_server)
+			resp = bystander_enemy_data.applyStatus(id_status=ewcfg.status_burning_id, value=burn_dmg, source=user_data.id_user).format(name_player = bystander_enemy_data.display_name)
+			resp_cont.add_channel_response(channel, resp)
+		
+		return resp_cont
+
 """ Player spars with a friendly player to gain slime. """
 async def spar(cmd):
 	time_now = int(time.time())
@@ -1816,16 +1827,20 @@ def apply_combat_mods(user_data = None, desired_type = None, target = None, shoo
 
 			# check target for targeted status effects
 			if status in [ewcfg.status_taunted_id, ewcfg.status_aiming_id, ewcfg.status_evasive_id]:
-				status_data = EwStatusEffect(id_status = status, user_data = user_data)
+				if user_data.combatant_type == "player":
+					status_data = EwStatusEffect(id_status = status, user_data = user_data)
+				else:
+					status_data = EwEnemyStatusEffect(id_status = status, enemy_data = user_data)
+
 				if status_data.id_target != "":
 					if status == ewcfg.status_taunted_id:
-						if shootee_data == None or shootee_data.combatant_type != ewcfg.combatant_type_player or shootee_data.id_user == status_data.id_target:
+						if shootee_data == None  or shootee_data.id_user == status_data.id_target:
 							continue
 					elif status == ewcfg.status_evasive_id:
-						if shooter_data == None or shooter_data.combatant_type != ewcfg.combatant_type_player or shooter_data.id_user != status_data.id_target:
+						if shooter_data == None  or shooter_data.id_user != status_data.id_target:
 							continue
 					elif status == ewcfg.status_aiming_id:
-						if shootee_data == None or shootee_data.combatant_type != ewcfg.combatant_type_player or shootee_data.id_user != status_data.id_target:
+						if shootee_data == None  or shootee_data.id_user != status_data.id_target:
 							continue
 
 			if status_flavor is not None:
@@ -1858,18 +1873,19 @@ def apply_combat_mods(user_data = None, desired_type = None, target = None, shoo
 				except:
 					ewutils.logMsg("error with int conversion")
 
-		trauma = ewcfg.trauma_map.get(user_data.trauma)
+		if user_data.combatant_type == 'player':
+			trauma = ewcfg.trauma_map.get(user_data.trauma)
 
-		if trauma != None:
-			if target == ewcfg.status_effect_target_self:
-				if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_movespeed:
-					modifier += 0.3 * user_data.degradation / 100
-				elif desired_type == ewcfg.status_effect_type_damage and trauma.trauma_class == ewcfg.trauma_class_damage:
-					modifier -= 0.9 * user_data.degradation / 100
+			if trauma != None:
+				if target == ewcfg.status_effect_target_self:
+					if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_movespeed:
+						modifier += 0.3 * user_data.degradation / 100
+					elif desired_type == ewcfg.status_effect_type_damage and trauma.trauma_class == ewcfg.trauma_class_damage:
+						modifier -= 0.9 * user_data.degradation / 100
 
-			elif target == ewcfg.status_effect_target_other:
-				if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_accuracy:
-					modifier -= 0.2 * user_data.degradation / 100
+				elif target == ewcfg.status_effect_target_other:
+					if desired_type == ewcfg.status_effect_type_miss and trauma.trauma_class == ewcfg.trauma_class_accuracy:
+						modifier -= 0.2 * user_data.degradation / 100
 
 	return modifier
 	
@@ -1905,9 +1921,15 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	sap_damage = 0
 	sap_ignored = 0
 
-	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
-	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
-	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data = enemy_data), 2)
+	# Weaponized flavor text.
+	hitzone = get_hitzone()
+	randombodypart = hitzone.name
+	if random.random() < 0.5:
+		randombodypart = random.choice(hitzone.aliases)
+
+	miss_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_miss, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+	crit_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_crit, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
+	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
 	slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
@@ -1943,12 +1965,6 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	if not sandbag_mode:
 		user_data.hunger += ewcfg.hunger_pershot * ewutils.hunger_cost_mod(user_data.slimelevel)
 		
-	# Weaponized flavor text.
-	hitzone = get_hitzone()
-	randombodypart = hitzone.name
-	if random.random() < 0.5:
-		randombodypart = random.choice(hitzone.aliases)
-
 	#randombodypart = ewcfg.hitzone_list[random.randrange(len(ewcfg.hitzone_list))]
 
 	# Weapon-specific adjustments
@@ -2050,38 +2066,32 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			weapon_item.stack_size -= 1
 		
 		if not sandbag_mode:
+			life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
+			bystander_faction = ""
+			if user_data.faction == "rowdys":
+				bystander_faction = "killers"
+			elif user_data.faction == "killers":
+				bystander_faction = "rowdys"
+
+			factions = ["", user_data.faction if backfire else bystander_faction]
+
+			# Burn players in district
+			if ewcfg.weapon_class_burning in weapon.classes:
+				if not miss:
+					resp = burn_bystanders(user_data=user_data, burn_dmg=bystander_damage, life_states=life_states, factions=factions, district_data=district_data)
+					resp_cont.add_response_container(resp)
+
 			if ewcfg.weapon_class_exploding in weapon.classes:
 				user_data.persist()
 				enemy_data.persist()
 
 				if not miss:
-					life_states = [ewcfg.life_state_juvenile, ewcfg.life_state_enlisted, ewcfg.life_state_shambler]
-					bystander_faction = ""
-					if user_data.faction == "rowdys":
-						bystander_faction = "killers"
-					elif user_data.faction == "killers":
-						bystander_faction = "rowdys"
-
-					factions = ["", user_data.faction if backfire else bystander_faction]
-					# Burn players in district
-					if weapon.id_weapon == ewcfg.weapon_id_molotov or weapon.id_weapon == ewcfg.weapon_id_dclaw:
-						bystander_users = district_data.get_players_in_district(life_states=life_states, factions=factions, pvp_only=True)
-						# TODO - Make enemies work with molotovs the same way players do.
-						for bystander in bystander_users:
-							# print(bystander)
-							bystander_user_data = EwUser(id_user=bystander, id_server=user_data.id_server)
-							bystander_player_data = EwPlayer(id_user=bystander, id_server=user_data.id_server)
-							resp = bystander_user_data.applyStatus(id_status=ewcfg.status_burning_id,
-																value=bystander_damage, source=user_data.id_user).format(
-								name_player=bystander_player_data.display_name)
-							resp_cont.add_channel_response(cmd.message.channel.name, resp)
 					# Damage players/enemies in district
-					else:
-						resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data,
-													district_data=district_data, market_data = market_data, life_states=life_states,
-													factions=factions, slimes_damage=bystander_damage, backfire=backfire,
-													time_now=time_now, target_enemy=True)
-						resp_cont.add_response_container(resp)
+					resp = weapon_explosion(user_data=user_data, shootee_data=enemy_data,
+												district_data=district_data, market_data = market_data, life_states=life_states,
+												factions=factions, slimes_damage=bystander_damage, backfire=backfire,
+												time_now=time_now, target_enemy=True)
+					resp_cont.add_response_container(resp)
 
 			user_data = EwUser(member=cmd.message.author)
 
@@ -2474,19 +2484,26 @@ async def dodge(cmd):
 		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.mentions_count < 1:
-		response = "Whose attacks do you want to {}?".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#if cmd.mentions_count < 1:
+	#	response = "Whose attacks do you want to {}?".format(cmd.tokens[0])
+	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 	if cmd.mentions_count > 1:
 		response = "You can only focus on dodging one person at a time.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	member = cmd.mentions[0]
-	
-	member_data = EwUser(member = member)
+	if cmd.mentions_count == 1:
+		target = cmd.mentions[0]
+		target_data = EwUser(member = target)
+	else:
+		huntedenemy = " ".join(cmd.tokens[1:]).lower()
+		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
-	if member_data.poi != user_data.poi:
+	if target_data == None:
+		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if target_data.poi != user_data.poi:
 		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2494,7 +2511,7 @@ async def dodge(cmd):
 
 	user_data.clear_status(id_status = id_status)
 
-	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = member.id)
+	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
 	user_data.sap -= sap_cost
 
@@ -2502,7 +2519,7 @@ async def dodge(cmd):
 
 	user_data.persist()
 
-	response = "You spend {} sap to focus on dodging {}'s attacks.".format(sap_cost, member.display_name)
+	response = "You spend {} sap to focus on dodging {}'s attacks.".format(sap_cost, target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2525,38 +2542,45 @@ async def taunt(cmd):
 		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.mentions_count < 1:
-		response = "Who do you want to {}?".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#if cmd.mentions_count < 1:
+	#	response = "Who do you want to {}?".format(cmd.tokens[0])
+	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 	if cmd.mentions_count > 1:
 		response = "You can only focus on taunting one person at a time.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	member = cmd.mentions[0]
-	
-	member_data = EwUser(member = member)
+	if cmd.mentions_count == 1:
+		target = cmd.mentions[0]
+		target_data = EwUser(member = target)
+	else:
+		huntedenemy = " ".join(cmd.tokens[1:]).lower()
+		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
-	if member_data.poi != user_data.poi:
+	if target_data == None:
+		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if target_data.poi != user_data.poi:
 		response = "You can't {} someone, who's not even here.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	id_status = ewcfg.status_taunted_id
 
-	member_statuses = member_data.getStatusEffects()
+	target_statuses = target_data.getStatusEffects()
 
-	if id_status in member_statuses:
-		response = "{} has already been taunted.".format(member.display_name)
+	if id_status in target_statuses:
+		response = "{} has already been taunted.".format(target.display_name)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
-	member_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = cmd.message.author.id)
+	target_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = cmd.message.author.id)
 
 	user_data.sap -= sap_cost
 
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 	user_data.persist()
 
-	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, member.display_name)
+	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2579,19 +2603,26 @@ async def aim(cmd):
 		response = "You don't have enough sap to {}. ({}/{})".format(cmd.tokens[0], user_data.sap, sap_cost)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.mentions_count < 1:
-		response = "Who do you want to {} at?".format(cmd.tokens[0])
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	#if cmd.mentions_count < 1:
+	#	response = "Who do you want to {} at?".format(cmd.tokens[0])
+	#	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
 	if cmd.mentions_count > 1:
 		response = "You can only focus on aiming at one person at a time.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	member = cmd.mentions[0]
-	
-	member_data = EwUser(member = member)
+	if cmd.mentions_count == 1:
+		target = cmd.mentions[0]
+		target_data = EwUser(member = target)
+	else:
+		huntedenemy = " ".join(cmd.tokens[1:]).lower()
+		target_data = target = ewhunting.find_enemy(enemy_search=huntedenemy, user_data=user_data)
 
-	if member_data.poi != user_data.poi:
+	if target_data == None:
+		response = "ENDLESS WAR didn't understand that name.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if target_data.poi != user_data.poi:
 		response = "You can't {} at someone, who's not even here.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2599,14 +2630,14 @@ async def aim(cmd):
 
 	user_data.clear_status(id_status = id_status)
 
-	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = member.id)
+	user_data.applyStatus(id_status = id_status, source = cmd.message.author.id, id_target = (target.id if target_data.combatant_type == "player" else target_data.id_enemy))
 
 	user_data.sap -= sap_cost
 
 	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
 	user_data.persist()
 
-	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, member.display_name)
+	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)
 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

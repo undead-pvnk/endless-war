@@ -26,7 +26,9 @@ from ewtrauma import EwTrauma, EwHitzone
 import ewdebug
 
 # Global configuration options.
+
 version = "v3.23i2k4p"
+
 
 dir_msgqueue = 'msgqueue'
 
@@ -2834,7 +2836,7 @@ def wef_bat(ctn = None):
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
-	if aim == -2:
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -2959,7 +2961,7 @@ def wef_broadsword(ctn = None):
 
 	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -3038,14 +3040,14 @@ def wef_scythe(ctn = None):
 
 	aim = (random.randrange(10) + 1)
 
-	if aim <= (1 + (10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
 
-	elif aim >= (10 - (10 * ctn.crit_mod)):
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -3123,7 +3125,7 @@ def wef_molotov(ctn = None):
 
 	ctn.bystander_damage = dmg * 0.5
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -3132,7 +3134,7 @@ def wef_molotov(ctn = None):
 			ctn.backfire = True
 			ctn.backfire_damage = dmg
 
-	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
+	elif aim > 2 and aim <= (3 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -3140,7 +3142,7 @@ def wef_molotov(ctn = None):
 			ctn.miss = True
 
 	else:
-		if aim >= (10 - (10 * ctn.crit_mod)):
+		if aim >= (10 - int(10 * ctn.crit_mod)):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 
@@ -3155,7 +3157,7 @@ def wef_grenade(ctn = None):
 
 	aim = (random.randrange(10) + 1)
 
-	if aim <= (1 + (10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -3164,7 +3166,7 @@ def wef_grenade(ctn = None):
 			ctn.miss = True
 			ctn.bystander_damage = 0
 
-	elif aim > 1 and aim <= 2:
+	elif aim > 1 and aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -3173,7 +3175,7 @@ def wef_grenade(ctn = None):
 			ctn.backfire = True
 			ctn.backfire_damage = ctn.slimes_damage
 
-	elif aim >= (10 - (10 * ctn.crit_mod)):
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
@@ -3185,14 +3187,14 @@ def wef_garrote(ctn = None):
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
-	if aim <= (100 * ctn.miss_mod):
+	if aim <= int(100 * ctn.miss_mod):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
 
-	elif aim <= (1 - (100 * ctn.crit_mod)):
+	elif aim <= (1 - int(100 * ctn.crit_mod)):
 		ctn.slimes_damage *= 10
 		ctn.crit = True
 
@@ -3296,6 +3298,7 @@ def wef_bow(ctn = None):
 def wef_dclaw(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
 	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
 		ctn.slimes_spent *= 0.5
@@ -3303,7 +3306,6 @@ def wef_dclaw(ctn = None):
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 		ctn.slimes_spent *= 1
 
-	dmg = ctn.slimes_damage
 	ctn.bystander_damage = int(dmg * 0.5)
 
 	#less slime cost and less damage = attacking faster I guess?
@@ -3327,6 +3329,7 @@ vendor_dojo = "Dojo"
 weapon_class_ammo = "ammo"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
+weapon_class_burning = "burning"
 weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
@@ -3809,7 +3812,7 @@ weapon_list = [
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
+		classes = [weapon_class_thrown, weapon_class_burning, weapon_class_captcha],
 		stat = stat_molotov_kills,
 		sap_cost = 1,
 		captcha_length = 4
@@ -4035,7 +4038,7 @@ weapon_list = [
 		str_description = "It's the core of a Dragon Claw, it will morph around whatever hand it is held by granting them the power of the elusive GREEN EYES SLIME DRAGON. If you listen closely you can hear whines of the dragon soul as it remains perpetually trapped in the weapon.",
 		acquisition = acquisition_smelting,
 		stat = stat_dclaw_kills,
-		classes = [weapon_class_exploding],
+		classes = [weapon_class_burning],
 		sap_cost = 5,
 		captcha_length = 2)
 ]
@@ -4058,10 +4061,10 @@ def atf_fangs(ctn = None):
 	aim = (random.randrange(10) + 1)
 	ctn.sap_damage = 1
 
-	if aim == 1:
+	if aim == (1 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim == 10:
+	elif aim == (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4073,7 +4076,7 @@ def atf_talons(ctn = None):
 	ctn.sap_damage = 0
 	ctn.sap_ignored = 10
 
-	if (random.randrange(10) + 1) == 10:
+	if (random.randrange(10) + 1) == (10 + int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2.1
 
@@ -4086,10 +4089,10 @@ def atf_raiderscythe(ctn = None):
 	ctn.sap_damage = 0
 	ctn.sap_ignored = 5
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= 9:
+	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4099,10 +4102,10 @@ def atf_gunkshot(ctn = None):
 	aim = (random.randrange(10) + 1)
 	ctn.sap_damage = 2
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= 9:
+	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4111,13 +4114,13 @@ def atf_tusks(ctn = None):
 
 	aim = (random.randrange(21) - 10)
 	ctn.sap_damage = 3
-	if aim <= -9:
+	if aim <= (-9 + int(21 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
 	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
 
-	if aim >= 9:
+	if aim >= (9 - int(21 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 
@@ -4133,15 +4136,15 @@ def atf_molotovbreath(ctn = None):
 
 	#ctn.bystander_damage = dmg * 0.5
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.backfire = True
 		ctn.backfire_damage = dmg
 
-	elif aim == 3:
+	elif aim == (3 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
-	elif aim == 10:
+	elif aim == (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4151,10 +4154,10 @@ def atf_armcannon(ctn = None):
 
 	aim = (random.randrange(20) + 1)
 
-	if aim <= 2:
+	if aim <= (2 + int(20 * ctn.miss_mod)):
 		ctn.miss = True
 
-	if aim == 20:
+	if aim == (20 - int(20 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 3
 
@@ -4163,10 +4166,10 @@ def atf_axe(ctn=None):
 	ctn.slimes_damage *= 0.7
 	aim = (random.randrange(10) + 1)
 
-	if aim <= 4:
+	if aim <= (4 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 
-	if aim == 10:
+	if aim == (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4175,10 +4178,10 @@ def atf_hooves(ctn=None):
 	ctn.slimes_damage *= 0.4
 	aim = (random.randrange(30) + 1)
 
-	if aim <= 5:
+	if aim <= (5 + int(30 * ctn.miss_mod)):
 		ctn.miss = True
 
-	if aim > 25:
+	if aim > (25 - int(30 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
