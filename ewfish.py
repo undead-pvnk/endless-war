@@ -479,7 +479,7 @@ async def cast(cmd):
 
 				user_data = EwUser(member=cmd.message.author)
 
-				if fisher.pier == "" or user_data.poi != fisher.pier.mother_district:
+				if fisher.pier == "" or user_data.poi != (fisher.pier.mother_district if fisher.pier.is_subzone else fisher.pier.id_poi):
 					fisher.stop()
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
