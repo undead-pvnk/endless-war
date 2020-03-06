@@ -27,7 +27,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.23i2k4p"
+version = "v3.24i2k4p"
 
 
 dir_msgqueue = 'msgqueue'
@@ -2353,7 +2353,7 @@ item_list = [
 		str_desc = "Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
 		context = 'blood stone',
 		acquisition = acquisition_smelting
-
+	),
 	EwGeneralItem(
 		id_item = "tanningknife",
 		context = "tool",
@@ -12569,7 +12569,7 @@ smelting_recipe_list = [
 			"monster soup"
 		],
 		ingredients = {
-			"monsterbones" : 5
+			"monsterbones" : 5,
 			item_id_dinoslimemeat : 1
 		},
 		products = [item_id_monstersoup],
