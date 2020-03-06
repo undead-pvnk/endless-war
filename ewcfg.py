@@ -26,7 +26,9 @@ from ewtrauma import EwTrauma, EwHitzone
 import ewdebug
 
 # Global configuration options.
-version = "v3.24i2"
+
+version = "v3.23i2k4p"
+
 
 dir_msgqueue = 'msgqueue'
 
@@ -1926,6 +1928,7 @@ vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 
 item_id_slimepoudrin = 'slimepoudrin'
+item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'
 item_id_octuplestuffedcrust = "octuplestuffedcrust"
@@ -2338,6 +2341,18 @@ item_list = [
 		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
 		context = 'dragon soul',
 	),
+	EwGeneralItem(
+		id_item = "monsterbones",
+		str_name = "Monster Bones",
+		str_desc = "A large set of bones, taken from the monsters that roam the outskirts. Tastes meaty.",
+		context = 'monster bone',
+	),
+	EwGeneralItem(
+		id_item = "bloodstone",
+		str_name = "blood stone",
+		str_desc = "Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
+		context = 'blood stone',
+		acquisition = acquisition_smelting
 
 	EwGeneralItem(
 		id_item = "tanningknife",
@@ -2728,17 +2743,21 @@ def wef_shotgun(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
 
 # weapon effect function for "rifle"
 def wef_rifle(ctn = None):
 	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.25)
 	aim = (random.randrange(10) + 1)
 	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_damage += 2
+		ctn.sap_ignored += 10
 
 # weapon effect function for "smg"
 def wef_smg(ctn = None):
@@ -2960,6 +2979,7 @@ def wef_broadsword(ctn = None):
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
+		ctn.sap_damage *= 2
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "nun-chucks"
@@ -3090,13 +3110,13 @@ def wef_knives(ctn = None):
 
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
 # weapon effect function for "molotov"
 def wef_molotov(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 2
+	ctn.slimes_spent *= 1
 	user_mutations = ctn.user_data.get_mutations()
 	ctn.sap_damage = 0
 	ctn.sap_ignored = 10
@@ -3130,10 +3150,10 @@ def wef_molotov(ctn = None):
 def wef_grenade(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 2
+	ctn.slimes_spent *= 1
 	ctn.bystander_damage = int(dmg * 0.3)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 2
+	ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 
@@ -3286,8 +3306,9 @@ def wef_dclaw(ctn = None):
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 		ctn.slimes_spent *= 1
 
+	ctn.bystander_damage = int(dmg * 0.5)
+
 	#less slime cost and less damage = attacking faster I guess?
-	ctn.bystander_damage = dmg / 2
 	ctn.sap_damage = 5
 	ctn.sap_ignored = 10
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
@@ -3300,10 +3321,7 @@ def wef_dclaw(ctn = None):
 			ctn.miss = True
 	elif aim >= (9 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
-		if mutation_id_lucky in user_mutations:
-			ctn.slimes_damage = int(dmg * 8)
-		else:
-			ctn.slimes_damage = int(dmg * 4)
+		ctn.slimes_damage = int(dmg * 4)
 
 
 vendor_dojo = "Dojo"
@@ -3349,7 +3367,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_revolver_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 2
 		id_weapon = weapon_id_dualpistols,
@@ -3357,6 +3375,7 @@ weapon_list = [
 			"dual",
 			"pistols",
 			"berettas",
+			"dualies"
 		],
 		str_crit = "**Critical Hit!** {name_player} has lodged several bullets into {name_target}'s vital arteries!",
 		str_miss = "**You missed!** Your numerous, haphazard shots hit everything but {name_target}!",
@@ -3372,8 +3391,8 @@ weapon_list = [
 		str_damage = "{name_target} takes a flurry of bullets to the {hitzone}!!",
 		str_duel = "**tk tk tk tk tk tk tk tk tk tk**. {name_player} and {name_target} hone their twitch aim and trigger fingers, unloading clip after clip of airsoft BBs into one another with the eagerness of small children.",
 		str_description = "They're dual pistols.",
-		str_reload = "You swing out the chamber on both of your dual pistols, knocking out the used shells onto the floor before hastily slamming fresh bullets back into them.",
-		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s chambers, they’re out of bullets!!",
+		str_reload = "You swing out the handles on both of your pistols, knocking out the used magazines onto the floor before hastily slamming fresh mags back into them.",
+		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s mags, they’re out of bullets!!",
 		str_scalp = " It has a couple bullet holes in it.",
 		fn_effect = wef_dualpistols,
 		clip_size = 12,
@@ -3382,7 +3401,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_dual_pistols_kills,
 		sap_cost = 1,
-		captcha_length = 2
+		captcha_length = 1
 	),
 	EwWeapon( # 3
 		id_weapon = weapon_id_shotgun,
@@ -3390,6 +3409,7 @@ weapon_list = [
 			"boomstick",
 			"remington",
 			"scattergun",
+			"r870"
 		],
 		str_crit = "**Critical Hit!** {name_player} has landed a thick, meaty shot into {name_target}'s chest!",
 		str_miss = "**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
@@ -3414,8 +3434,8 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_shotgun_kills,
-		sap_cost = 5,
-		captcha_length = 6
+		sap_cost = 4,
+		captcha_length = 5
 	),
 	EwWeapon( # 4
 		id_weapon = weapon_id_rifle,
@@ -3447,8 +3467,8 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_rifle_kills,
-		sap_cost = 4,
-		captcha_length = 6
+		sap_cost = 3,
+		captcha_length = 4
 	),
 	EwWeapon( # 5
 		id_weapon = weapon_id_smg,
@@ -3482,7 +3502,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
 		sap_cost = 3,
-		captcha_length = 4
+		captcha_length = 6
 	),
 	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
@@ -3672,7 +3692,7 @@ weapon_list = [
 		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills,
 		sap_cost = 4,
-		captcha_length = 2
+		captcha_length = 3
 	),
 	EwWeapon( # 12
 		id_weapon = weapon_id_scythe,
@@ -3762,7 +3782,7 @@ weapon_list = [
 		classes = [weapon_class_thrown, weapon_class_captcha],
 		stat = stat_knives_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 15
 		id_weapon = weapon_id_molotov,
@@ -3770,7 +3790,8 @@ weapon_list = [
 			"firebomb",
 			"molotovcocktail",
 			"bomb",
-			"bombs"
+			"bombs",
+			"moly"
 		],
 		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
@@ -3823,7 +3844,7 @@ weapon_list = [
 		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
 		stat = stat_grenade_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 17
 		id_weapon = weapon_id_garrote,
@@ -5870,6 +5891,24 @@ food_list = [
 				   "with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the "
 				   "life of the ones you love. Chant it’s name, praise the harbinger of death you just acquired from Pizza "
 				   "Hut. Quadruple Stuffed Crust. Quadruple Stuffed Crust. QUADRUPLE STUFFED CRUST!! AAAAAAAAAAAAAAAAAAH!!",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food = item_id_monstersoup,
+		alias = [
+			"soup",
+			"meatsoup",
+			"stew",
+			"meatstew",
+			"monstersoup",
+			"monster soup"
+		],
+		recover_hunger = 2000,
+		str_name = "Homemade Monster Soup",
+		str_eat = "You gaze upon the large bowl of monster soup and slurp it down, your throat scratched by the copious ammounts "
+		"of bone shards that permiate the rich broth. Meaty and homely, just like grandma made it.",
+		str_desc = "A large bowl of soup covered with the saran wrap that prevents you from smelling the wonderous mix of"
+		"soft meat and crackling bones, full of nutrients and carcinogens in equal ammounts.",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -12519,6 +12558,23 @@ smelting_recipe_list = [
 		products = ["knightarmor"]
 	),
 	EwSmeltingRecipe(
+		id_recipe = item_id_monstersoup,
+		str_name = "a bowl of Monster Soup",
+		alias = [
+			"soup",
+			"meatsoup",
+			"stew",
+			"meatstew",
+			"monstersoup",
+			"monster soup"
+		],
+		ingredients = {
+			"monsterbones" : 5
+			item_id_dinoslimemeat : 1
+		},
+		products = [item_id_monstersoup],
+	),
+	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
 		str_name = "an Octuple Stuffed Crust",
 		alias = [
@@ -12734,6 +12790,19 @@ smelting_recipe_list = [
 			'tanningknife':1
 		},
 		products = ['leather']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "bloodstone",
+		str_name = "a chunk of bloodstone",
+		alias = [
+			"bloodstone",
+			"bstone"
+		],
+		ingredients = {
+			'monsterbones':100,
+			'faggot':1
+		},
+		products = ['bloodstone']
     ),
 	    EwSmeltingRecipe(
 		id_recipe = "dclaw",
@@ -15365,7 +15434,7 @@ status_effect_list = [
 		miss_mod = -0.06,
 		crit_mod = 0.03,
 	),
-	
+
 ]
 
 status_effects_def_map = {}
@@ -15955,17 +16024,17 @@ enemy_spawn_groups = {
 enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
 	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
-	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}, {"monsterbones": [100, 3, 5]}],
 	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
 	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
-	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
+	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}, {"monsterbones": [100, 1, 3]}],
 	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
-	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}, {"monsterbones": [100, 5, 10]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
