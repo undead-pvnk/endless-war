@@ -166,6 +166,19 @@ class EwResponseContainer:
 
 		return messages
 
+class EwVector2D:
+	vector = [0, 0]
+
+	def __init__(self, vector):
+		self.vector = vector
+
+	def scalar_product(self, other_vector):
+		result = 0
+
+		for i in range(2):
+			result += self.vector[i] * other_vector.vector[i]
+
+		return result
 
 def readMessage(fname):
 	msg = Message()
