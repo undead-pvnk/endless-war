@@ -43,7 +43,7 @@ class EwShambleBallPlayer:
 
 		global sb_games
 
-		self.velocity = (0, 0)
+		self.velocity = [0, 0]
 		
 
 		game_data = sb_games.get(id_game)
@@ -67,9 +67,9 @@ class EwShambleBallPlayer:
 			return resp_cont
 
 		if random.random() * abs_sum < abs_x:
-			move = (self.velocity[0] / abs_x, 0)
+			move = [self.velocity[0] / abs_x, 0]
 		else:
-			move = (0, self.velocity[1] / abs_y)
+			move = [0, self.velocity[1] / abs_y]
 
 
 		move_vector = ewutils.EwVector2D(move)
@@ -86,12 +86,12 @@ class EwShambleBallPlayer:
 			self.coords = destination_vector.vector
 
 		elif game_data.out_of_bounds(destination_vector.vector):
-			self.velocity = (0, 0)
+			self.velocity = [0, 0]
 			response = "{} has walked against the outer bounds and stopped at {}.".format(player_data.display_name, self.coords)
 		else:
 			if destination_vector.vector == game_data.ball_coords:
 				game_data.ball_velocity = (round(5 * self.velocity[0]), round(5 * self.velocity[1]))
-				self.velocity = (0, 0)
+				self.velocity = [0, 0]
 				response = "{} has kicked the ball in direction {}!".format(player_data.display_name, game_data.ball_velocity)
 			else:
 				vel = self.velocity
@@ -150,7 +150,7 @@ class EwShambleBallGame:
 		while not self.coords_free(self.ball_coords):
 			self.ball_coords = get_starting_position("")
 
-		self.ball_velocity = (0, 0)
+		self.ball_velocity = [0, 0]
 
 	def coords_free(self, coords):
 
@@ -196,9 +196,9 @@ class EwShambleBallGame:
 		response = ""
 		while abs_sum != 0:
 			if random.random() * abs_sum < abs_x:
-				part_move = (move[0] / abs_x, 0)
+				part_move = [move[0] / abs_x, 0]
 			else:
-				part_move = (0, move[0] / abs_y)
+				part_move = [0, move[0] / abs_y]
 
 			
 
@@ -215,7 +215,7 @@ class EwShambleBallGame:
 						whole_move_vector.vector[i] *= -1
 						self.ball_velocity[i] *= -1
 			else:
-			 	self.ball_velocity = (0, 0)
+			 	self.ball_velocity = [0, 0]
 			 	break
 
 			if self.is_goal():
@@ -228,7 +228,7 @@ class EwShambleBallGame:
 					self.score_purple += 1
 
 
-				self.ball_velocity = (0, 0)
+				self.ball_velocity = [0, 0]
 				self.ball_coords = get_starting_position("")
 				break
 
@@ -238,24 +238,6 @@ class EwShambleBallGame:
 				abs_y = abs(whole_move_vector.vector[1])
 				abs_sum = abs_x + abs_y
 
-		elif game_data.out_of_bounds(destination_vector.vector):
-			self.velocity = (0, 0)
-			response = "{} has walked against the outer bounds and stopped at {}.".format(player_data.display_name, self.coords)
-		else:
-			if destination_vector.vector == game_data.ball_coords:
-				game_data.ball_velocity = (round(5 * self.velocity[0]), round(5 * self.velocity[1]))
-				self.velocity = (0, 0)
-				response = "{} has kicked the ball in direction {}!".format(player_data.display_name, game_data.ball_velocity)
-			else:
-				vel = self.velocity
-
-				for p in game_data.players:
-						if p.coords == destination_vector.vector:
-								self.velocity = p.velocity
-								p.velocity = vel
-								other_player_data = EwPlayer(id_user = p.id_user)
-								response = "{} has collided with {}.".format(player_data.display_name, other_player_data.display_name)
-								break			
 					
 		if len(response) > 0:
 			poi_data = ewcfg.id_to_poi.get(game_data.poi)
@@ -266,7 +248,7 @@ class EwShambleBallGame:
 		
 
 def get_starting_position(team):
-	coords = ()
+	coords = []
 	if team == "purple":
 		coords.append(random.randrange(10, 40))
 		coords.append(random.randrange(10, 40))
@@ -417,4 +399,4 @@ async def shamblestop(cmd):
 		response = "Your Shambleball game is happening in the #{} channel.".format(game_poi.channel)
 		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
 
-	shamble_player.velocity = (0, 0)
+	shamble_player.velocity = [0, 0]
