@@ -59,19 +59,6 @@ class EwShambleBallPlayer:
 
 		
 			
-def get_starting_position(team):
-	coords = ()
-	if team == "purple":
-		coords.append(random.randrange(10, 40))
-		coords.append(random.randrange(10, 40))
-	elif team == "pink":
-		coords.append(random.randrange(60, 90))
-		coords.append(random.randrange(10, 40))
-	else:
-		coords.append(random.randrange(49, 51))
-		coords.append(random.randrange(20, 30))
-
-	return coords
 
 class EwShambleBallGame:
 
@@ -120,6 +107,34 @@ class EwShambleBallGame:
 
 		return True
 
+def get_starting_position(team):
+	coords = ()
+	if team == "purple":
+		coords.append(random.randrange(10, 40))
+		coords.append(random.randrange(10, 40))
+	elif team == "pink":
+		coords.append(random.randrange(60, 90))
+		coords.append(random.randrange(10, 40))
+	else:
+		coords.append(random.randrange(49, 51))
+		coords.append(random.randrange(20, 30))
+
+	return coords
+
+def get_coords(tokens):
+
+	coords = []
+	for token in tokens:
+		if len(coords) == 2:
+			break
+		try:
+			int_token = int(token)
+			coords.append(int_token)
+		except:
+			pass
+	
+	return coords
+
 async def shambleball(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
@@ -144,6 +159,11 @@ async def shambleball(cmd):
 		response = "This place is too functional and full of people to play Shambleball. You'll have to {} it first.".format(ewcfg.cmd_shamble)
 		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
 
+	team = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	if team not in ["purple", "pink"]:
+		response = "Please choose if you want to play on the pink team or the purple team."
+		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+
 	global sb_userid_to_player
 	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
 
@@ -163,7 +183,7 @@ async def shambleball(cmd):
 			game_data = EwShambleBallGame(poi_data.id_poi)
 			response = "You put your severed head on the floor and start a new game of Shambleball as a {team} team player."
 
-		shamble_player = EwShambleBallPlayer(cmd.message.author.id, cmd.message.server.id, game_data.id_game)
+		shamble_player = EwShambleBallPlayer(cmd.message.author.id, cmd.message.server.id, game_data.id_game, team)
 	else:
 		response = "You are playing Shambleball on the {team} team. You are currently at {player_coords} going in direction {player_vel}. The ball is currently at {ball_coords} going in direction {ball_vel}."
 
@@ -183,8 +203,54 @@ async def shamblego(cmd):
 		response = "You have to go into the city to play Shambleball."
 		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
 
+	global sb_games
+	game_data = sb_games.get(shamble_player.id_game)
+
 	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
+	if poi_data.id_poi != game_data.poi:
+		game_poi = ewcfg.id_to_poi.get(game_data.poi)
+		response = "Your Shambleball game is happening in the #{} channel.".format(game_poi.channel)
+		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+
+
+	target_coords = get_coords(cmd.tokens[1:])
+
+	if len(target_coords) != 2:
+		response = "Specify where you want to {} to.".format(ewcfg.cmd_shamblego)
+
+	target_vector = ewutils.EwVector2D(target_coords)
+	current_vector = ewutils.EwVector2D(shamble_player.coords)
+
+	target_direction = target_vector.subtract(current_vector)
+	target_direction = target_direction.normalize()
+
+	current_direction = ewutils.EwVector2D(shamble_player.velocity)
+
+	result_direction = current_direction.add(target_direction)
 	
+	shamble_player.velocity = result_direction.vector
 
 async def shamblestop(cmd):
+	global sb_userid_to_player
+	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
+
+	if shamble_player == None:
+		response = "You have to join a game using {} first.".format(ewcfg.cmd_shambleball)
+		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+
+	if ewmap.channel_name_is_poi(cmd.message.channel.name):
+		response = "You have to go into the city to play Shambleball."
+		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+
+	global sb_games
+	game_data = sb_games.get(shamble_player.id_game)
+
+	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+
+	if poi_data.id_poi != game_data.poi:
+		game_poi = ewcfg.id_to_poi.get(game_data.poi)
+		response = "Your Shambleball game is happening in the #{} channel.".format(game_poi.channel)
+		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+
+	shamble_player.velocity = (0, 0)
