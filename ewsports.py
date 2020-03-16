@@ -125,7 +125,10 @@ class EwShambleBallGame:
 
 	ball_velocity = None
 
-	def __init__(self, poi, id_server):
+	score_pink = 0
+	score_purple = 0
+
+	def	__init__(self, poi, id_server):
 		self.poi = poi
 		self.id_server = id_server
 
@@ -151,6 +154,9 @@ class EwShambleBallGame:
 			self.ball_coords = get_starting_position("")
 
 		self.ball_velocity = [0, 0]
+
+		self.score_pink = 0
+		self.score_purple = 0
 
 	def coords_free(self, coords):
 
@@ -330,9 +336,17 @@ async def shambleball(cmd):
 
 		shamble_player = EwShambleBallPlayer(cmd.message.author.id, cmd.message.server.id, game_data.id_game, team)
 	else:
-		response = "You are playing Shambleball on the {team} team. You are currently at {player_coords} going in direction {player_vel}. The ball is currently at {ball_coords} going in direction {ball_vel}."
+		response = "You are playing Shambleball on the {team} team. You are currently at {player_coords} going in direction {player_vel}. The ball is currently at {ball_coords} going in direction {ball_vel}. The score is purple {score_purple} : {score_pink} pink."
 
-	response = response.format(team = shamble_player.team, player_coords = shamble_player.coords, ball_coords = game_data.ball_coords, player_vel = player.velocity, ball_vel = game_data.ball_velocity)
+	response = response.format(
+			team = shamble_player.team,
+			player_coords = shamble_player.coords,
+		   	ball_coords = game_data.ball_coords,
+		   	player_vel = player.velocity,
+		   	ball_vel = game_data.ball_velocity,
+		   	score_purple = game_data.score_purple,
+		   	score_pink = game_data.score_pink
+	)
 	return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
 
 async def shamblego(cmd):
