@@ -26,13 +26,15 @@ class EwShambleBallPlayer:
 
 	coords = None
 	velocity = None
+	team = ""
 
-	def __init__(self, id_user, id_server, id_game):
+	def __init__(self, id_user, id_server, id_game, team):
 
 		self.id_user = id_user
 		self.id_server = id_server
 		self.id_game = id_game
-		
+		self.team = team
+
 		global sb_count
 
 		self.id_player = sb_count
@@ -40,7 +42,12 @@ class EwShambleBallPlayer:
 
 		global sb_games
 
+		self.velocity = (0, 0)
+		
+
 		game_data = sb_games.get(id_game)
+		while not game_data.coords_free(self.coords):
+			self.coords = get_starting_position(self.team)
 
 		game_data.players.append(self)
 
@@ -49,6 +56,22 @@ class EwShambleBallPlayer:
 		sb_userid_to_player[self.id_user] = self
 		sb_shambleid_to_player[self.id_player] = self
 
+
+		
+			
+def get_starting_position(team):
+	coords = ()
+	if team == "purple":
+		coords.append(random.randrange(10, 40))
+		coords.append(random.randrange(10, 40))
+	elif team == "pink":
+		coords.append(random.randrange(60, 90))
+		coords.append(random.randrange(10, 40))
+	else:
+		coords.append(random.randrange(49, 51))
+		coords.append(random.randrange(20, 30))
+
+	return coords
 
 class EwShambleBallGame:
 
@@ -78,6 +101,24 @@ class EwShambleBallGame:
 
 		self.players = []
 
+		while not self.coords_free(self.ball_coords):
+			self.ball_coords = get_starting_position("")
+
+		self.ball_velocity = (0, 0)
+
+	def coords_free(self, coords):
+
+		if coords == None or len(coords) != 2:
+			return False
+
+		if coords == self.ball_coords:
+			return False
+
+		for p in self.players:
+			if p.coords == coords:
+				return False
+
+		return True
 
 async def shambleball(cmd):
 
