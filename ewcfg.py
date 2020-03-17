@@ -1139,7 +1139,7 @@ weather_tick_length = 10
 event_tick_length = 5
 
 # shambleball tick length
-shambleball_tick_length = 3
+shambleball_tick_length = 5
 
 # how often to refresh sap
 sap_tick_length = 5

@@ -91,7 +91,18 @@ class EwShambleBallPlayer:
 			self.velocity = [0, 0]
 			response = "{} has walked against the outer bounds and stopped at {}.".format(player_data.display_name, self.coords)
 		else:
-			if destination_vector.vector == game_data.ball_coords:
+			ball_contact = False
+			for i in range(-1, 2):
+				for j in range(-1, 2):
+					neighbor_direction = [i, j]
+					neighbor_vector = ewutils.EwVector2D(neighbor_direction)
+					if move_vector.scalar_product(neighbor_vector) > 0:
+						neighbor_position = destination_vector.add(neighbor_vector)
+						if neighbor_position.vector == game_data.ball_coords:
+							ball_contact = True
+							break
+
+			if ball_contact:
 				game_data.ball_velocity = [round(5 * self.velocity[0]), round(5 * self.velocity[1])]
 				game_data.last_contact = self.id_player
 				self.velocity = [0, 0]
@@ -199,6 +210,7 @@ class EwShambleBallGame:
 		for p in self.players:
 			if p.coords == coords:
 				player = p.id_player
+				break
 
 		return player
 
@@ -504,6 +516,7 @@ async def shambleleave(cmd):
 	game_data = sb_games.get(shamble_player.id_game)
 
 	game_data.players.remove(shamble_player)
+	shamble_player.id_game = -1
 
 	response = "You quit the game of Shambleball."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
