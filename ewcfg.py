@@ -745,6 +745,9 @@ cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
+cmd_shambleball = cmd_prefix + 'shambleball'
+cmd_shamblego = cmd_prefix + 'shamblego'
+cmd_shamblestop = cmd_prefix + 'shamblestop'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1133,6 +1136,9 @@ weather_tick_length = 10
 
 # how often to delete expired world events
 event_tick_length = 5
+
+# shambleball tick length
+shambleball_tick_length = 3
 
 # how often to refresh sap
 sap_tick_length = 5

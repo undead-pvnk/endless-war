@@ -91,6 +91,7 @@ class EwShambleBallPlayer:
 		else:
 			if destination_vector.vector == game_data.ball_coords:
 				game_data.ball_velocity = (round(5 * self.velocity[0]), round(5 * self.velocity[1]))
+				game_data.last_contact = self.id_player
 				self.velocity = [0, 0]
 				response = "{} has kicked the ball in direction {}!".format(player_data.display_name, game_data.ball_velocity)
 			else:
@@ -127,6 +128,7 @@ class EwShambleBallGame:
 
 	score_pink = 0
 	score_purple = 0
+	last_contact = -1
 
 	def	__init__(self, poi, id_server):
 		self.poi = poi
@@ -157,6 +159,7 @@ class EwShambleBallGame:
 
 		self.score_pink = 0
 		self.score_purple = 0
+		self.last_contact = -1
 
 	def coords_free(self, coords):
 
@@ -169,9 +172,8 @@ class EwShambleBallGame:
 		if coords == self.ball_coords:
 			return False
 
-		for p in self.players:
-			if p.coords == coords:
-				return False
+		if self.player_at_coords(coords) != -1:
+			return False
 
 		return True
 
@@ -187,6 +189,14 @@ class EwShambleBallGame:
 	def is_goal_pink(self):
 		return self.ball_coords[0] == 99 and self.ball_coords[1] in range(20, 30):
 		
+	def player_at_coords(self, coords):
+		player = -1
+
+		for p in self.players:
+			if p.coords == coords:
+				player = p.id_player
+
+		return player
 
 	def move_ball(self):
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
@@ -222,20 +232,38 @@ class EwShambleBallGame:
 						self.ball_velocity[i] *= -1
 			else:
 			 	self.ball_velocity = [0, 0]
+				self.last_contact = self.player_at_coords(destination_vector.vector)			
 			 	break
 
 			if self.is_goal():
 
+				global sb_shambleid_to_player
+
+				scoring_player = sb_shambleid_to_player.get(self.last_contact)
+				if scoring_player != None:
+					player_data = EwPlayer(id_user = scoring_player.id_user)
+				else:
+					player_data = None
+
 				if self.is_goal_purple():
-					response = "The pink team scored a goal!"
+
+					if player_data != None:
+						response = "{} scored a goal for the pink team!".format(player_data.display_name)
+					else:
+						response = "The pink team scored a goal!"
 					self.score_pink += 1
 				elif self.is_goal_pink():
-					response = "The purple team scored a goal!"
+
+					if player_data != None:
+						response = "{} scored a goal for the purple team!".format(player_data.display_name)
+					else:
+						response = "The purple team scored a goal!"
 					self.score_purple += 1
 
 
 				self.ball_velocity = [0, 0]
 				self.ball_coords = get_starting_position("")
+				self.last_contact = -1
 				break
 
 			else:
@@ -244,14 +272,55 @@ class EwShambleBallGame:
 				abs_y = abs(whole_move_vector.vector[1])
 				abs_sum = abs_x + abs_y
 
-					
+		for i in range(2):
+			if self.ball_velocity[i] > 0:
+				self.ball_velocity[i] -= 1
+			elif self.ball_velocity[i] < 0:
+				self.ball_velocity[i] += 1
+
 		if len(response) > 0:
 			poi_data = ewcfg.id_to_poi.get(game_data.poi)
 			resp_cont.add_channel_response(poi_data.channel, response)
 
 		return resp_cont
 
+	def kill(self):
+		global sb_games
+		global sb_poi_to_gamemap
+
+		sb_games[self.id_game] = None
+		gamemap = sb_idserver_to_gamemap.get(self.id_server)
+		gamemap[self.poi] = None
 		
+async def shambleball_tick_loop(id_server):
+	global sb_games
+	while not ewutils.TERMINATE:
+		await shambleball_tick(id_server)
+		await asyncio.sleep(ewcfg.shambleball_tick_length)
+		
+
+async def shambleball_tick(id_server):
+	resp_cont = ewutils.EwResponseContainer(id_server)
+
+	for id_game in sb_games:
+		game = sb_games.get(id_game)
+		if game == None:
+			continue
+		if game.id_server == id_server:
+			if len(game.players) > 0:
+				for player in game.players:
+					resp_cont.add_response_container(player.move())
+
+				resp_cont.add_response_container(game.move_ball())
+
+			else:
+				poi_data = ewcfg.id_to_poi.get(game.poi)
+				response = "Shambleball game ended with score purple {} : {} pink.".format(game.score_purple, game.score_pink)
+				resp_cont.add_channel_response(poi_data.channel, response)
+					
+				game.kill()
+
+	await resp_cont.post()
 
 def get_starting_position(team):
 	coords = []
