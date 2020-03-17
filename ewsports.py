@@ -1,8 +1,10 @@
 import time
 import random
+import asyncio
 
 import ewcfg
 import ewutils
+import ewmap
 
 from ew import EwUser
 from ewplayer import EwPlayer
@@ -90,7 +92,7 @@ class EwShambleBallPlayer:
 			response = "{} has walked against the outer bounds and stopped at {}.".format(player_data.display_name, self.coords)
 		else:
 			if destination_vector.vector == game_data.ball_coords:
-				game_data.ball_velocity = (round(5 * self.velocity[0]), round(5 * self.velocity[1]))
+				game_data.ball_velocity = [round(5 * self.velocity[0]), round(5 * self.velocity[1])]
 				game_data.last_contact = self.id_player
 				self.velocity = [0, 0]
 				response = "{} has kicked the ball in direction {}!".format(player_data.display_name, game_data.ball_velocity)
@@ -99,11 +101,11 @@ class EwShambleBallPlayer:
 
 				for p in game_data.players:
 						if p.coords == destination_vector.vector:
-								self.velocity = p.velocity
-								p.velocity = vel
-								other_player_data = EwPlayer(id_user = p.id_user)
-								response = "{} has collided with {}.".format(player_data.display_name, other_player_data.display_name)
-								break			
+							self.velocity = p.velocity
+							p.velocity = vel
+							other_player_data = EwPlayer(id_user = p.id_user)
+							response = "{} has collided with {}.".format(player_data.display_name, other_player_data.display_name)
+							break			
 					
 		if len(response) > 0:
 			poi_data = ewcfg.id_to_poi.get(game_data.poi)
@@ -152,8 +154,10 @@ class EwShambleBallGame:
 
 		self.players = []
 
-		while not self.coords_free(self.ball_coords):
-			self.ball_coords = get_starting_position("")
+		ball_coords = []
+		while not self.coords_free(ball_coords):
+			ball_coords = get_starting_position("")
+		self.ball_coords = ball_coords
 
 		self.ball_velocity = [0, 0]
 
@@ -178,16 +182,16 @@ class EwShambleBallGame:
 		return True
 
 	def out_of_bounds(self, coords):
-		return coords[0] < 0 or coords[0] > 99 or coords[1] < 0 or coords[1] > 49:
+		return coords[0] < 0 or coords[0] > 99 or coords[1] < 0 or coords[1] > 49
 
 	def is_goal(self):
 		return self.is_goal_purple() or self.is_goal_pink()
 
 	def is_goal_purple(self):
-		return self.ball_coords[0] == 0 and self.ball_coords[1] in range(20, 30):
+		return self.ball_coords[0] == 0 and self.ball_coords[1] in range(20, 30)
 		
 	def is_goal_pink(self):
-		return self.ball_coords[0] == 99 and self.ball_coords[1] in range(20, 30):
+		return self.ball_coords[0] == 99 and self.ball_coords[1] in range(20, 30)
 		
 	def player_at_coords(self, coords):
 		player = -1
@@ -200,13 +204,13 @@ class EwShambleBallGame:
 
 	def move_ball(self):
 		resp_cont = ewutils.EwResponseContainer(id_server = self.id_server)
-		abs_x = abs(self.velocity[0])
-		abs_y = abs(self.velocity[1])
+		abs_x = abs(self.ball_velocity[0])
+		abs_y = abs(self.ball_velocity[1])
 		abs_sum = abs_x + abs_y
 		if abs_sum == 0:
 			return resp_cont
 
-		move = (self.velocity[0], self.velocity[1])
+		move = (self.ball_velocity[0], self.ball_velocity[1])
 		whole_move_vector = ewutils.EwVector2D(move)
 
 		response = ""
@@ -231,9 +235,9 @@ class EwShambleBallGame:
 						whole_move_vector.vector[i] *= -1
 						self.ball_velocity[i] *= -1
 			else:
-			 	self.ball_velocity = [0, 0]
+				self.ball_velocity = [0, 0]
 				self.last_contact = self.player_at_coords(destination_vector.vector)			
-			 	break
+				break
 
 			if self.is_goal():
 
@@ -267,7 +271,7 @@ class EwShambleBallGame:
 				break
 
 			else:
-				whole_move_vector = whole_move_vector.subract(move_vector)
+				whole_move_vector = whole_move_vector.subtract(move_vector)
 				abs_x = abs(whole_move_vector.vector[0])
 				abs_y = abs(whole_move_vector.vector[1])
 				abs_sum = abs_x + abs_y
@@ -300,7 +304,7 @@ async def shambleball_tick_loop(id_server):
 		
 
 async def shambleball_tick(id_server):
-	resp_cont = ewutils.EwResponseContainer(id_server)
+	resp_cont = ewutils.EwResponseContainer(id_server = id_server)
 
 	for id_game in sb_games:
 		game = sb_games.get(id_game)
@@ -354,33 +358,39 @@ async def shambleball(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 
+	global sb_userid_to_player
+	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
+
 	if user_data.life_state != ewcfg.life_state_shambler:
 		response = "You have too many higher brain functions left to play Shambleball."
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Shambleball."
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
 	if poi_data.is_subzone or poi_data.is_transport:
 		response = "This place is too cramped for playing Shambleball. Go outside!"
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	district_data = EwDistrict(district = poi_data.id_poi, id_server = cmd.message.server.id)
 
 	if not district_data.is_degraded:
 		response = "This place is too functional and full of people to play Shambleball. You'll have to {} it first.".format(ewcfg.cmd_shamble)
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	team = ewutils.flattenTokenListToString(cmd.tokens[1:])
-	if team not in ["purple", "pink"]:
-		response = "Please choose if you want to play on the pink team or the purple team."
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+	if shamble_player == None:
+		team = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		if team not in ["purple", "pink"]:
+			response = "Please choose if you want to play on the pink team or the purple team."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	global sb_userid_to_player
-	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
+	#global sb_userid_to_player
+	#shamble_player = sb_userid_to_player.get(cmd.message.author.id)
+	
+	game_data = None
 
 	if shamble_player != None:
 		global sb_games
@@ -411,12 +421,12 @@ async def shambleball(cmd):
 			team = shamble_player.team,
 			player_coords = shamble_player.coords,
 		   	ball_coords = game_data.ball_coords,
-		   	player_vel = player.velocity,
+		   	player_vel = shamble_player.velocity,
 		   	ball_vel = game_data.ball_velocity,
 		   	score_purple = game_data.score_purple,
 		   	score_pink = game_data.score_pink
 	)
-	return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def shamblego(cmd):
 
@@ -425,11 +435,11 @@ async def shamblego(cmd):
 
 	if shamble_player == None:
 		response = "You have to join a game using {} first.".format(ewcfg.cmd_shambleball)
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Shambleball."
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	global sb_games
 	game_data = sb_games.get(shamble_player.id_game)
@@ -439,12 +449,13 @@ async def shamblego(cmd):
 	if poi_data.id_poi != game_data.poi:
 		game_poi = ewcfg.id_to_poi.get(game_data.poi)
 		response = "Your Shambleball game is happening in the #{} channel.".format(game_poi.channel)
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 	target_coords = get_coords(cmd.tokens[1:])
 
-	if len(target_coords) != 2:
+	#todo
+	if len(target_coords) != 2 or cmd.tokens_count < 3:
 		response = "Specify where you want to {} to.".format(ewcfg.cmd_shamblego)
 
 	target_vector = ewutils.EwVector2D(target_coords)
@@ -466,11 +477,11 @@ async def shamblestop(cmd):
 
 	if shamble_player == None:
 		response = "You have to join a game using {} first.".format(ewcfg.cmd_shambleball)
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Shambleball."
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	global sb_games
 	game_data = sb_games.get(shamble_player.id_game)
@@ -480,6 +491,6 @@ async def shamblestop(cmd):
 	if poi_data.id_poi != game_data.poi:
 		game_poi = ewcfg.id_to_poi.get(game_data.poi)
 		response = "Your Shambleball game is happening in the #{} channel.".format(game_poi.channel)
-		return await ewutils.send_response(cmd.client, cmd.message.channel, ewutils.formatResponse(cmd.message.author, response))
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	shamble_player.velocity = [0, 0]
