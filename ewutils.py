@@ -210,7 +210,7 @@ class EwVector2D:
 			return EwVector2D([0, 0])
 
 		for i in range(2):
-			result.append(self.vector[i] / norm)
+			result.append(round(self.vector[i] / norm, 3))
 
 		return EwVector2D(result)
 

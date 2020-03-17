@@ -275,6 +275,7 @@ class EwShambleBallGame:
 				abs_x = abs(whole_move_vector.vector[0])
 				abs_y = abs(whole_move_vector.vector[1])
 				abs_sum = abs_x + abs_y
+				move = whole_move_vector.vector
 
 		for i in range(2):
 			if self.ball_velocity[i] > 0:
@@ -283,7 +284,7 @@ class EwShambleBallGame:
 				self.ball_velocity[i] += 1
 
 		if len(response) > 0:
-			poi_data = ewcfg.id_to_poi.get(game_data.poi)
+			poi_data = ewcfg.id_to_poi.get(self.poi)
 			resp_cont.add_channel_response(poi_data.channel, response)
 
 		return resp_cont
@@ -454,9 +455,9 @@ async def shamblego(cmd):
 
 	target_coords = get_coords(cmd.tokens[1:])
 
-	#todo
-	if len(target_coords) != 2 or cmd.tokens_count < 3:
+	if len(target_coords) != 2:
 		response = "Specify where you want to {} to.".format(ewcfg.cmd_shamblego)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	target_vector = ewutils.EwVector2D(target_coords)
 	current_vector = ewutils.EwVector2D(shamble_player.coords)
