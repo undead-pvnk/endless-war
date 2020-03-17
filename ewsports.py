@@ -84,39 +84,39 @@ class EwShambleBallPlayer:
 
 		player_data = EwPlayer(id_user = self.id_user)
 		response = ""
-		if game_data.coords_free(destination_vector.vector):
+		ball_contact = False
+		for i in range(-1, 2):
+			for j in range(-1, 2):
+				neighbor_direction = [i, j]
+				neighbor_vector = ewutils.EwVector2D(neighbor_direction)
+				if move_vector.scalar_product(neighbor_vector) > 0:
+					neighbor_position = position_vector.add(neighbor_vector)
+					if neighbor_position.vector == game_data.ball_coords:
+						ball_contact = True
+						break
+
+		if ball_contact:
+			game_data.ball_velocity = [round(5 * self.velocity[0]), round(5 * self.velocity[1])]
+			game_data.last_contact = self.id_player
+			self.velocity = [0, 0]
+			response = "{} has kicked the ball in direction {}!".format(player_data.display_name, game_data.ball_velocity)
+
+		elif game_data.coords_free(destination_vector.vector):
 			self.coords = destination_vector.vector
 
 		elif game_data.out_of_bounds(destination_vector.vector):
 			self.velocity = [0, 0]
 			response = "{} has walked against the outer bounds and stopped at {}.".format(player_data.display_name, self.coords)
 		else:
-			ball_contact = False
-			for i in range(-1, 2):
-				for j in range(-1, 2):
-					neighbor_direction = [i, j]
-					neighbor_vector = ewutils.EwVector2D(neighbor_direction)
-					if move_vector.scalar_product(neighbor_vector) > 0:
-						neighbor_position = destination_vector.add(neighbor_vector)
-						if neighbor_position.vector == game_data.ball_coords:
-							ball_contact = True
-							break
+			vel = self.velocity
 
-			if ball_contact:
-				game_data.ball_velocity = [round(5 * self.velocity[0]), round(5 * self.velocity[1])]
-				game_data.last_contact = self.id_player
-				self.velocity = [0, 0]
-				response = "{} has kicked the ball in direction {}!".format(player_data.display_name, game_data.ball_velocity)
-			else:
-				vel = self.velocity
-
-				for p in game_data.players:
-						if p.coords == destination_vector.vector:
-							self.velocity = p.velocity
-							p.velocity = vel
-							other_player_data = EwPlayer(id_user = p.id_user)
-							response = "{} has collided with {}.".format(player_data.display_name, other_player_data.display_name)
-							break			
+			for p in game_data.players:
+				if p.coords == destination_vector.vector:
+					self.velocity = p.velocity
+					p.velocity = vel
+					other_player_data = EwPlayer(id_user = p.id_user)
+					response = "{} has collided with {}.".format(player_data.display_name, other_player_data.display_name)
+					break			
 					
 		if len(response) > 0:
 			poi_data = ewcfg.id_to_poi.get(game_data.poi)
@@ -222,7 +222,7 @@ class EwShambleBallGame:
 		if abs_sum == 0:
 			return resp_cont
 
-		move = (self.ball_velocity[0], self.ball_velocity[1])
+		move = [self.ball_velocity[0], self.ball_velocity[1]]
 		whole_move_vector = ewutils.EwVector2D(move)
 
 		response = ""
@@ -239,17 +239,31 @@ class EwShambleBallGame:
 
 			destination_vector = position_vector.add(move_vector)
 
-			if self.coords_free(destination_vector.vector):
+			player_contact = False
+			for i in range(-1, 2):
+				for j in range(-1, 2):
+					neighbor_direction = [i, j]
+					neighbor_vector = ewutils.EwVector2D(neighbor_direction)
+					if move_vector.scalar_product(neighbor_vector) > 0:
+						neighbor_position = position_vector.add(neighbor_vector)
+						player = self.player_at_coords(neighbor_position.vector)
+						if player != -1:
+							self.ball_velocity = [0, 0]
+							self.last_contact = player
+							player_contact = True
+							break
+
+			if player_contact:
+				break
+
+			elif self.coords_free(destination_vector.vector):
 				self.ball_coords = destination_vector.vector
 			elif self.out_of_bounds(destination_vector.vector):
 				for i in range(2):
 					if part_move[i] != 0:
 						whole_move_vector.vector[i] *= -1
 						self.ball_velocity[i] *= -1
-			else:
-				self.ball_velocity = [0, 0]
-				self.last_contact = self.player_at_coords(destination_vector.vector)			
-				break
+
 
 			if self.is_goal():
 
