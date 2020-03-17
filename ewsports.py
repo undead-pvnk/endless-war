@@ -218,7 +218,7 @@ class EwShambleBallGame:
 			if random.random() * abs_sum < abs_x:
 				part_move = [move[0] / abs_x, 0]
 			else:
-				part_move = [0, move[0] / abs_y]
+				part_move = [0, move[1] / abs_y]
 
 			
 
@@ -359,9 +359,6 @@ async def shambleball(cmd):
 
 	user_data = EwUser(member = cmd.message.author)
 
-	global sb_userid_to_player
-	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
-
 	if user_data.life_state != ewcfg.life_state_shambler:
 		response = "You have too many higher brain functions left to play Shambleball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -382,14 +379,8 @@ async def shambleball(cmd):
 		response = "This place is too functional and full of people to play Shambleball. You'll have to {} it first.".format(ewcfg.cmd_shamble)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if shamble_player == None:
-		team = ewutils.flattenTokenListToString(cmd.tokens[1:])
-		if team not in ["purple", "pink"]:
-			response = "Please choose if you want to play on the pink team or the purple team."
-			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-	#global sb_userid_to_player
-	#shamble_player = sb_userid_to_player.get(cmd.message.author.id)
+	global sb_userid_to_player
+	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
 	
 	game_data = None
 
@@ -397,7 +388,7 @@ async def shambleball(cmd):
 		global sb_games
 		game_data = sb_games.get(shamble_player.id_game)
 
-		if game_data.poi != poi_data.id_poi:
+		if game_data != None and game_data.poi != poi_data.id_poi:
 			game_data.players.remove(shamble_player)
 			game_data = None
 
@@ -407,6 +398,11 @@ async def shambleball(cmd):
 		gamemap = sb_idserver_to_gamemap.get(cmd.message.server.id)
 		if gamemap != None:
 			game_data = gamemap.get(poi_data.id_poi)
+
+		team = ewutils.flattenTokenListToString(cmd.tokens[1:])
+		if team not in ["purple", "pink"]:
+			response = "Please choose if you want to play on the pink team or the purple team."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if game_data == None:
 			game_data = EwShambleBallGame(poi_data.id_poi, cmd.message.server.id)
@@ -495,3 +491,19 @@ async def shamblestop(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	shamble_player.velocity = [0, 0]
+
+async def shambleleave(cmd):
+	global sb_userid_to_player
+	shamble_player = sb_userid_to_player.get(cmd.message.author.id)
+
+	if shamble_player == None:
+		response = "You have to join a game using {} first.".format(ewcfg.cmd_shambleball)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	global sb_games
+	game_data = sb_games.get(shamble_player.id_game)
+
+	game_data.players.remove(shamble_player)
+
+	response = "You quit the game of Shambleball."
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

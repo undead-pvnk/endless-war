@@ -748,6 +748,7 @@ cmd_shamble = cmd_prefix + 'shamble'
 cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
 cmd_shamblestop = cmd_prefix + 'shamblestop'
+cmd_shambleleave = cmd_prefix + 'shambleleave'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'

@@ -646,6 +646,7 @@ cmd_map = {
 	ewcfg.cmd_shambleball: ewsports.shambleball,
 	ewcfg.cmd_shamblego: ewsports.shamblego,
 	ewcfg.cmd_shamblestop: ewsports.shamblestop,
+	ewcfg.cmd_shambleleave: ewsports.shambleleave,
 
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
