@@ -1011,7 +1011,7 @@ class EwUser:
 				self.festivity_from_slimecoin,
 				self.slimernalia_kingpin,
 				self.manuscript,
-				self.spray
+				self.spray,
 				self.swear_jar,
 				self.degradation,
 				self.time_lastdeath,

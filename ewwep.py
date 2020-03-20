@@ -3000,17 +3000,20 @@ async def annex2(cmd):
 						name_player=cmd.message.author.display_name)
 
 				if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-
-
-					loc_array = ewcaptcha.streetcaptcha[poi.id_poi]
-					new_loc = str(random.choice(loc_array))
-					print(new_loc)
-					new_captcha = new_loc.replace('the ', '')
-					new_captcha_low = new_captcha.split(' ', 1)[0]
-					new_captcha = "**"+new_captcha_low.upper()+"**"
-					new_loc = new_loc.replace(new_captcha_low, new_captcha)
-					response += "\nNext stop is {}.".format(new_loc)
-					weapon_item.item_props['captcha'] = new_captcha_low
+					if weapon.id_weapon != ewcfg.weapon_id_rifle:
+						loc_array = ewcaptcha.streetcaptcha[poi.id_poi]
+						new_loc = str(random.choice(loc_array))
+						new_captcha = new_loc.replace('the ', '')
+						new_captcha_low = new_captcha.split(' ', 1)[0]
+						new_captcha = "**"+new_captcha_low.upper()+"**"
+						new_loc = new_loc.replace(new_captcha_low, new_captcha)
+						response += "\nNext stop is {}.".format(new_loc)
+						weapon_item.item_props['captcha'] = new_captcha_low
+					else:
+						riflearray = ewcaptcha.riflecap
+						direction = str(random.choice(riflearray))
+						weapon_item.item_props['captcha'] = direction
+						response = "\nNext target is {}.".format("**"+direction+"**")
 					weapon_item.persist()
 
 				if district_data.controlling_faction == user_data.faction and abs(district_data.influence) > ewcfg.limit_influence[district_data.property_class]:
