@@ -22,10 +22,13 @@ from ewfish import EwFish
 from ewapt import EwFurniture
 from ewworldevent import EwEventDef
 from ewdungeons import EwDungeonScene
+from ewtrauma import EwTrauma, EwHitzone
 import ewdebug
 
 # Global configuration options.
-version = "v3.20noslimernalia"
+
+version = "v3.24i2k4p"
+
 
 dir_msgqueue = 'msgqueue'
 
@@ -51,6 +54,7 @@ combatant_type_enemy = "enemy"
 life_state_corpse = 0
 life_state_juvenile = 1
 life_state_enlisted = 2
+life_state_shambler = 3
 life_state_executive = 6
 life_state_lucky = 7
 life_state_grandfoe = 8
@@ -325,6 +329,7 @@ role_copkillers_active = "killerotp"
 role_corpse = "corpse"
 role_corpse_pvp = "corpsewanted"
 role_corpse_active = "corpseotp"
+role_shambler = "shambler"
 role_kingpin = "kingpin"
 role_grandfoe = "grandfoe"
 role_slimecorp = "slimecorp"
@@ -353,6 +358,7 @@ faction_roles = [
 	role_grandfoe,
 	role_slimecorp,
 	role_tutorial,
+	role_shambler,
 	]
 
 role_to_pvp_role = {
@@ -529,6 +535,7 @@ cmd_shoot_alt1 = cmd_prefix + 'bonk'
 cmd_shoot_alt2 = cmd_prefix + 'pat'
 cmd_shoot_alt3 = cmd_prefix + 'ban'
 cmd_shoot_alt4 = cmd_prefix + 'pullthetrigger'
+cmd_shoot_alt5 = cmd_prefix + 'curbstomp'
 cmd_attack = cmd_prefix + 'attack'
 cmd_reload = cmd_prefix + 'reload'
 cmd_reload_alt1 = cmd_prefix + 'loadthegun'
@@ -600,6 +607,7 @@ cmd_stocks = cmd_prefix + 'stocks'
 cmd_negapool = cmd_prefix + 'negapool'
 cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
+cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
@@ -669,6 +677,7 @@ cmd_makecostume = cmd_prefix + 'makecostume'
 cmd_trick = cmd_prefix + 'trick'
 cmd_treat = cmd_prefix + 'treat'
 cmd_russian = cmd_prefix + 'russianroulette'
+cmd_duel = cmd_prefix + 'duel'
 cmd_accept = cmd_prefix + 'accept'
 cmd_refuse = cmd_prefix + 'refuse'
 cmd_sign = cmd_prefix + 'sign'
@@ -736,6 +745,7 @@ cmd_flushsubzones = cmd_prefix + 'flushsubzones'
 cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
+cmd_shamble = cmd_prefix + 'shamble'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -824,6 +834,7 @@ cmd_takedown_alt_2 = cmd_prefix + 'deletezine'
 cmd_untakedown = cmd_prefix + 'untakedown'
 cmd_untakedown_alt_1 = cmd_prefix + 'uncopyrightstrike'
 cmd_untakedown_alt_2 = cmd_prefix + 'undeletezine'
+cmd_lol = cmd_prefix + 'lol'
 
 apartment_b_multiplier = 1500
 apartment_a_multiplier = 2000000
@@ -929,7 +940,7 @@ offline_cmds = [
 	cmd_scout_alt1,
 	cmd_scrutinize
 ]
-		
+
 # Slime costs/values
 slimes_onrevive = 20
 slimes_onrevive_everyone = 20
@@ -939,13 +950,14 @@ slimes_hauntratio = 400
 slimes_hauntmax = 20000
 slimes_perslot = 100
 slimes_perpachinko = 500
-slimecoin_exchangerate = 100
+slimecoin_exchangerate = 1
 slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
+slimes_shambler = 1000000
 
 # hunger
 min_stamina = 100
@@ -1047,7 +1059,7 @@ min_influence = {
 
 # how long districts stay locked after capture
 capture_lock_s = 48 * 60 * 60  # 2 days
-capture_lock_a = 24 * 60 * 60  # 1 day 
+capture_lock_a = 24 * 60 * 60  # 1 day
 capture_lock_b = 12 * 60 * 60  # 12 hours
 capture_lock_c = 6 * 60 * 60  # 6 hours
 
@@ -1214,7 +1226,7 @@ for farm_action in farm_actions:
 		cmd_to_farm_action[alias] = farm_action
 	id_to_farm_action[farm_action.id_action] = farm_action
 	farm_action_ids.append(farm_action.id_action)
-	
+
 
 # fishing
 fish_gain = 10000 # multiplied by fish size class
@@ -1246,6 +1258,7 @@ time_pvp_farm = 10 * 60
 time_pvp_spar = 5 * 60
 time_pvp_enlist = 5 * 60
 time_pvp_knock = 10 #temp fix. will probably add spam prevention or something funny like restraining orders later
+time_pvp_duel = 3 * 60
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -1309,6 +1322,7 @@ emote_purple = "<:purple:496397848343216138>"
 emote_pink = "<:pink:496397871180939294>"
 emote_slimecoin = "<:slimecoin:440576133214240769>"
 emote_slimegun = "<:slimegun:436500203743477760>"
+emote_slimeshot = "<:slimeshot:436604890928644106>"
 emote_slimecorp = "<:slimecorp:568637591847698432>"
 emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
@@ -1398,7 +1412,7 @@ symbol_map_pokemine = {
 	11 : ";",
 	12 : "/",
 	13 : "#"
-	
+
 }
 
 number_emote_map = {
@@ -1432,6 +1446,8 @@ festivity_on_gift_giving = 10000
 
 # Common strings.
 str_casino_closed = "The SlimeCorp Casino only operates at night."
+str_casino_negaslime_dealer = "\"We don't deal with negaslime around here.\", says the dealer disdainfully."
+str_casino_negaslime_machine = "The machine doesn't seem to accept antislime."
 str_exchange_closed = "The Exchange has closed for the night."
 str_exchange_specify = "Specify how much {currency} you will {action}."
 str_exchange_channelreq = "You must go to the #" + channel_stockexchange + " in person to {action} your {currency}."
@@ -1519,7 +1535,6 @@ col_faction = 'faction'
 col_poi = 'poi'
 col_life_state = 'life_state'
 col_busted = 'busted'
-col_rrchallenger = 'rr_challenger_id'
 col_time_last_action = 'time_last_action'
 col_weaponmarried = 'weaponmarried'
 col_time_lastscavenge = 'time_lastscavenge'
@@ -1531,6 +1546,7 @@ col_poi_death = 'poi_death'
 col_slime_donations = 'donated_slimes'
 col_poudrin_donations = 'donated_poudrins'
 col_caught_fish = 'caught_fish'
+col_global_swear_jar = 'global_swear_jar'
 col_arrested = 'arrested'
 col_active_slimeoid = 'active_slimeoid'
 col_time_expirpvp = 'time_expirpvp'
@@ -1542,6 +1558,10 @@ col_sap = 'sap'
 col_hardened_sap = 'hardened_sap'
 col_manuscript = "manuscript"
 col_spray = "spray"
+col_swear_jar = 'swear_jar'
+col_degradation = 'degradation'
+col_time_lastdeath = 'time_lastdeath'
+
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_festivity_from_slimecoin = 'festivity_from_slimecoin'
@@ -1729,6 +1749,10 @@ leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
 #SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
+#INTERMISSION2
+leaderboard_degradation = "MOST DEGRADED"
+leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
+
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1748,33 +1772,13 @@ control_topics = {
 # district control actors
 actor_decay = "decay"
 
+# degradation strings
+channel_topic_degraded = "(Closed indefinitely)"
+str_zone_degraded = "{poi} has been degraded too far to keep operating."
+
 # The highest and lowest level your weaponskill may be on revive. All skills over this level reset to these.
 weaponskill_max_onrevive = 6
 weaponskill_min_onrevive = 0
-
-# Places you might get !shot
-hitzone_list = [
-	"wrist",
-	"leg",
-	"arm",
-	"upper back",
-	"foot",
-	"shoulder",
-	"neck",
-	"kneecap",
-	"obliques",
-	"solar plexus",
-	"Achilles' tendon",
-	"jaw",
-	"ankle",
-	"trapezius",
-	"thigh",
-	"chest",
-	"gut",
-	"abdomen",
-	"lower back",
-	"calf"
-]
 
 # User statistics we track
 stat_max_slimes = 'max_slimes'
@@ -1816,6 +1820,7 @@ stat_lifetime_casino_losses = 'lifetime_casino_losses'
 stat_total_slimecoin_invested = 'total_slimecoin_invested'
 stat_total_slimecoin_withdrawn = 'total_slimecoin_withdrawn'
 stat_total_slimecoin_from_recycling = 'total_slimecoin_from_recycling'
+stat_total_slimecoin_from_swearing = 'total_slimecoin_from_swearing'
 stat_bounty_collected = 'bounty_collected'
 stat_max_bounty = 'max_bounty'
 stat_ghostbusts = 'ghostbusts'
@@ -1839,6 +1844,7 @@ stat_lifetime_pve_takedowns = 'lifetime_pve_takedowns'
 stat_lifetime_pve_ganks = 'lifetime_pve_ganks'
 stat_lifetime_pve_deaths = 'lifetime_pve_deaths'
 stat_capture_points_contributed = 'capture_points_contributed'
+stat_shamblers_killed = 'shamblers_killed'
 
 stat_revolver_kills = 'revolver_kills'
 stat_dual_pistols_kills = 'dual_pistols_kills'
@@ -1860,7 +1866,9 @@ stat_garrote_kills = 'garrote_kills'
 stat_pickaxe_kills = 'pickaxe_kills'
 stat_fishingrod_kills = 'fishingrod_kills'
 stat_bass_kills = 'bass_kills'
+stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
+stat_dclaw_kills = 'dclaw_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -1893,6 +1901,7 @@ coinsource_transfer = 5
 coinsource_invest = 6
 coinsource_withdraw = 7
 coinsource_recycle = 8
+coinsource_swearjar = 9
 
 # Causes of death, for statistics tracking
 cause_killing = 0
@@ -1947,6 +1956,7 @@ vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
 
 item_id_slimepoudrin = 'slimepoudrin'
+item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'
 item_id_octuplestuffedcrust = "octuplestuffedcrust"
@@ -2060,7 +2070,8 @@ weapon_id_garrote = 'garrote'
 weapon_id_pickaxe = 'pickaxe'
 weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
-
+weapon_id_bow = 'bow'
+weapon_id_dclaw = 'dclaw'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2119,6 +2130,7 @@ item_list = [
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
 	),
+
 	EwGeneralItem(
 		id_item = "orangedye",
 		context = "dye",
@@ -2335,6 +2347,49 @@ item_list = [
 		ingredients = "generic",
 		context = 10,
 	),
+	EwGeneralItem(
+		id_item = "leather",
+		str_name = "Leather",
+		str_desc = "A strip of leather.",
+		acquisition = acquisition_smelting,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "ironingot",
+		str_name = "Iron Ingot",
+		str_desc = "A bar of iron",
+		acquisition = acquisition_smelting,
+		ingredients = "generic",
+		context = 10,
+	),
+	EwGeneralItem(
+		id_item = "dragonsoul",
+		str_name = "Dragon Soul",
+		str_desc = "A fearsome dragon soul, pried from the corpse of a Green Eyes Slime Dragon. It's just like Dark Souls! Wait... *just like* Dark Souls??? Maybe you can use this for something.",
+		context = 'dragon soul',
+	),
+	EwGeneralItem(
+		id_item = "monsterbones",
+		str_name = "Monster Bones",
+		str_desc = "A large set of bones, taken from the monsters that roam the outskirts. Tastes meaty.",
+		context = 'monster bone',
+	),
+	EwGeneralItem(
+		id_item = "bloodstone",
+		str_name = "blood stone",
+		str_desc = "Formed from the cracking of monster bones, it glistens in your palm with the screams of those whos bones comprise it. Perhaps it will be of use one day.",
+		context = 'blood stone',
+		acquisition = acquisition_smelting
+	),
+	EwGeneralItem(
+		id_item = "tanningknife",
+		context = "tool",
+		str_name = "Tanning Knife",
+		str_desc = "A tanning knife",
+		acquisition = acquisition_smelting,
+	),
+
 	EwGeneralItem(
 		id_item = "string",
 		str_name = "string",
@@ -2675,7 +2730,7 @@ def wef_revolver(ctn = None):
 				ctn.miss = True
 		else:
 			ctn.miss = True
-			
+
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
@@ -2716,17 +2771,21 @@ def wef_shotgun(ctn = None):
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
 
-# weapon effect function for "rifle" 
+# weapon effect function for "rifle"
 def wef_rifle(ctn = None):
-	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)	
-	ctn.slimes_spent = int(ctn.slimes_spent * 1.5) 
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.25)
+	ctn.slimes_spent = int(ctn.slimes_spent * 1.25)
 	aim = (random.randrange(10) + 1)
 	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
 
 	if aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+		ctn.sap_damage += 2
+		ctn.sap_ignored += 10
 
 # weapon effect function for "smg"
 def wef_smg(ctn = None):
@@ -2793,19 +2852,19 @@ def wef_minigun(ctn = None):
 	ctn.sap_damage = 2 * ctn.strikes
 
 # weapon effect function for "bat"
-def wef_bat(ctn = None): 
+def wef_bat(ctn = None):
 	aim = (random.randrange(0, 13) - 2)
 	user_mutations = ctn.user_data.get_mutations()
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
-	
+
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
 
 	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
 
-	if aim == -2:
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -2824,7 +2883,7 @@ def wef_bat(ctn = None):
 	elif aim >= (10 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
-		
+
 # weapon effect function for "brassknuckles"
 def wef_brassknuckles(ctn = None):
 	last_attack = (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else 0)
@@ -2833,7 +2892,7 @@ def wef_brassknuckles(ctn = None):
 	ctn.strikes = 0
 
 	damage_min = ctn.slimes_damage / 10
-	
+
 	if last_attack > 0:
 		ctn.slimes_damage = damage_min * ((min(last_attack, 2) / 2)**0.5  * 10)
 	else:
@@ -2876,8 +2935,8 @@ def wef_brassknuckles(ctn = None):
 				ctn.weapon_item.item_props["consecutive_hits"] = consecutive_hits + 1
 			else:
 				ctn.weapon_item.item_props["consecutive_hits"] = 0
-				
-	
+
+
 
 # weapon effect function for "katana"
 def wef_katana(ctn = None):
@@ -2889,7 +2948,7 @@ def wef_katana(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	damage_min = ctn.slimes_damage / 10
-	
+
 
 	if time_lastattack > 0:
 		ctn.slimes_damage = damage_min * ((min(time_lastattack, 5) / 5)**0.5  * 10)
@@ -2897,7 +2956,7 @@ def wef_katana(ctn = None):
 		ctn.slimes_damage = damage_min
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-	
+
 	if 5.2 > time_lastattack > 4.8:
 		ctn.sap_ignored = 10
 
@@ -2930,7 +2989,7 @@ def wef_broadsword(ctn = None):
 
 	ctn.slimes_damage += int( dmg * (min(10, int(ctn.weapon_item.item_props.get("kills"))) / 2) )
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -2948,12 +3007,13 @@ def wef_broadsword(ctn = None):
 
 	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
+		ctn.sap_damage *= 2
 		ctn.slimes_damage *= 2
 
 # weapon effect function for "nun-chucks"
 def wef_nunchucks(ctn = None):
 	ctn.strikes = 0
-	dmg = ctn.slimes_damage 
+	dmg = ctn.slimes_damage
 	ctn.slimes_damage = 0
 	user_mutations = ctn.user_data.get_mutations()
 
@@ -2978,7 +3038,7 @@ def wef_nunchucks(ctn = None):
 	elif ctn.strikes == 0:
 		ctn.backfire = True
 		ctn.backfire_damage = dmg * 2
-	
+
 	ctn.sap_damage = ctn.strikes
 
 # weapon effect function for "scythe"
@@ -3005,17 +3065,17 @@ def wef_scythe(ctn = None):
 		ctn.slimes_damage = damage_min
 
 	ctn.slimes_damage = int(max(ctn.slimes_damage, damage_min))
-	
+
 	aim = (random.randrange(10) + 1)
 
-	if aim <= (1 + (10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
 			ctn.miss = True
 
-	elif aim >= (10 - (10 * ctn.crit_mod)):
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -3036,7 +3096,7 @@ def wef_yoyo(ctn = None):
 	damage_min = ctn.slimes_damage / 10
 
 	if time_lastattack > 0:
-		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10) 
+		ctn.slimes_damage = damage_min * ((min(time_lastattack, 2)/2) ** 0.5 * 10)
 	else:
 		ctn.slimes_damage = damage_min
 
@@ -3078,13 +3138,13 @@ def wef_knives(ctn = None):
 
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+		ctn.slimes_damage = int(ctn.slimes_damage * 2)
 
 # weapon effect function for "molotov"
 def wef_molotov(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 2
+	ctn.slimes_spent *= 1
 	user_mutations = ctn.user_data.get_mutations()
 	ctn.sap_damage = 0
 	ctn.sap_ignored = 10
@@ -3093,7 +3153,7 @@ def wef_molotov(ctn = None):
 
 	ctn.bystander_damage = dmg * 0.5
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -3102,7 +3162,7 @@ def wef_molotov(ctn = None):
 			ctn.backfire = True
 			ctn.backfire_damage = dmg
 
-	elif aim > 2 and aim <= (3 + (10 * ctn.miss_mod)):
+	elif aim > 2 and aim <= (3 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -3110,7 +3170,7 @@ def wef_molotov(ctn = None):
 			ctn.miss = True
 
 	else:
-		if aim >= (10 - (10 * ctn.crit_mod)):
+		if aim >= (10 - int(10 * ctn.crit_mod)):
 			ctn.crit = True
 			ctn.slimes_damage *= 2
 
@@ -3118,14 +3178,14 @@ def wef_molotov(ctn = None):
 def wef_grenade(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
-	ctn.slimes_spent *= 2
+	ctn.slimes_spent *= 1
 	ctn.bystander_damage = int(dmg * 0.3)
 	user_mutations = ctn.user_data.get_mutations()
-	ctn.sap_damage = 2
+	ctn.sap_damage = 5
 
 	aim = (random.randrange(10) + 1)
 
-	if aim <= (1 + (10 * ctn.miss_mod)):
+	if aim <= (1 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
@@ -3134,7 +3194,7 @@ def wef_grenade(ctn = None):
 			ctn.miss = True
 			ctn.bystander_damage = 0
 
-	elif aim > 1 and aim <= 2:
+	elif aim > 1 and aim <= (2 + int(10 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.backfire = True
@@ -3143,7 +3203,7 @@ def wef_grenade(ctn = None):
 			ctn.backfire = True
 			ctn.backfire_damage = ctn.slimes_damage
 
-	elif aim >= (10 - (10 * ctn.crit_mod)):
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = dmg * 4
 
@@ -3155,14 +3215,14 @@ def wef_garrote(ctn = None):
 
 	user_mutations = ctn.user_data.get_mutations()
 	aim = (random.randrange(100) + 1)
-	if aim <= (100 * ctn.miss_mod):
+	if aim <= int(100 * ctn.miss_mod):
 		if mutation_id_sharptoother in user_mutations:
 			if random.random() < 0.5:
 				ctn.miss = True
 		else:
-			ctn.miss = True 
+			ctn.miss = True
 
-	elif aim <= (1 - (100 * ctn.crit_mod)):
+	elif aim <= (1 - int(100 * ctn.crit_mod)):
 		ctn.slimes_damage *= 10
 		ctn.crit = True
 
@@ -3202,7 +3262,7 @@ def wef_bass(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 1
 	ctn.sap_ignored = 5
-	
+
 	# Increased miss chance if attacking within less than two seconds after last attack
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
@@ -3233,16 +3293,71 @@ def wef_umbrella(ctn = None):
 				ctn.miss = True
 		else:
 			ctn.miss = True
-			
+
 	elif aim >= (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
+# weapon effect function for "minecraft bow"
+def wef_bow(ctn = None):
+	aim = (random.randrange(0, 13) - 2)
+	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
+	ctn.sap_damage = 1
+	ctn.sap_ignored = 8
+
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
+
+	ctn.slimes_damage = int(ctn.slimes_damage * 3)
+
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (9 - int(16 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage = int(dmg * 6)
+
+# weapon effect function for "Dragon Claw"
+
+def wef_dclaw(ctn = None):
+	aim = (random.randrange(0, 13) - 2)
+	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
+	if mutation_id_fastmetabolism in user_mutations or mutation_id_lightasafeather in user_mutations:
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.2)
+		ctn.slimes_spent *= 0.5
+	else:
+		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+		ctn.slimes_spent *= 1
+
+	ctn.bystander_damage = int(dmg * 0.5)
+
+	#less slime cost and less damage = attacking faster I guess?
+	ctn.sap_damage = 5
+	ctn.sap_ignored = 10
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((5 - min(time_lastattack, 5)) / 5) ** 2) / 13 * 5
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.3:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+	elif aim >= (9 - int(13 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage = int(dmg * 4)
+
 
 vendor_dojo = "Dojo"
 
 weapon_class_ammo = "ammo"
 weapon_class_thrown = "thrown"
 weapon_class_exploding = "exploding"
+weapon_class_burning = "burning"
 weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
@@ -3264,8 +3379,8 @@ weapon_list = [
 		str_weapon = "a revolver",
 		str_weaponmaster_self = "You are a rank {rank} master of the revolver.",
 		str_weaponmaster = "They are a rank {rank} master of the revolver.",
-		str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
-		str_trauma = "They have scarring on both temples, which occasionally bleeds.",
+		#str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
+		#str_trauma = "They have scarring on both temples, which occasionally bleeds.",
 		str_kill = "{name_player} puts their revolver to {name_target}'s head. **BANG**. Execution-style. Blood splatters across the hot asphalt. {emote_skull}",
 		str_killdescriptor = "gunned down",
 		str_damage = "{name_target} takes a bullet to the {hitzone}!!",
@@ -3280,7 +3395,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_revolver_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 2
 		id_weapon = weapon_id_dualpistols,
@@ -3288,6 +3403,7 @@ weapon_list = [
 			"dual",
 			"pistols",
 			"berettas",
+			"dualies"
 		],
 		str_crit = "**Critical Hit!** {name_player} has lodged several bullets into {name_target}'s vital arteries!",
 		str_miss = "**You missed!** Your numerous, haphazard shots hit everything but {name_target}!",
@@ -3296,15 +3412,15 @@ weapon_list = [
 		str_weapon = "dual pistols",
 		str_weaponmaster_self = "You are a rank {rank} master of the dual pistols.",
 		str_weaponmaster = "They are a rank {rank} master of the dual pistols.",
-		str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
-		str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
+		#str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
+		#str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
 		str_kill = "{name_player} dramatically pulls both triggers on their dual pistols midair, sending two bullets straight into {name_target}'s lungs'. {emote_skull}",
 		str_killdescriptor = "double gunned down",
 		str_damage = "{name_target} takes a flurry of bullets to the {hitzone}!!",
 		str_duel = "**tk tk tk tk tk tk tk tk tk tk**. {name_player} and {name_target} hone their twitch aim and trigger fingers, unloading clip after clip of airsoft BBs into one another with the eagerness of small children.",
 		str_description = "They're dual pistols.",
-		str_reload = "You swing out the chamber on both of your dual pistols, knocking out the used shells onto the floor before hastily slamming fresh bullets back into them.",
-		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s chambers, they’re out of bullets!!",
+		str_reload = "You swing out the handles on both of your pistols, knocking out the used magazines onto the floor before hastily slamming fresh mags back into them.",
+		str_reload_warning = "**tk tk tk tk--** *tk...* **SHIT!!** {name_player} just spent the last of the ammo in their dual pistol’s mags, they’re out of bullets!!",
 		str_scalp = " It has a couple bullet holes in it.",
 		fn_effect = wef_dualpistols,
 		clip_size = 12,
@@ -3313,7 +3429,7 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_dual_pistols_kills,
 		sap_cost = 1,
-		captcha_length = 2
+		captcha_length = 1
 	),
 	EwWeapon( # 3
 		id_weapon = weapon_id_shotgun,
@@ -3321,6 +3437,7 @@ weapon_list = [
 			"boomstick",
 			"remington",
 			"scattergun",
+			"r870"
 		],
 		str_crit = "**Critical Hit!** {name_player} has landed a thick, meaty shot into {name_target}'s chest!",
 		str_miss = "**You missed!** Your pellets inexplicably dodge {name_target}. Fucking random bullet spread, this game will never be competitive.",
@@ -3329,8 +3446,8 @@ weapon_list = [
 		str_weapon = "a shotgun",
 		str_weaponmaster_self = "You are a rank {rank} master of the shotgun.",
 		str_weaponmaster = "They are a rank {rank} master of the shotgun.",
-		str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
-		str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		#str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		#str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
 		str_kill = "{name_player} blasts their shotgun into {name_target}'s chest at point-blank range, causing guts to explode from their back and coat the surrounding street. chk chk Who's next? {emote_skull}",
 		str_killdescriptor = "pumped full of lead",
 		str_damage = "{name_target} takes a shotgun blast to the {hitzone}!!",
@@ -3345,9 +3462,9 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_shotgun_kills,
-		sap_cost = 5,
-		captcha_length = 6
-	),	
+		sap_cost = 4,
+		captcha_length = 5
+	),
 	EwWeapon( # 4
 		id_weapon = weapon_id_rifle,
 		alias = [
@@ -3362,8 +3479,8 @@ weapon_list = [
 		str_weapon = "an assault rifle",
 		str_weaponmaster_self = "You are a rank {rank} master of the assault rifle.",
 		str_weaponmaster = "They are a rank {rank} master of the assault rifle.",
-		str_trauma_self = "Your torso is riddled with scarred-over bulletholes.",
-		str_trauma = "Their torso is riddled with scarred-over bulletholes.",
+		#str_trauma_self = "Your torso is riddled with scarred-over bulletholes.",
+		#str_trauma = "Their torso is riddled with scarred-over bulletholes.",
 		str_kill = "**RAT-TAT-TAT-TAT-TAT!!** {name_player} rains a hail of bullets directly into {name_target}!! They're officially toast! {emote_skull}",
 		str_killdescriptor = "gunned down",
 		str_damage = "Bullets rake over {name_target}'s {hitzone}!!",
@@ -3378,8 +3495,8 @@ weapon_list = [
 		vendors = [vendor_dojo],
 		classes = [weapon_class_ammo, weapon_class_captcha],
 		stat = stat_rifle_kills,
-		sap_cost = 4,
-		captcha_length = 6
+		sap_cost = 3,
+		captcha_length = 4
 	),
 	EwWeapon( # 5
 		id_weapon = weapon_id_smg,
@@ -3394,8 +3511,8 @@ weapon_list = [
 		str_weapon = "an SMG",
 		str_weaponmaster_self = "You are a rank {rank} master of the SMG.",
 		str_weaponmaster = "They are a rank {rank} master of the SMG.",
-		str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
-		str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		#str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		#str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
 		str_kill = "**RATTA TATTA TAT!!** {name_player}’s bullet rip through what little was left of {name_target} after the initial barrage. All that remains is a few shreds of clothing and splatterings of slime. {emote_skull}",
 		str_killdescriptor = "riddled with bullets",
 		str_damage = "A reckless barrage of bullets pummel {name_target}’s {hitzone}!!",
@@ -3413,8 +3530,8 @@ weapon_list = [
 		classes = [weapon_class_ammo, weapon_class_jammable],
 		stat = stat_smg_kills,
 		sap_cost = 3,
-		captcha_length = 4
-	),	
+		captcha_length = 6
+	),
 	EwWeapon( # 6
 		id_weapon = weapon_id_minigun,
 		alias = [
@@ -3428,8 +3545,8 @@ weapon_list = [
 		str_weapon = "a minigun",
 		str_weaponmaster_self = "You are a rank {rank} master of the minigun.",
 		str_weaponmaster = "They are a rank {rank} master of the minigun.",
-		str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
-		str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
+		#str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
+		#str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
 		str_kill = "**TKTKTKTKTKTKTKTKTK!!** {name_player} pushes their minigun barrel right up to {name_target}’s chest, unloading a full round of ammunition and knocking their lifeless corpse back a few yards from the sheer force of the bullets. They failed to outsmart bullet. {emote_skull}",
 		str_killdescriptor = "obliterated",
 		str_damage = "Cascades of bullet easily puncture and rupture {name_target}’s {hitzone}!!",
@@ -3445,7 +3562,7 @@ weapon_list = [
 		stat = stat_minigun_kills,
 		sap_cost = 15,
 		captcha_length = 10
-	),	
+	),
 	EwWeapon( # 7
 		id_weapon = weapon_id_bat,
 		alias = [
@@ -3460,8 +3577,8 @@ weapon_list = [
 		str_weaponmaster_self = "You are a rank {rank} master of the nailbat.",
 		str_weaponmaster = "They are a rank {rank} master of the nailbat.",
 		str_weapon = "a bat full of nails",
-		str_trauma_self = "Your head appears to be slightly concave on one side.",
-		str_trauma = "Their head appears to be slightly concave on one side.",
+		#str_trauma_self = "Your head appears to be slightly concave on one side.",
+		#str_trauma = "Their head appears to be slightly concave on one side.",
 		str_kill = "{name_player} pulls back for a brutal swing! **CRUNCCHHH.** {name_target}'s brains splatter over the sidewalk. {emote_skull}",
 		str_killdescriptor = "nail bat battered",
 		str_damage = "{name_target} is struck with a hard blow to the {hitzone}!!",
@@ -3476,7 +3593,7 @@ weapon_list = [
 		stat = stat_bat_kills,
 		sap_cost = 2,
 		captcha_length = 2
-	),	
+	),
 	EwWeapon( # 8
 		id_weapon = weapon_id_brassknuckles,
 		alias = [
@@ -3491,8 +3608,8 @@ weapon_list = [
 		str_weapon = "brass knuckles",
 		str_weaponmaster_self = "You are a rank {rank} master pugilist.",
 		str_weaponmaster = "They are a rank {rank} master pugilist.",
-		str_trauma_self = "You've got two black eyes, missing teeth, and a profoundly crooked nose.",
-		str_trauma = "They've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		#str_trauma_self = "You've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		#str_trauma = "They've got two black eyes, missing teeth, and a profoundly crooked nose.",
 		str_kill = "{name_player} slugs {name_target} right between the eyes! *POW! THWACK!!* **CRUNCH.** Shit. May have gotten carried away there. Oh, well. {emote_skull}",
 		str_killdescriptor = "pummeled to death",
 		str_damage = "{name_target} is socked in the {hitzone}!!",
@@ -3522,8 +3639,8 @@ weapon_list = [
 		str_weapon = "a katana",
 		str_weaponmaster_self = "You are a rank {rank} blademaster.",
 		str_weaponmaster = "They are a rank {rank} blademaster.",
-		str_trauma_self = "A single clean scar runs across the entire length of your body.",
-		str_trauma = "A single clean scar runs across the entire length of their body.",
+		#str_trauma_self = "A single clean scar runs across the entire length of your body.",
+		#str_trauma = "A single clean scar runs across the entire length of their body.",
 		str_kill = "Faster than the eye can follow, {name_player}'s blade glints in the greenish light. {name_target} falls over, now in two pieces. {emote_skull}",
 		str_killdescriptor = "bisected",
 		str_damage = "{name_target} is slashed across the {hitzone}!!",
@@ -3554,8 +3671,8 @@ weapon_list = [
 		str_weapon = "a broadsword",
 		str_weaponmaster_self = "You are a rank {rank} berserker.",
 		str_weaponmaster = "They are a rank {rank} berserker.",
-		str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
-		str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
+		#str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
+		#str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
 		str_kill = "{name_player} skewers {name_target} through the back to the hilt of their broadsword, before kicking their lifeless corpse onto the street corner in gruseome fashion. {name_player} screams at the top of their lungs. {emote_skull}",
 		str_killdescriptor = "slayed",
 		str_damage = "{name_target}'s {hitzone} is separated from their body!!",
@@ -3589,8 +3706,8 @@ weapon_list = [
 		str_weapon = "nun-chucks",
 		str_weaponmaster_self = "You are a rank {rank} kung-fu master.",
 		str_weaponmaster = "They are a rank {rank} kung-fu master.",
-		str_trauma_self = "You are covered in deep bruises. You hate martial arts of all kinds.",
-		str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
+		#str_trauma_self = "You are covered in deep bruises. You hate martial arts of all kinds.",
+		#str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
 		str_kill = "**HIIII-YAA!!** With expert timing, {name_player} brutally batters {name_target} to death, then strikes a sweet kung-fu pose. {emote_skull}",
 		str_killdescriptor = "fatally bludgeoned",
 		str_damage = "{name_target} takes {strikes} nun-chuck whacks directly in the {hitzone}!!",
@@ -3603,7 +3720,7 @@ weapon_list = [
 		classes= [weapon_class_captcha],
 		stat = stat_nunchucks_kills,
 		sap_cost = 4,
-		captcha_length = 2
+		captcha_length = 3
 	),
 	EwWeapon( # 12
 		id_weapon = weapon_id_scythe,
@@ -3617,8 +3734,8 @@ weapon_list = [
 		str_weapon = "a scythe",
 		str_weaponmaster_self = "You are a rank {rank} master of the scythe.",
 		str_weaponmaster = "They are a rank {rank} master of the scythe.",
-		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
-		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
+		#str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
+		#str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
 		str_kill = "**SLASHH!!** {name_player}'s scythe cleaves the air, and {name_target} staggers. A moment later, {name_target}'s torso topples off their waist. {emote_skull}",
 		str_killdescriptor = "sliced in twain",
 		str_damage = "{name_target} is cleaved through the {hitzone}!!",
@@ -3633,7 +3750,7 @@ weapon_list = [
 		sap_cost = 6,
 		captcha_length = 4
 	),
-	EwWeapon( # 13	
+	EwWeapon( # 13
 		id_weapon = weapon_id_yoyo,
 		alias = [
 			"yo-yos",
@@ -3647,8 +3764,8 @@ weapon_list = [
 		str_weaponmaster_self = "You are a rank {rank} master of the yo-yo.",
 		str_weaponmaster = "They are a rank {rank} master of the yo-yo.",
 		str_weapon = "a yo-yo",
-		str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
-		str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
+		#str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
+		#str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
 		str_kill = "{name_player} performs a modified Kwyjibo, effortlessly nailing each step before killing their opponent just ahead of the dismount.",
 		str_killdescriptor = "amazed",
 		str_damage = "{name_player} used {name_target}'s {hitzone} as a counterweight!!",
@@ -3679,8 +3796,8 @@ weapon_list = [
 		str_weapon = "throwing knives",
 		str_weaponmaster_self = "You are a rank {rank} master of the throwing knife.",
 		str_weaponmaster = "They are a rank {rank} master of the throwing knife.",
-		str_trauma_self = "You are covered in scarred-over lacerations and puncture wounds.",
-		str_trauma = "They are covered in scarred-over lacerations and puncture wounds.",
+		#str_trauma_self = "You are covered in scarred-over lacerations and puncture wounds.",
+		#str_trauma = "They are covered in scarred-over lacerations and puncture wounds.",
 		str_kill = "A blade flashes through the air!! **THUNK.** {name_target} is a goner, but {name_player} slits their throat before fleeing the scene, just to be safe. {emote_skull}",
 		str_killdescriptor = "knifed",
 		str_damage = "{name_target} is stuck by a knife in the {hitzone}!!",
@@ -3693,7 +3810,7 @@ weapon_list = [
 		classes = [weapon_class_thrown, weapon_class_captcha],
 		stat = stat_knives_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 15
 		id_weapon = weapon_id_molotov,
@@ -3701,7 +3818,8 @@ weapon_list = [
 			"firebomb",
 			"molotovcocktail",
 			"bomb",
-			"bombs"
+			"bombs",
+			"moly"
 		],
 		str_backfire = "**Oh, the humanity!!** The bottle bursts in {name_player}'s hand, burning them terribly!!",
 		str_miss = "**A dud!!** the rag failed to ignite the molotov!",
@@ -3711,8 +3829,8 @@ weapon_list = [
 		str_weapon = "molotov cocktails",
 		str_weaponmaster_self = "You are a rank {rank} master arsonist.",
 		str_weaponmaster = "They are a rank {rank} master arsonist.",
-		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
-		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
+		#str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
+		#str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
 		str_kill = "**SMASH!** {name_target}'s front window shatters and suddenly flames are everywhere!! The next morning, police report that {name_player} is suspected of arson. {emote_skull}",
 		str_killdescriptor = "exploded",
 		str_damage = "{name_target} dodges a bottle, but is singed on the {hitzone} by the blast!!",
@@ -3722,7 +3840,7 @@ weapon_list = [
 		fn_effect = wef_molotov,
 		price = 500,
 		vendors = [vendor_dojo],
-		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
+		classes = [weapon_class_thrown, weapon_class_burning, weapon_class_captcha],
 		stat = stat_molotov_kills,
 		sap_cost = 1,
 		captcha_length = 4
@@ -3740,8 +3858,8 @@ weapon_list = [
 		str_weapon = "a stack of grenades",
 		str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
 		str_weaponmaster = "They are a rank {rank} master of the grenades.",
-		str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
-		str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
+		#str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
+		#str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
 		str_kill = "**KA-BOOM!!** {name_player} pulls the safety pin and holds their grenade just long enough to cause it to explode mid air, right in front of {name_target}’s face, blowing it to smithereens. {emote_skull}",
 		str_killdescriptor = "exploded",
 		str_damage = "{name_player}’s grenade explodes, sending {name_target}’s {hitzone} flying off their body!!",
@@ -3754,7 +3872,7 @@ weapon_list = [
 		classes = [weapon_class_thrown, weapon_class_exploding, weapon_class_captcha],
 		stat = stat_grenade_kills,
 		sap_cost = 1,
-		captcha_length = 4
+		captcha_length = 3
 	),
 	EwWeapon( # 17
 		id_weapon = weapon_id_garrote,
@@ -3770,8 +3888,8 @@ weapon_list = [
 		str_weapon = "a garrotte wire",
 		str_weaponmaster_self = "You are a rank {rank} master of the garrotte.",
 		str_weaponmaster = "They are a rank {rank} master of the garrotte.",
-		str_trauma_self = "There is noticeable bruising and scarring around your neck.",
-		str_trauma = "There is noticeable bruising and scarring around their neck.",
+		#str_trauma_self = "There is noticeable bruising and scarring around your neck.",
+		#str_trauma = "There is noticeable bruising and scarring around their neck.",
 		str_kill = "{name_player} quietly moves behind {name_target} and... **!!!** After a brief struggle, only a cold body remains. {emote_skull}",
 		str_killdescriptor = "garrote wired",
 		str_damage = "{name_target} is ensnared by {name_player}'s wire!!",
@@ -3798,8 +3916,8 @@ weapon_list = [
 		str_weapon = "a pickaxe",
 		str_weaponmaster_self = "You are a rank {rank} coward of the pickaxe.",
 		str_weaponmaster = "They are a rank {rank} coward of the pickaxe.",
-		str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
-		str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
+		#str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
+		#str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
 		str_kill = "**THWACK!!** {name_player} summons what little courage they possess to lift the pickaxe above their head and !mine {name_target} to death. How embarrassing! {emote_skull}",
 		str_killdescriptor = "!mined",
 		str_damage = "{name_target} is lightly tapped on the {hitzone}!!",
@@ -3829,8 +3947,8 @@ weapon_list = [
 		str_weapon = "a super fishing rod",
 		str_weaponmaster_self = "You are a rank {rank} coward of the super fishing rod.",
 		str_weaponmaster = "They are a rank {rank} coward of the super fishing rod.",
-		str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
-		str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
+		#str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
+		#str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
 		str_kill = "*whsssh* {name_player} summons what little courage they possess to reel in {name_target} and wring all the slime out of them. How embarrassing! {emote_skull}",
 		str_killdescriptor = "!reeled",
 		str_damage = "{name_target} is lightly pierced on the {hitzone}!!",
@@ -3855,8 +3973,8 @@ weapon_list = [
 		str_weapon = "a bass guitar",
 		str_weaponmaster_self = "You are a rank {rank} master of the bass guitar.",
 		str_weaponmaster = "They are a rank {rank} master of the bass guitar.",
-		str_trauma_self = "There is a large concave dome in the side of your head.",
-		str_trauma = "There is a large concave dome in the side of their head.",
+		#str_trauma_self = "There is a large concave dome in the side of your head.",
+		#str_trauma = "There is a large concave dome in the side of their head.",
 		str_kill = "*CRASSHHH.* {name_player} brings down the bass with righteous fury. Discordant notes play harshly as the bass trys its hardest to keep itself together. {emote_skull}",
 		str_killdescriptor = "smashed to pieces",
 		str_damage = "{name_target} is whacked across the {hitzone}!!",
@@ -3883,8 +4001,8 @@ weapon_list = [
 		str_weapon = "an umbrella",
 		str_weaponmaster_self = "You are a rank {rank} master of the umbrella.",
 		str_weaponmaster = "They are a rank {rank} master of the umbrella.",
-		str_trauma_self = "You have a large hole in your chest.",
-		str_trauma = "They have a large hole in their chest.",
+		#str_trauma_self = "You have a large hole in your chest.",
+		#str_trauma = "They have a large hole in their chest.",
 		str_kill = "*SPLAT.* {name_player} pierces {name_target} through the chest, hoists them over their head and opens their umbrella, causing them to explode in a rain of blood and slime. {emote_skull}",
 		str_killdescriptor = "umbrella'd",
 		str_damage = "{name_target} is struck in the {hitzone}!!",
@@ -3899,7 +4017,60 @@ weapon_list = [
 		sap_cost = 1,
 		captcha_length = 4
 	),
+	EwWeapon(  # 22
+		id_weapon = weapon_id_bow,
+		alias = [
+			"bow",
+		],
+		str_crit = "**Critical hit!!** Through measured shots {name_player} manages to stick a pixelated arrow in {name_target}’s {hitzone}.",
+		str_miss = "**MISS!!** {name_player} completely misses, a pixelated arrow embeds itself into the ground!",
+		str_equip = "You equip the minecraft bow, c418 music plays in the background.",
+		str_name = "minecraft bow",
+		str_weapon = "a minecraft bow",
+		str_weaponmaster_self = "You are a rank {rank} minecraft bowmaster.",
+		str_weaponmaster = "They are a rank {rank} minecraft bowmaster.",
+		#str_trauma_self = "There is a pixelated arrow in the side of your head.",
+		#str_trauma = "There is a pixelated arrow in the side of their head.",
+		str_kill = "*Pew Pew Pew.* {name_player} spams the bow as their foes life fades, riddling their body with arrows. {emote_skull}",
+		str_killdescriptor = "shot to death",
+		str_damage = "{name_target} is shot in the {hitzone}!!",
+		str_duel = "{name_player} and {name_target} shoot distant targets, {name_player} is clearly the superior bowman.",
+		str_scalp = " The scalp has pixels covering it.",
+		fn_effect = wef_bow,
+		str_description = "It's a newly crafted minecraft bow, complete with a set of minecraft arrows",
+		acquisition = acquisition_smelting,
+		stat = stat_bow_kills,
+		sap_cost = 2,
+		captcha_length = 2
+	),
+		EwWeapon(  # 23
+		id_weapon = weapon_id_dclaw,
+		alias = [
+			"dragon claw",
+		],
+		str_crit = "{name_player} runs like a madman towards {name_target}, {name_target} swings but is deftly parried by {name_player}, {name_player} hoists their dragon claw into the air and ripostes {name_target} for massive damage ***!!!Critical Hit!!!***",
+		str_miss = "{name_player} swings but {name_target} is in the middle of a dodge roll and is protected by iframes. **!!Miss!!**",
+		str_equip = "You place the core of the dragon claw on your hand and it unfolds around it, conforming to the contour of your hands, claws protude out the end of your fingers as your hand completes its transformation into the *dragon claw*.",
+		str_name = "dragon claw",
+		str_weapon = "a dragon claw",
+		str_weaponmaster_self = "You are a rank {rank} master of the dragon claw.",
+		str_weaponmaster = "They are a rank {rank} master of the dragon claw.",
+		#str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames `won't seem to extinguish.",
+		#str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
+		str_kill = "***Thwip.*** {name_player}'s dragon claw cuts the air followed by a trail of flame and blood, the camera pans out and {name_target} is shown, cut in twain. {emote_skull}",
+		str_killdescriptor = "cut to pieces",
+		str_damage = random.choice(["{name_target} is slashed across the {hitzone}!!","{name_player} furiously slashes {name_target} across the {hitzone}!!","{name_player} flicks their fingers and a jet of flame ignites from the dragon claw, burning {name_target} in the {hitzone}!!"]),
+		str_duel = "**SLICE!! SWIPE!! SLASH!!** {name_player} and {name_target} cut the fuck out of eachother, a fire extinguisher is never more than a meter away.",
+		str_scalp = "The scalp is burning and doesn't look like it's gonna stop.",
+		fn_effect = wef_dclaw,
+		str_description = "It's the core of a Dragon Claw, it will morph around whatever hand it is held by granting them the power of the elusive GREEN EYES SLIME DRAGON. If you listen closely you can hear whines of the dragon soul as it remains perpetually trapped in the weapon.",
+		acquisition = acquisition_smelting,
+		stat = stat_dclaw_kills,
+		classes = [weapon_class_burning],
+		sap_cost = 5,
+		captcha_length = 2)
 ]
+
 
 weapon_vendors = [
 	vendor_dojo
@@ -3918,10 +4089,10 @@ def atf_fangs(ctn = None):
 	aim = (random.randrange(10) + 1)
 	ctn.sap_damage = 1
 
-	if aim == 1:
+	if aim == (1 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim == 10:
+	elif aim == (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -3933,7 +4104,7 @@ def atf_talons(ctn = None):
 	ctn.sap_damage = 0
 	ctn.sap_ignored = 10
 
-	if (random.randrange(10) + 1) == 10:
+	if (random.randrange(10) + 1) == (10 + int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2.1
 
@@ -3946,10 +4117,10 @@ def atf_raiderscythe(ctn = None):
 	ctn.sap_damage = 0
 	ctn.sap_ignored = 5
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= 9:
+	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -3959,10 +4130,10 @@ def atf_gunkshot(ctn = None):
 	aim = (random.randrange(10) + 1)
 	ctn.sap_damage = 2
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
-	elif aim >= 9:
+	elif aim >= (9 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -3971,19 +4142,19 @@ def atf_tusks(ctn = None):
 
 	aim = (random.randrange(21) - 10)
 	ctn.sap_damage = 3
-	if aim <= -9:
+	if aim <= (-9 + int(21 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
 	ctn.slimes_damage = int(ctn.slimes_damage * (1 + (aim / 10)))
 
-	if aim >= 9:
+	if aim >= (9 - int(21 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
-		
+
 def atf_molotovbreath(ctn = None):
 	# Reskin of molotov
-	
+
 	dmg = ctn.slimes_damage
 	ctn.slimes_damage = int(ctn.slimes_damage * 0.75)
 	ctn.sap_damage = 0
@@ -3993,28 +4164,28 @@ def atf_molotovbreath(ctn = None):
 
 	#ctn.bystander_damage = dmg * 0.5
 
-	if aim <= 2:
+	if aim <= (2 + int(10 * ctn.miss_mod)):
 		ctn.backfire = True
 		ctn.backfire_damage = dmg
 
-	elif aim == 3:
+	elif aim == (3 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 		ctn.slimes_damage = 0
 
-	elif aim == 10:
+	elif aim == (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
-			
+
 def atf_armcannon(ctn = None):
 	dmg = ctn.slimes_damage
 	ctn.sap_damage = 2
 
 	aim = (random.randrange(20) + 1)
-	
-	if aim <= 2:
+
+	if aim <= (2 + int(20 * ctn.miss_mod)):
 		ctn.miss = True
-		
-	if aim == 20:
+
+	if aim == (20 - int(20 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 3
 
@@ -4023,10 +4194,10 @@ def atf_axe(ctn=None):
 	ctn.slimes_damage *= 0.7
 	aim = (random.randrange(10) + 1)
 
-	if aim <= 4:
+	if aim <= (4 + int(10 * ctn.miss_mod)):
 		ctn.miss = True
 
-	if aim == 10:
+	if aim == (10 - int(10 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4035,10 +4206,10 @@ def atf_hooves(ctn=None):
 	ctn.slimes_damage *= 0.4
 	aim = (random.randrange(30) + 1)
 
-	if aim <= 5:
+	if aim <= (5 + int(30 * ctn.miss_mod)):
 		ctn.miss = True
 
-	if aim > 25:
+	if aim > (25 - int(30 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage *= 2
 
@@ -4048,8 +4219,8 @@ enemy_attack_type_list = [
 		id_type = "fangs",
 		str_crit = "**Critical Hit!** {name_enemy} sinks their teeth deep into {name_target}!",
 		str_miss = "**{name_enemy} missed!** Their maw snaps shut!",
-		str_trauma_self = "You have bite marks littered throughout your body.",
-		str_trauma = "They have bite marks littered throughout their body.",
+		#str_trauma_self = "You have bite marks littered throughout your body.",
+		#str_trauma = "They have bite marks littered throughout their body.",
 		str_kill = "{name_enemy} opens their jaw for one last bite right on {name_target}'s juicy neck. **CHOMP**. Blood gushes out of their arteries and onto the ground. {emote_skull}",
 		str_killdescriptor = "mangled",
 		str_damage = "{name_target} is bitten on the {hitzone}!!",
@@ -4059,8 +4230,8 @@ enemy_attack_type_list = [
 		id_type = "talons",
 		str_crit = "**Critical hit!!** {name_target} is slashed across the chest!!",
 		str_miss = "**{name_enemy} missed!** Their wings flap in the air as they prepare for another strike!",
-		str_trauma_self = "A large section of scars litter your abdomen.",
-		str_trauma = "A large section of scars litter their abdomen.",
+		#str_trauma_self = "A large section of scars litter your abdomen.",
+		#str_trauma = "A large section of scars litter their abdomen.",
 		str_kill = "In a fantastic display of avian savagery, {name_enemy}'s talons grip {name_target}'s stomach, rip open their flesh and tear their intestines to pieces. {emote_skull}",
 		str_killdescriptor = "disembowled",
 		str_damage = "{name_target} has their {hitzone} clawed at!!",
@@ -4070,8 +4241,8 @@ enemy_attack_type_list = [
 		id_type = "scythe",
 		str_crit = "**Critical hit!!** {name_target} is carved by the wicked curved blade!",
 		str_miss = "**MISS!!** {name_enemy}'s swings miss wide of the target!",
-		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
-		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
+		#str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
+		#str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
 		str_kill = "**SLASHH!!** {name_enemy}'s scythe cleaves the air, and {name_target} staggers. A moment later, {name_target}'s torso topples off their waist. {emote_skull}",
 		str_killdescriptor = "sliced in twain",
 		str_damage = "{name_target} is cleaved through the {hitzone}!!",
@@ -4081,8 +4252,8 @@ enemy_attack_type_list = [
 		id_type = "gunk shot",
 		str_crit = "**Critical hit!!** {name_target} is covered in a thick, gelatenous ooze!",
 		str_miss = "**MISS!!** {name_enemy}'s gunk shot just barely missed the target!",
-		str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
-		str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
+		#str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
+		#str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
 		str_kill = "**SPLOOSH!!** {name_enemy}'s gunk shot completely envelops {name_target}, boiling their flesh alive in a radiation that rivals the Elephant's Foot. Nothing but a charred husk remains. {emote_skull}",
 		str_killdescriptor = "slimed on",
 		str_damage = "{name_target} is coated in searing, acidic radiation on their {hitzone}!!",
@@ -4092,8 +4263,8 @@ enemy_attack_type_list = [
 		id_type = "tusks",
 		str_crit = "**Critical hit!!** {name_target} is smashed hard by {name_enemy}'s tusks!",
 		str_miss = "**{name_enemy} missed!** Their tusks strike the ground, causing it to quake underneath!",
-		str_trauma_self = "You have one large scarred-over hole on your upper body.",
-		str_trauma = "They have one large scarred-over hole on their upper body.",
+		#str_trauma_self = "You have one large scarred-over hole on your upper body.",
+		#str_trauma = "They have one large scarred-over hole on their upper body.",
 		str_kill = "**SHINK!!** {name_enemy}'s tusk rams right into your chest, impaling you right through your back! Moments later, you're thrusted out on to the ground, left to bleed profusely. {emote_skull}",
 		str_killdescriptor = "pierced",
 		str_damage = "{name_target} has tusks slammed into their {hitzone}!!",
@@ -4104,8 +4275,8 @@ enemy_attack_type_list = [
 		str_backfire = "**Oh the humanity!!** {name_enemy} tries to let out a breath of fire, but it combusts while still inside their maw!!",
 		str_crit = "**Critical hit!!** {name_target} is char grilled by {name_enemy}'s barrage of molotov breath!",
 		str_miss = "**{name_enemy} missed!** Their shot hits the ground instead, causing embers to shoot out in all directions!",
-		str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
-		str_trauma = "They're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		#str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		#str_trauma = "They're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
 		str_kill = "In a last ditch effort, {name_enemy} breathes in deeply for an extra powerful shot of fire. Before you know it, your body is cooked alive like a rotisserie chicken. {emote_skull}",
 		str_killdescriptor = "exploded",
 		str_damage = "{name_target} is hit by a blast of fire on their {hitzone}!!",
@@ -4115,8 +4286,8 @@ enemy_attack_type_list = [
 		id_type = "arm cannon",
 		str_crit = "**Critical hit!!** {name_target} has a clean hole shot through their chest by {name_enemy}'s bullet!",
 		str_miss = "**{name_enemy} missed their target!** The stray bullet cleaves right into the ground!",
-		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
-		str_trauma = "There's a deep bruising right in the middle of their forehead.",
+		#str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
+		#str_trauma = "There's a deep bruising right in the middle of their forehead.",
 		str_kill = "{name_enemy} readies their crosshair right for your head and fires without hesitation. The force from the bullet is so powerful that when it lodges itself into your skull, it rips your head right off in the process. {emote_skull}",
 		str_killdescriptor = "sniped",
 		str_damage = "{name_target} has a bullet zoom right through their {hitzone}!!",
@@ -4126,8 +4297,8 @@ enemy_attack_type_list = [
 		id_type = "axe",
 		str_crit = "**Critical hit!!** {name_target} is thoroughly cleaved by {name_enemy}'s axe!",
 		str_miss = "**{name_enemy} missed!** The axe gives a loud **THUD** as it strikes the earth!",
-		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
-		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		#str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		#str_trauma = "There's a hefty amount of bandages covering the top of their head",
 		str_kill = "{name_enemy} lifts up their axe for one last swing. The wicked edge buries itself deep into your skull, cutting your brain in twain. {emote_skull}",
 		str_killdescriptor = "axed",
 		str_damage = "{name_target} is swung at right on their {hitzone}!!",
@@ -4137,8 +4308,8 @@ enemy_attack_type_list = [
 		id_type = "hooves",
 		str_crit = "**Critical hit!!** {name_enemy} lays a savage hind-leg kick into {name_target}'s chest!",
 		str_miss = "**WHOOSH!** {name_enemy}'s hooves just barely miss you!",
-		str_trauma_self = "Your chest is somewhat concave.",
-		str_trauma = "Their chest is somewhat concave.",
+		#str_trauma_self = "Your chest is somewhat concave.",
+		#str_trauma = "Their chest is somewhat concave.",
 		str_kill = "{name_enemy} gallops right over your head, readying their hind legs just after landing. Before you can even ready your weapon, their legs are already planted right onto your chest. Your heart explodes. {emote_skull}",
 		str_killdescriptor = "stomped",
 		str_damage = "{name_target} is stomped all over their {hitzone}!!",
@@ -5655,6 +5826,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "khaotickilliflowerfuckenergy",
+		alias = [
+			"kkfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5665,6 +5839,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "rampagingrowddishfuckenergy",
+		alias = [
+			"rrfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5675,6 +5852,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "direappleciderfuckenergy",
+		alias = [
+			"dacfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5685,6 +5865,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "ultimateurinefuckenergy",
+		alias = [
+			"uufu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5695,6 +5878,9 @@ food_list = [
 	),
 	EwFood(
 		id_food = "superwaterfuckenergy",
+		alias = [
+			"swfu"
+		],
 		recover_hunger = 1200,
 		price = 12000,
 		inebriation = 1000,
@@ -5733,6 +5919,24 @@ food_list = [
 				   "with enough hubris to challenge it’s supremacy. Bow down before it, beg and weep for your life and the "
 				   "life of the ones you love. Chant it’s name, praise the harbinger of death you just acquired from Pizza "
 				   "Hut. Quadruple Stuffed Crust. Quadruple Stuffed Crust. QUADRUPLE STUFFED CRUST!! AAAAAAAAAAAAAAAAAAH!!",
+		acquisition = acquisition_smelting
+	),
+	EwFood(
+		id_food = item_id_monstersoup,
+		alias = [
+			"soup",
+			"meatsoup",
+			"stew",
+			"meatstew",
+			"monstersoup",
+			"monster soup"
+		],
+		recover_hunger = 2000,
+		str_name = "Homemade Monster Soup",
+		str_eat = "You gaze upon the large bowl of monster soup and slurp it down, your throat scratched by the copious ammounts "
+		"of bone shards that permiate the rich broth. Meaty and homely, just like grandma made it.",
+		str_desc = "A large bowl of soup covered with the saran wrap that prevents you from smelling the wonderous mix of"
+		"soft meat and crackling bones, full of nutrients and carcinogens in equal ammounts.",
 		acquisition = acquisition_smelting
 	),
 	EwFood(
@@ -5900,7 +6104,7 @@ food_list = [
 			"chocs",
 		],
 		recover_hunger = 120,
-        price = 100,
+	price = 100,
 		str_name = 'Paradox Chocs',
 		str_eat = "You eat the Paradox Chocs. They don't taste all that good, but that's part of their charm, you think.",
 		str_desc = "A bag of chocolates. Almost all of them are shaped like the head of Paradox Crocs. Every bag also comes with a Koff head, a Seani head, and an ~~Ackro~~ Obama head.",
@@ -5912,7 +6116,7 @@ food_list = [
 			"twix",
 		],
 		recover_hunger = 150,
-        price = 100,
+	price = 100,
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
@@ -6295,14 +6499,15 @@ food_list = [
 		vendors=[vendor_greencakecafe]
 	),
 	EwFood(
-		id_food = "juicebox",
+		id_food = "direapplefrickenergy",
 		alias = [
 			"juice",
 			"appyjuice",
+			"frickenergy",
 		],
 		recover_hunger=10,
 		price=1,
-		str_name = "Juice Box",
+		str_name = "Dire Apple FRICK Energy",
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
 		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
@@ -8353,7 +8558,7 @@ furniture_slimecorp = []
 furniture_seventies = []
 furniture_shitty = []
 furniture_instrument = []
-
+furniture_specialhue = []
 
 howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOO**',
@@ -9064,7 +9269,8 @@ poi_list = [
 		channel = channel_endlesswar,
 		role = "Endless War",
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_district = poi_id_downtown,
+		max_degradation = 10000000,
 	),
 	EwPoi(  # slimecorp HQ
 		id_poi = poi_id_slimecorphq,
@@ -10694,7 +10900,7 @@ poi_list = [
 		],
 		str_name = "an Arsonbrook apartment",
 		str_desc = "",
-		channel = channel_apt_oldnewyonkers,
+		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
 		mother_district = poi_id_arsonbrook,
@@ -12326,7 +12532,16 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
+        EwCosmeticItem(
+		id_cosmetic = "knightarmor",
+		str_name = "Steel knight armor",
+		str_desc = "A shining set of steel armor.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
 ]
+
 
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
@@ -12358,6 +12573,34 @@ smelting_recipe_list = [
 			item_id_doublestuffedcrust : 2
 		},
 		products = [item_id_quadruplestuffedcrust],
+	),
+        EwSmeltingRecipe(
+		id_recipe = "knightarmor",
+		str_name = "Knight Armor",
+                alias = [
+			"armor",
+		],
+		ingredients = {
+			"ironingot" : 2
+		},
+		products = ["knightarmor"]
+	),
+	EwSmeltingRecipe(
+		id_recipe = item_id_monstersoup,
+		str_name = "a bowl of Monster Soup",
+		alias = [
+			"soup",
+			"meatsoup",
+			"stew",
+			"meatstew",
+			"monstersoup",
+			"monster soup"
+		],
+		ingredients = {
+			"monsterbones" : 5,
+			item_id_dinoslimemeat : 1
+		},
+		products = [item_id_monstersoup],
 	),
 	EwSmeltingRecipe(
 		id_recipe = item_id_octuplestuffedcrust,
@@ -12524,6 +12767,88 @@ smelting_recipe_list = [
 		},
 		products = ['bass']
     ),
+    EwSmeltingRecipe(
+		id_recipe = "bow",
+		str_name = "a Minecraft Bow",
+		alias = [
+			"minecraft bow"
+		],
+		ingredients = {
+			'stick' : 3,
+			'string':3
+		},
+		products = ['bow']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "ironingot",
+		str_name = "an Iron Ingot",
+		alias = [
+			"ingot"
+			"metal",
+			"ironingot",
+			"iron ingot"
+		],
+		ingredients = {
+			'tincan':10,
+			'faggot':1
+		},
+		products = ['ironingot']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "tanningknife",
+		str_name = "a small tanning knife",
+		alias = [
+			"knife",
+			"tanningknife",
+			"tanning"
+		],
+		ingredients = {
+			'ironingot':1
+		},
+		products = ['tanningknife']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "leather",
+		str_name = "a piece of leather",
+		alias = [
+			"leather"
+		],
+		ingredients = {
+			'oldboot':10,
+			'tanningknife':1
+		},
+		products = ['leather']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "bloodstone",
+		str_name = "a chunk of bloodstone",
+		alias = [
+			"bloodstone",
+			"bstone"
+		],
+		ingredients = {
+			'monsterbones':100,
+			'faggot':1
+		},
+		products = ['bloodstone']
+    ),
+	    EwSmeltingRecipe(
+		id_recipe = "dclaw",
+		str_name = "a Dragon Claw",
+		alias = [
+			"dragonclaw",
+			"claw",
+			"dclaw"
+		],
+		ingredients = {
+			'dragonsoul' : 1,
+			item_id_slimepoudrin : 5,
+			'ironingot':1,
+			'leather':1
+		},
+		products = ['dclaw']
+    ),
+
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
@@ -12658,9 +12983,22 @@ EwSmeltingRecipe(
 		],
 		ingredients = {
 			'humancorpse': 1,
-			'poudrin':10,
+			'soul':1,
 		},
 		products = ['reanimatedcorpse']
+	),
+EwSmeltingRecipe(
+		id_recipe = "soul",
+		str_name = "soul",
+		alias = [
+			"spirit",
+			"essence",
+			"hippiebullshit",
+		],
+		ingredients = {
+			'reanimatedcorpse': 1,
+		},
+		products = ['soul']
 	),
 EwSmeltingRecipe(
 		id_recipe = "handmadechair",
@@ -13624,7 +13962,7 @@ def get_strat_a(combat_data, in_range, first_turn, active):
 	sap_spend = min(sap_spend, combat_data.sap)
 
 	return strat_used, sap_spend
-	
+
 def get_strat_b(combat_data, in_range, first_turn, active):
 	base_attack = 20
 	base_evade = 10
@@ -13815,7 +14153,7 @@ def get_strat_f(combat_data, in_range, first_turn, active):
 		else:
 			weight_block *= 3
 			weight_evade *= 2
-			
+
 
 	strat = random.randrange(weight_attack + weight_evade + weight_block)
 	if strat < weight_attack:
@@ -14382,11 +14720,11 @@ thrownobjects_list = [
 	"Nokia 3310"
 ]
 
-mutation_id_spontaneouscombustion = "spontaneouscombustion" 
+mutation_id_spontaneouscombustion = "spontaneouscombustion"
 mutation_id_thickerthanblood = "thickerthanblood"
 mutation_id_graveyardswift = "graveyardswift" #TODO
 mutation_id_fungalfeaster = "fungalfeaster"
-mutation_id_sharptoother = "sharptoother" 
+mutation_id_sharptoother = "sharptoother"
 mutation_id_openarms = "openarms" #TODO
 mutation_id_2ndamendment = "2ndamendment"
 mutation_id_panicattacks = "panicattacks" #TODO
@@ -14414,7 +14752,7 @@ mutation_id_threesashroud = "threesashroud"
 mutation_id_aposematicstench = "aposematicstench"
 mutation_id_paintrain = "paintrain" #TODO
 mutation_id_lucky = "lucky"
-mutation_id_dressedtokill = "dressedtokill" 
+mutation_id_dressedtokill = "dressedtokill"
 mutation_id_keensmell = "keensmell"
 mutation_id_enlargedbladder = "enlargedbladder"
 mutation_id_dumpsterdiver = "dumpsterdiver"
@@ -14840,6 +15178,8 @@ for furniture in furniture_list:
 		furniture_shitty.append(furniture.id_furniture)
 	elif furniture.furn_set == "instrument":
 		furniture_instrument.append(furniture.id_furniture)
+	elif furniture.furn_set == "specialhue":
+		furniture_specialhue.append(furniture.id_furniture)
 
 
 	for vendor in furniture.vendors:
@@ -15010,6 +15350,12 @@ status_sapfatigue_id = "sapfatigue"
 status_rerollfatigue_id = "rerollfatigue"
 status_high_id = "high"
 
+status_injury_head_id = "injury_head"
+status_injury_torso_id = "injury_torso"
+status_injury_arms_id = "injury_arms"
+status_injury_legs_id = "injury_legs"
+
+
 time_expire_burn = 12
 time_expire_high = 30 * 60 # 30 minutes
 
@@ -15088,6 +15434,35 @@ status_effect_list = [
 	EwStatusEffectDef(
 		id_status = status_rerollfatigue_id,
 	),
+	EwStatusEffectDef(
+		id_status = status_injury_head_id,
+		str_describe = "Their head looks {severity}",
+		str_describe_self = "Your head looks {severity}",
+		miss_mod_self = 0.05,
+		crit_mod_self = -0.1,
+		miss_mod = -0.01,
+		crit_mod = 0.01,
+	),
+	EwStatusEffectDef(
+		id_status = status_injury_torso_id,
+		str_describe = "Their torso looks {severity}",
+		str_describe_self = "Your torso looks {severity}",
+	),
+	EwStatusEffectDef(
+		id_status = status_injury_arms_id,
+		str_describe = "Their arms look {severity}",
+		str_describe_self = "Your arms look {severity}",
+		miss_mod_self = 0.05,
+		crit_mod_self = -0.1,
+	),
+	EwStatusEffectDef(
+		id_status = status_injury_legs_id,
+		str_describe = "Their legs look {severity}",
+		str_describe_self = "Your legs look {severity}",
+		miss_mod = -0.06,
+		crit_mod = 0.03,
+	),
+
 ]
 
 status_effects_def_map = {}
@@ -15100,6 +15475,303 @@ stackable_status_effects = [
 	status_repelled_id,
 	status_repelaftereffects_id,
 ]
+
+injury_weights = {
+	status_injury_head_id : 1,
+	status_injury_torso_id : 5,
+	status_injury_arms_id : 2,
+	status_injury_legs_id : 2
+}
+
+
+# Places you might get !shot
+hitzones = [
+	EwHitzone(
+		name = "head",
+		aliases = [
+			"neck",
+			"jaw",
+			"face",
+			"nose",
+		],
+		id_injury = status_injury_head_id,
+	),
+	EwHitzone(
+		name = "torso",
+		aliases = [
+			"upper back",
+			"obliques",
+			"solar plexus",
+			"trapezius",
+			"chest",
+			"gut",
+			"abdomen",
+			"lower back",
+		],
+		id_injury = status_injury_torso_id,
+	),
+	EwHitzone(
+		name = "leg",
+		aliases = [
+			"foot",
+			"kneecap",
+			"Achilles' tendon",
+			"ankle",
+			"thigh",
+			"calf",
+		],
+		id_injury = status_injury_legs_id,
+	),
+	EwHitzone(
+		name = "arm",
+		aliases = [
+			"hand",
+			"wrist",
+			"shoulder",
+			"elbow",
+		],
+		id_injury = status_injury_arms_id,
+	),
+]
+
+hitzone_list = []
+hitzone_map = {}
+
+for hz in hitzones:
+	hitzone_list.append(hz.name)
+	hitzone_map[hz.name] = hz
+
+	for alias in hz.aliases:
+		hitzone_list.append(alias)
+		hitzone_map[alias] = hz
+
+	hitzone_map[hz.id_injury] = hz
+
+trauma_id_suicide = "suicide"
+trauma_id_betrayal = "betrayal"
+trauma_id_environment = "environment"
+
+trauma_class_slimegain = "slimegain"
+trauma_class_damage = "damage"
+
+trauma_class_sapregeneration = "sapgen"
+trauma_class_accuracy = "accuracy"
+trauma_class_bleeding = "bleeding"
+trauma_class_movespeed = "movespeed"
+trauma_class_hunger = "hunger"
+
+trauma_list = [
+	EwTrauma(
+		id_trauma = trauma_id_suicide,
+		str_trauma_self = "You are suffering from a tragic case of cowardice.",
+		str_trauma = "They are suffering from a tragic case of cowardice.",
+		trauma_class = trauma_class_damage,
+	),
+	EwTrauma(
+		id_trauma = trauma_id_betrayal,
+		str_trauma_self = "You look anxious around your teammates, wary of betrayal.",
+		str_trauma = "They look anxious around their teammates, wary of betrayal.",
+		trauma_class = trauma_class_movespeed,
+	),
+	EwTrauma(
+		id_trauma = trauma_id_environment,
+		str_trauma_self = "You look like the kind of idiot who would accidentally fall off the blimp.",
+		str_trauma = "They look like the kind of idiot who would accidentally fall off the blimp.",
+		trauma_class = trauma_class_slimegain,
+	),
+	EwTrauma( # 1
+		id_trauma = weapon_id_revolver,
+		str_trauma_self = "You have scarring on both temples, which occasionally bleeds.",
+		str_trauma = "They have scarring on both temples, which occasionally bleeds.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma( # 2
+		id_trauma = weapon_id_dualpistols,
+		str_trauma_self = "You have several stitches embroidered into your chest over your numerous bullet wounds.",
+		str_trauma = "They have several stitches embroidered into your chest over your numerous bullet wounds.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 3
+		id_trauma = weapon_id_shotgun,
+		str_trauma_self = "You have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		str_trauma = "They have a few large, gaping holes in your abdomen. Someone could stick their arm through the biggest one.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 4
+		id_trauma = weapon_id_rifle,
+		str_trauma_self = "Your torso is riddled with scarred-over bulletholes.",
+		str_trauma = "Their torso is riddled with scarred-over bulletholes.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 5
+		id_trauma = weapon_id_smg,
+		str_trauma_self = "Your copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		str_trauma = "Their copious amount of bullet holes trigger onlookers’ Trypophobia.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 6
+		id_trauma = weapon_id_minigun,
+		str_trauma_self = "What little is left of your body has large holes punched through it, resembling a slice of swiss cheese.",
+		str_trauma = "What little is left of their body has large holes punched through it, resembling a slice of swiss cheese.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 7
+		id_trauma = weapon_id_bat,
+		str_trauma_self = "Your head appears to be slightly concave on one side.",
+		str_trauma = "Their head appears to be slightly concave on one side.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma( # 8
+		id_trauma = weapon_id_brassknuckles,
+		str_trauma_self = "You've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		str_trauma = "They've got two black eyes, missing teeth, and a profoundly crooked nose.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma( # 9
+		id_trauma = weapon_id_katana,
+		str_trauma_self = "A single clean scar runs across the entire length of your body.",
+		str_trauma = "A single clean scar runs across the entire length of their body.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 10
+		id_trauma = weapon_id_broadsword,
+		str_trauma_self = "A large dent resembling that of a half-chopped down tree appears on the top of your head.",
+		str_trauma = "A dent resembling that of a half-chopped down tree appears on the top of their head.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma( # 11
+		id_trauma = weapon_id_nunchucks,
+		str_trauma_self = "You are covered in deep bruises. You hate martial arts of all kinds.",
+		str_trauma = "They are covered in deep bruises. They hate martial arts of all kinds.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 12
+		id_trauma = weapon_id_scythe,
+		str_trauma_self = "You are wrapped tightly in bandages that hold your two halves together.",
+		str_trauma = "They are wrapped tightly in bandages that hold their two halves together.",
+		trauma_class = trauma_class_movespeed,
+	),
+	EwTrauma( # 13
+		id_trauma = weapon_id_yoyo,
+		str_trauma_self = "Simple yo-yo tricks caught even in your peripheral vision triggers intense PTSD flashbacks.",
+		str_trauma = "Simple yo-yo tricks caught even in their peripheral vision triggers intense PTSD flashbacks.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 14
+		id_trauma = weapon_id_knives,
+		str_trauma_self = "You are covered in scarred-over lacerations and puncture wounds.",
+		str_trauma = "They are covered in scarred-over lacerations and puncture wounds.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 15
+		id_trauma = weapon_id_molotov,
+		str_trauma_self = "You're wrapped in bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in bandages. What skin is showing appears burn-scarred.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 16
+		id_trauma = weapon_id_grenades,
+		str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
+		str_trauma = "Blast scars and burned skin are spread unevenly across their body.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 17
+		id_trauma = weapon_id_garrote,
+		str_trauma_self = "There is noticeable bruising and scarring around your neck.",
+		str_trauma = "There is noticeable bruising and scarring around their neck.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma(  # 18
+		id_trauma = weapon_id_pickaxe,
+		str_trauma_self = "There is a deep, precise indent in the crown of your skull. How embarrassing!",
+		str_trauma = "There is a deep, precise indent in the crown of their skull. How embarrassing!",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma(  # 19
+		id_trauma = "fishingrod",
+		str_trauma_self = "There is a piercing on the side of your mouth. How embarrassing!",
+		str_trauma = "There is a piercing on the side of their mouth. How embarrassing!",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma(  # 20
+		id_trauma = weapon_id_bass,
+		str_trauma_self = "There is a large concave dome in the side of your head.",
+		str_trauma = "There is a large concave dome in the side of their head.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma(  # 21
+		id_trauma = weapon_id_umbrella,
+		str_trauma_self = "You have a large hole in your chest.",
+		str_trauma = "They have a large hole in their chest.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma(  # 22
+		id_trauma = weapon_id_bow,
+		str_trauma_self = "There is a pixelated arrow in the side of your head.",
+		str_trauma = "There is a pixelated arrow in the side of their head.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma(  # 23
+		id_trauma = weapon_id_dclaw,
+		str_trauma_self = "Three smoldering claw marks are burned into your flesh, the flames `won't seem to extinguish.",
+		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
+		trauma_class = trauma_class_sapregeneration,
+	),
+	EwTrauma( # 1
+		id_trauma = "fangs",
+		str_trauma_self = "You have bite marks littered throughout your body.",
+		str_trauma = "They have bite marks littered throughout their body.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 2
+		id_trauma = "talons",
+		str_trauma_self = "A large section of scars litter your abdomen.",
+		str_trauma = "A large section of scars litter their abdomen.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 4
+		id_trauma = "gunk shot",
+		str_trauma_self = "Several locations on your body have decayed from the aftermath of horrific radiation.",
+		str_trauma = "Several locations on their body have decayed from the aftermath of horrific radiation.",
+		trauma_class = trauma_class_sapregeneration,
+	),
+	EwTrauma( # 5
+		id_trauma = "tusks",
+		str_trauma_self = "You have one large scarred-over hole on your upper body.",
+		str_trauma = "They have one large scarred-over hole on their upper body.",
+		trauma_class = trauma_class_bleeding,
+	),
+	EwTrauma( # 6
+		id_trauma = "molotov breath",
+		str_trauma_self = "You're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		str_trauma = "They're wrapped in two layers of bandages. What skin is showing appears burn-scarred.",
+		trauma_class = trauma_class_hunger,
+	),
+	EwTrauma( # 7
+		id_trauma = "arm cannon",
+		str_trauma_self = "There's a deep bruising right in the middle of your forehead.",
+		str_trauma = "There's a deep bruising right in the middle of their forehead.",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma( # 8
+		id_trauma = "axe",
+		str_trauma_self = "There's a hefty amount of bandages covering the top of your head",
+		str_trauma = "There's a hefty amount of bandages covering the top of their head",
+		trauma_class = trauma_class_accuracy,
+	),
+	EwTrauma( # 9
+		id_trauma = "hooves",
+		str_trauma_self = "Your chest is somewhat concave.",
+		str_trauma = "Their chest is somewhat concave.",
+		trauma_class = trauma_class_hunger,
+	),
+]
+
+trauma_map = {}
+
+for trauma in trauma_list:
+	trauma_map[trauma.id_trauma] = trauma
+
 # Shitty bait that always yields Plebefish while fishing.
 plebe_bait = []
 
@@ -15142,7 +15814,7 @@ nobite_text = [
     	"You see a bird carry off a Plebefish in the distance... Good riddance...",
     	"You spot a stray bullet in the distance...",
     	"You see a dead body float up to the surface of the Slime...",
-    	"Fish..." 
+    	"Fish..."
 ]
 
 generic_help_response = "Check out the guide for help: https://ew.krakissi.net/guide/\nThe guide won't cover everything though, and may even be a bit outdated in some places, so you can also visit N.L.A.C.U. (!goto uni) or Neo Milwaukee State (!goto nms) to get more in-depth descriptions about how various game mechanics work by using the !help command there. Portable game guides can also be bought there for 10,000 slime."
@@ -15212,7 +15884,7 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase."
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
@@ -15380,17 +16052,17 @@ enemy_spawn_groups = {
 enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
 	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}],
-	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}, {"monsterbones": [100, 3, 5]}],
 	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
 	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}],
-	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}],
+	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}, {"monsterbones": [100, 1, 3]}],
 	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
 	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}],
-	enemy_type_greeneyesslimedragon: [{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}, {"monsterbones": [100, 5, 10]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
@@ -15509,7 +16181,7 @@ world_events = [
 		str_event_start = "You notice the wall bulging slightly and you can dig into it.({} column number)".format(cmd_mine),
 		str_event_end = "The wall collapses.",
 	),
-	
+
 ]
 
 event_type_to_def = {}
@@ -15827,10 +16499,35 @@ pray_responses_list = [
 dance_responses = [
 	"{} busts a move. Wow, look at 'em go!",
 	"{} gets down and boogies! Groovy!",
-	"{} does a headstand and starts breakdancing!",
+	"{} does a headstand and does a 720 degree spin!",
 	"{} starts flossing fast and hard!",
 	"{} does the Orange Justice, nailing each step flawlessly. Incredible!",
+	"{} cracks the whip! Watch them go at it!",
+	"{} performs the Nae Nae! https://en.wikipedia.org/wiki/Nae_Nae",
+	"{} does the Default Dance! You hear the familiar Fortnite jingle go off in your head.",
+	"{} gets down on the floor and does the worm! Their rhythm is off the charts!",
+	"{} spins around like a Laotian Toprock dancer! Whoa, be careful not to kick anyone, big guy!",
+	"{} does the monkey! Man, they're pretty!",
+	"{} does the charleston. What is this, the 20's? They do look kinda cool though...",
+	"{} starts breakdancing, Capoeira style! They almost knock someone's teeth out with their swift leg swings!",
+	"{} does a triple backflip! Hot diggedy!",
+	"{} performs a double Cartwheel! Not really a dance move, but we'll take it!",
+	"{} starts a Conga line! The party's over here!",
+	"{} does a moonwalk! They're smooth as heck!",
+	"{} does the robot! They manage to pull it off in a way that doesn't seem totally autistic!",
+	"{} does the carlton! It's anything BUT unusual!",
+	"{} starts tap dancing! They really start puttin' on the ritz for sure!",
+	"{} pumps their fist in the air over and over!",
+	"{} does a Flamenco dance! Their grace and elegance is unmatched!",
+	"{} walks like an Egyptian! Wow, racist much???",
+	"{} does an old-fashioned breakdance! Hot damn!",
+	"{} does the traditional Ukrainian Hopak! Their legs flail back and forth!",
+	"{} performs the Mannrobics taunt! They feel the burn!",
+	"{} gets the urge to !dab, but holds back with all their might.",
+	"{} gets the urge to !thrash, but holds back with all their might.",
+	"{} just kind of stands there, awkwardly. What did you expect?",
 	"{} makes a complete fool of themselves. Everyone gets secondhand embarrassment...",
+	# "{} does the Mayor Pete dance!", -- hm, maybe not...
 ]
 
 # list of genres and aliases
@@ -15889,7 +16586,57 @@ zine_commands = [
 	cmd_setpages,
 	cmd_setpages_alt_1,
 	cmd_setpages_alt_2,
-	]
+]
+
+curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
+	"fag":30,
+	"shit":10,
+	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
+	"dumbass": 10,
+	"cunt":30,
+	"fuck":10,
+	"bitch":10,
+	"bastard":5,
+	"nigger":80,
+	"kike":80,
+	"cuck":30,
+	#"chink":50,
+	"chinaman":50,
+	"gook":50,
+	"injun":50,
+	"bomboclaat":80,
+	"mick":50,
+	"pickaninny":50,
+	"tarbaby":50,
+	"towelhead":50,
+	"wetback":50,
+	"zipperhead":50,
+	"spick":50,
+	"dyke":50,
+	"tranny":80,
+	"dickhead":20,
+	"retard":30,
+	"buster":100,
+	"kraker":100,
+	"beaner":50,
+	"wanker":10,
+	"twat":10,
+}
+
+curse_responses = [ # scold the player for swearing
+	"Watch your language!",
+	"Another one for the swear jar...",
+	"Do you kiss your mother with that mouth?",
+	"Wow, maybe next time be a little nicer, won't you?",
+	"If you don't have anything nice to say, then don't say anything at all.",
+	"Wow, racist much???",
+	"Now that's just plain rude.",
+	"And just like that, some of your precious SlimeCoin goes right down the drain.",
+	"Calm down that attitude of yours, will you?",
+	"Your bad manners have costed you a fraction of your SlimeCoin!",
+	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
+	#"You know, don't, say, s-swears."
+]
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

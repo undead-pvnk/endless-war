@@ -143,6 +143,10 @@ async def add_quadrant(cmd):
 	author = cmd.message.author
 	quadrant = None
 	user_data = ew.EwUser(id_user=author.id, id_server=author.server.id)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	for token in cmd.tokens[1:]:
 		if token.lower() in ewcfg.quadrants_map:

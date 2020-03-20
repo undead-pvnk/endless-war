@@ -177,6 +177,9 @@ class EwPoi:
 	# if you can write zines here
 	write_manuscript = False
 
+	# maximum degradation - zone ceases functioning when this value is reached
+	max_degradation = 0
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -213,6 +216,7 @@ class EwPoi:
 		is_tutorial = False,
 		has_ads = False,
 		write_manuscript = False,
+		max_degradation = 1000,
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -248,6 +252,7 @@ class EwPoi:
 		self.is_tutorial = is_tutorial
 		self.has_ads = has_ads
 		self.write_manuscript = write_manuscript
+		self.max_degradation = max_degradation
 
 	#  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54
 map_world = [
@@ -749,7 +754,11 @@ async def move(cmd = None, isApt = False):
 	member_object = server_data.get_member(player_data.id_user)
 
 	movement_method = ""
-	
+
+	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if poi == None:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
 
@@ -1038,10 +1047,15 @@ async def teleport(cmd):
 
 	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
+	poi_now = user_data.poi
 	mutations = user_data.get_mutations()
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	
+	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewcfg.id_to_poi.get(target_name)
 
@@ -1074,28 +1088,70 @@ async def teleport(cmd):
 		if poi.id_poi not in valid_destinations:
 			response = "You can't {} that far.".format(cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		mutation_data.data = str(time_now)
-		mutation_data.persist()
-		ewutils.moves_active[cmd.message.author.id] = 0
-		user_data.poi = poi.id_poi
-		user_data.time_lastenter = int(time.time())
-		user_data.persist()
-		
-		if not blj_used:
-			response = "WHOOO-"
-		else:
-			response = "YAHOO! YAHOO! Y-Y-Y-Y-Y-"
+
+		# 30 second windup before teleport goes through
+		windup_finished = False
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You get a running start to charge up your Quantum Legs..."))
+		try:
+			msg = await cmd.client.wait_for_message(timeout=30, author=cmd.message.author)
+
+			if msg != None:
+				windup_finished = False
+			else:
+				windup_finished = True
+				
+		except:
+			windup_finished = True
+
+		user_data = EwUser(member=cmd.message.author)
 			
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-		
-		if not blj_used:
-			response = "-OOOP!"
-		else:
-			response = "-AHOO!"
+		if windup_finished and user_data.poi == poi_now:
+			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
+
+			mutation_data.data = str(time_now)
+			mutation_data.persist()
 			
-		resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
-		return await resp_cont.post()
+			if not blj_used:
+				response = "WHOOO-"
+			else:
+				response = "YAHOO! YAHOO! Y-Y-Y-Y-Y-"
+				
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			
+			poi_channel = ewutils.get_channel(cmd.message.server, poi.channel)
+
+			await ewutils.send_message(cmd.client, poi_channel, "A rift in time and space is pouring open! Something's coming through!!")
+			
+			await asyncio.sleep(5)
+			
+			if not blj_used:
+				response = "-OOOP!"
+			else:
+				response = "-AHOO!"
+
+			user_data = EwUser(member=cmd.message.author)
+
+			ewutils.moves_active[cmd.message.author.id] = 0
+			user_data.poi = poi.id_poi
+			user_data.time_lastenter = int(time.time())
+			user_data.persist()
+
+			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+				
+			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
+			return await resp_cont.post()
+		else:
+			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
+
+			mutation_data.data = str(time_now)
+			mutation_data.persist()
+			
+			# Get the channel for the poi the user is currently in, just in case they've moved to a different poi before the teleportation went through.
+			current_poi = ewcfg.id_to_poi.get(user_data.poi)
+			current_channel = ewutils.get_channel(cmd.message.server, current_poi.channel)
+			
+			response = "You slow down before the teleportation goes through."
+			return await ewutils.send_message(cmd.client, current_channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		
 		if not blj_used:
@@ -1139,19 +1195,30 @@ async def teleport_player(cmd):
 """
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if channel_name_is_poi(cmd.message.channel.name):
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+	degrade_resp = ""
+	if district_data.degradation >= poi.max_degradation:
+		degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
+
 
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	if fetch_poi_if_coordless(cmd.message.channel.name) is not None: # Triggers if you input the command in a sub-zone.
-		poi = fetch_poi_if_coordless(cmd.message.channel.name)
+	if poi.coord is None: # Triggers if you input the command in a sub-zone.
+
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-			"You stand {} {}.\n\n{}".format(
+			"You stand {} {}.\n\n{}\n\n{}".format(
 				poi.str_in,
 				poi.str_name,
-				poi.str_desc
+				poi.str_desc,
+				degrade_resp,
 			)
 		))
 
@@ -1186,10 +1253,11 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n...".format(
+			"You stand {} {}.\n\n{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
-				poi.str_desc
+				poi.str_desc,
+				degrade_resp,
 			)
 		))
 

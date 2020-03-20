@@ -88,6 +88,12 @@ class EwTransport:
 		poi_data = ewcfg.id_to_poi.get(self.poi)
 		last_messages = []
 		while not ewutils.TERMINATE:
+
+			district_data = EwDistrict(district = self.poi, id_server = self.id_server)
+
+			if district_data.is_degraded():
+				return
+
 			transport_line = ewcfg.id_to_transport_line[self.current_line]
 			client = ewutils.get_client()
 			resp_cont = ewutils.EwResponseContainer(client = client, id_server = self.id_server)
@@ -223,15 +229,26 @@ async def embark(cmd):
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
+
+	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
+		response = "You can't do that right now."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 	# must be at a transport stop to enter a transport
 	if poi != None and poi.id_poi in ewcfg.transport_stops:
 		transport_ids = get_transports_at_stop(id_server = user_data.id_server, stop = poi.id_poi)
-		
+
 		# can't embark, when there's no vehicles to embark on
 		if len(transport_ids) == 0:
 			response = "There are currently no transport vehicles to embark on here."
@@ -276,7 +293,7 @@ async def embark(cmd):
 				# check if the user entered another movement command while waiting for the current one to be completed
 				if move_current == ewutils.moves_active[cmd.message.author.id]:
 					user_data = EwUser(member = cmd.message.author)
-	
+
 					transport_data = EwTransport(id_server = user_data.id_server, poi = transport_id)
 
 					# check if the transport is still at the same stop
@@ -333,7 +350,7 @@ async def disembark(cmd):
 		await message_task
 		await wait_task
 
-		
+
 		# check if the user entered another movement command while waiting for the current one to be completed
 		if move_current != ewutils.moves_active[cmd.message.author.id]:
 			return
@@ -354,6 +371,7 @@ async def disembark(cmd):
 				response = ewutils.formatMessage(cmd.message.author, response)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, response)
 			user_data.poi = ewcfg.poi_id_slimesea
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause = ewcfg.cause_drowning)
 			user_data.persist()
 			resp_cont.add_response_container(die_resp)
@@ -363,32 +381,44 @@ async def disembark(cmd):
 			resp_cont.add_channel_response(channel = ewcfg.channel_ferry, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 		# they also can't fly
+                
 		elif transport_data.transport_type == ewcfg.transport_type_blimp and not stop_poi.is_transport_stop and user_data.life_state != ewcfg.life_state_corpse:
+			user_mutations = user_data.get_mutations()
 			if user_data.life_state == ewcfg.life_state_kingpin:
 				response = "Your life flashes before your eyes, as you plummet towards your certain death. A lifetime spent being a piece of shit and playing videogames all day. You close your eyes and... BOING! You open your eyes again to see a crew of workers transporting the trampoline that broke your fall. You get up and dust yourself off, sighing heavily."
 				response = ewutils.formatMessage(cmd.message.author, response)
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 				user_data.poi = stop_poi.id_poi
+				user_data.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
-
+			
+			elif ewcfg.mutation_id_lightasafeather in user_mutations:
+				response = "With a running jump you launch yourself out of the blimp and begin falling to your soon-to-be demise... but then a strong updraft breaks your fall and you land unscathed. "
+				response = ewutils.formatMessage(cmd.message.author, response)
+				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
+				user_data.poi = stop_poi.id_poi
+				user_data.persist()
+				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+				return await resp_cont.post()
 			district_data = EwDistrict(id_server = user_data.id_server, district = stop_poi.id_poi)
 			district_data.change_slimes(n = user_data.slimes)
 			district_data.persist()
 			user_data.poi = stop_poi.id_poi
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause = ewcfg.cause_falling)
 			user_data.persist()
 			resp_cont.add_response_container(die_resp)
 			response = "SPLAT! A body collides with the asphalt with such force, that it is utterly annihilated, covering bystanders in blood and slime and guts."
 			resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			
+
 		# update user location, if move successful
 		else:
 			if stop_poi.is_subzone:
 				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
-			
+
 			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 
@@ -423,4 +453,3 @@ async def check_schedule(cmd):
 		response = "There is no schedule to check here."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-

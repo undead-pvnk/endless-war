@@ -28,6 +28,12 @@ async def revive(cmd):
 		response = "Come to me. I hunger. #{}.".format(ewcfg.channel_sewers)
 	else:
 		player_data = EwUser(member = cmd.message.author)
+
+		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
+		if time_until_revive > 0:
+			response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 		slimeoid = EwSlimeoid(member = cmd.message.author)
 
 		if player_data.life_state == ewcfg.life_state_corpse:
@@ -44,18 +50,31 @@ async def revive(cmd):
 				#market_data.negaslime += player_data.slimes
 				player_data.change_slimes(n = -player_data.slimes) # set to 0
 
-			# Give player some initial slimes.
+			# reset slimelevel to zero
 			player_data.slimelevel = 0
-			player_data.change_slimes(n = ewcfg.slimes_onrevive)
 
 			# Set time of last revive. This used to provied spawn protection, but currently isn't used.
 			player_data.time_lastrevive = time_now
 
-			# Set life state. This is what determines whether the player is actually alive.
-			player_data.life_state = ewcfg.life_state_juvenile
+			
+			if player_data.degradation >= 100:
+				player_data.life_state = ewcfg.life_state_shambler
+				player_data.change_slimes(n = 0.5 * ewcfg.slimes_shambler)
+				player_data.trauma = ""
+				poi_death = ewcfg.id_to_poi.get(player_data.poi_death)
+				if ewmap.inaccessible(poi = poi_death, user_data = player_data):
+					player_data.poi = ewcfg.poi_id_downtown
+				else:
+					player_data.poi = poi_death.id_poi
+			else:
+				# Set life state. This is what determines whether the player is actually alive.
+				player_data.life_state = ewcfg.life_state_juvenile
+				# Give player some initial slimes.
+				player_data.change_slimes(n = ewcfg.slimes_onrevive)
+				# Get the player out of the sewers.
+				player_data.poi = ewcfg.poi_id_downtown
 
-			# Get the player out of the sewers.
-			player_data.poi = ewcfg.poi_id_downtown
+
 
 			player_data.persist()
 			market_data.persist()
@@ -122,6 +141,7 @@ async def haunt(cmd):
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
 		market_data = EwMarket(id_server = cmd.message.server.id)
+		target_isshambler = haunted_data.life_state == ewcfg.life_state_shambler
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
@@ -134,7 +154,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp:
+		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -143,7 +163,7 @@ async def haunt(cmd):
 		elif haunted_data.life_state == ewcfg.life_state_grandfoe:
 			# Grand foes can't be haunted.
 			response = "{} is invulnerable to ghosts.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile:
+		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
 			# Target can be haunted by the player.
 			haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
 			# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
