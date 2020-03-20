@@ -24,6 +24,7 @@ from ewplayer import EwPlayer
 from ewhunting import EwEnemy
 from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
+from ewstatuseffects import EwEnemyStatusEffect
 from ewitem import EwItem
 
 TERMINATE = False
@@ -706,6 +707,7 @@ async def burn_tick_loop(id_server):
 	interval = ewcfg.burn_tick_length
 	while not TERMINATE:
 		await burnSlimes(id_server = id_server)
+		await enemyBurnSlimes(id_server = id_server)
 		await asyncio.sleep(interval)
 
 """ Burn slime for all users """
@@ -729,7 +731,6 @@ async def burnSlimes(id_server = None):
 			id_server
 		))
 
-		deathreport = ""
 		resp_cont = EwResponseContainer(id_server = id_server)
 		for result in data:
 			user_data = EwUser(id_user = result[0], id_server = id_server)
@@ -750,6 +751,7 @@ async def burnSlimes(id_server = None):
 
 				player_data = EwPlayer(id_server = user_data.id_server, id_user = user_data.id_user)
 				killer = EwPlayer(id_server = id_server, id_user=killer_data.id_user)
+				poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				# Kill stats
 				ewstats.increment_stat(user = killer_data, metric = ewcfg.stat_kills)
@@ -773,6 +775,9 @@ async def burnSlimes(id_server = None):
 				#user_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
 				resp_cont.add_response_container(die_resp)
+				
+				deathreport = "{} has burned to death.".format(player_data.display_name)
+				resp_cont.add_channel_response(poi.channel, deathreport)
 
 				user_data.trauma = weapon.id_weapon
 
@@ -785,13 +790,62 @@ async def burnSlimes(id_server = None):
 
 		await resp_cont.post()	
 
+async def enemyBurnSlimes(id_server):
+	if id_server != None:
+		time_now = int(time.time())
+		client = get_client()
+		server = client.get_server(id_server)
+
+		results = {}
+
+		# Get enemies with burning effect
+		data = execute_sql_query("SELECT {id_enemy}, {value}, {source} from enemy_status_effects WHERE {id_status} = %s and {id_server} = %s".format(
+			id_enemy = ewcfg.col_id_enemy,
+			value = ewcfg.col_value,
+			id_status = ewcfg.col_id_status,
+			id_server = ewcfg.col_id_server,
+			source = ewcfg.col_source
+		), (
+			ewcfg.status_burning_id,
+			id_server
+		))
+
+		resp_cont = EwResponseContainer(id_server = id_server)
+		for result in data:
+			enemy_data = EwEnemy(id_enemy = result[0], id_server = id_server)
+			
+			slimes_dropped = enemy_data.totaldamage + enemy_data.slimes
+
+			# Deal 10% of total slime to burn every second
+			slimes_to_burn = math.ceil(int(float(result[1])) * ewcfg.burn_tick_length / ewcfg.time_expire_burn)
+
+			killer_data = EwUser(id_server = id_server, id_user=result[2])
+
+			# Damage stats
+			ewstats.change_stat(user = killer_data, metric = ewcfg.stat_lifetime_damagedealt, n = slimes_to_burn)
+
+			if enemy_data.slimes - slimes_to_burn <= 0:
+				ewhunting.delete_enemy(enemy_data)
+
+				response = "{} has burned to death.".format(enemy_data.display_name)
+				resp_cont.add_channel_response(ewcfg.id_to_poi.get(enemy_data.poi).channel, response)
+				
+				district_data = EwDistrict(id_server = id_server, district = enemy_data.poi)
+				resp_cont.add_response_container(ewhunting.drop_enemy_loot(enemy_data, district_data))
+			else:
+				enemy_data.change_slimes(n = -slimes_to_burn, source=ewcfg.source_damage)
+				enemy_data.persist()
+			
+		await resp_cont.post()
+
 async def remove_status_loop(id_server):
 	interval = ewcfg.removestatus_tick_length
 	while not TERMINATE:
 		removeExpiredStatuses(id_server = id_server)
+		enemyRemoveExpiredStatuses(id_server = id_server)
 		await asyncio.sleep(interval)
 
-""" Decay slime totals for all users """
+""" Remove expired status effects for all users """
 def removeExpiredStatuses(id_server = None):
 	if id_server != None:
 		time_now = int(time.time())
@@ -824,6 +878,36 @@ def removeExpiredStatuses(id_server = None):
 				if status == ewcfg.status_stunned_id:
 					if int(status_effect.value) < time_now:
 						user_data.clear_status(id_status=status)
+					
+def enemyRemoveExpiredStatuses(id_server = None):
+	if id_server != None:
+		time_now = int(time.time())
+
+		statuses = execute_sql_query("SELECT {id_status}, {id_enemy} FROM enemy_status_effects WHERE id_server = %s AND {time_expire} < %s".format(
+			id_status = ewcfg.col_id_status,
+			id_enemy = ewcfg.col_id_enemy,
+			time_expire = ewcfg.col_time_expir
+		), (
+			id_server,
+			time_now
+		))
+
+		for row in statuses:
+			status = row[0]
+			id_enemy = row[1]
+			enemy_data = EwEnemy(id_enemy = id_enemy, id_server = id_server)
+			status_def = ewcfg.status_effects_def_map.get(status)
+			status_effect = EwEnemyStatusEffect(id_status=status, enemy_data = enemy_data)
+	
+			if status_def.time_expire > 0:
+				if status_effect.time_expire < time_now:
+					enemy_data.clear_status(id_status=status)
+
+			# Status that expire under special conditions
+			else:
+				if status == ewcfg.status_stunned_id:
+					if int(status_effect.value) < time_now:
+						enemy_data.clear_status(id_status=status)
 
 """ Parse a list of tokens and return an integer value. If allow_all, return -1 if the word 'all' is present. """
 def getIntToken(tokens = [], allow_all = False, negate = False):

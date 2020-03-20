@@ -141,6 +141,7 @@ async def haunt(cmd):
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
 		market_data = EwMarket(id_server = cmd.message.server.id)
+		target_isshambler = haunted_data.life_state == ewcfg.life_state_shambler
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
@@ -153,7 +154,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp:
+		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -162,7 +163,7 @@ async def haunt(cmd):
 		elif haunted_data.life_state == ewcfg.life_state_grandfoe:
 			# Grand foes can't be haunted.
 			response = "{} is invulnerable to ghosts.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile:
+		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
 			# Target can be haunted by the player.
 			haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
 			# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
