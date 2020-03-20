@@ -55,6 +55,8 @@ CREATE TABLE users (
 	slimernalia_kingpin boolean NOT NULL DEFAULT false,
 	manuscript int NOT NULL DEFAULT '-1',
 	swear_jar bigint NOT NULL DEFAULT '0',
+	degradation bigint NOT NULL DEFAULT '0',
+	time_lastdeath int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -241,6 +243,7 @@ CREATE TABLE districts (
 	capture_points bigint NOT NULL DEFAULT '0',
 	slimes bigint NOT NULL DEFAULT '0',
 	time_unlock int NOT NULL DEFAULT '0',
+	degradation bigint NOT NULL DEFAULT '0',
 
 	PRIMARY KEY (id_server, district)
 );
@@ -297,6 +300,19 @@ CREATE TABLE status_effects (
 	id_target varchar(128) NOT NULL DEFAULT '',
 
 	PRIMARY KEY (id_server, id_user, id_status)
+);
+
+CREATE TABLE enemy_status_effects (
+	id_server varchar(128) NOT NULL,
+	id_enemy varchar(128) NOT NULL,
+	id_status varchar(64) NOT NULL,
+	
+	time_expir int NOT NULL DEFAULT '-1',
+	value varchar(255) NOT NULL DEFAULT 0,
+	source varchar(128) NOT NULL DEFAULT '',
+	id_target varchar(128) NOT NULL DEFAULT '',
+
+	PRIMARY KEY (id_server, id_enemy, id_status)
 );
 
 CREATE TABLE bans (

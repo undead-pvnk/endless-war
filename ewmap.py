@@ -177,6 +177,9 @@ class EwPoi:
 	# if you can write zines here
 	write_manuscript = False
 
+	# maximum degradation - zone ceases functioning when this value is reached
+	max_degradation = 0
+
 	def __init__(
 		self,
 		id_poi = "unknown", 
@@ -213,6 +216,7 @@ class EwPoi:
 		is_tutorial = False,
 		has_ads = False,
 		write_manuscript = False,
+		max_degradation = 1000,
 	):
 		self.id_poi = id_poi
 		self.alias = alias
@@ -248,6 +252,7 @@ class EwPoi:
 		self.is_tutorial = is_tutorial
 		self.has_ads = has_ads
 		self.write_manuscript = write_manuscript
+		self.max_degradation = max_degradation
 
 	#  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54
 map_world = [
@@ -1190,19 +1195,30 @@ async def teleport_player(cmd):
 """
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	district_data = EwDistrict(district = user_data.poi, id_server = user_data.id_server)
-	poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	if channel_name_is_poi(cmd.message.channel.name):
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	else:
+		poi = ewcfg.id_to_poi.get(user_data.poi)
+
+	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
+
+	degrade_resp = ""
+	if district_data.degradation >= poi.max_degradation:
+		degrade_resp = ewcfg.str_zone_degraded.format(poi = poi.str_name) + "\n\n"
+
 
 	if poi.is_apartment:
 		return await ewapt.apt_look(cmd=cmd)
 
-	if fetch_poi_if_coordless(cmd.message.channel.name) is not None: # Triggers if you input the command in a sub-zone.
-		poi = fetch_poi_if_coordless(cmd.message.channel.name)
+	if poi.coord is None: # Triggers if you input the command in a sub-zone.
+
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author,
-			"You stand {} {}.\n\n{}".format(
+			"You stand {} {}.\n\n{}\n\n{}".format(
 				poi.str_in,
 				poi.str_name,
-				poi.str_desc
+				poi.str_desc,
+				degrade_resp,
 			)
 		))
 
@@ -1237,10 +1253,11 @@ async def look(cmd):
 	if poi != None:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
-			"You stand {} {}.\n\n{}\n\n...".format(
+			"You stand {} {}.\n\n{}\n\n{}...".format(
 				poi.str_in,
 				poi.str_name,
-				poi.str_desc
+				poi.str_desc,
+				degrade_resp,
 			)
 		))
 

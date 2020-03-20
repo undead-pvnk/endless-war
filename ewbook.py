@@ -283,6 +283,10 @@ async def begin_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	cost = 20000
 
 	if not dm:
@@ -309,6 +313,7 @@ async def begin_manuscript(cmd = None, dm = False):
 		response = "Alright buddy, reel it in. That title is just too long. ({:,}/50)".format(len(title))
 
 	else:
+
 		if user_data.manuscript != -1:
 			response = "You already have a manuscript deployed you eager beaver!"
 		else:
@@ -327,6 +332,10 @@ async def begin_manuscript(cmd = None, dm = False):
 
 async def set_pen_name(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
+
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if not dm:
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -360,6 +369,10 @@ async def set_pen_name(cmd = None, dm = False):
 
 async def set_genre(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
 	if not dm:
@@ -396,6 +409,10 @@ async def set_genre(cmd = None, dm = False):
 
 async def set_length(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if not dm:
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -484,6 +501,10 @@ async def set_length(cmd = None, dm = False):
 
 async def set_title(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
 	if not dm:
@@ -521,6 +542,10 @@ async def set_title(cmd = None, dm = False):
 
 async def edit_page(cmd = None, dm = False):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 
 	if not dm:
@@ -601,6 +626,10 @@ async def edit_page(cmd = None, dm = False):
 
 async def view_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if not dm:
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -645,6 +674,10 @@ async def view_page(cmd = None, dm = False):
 
 async def check_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if not dm:
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -684,6 +717,10 @@ async def check_manuscript(cmd = None, dm = False):
 
 async def publish_manuscript(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 
 	if not dm:
@@ -776,6 +813,10 @@ def get_page(id_book, page):
 
 async def read_book(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if not dm:
 		response = "ENDLESS WAR politely asks that you !read in his DMs."
@@ -856,6 +897,10 @@ async def read_book(cmd = None, dm = False):
 
 async def next_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if not dm:
 		response = "ENDLESS WAR politely asks that you !read in his DMs."
@@ -896,6 +941,10 @@ async def next_page(cmd = None, dm = False):
 
 async def previous_page(cmd = None, dm = False):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if not dm:
 		response = "ENDLESS WAR politely asks that you !read in his DMs."
@@ -1164,6 +1213,10 @@ async def browse_zines(cmd):
 
 async def order_zine(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
 	if not poi.write_manuscript:

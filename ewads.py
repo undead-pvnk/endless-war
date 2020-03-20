@@ -5,6 +5,7 @@ import ewutils
 
 from ew import EwUser
 from ewplayer import EwPlayer
+from ewdistrict import EwDistrict
 
 class EwAd:
 
@@ -111,11 +112,22 @@ async def advertise(cmd):
 
 	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if cmd.message.channel.name != ewcfg.channel_slimecorphq:
 		response = "To buy ad space, you'll need to go SlimeCorp HQ."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+		
 
 	cost = ewcfg.slimecoin_toadvertise
 
