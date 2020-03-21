@@ -509,7 +509,7 @@ async def flag_outskirts(id_server = None):
 				user_data = EwUser(id_user = user[0], id_server = id_server)
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp,(int(time.time()) + ewcfg.time_pvp_mine), enlisted)
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
 
@@ -1737,9 +1737,11 @@ def return_server_role(server, role_name):
 	return discord.utils.get(server.roles, name=role_name)
 
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
-def calculatePvpTimer(current_time_expirpvp, desired_time_expirpvp, enlisted = False):
+def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
 	if enlisted:
-		desired_time_expirpvp *= 4
+		timer *= 4
+
+	desired_time_expirpvp = int(time.time()) + timer
 
 	if desired_time_expirpvp > current_time_expirpvp:
 		return desired_time_expirpvp

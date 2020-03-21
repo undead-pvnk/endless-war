@@ -107,7 +107,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist), True)
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -132,7 +132,7 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist), True)
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -415,7 +415,7 @@ async def mine(cmd):
 			was_pvp = user_data.time_expirpvp > time_now
 			# Flag the user for PvP
 			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_mine), enlisted)
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
 
 			user_data.persist()
 			if not was_pvp:
@@ -721,7 +721,7 @@ async def scavenge(cmd):
 			was_pvp = user_data.time_expirpvp > time_now
 			# Flag the user for PvP
 			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_scavenge), enlisted)
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
 
 			user_data.persist()
 			if not was_pvp:

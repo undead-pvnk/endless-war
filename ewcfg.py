@@ -15565,8 +15565,8 @@ trauma_list = [
 	),
 	EwTrauma(
 		id_trauma = trauma_id_environment,
-		str_trauma_self = "You look like the kind of idiot who would accidentally fall off the blimp.",
-		str_trauma = "They look like the kind of idiot who would accidentally fall off the blimp.",
+		str_trauma_self = "Your death could have resulted any number of situations, mostly related to your own idiocy.",
+		str_trauma = "Their death could have come from any number of situations, mostly related to their own idiocy.",
 		trauma_class = trauma_class_slimegain,
 	),
 	EwTrauma( # 1

@@ -1656,8 +1656,8 @@ async def duel(cmd):
 		challengee = EwUser(member=member)
 		
 		# start the duel
-		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
-		challengee.time_expirpvp = ewutils.calculatePvpTimer(challengee.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_duel))
+		challenger.time_expirpvp = ewutils.calculatePvpTimer(challenger.time_expirpvp, ewcfg.time_pvp_duel)
+		challengee.time_expirpvp = ewutils.calculatePvpTimer(challengee.time_expirpvp, ewcfg.time_pvp_duel)
 
 		challenger.persist()
 		challengee.persist()
