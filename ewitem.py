@@ -1494,6 +1494,10 @@ async def squeeze(cmd):
 	if cmd.mentions_count <= 0:
 		response = "Specify a soul you want to squeeze the life out of."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if usermodel.life_state == ewcfg.life_state_corpse:
+		response = "Alas, the precious soul slips right through your fingers. Maybe if you had a mortal body of flesh and blood, you'd be able to wring some slime out of it."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	target = cmd.mentions[0]
 	targetmodel = EwUser(member=target)

@@ -261,7 +261,8 @@ async def reap(cmd):
 
 					user_data.hunger += ewcfg.hunger_perfarm
 					# Flag the user for PvP
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_farm))
+					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_farm), enlisted)
 
 					user_data.persist()
 

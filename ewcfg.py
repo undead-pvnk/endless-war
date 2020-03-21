@@ -27,7 +27,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.24i2k4p"
+version = "v3.25i2"
 
 
 dir_msgqueue = 'msgqueue'
@@ -619,6 +619,7 @@ cmd_weather = cmd_prefix + 'weather'
 cmd_patchnotes = cmd_prefix + 'patchnotes'
 cmd_howl = cmd_prefix + 'howl'
 cmd_howl_alt1 = cmd_prefix + '56709'
+cmd_moan = cmd_prefix + 'moan'
 cmd_transfer = cmd_prefix + 'transfer'
 cmd_transfer_alt1 = cmd_prefix + 'xfer'
 cmd_menu = cmd_prefix + 'menu'
@@ -711,6 +712,7 @@ cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_annex = cmd_prefix + 'annex'
@@ -8543,6 +8545,22 @@ howls = [
 	'**AWOOOOOOOOOOOOOOOOOOOOOOOOOOOOO**',
 	'**AWOOOOOOOOOOOOOOOOOOOO**',
 	'**AWWWOOOOOOOOOOOOOOOOOOOO**'
+]
+
+moans = [
+	'**BRRRRRAAAAAAAAAIIIIIINNNNNZZ**',
+	'**B R A I N Z**',
+	'**bbbbbRRRRRaaaaaaIIIIIInnnnZZZZZZ**',
+	'**bbbbbbrrrrrraaaaaaaaiiiiiiinnnnnnnzzzz**',
+	'**duuuuude, liiiiike, brrrraaaaaaiiiiinnnnnnzzzzz**',
+	'**bbbraaaaiiinnnzzz**',
+	'**BRAAAAAAAIIIIIIIIIIIIIIIINNNNNNNNNZZZZZZZZ**',
+	'**BBBBBBBBBBBBBBBBBRRRRRRRRRRRRRRRAAAAAAAAAAAAAIIIIIIIIIIIIIIINNNNNNNNZZZZZZZZZZ**',
+	'**BRRRRAAAAAIIINNNNNZZZ**',
+	'**BBBBRRRRRRRRRRRRRRRAAAAIIIIIINNNNZZZZZ**',
+	'**BRRRAAAIINNNZZ? BRRRAAAAIINNNZZ! BRRRRRRRAAAAAAAAIIIIIINNNNNZZZZZZZ!!!**',
+	'**bbbbbBBBBrrrrrRRRRaaaaIIIIInnnnnnNNNNNzzzzZZZZZZZ!!!**',
+	'**CCCCRRRRRRIIIIINNNNNNNGGGGEEEEE! BBBBBAAAAAAAAAAASSSSSEEEDDDDDDDD!**'
 ]
 
 """
@@ -16587,7 +16605,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"dyke":50,
 	"tranny":80,
 	"dickhead":20,
-	"retard":30,
+	"retard":20,
 	"buster":100,
 	"kraker":100,
 	"beaner":50,

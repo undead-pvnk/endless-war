@@ -444,6 +444,7 @@ cmd_map = {
 
 	#scavenging
 	ewcfg.cmd_scavenge: ewjuviecmd.scavenge,
+	ewcfg.cmd_scavenge_alt1: ewjuviecmd.scavenge,
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
@@ -484,6 +485,7 @@ cmd_map = {
 	# Misc
 	ewcfg.cmd_howl: ewcmd.cmd_howl,
 	ewcfg.cmd_howl_alt1: ewcmd.cmd_howl,
+	ewcfg.cmd_moan: ewcmd.cmd_moan,
 	ewcfg.cmd_harvest: ewcmd.harvest,
 	ewcfg.cmd_salute: ewcmd.salute,
 	ewcfg.cmd_unsalute: ewcmd.unsalute,
@@ -1189,6 +1191,7 @@ async def on_message(message):
 	content_tolower = message.content.lower()
 	content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
+	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
 	# update the player's time_last_action which is used for kicking AFK players out of subzones
 	if message.server != None:
@@ -1581,6 +1584,8 @@ async def on_message(message):
 		# AWOOOOO
 		elif re_awoo.match(cmd):
 			return await ewcmd.cmd_howl(cmd_obj)
+		elif re_moan.match(cmd):
+			return await ewcmd.cmd_moan(cmd_obj)
 
 		# Debug command to override the role of a user
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'setrole'):
@@ -1622,6 +1627,13 @@ async def on_message(message):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
+			user_data.persist()
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getshambler'):
+			response = "You get shambler. Jesus fucking Christ, why not, sure."
+			user_data = EwUser(member=message.author)
+			user_data.life_state = ewcfg.life_state_shambler
 			user_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 			
@@ -1696,7 +1708,11 @@ async def on_message(message):
 			message = message,
 			client = client
 		))
-
+	elif content_tolower.find(ewcfg.cmd_moan) >= 0 or re_moan.match(content_tolower):
+		return await ewcmd.cmd_moan(ewcmd.EwCmd(
+			message=message,
+			client=client
+		))
 
 # find our REST API token
 token = ewutils.getToken()

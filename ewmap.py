@@ -1038,13 +1038,6 @@ async def teleport(cmd):
 	if channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	if cmd.tokens_count < 2 and not blj_used:
-		response = "Teleport where?"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	elif cmd.tokens_count < 2 and blj_used:
-		response = "Backwards Long Jump where?"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 	time_now = int(time.time())
 	user_data = EwUser(member = cmd.message.author)
 	poi_now = user_data.poi
@@ -1057,17 +1050,6 @@ async def teleport(cmd):
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.id_to_poi.get(target_name)
-
-	if poi is None:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
-
-	if poi.id_poi == user_data.poi:
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
-
-	if inaccessible(user_data = user_data, poi = poi):
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
-
 	if ewcfg.mutation_id_quantumlegs in mutations:
 		mutation_data = EwMutation(id_user = user_data.id_user, id_server = user_data.id_server, id_mutation = ewcfg.mutation_id_quantumlegs)
 		if len(mutation_data.data) > 0:
@@ -1078,6 +1060,24 @@ async def teleport(cmd):
 		if time_lastuse + 180*60 > time_now:
 			response = "You can't do that again yet. Try again in about {} minute(s)".format(math.ceil((time_lastuse + 180*60 - time_now)/60))
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+		if cmd.tokens_count < 2 and not blj_used:
+			response = "Teleport where?"
+			return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+		elif cmd.tokens_count < 2 and blj_used:
+			response = "Backwards Long Jump where?"
+			return await ewutils.send_message(cmd.client, cmd.message.channel,ewutils.formatMessage(cmd.message.author, response))
+
+		poi = ewcfg.id_to_poi.get(target_name)
+
+		if poi is None:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Never heard of it."))
+
+		if poi.id_poi == user_data.poi:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
+
+		if inaccessible(user_data=user_data, poi=poi):
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
 			
 		valid_destinations = set()
 		neighbors = ewcfg.poi_neighbors.get(user_data.poi)

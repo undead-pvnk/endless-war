@@ -738,7 +738,8 @@ async def reel(cmd):
 				fisher.stop()
 
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish))
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_fish), enlisted)
 
 				user_data.persist()
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
