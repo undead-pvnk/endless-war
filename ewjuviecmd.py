@@ -1479,7 +1479,4 @@ def create_mining_event(cmd):
 def gen_scavenge_captcha(n = 0):
 	captcha_length = math.ceil(n / 3)
 
-	if captcha_length >= 3 and captcha_length <= 10:
-		return ewutils.generate_captcha(captcha_length)
-	else:
-		return ewutils.generate_captcha_random(max(1, captcha_length))
+	return ewutils.generate_captcha(captcha_length)

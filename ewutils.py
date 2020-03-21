@@ -1537,7 +1537,10 @@ def generate_captcha_random(n = 4):
 	return captcha.upper()
 
 def generate_captcha(n = 4):
-	return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == n])
+	try:
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == n])
+	except:
+		return generate_captcha_random(n)
 
 async def sap_tick_loop(id_server):
 	interval = ewcfg.sap_tick_length
