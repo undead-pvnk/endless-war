@@ -16474,6 +16474,7 @@ pray_responses_list = [
 	"ENDLESS WAR commands you to kill thy neighbor.",
 	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+	"ENDLESS WAR is a free text-based MMORPG playable entirely within a Discord server. But, you probably already knew that, didn't you?",
 ]
 
 
