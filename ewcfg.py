@@ -619,6 +619,7 @@ cmd_weather = cmd_prefix + 'weather'
 cmd_patchnotes = cmd_prefix + 'patchnotes'
 cmd_howl = cmd_prefix + 'howl'
 cmd_howl_alt1 = cmd_prefix + '56709'
+cmd_moan = cmd_prefix + 'moan'
 cmd_transfer = cmd_prefix + 'transfer'
 cmd_transfer_alt1 = cmd_prefix + 'xfer'
 cmd_menu = cmd_prefix + 'menu'
@@ -711,6 +712,7 @@ cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_annex = cmd_prefix + 'annex'
@@ -8552,6 +8554,22 @@ howls = [
 	'**AWWWOOOOOOOOOOOOOOOOOOOO**'
 ]
 
+moans = [
+	'**BRRRRRAAAAAAAAAIIIIIINNNNNZZ**',
+	'**B R A I N Z**',
+	'**bbbbbRRRRRaaaaaaIIIIIInnnnZZZZZZ**',
+	'**bbbbbbrrrrrraaaaaaaaiiiiiiinnnnnnnzzzz**',
+	'**duuuuude, liiiiike, brrrraaaaaaiiiiinnnnnnzzzzz**',
+	'**bbbraaaaiiinnnzzz**',
+	'**BRAAAAAAAIIIIIIIIIIIIIIIINNNNNNNNNZZZZZZZZ**',
+	'**BBBBBBBBBBBBBBBBBRRRRRRRRRRRRRRRAAAAAAAAAAAAAIIIIIIIIIIIIIIINNNNNNNNZZZZZZZZZZ**',
+	'**BRRRRAAAAAIIINNNNNZZZ**',
+	'**BBBBRRRRRRRRRRRRRRRAAAAIIIIIINNNNZZZZZ**',
+	'**BRRRAAAIINNNZZ? BRRRAAAAIINNNZZ! BRRRRRRRAAAAAAAAIIIIIINNNNNZZZZZZZ!!!**',
+	'**bbbbbBBBBrrrrrRRRRaaaaIIIIInnnnnnNNNNNzzzzZZZZZZZ!!!**',
+	'**CCCCRRRRRRIIIIINNNNNNNGGGGEEEEE! BBBBBAAAAAAAAAAASSSSSEEEDDDDDDDD!**'
+]
+
 """
 	The list of item definitions. Instances of items are always based on these
 	skeleton definitions.
@@ -15554,8 +15572,8 @@ trauma_list = [
 	),
 	EwTrauma(
 		id_trauma = trauma_id_environment,
-		str_trauma_self = "You look like the kind of idiot who would accidentally fall off the blimp.",
-		str_trauma = "They look like the kind of idiot who would accidentally fall off the blimp.",
+		str_trauma_self = "Your death could have resulted any number of situations, mostly related to your own idiocy.",
+		str_trauma = "Their death could have come from any number of situations, mostly related to their own idiocy.",
 		trauma_class = trauma_class_slimegain,
 	),
 	EwTrauma( # 1
@@ -16474,6 +16492,7 @@ pray_responses_list = [
 	"ENDLESS WAR commands you to kill thy neighbor.",
 	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+	"ENDLESS WAR is a free text-based MMORPG playable entirely within a Discord server. But, you probably already knew that, didn't you?",
 ]
 
 
@@ -16596,7 +16615,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"dyke":50,
 	"tranny":80,
 	"dickhead":20,
-	"retard":30,
+	"retard":20,
 	"buster":100,
 	"kraker":100,
 	"beaner":50,
