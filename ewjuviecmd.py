@@ -650,6 +650,9 @@ async def scavenge(cmd):
 	# currently not active - no cooldown
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
+	
+	if cmd.message.channel.name == ewcfg.channel_slimesea:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
 	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
