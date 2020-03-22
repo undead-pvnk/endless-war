@@ -71,6 +71,21 @@ async def cmd_howl(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def cmd_moan(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	slimeoid = EwSlimeoid(member = cmd.message.author)
+	response = ewcfg.moans[random.randrange(len(ewcfg.moans))]
+
+	if user_data.life_state != ewcfg.life_state_shambler:
+		response = "You're not really feeling it... Maybe if you lacked cognitive function, you'd be more inclined to moan, about brains, perhaps."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	if (slimeoid.life_state == ewcfg.slimeoid_state_active):
+		response += "\n{} moans along with you! {}".format(str(slimeoid.name), ewcfg.moans[random.randrange(len(ewcfg.moans))])
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 """ returns true if it's night time and the casino is open, else false. """
 def is_casino_open(t):
 	if t < 18 and t >= 6:
@@ -1002,7 +1017,8 @@ async def piss(cmd):
 					
 					user_data.sap -= ewcfg.sap_spend_piss
 					user_data.limit_fix()
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+					enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, enlisted)
 					user_data.persist()
 					
 					await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1403,7 +1419,8 @@ async def push(cmd):
 		targetmodel.persist()
 
 		# Flag the user for PvP
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
+		enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, enlisted)
 		user_data.persist()
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = target)
