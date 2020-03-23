@@ -62,6 +62,10 @@ class EwMineGrid:
 """ player enlists in a faction/gang """
 async def enlist(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	user_slimes = user_data.slimes
 	time_now = int(time.time())
 	bans = user_data.get_bans()
@@ -140,6 +144,10 @@ async def enlist(cmd):
 
 async def renounce(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You're dead, bitch."
@@ -167,6 +175,10 @@ async def renounce(cmd):
 async def mine(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -190,6 +202,12 @@ async def mine(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if user_data.hunger >= user_data.get_hunger_max():
 			return await mismine(cmd, user_data, "exhaustion")
@@ -371,6 +389,13 @@ async def mine(cmd):
 				mining_yield *= 2
 			if user_data.life_state == ewcfg.life_state_juvenile:
 				mining_yield *= 2
+
+			trauma = ewcfg.trauma_map.get(user_data.trauma)
+			if trauma != None and trauma.trauma_class == ewcfg.trauma_class_slimegain:
+				mining_yield *= (1 - 0.5 * user_data.degradation / 100)
+
+			mining_yield = max(0, round(mining_yield))
+
 			# Fatigue the miner.
 
 			user_data.hunger += ewcfg.hunger_permine * int(hunger_cost_mod)
@@ -410,6 +435,10 @@ async def mine(cmd):
 async def flag(cmd):
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	mutations = user_data.get_mutations()
 	time_now = int(time.time())
 
@@ -432,6 +461,12 @@ async def flag(cmd):
 
 	# Mine only in the mines.
 	if cmd.message.channel.name in [ewcfg.channel_mines, ewcfg.channel_cv_mines, ewcfg.channel_tt_mines]:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."))

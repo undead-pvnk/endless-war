@@ -637,6 +637,9 @@ cmd_map = {
 
 	# Praying at the base of ENDLESS WAR.
 	ewcfg.cmd_pray: ewcmd.pray,
+
+	# shambling
+	ewcfg.cmd_shamble: ewdistrict.shamble,
 	
 	# flush items and slime from subzones into their mother district
 	ewcfg.cmd_flushsubzones: ewcmd.flush_subzones,
@@ -675,6 +678,7 @@ async def on_member_remove(member):
 		if user_data.poi in ewcfg.tutorial_pois:
 			return
 
+		user_data.trauma = ewcfg.trauma_id_suicide
 		user_data.die(cause = ewcfg.cause_leftserver)
 		user_data.persist()
 
@@ -938,11 +942,13 @@ async def on_ready():
 				if market_data.time_lasttick + ewcfg.update_market <= time_now:
 
 					market_response = ""
+					exchange_data = EwDistrict(district = ewcfg.poi_id_stockexchange, id_server = server.id)
 
 					for stock in ewcfg.stocks:
 						s = EwStock(server.id, stock)
 						# we don't update stocks when they were just added
-						if s.timestamp != 0:
+						# or when shamblers have degraded it
+						if s.timestamp != 0 and not exchange_data.is_degraded():
 							s.timestamp = time_now
 							market_response = ewmarket.market_tick(s, server.id)
 							await ewutils.send_message(client, channels_stockmarket.get(server.id), market_response)
@@ -1021,7 +1027,7 @@ async def on_ready():
 						market_data.bazaar_wares['furniture3'] = bw_furniture3
 
 
-						if random.random() == 0.1:
+						if random.random() < 0.01:
 							market_data.bazaar_wares['minigun'] = ewcfg.weapon_id_minigun
 
 
@@ -1210,6 +1216,7 @@ async def on_message(message):
 			return await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 		
 		if ewutils.active_restrictions.get(user_data.id_user) == 3:
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause=ewcfg.cause_praying)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client=client, member=message.author)
@@ -1381,6 +1388,7 @@ async def on_message(message):
 		# Check the main command map for the requested command.
 		global cmd_map
 		cmd_fn = cmd_map.get(cmd)
+
 
 		if user_data.poi in ewcfg.tutorial_pois:	
 			return await ewdungeons.tutorial_cmd(cmd_obj)

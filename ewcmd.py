@@ -9,7 +9,6 @@ import ewrolemgr
 import ewstats
 import ewstatuseffects
 import ewmap
-import ewdistrict
 import ewslimeoid
 import ewfaction
 import ewapt
@@ -20,6 +19,8 @@ from ewitem import EwItem
 from ewslimeoid import EwSlimeoid
 from ewhunting import find_enemy
 from ewstatuseffects import EwStatusEffect
+from ewstatuseffects import EwEnemyStatusEffect
+from ewdistrict import EwDistrict
 
 """ class to send general data about an interaction to a command """
 class EwCmd:
@@ -169,8 +170,22 @@ def gen_data_text(
 		# return somebody's score
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "{} is a level {} deadboi.".format(display_name, user_data.slimelevel)
+		elif user_data.life_state == ewcfg.life_state_shambler:
+			response = "{} is a level {} shambler.".format(display_name, user_data.slimelevel)
 		else:
 			response = "{} is a level {} slimeboi.".format(display_name, user_data.slimelevel)
+			if user_data.degradation < 20:
+				pass
+			elif user_data.degradation < 40:
+				response += " Their bodily integrity is starting to slip."
+			elif user_data.degradation < 60:
+				response += " Their face seems to be melting and they periodically have to put it back in place."
+			elif user_data.degradation < 80:
+				response += " They are walking a bit funny, because their legs are getting mushy."
+			elif user_data.degradation < 100:
+				response += " Their limbs keep falling off. It's really annoying."
+			else:
+				response += " They almost look like a shambler already."
 
 		coinbounty = int(user_data.bounty / ewcfg.slimecoin_exchangerate)
 
@@ -185,10 +200,7 @@ def gen_data_text(
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
 
-		trauma = ewcfg.weapon_map.get(user_data.trauma)
-		# if trauma is not gathered from weapon_map, get it from attack_type_map
-		if trauma == None:
-			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma)
@@ -219,8 +231,25 @@ def gen_data_text(
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
 				status_flavor = ewcfg.status_effects_def_map.get(status)
+
+				severity = ""
+				try:
+					value_int = int(status_effect.value)
+					if value_int < 3:
+						severity = "lightly injured."
+					elif value_int < 7:
+						severity = "battered and bruised."
+					elif value_int < 11:
+						severity = "severely damaged."
+					else:
+						severity = "completely fucked up, holy shit!"
+				except:
+					pass
+
+				format_status = {'severity': severity}
+
 				if status_flavor is not None:
-					response_block += status_flavor.str_describe + " "
+					response_block += status_flavor.str_describe.format_map(format_status) + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "They are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
@@ -260,11 +289,37 @@ async def data(cmd):
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}.".format(
+				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}. ".format(
 					enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {:,} slime.".format(enemy.display_name, enemy.level,
+				response = "{} is a level {} enemy. They have {:,} slime. ".format(enemy.display_name, enemy.level,
 																				enemy.slimes)
+		
+			statuses = enemy.getStatusEffects()
+
+			for status in statuses:
+				status_effect = EwEnemyStatusEffect(id_status=status, enemy_data=enemy)
+				if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
+					status_flavor = ewcfg.status_effects_def_map.get(status)
+
+					severity = ""
+					try:
+						value_int = int(status_effect.value)
+						if value_int < 3:
+							severity = "lightly injured."
+						elif value_int < 7:
+							severity = "battered and bruised."
+						elif value_int < 11:
+							severity = "severely damaged."
+						else:
+							severity = "completely fucked up, holy shit!"
+					except:
+						pass
+
+					format_status = {'severity': severity}
+
+					if status_flavor is not None:
+						response += status_flavor.str_describe.format_map(format_status) + " "
 		else:
 			response = "ENDLESS WAR didn't understand that name."
 
@@ -294,8 +349,22 @@ async def data(cmd):
 		# return my data
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response += "You are a level {} deadboi.".format(user_data.slimelevel)
+		elif user_data.life_state == ewcfg.life_state_shambler:
+			response += "You are a level {} shambler.".format(user_data.slimelevel)
 		else:
 			response += "You are a level {} slimeboi.".format(user_data.slimelevel)
+			if user_data.degradation < 20:
+				pass
+			elif user_data.degradation < 40:
+				response += " Your bodily integrity is starting to slip."
+			elif user_data.degradation < 60:
+				response += " Your face seems to be melting and you periodically have to put it back in place."
+			elif user_data.degradation < 80:
+				response += " You are walking a bit funny, because your legs are getting mushy."
+			elif user_data.degradation < 100:
+				response += " Your limbs keep falling off. It's really annoying."
+			else:
+				response += " You almost look like a shambler already."
 
 		if user_data.has_soul == 0:
 			response += " You have no soul."
@@ -313,10 +382,7 @@ async def data(cmd):
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster_self.format(rank=(user_data.weaponskill - 4)))
 
-		trauma = ewcfg.weapon_map.get(user_data.trauma)
-		# if trauma is not gathered from weapon_map, get it from attack_type_map
-		if trauma == None:
-			trauma = ewcfg.attack_type_map.get(user_data.trauma)
+		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
@@ -354,8 +420,25 @@ async def data(cmd):
 			status_effect = EwStatusEffect(id_status=status, user_data=user_data)
 			if status_effect.time_expire > time.time() or status_effect.time_expire == -1:
 				status_flavor = ewcfg.status_effects_def_map.get(status)
+
+				severity = ""
+				try:
+					value_int = int(status_effect.value)
+					if value_int < 3:
+						severity = "lightly injured."
+					elif value_int < 7:
+						severity = "battered and bruised."
+					elif value_int < 11:
+						severity = "severely damaged."
+					else:
+						severity = "completely fucked up, holy shit!"
+				except:
+					pass
+
+				format_status = {'severity': severity}
+
 				if status_flavor is not None:
-					response_block += status_flavor.str_describe_self + " "
+					response_block += status_flavor.str_describe_self.format_map(format_status) + " "
 
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
@@ -960,11 +1043,21 @@ async def fursuit(cmd):
 
 async def pray(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 	if cmd.message.channel.name != ewcfg.channel_endlesswar:
 		response = "You must be in the presence of your lord if you wish to pray to him."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	if user_data.life_state == ewcfg.life_state_kingpin:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
 			cmd.message.author,
@@ -1064,6 +1157,7 @@ async def pray(cmd):
 			await asyncio.sleep(3)
 
 			user_data = EwUser(member = cmd.message.author)
+			user_data.trauma = ewcfg.trauma_id_environment
 			die_resp = user_data.die(cause = ewcfg.cause_praying)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1086,12 +1180,22 @@ async def pray(cmd):
 """recycle your trash at the SlimeCorp Recycling plant"""
 async def recycle(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	response = ""
 
 	if cmd.message.channel.name != ewcfg.channel_recyclingplant:
 		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+	if district_data.is_degraded():
+		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
@@ -1189,7 +1293,7 @@ async def view_sap(cmd):
 async def push(cmd):
 	time_now = int(time.time())
 	user_data = EwUser(member=cmd.message.author)
-	districtmodel = ewdistrict.EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
+	districtmodel = EwDistrict(id_server=cmd.message.server.id, district=ewcfg.poi_id_slimesendcliffs)
 
 	if cmd.mentions_count == 0:
 		response = "You try to push a nearby building. Nope, still not strong enough to move it."
@@ -1294,6 +1398,7 @@ async def push(cmd):
 
 
 
+		targetmodel.trauma = ewcfg.trauma_id_environment
 		die_resp = targetmodel.die(cause = ewcfg.cause_cliff)
 		targetmodel.persist()
 
@@ -1340,6 +1445,7 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
+		targetmodel.trauma = ewcfg.trauma_id_environment
 		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
@@ -1398,7 +1504,7 @@ async def toss_off_cliff(cmd):
 
 def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 	item_obj = EwItem(id_item=id_item)
-	districtmodel = ewdistrict.EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
+	districtmodel = EwDistrict(id_server=id_server, district=ewcfg.poi_id_slimesendcliffs)
 	slimetotal = 0
 
 	if random.randrange(500) < 125 or item_obj.item_type == ewcfg.it_questitem or item_obj.item_type == ewcfg.it_medal or item_obj.item_props.get('rarity') == ewcfg.rarity_princeps or item_obj.item_props.get('id_cosmetic') == "soul" or item_obj.item_props.get('id_furniture') == "propstand":
@@ -1423,8 +1529,18 @@ def item_off(id_item, id_server, item_name = "", is_pushed_off = False):
 
 async def purify(cmd):
 	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	
 	if cmd.message.channel.name == ewcfg.channel_sodafountain:
+		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+		district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+
+		if district_data.is_degraded():
+			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		if user_data.life_state == ewcfg.life_state_corpse:
 			response = "You're too ghastly for something like that. Besides, you couldn't even touch the water if you wanted to, it would just phase right through your ghostly form."
 		else:
@@ -1475,8 +1591,8 @@ async def flush_subzones(cmd):
 			cmd.message.server.id
 		))
 
-		subzone_data = ewdistrict.EwDistrict(district = subzone, id_server = cmd.message.server.id)
-		district_data = ewdistrict.EwDistrict(district = mother_district, id_server = cmd.message.server.id)
+		subzone_data = EwDistrict(district = subzone, id_server = cmd.message.server.id)
+		district_data = EwDistrict(district = mother_district, id_server = cmd.message.server.id)
 
 		district_data.change_slimes(n = subzone_data.slimes)
 		subzone_data.change_slimes(n = -subzone_data.slimes)

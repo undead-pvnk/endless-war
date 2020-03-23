@@ -49,6 +49,7 @@ class EwUser:
 	slimernalia_kingpin = False
 	manuscript = -1
 	swear_jar = 0
+	degradation = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -61,6 +62,7 @@ class EwUser:
 	time_joined = 0
 	time_expirpvp = 0
 	time_lastenlist = 0
+	time_lastdeath = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -72,6 +74,9 @@ class EwUser:
 	def limit_fix(self):
 		if self.hunger > self.get_hunger_max():
 			self.hunger = self.get_hunger_max()
+
+		if self.life_state == ewcfg.life_state_shambler:
+			self.hunger = 0
 
 		if self.inebriation < 0:
 			self.inebriation = 0
@@ -88,6 +93,9 @@ class EwUser:
 		self.sap = max(0, min(self.sap, self.slimelevel - self.hardened_sap))
 
 		self.hardened_sap = max(0, self.hardened_sap)
+
+		self.degradation = max(0, self.degradation)
+
 
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
@@ -143,7 +151,7 @@ class EwUser:
 			for level in range(self.slimelevel+1, new_level+1):
 				current_mutations = self.get_mutations()
 				
-				if level in ewcfg.mutation_milestones and self.life_state != ewcfg.life_state_corpse and len(current_mutations) < 10:
+				if (level in ewcfg.mutation_milestones) and (self.life_state not in [ewcfg.life_state_corpse, ewcfg.life_state_shambler]) and (len(current_mutations) < 10):
 					
 					new_mutation = random.choice(list(ewcfg.mutation_ids))
 					while new_mutation in current_mutations:
@@ -210,6 +218,12 @@ class EwUser:
 			self.hunger = 0
 			self.inebriation = 0
 			self.bounty = 0
+			self.time_lastdeath = time_now		
+	
+			if self.life_state == ewcfg.life_state_shambler:
+				self.degradation += 1
+			else:
+				self.degradation += 5
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
@@ -512,7 +526,7 @@ class EwUser:
 						status_effect.time_expire += time_expire
 						response = status.str_acquire
 
-					status_effect.persist() 
+					status_effect.persist()
 				else:
 					response = status.str_acquire
 					
@@ -554,7 +568,32 @@ class EwUser:
 				))
 		except:
 			ewutils.logMsg("Failed to clear status effects for user {}.".format(self.id_user))
-				
+		
+
+	def apply_injury(self, id_injury, severity, source):
+		statuses = self.getStatusEffects()
+
+		if id_injury in statuses:
+			status_data = EwStatusEffect(id_status = id_injury, user_data = self)
+			
+			try:
+				value_int = int(status_data.value)
+
+				if value_int > severity:
+					if random.randrange(value_int) < severity:
+						status_data.value = value_int + 1
+				else:
+					status_data.value = severity
+			except:
+				status_data.value = severity
+
+			status_data.source = source
+
+			status_data.persist()
+
+		else:
+			self.applyStatus(id_status = id_injury, value = severity, source = source)
+		
 	def get_weapon_capacity(self):
 		mutations = self.get_mutations()
 		base_capacity = ewutils.weapon_carry_capacity_bylevel(self.slimelevel)
@@ -711,7 +750,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -756,7 +795,9 @@ class EwUser:
 					ewcfg.col_festivity_from_slimecoin,
 					ewcfg.col_slimernalia_kingpin,
 					ewcfg.col_manuscript,
-					ewcfg.col_swear_jar
+					ewcfg.col_swear_jar,
+					ewcfg.col_degradation,
+					ewcfg.col_time_lastdeath,
 				), (
 					id_user,
 					id_server
@@ -809,8 +850,10 @@ class EwUser:
 					self.slimernalia_kingpin = (result[41] == 1)
 					self.manuscript = result[42]
 					self.swear_jar = result[43]
+					self.degradation = result[44]
+					self.time_lastdeath = result[45]
 				else:
-					self.poi = ewcfg.poi_id_tutorial_classroom
+					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
 					# Create a new database entry if the object is missing.
 					cursor.execute("REPLACE INTO users(id_user, id_server, poi, life_state) VALUES(%s, %s, %s, %s)", (
@@ -864,7 +907,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -912,6 +955,8 @@ class EwUser:
 				ewcfg.col_slimernalia_kingpin,
 				ewcfg.col_manuscript,
 				ewcfg.col_swear_jar,
+				ewcfg.col_degradation,
+				ewcfg.col_time_lastdeath,
 			), (
 				self.id_user,
 				self.id_server,
@@ -959,7 +1004,9 @@ class EwUser:
 				self.festivity_from_slimecoin,
 				self.slimernalia_kingpin,
 				self.manuscript,
-				self.swear_jar
+				self.swear_jar,
+				self.degradation,
+				self.time_lastdeath,
 			))
 
 			conn.commit()
