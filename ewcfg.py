@@ -619,6 +619,7 @@ cmd_weather = cmd_prefix + 'weather'
 cmd_patchnotes = cmd_prefix + 'patchnotes'
 cmd_howl = cmd_prefix + 'howl'
 cmd_howl_alt1 = cmd_prefix + '56709'
+cmd_moan = cmd_prefix + 'moan'
 cmd_transfer = cmd_prefix + 'transfer'
 cmd_transfer_alt1 = cmd_prefix + 'xfer'
 cmd_menu = cmd_prefix + 'menu'
@@ -711,6 +712,7 @@ cmd_leaderboard_alt1 = cmd_prefix + 'leaderboards'
 cmd_marry = cmd_prefix + 'marry'
 cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
+cmd_scavenge_alt1 = cmd_prefix + 'lookbetweenthecushions'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
 cmd_annex = cmd_prefix + 'annex'
@@ -8552,6 +8554,22 @@ howls = [
 	'**AWWWOOOOOOOOOOOOOOOOOOOO**'
 ]
 
+moans = [
+	'**BRRRRRAAAAAAAAAIIIIIINNNNNZZ**',
+	'**B R A I N Z**',
+	'**bbbbbRRRRRaaaaaaIIIIIInnnnZZZZZZ**',
+	'**bbbbbbrrrrrraaaaaaaaiiiiiiinnnnnnnzzzz**',
+	'**duuuuude, liiiiike, brrrraaaaaaiiiiinnnnnnzzzzz**',
+	'**bbbraaaaiiinnnzzz**',
+	'**BRAAAAAAAIIIIIIIIIIIIIIIINNNNNNNNNZZZZZZZZ**',
+	'**BBBBBBBBBBBBBBBBBRRRRRRRRRRRRRRRAAAAAAAAAAAAAIIIIIIIIIIIIIIINNNNNNNNZZZZZZZZZZ**',
+	'**BRRRRAAAAAIIINNNNNZZZ**',
+	'**BBBBRRRRRRRRRRRRRRRAAAAIIIIIINNNNZZZZZ**',
+	'**BRRRAAAIINNNZZ? BRRRAAAAIINNNZZ! BRRRRRRRAAAAAAAAIIIIIINNNNNZZZZZZZ!!!**',
+	'**bbbbbBBBBrrrrrRRRRaaaaIIIIInnnnnnNNNNNzzzzZZZZZZZ!!!**',
+	'**CCCCRRRRRRIIIIINNNNNNNGGGGEEEEE! BBBBBAAAAAAAAAAASSSSSEEEDDDDDDDD!**'
+]
+
 """
 	The list of item definitions. Instances of items are always based on these
 	skeleton definitions.
@@ -15554,8 +15572,8 @@ trauma_list = [
 	),
 	EwTrauma(
 		id_trauma = trauma_id_environment,
-		str_trauma_self = "You look like the kind of idiot who would accidentally fall off the blimp.",
-		str_trauma = "They look like the kind of idiot who would accidentally fall off the blimp.",
+		str_trauma_self = "Your death could have resulted any number of situations, mostly related to your own idiocy.",
+		str_trauma = "Their death could have come from any number of situations, mostly related to their own idiocy.",
 		trauma_class = trauma_class_slimegain,
 	),
 	EwTrauma( # 1
@@ -15863,7 +15881,7 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase."
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
 	
 	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left."
 }
@@ -16480,6 +16498,7 @@ pray_responses_list = [
 	"ENDLESS WAR commands you to kill thy neighbor.",
 	"ENDLESS WAR creates an overwhelming urge inside of you to kill everyone you know.",
 	"ENDLESS WAR helpfully reminds you that !harvest is not a valid text command.",
+	"ENDLESS WAR is a free text-based MMORPG playable entirely within a Discord server. But, you probably already knew that, didn't you?",
 ]
 
 
@@ -16602,7 +16621,7 @@ curse_words = { # words that the player should be punished for saying via swear 
 	"dyke":50,
 	"tranny":80,
 	"dickhead":20,
-	"retard":30,
+	"retard":20,
 	"buster":100,
 	"kraker":100,
 	"beaner":50,
