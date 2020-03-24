@@ -1578,11 +1578,17 @@ def end_trade(id_user):
 		trading_offers[trader] = []
 		trading_offers[id_user] = []
 
-def generate_captcha(n = 4):
+def generate_captcha_random(n = 4):
 	captcha = ""
 	for i in range(n):
 		captcha += random.choice(ewcfg.alphabet)
 	return captcha.upper()
+
+def generate_captcha(n = 4):
+	try:
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == n])
+	except:
+		return generate_captcha_random(n)
 
 async def sap_tick_loop(id_server):
 	interval = ewcfg.sap_tick_length
