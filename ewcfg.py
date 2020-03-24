@@ -15966,6 +15966,12 @@ consult_responses = {
 "dreadford":"Have you ever wanted to suck on the sweet, sweet teat of ultra-decadence? Do you have multiple yachts? Do you buy both versions of Pokemon when they come out, just because you can blow the cash? Ha. Let me introduce you to the next level of opulence. Each apartment is a full-scale mansion, maintained by some of the finest slimebutlers in the industry. In the morning they tickle your feet to get you up, and at night they sing you Sixten ballads to drift you back to restful slumber. The place is bulletproof, fireproof, and doubles as a nuclear bunker if things go south. And it stores...everything. The price, you say? Shit, I was hoping you wouldn't ask."
 }
 
+sea_scavenge_responses = [
+	"see a school of Fuck Sharks circling below you",
+	"notice an approaching kraken",
+	"remember you can't swim"
+]
+
 # Enemy life states
 enemy_lifestate_dead = 0
 enemy_lifestate_alive = 1
@@ -16636,6 +16642,62 @@ curse_responses = [ # scold the player for swearing
 	"Your bad manners have costed you a fraction of your SlimeCoin!",
 	"Take your anger out on a juvenile, if you're so inclined to use such vulgar language.",
 	#"You know, don't, say, s-swears."
+]
+
+captcha_dict = [
+	#3
+	'GOO', 'MUD', 'COP', 'WAR', 'BEN',
+	'EYE', 'ARM', 'LEG', 'BOO', 'DAB',
+	'KFC', 'GAY', 'LOL', 'GUN', 'MUK',
+	'POW', 'WOW', 'POP', 'OWO', 'HIP',
+	'END', 'HAT', 'CUP', '911', '711',
+	'SIX', 'SMG', 'BOW', 'AWO',
+	#4
+	'GOON', 'DOOR', 'CORP', 'SPAM', 'BLAM',
+	'FISH', 'MINE', 'LOCK', 'OURS', 'ROCK',
+	'DATA', 'LOOK', 'GOTO', 'COIN', 'GANG',
+	'HEHE', 'WEED', 'LMAO', 'EPIC', 'NICE',
+	'SOUL', 'KILL', 'FREE', 'GOOP', 'CAVE',
+	'ZOOM', 'FIVE', 'NINE', 'BASS', 'FIRE',
+	'TEXT', 'AWOO',
+	#5
+	'SLIME', 'BOORU', 'ROWDY', 'GHOST', 'ORDER',
+	'SCARE', 'BULLY', 'FERRY', 'SAINT', 'SLASH',
+	'SLOSH', 'PARTY', 'JUVIE', 'BASED', 'TULPA',
+	'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
+	'GREEN', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
+	'LUCKY', 'RIFLE', '56709', 'AWOOO',
+	#6
+	'SLUDGE', 'KILLER', 'MUNCHY', 'BLAAAP', 'BARTER',
+	'ARTIST', 'FUCKER', 'MINING', 'SURVEY', 'THRASH',
+	'BEWARE', 'STOCKS', 'COWARD', 'CRINGE', 'INVEST', 
+	'BUSTAH', 'KILLAH', 'KATANA', 'GHOSTS', 'BASSED', 
+	'REVIVE', 'BATTLE', 'PAWPAW', 'AWOOOO',
+	#7
+	'KINGPIN', 'ENDLESS', 'ATTACKS', 'FUCKERS', 'FISHING',
+	'VIOLENT', 'SQUEEZE', 'LOBSTER', 'WESTERN', 'EASTERN', 
+	'REGIONS', 'DISCORD', 'KNUCKLE', 'MOLOTOV', 'SHAMBLE',
+	'WARFARE', 'BIGIRON', 'POUDRIN', 'PATRIOT', 'MINIGUN',
+	'AWOOOOO',
+	#8
+	'GAMEPLAY', 'SHAMBLER', 'CONFLICT', 'EXCHANGE', 'FEEDBACK',
+	'VIOLENCE', 'TACOBELL', 'PIZZAHUT', 'OUTSKIRT', 'WHATEVER',
+	'WITHDRAW', 'SOUTHERN', 'NORTHERN', 'ASTATINE', 'SLIMEOID',
+	'SHAMBLIN', 'STAYDEAD', 'JUVENILE', 'DOWNTOWN', 'DISTRICT',
+	'BIGBONES', 'LONEWOLF', 'KEENSMELL', 'RAZORNUTS', 'REVOLVER',
+	'BASEBALL', 'GRENADES', 'AWOOOOOO',
+	#9
+	'APARTMENT', 'SURVIVORS', 'NEGASLIME', 'COMMUNITY', 'GIGASLIME',
+	'DETENTION', 'CATHEDRAL', 'TOXINGTON', 'SLIMEGIRL', 'INVESTING',
+	'SLIMECOIN', 'RATELIMIT', 'NARRATIVE', 'COMMANDO', 'SHAMBLERS',
+	'NUNCHUCKS', 'SLIMECORP', 'ARSONBROOK','SMOGSBURG', 'SLIMEFEST', 
+	'COMMANDER', 'FATCHANCE', 'DANKWHEAT', 'AWOOOOOOO',
+	#10
+	'SLUDGECORE', 'LOREMASTER', 'ROUGHHOUSE', 'GLOCKSBURY', 'CALCULATED',
+	'PLAYGROUND', 'NEWYONKERS', 'OLDYONKERS', 'VANDALPARK', 'SLIMERMAID',
+	'SLIMEXODIA', 'WEBBEDFEET', 'NOSEFERATU', 'BINGEEATER', 'TRASHMOUTH',
+	'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
+	'DRAGONCLAW', 'AWOOOOOOOO',
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id

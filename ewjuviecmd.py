@@ -34,6 +34,8 @@ mines_map = {
 	ewcfg.channel_cv_mines: cratersville_mines
 }
 
+scavenge_combos = {}
+scavenge_captchas = {}
 
 class EwMineGrid:
 	grid_type = ""
@@ -649,23 +651,32 @@ async def scavenge(cmd):
 	# currently not active - no cooldown
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
+	
+	if cmd.message.channel.name == ewcfg.channel_slimesea:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
 	# Scavenge only in location channels
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
+
+			if scavenge_combos.get(user_data.id_user) == None:
+				scavenge_combos[user_data.id_user] = 0
+
+			combo = scavenge_combos.get(user_data.id_user)
+
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
 			if ewcfg.mutation_id_trashmouth in mutations:
-				time_since_last_scavenge *= 3
+				combo += 5
 
 			time_since_last_scavenge = min(max(1, time_since_last_scavenge), ewcfg.soft_cd_scavenge)
 
-
-			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
+			#scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
+			scavenge_mod = 0.005 * combo
 
 			if ewcfg.mutation_id_whitenationalist in mutations and market_data.weather == "snow":
 				scavenge_mod *= 1.5
@@ -691,8 +702,17 @@ async def scavenge(cmd):
 					item_search = item_search
 				)
 
-				response += loot_resp
+				if loot_resp != "":
+					response += loot_resp + "\n\n"
 
+				if scavenge_combos.get(user_data.id_user) > 0 and (time_now - user_data.time_lastscavenge) < 60:
+					if scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
+						scavenge_combos[user_data.id_user] += 1
+						new_captcha = gen_scavenge_captcha(scavenge_combos.get(user_data.id_user))
+						response += "New captcha: **" + new_captcha + "**"
+						scavenge_captchas[user_data.id_user] = new_captcha
+					else:
+						scavenge_combos[user_data.id_user] = 0
 			else:
 				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
 				loot_chance = loot_multiplier / ewcfg.scavenge_item_rarity
@@ -703,8 +723,14 @@ async def scavenge(cmd):
 						id_server = user_data.id_server,
 						id_user = user_data.id_user
 					)
-					response += loot_resp
+					
+					if loot_resp != "":
+						response += loot_resp +"\n\n"
 
+				scavenge_combos[user_data.id_user] = 1
+				new_captcha = gen_scavenge_captcha(1)
+				response += "New captcha: **" + new_captcha + "**"
+				scavenge_captchas[user_data.id_user] = new_captcha
 
 			# Fatigue the scavenger.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
@@ -1454,3 +1480,8 @@ def create_mining_event(cmd):
 				time_expir = time_now + 60*3,
 				event_props = event_props
 			)
+
+def gen_scavenge_captcha(n = 0):
+	captcha_length = math.ceil(n / 3)
+
+	return ewutils.generate_captcha(captcha_length)
