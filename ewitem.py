@@ -758,6 +758,7 @@ def inventory(
 				item_def = item.get('item_def')
 				id_item = item.get('id_item')
 				name = item_def.str_name
+				#print("761 -- {}".format(name))
 
 				quantity = 1
 				if item.get('stack_max') > 0:
@@ -773,7 +774,14 @@ def inventory(
 						name = name.format_map(item_inst.item_props)
 
 						if name.find('{') >= 0:
-							name = name.format_map(item_inst.item_props)
+							try:
+								name = name.format_map(item_inst.item_props)
+							except:
+								pass
+								#print("Exception caught in ewitem -- Item might have brackets inside name.")
+								# If a key error comes from here, it's likely that an item somehow got a { symbol placed inside its name
+								# Normally curly brackets are used for renaming an item based on what comes from item_def, such as {item_name}
+								# Therefore, in most circumstances we can ignore when a key error comes from here, since that item has already been given a name.
 
 				#if a weapon has no name show its type instead
 				if name == "" and item_inst.item_type == ewcfg.it_weapon:
