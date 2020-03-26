@@ -2739,7 +2739,8 @@ def get_hitzone(injury_map = None):
 def get_injury_severity(shootee_data, slimes_damage, crit):
 
 	severity = 0
-	severity += slimes_damage / shootee_data.slimes
+	if shootee_data.slimes > 0:
+		severity += slimes_damage / shootee_data.slimes
 	severity *= 10
 
 	if crit:
