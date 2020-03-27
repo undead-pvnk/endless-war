@@ -57,6 +57,9 @@ CREATE TABLE users (
 	swear_jar bigint NOT NULL DEFAULT '0',
 	degradation bigint NOT NULL DEFAULT '0',
 	time_lastdeath int NOT NULL DEFAULT '0',
+	gambit bigint NOT NULL DEFAULT '0',
+	credence bigint NOT NULL DEFAULT '0',
+	credence_used bigint NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
