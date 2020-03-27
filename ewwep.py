@@ -1091,6 +1091,7 @@ async def suicide(cmd):
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
 			user_data.trauma = ewcfg.trauma_id_suicide
+			user_data.visiting = ewcfg.location_id_empty
 			die_resp = user_data.die(cause = ewcfg.cause_suicide)
 			resp_cont.add_response_container(die_resp)
 			user_data.persist()

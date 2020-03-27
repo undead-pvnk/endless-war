@@ -1240,8 +1240,9 @@ time_pvp_fish = 5 * 60
 time_pvp_farm = 10 * 60
 time_pvp_spar = 5 * 60
 time_pvp_enlist = 5 * 60
-time_pvp_knock = 10 #temp fix. will probably add spam prevention or something funny like restraining orders later
+time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or something funny like restraining orders later
 time_pvp_duel = 3 * 60
+time_pvp_pride = 1 * 60
 
 # time to get kicked out of subzone
 time_kickout = 60 * 60  # 1 hour
@@ -16595,7 +16596,7 @@ zine_commands = [
 ]
 
 curse_words = { # words that the player should be punished for saying via swear jar deduction. the higher number, the more the player gets punished.
-	"fag":30,
+	"fag":20,
 	"shit":10,
 	"asshole":10, # can not be shortened to 'ass' due to words like 'pass' or 'class'
 	"dumbass": 10,
