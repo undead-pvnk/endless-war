@@ -33,6 +33,10 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topshamblerkills)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
+	topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high, lowgambit = False)
+	await ewutils.send_message(client, leaderboard_channel, topgambit)
+	bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high, lowgambit = True)
+	await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
 	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
 	topzines = make_zines_top_board(server=server)
@@ -269,6 +273,44 @@ def make_slimernalia_board(server, title):
 	
 	return format_board(entries = entries, title = title)
 
+#SWILLDERMUK
+def make_gambit_leaderboard(server, title, rows = 3, lowgambit = False):
+	entries = []
+	try:
+		conn_info = ewutils.databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor()
+
+		cursor.execute(
+			"SELECT {name}, {state}, {faction}, {gambit}, FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {gambit} {order} LIMIT {limit}".format(
+				name=ewcfg.col_display_name,
+				gambit=ewcfg.col_gambit,
+				state=ewcfg.col_life_state,
+				faction=ewcfg.col_faction,
+				id_user=ewcfg.col_id_user,
+				order=('DESC' if lowgambit == False else 'ASC'),
+				limit=rows
+			), (
+				server.id,
+			))
+
+		i = 0
+		row = cursor.fetchone()
+		while (row != None) and (i < rows):
+			if row[1] == ewcfg.life_state_kingpin or row[1] == ewcfg.life_state_grandfoe or row[1] == ewcfg.life_state_lucky:
+				row = cursor.fetchone()
+			else:
+				entries.append(row)
+				row = cursor.fetchone()
+				i += 1
+
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		ewutils.databaseClose(conn_info)
+
+	return format_board(entries=entries, title=title)
+
 """
 	convert leaderboard data into a message ready string 
 """
@@ -324,6 +366,14 @@ def board_header(title):
 
 	elif title == ewcfg.leaderboard_shamblers_killed:
 		emote = ewcfg.emote_slimeshot
+		bar += " "
+	
+	elif title == ewcfg.leaderboard_gambit_high:
+		#emote = ewcfg.emote_janus1
+		bar += " "
+	
+	elif title == ewcfg.leaderboard_gambit_low:
+		#emote = ewcfg.emote_janus2
 		bar += " "
 
 	return emote + bar + title + bar + emote + "\n"

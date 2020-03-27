@@ -1544,6 +1544,9 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_gambit = 'gambit'
+col_credence = 'credence'
+col_credence_used = 'credence_used'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1734,7 +1737,9 @@ leaderboard_slimernalia = "MOST FESTIVE"
 #INTERMISSION2
 leaderboard_degradation = "MOST DEGRADED"
 leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
-
+#SWILLDERKMUK
+leaderboard_gambit_high = "HIGHEST GAMBIT"
+leaderboard_gambit_low = "LOWEST GAMBIT"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -2676,6 +2681,9 @@ item_list = [
 		increase = slimeoid_stat_moxie,
 		decrease = slimeoid_stat_chutzpah,
 	),
+	#EwPrankItem(
+	#	
+	#),
 ]
 item_list += ewdebug.debugitem_set
 

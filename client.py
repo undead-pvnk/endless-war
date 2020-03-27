@@ -1307,6 +1307,8 @@ async def on_message(message):
 					elif swear == "shit" and "shit" not in content_tolower:
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
+					elif swear == "fag" and "fag" not in content_tolower:
+						continue
 
 					for i in range(swear_count):
 						swear_multiplier += ewcfg.curse_words[swear]
