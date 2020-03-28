@@ -1469,10 +1469,20 @@ async def toss_off_cliff(cmd):
 					item.persist()
 					response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
 					if ewcfg.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
-						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
-
+						try:
+							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
+						except:
+							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
+				elif target.poi == user_data.poi:
+					response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
+					item.id_owner = target.poi
+					item.persist()
+					try:
+						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
+					except:
+						ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
 				else:
-					response = "There's no apartment here."
+					response = "There's nobody here."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			else:
 				return await ewitem.discard(cmd=cmd)
