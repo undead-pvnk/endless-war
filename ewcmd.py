@@ -1474,13 +1474,26 @@ async def toss_off_cliff(cmd):
 						except:
 							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
 				elif target.poi == user_data.poi:
-					response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
-					item.id_owner = target.poi
-					item.persist()
-					try:
-						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
-					except:
-						ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
+					if target.life_state == ewcfg.life_state_corpse:
+						response = "You reel back and chuck the brick at a ghost. As much as we both would like to teach the dirty staydead a lesson, the brick passes right through."
+						item.id_owner = target.poi
+						item.persist()
+					elif target.life_state == ewcfg.life_state_shambler:
+						response = "The brick is buried into the shambler's soft, malleable head, but the decayed fellow doesn't seem to notice. It looks like it phased into its inventory."
+						item.id_owner = target.id_user
+						item.persist()
+					elif target.life_state == ewcfg.life_state_kingpin:
+						response = "The brick is hurtling toward the kingpin's head, but they've long since gotten used to bricks to the head. It bounces off like nothing."
+						item.id_owner = target.poi
+						item.persist()
+					else:
+						response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
+						item.id_owner = target.poi
+						item.persist()
+						try:
+							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
+						except:
+							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
 				else:
 					response = "There's nobody here."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
