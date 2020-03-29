@@ -33,14 +33,14 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topshamblerkills)
 	topslimeoids = make_slimeoids_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
-	topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high, lowgambit = False)
-	await ewutils.send_message(client, leaderboard_channel, topgambit)
-	bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low, lowgambit = True)
-	await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
 	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
 	topzines = make_zines_top_board(server=server)
 	await ewutils.send_message(client, leaderboard_channel, topzines)
+	topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high)
+	await ewutils.send_message(client, leaderboard_channel, topgambit)
+	bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
+	await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
@@ -274,8 +274,15 @@ def make_slimernalia_board(server, title):
 	return format_board(entries = entries, title = title)
 
 #SWILLDERMUK
-def make_gambit_leaderboard(server, title, rows = 3, lowgambit = False):
+def make_gambit_leaderboard(server, title, rows = 3):
 	entries = []
+	
+	lowgambit = False
+	if title == ewcfg.leaderboard_gambit_high:
+		lowgambit = False
+	else:
+		lowgambit = True
+	
 	try:
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
