@@ -1402,6 +1402,12 @@ def gen_item_props(item):
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
 			item_props["decrease"] = item.decrease
+		if item.context == ewcfg.context_prankitem:
+			item_props["prank_type"] = item.prank_type
+			item_props["rarity"] = item.rarity
+			item_props["gambit"] = item.gambit
+			item_props["side_effect"] = item.side_effect
+			
 
 	elif item.item_type == ewcfg.it_weapon:
 		captcha = ""
@@ -1459,7 +1465,7 @@ async def soulextract(cmd):
 		usermodel.has_soul = 0
 		usermodel.persist()
 		response = "You tremble at the thought of trying this. Nothing ventured, nothing gained, you suppose. With all your mental fortitude you jam your hand deep into your chest and begin to pull out the very essence of your being. Your spirit, aspirations, everything that made you who you are begins to slowly drain from your mortal effigy until you feel absolutely nothing. Your soul flickers about, taunting you from outside your body. You capture it in a jar, almost reflexively.\n\nWow. Your personality must suck now."
-	elif usermodel.has_soul == 1 and usermodel.rr_challenger != "":
+	elif usermodel.has_soul == 1 and ewutils.active_target_map.get(usermodel.id_user) != "":
 		response = "Now's not the time to be playing with your soul, dumbass! You have to focus on pointing the gun at your head!"
 	else:
 		response = "There's nothing left in you to extract. You already spent the soul you had."

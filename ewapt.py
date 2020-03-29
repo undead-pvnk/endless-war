@@ -431,7 +431,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.poi = poi_dest.id_poi
 			user_data.visiting = ewcfg.location_id_empty
 			user_data.time_lastenter = int(time.time())
-			user_data.rr_challenger = ""
+			ewutils.active_target_map[user_data.id_user] = ""
 			user_data.persist()
 
 			ewutils.end_trade(user_data.id_user)
@@ -993,7 +993,7 @@ async def watch(cmd):
 		response = ""
 
 	user_model = EwUser(id_user=cmd.message.author.id, id_server=player_model.id_server)
-	user_model.rr_challenger = ""
+	ewutils.active_target_map[user_model.id_user] = ""
 	user_model.persist()
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

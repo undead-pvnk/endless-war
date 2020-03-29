@@ -1765,3 +1765,45 @@ async def festivity(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def gambit(cmd):
+	if cmd.mentions_count == 0:
+		user_data = EwUser(member=cmd.message.author)
+		response = "You currently have {:,} gambit.".format(user_data.gambit)
+
+	else:
+		member = cmd.mentions[0]
+		user_data = EwUser(member=member)
+		response = "{} currently has {:,} gambit.".format(member.display_name, user_data.gambit)
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+async def credence(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	if cmd.mentions_count == 0:
+		user_data = EwUser(member=cmd.message.author)
+		response = "DEBUG: You currently have {:,} credence, and {:,} credence used.".format(user_data.credence, user_data.credence_used)
+
+	else:
+		member = cmd.mentions[0]
+		user_data = EwUser(member=member)
+		response = "{} currently has {:,} credence, and {:,} credence used.".format(member.display_name, user_data.credence, user_data.credence_used)
+
+	# Send the response to the player.
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	
+async def get_credence(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	response = "DEBUG: You get 1,000 credence!"
+	user_data = EwUser(member=cmd.message.author)
+	
+	user_data.credence += 1000
+	user_data.credence_used = 0
+	user_data.persist()
+	
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

@@ -831,6 +831,7 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
