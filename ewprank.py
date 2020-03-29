@@ -3,11 +3,11 @@
 #import random
 #import asyncio
 
-#import ewutils
-import ewcfg
+import ewutils
+#import ewcfg
 
-#from ew import EwUser
-#from ewplayer import EwPlayer
+from ew import EwUser
+from ewplayer import EwPlayer
 
 """
 	Prank items for Swilldermuk
@@ -79,12 +79,15 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	pranker_credence = pranker_data.credence
 	pranked_credence = pranked_data.credence
 	
+	print(pranker_credence)
+	print(pranked_credence)
+	
 	item_props = item.item_props
-	gambit_multiplier = item_props.get('gambit')
+	gambit_multiplier = int(item_props.get('gambit'))
 	
 	total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
 	
-	pranked_data.credence = 0
+	pranker_data.credence = 0
 	pranked_data.credence = 0
 	
 	pranker_data.credence_used += total_gambit_value
@@ -95,3 +98,38 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	
 	pranker_data.persist()
 	pranked_data.persist()
+	
+async def prank_item_effect_instantuse(cmd, item):
+	should_delete_item = False
+	mentions_user = False
+	use_mention_displayname = False
+	if cmd.mentions_count == 1:
+		mentions_user = True
+		
+	if mentions_user:
+		member = cmd.mentions[0]
+		
+		pranker_data = EwUser(member=cmd.message.author)
+		pranked_data = EwUser(member=member)
+		
+		prank_item_data = item
+		
+		calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data)
+		
+		response = prank_item_data.item_props.get('prank_desc')
+		
+		response = response.format(cmd.message.author.display_name)
+		should_delete_item = False
+		use_mention_displayname = True
+	else:
+		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
+		should_delete_item = False
+	
+	return should_delete_item, response, use_mention_displayname
+
+
+async def prank_item_effect_response(cmd, item):
+	return True, "", False
+
+async def prank_item_effect_trap(cmd, item):
+	return True, "", False

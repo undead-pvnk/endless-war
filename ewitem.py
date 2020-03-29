@@ -11,6 +11,7 @@ import ewstats
 import ewdistrict
 import ewrolemgr
 import ewsmelting
+import ewprank
 
 from ew import EwUser
 from ewplayer import EwPlayer
@@ -1113,9 +1114,25 @@ async def item_use(cmd):
 				else:
 					response = "You turn on your gellphone."
 					item.item_props['active'] = 'true'
-				
+					
+
 				item.persist()
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					
+			elif context == ewcfg.context_prankitem:
+				should_delete_item = False
+				use_mention_displayname = False
+				
+				if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
+					should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_instantuse(cmd, item)
+				elif item.item_props['prank_type'] == ewcfg.prank_type_response:
+					should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_response(cmd, item)
+				elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
+					should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_trap(cmd, item)
+					
+				if should_delete_item:
+					item_delete(item.id_item)
+				
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
@@ -1404,6 +1421,7 @@ def gen_item_props(item):
 			item_props["decrease"] = item.decrease
 		if item.context == ewcfg.context_prankitem:
 			item_props["prank_type"] = item.prank_type
+			item_props["prank_desc"] = item.prank_desc
 			item_props["rarity"] = item.rarity
 			item_props["gambit"] = item.gambit
 			item_props["response_command"] = item.response_command
