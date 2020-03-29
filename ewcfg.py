@@ -752,6 +752,9 @@ cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
 cmd_shamblestop = cmd_prefix + 'shamblestop'
 cmd_shambleleave = cmd_prefix + 'shambleleave'
+cmd_gambit = cmd_prefix + 'gambit'
+cmd_credence = cmd_prefix + 'credence'
+cmd_get_credence = cmd_prefix + 'getcredence'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -2684,9 +2687,6 @@ item_list = [
 	),
 	EwPrankItem(
 		id_item="creampie",
-		alias = [
-			"cream",
-		],
 		str_name="Coconut Cream Pie",
 		str_desc="A coconut cream pie, perfect for creaming all over someone!",
 		prank_type="instantuse",
@@ -2696,9 +2696,6 @@ item_list = [
 	),
 	EwPrankItem(
 		id_item="chinesefingertrap",
-		alias = [
-			"chinese",
-		],
 		str_name="Chinese Finger Trap",
 		str_desc="An item of oriental origin. Wrap it around someone's finger to totally prank them!",
 		prank_type="response",
@@ -2709,9 +2706,6 @@ item_list = [
 	),
 	EwPrankItem(
 		id_item="beartrap",
-		alias = [
-			"bear",
-		],
 		str_name="Bear Trap",
 		str_desc="A hunk of metal jaws, with a trigger plate in the middle. Stepping on it would be a bad idea.",
 		prank_type="trap",
@@ -15141,7 +15135,6 @@ for item in item_list:
 		vendor_list.append(item.id_item)
 
 	for alias in item.alias:
-		print(item.alias)
 		item_map[alias] = item
 
 # Populate food map, including all aliases.
@@ -16779,3 +16772,9 @@ def set_client(cl):
 	client_ref = cl
 
 	return client_ref
+
+# scream = ""
+# for i in range(1, 10000):
+#     scream += "A"
+#     
+# print(scream)
