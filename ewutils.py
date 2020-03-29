@@ -1640,6 +1640,41 @@ def sap_tick(id_server):
 				enemy_data.persist()
 	except:
 		logMsg("An error occured in sap tick for server {}".format(id_server))
+		
+async def spawn_prank_items_tick_loop(id_server):
+	#DEBUG
+	interval = 10
+	
+	#interval = 300
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		await spawn_prank_items(id_server = id_server)
+
+async def spawn_prank_items(id_server):
+	
+	try:
+		district_id = random.choice(ewcfg.capturable_districts)
+		district_channel = ewcfg.id_to_poi.get(district_id).channel
+		client = get_client()
+
+		prank_item = random.choice(ewcfg.prank_items)
+
+		item_props = ewitem.gen_item_props(prank_item)
+
+		prank_item_id = ewitem.item_create(
+			item_type=prank_item.item_type,
+			id_user=district_id,
+			id_server=id_server,
+			item_props=item_props
+		)
+		
+		print('{} with id {} spawned in {}!'.format(item_props.get('str_name'), prank_item_id, district_id))
+		
+		response = "An ominous wind blows through the streets. You think you hear someone drop something on the ground nearby..."
+		await send_message(client, district_channel, response)
+
+	except:
+		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
 
 def check_fursuit_active(id_server):
 	market_data = EwMarket(id_server=id_server)

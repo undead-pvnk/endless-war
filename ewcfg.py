@@ -23,6 +23,7 @@ from ewapt import EwFurniture
 from ewworldevent import EwEventDef
 from ewdungeons import EwDungeonScene
 from ewtrauma import EwTrauma, EwHitzone
+from ewprank import EwPrankItem
 import ewdebug
 
 # Global configuration options.
@@ -972,7 +973,7 @@ hunger_perfarm = 50
 hunger_permine = 1
 hunger_perminereset = 25
 hunger_perfish = 15
-hunger_perscavenge = 2
+hunger_perscavenge = 1 #SWILLDERMUK
 hunger_pertick = 3
 hunger_pertrickortreat = 6
 
@@ -1923,6 +1924,7 @@ context_slimeoidheart = 'slimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
+context_prankitem = 'prankitem'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -2681,9 +2683,44 @@ item_list = [
 		increase = slimeoid_stat_moxie,
 		decrease = slimeoid_stat_chutzpah,
 	),
-	#EwPrankItem(
-	#	
-	#),
+	EwPrankItem(
+		id_item="creampie",
+		alias = [
+			"cream",
+		],
+		str_name="Coconut Cream Pie",
+		str_desc="A coconut cream pie, perfect for creaming all over someone!",
+		prank_type="instantuse",
+		prank_desc="{} throws a cream pie at your face! How embarrassing!",
+		rarity="common",
+		gambit=10,
+	),
+	EwPrankItem(
+		id_item="chinesefingertrap",
+		alias = [
+			"chinese",
+		],
+		str_name="Chinese Finger Trap",
+		str_desc="An item of oriental origin. Wrap it around someone's finger to totally prank them!",
+		prank_type="response",
+		prank_desc="Oh no! {} has ensnared you in a Chinese finger trap! Type !loosenfinger to escape!",
+		response_command="loosenfinger",
+		rarity="common",
+		gambit=10,
+	),
+	EwPrankItem(
+		id_item="beartrap",
+		alias = [
+			"bear",
+		],
+		str_name="Bear Trap",
+		str_desc="A hunk of metal jaws, with a trigger plate in the middle. Stepping on it would be a bad idea.",
+		prank_type="trap",
+		prank_desc="Oh fuck! You just stepped inside a bear trap! You manage to pry it open and get your foot out, but damn if you weren't just totally pranked!",
+		trap_chance="100",
+		rarity="common",
+		gambit=10,
+	)
 ]
 item_list += ewdebug.debugitem_set
 
@@ -15105,6 +15142,7 @@ for item in item_list:
 		vendor_list.append(item.id_item)
 
 	for alias in item.alias:
+		print(item.alias)
 		item_map[alias] = item
 
 # Populate food map, including all aliases.
@@ -15332,6 +15370,15 @@ slimexodia_parts = []
 for slimexodia in item_list:
 	if slimexodia.context == 'slimexodia':
 		slimexodia_parts.append(slimexodia)
+	else:
+		pass
+
+prank_items = []
+
+# Gather all prank items
+for p in item_list:
+	if p.context == context_prankitem:
+		prank_items.append(p)
 	else:
 		pass
 
