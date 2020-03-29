@@ -43,10 +43,11 @@ active_trades = {}
 # Contains the items being offered by players
 trading_offers = {}
 
-# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc. 
+# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc. For SWILLDERMUK, response item exchanges will occur here as well.
 active_target_map = {}
 # Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
 active_restrictions = {}
+
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -1643,7 +1644,7 @@ def sap_tick(id_server):
 		
 async def spawn_prank_items_tick_loop(id_server):
 	#DEBUG
-	#interval = 10
+	# interval = 10
 	
 	interval = 300
 	while not TERMINATE:
@@ -1661,8 +1662,18 @@ async def spawn_prank_items(id_server):
 		server = client.get_server(id_server)
 	
 		district_channel = get_channel(server=server, channel_name=district_channel_name)
-	
-		prank_item = random.choice(ewcfg.prank_items)
+		
+		rarity_roll = random.randrange(10)
+		
+		if rarity_roll > 3:
+			prank_item = random.choice(ewcfg.prank_items_heinous)
+		elif rarity_roll > 0:
+			prank_item = random.choice(ewcfg.prank_items_scandalous)
+		else:
+			prank_item = random.choice(ewcfg.prank_items_forbidden)
+			
+		#Debug
+		prank_item = ewcfg.prank_items_heinous[0] # Cream pie
 	
 		item_props = ewitem.gen_item_props(prank_item)
 	
@@ -1675,11 +1686,74 @@ async def spawn_prank_items(id_server):
 	
 		print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
 	
-		response = "An ominous wind blows through the streets. You think you hear someone drop something on the ground nearby..."
+		response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
 		await send_message(client, district_channel, response)
 
 	except:
 		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
+		
+async def generate_credence_tick_loop(id_server):
+	# DEBUG
+	# interval = 10
+
+	interval = 300
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		await generate_credence(id_server)
+		
+async def generate_credence(id_server):
+	if id_server != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+	
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
+				life_state = ewcfg.col_life_state,
+				poi = ewcfg.col_poi,
+				life_state_corpse = ewcfg.life_state_corpse,
+				life_state_kingpin = ewcfg.life_state_kingpin
+			), (
+				id_server,
+				ewcfg.capturable_districts,
+			))
+	
+			users = cursor.fetchall()
+	
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				added_credence = 0
+				lowered_credence_used = 0
+				
+				if user_data.credence >= 1000:
+					added_credence = 1 + random.randrange(5)
+				elif user_data.credence >= 500:
+					added_credence = 10 + random.randrange(41)
+				elif user_data.credence >= 100:
+					added_credence = 25 + random.randrange(76)
+				else:
+					added_credence = 50 + random.randrange(151)
+					
+				if user_data.credence_used > 0:
+					lowered_credence_used = int(user_data.credence_used/10)
+					
+					if lowered_credence_used == 1:
+						lowered_credence_used = 0
+						
+					user_data.credence_used = lowered_credence_used
+					
+				added_credence = max(0, added_credence - lowered_credence_used)
+				user_data.credence += added_credence
+					
+				user_data.persist()
+				
+	
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+	
 
 def check_fursuit_active(id_server):
 	market_data = EwMarket(id_server=id_server)

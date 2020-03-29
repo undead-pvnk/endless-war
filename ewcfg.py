@@ -1989,6 +1989,45 @@ item_id_dinoslimesteak = "dinoslimesteak"
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
 
+#SWILLDERMUK
+# Instant use items
+item_id_waterballoon = "waterbaloon"
+item_id_creampie = "creampie"
+item_id_bungisbeam = "bungisbeam"
+item_id_circumcisionray = "circumcisionray"
+item_id_genitalmutilationinstrument = "gentialmutilationinstrument"
+item_id_cumjar = "cumjar"
+item_id_perfectlynormalfood = "perfectlynormalfood"
+item_id_discounttransbeam = "discounttransbeam"
+item_id_transbeamreplica = "transbeamreplica"
+item_id_airhorn = "airhorn"
+item_id_bloodtransfusion = "bloodtransfusion"
+item_id_transformationmask = "transformationmask"
+item_id_emptychewinggumpacket = "emptychewinggumpacket"
+# Response items
+item_id_chinesefingertrap = "chinesefingertrap"
+item_id_japanesefingertrap = "japanesefingertrap"
+item_id_sissyhypnodevice = "sissyhypnodevice"
+item_id_piedpiperkazoo = "piedpiperkazoo"
+item_id_sandpapergloves = "sandpapergloves"
+item_id_ticklefeather = "ticklefeather"
+# Trap items
+item_id_whoopiecushion = "whoopiecushion"
+item_id_beartrap = "beartrap"
+item_id_bananapeel = "bananapeel"
+item_id_guillotine = "guillotine"
+item_id_windupbox = "windupbox"
+item_id_windupchatterteeth = "windupchatterteeth"
+item_id_snakeinacan = "snakeinacan"
+item_id_landmine = "landmine"
+
+prank_type_instantuse = 'instantuse'
+prank_type_response = 'response'
+prank_type_trap = 'trap'
+prank_rarity_heinous = 'heinous'
+prank_rarity_scandalous = 'scandalous'
+prank_rarity_forbidden = 'forbidden'
+
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
@@ -2687,32 +2726,62 @@ item_list = [
 		decrease = slimeoid_stat_chutzpah,
 	),
 	EwPrankItem(
-		id_item="creampie",
+		id_item=item_id_creampie,
 		str_name="Coconut Cream Pie",
 		str_desc="A coconut cream pie, perfect for creaming all over someone!",
-		prank_type="instantuse",
+		prank_type=prank_type_instantuse,
 		prank_desc="{} throws a cream pie at your face! How embarrassing!",
-		rarity="common",
+		rarity=prank_rarity_heinous,
 		gambit=10,
 	),
 	EwPrankItem(
-		id_item="chinesefingertrap",
+		id_item=item_id_chinesefingertrap,
 		str_name="Chinese Finger Trap",
 		str_desc="An item of oriental origin. Wrap it around someone's finger to totally prank them!",
-		prank_type="response",
+		prank_type=prank_type_response,
 		prank_desc="Oh no! {} has ensnared you in a Chinese finger trap! Type !loosenfinger to escape!",
 		response_command="loosenfinger",
-		rarity="common",
+		rarity=prank_rarity_heinous,
+		gambit=1,
+	),
+	EwPrankItem(
+		id_item=item_id_beartrap,
+		str_name="Bear Trap",
+		str_desc="A hunk of metal jaws, with a trigger plate in the middle. Stepping on it would be a bad idea.",
+		prank_type=prank_type_trap,
+		prank_desc="Oh fuck! You just stepped inside a bear trap! You manage to pry it open and get your foot out, but damn if you weren't just totally pranked!",
+		trap_chance=100,
+		rarity=prank_rarity_heinous,
 		gambit=10,
 	),
 	EwPrankItem(
-		id_item="beartrap",
-		str_name="Bear Trap",
-		str_desc="A hunk of metal jaws, with a trigger plate in the middle. Stepping on it would be a bad idea.",
-		prank_type="trap",
-		prank_desc="Oh fuck! You just stepped inside a bear trap! You manage to pry it open and get your foot out, but damn if you weren't just totally pranked!",
-		trap_chance="100",
-		rarity="common",
+		id_item=item_id_japanesefingertrap,
+		str_name="Japanese Finger Trap",
+		str_desc="By all means it's an upgrade compared to the Chinese one. This one has barbs on the inside. Youch!",
+		prank_type=prank_type_response,
+		prank_desc="Aw crud! {} got you good and slipped one of your fingers into a Japanese finger trap! Type !wigglefinger to get out of there before the bleeding gets worse!",
+		response_command="wigglefinger",
+		rarity=prank_rarity_scandalous,
+		gambit=5,
+	),
+	EwPrankItem(
+		id_item=item_id_landmine,
+		str_name="Land Mine",
+		str_desc="A round metal plate, charged with explosives. Lay it down in a district, and hope someone's stupid enough to step over it.",
+		prank_type=prank_type_trap,
+		prank_desc="Holy shit! You just stepped on a land mine! You manage to escape the blast zone with your limbs intact, but the embarrassment will stick with you forever.",
+		trap_chance=50,
+		rarity=prank_rarity_forbidden,
+		gambit=50,
+	),
+	EwPrankItem(
+		id_item=item_id_sissyhypnodevice,
+		str_name="Sissy Hypno Device",
+		str_desc="It's a VR headset with... dubious content being broadcast onto the screen... Yeah, better save this one for when the chips are down and you really wanna fuck someone's day up.",
+		prank_type=prank_type_response,
+		prank_desc="Oh no! When you weren't looking, {} slipped a sissy hypno device onto your head and tightened the straps! Type !takeoffheadset to get out of there before your mind becomes corrupted!",
+		response_command="takeoffheadset",
+		rarity=prank_rarity_forbidden,
 		gambit=10,
 	)
 ]
@@ -15366,12 +15435,24 @@ for slimexodia in item_list:
 	else:
 		pass
 
-prank_items = []
+prank_items_heinous = [] # common
+prank_items_scandalous = [] # uncommon
+prank_items_forbidden = [] # rare
 
 # Gather all prank items
 for p in item_list:
-	if p.context == context_prankitem:
-		prank_items.append(p)
+	if p.context == context_prankitem and p.rarity == prank_rarity_heinous:
+		prank_items_heinous.append(p)
+	else:
+		pass
+for p in item_list:
+	if p.context == context_prankitem and p.rarity == prank_rarity_scandalous:
+		prank_items_scandalous.append(p)
+	else:
+		pass
+for p in item_list:
+	if p.context == context_prankitem and p.rarity == prank_rarity_forbidden:
+		prank_items_forbidden.append(p)
 	else:
 		pass
 
