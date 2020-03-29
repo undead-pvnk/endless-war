@@ -35,7 +35,7 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topslimeoids)
 	topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high, lowgambit = False)
 	await ewutils.send_message(client, leaderboard_channel, topgambit)
-	bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high, lowgambit = True)
+	bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low, lowgambit = True)
 	await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 	#topfestivity = make_slimernalia_board(server = server, title = ewcfg.leaderboard_slimernalia)
 	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
@@ -280,9 +280,9 @@ def make_gambit_leaderboard(server, title, rows = 3, lowgambit = False):
 		conn_info = ewutils.databaseConnect()
 		conn = conn_info.get('conn')
 		cursor = conn.cursor()
-
+	
 		cursor.execute(
-			"SELECT {name}, {state}, {faction}, {gambit}, FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {gambit} {order} LIMIT {limit}".format(
+			"SELECT {name}, {state}, {faction}, {gambit} FROM users, players WHERE users.id_server = %s AND users.{id_user} = players.{id_user} ORDER BY {gambit} {order} LIMIT {limit}".format(
 				name=ewcfg.col_display_name,
 				gambit=ewcfg.col_gambit,
 				state=ewcfg.col_life_state,
@@ -293,7 +293,7 @@ def make_gambit_leaderboard(server, title, rows = 3, lowgambit = False):
 			), (
 				server.id,
 			))
-
+	
 		i = 0
 		row = cursor.fetchone()
 		while (row != None) and (i < rows):
@@ -369,10 +369,12 @@ def board_header(title):
 		bar += " "
 	
 	elif title == ewcfg.leaderboard_gambit_high:
+		emote = ewcfg.emote_slime1
 		#emote = ewcfg.emote_janus1
 		bar += " "
 	
 	elif title == ewcfg.leaderboard_gambit_low:
+		emote = ewcfg.emote_slime1
 		#emote = ewcfg.emote_janus2
 		bar += " "
 

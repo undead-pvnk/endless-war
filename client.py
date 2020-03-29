@@ -663,6 +663,11 @@ cmd_map = {
 	# Yo, Slimernalia
 	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
 	
+	# Swilldermuk
+	ewcfg.cmd_gambit: ewcmd.gambit,
+	ewcfg.cmd_credence: ewcmd.credence, #debug
+	ewcfg.cmd_get_credence: ewcmd.get_credence, #debug
+	
 }
 
 debug = False
@@ -1693,6 +1698,13 @@ async def on_message(message):
 				
 			market_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
+			try:
+				for server in client.servers:
+					await ewleaderboard.post_leaderboards(client=client, server=server)
+			except:
+				pass
 			
 			
 		# didn't match any of the command words.
