@@ -1677,7 +1677,7 @@ async def spawn_prank_items(id_server):
 			prank_item = random.choice(ewcfg.prank_items_forbidden)
 			
 		#Debug
-		prank_item = ewcfg.prank_items_heinous[1] # Finger trap
+		prank_item = ewcfg.prank_items_heinous[2] # Bear trap
 	
 		item_props = ewitem.gen_item_props(prank_item)
 	

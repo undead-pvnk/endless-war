@@ -105,9 +105,10 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	
 	pranker_data.persist()
 	pranked_data.persist()
-	
+
+# Use an instant use item
 async def prank_item_effect_instantuse(cmd, item):
-	should_delete_item = False
+	item_action= ""
 	mentions_user = False
 	use_mention_displayname = False
 	if cmd.mentions_count == 1:
@@ -126,11 +127,11 @@ async def prank_item_effect_instantuse(cmd, item):
 			else:
 				response = "You can't prank that person right now, they don't have any credence!"
 
-			return should_delete_item, response, use_mention_displayname
+			return item_action, response, use_mention_displayname
 		
 		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
 			response = "You can't prank that person right now."
-			return should_delete_item, response, use_mention_displayname
+			return item_action, response, use_mention_displayname
 		
 		prank_item_data = item
 		
@@ -139,17 +140,16 @@ async def prank_item_effect_instantuse(cmd, item):
 		response = prank_item_data.item_props.get('prank_desc')
 		
 		response = response.format(cmd.message.author.display_name)
-		should_delete_item = True
+		item_action = "delete"
 		use_mention_displayname = True
 	else:
 		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
-		should_delete_item = False
 	
-	return should_delete_item, response, use_mention_displayname
+	return item_action, response, use_mention_displayname
 
-
+# Use a response item
 async def prank_item_effect_response(cmd, item):
-	should_delete_item = False
+	item_action = ""
 	mentions_user = False
 	use_mention_displayname = False
 	if cmd.mentions_count == 1:
@@ -163,7 +163,7 @@ async def prank_item_effect_response(cmd, item):
 		
 		if pranker_data.poi != pranked_data.poi:
 			response = "You need to be in the same place as your target to prank them with that item."
-			return should_delete_item, response, use_mention_displayname
+			return item_action, response, use_mention_displayname
 		
 		if pranker_data.credence == 0 or pranked_data.credence == 0:
 			if pranker_data.credence == 0:
@@ -172,11 +172,11 @@ async def prank_item_effect_response(cmd, item):
 			else:
 				response = "You can't prank that person right now, they don't have any credence!"
 				
-			return should_delete_item, response, use_mention_displayname
+			return item_action, response, use_mention_displayname
 		
 		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
 			response = "You can't prank that person right now."
-			return should_delete_item, response, use_mention_displayname
+			return item_action, response, use_mention_displayname
 
 		prank_item_data = item
 
@@ -231,12 +231,46 @@ async def prank_item_effect_response(cmd, item):
 		ewutils.active_restrictions[pranker_data.id_user] = 0
 		ewutils.active_restrictions[pranked_data.id_user] = 0
 		
-		should_delete_item = False
+		item_action = "delete"
 	else:
 		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
-		should_delete_item = False
 
-	return should_delete_item, response, use_mention_displayname
+	return item_action, response, use_mention_displayname
 
+# Lay down a trap in a district.
 async def prank_item_effect_trap(cmd, item):
-	return True, "", False
+	item_action = ""
+	mentions_user = False
+	use_mention_displayname = False
+	if cmd.mentions_count == 1:
+		mentions_user = True
+
+	if mentions_user:
+		response = "You can't use that item on someone else! You gotta lay it down in a district!\n**(Hint: !use item)**"
+	else:
+
+		pranker_data = EwUser(member=cmd.message.author)
+
+		if pranker_data.credence == 0:
+			response = "You can't lay down a trap without any credence!"
+			return item_action, response, use_mention_displayname
+
+		# Store values inside the trap's item_props
+		
+		halved_credence = int(pranker_data.credence / 2)
+		if halved_credence == 0:
+			halved_credence = 1
+		
+		pranker_data.credence = halved_credence
+		pranker_data.credence_used += halved_credence
+
+		item.item_props["trap_stored_credence"] = halved_credence
+		item.item_props["trap_user_id"] = pranker_data.id_user
+		
+		item.persist()
+		pranker_data.persist()
+
+		response = "You store some of your credence in a trap. Hopefully someone's dumb enough to fall for it."
+		item_action = "drop"
+
+	return item_action, response, use_mention_displayname
