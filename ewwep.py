@@ -295,7 +295,7 @@ def canAttack(cmd):
 	#	else:
 	#		response = "You lack the moral fiber necessary for violence."
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
@@ -1047,7 +1047,7 @@ async def suicide(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
 	# Only allowed in the combat zone.
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
 	else:
 		# Get the user data.

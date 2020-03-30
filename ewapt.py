@@ -374,7 +374,7 @@ async def retire(cmd):
 
 	if cmd.mentions_count > 0:
 		return await usekey(cmd)
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	elif ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
@@ -1089,7 +1089,7 @@ async def usekey(cmd):
 			if item_key_check.item_props.get("houseID") == owner_user.id_user:
 				key = item_key_check
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must enter an apartment in a zone's channel.".format(cmd.tokens[0])))
 	elif key == None:
 		response = "You don't have a key for their apartment."
@@ -1443,7 +1443,7 @@ async def bootall(cmd):
 async def trickortreat(cmd = None):
 	user_data = EwUser(member=cmd.message.author)
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "There will be neither trick nor treat found in these parts."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

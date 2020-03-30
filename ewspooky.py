@@ -152,7 +152,7 @@ async def haunt(cmd):
 		elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
 			# Disallow haunting if the user has haunted too recently.
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
-		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
 		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
 			# Require the target to be flagged for PvP
