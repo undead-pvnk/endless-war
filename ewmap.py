@@ -39,14 +39,7 @@ def poi_is_pvp(poi_name = None):
 	
 	return False
 
-"""
-	Returns true if the specified name is used by any POI.
-"""
-def channel_name_is_poi(channel_name):
-	if channel_name != None:
-		return channel_name in ewcfg.chname_to_poi
 
-	return False
 
 """
 	Returns data for POI if it isn't on the map.
@@ -736,7 +729,7 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
-	if channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -1035,7 +1028,7 @@ async def teleport(cmd):
 	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'blj'):
 		blj_used = True
 	
-	if channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	time_now = int(time.time())
@@ -1196,7 +1189,7 @@ async def teleport_player(cmd):
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if channel_name_is_poi(cmd.message.channel.name):
+	if ewutils.channel_name_is_poi(cmd.message.channel.name):
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -1325,7 +1318,7 @@ async def scout(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	
-	if channel_name_is_poi(cmd.message.channel.name) is False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) is False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)

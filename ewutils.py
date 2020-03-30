@@ -1655,6 +1655,10 @@ async def spawn_prank_items(id_server):
 	
 	try:
 		district_id = random.choice(ewcfg.capturable_districts)
+		
+		#Debug
+		district_id = 'wreckington'
+		
 		district_channel_name = ewcfg.id_to_poi.get(district_id).channel
 		
 		client = get_client()
@@ -1673,7 +1677,7 @@ async def spawn_prank_items(id_server):
 			prank_item = random.choice(ewcfg.prank_items_forbidden)
 			
 		#Debug
-		prank_item = ewcfg.prank_items_heinous[0] # Cream pie
+		prank_item = ewcfg.prank_items_heinous[1] # Finger trap
 	
 		item_props = ewitem.gen_item_props(prank_item)
 	
@@ -1926,3 +1930,12 @@ async def add_pvp_role(cmd = None):
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
 	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+		
+"""
+	Returns true if the specified name is used by any POI.
+"""
+def channel_name_is_poi(channel_name):
+	if channel_name != None:
+		return channel_name in ewcfg.chname_to_poi
+
+	return False

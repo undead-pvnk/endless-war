@@ -226,7 +226,7 @@ def get_transports_at_stop(id_server, stop):
 """ Enter a transport vehicle from a transport stop """
 async def embark(cmd):
 	# can only use movement commands in location channels
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
@@ -322,7 +322,7 @@ async def embark(cmd):
 """ Exit a transport vehicle into its current stop """
 async def disembark(cmd):
 	# can only use movement commands in location channels
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
@@ -433,7 +433,7 @@ async def disembark(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def check_schedule(cmd):
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 	user_data = EwUser(member = cmd.message.author)
 	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)

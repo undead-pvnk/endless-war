@@ -1,10 +1,9 @@
 #import math
 #import time
 #import random
-#import asyncio
+import asyncio
 
 import ewutils
-#import ewcfg
 
 from ew import EwUser
 from ewplayer import EwPlayer
@@ -75,7 +74,7 @@ class EwPrankItem:
 		self.acquisition = acquisition
 		self.vendors = vendors
 		
-def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 1):
+def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 0):
 	pranker_credence = pranker_data.credence
 	pranked_credence = pranked_data.credence
 	
@@ -85,10 +84,14 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	item_props = item.item_props
 	gambit_multiplier = int(item_props.get('gambit'))
 	
-	total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
-	
-	pranker_data.credence = 0
-	pranked_data.credence = 0
+	# A multiplier of 0 means that a response item isn't being used.
+	# A multiplier of 5 means that a response item is done being used.
+	if response_item_multiplier == 0 or response_item_multiplier == 5:
+		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier)
+		pranker_data.credence = 0
+		pranked_data.credence = 0
+	else:
+		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
 	
 	pranker_data.credence_used += total_gambit_value
 	pranked_data.credence_used += total_gambit_value
@@ -111,6 +114,19 @@ async def prank_item_effect_instantuse(cmd, item):
 		
 		pranker_data = EwUser(member=cmd.message.author)
 		pranked_data = EwUser(member=member)
+
+		if pranker_data.credence == 0 or pranked_data.credence == 0:
+			if pranker_data.credence == 0:
+
+				response = "You can't prank that person right now, you don't have any credence!"
+			else:
+				response = "You can't prank that person right now, they don't have any credence!"
+
+			return should_delete_item, response, use_mention_displayname
+		
+		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
+			response = "You can't prank that person right now."
+			return should_delete_item, response, use_mention_displayname
 		
 		prank_item_data = item
 		
@@ -119,7 +135,7 @@ async def prank_item_effect_instantuse(cmd, item):
 		response = prank_item_data.item_props.get('prank_desc')
 		
 		response = response.format(cmd.message.author.display_name)
-		should_delete_item = False
+		should_delete_item = True
 		use_mention_displayname = True
 	else:
 		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
@@ -129,7 +145,94 @@ async def prank_item_effect_instantuse(cmd, item):
 
 
 async def prank_item_effect_response(cmd, item):
-	return True, "", False
+	should_delete_item = False
+	mentions_user = False
+	use_mention_displayname = False
+	if cmd.mentions_count == 1:
+		mentions_user = True
+
+	if mentions_user:
+		member = cmd.mentions[0]
+
+		pranker_data = EwUser(member=cmd.message.author)
+		pranked_data = EwUser(member=member)
+		
+		if pranker_data.poi != pranked_data.poi:
+			response = "You need to be in the same place as your target to prank them with that item."
+			return should_delete_item, response, use_mention_displayname
+		
+		if pranker_data.credence == 0 or pranked_data.credence == 0:
+			if pranker_data.credence == 0:
+				
+				response = "You can't prank that person right now, you don't have any credence!"
+			else:
+				response = "You can't prank that person right now, they don't have any credence!"
+				
+			return should_delete_item, response, use_mention_displayname
+		
+		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
+			response = "You can't prank that person right now."
+			return should_delete_item, response, use_mention_displayname
+
+		prank_item_data = item
+
+		response = prank_item_data.item_props.get('prank_desc')
+
+		response = response.format(cmd.message.author.display_name)
+		
+		# Apply restrictions, stop both users in their tracks
+		# Restriction level 2 -- No one else can prank you at this time.
+		ewutils.active_target_map[pranker_data.id_user] = pranked_data.id_user
+		ewutils.active_target_map[pranked_data.id_user] = pranker_data.id_user
+		ewutils.moves_active[pranker_data.id_user] = 0
+		ewutils.moves_active[pranked_data.id_user] = 0
+		ewutils.active_restrictions[pranker_data.id_user] = 2 
+		ewutils.active_restrictions[pranked_data.id_user] = 2
+		
+		# The command needed to remove the response item
+		response_command = prank_item_data.item_props.get('response_command')
+
+		use_mention_displayname = True
+
+		# The pranked person has 5 chances to type in the proper command before more and more gambit builds up
+		limit = 0
+		while limit < 5:
+
+			accepted = 0
+			try:
+				msg = await cmd.client.wait_for_message(timeout=3, author=member)
+
+				if msg != None:
+					if msg.content == "!" + response_command:
+						accepted = 1
+						limit = 5
+			except:
+				accepted = 0
+
+			
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+			limit += 1
+
+			# The longer time goes on without the pranked person typing in the command, the more gambit they lose
+			calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
+			
+		if accepted == 1:
+			response = "You manage to resist {}'s prank efforts for now.".format(cmd.message.author.display_name)
+		else:
+			response = "Before {} can go any further, their piece of shit prank item breaks down and shatters into a million pieces. Serves them right!".format(cmd.message.author.display_name)
+
+		# Remove restrictions
+		ewutils.active_target_map[pranker_data.id_user] = ""
+		ewutils.active_target_map[pranked_data.id_user] = ""
+		ewutils.active_restrictions[pranker_data.id_user] = 0
+		ewutils.active_restrictions[pranked_data.id_user] = 0
+		
+		should_delete_item = False
+	else:
+		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
+		should_delete_item = False
+
+	return should_delete_item, response, use_mention_displayname
 
 async def prank_item_effect_trap(cmd, item):
 	return True, "", False

@@ -1121,16 +1121,19 @@ async def item_use(cmd):
 			elif context == ewcfg.context_prankitem:
 				should_delete_item = False
 				use_mention_displayname = False
-				
-				if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
-					should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_instantuse(cmd, item)
-				elif item.item_props['prank_type'] == ewcfg.prank_type_response:
-					should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_response(cmd, item)
-				elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
-					should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_trap(cmd, item)
-					
-				if should_delete_item:
-					item_delete(item.id_item)
+
+				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
+					response = "You need to be on the city streets to unleash that prank item's full potential."
+				else:
+					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
+						should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_instantuse(cmd, item)
+					elif item.item_props['prank_type'] == ewcfg.prank_type_response:
+						should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_response(cmd, item)
+					elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
+						should_delete_item, response, use_mention_displayname = await ewprank.prank_item_effect_trap(cmd, item)
+						
+					if should_delete_item:
+						item_delete(item.id_item)
 				
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

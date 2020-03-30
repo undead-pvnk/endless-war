@@ -1781,16 +1781,30 @@ async def gambit(cmd):
 	
 async def credence(cmd):
 	if not cmd.message.author.server_permissions.administrator:
-		return
+		adminmode = False
+	else:
+		adminmode = True
 	
 	if cmd.mentions_count == 0:
 		user_data = EwUser(member=cmd.message.author)
-		response = "DEBUG: You currently have {:,} credence, and {:,} credence used.".format(user_data.credence, user_data.credence_used)
+		if adminmode:
+			response = "DEBUG: You currently have {:,} credence, and {:,} credence used.".format(user_data.credence, user_data.credence_used)
+		else:
+			if user_data.credence > 0:
+				response = "You have credence. Don't fuck this up."
+			else:
+				response = "You don't have any credence."
 
 	else:
 		member = cmd.mentions[0]
 		user_data = EwUser(member=member)
-		response = "{} currently has {:,} credence, and {:,} credence used.".format(member.display_name, user_data.credence, user_data.credence_used)
+		if adminmode:
+			response = "{} currently has {:,} credence, and {:,} credence used.".format(member.display_name, user_data.credence, user_data.credence_used)
+		else:
+			if user_data.credence > 0:
+				response = "They have credence. Time for a little anarchy."
+			else:
+				response = "They don't have any credence."
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

@@ -389,7 +389,7 @@ async def shambleball(cmd):
 		response = "You have too many higher brain functions left to play Shambleball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Shambleball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -460,7 +460,7 @@ async def shamblego(cmd):
 		response = "You have to join a game using {} first.".format(ewcfg.cmd_shambleball)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Shambleball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -502,7 +502,7 @@ async def shamblestop(cmd):
 		response = "You have to join a game using {} first.".format(ewcfg.cmd_shambleball)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You have to go into the city to play Shambleball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
