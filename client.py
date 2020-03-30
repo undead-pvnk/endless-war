@@ -667,6 +667,7 @@ cmd_map = {
 	ewcfg.cmd_gambit: ewcmd.gambit,
 	ewcfg.cmd_credence: ewcmd.credence, #debug
 	ewcfg.cmd_get_credence: ewcmd.get_credence, #debug
+	ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
 	
 }
 

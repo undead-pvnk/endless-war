@@ -85,9 +85,13 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	gambit_multiplier = int(item_props.get('gambit'))
 	
 	# A multiplier of 0 means that a response item isn't being used.
-	# A multiplier of 5 means that a response item is done being used.
-	if response_item_multiplier == 0 or response_item_multiplier == 5:
+	# A multiplier of 6 means that a response item is done being used.
+	if response_item_multiplier == 0 or response_item_multiplier == 6:
 		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier)
+		
+		if response_item_multiplier == 6:
+			total_gambit_value = 0
+		
 		pranker_data.credence = 0
 		pranked_data.credence = 0
 	else:
@@ -196,25 +200,25 @@ async def prank_item_effect_response(cmd, item):
 
 		# The pranked person has 5 chances to type in the proper command before more and more gambit builds up
 		limit = 0
-		while limit < 5:
-
-			accepted = 0
-			try:
-				msg = await cmd.client.wait_for_message(timeout=3, author=member)
-
-				if msg != None:
-					if msg.content == "!" + response_command:
-						accepted = 1
-						limit = 5
-			except:
-				accepted = 0
-
-			
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+		accepted = 0
+		while limit < 6:
 			limit += 1
 
-			# The longer time goes on without the pranked person typing in the command, the more gambit they lose
-			calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
+			if limit != 6:
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
+				calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
+	
+				accepted = 0
+				try:
+					msg = await cmd.client.wait_for_message(timeout=3, author=member)
+	
+					if msg != None:
+						if msg.content == "!" + response_command:
+							accepted = 1
+							limit = 6
+				except:
+					accepted = 0
 			
 		if accepted == 1:
 			response = "You manage to resist {}'s prank efforts for now.".format(cmd.message.author.display_name)
