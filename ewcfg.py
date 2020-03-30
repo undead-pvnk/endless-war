@@ -755,6 +755,7 @@ cmd_shambleleave = cmd_prefix + 'shambleleave'
 cmd_gambit = cmd_prefix + 'gambit'
 cmd_credence = cmd_prefix + 'credence'
 cmd_get_credence = cmd_prefix + 'getcredence'
+cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'

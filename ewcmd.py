@@ -1813,7 +1813,7 @@ async def credence(cmd):
 			if user_data.credence > 0:
 				response = "You have credence. Don't fuck this up."
 			else:
-				response = "You don't have any credence."
+				response = "You don't have any credence. You'll need to build some up in the city before you can get to pranking again."
 
 	else:
 		member = cmd.mentions[0]
@@ -1841,3 +1841,23 @@ async def get_credence(cmd):
 	user_data.persist()
 	
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def reset_prank_stats(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	if cmd.mentions_count == 0:
+		member = cmd.message.author
+		user_data = EwUser(member=member)
+	else:
+		member = cmd.mentions[0]
+		user_data = EwUser(member=member)
+
+	user_data.gambit = 0
+	user_data.credence = 100
+	user_data.credence_used = 0
+
+	response = "Prank stats reset for {}.".format(member.display_name)
+		
+	user_data.persist()
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
