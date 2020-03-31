@@ -1066,6 +1066,8 @@ async def item_look(cmd):
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
+	use_mention_displayname = False
+	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.message.server
@@ -1120,7 +1122,6 @@ async def item_use(cmd):
 					
 			elif context == ewcfg.context_prankitem:
 				item_action = ""
-				use_mention_displayname = False
 
 				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
 					response = "You need to be on the city streets to unleash that prank item's full potential."

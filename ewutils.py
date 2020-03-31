@@ -1644,9 +1644,9 @@ def sap_tick(id_server):
 		
 async def spawn_prank_items_tick_loop(id_server):
 	#DEBUG
-	# interval = 10
+	interval = 10
 	
-	interval = 300
+	# interval = 180
 	while not TERMINATE:
 		await asyncio.sleep(interval)
 		await spawn_prank_items(id_server = id_server)
@@ -1667,31 +1667,50 @@ async def spawn_prank_items(id_server):
 	
 		district_channel = get_channel(server=server, channel_name=district_channel_name)
 		
-		rarity_roll = random.randrange(10)
+		pie_or_prank = random.randrange(3)
 		
-		if rarity_roll > 3:
-			prank_item = random.choice(ewcfg.prank_items_heinous)
-		elif rarity_roll > 0:
-			prank_item = random.choice(ewcfg.prank_items_scandalous)
+		if pie_or_prank == 0:
+			swilldermuk_food_item = random.choice(ewcfg.swilldermuk_food)
+
+			item_props = ewitem.gen_item_props(swilldermuk_food_item)
+
+			swilldermuk_food_item_id = ewitem.item_create(
+				item_type=swilldermuk_food_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+
+			print('{} with id {} spawned in {}!'.format(swilldermuk_food_item.str_name, swilldermuk_food_item_id, district_id))
+
+			response = "That smell... it's unmistakeable!! Someone's left a fresh {} on the ground!".format(swilldermuk_food_item.str_name)
+			await send_message(client, district_channel, response)
 		else:
-			prank_item = random.choice(ewcfg.prank_items_forbidden)
+			rarity_roll = random.randrange(10)
 			
-		#Debug
-		prank_item = ewcfg.prank_items_heinous[2] # Bear trap
+			if rarity_roll > 3:
+				prank_item = random.choice(ewcfg.prank_items_heinous)
+			elif rarity_roll > 0:
+				prank_item = random.choice(ewcfg.prank_items_scandalous)
+			else:
+				prank_item = random.choice(ewcfg.prank_items_forbidden)
+				
+			#Debug
+			prank_item = ewcfg.prank_items_heinous[2] # Bear trap
+		
+			item_props = ewitem.gen_item_props(prank_item)
+		
+			prank_item_id = ewitem.item_create(
+				item_type=prank_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+		
+			print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
 	
-		item_props = ewitem.gen_item_props(prank_item)
-	
-		prank_item_id = ewitem.item_create(
-			item_type=prank_item.item_type,
-			id_user=district_id,
-			id_server=id_server,
-			item_props=item_props
-		)
-	
-		print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
-	
-		response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
-		await send_message(client, district_channel, response)
+			response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
+			await send_message(client, district_channel, response)
 
 	except:
 		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
@@ -1700,7 +1719,7 @@ async def generate_credence_tick_loop(id_server):
 	# DEBUG
 	# interval = 10
 
-	interval = 300
+	interval = random.randrange(121) + 180 # anywhere from 3-5 minutes
 	while not TERMINATE:
 		await asyncio.sleep(interval)
 		await generate_credence(id_server)

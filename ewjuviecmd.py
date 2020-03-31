@@ -763,8 +763,8 @@ async def scavenge(cmd):
 			# if not was_pvp:
 			# 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 			# 
-			# if not response == "":
-			# 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if not response == "":
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
