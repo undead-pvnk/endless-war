@@ -332,6 +332,7 @@ def format_board(entries = None, title = "", entry_type = "player", divide_by = 
 
 def board_header(title):
 	emote = None
+	emote2 = None
 
 	bar = " ▓▓▓▓▓"
 
@@ -376,16 +377,19 @@ def board_header(title):
 		bar += " "
 	
 	elif title == ewcfg.leaderboard_gambit_high:
-		emote = ewcfg.emote_slime1
-		#emote = ewcfg.emote_janus1
+		emote = ewcfg.emote_janus1
+		emote2 = ewcfg.emote_janus2
 		bar += " "
 	
 	elif title == ewcfg.leaderboard_gambit_low:
-		emote = ewcfg.emote_slime1
-		#emote = ewcfg.emote_janus2
+		emote = ewcfg.emote_janus1
+		emote2 = ewcfg.emote_janus2
 		bar += " "
-
-	return emote + bar + title + bar + emote + "\n"
+		
+	if emote2 != None:
+		return emote + bar + title + bar + emote2 + "\n"
+	else:
+		return emote + bar + title + bar + emote + "\n"
 
 def board_entry(entry, entry_type, divide_by):
 	result = ""

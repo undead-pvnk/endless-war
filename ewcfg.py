@@ -1319,6 +1319,8 @@ emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
 emote_srs = "<:srs:631859962519224341>"
 emote_staydead = "<:sd:506840095714836480>"
+emote_janus1 = "<:janus1:694404178956779592>"
+emote_janus2 = "<:janus2:694404179342655518>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"

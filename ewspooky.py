@@ -31,8 +31,8 @@ async def revive(cmd):
 
 		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
 		
-		# SWILLDERMUK -- Give everyone (mostly the shamblers) a break from long respawn timers
-		time_until_revive = min(time_until_revive, 300) # 5 minute maximum respawn time
+		# SWILLDERMUK -- Give everyone (mostly the shamblers) a break from long-ass respawn timers
+		time_until_revive = min(time_until_revive, 600) # 10 minute maximum respawn time
 		
 		if time_until_revive > 0:
 			response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
