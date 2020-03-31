@@ -1861,3 +1861,63 @@ async def reset_prank_stats(cmd):
 		
 	user_data.persist()
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+async def set_gambit(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member=member)
+	else:
+		return
+		
+	if not len(cmd.tokens) > 1:
+		return
+		
+	gambit_set = int(cmd.tokens[1])
+
+	user_data.gambit = gambit_set
+	user_data.credence = 100
+	user_data.credence_used = 0
+
+	response = "Gambit for {} set to {:,}.".format(member.display_name, gambit_set)
+
+	user_data.persist()
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+async def forge_master_poudrin(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	if cmd.mentions_count == 1:
+		member = cmd.mentions[0]
+		user_data = EwUser(member=member)
+	else:
+		return
+		
+	item_props = {
+		"cosmetic_name": "Master Poudrin",
+		"cosmetic_desc": "One poudrin to rule them all... or something like that. It's wrapped in twine, fit to wear as a necklace. There's a fuck ton of slime on the inside, but you're not nearly powerful enough on your own to !crush it.",
+		"adorned": "false",
+		"rarity": "princeps",
+		"context": user_data.slimes,
+		"id_cosmetic": "masterpoudrin",
+	}
+
+	new_item_id = ewitem.item_create(
+		id_server=cmd.message.server.id,
+		id_user=user_data.id_user,
+		item_type=ewcfg.it_cosmetic,
+		item_props=item_props
+	)
+	
+	ewutils.logMsg("Master poudrin created. Slime stored: {}, Cosmetic ID = {}".format(user_data.slimes, new_item_id))
+
+	ewitem.soulbind(new_item_id)
+	
+	user_data.slimes = 0
+	user_data.persist()
+	
+	response = "A pillar of light envelops {}! All of their slime is condensed into one, all-powerful Master Poudrin!\nDon't !crush it all in one place, kiddo.".format(member.display_name)
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
