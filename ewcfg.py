@@ -979,7 +979,7 @@ hunger_perfarm = 50
 hunger_permine = 1
 hunger_perminereset = 25
 hunger_perfish = 15
-hunger_perscavenge = 1 #SWILLDERMUK
+hunger_perscavenge = 2
 hunger_pertick = 3
 hunger_pertrickortreat = 6
 
