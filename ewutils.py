@@ -26,6 +26,7 @@ from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewitem import EwItem
+from ewprank import calculate_gambit_exchange
 
 TERMINATE = False
 DEBUG = False
@@ -1644,9 +1645,9 @@ def sap_tick(id_server):
 		
 async def spawn_prank_items_tick_loop(id_server):
 	#DEBUG
-	interval = 10
+	# interval = 10
 	
-	# interval = 180
+	interval = 180
 	while not TERMINATE:
 		await asyncio.sleep(interval)
 		await spawn_prank_items(id_server = id_server)
@@ -1696,7 +1697,7 @@ async def spawn_prank_items(id_server):
 				prank_item = random.choice(ewcfg.prank_items_forbidden)
 				
 			#Debug
-			prank_item = ewcfg.prank_items_heinous[2] # Bear trap
+			prank_item = ewcfg.prank_items_heinous[1] # Bear trap
 		
 			item_props = ewitem.gen_item_props(prank_item)
 		
@@ -1776,7 +1777,82 @@ async def generate_credence(id_server):
 			# Clean up the database handles.
 			cursor.close()
 			databaseClose(conn_info)
+			
+async def activate_trap_items(district, id_server, id_user):
+	# Return if --> User has 0 credence, there are no traps, or if the trap setter is the one who entered the district.
+	print("TRAP FUNCTION")
 	
+	user_data = EwUser(id_user=id_user, id_server=id_server)
+	if user_data.credence == 0:
+		print('no credence')
+		return
+	
+	try:
+		conn_info = databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor();
+
+		district_channel_name = ewcfg.id_to_poi.get(district).channel
+
+		client = get_client()
+
+		server = client.get_server(id_server)
+
+		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		
+		searched_id = district + '_trap'
+		
+		cursor.execute("SELECT id_item, id_user FROM items WHERE id_user = %s AND id_server = %s".format(
+			id_item = ewcfg.col_id_item,
+			id_user = ewcfg.col_id_user
+		), (
+			searched_id,
+			id_server,
+		))
+
+		traps = cursor.fetchall()
+		
+		if len(traps) == 0:
+			print('no traps')
+			return
+		
+		trap_used = traps[0]
+		
+		trap_id_item = trap_used[0]
+		#trap_id_user = trap_used[1]
+		
+		trap_item_data = EwItem(id_item=trap_id_item)
+		
+		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
+		trap_user_id = trap_item_data.item_props.get('trap_user_id')
+		
+		if trap_user_id == user_data.id_user:
+			print('trap same user id')
+			return
+		
+		if random.randrange(101) < trap_chance:
+			# Trap was triggered!
+			pranker_data = EwUser(id_user=trap_user_id, id_server=id_server)
+			pranked_data = user_data
+
+			response = trap_item_data.item_props.get('prank_desc')
+			
+			calculate_gambit_exchange(pranker_data, pranked_data, trap_item_data, trap_used=True)
+		else:
+			# Trap was a dud.
+			response = "Close call! You were just about to eat shit and fall right into someone's {}, but luckily, it was a dud.".format(trap_item_data.item_props.get('item_name'))
+		
+		ewitem.item_delete(trap_id_item)
+		
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		databaseClose(conn_info)
+		
+	player_data = EwPlayer(id_user=id_user)
+
+	# A bit dangerous. This is the only time player data is sent in to formatMessage rather than a member object. But it works nonetheless.
+	await send_message(client, district_channel, formatMessage(player_data, response))
 
 def check_fursuit_active(id_server):
 	market_data = EwMarket(id_server=id_server)
