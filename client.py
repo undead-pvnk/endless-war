@@ -451,6 +451,7 @@ cmd_map = {
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
@@ -668,6 +669,7 @@ cmd_map = {
 	ewcfg.cmd_credence: ewcmd.credence, #debug
 	ewcfg.cmd_get_credence: ewcmd.get_credence, #debug
 	ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
+	ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	
 }
 
