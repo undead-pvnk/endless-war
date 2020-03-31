@@ -749,18 +749,22 @@ async def scavenge(cmd):
 					user_data.hunger += ewcfg.hunger_perscavenge
 
 			user_data.time_lastscavenge = time_now
+			
+			# SWILLDERMUK -- Look, I'll make it simple. This event isn't about getting slime or killing people.
+			# It's about pranking your bros and your not-so-bros. So scavenging just wont flag people, ok?
 
-			was_pvp = user_data.time_expirpvp > time_now
-			# Flag the user for PvP
-			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
+			# was_pvp = user_data.time_expirpvp > time_now
+			# 
+			# # Flag the user for PvP
+			# enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+			# user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
 
 			user_data.persist()
-			if not was_pvp:
-				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-
-			if not response == "":
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			# if not was_pvp:
+			# 	await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+			# 
+			# if not response == "":
+			# 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You'll find no slime here, this place has been picked clean. Head into the city to try and scavenge some slime."))
 
