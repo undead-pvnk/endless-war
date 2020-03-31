@@ -426,7 +426,12 @@ async def disembark(cmd):
 			user_data.persist()
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
-			return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(stop_poi.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 		return await resp_cont.post()
 	else:
 		response = "You are not currently riding any transport."

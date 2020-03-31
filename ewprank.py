@@ -74,9 +74,12 @@ class EwPrankItem:
 		self.acquisition = acquisition
 		self.vendors = vendors
 		
-def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 0):
+def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 0, trap_used = False):
 	pranker_credence = pranker_data.credence
 	pranked_credence = pranked_data.credence
+	
+	if trap_used:
+		pranker_credence = int(item.item_props.get('trap_stored_credence'))
 	
 	print(pranker_credence)
 	print(pranked_credence)
@@ -92,7 +95,8 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 		if response_item_multiplier == 6:
 			total_gambit_value = 0
 		
-		pranker_data.credence = 0
+		if not trap_used:
+			pranker_data.credence = 0
 		pranked_data.credence = 0
 	else:
 		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
@@ -119,6 +123,10 @@ async def prank_item_effect_instantuse(cmd, item):
 		
 		pranker_data = EwUser(member=cmd.message.author)
 		pranked_data = EwUser(member=member)
+		
+		if pranker_data.id_user == pranked_data.id_user:
+			response = "A bit masochistic, don't you think?"
+			return item_action, response, use_mention_displayname
 
 		if pranker_data.credence == 0 or pranked_data.credence == 0:
 			if pranker_data.credence == 0:
@@ -160,6 +168,10 @@ async def prank_item_effect_response(cmd, item):
 
 		pranker_data = EwUser(member=cmd.message.author)
 		pranked_data = EwUser(member=member)
+		
+		if pranker_data.id_user == pranked_data.id_user:
+			response = "A bit masochistic, don't you think?"
+			return item_action, response, use_mention_displayname
 		
 		if pranker_data.poi != pranked_data.poi:
 			response = "You need to be in the same place as your target to prank them with that item."

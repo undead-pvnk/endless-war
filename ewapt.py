@@ -444,7 +444,12 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			else:
 				response = "Here we are. The outside world."
 
-			return await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+			await ewutils.send_message(cmd.client, ewutils.get_channel(server, poi_dest.channel), ewutils.formatMessage(cmd.message.author, response))
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(poi_dest.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 
 
 def getPriceBase(cmd):

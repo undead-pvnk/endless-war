@@ -1431,10 +1431,13 @@ def gen_item_props(item):
 			item_props["prank_desc"] = item.prank_desc
 			item_props["rarity"] = item.rarity
 			item_props["gambit"] = item.gambit
+			# Response items
 			item_props["response_command"] = item.response_command
+			# Trap items
 			item_props["trap_chance"] = item.trap_chance
 			item_props["trap_stored_credence"] = item.trap_stored_credence
 			item_props["trap_user_id"] = item.trap_user_id
+			# Some prank items have nifty side effects
 			item_props["side_effect"] = item.side_effect
 			
 

@@ -2001,15 +2001,13 @@ item_id_waterballoon = "waterbaloon"
 item_id_creampie = "creampie"
 item_id_bungisbeam = "bungisbeam"
 item_id_circumcisionray = "circumcisionray"
-item_id_genitalmutilationinstrument = "gentialmutilationinstrument"
 item_id_cumjar = "cumjar"
-item_id_perfectlynormalfood = "perfectlynormalfood"
 item_id_discounttransbeam = "discounttransbeam"
 item_id_transbeamreplica = "transbeamreplica"
-item_id_airhorn = "airhorn"
 item_id_bloodtransfusion = "bloodtransfusion"
 item_id_transformationmask = "transformationmask"
 item_id_emptychewinggumpacket = "emptychewinggumpacket"
+item_id_airhorn = "airhorn"
 # Response items
 item_id_chinesefingertrap = "chinesefingertrap"
 item_id_japanesefingertrap = "japanesefingertrap"
@@ -2017,6 +2015,7 @@ item_id_sissyhypnodevice = "sissyhypnodevice"
 item_id_piedpiperkazoo = "piedpiperkazoo"
 item_id_sandpapergloves = "sandpapergloves"
 item_id_ticklefeather = "ticklefeather"
+item_id_genitalmutilationinstrument = "gentialmutilationinstrument"
 # Trap items
 item_id_whoopiecushion = "whoopiecushion"
 item_id_beartrap = "beartrap"
@@ -2026,6 +2025,8 @@ item_id_windupbox = "windupbox"
 item_id_windupchatterteeth = "windupchatterteeth"
 item_id_snakeinacan = "snakeinacan"
 item_id_landmine = "landmine"
+item_id_freeipad = "freeipad"
+item_id_perfectlynormalfood = "perfectlynormalfood"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -2033,6 +2034,10 @@ prank_type_trap = 'trap'
 prank_rarity_heinous = 'heinous'
 prank_rarity_scandalous = 'scandalous'
 prank_rarity_forbidden = 'forbidden'
+
+prank_type_text_instantuse = '\nPrank Type: Instant Use - Good for hit-and-run tactics.'
+prank_type_text_response = '\nPrank Type: Response - Use it on an unsuspecting bystander.'
+prank_type_text_trap = '\nPrank Type: Trap - Lay it down in a district.'
 
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"

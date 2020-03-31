@@ -885,6 +885,7 @@ async def move(cmd = None, isApt = False):
 				"You {} {}.".format(poi.str_enter, poi.str_name)
 			)
 		)
+		
 		try:
 			await cmd.client.delete_message(msg_walk_start)
 			await asyncio.sleep(30)
@@ -977,6 +978,9 @@ async def move(cmd = None, isApt = False):
 							"You {} {}.".format(poi_current.str_enter, poi_current.str_name)
 						)
 					)
+
+					# SWILLDERMUK
+					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
@@ -1132,7 +1136,12 @@ async def teleport(cmd):
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 				
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
-			return await resp_cont.post()
+			await resp_cont.post()
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 		else:
 			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
 
@@ -1180,6 +1189,9 @@ async def teleport_player(cmd):
 		target_user.persist()
 		
 		response = "{} has been teleported to {}".format(target_player.display_name, new_poi.id_poi)
+		
+		await ewrolemgr.updateRoles(client = cmd.client, member = target)
+		
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
