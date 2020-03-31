@@ -1945,3 +1945,38 @@ async def forge_master_poudrin(cmd):
 	response = "A pillar of light envelops {}! All of their slime is condensed into one, all-powerful Master Poudrin!\nDon't !crush it all in one place, kiddo.".format(
 		member.display_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+async def create_general_item(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if len(cmd.tokens) > 1:
+		searched_item_id = cmd.tokens[1]
+	else:
+		return
+	
+	found_item = None
+	
+	for item in ewcfg.item_list:
+		if item.id_item == searched_item_id:
+			found_item = item
+			break
+			
+	if found_item != None:
+		
+		item_props = ewitem.gen_item_props(item)
+		
+		generated_item_id = ewitem.item_create(
+			item_type=item.item_type,
+			id_user=cmd.message.author.id,
+			id_server=cmd.message.server.id,
+			item_props=item_props
+		)
+		
+		response = "Created item **{}** with id **{}** for **{}**".format(item_props.get('item_name'), generated_item_id, cmd.message.author.display_name)
+	else:
+		response = "Could not find item."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+		
+		

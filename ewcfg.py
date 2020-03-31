@@ -705,6 +705,7 @@ cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
+cmd_creategeneralitem = cmd_prefix + 'creategeneralitem'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -1997,8 +1998,8 @@ item_id_sigillaria = "sigillaria"
 
 #SWILLDERMUK
 # Instant use items
-item_id_waterballoon = "waterbaloon"
 item_id_creampie = "creampie"
+item_id_waterballoon = "waterbaloon"
 item_id_bungisbeam = "bungisbeam"
 item_id_circumcisionray = "circumcisionray"
 item_id_cumjar = "cumjar"
@@ -2016,6 +2017,10 @@ item_id_piedpiperkazoo = "piedpiperkazoo"
 item_id_sandpapergloves = "sandpapergloves"
 item_id_ticklefeather = "ticklefeather"
 item_id_genitalmutilationinstrument = "gentialmutilationinstrument"
+item_id_gamerficationasmr = "gamerficationasmr"
+item_id_beansinacan = "beansinacan"
+item_id_brandingiron = "brandingiron"
+item_id_lasso = "lasso"
 # Trap items
 item_id_whoopiecushion = "whoopiecushion"
 item_id_beartrap = "beartrap"
@@ -2027,6 +2032,9 @@ item_id_snakeinacan = "snakeinacan"
 item_id_landmine = "landmine"
 item_id_freeipad = "freeipad"
 item_id_perfectlynormalfood = "perfectlynormalfood"
+item_id_pitfall = "pitfall"
+item_id_electrocage = "electrocage"
+item_id_ironmaiden = "ironmaiden"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -2034,10 +2042,9 @@ prank_type_trap = 'trap'
 prank_rarity_heinous = 'heinous'
 prank_rarity_scandalous = 'scandalous'
 prank_rarity_forbidden = 'forbidden'
-
-prank_type_text_instantuse = '\nPrank Type: Instant Use - Good for hit-and-run tactics.'
-prank_type_text_response = '\nPrank Type: Response - Use it on an unsuspecting bystander.'
-prank_type_text_trap = '\nPrank Type: Trap - Lay it down in a district.'
+prank_type_text_instantuse = '\n\nPrank Type: Instant Use - Good for hit-and-run tactics.'
+prank_type_text_response = '\n\nPrank Type: Response - Use it on an unsuspecting bystander.'
+prank_type_text_trap = '\n\nPrank Type: Trap - Lay it down in a district.'
 
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"
@@ -2739,11 +2746,103 @@ item_list = [
 	EwPrankItem(
 		id_item=item_id_creampie,
 		str_name="Coconut Cream Pie",
-		str_desc="A coconut cream pie, perfect for creaming all over someone!",
+		str_desc="A coconut cream pie, perfect for creaming all over someone!" + prank_type_text_instantuse,
 		prank_type=prank_type_instantuse,
 		prank_desc="{} throws a cream pie at your face! How embarrassing!",
 		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_waterballoon,
+		str_name="Water Balloon",
+		str_desc="A simple, yet effective water balloon. Aim for the groin for maximum effectiveness." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} throws a water balloon at your crotch. Haha, fucking piss your pants much?",
+		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_bungisbeam,
+		str_name="Bungis Beam",
+		str_desc="A high-tech futuristic ray gun, with the uncanny ability to turn someone into Sky (Bungis)... or so the legends say." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} shoots you with a Bungis Beam! Slowly but surely, you transmogrify into Sky (Bungis)!!",
+		rarity=prank_rarity_scandalous,
 		gambit=10,
+		side_effect="bungisbeam_effect",
+	),
+	EwPrankItem(
+		id_item=item_id_circumcisionray,
+		str_name="Circumcision Ray",
+		str_desc="A powerful surgical tool in the form of a handgun. You're not really sure how it works, but testing it out seems unwise." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} fires off a Circumcision Ray at your genitals! Oh god, **IT BURNS!!** What the fuck is wrong with them?",
+		rarity=prank_rarity_scandalous,
+		gambit=25,
+	),
+	EwPrankItem(
+		id_item=item_id_cumjar,
+		str_name="Cum Jar",
+		str_desc="A jar full of seminal fluid. You think you can spot what looks like a My Little Pony figurine on the inside." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} chucks a Cum Jar in your general direction! The sticky white stuff gets everywhere!!",
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+		side_effect="cumjar_effect",
+	),
+	EwPrankItem(
+		id_item=item_id_discounttransbeam,
+		str_name="Discount Trans Beam",
+		str_desc="A shitty knock-off of the real thing. Gotta work with the hand you're dealt, I guess." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} emits a Discount Trans Beam! You are imbued with a mild sense of gender dysphoria.",
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_transbeamreplica,
+		str_name="Trans Beam Replica",
+		str_desc="A scientifically perfected replica of the famous Trans Beam. Could SlimeCorp be responsible?" + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="***PSHOOOOOOOO!!!*** {} calls upon the all powerful **Trans Beam!** Your gender dysphoria levels are off the fucking charts!!",
+		rarity=prank_rarity_forbidden,
+		gambit=50,
+	),
+	EwPrankItem(
+		id_item=item_id_bloodtransfusion,
+		str_name="Blood Transfusion",
+		str_desc="A packet of unknown blood hooked up to a syringe. They'll never see it coming." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} stabs you with a syringe and performs a Blood Transfusion! Who knows what kind of fucked up diseases they just gave you!!",
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+	),
+	EwPrankItem(
+		id_item=item_id_transformationmask,
+		str_name="Transformation Mask",
+		str_desc="A mask used to transform into other people, somewhat visually reminiscent of the one used in The Mask (1994), starring Jim Carrey." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="***SSSSMMMMMMOOOOKKIIIN!!*** {} puts on their Transformation Mask and copies your likeness! While in disguise, they do all sorts of crazy, messed up shit and ruin your reputation completely!!",
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_emptychewinggumpacket,
+		str_name="Empty Chewing Packet",
+		str_desc="A packet of chewing gum, which, upon closer inspection, is completely empty. It's fool-proof, really." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} offers you a piece of a gum in these desperate times. HA, sike! The packet is completely empty, you fucking IDIOT!",
+		rarity=prank_rarity_heinous,
+		gambit=10,
+	),
+	EwPrankItem(
+		id_item=item_id_airhorn,
+		str_name="Air Horn",
+		str_desc="A device capable of deafening those who get too close to it." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} blasts an Air Horn and ruptures your eardrums! What an asshole!",
+		rarity=prank_rarity_heinous,
+		gambit=20,
 	),
 	EwPrankItem(
 		id_item=item_id_chinesefingertrap,

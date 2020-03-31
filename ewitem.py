@@ -1122,16 +1122,21 @@ async def item_use(cmd):
 					
 			elif context == ewcfg.context_prankitem:
 				item_action = ""
+				side_effect = ""
 
 				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
 					response = "You need to be on the city streets to unleash that prank item's full potential."
 				else:
 					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
-						item_action, response, use_mention_displayname = await ewprank.prank_item_effect_instantuse(cmd, item)
+						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
 					elif item.item_props['prank_type'] == ewcfg.prank_type_response:
-						item_action, response, use_mention_displayname = await ewprank.prank_item_effect_response(cmd, item)
+						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
 					elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
-						item_action, response, use_mention_displayname = await ewprank.prank_item_effect_trap(cmd, item)
+						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+						
+					if side_effect != "":
+			
+						response += await perform_prank_item_side_effect(cmd, side_effect)
 						
 					if item_action == "delete":
 						item_delete(item.id_item)
@@ -1714,5 +1719,45 @@ def surrendersoul(giver = None, receiver = None, id_server=None):
 			)
 			return item_id
 
+# SWILLDERMUK
+async def perform_prank_item_side_effect(cmd, side_effect):
+	response = ""
+	
+	if side_effect == "bungisbeam_effect":
+
+		target_member = cmd.mentions[0]
+		client = cmd.client
+
+		await client.change_nickname(target_member, target_member.display_name + ' (Bungis)')
+		
+		response = "\n\nYou are now known as {}!".format(target_member.display_name)
+
+	elif side_effect == "cumjar_effect":
+
+		target_member = cmd.mentions[0]
+		target_data = EwUser(member=target_member)
+
+		if random.randrange(5) >= 0:
+			
+			
+			figurine_id = random.choice(ewcfg.furniture_pony)
+			
+			#print(figurine_id)
+			item = ewcfg.furniture_map.get(figurine_id)
+			
+			item_props = gen_item_props(item)
+			
+			#print(item_props)
+
+			item_create(
+				id_user=target_data.id_user,
+				id_server=target_data.id_server,
+				item_type=ewcfg.it_furniture,
+				item_props=item_props,
+			)
+
+			response = "\n\nWhat's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly."
+
+	return response
 
 
