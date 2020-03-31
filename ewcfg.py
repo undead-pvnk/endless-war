@@ -758,6 +758,7 @@ cmd_credence = cmd_prefix + 'credence'
 cmd_get_credence = cmd_prefix + 'getcredence'
 cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
+cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -6606,6 +6607,18 @@ food_list = [
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
 		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
+	),
+	EwFood(
+		id_food = "defectivecreampie",
+		alias = [
+			"defective",
+			"dfcp",
+		],
+		recover_hunger = 100,
+		str_name = "Defective Coconut Cream Pie",
+		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
+		str_desc = "A cream pie not even worth throwing at someone. This thing is practically spoiling away in your hands!",
+		acquisition = "swilldermuk"
 	)
 ]
 
@@ -15443,6 +15456,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
+swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
@@ -15458,6 +15472,13 @@ for p in item_list:
 for p in item_list:
 	if p.context == context_prankitem and p.rarity == prank_rarity_forbidden:
 		prank_items_forbidden.append(p)
+	else:
+		pass
+
+# Pity-pies will also spawn across the map.
+for p in food_list:
+	if p.acquisition == "swilldermuk":
+		swilldermuk_food.append(p)
 	else:
 		pass
 
