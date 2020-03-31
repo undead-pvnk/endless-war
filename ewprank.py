@@ -1,6 +1,3 @@
-#import math
-#import time
-#import random
 import asyncio
 
 import ewutils
@@ -115,6 +112,8 @@ async def prank_item_effect_instantuse(cmd, item):
 	item_action= ""
 	mentions_user = False
 	use_mention_displayname = False
+	side_effect = ""
+	
 	if cmd.mentions_count == 1:
 		mentions_user = True
 		
@@ -126,7 +125,7 @@ async def prank_item_effect_instantuse(cmd, item):
 		
 		if pranker_data.id_user == pranked_data.id_user:
 			response = "A bit masochistic, don't you think?"
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 
 		if pranker_data.credence == 0 or pranked_data.credence == 0:
 			if pranker_data.credence == 0:
@@ -135,11 +134,11 @@ async def prank_item_effect_instantuse(cmd, item):
 			else:
 				response = "You can't prank that person right now, they don't have any credence!"
 
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 		
 		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
 			response = "You can't prank that person right now."
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 		
 		prank_item_data = item
 		
@@ -147,19 +146,23 @@ async def prank_item_effect_instantuse(cmd, item):
 		
 		response = prank_item_data.item_props.get('prank_desc')
 		
+		side_effect = prank_item_data.item_props.get('side_effect')
+		
 		response = response.format(cmd.message.author.display_name)
 		item_action = "delete"
 		use_mention_displayname = True
 	else:
 		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
 	
-	return item_action, response, use_mention_displayname
+	return item_action, response, use_mention_displayname, side_effect
 
 # Use a response item
 async def prank_item_effect_response(cmd, item):
 	item_action = ""
 	mentions_user = False
 	use_mention_displayname = False
+	side_effect = ""
+	
 	if cmd.mentions_count == 1:
 		mentions_user = True
 
@@ -171,11 +174,11 @@ async def prank_item_effect_response(cmd, item):
 		
 		if pranker_data.id_user == pranked_data.id_user:
 			response = "A bit masochistic, don't you think?"
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 		
 		if pranker_data.poi != pranked_data.poi:
 			response = "You need to be in the same place as your target to prank them with that item."
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 		
 		if pranker_data.credence == 0 or pranked_data.credence == 0:
 			if pranker_data.credence == 0:
@@ -184,11 +187,11 @@ async def prank_item_effect_response(cmd, item):
 			else:
 				response = "You can't prank that person right now, they don't have any credence!"
 				
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 		
 		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
 			response = "You can't prank that person right now."
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 
 		prank_item_data = item
 
@@ -247,13 +250,15 @@ async def prank_item_effect_response(cmd, item):
 	else:
 		response = "You gotta find someone to prank someone with that item, first!\n**(Hint: !use item @player)**"
 
-	return item_action, response, use_mention_displayname
+	return item_action, response, use_mention_displayname, side_effect
 
 # Lay down a trap in a district.
 async def prank_item_effect_trap(cmd, item):
 	item_action = ""
 	mentions_user = False
 	use_mention_displayname = False
+	side_effect = ""
+	
 	if cmd.mentions_count == 1:
 		mentions_user = True
 
@@ -265,7 +270,7 @@ async def prank_item_effect_trap(cmd, item):
 
 		if pranker_data.credence == 0:
 			response = "You can't lay down a trap without any credence!"
-			return item_action, response, use_mention_displayname
+			return item_action, response, use_mention_displayname, side_effect
 
 		# Store values inside the trap's item_props
 		
@@ -282,7 +287,7 @@ async def prank_item_effect_trap(cmd, item):
 		item.persist()
 		pranker_data.persist()
 
-		response = "You store some of your credence in a trap. Hopefully someone's dumb enough to fall for it."
+		response = "You store some of your credence in a {}. Hopefully someone's dumb enough to fall for it.".format(item.item_props.get('item_name'))
 		item_action = "drop"
 
-	return item_action, response, use_mention_displayname
+	return item_action, response, use_mention_displayname, side_effect
