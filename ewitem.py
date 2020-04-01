@@ -1749,8 +1749,7 @@ async def perform_prank_item_side_effect(cmd, side_effect):
 		target_member = cmd.mentions[0]
 		target_data = EwUser(member=target_member)
 
-		if random.randrange(5) >= 0:
-			
+		if random.randrange(2) == 0:
 			
 			figurine_id = random.choice(ewcfg.furniture_pony)
 			
