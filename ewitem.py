@@ -1142,7 +1142,7 @@ async def item_use(cmd):
 						item_delete(item.id_item)
 					elif item_action == "drop":
 						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
-						print(item.item_props)
+						#print(item.item_props)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
@@ -1438,6 +1438,10 @@ def gen_item_props(item):
 			item_props["gambit"] = item.gambit
 			# Response items
 			item_props["response_command"] = item.response_command
+			item_props["response_desc_1"] = item.response_desc_1
+			item_props["response_desc_2"] = item.response_desc_2
+			item_props["response_desc_3"] = item.response_desc_3
+			item_props["response_desc_4"] = item.response_desc_4
 			# Trap items
 			item_props["trap_chance"] = item.trap_chance
 			item_props["trap_stored_credence"] = item.trap_stored_credence
@@ -1727,8 +1731,16 @@ async def perform_prank_item_side_effect(cmd, side_effect):
 
 		target_member = cmd.mentions[0]
 		client = cmd.client
+		
+		current_nickname = target_member.display_name
+		new_nickname = current_nickname + ' (Bungis)'
+		
+		if len(new_nickname) > 32:
+			# new nickname is too long, cut out some parts of original nickname
+			new_nickname = current_nickname[:20]
+			new_nickname += '... (Bungis)'
 
-		await client.change_nickname(target_member, target_member.display_name + ' (Bungis)')
+		await client.change_nickname(target_member, new_nickname)
 		
 		response = "\n\nYou are now known as {}!".format(target_member.display_name)
 

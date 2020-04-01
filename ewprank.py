@@ -24,6 +24,10 @@ class EwPrankItem:
 	rarity = "" # Rarity of prank item. Used in determining how often it should spawn
 	gambit = 0 # Gambit multiplier
 	response_command = "" # All response items need a different command to break out of them
+	response_desc_1 = "" # Response items contain additonal text which is indicative of how far the prank has progressed.
+	response_desc_2 = ""
+	response_desc_3 = ""
+	response_desc_4 = ""
 	trap_chance = 0 # All trap items only have a certain chance to activate
 	trap_stored_credence = 0 # Trap items store half your current credence up front for later
 	trap_user_id = "" # Trap items store your user id when you lay them down for later
@@ -44,6 +48,10 @@ class EwPrankItem:
 		rarity = "",
 		gambit = 0,
 		response_command = "",
+		response_desc_1 = "",
+		response_desc_2 = "",
+		response_desc_3 = "",
+		response_desc_4 = "",
 		trap_chance = 0,
 		trap_stored_credence = 0,
 		trap_user_id = "",
@@ -63,6 +71,10 @@ class EwPrankItem:
 		self.rarity = rarity
 		self.gambit = gambit
 		self.response_command = response_command
+		self.response_desc_1 = response_desc_1
+		self.response_desc_2 = response_desc_2
+		self.response_desc_3 = response_desc_3
+		self.response_desc_4 = response_desc_4
 		self.trap_chance = trap_chance
 		self.trap_stored_credence = trap_stored_credence
 		self.trap_user_id = trap_user_id
@@ -78,8 +90,8 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	if trap_used:
 		pranker_credence = int(item.item_props.get('trap_stored_credence'))
 	
-	print(pranker_credence)
-	print(pranked_credence)
+	#print(pranker_credence)
+	#print(pranked_credence)
 	
 	item_props = item.item_props
 	gambit_multiplier = int(item_props.get('gambit'))
@@ -103,6 +115,8 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 	
 	pranker_data.gambit += total_gambit_value
 	pranked_data.gambit -= total_gambit_value
+	
+	#print('response multi: {}'.format(response_item_multiplier))
 	
 	pranker_data.persist()
 	pranked_data.persist()
@@ -196,8 +210,20 @@ async def prank_item_effect_response(cmd, item):
 		prank_item_data = item
 
 		response = prank_item_data.item_props.get('prank_desc')
+		extra_response_1 = prank_item_data.item_props.get('response_desc_1')
+		extra_response_2 = prank_item_data.item_props.get('response_desc_2')
+		extra_response_3 = prank_item_data.item_props.get('response_desc_3')
+		extra_response_4 = prank_item_data.item_props.get('response_desc_4')
+		
+		possible_responses_list = [
+			response,
+			extra_response_1,
+			extra_response_2,
+			extra_response_3,
+			extra_response_4,
+		]
 
-		response = response.format(cmd.message.author.display_name)
+		# response = response.format(cmd.message.author.display_name)
 		
 		# Apply restrictions, stop both users in their tracks
 		# Restriction level 2 -- No one else can prank you at this time.
@@ -217,11 +243,23 @@ async def prank_item_effect_response(cmd, item):
 		limit = 0
 		accepted = 0
 		while limit < 6:
+			
 			limit += 1
 
 			if limit != 6:
-				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
+				chosen_response = possible_responses_list[limit - 1]
+				
+				# Some response item messages wont have formatting in them.
+				try:
+					chosen_response = chosen_response.format(cmd.message.author.display_name)
+				except:
+					pass
+				
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
 				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
+				pranker_data = EwUser(member=cmd.message.author)
+				pranked_data = EwUser(member=member)
+				
 				calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
 	
 				accepted = 0
@@ -240,6 +278,11 @@ async def prank_item_effect_response(cmd, item):
 		else:
 			response = "Before {} can go any further, their piece of shit prank item breaks down and shatters into a million pieces. Serves them right!".format(cmd.message.author.display_name)
 
+		pranker_data = EwUser(member=cmd.message.author)
+		pranked_data = EwUser(member=member)
+		
+		calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
+		
 		# Remove restrictions
 		ewutils.active_target_map[pranker_data.id_user] = ""
 		ewutils.active_target_map[pranked_data.id_user] = ""

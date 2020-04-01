@@ -1482,7 +1482,7 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
-		targetmodel.trauma = ewcfg.trauma_id_environment
+		user_data.trauma = ewcfg.trauma_id_environment
 		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
