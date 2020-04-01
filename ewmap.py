@@ -22,6 +22,7 @@ from ewmutation import EwMutation
 from ewslimeoid import EwSlimeoid
 from ewplayer import EwPlayer
 from ewads import EwAd
+from ewitem import EwItem
 
 from ewhunting import EwEnemy, spawn_enemy
 
@@ -1281,7 +1282,7 @@ async def look(cmd):
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else ""),
 				ad_formatting
-			)
+			) + get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
 		if len(ad_resp) > 0:
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -1320,8 +1321,10 @@ async def survey(cmd):
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
-			)
+			) + get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
+		
+		
 	
 """
 	Get information about an adjacent zone.
@@ -1704,4 +1707,43 @@ async def boot(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+# SWILLDERMUK
+def get_random_prank_item(user_data, district_data):
+	response = ""
+
+	items_in_poi = ewutils.execute_sql_query(
+		"SELECT {id_item} FROM items WHERE {id_owner} = %s AND {id_server} = %s".format(
+			id_item=ewcfg.col_id_item,
+			id_owner=ewcfg.col_id_user,
+			id_server=ewcfg.col_id_server
+		), (
+			user_data.poi,
+			district_data.id_server
+		))
+
+	prank_items = []
+	
+	for item in items_in_poi:
+		id_item = item[0]
+		possible_prank_item = EwItem(id_item=id_item)
+		
+		context = possible_prank_item.item_props.get('context')
+		food_item_id = possible_prank_item.item_props.get('id_food')
+		
+		if (context == ewcfg.context_prankitem or food_item_id == "defectivecreampie"):
+			prank_items.append(id_item)
+
+	if len(prank_items) > 0:
+		id_item = random.choice(prank_items)
+		
+		prank_item = EwItem(id_item=id_item)
+		
+		item_name = prank_item.item_props.get('item_name')
+		if item_name == None:
+			item_name = prank_item.item_props.get('food_name')
+		
+		response = "\n\nYou think you can spot a {} lying on the ground somewhere...".format(item_name)
+	
+	return response
 
