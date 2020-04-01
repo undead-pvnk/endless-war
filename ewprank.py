@@ -242,6 +242,8 @@ async def prank_item_effect_response(cmd, item):
 		# The pranked person has 5 chances to type in the proper command before more and more gambit builds up
 		limit = 0
 		accepted = 0
+		has_escaped = False
+		has_escaped_fast = False
 		while limit < 6:
 			
 			limit += 1
@@ -269,14 +271,23 @@ async def prank_item_effect_response(cmd, item):
 					if msg != None:
 						if msg.content == "!" + response_command:
 							accepted = 1
+							
+							if limit != 5:
+								has_escaped = True
+								# if limit == 1:
+								# 	has_escaped_fast = True
+								
 							limit = 6
 				except:
 					accepted = 0
 			
-		if accepted == 1:
+		if accepted == 1 and has_escaped:
 			response = "You manage to resist {}'s prank efforts for now.".format(cmd.message.author.display_name)
+			# if has_escaped_fast:
+			# 	response = "You swiftly dodge {}'s prank attempt!".format(cmd.message.author.display_name)
+			# 	limit = 7
 		else:
-			response = "Before {} can go any further, their piece of shit prank item breaks down and shatters into a million pieces. Serves them right!".format(cmd.message.author.display_name)
+			response = "It's over. The damage {} has done to you will stay with you until your death. Or at least for the rest of the week, whichever comes first.".format(cmd.message.author.display_name)
 
 		pranker_data = EwUser(member=cmd.message.author)
 		pranked_data = EwUser(member=member)

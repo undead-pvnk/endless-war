@@ -1920,7 +1920,7 @@ async def forge_master_poudrin(cmd):
 		return
 
 	item_props = {
-		"cosmetic_name": "Master Poudrin",
+		"cosmetic_name": (ewcfg.emote_masterpoudrin + " Master Poudrin " + ewcfg.emote_masterpoudrin),
 		"cosmetic_desc": "One poudrin to rule them all... or something like that. It's wrapped in twine, fit to wear as a necklace. There's a fuck ton of slime on the inside, but you're not nearly powerful enough on your own to !crush it.",
 		"adorned": "false",
 		"rarity": "princeps",
