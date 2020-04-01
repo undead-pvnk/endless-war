@@ -39,14 +39,7 @@ def poi_is_pvp(poi_name = None):
 	
 	return False
 
-"""
-	Returns true if the specified name is used by any POI.
-"""
-def channel_name_is_poi(channel_name):
-	if channel_name != None:
-		return channel_name in ewcfg.chname_to_poi
 
-	return False
 
 """
 	Returns data for POI if it isn't on the map.
@@ -736,7 +729,7 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
-	if channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	target_name = ewutils.flattenTokenListToString(cmd.tokens[1:])
@@ -892,6 +885,7 @@ async def move(cmd = None, isApt = False):
 				"You {} {}.".format(poi.str_enter, poi.str_name)
 			)
 		)
+		
 		try:
 			await cmd.client.delete_message(msg_walk_start)
 			await asyncio.sleep(30)
@@ -985,6 +979,9 @@ async def move(cmd = None, isApt = False):
 						)
 					)
 
+					# SWILLDERMUK
+					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
 						if len(ads) > 0:
@@ -1035,7 +1032,7 @@ async def teleport(cmd):
 	if cmd.tokens[0] == (ewcfg.cmd_prefix + 'blj'):
 		blj_used = True
 	
-	if channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	time_now = int(time.time())
@@ -1139,7 +1136,12 @@ async def teleport(cmd):
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
 				
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
-			return await resp_cont.post()
+			await resp_cont.post()
+
+			# SWILLDERMUK
+			await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+			
+			return
 		else:
 			mutation_data = EwMutation(id_user=user_data.id_user, id_server=user_data.id_server, id_mutation=ewcfg.mutation_id_quantumlegs)
 
@@ -1187,6 +1189,9 @@ async def teleport_player(cmd):
 		target_user.persist()
 		
 		response = "{} has been teleported to {}".format(target_player.display_name, new_poi.id_poi)
+		
+		await ewrolemgr.updateRoles(client = cmd.client, member = target)
+		
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
@@ -1196,7 +1201,7 @@ async def teleport_player(cmd):
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if channel_name_is_poi(cmd.message.channel.name):
+	if ewutils.channel_name_is_poi(cmd.message.channel.name):
 		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -1325,7 +1330,7 @@ async def scout(cmd):
 	user_data = EwUser(member=cmd.message.author)
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	
-	if channel_name_is_poi(cmd.message.channel.name) is False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) is False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)

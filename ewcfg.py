@@ -23,11 +23,12 @@ from ewapt import EwFurniture
 from ewworldevent import EwEventDef
 from ewdungeons import EwDungeonScene
 from ewtrauma import EwTrauma, EwHitzone
+from ewprank import EwPrankItem
 import ewdebug
 
 # Global configuration options.
 
-version = "v3.26i2"
+version = "v3.3i2-SWILLDERMUK"
 
 
 dir_msgqueue = 'msgqueue'
@@ -703,6 +704,8 @@ cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
+cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
+cmd_creategeneralitem = cmd_prefix + 'creategeneralitem'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -751,6 +754,12 @@ cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
 cmd_shamblestop = cmd_prefix + 'shamblestop'
 cmd_shambleleave = cmd_prefix + 'shambleleave'
+cmd_gambit = cmd_prefix + 'gambit'
+cmd_credence = cmd_prefix + 'credence'
+cmd_get_credence = cmd_prefix + 'getcredence'
+cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
+cmd_set_gambit = cmd_prefix + 'setgambit'
+cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1312,6 +1321,9 @@ emote_nlacakanm = "<:nlacakanm:499615025544298517>"
 emote_megaslime = "<:megaslime:436877747240042508>"
 emote_srs = "<:srs:631859962519224341>"
 emote_staydead = "<:sd:506840095714836480>"
+emote_janus1 = "<:janus1:694404178956779592>"
+emote_janus2 = "<:janus2:694404179342655518>"
+emote_masterpoudrin = "<:masterpoudrin:694788959418712114>"
 
 # Emotes for the negaslime writhe animation
 emote_vt = "<:vt:492067858160025600>"
@@ -1544,6 +1556,9 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_gambit = 'gambit'
+col_credence = 'credence'
+col_credence_used = 'credence_used'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1734,7 +1749,9 @@ leaderboard_slimernalia = "MOST FESTIVE"
 #INTERMISSION2
 leaderboard_degradation = "MOST DEGRADED"
 leaderboard_shamblers_killed = "MOST SHAMBLER KILLS"
-
+#SWILLDERKMUK
+leaderboard_gambit_high = "HIGHEST GAMBIT"
+leaderboard_gambit_low = "LOWEST GAMBIT"
 
 # leaderboard entry types
 entry_type_player = "player"
@@ -1918,6 +1935,7 @@ context_slimeoidheart = 'slimeoidheart'
 context_slimeoidbottle = 'slimeoidbottle'
 context_slimeoidfood = 'slimeoidfood'
 context_wrappingpaper = 'wrappingpaper'
+context_prankitem = 'prankitem'
 
 # Item vendor names.
 vendor_bar = 'bar'	#rate of non-mtn dew drinks are 100 slime to 9 hunger
@@ -1978,6 +1996,55 @@ item_id_dinoslimesteak = "dinoslimesteak"
 
 #SLIMERNALIA
 item_id_sigillaria = "sigillaria"
+
+#SWILLDERMUK
+# Instant use items
+item_id_creampie = "creampie"
+item_id_waterballoon = "waterbaloon"
+item_id_bungisbeam = "bungisbeam"
+item_id_circumcisionray = "circumcisionray"
+item_id_cumjar = "cumjar"
+item_id_discounttransbeam = "discounttransbeam"
+item_id_transbeamreplica = "transbeamreplica"
+item_id_bloodtransfusion = "bloodtransfusion"
+item_id_transformationmask = "transformationmask"
+item_id_emptychewinggumpacket = "emptychewinggumpacket"
+item_id_airhorn = "airhorn"
+# Response items
+item_id_chinesefingertrap = "chinesefingertrap"
+item_id_japanesefingertrap = "japanesefingertrap"
+item_id_sissyhypnodevice = "sissyhypnodevice"
+item_id_piedpiperkazoo = "piedpiperkazoo"
+item_id_sandpapergloves = "sandpapergloves"
+item_id_ticklefeather = "ticklefeather"
+item_id_genitalmutilationinstrument = "gentialmutilationinstrument"
+item_id_gamerficationasmr = "gamerficationasmr"
+item_id_beansinacan = "beansinacan"
+item_id_brandingiron = "brandingiron"
+item_id_lasso = "lasso"
+# Trap items
+item_id_whoopiecushion = "whoopiecushion"
+item_id_beartrap = "beartrap"
+item_id_bananapeel = "bananapeel"
+item_id_windupbox = "windupbox"
+item_id_windupchatterteeth = "windupchatterteeth"
+item_id_snakeinacan = "snakeinacan"
+item_id_landmine = "landmine"
+item_id_freeipad = "freeipad"
+item_id_perfectlynormalfood = "perfectlynormalfood"
+item_id_pitfall = "pitfall"
+item_id_electrocage = "electrocage"
+item_id_ironmaiden = "ironmaiden"
+
+prank_type_instantuse = 'instantuse'
+prank_type_response = 'response'
+prank_type_trap = 'trap'
+prank_rarity_heinous = 'heinous'
+prank_rarity_scandalous = 'scandalous'
+prank_rarity_forbidden = 'forbidden'
+prank_type_text_instantuse = '\n\nPrank Type: Instant Use - Good for hit-and-run tactics.'
+prank_type_text_response = '\n\nPrank Type: Response - Use it on an unsuspecting bystander.'
+prank_type_text_trap = '\n\nPrank Type: Trap - Lay it down in a district.'
 
 #candy ids
 item_id_paradoxchocs = "paradoxchocs"
@@ -2675,6 +2742,381 @@ item_list = [
 		price = 100000,
 		increase = slimeoid_stat_moxie,
 		decrease = slimeoid_stat_chutzpah,
+	),
+	EwPrankItem(
+		id_item=item_id_creampie,
+		str_name="Coconut Cream Pie",
+		str_desc="A coconut cream pie, perfect for creaming all over someone!" + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} throws a cream pie at your face! How embarrassing, yet tasty!",
+		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_waterballoon,
+		str_name="Water Balloon",
+		str_desc="A simple, yet effective water balloon. Aim for the groin for maximum effectiveness." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} throws a water balloon at your crotch. Haha, fucking piss your pants much?",
+		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_bungisbeam,
+		str_name="Bungis Beam",
+		str_desc="A high-tech futuristic ray gun, with the uncanny ability to turn someone into Sky (Bungis)... or so the legends say." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} shoots you with a Bungis Beam! Slowly but surely, you transmogrify into Sky (Bungis)!!",
+		rarity=prank_rarity_scandalous,
+		gambit=10,
+		side_effect="bungisbeam_effect",
+	),
+	EwPrankItem(
+		id_item=item_id_circumcisionray,
+		str_name="Circumcision Ray",
+		str_desc="A powerful surgical tool in the form of a handgun. You're not really sure how it works, but testing it out on yourself seems unwise." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} fires off a Circumcision Ray at your genitals! Oh god, **IT BURNS!!** What the fuck is wrong with them?",
+		rarity=prank_rarity_scandalous,
+		gambit=25,
+	),
+	EwPrankItem(
+		id_item=item_id_cumjar,
+		str_name="Cum Jar",
+		str_desc="A jar full of seminal fluid. You think you can spot what looks like a My Little Pony figurine on the inside." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} chucks a Cum Jar in your general direction! The sticky white stuff gets everywhere!!",
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+		side_effect="cumjar_effect",
+	),
+	EwPrankItem(
+		id_item=item_id_discounttransbeam,
+		str_name="Discount Trans Beam",
+		str_desc="A shitty knock-off of the real thing. Gotta work with the hand you're dealt, I guess." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} emits a Discount Trans Beam! You are imbued with a mild sense of gender dysphoria.",
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_transbeamreplica,
+		str_name="Trans Beam Replica",
+		str_desc="A scientifically perfected replica of the famous Trans Beam. Could SlimeCorp be responsible?" + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="***PSHOOOOOOOO!!!*** {} calls upon the all powerful **Trans Beam!** Your gender dysphoria levels are off the fucking charts!! You, dare I say it, might just be Transgendered now.",
+		rarity=prank_rarity_forbidden,
+		gambit=50,
+	),
+	EwPrankItem(
+		id_item=item_id_bloodtransfusion,
+		str_name="Blood Transfusion",
+		str_desc="A packet of unknown blood hooked up to a syringe. They'll never see it coming." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} stabs you with a syringe and performs a Blood Transfusion! Who knows what kind of fucked up diseases they just gave you?!",
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+	),
+	EwPrankItem(
+		id_item=item_id_transformationmask,
+		str_name="Transformation Mask",
+		str_desc="A mask used to transform into other people, somewhat visually reminiscent of the one used in The Mask (1994), starring Jim Carrey." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="***SSSSMMMMMMOOOOKKIIIN!!*** {} puts on their Transformation Mask and copies your likeness! While in disguise, they do all sorts of crazy, messed up shit and ruin your reputation completely!!",
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_emptychewinggumpacket,
+		str_name="Empty Chewing Packet",
+		str_desc="A packet of chewing gum, which, upon closer inspection, is completely empty. It's fool-proof, really." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} offers you a piece of Chewing Gum in these desperate times. HA, sike! The packet is completely empty, you fucking IDIOT!",
+		rarity=prank_rarity_heinous,
+		gambit=10,
+	),
+	EwPrankItem(
+		id_item=item_id_airhorn,
+		str_name="Air Horn",
+		str_desc="A device capable of deafening those who get too close to it." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} blasts an Air Horn and ruptures your eardrums! What an asshole!",
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_chinesefingertrap,
+		str_name="Chinese Finger Trap",
+		str_desc="An item of oriental origin. Wrap it around someone's finger to totally prank them!" + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! {} has ensnared you in a Chinese finger trap! Type **!loosenfinger** to escape!",
+		response_desc_1="You try to separate your fingers but they are truly trapped. Type **!loosenfinger** to untrap yourself.",
+		response_desc_2="The paper finger trap holds strong. Type **!loosenfinger** to break free.",
+		response_desc_3="You pull your fingers apart with all your might, but the finger trap only grips tighter. Typing **!loosenfinger** might loosen your finger and help you escape.",
+		response_desc_4="You surrender, resigning your fingers to be connected forever. You think about all the things you can still do with conjoined index fingers. You try to jack it but it doesn't quite work.",
+		response_command="loosenfinger",
+		rarity=prank_rarity_heinous,
+		gambit=2,
+	),
+	EwPrankItem(
+		id_item=item_id_japanesefingertrap,
+		str_name="Japanese Finger Trap",
+		str_desc="By all means it's an upgrade compared to the Chinese one. This one has barbs on the inside. Youch!" + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="気を付けて！ {}さんがあなたを日本の指トラップに捕らえました！ **!wigglefinger**タイプをする！",
+		response_desc_1="指が閉じ込められます。閉じ込められるように、**!wigglefinger**と入力します。",
+		response_desc_2="ペーパーフィンガートラップは強力です。 **!wigglefinger**と入力して自由にします。",
+		response_desc_3="機械翻訳施設に閉じ込められているのを助けてください **!wigglefinger**。",
+		response_desc_4="あなたは日本人になりました",
+		response_command="wigglefinger",
+		rarity=prank_rarity_scandalous,
+		gambit=4,
+	),
+	EwPrankItem(
+		id_item=item_id_sissyhypnodevice,
+		str_name="Sissy Hypno Device",
+		str_desc="A VR headset with some rather dubious content being broadcast to it. Yeah, you better save this for when the chips are down and you really wanna fuck someone's day up." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! When you weren't looking, {} slipped a sissy hypno device onto your head and tightened the straps! Type **!takeoffheadset** to get out of there before your mind becomes corrupted!",
+		response_desc_1="The sissy hypno device analyzes your brainwaves and finds you a perfect candidate to become a sissy. Type **!takeoffheadset** to stop the procedure.",
+		response_desc_2="Your grey matter is probed by the tendrils of the sissy hypno device. You are about to sustain permanant sissyfication. Type **!takeoffheadset** now.",
+		response_desc_3="You feel the sudden urge to don striped socks. **!takeoffheadset**.",
+		response_desc_4="You have been fully hypnotized and are now 100% a sissy. **!takeoffheadset** will not help you any longer.",
+		response_command="takeoffheadset",
+		rarity=prank_rarity_forbidden,
+		gambit=6,
+	),
+	EwPrankItem(
+		id_item=item_id_piedpiperkazoo,
+		str_name="Pied Piper Kazoo",
+		str_desc="A musical instrument capable of summoning a swarm of rodents! Let's see what kind of trouble this thing can get you into." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! {} has sicced their rats on you. Type **!runfromtherats** to run from the rats.",
+		response_desc_1="A rat peeks its head out of a nearby gutter and peers directly at you. You can get a headstart on him by typing **!runfromtherats**.",
+		response_desc_2="Three rats crawl out of a trashcan and attempt to block your way. You could probably step over them, if you type **!runfromtherats**.",
+		response_desc_3="About 15 or 16 rats encircle you. It looks grim, but you may still have a chance to **!runfromtherats**.",
+		response_desc_4="A rat runs up your pant leg and bites your taint. You stumble and fall into what can only be described as a sea of rats.",
+		response_command="runfromtherats",
+		rarity=prank_rarity_scandalous,
+		gambit=4,
+	),
+	EwPrankItem(
+		id_item=item_id_sandpapergloves,
+		str_name="Sandpaper Gloves",
+		str_desc="Gloves padded with sandpaper on the palms and fingers. Although it's capable of giving some real mean Indian burns, its slapping attacks are nothing to be scoffed at, either." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! {} approaches. It looks like they want a hi-five. Type **!dodgetheglove** to dodge their sandpaper glove.",
+		response_desc_1="You don't know them that well... they might just be waving at you. Type **!dodgetheglove** to try and avoid an awkward situation.",
+		response_desc_2="You raise your hand to wave back, but it seems they're waving at someone behind you. Type **!dodgetheglove** to sprint in the opposite direction as fast as possible.",
+		response_desc_3="They stop waving, but are still approaching you with -- what you can now see is a sandpaper glove -- outstretched. Type **!dodgetheglove** to dodge their hand, matrix-style.",
+		response_desc_4="{} reaches you, and slaps you across the face with their 80 grit, diamond powder, industry-standard sandpaper glove. It tears your facial dermis straight off.",
+		response_command="dodgetheglove",
+		rarity=prank_rarity_heinous,
+		gambit=3,
+	),
+	EwPrankItem(
+		id_item=item_id_ticklefeather,
+		str_name="Tickle Feather",
+		str_desc="A feather? For like, tickling people or some shit? Honestly, these pranks are starting to get a bit weird." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! Imminent tickling from {} approaching. Type **!dontlaugh** to not laugh.",
+		response_desc_1="aaahahaaha it tickles **!dontlaugh**",
+		response_desc_2="hehehehheh STOP **!dontlaugh**",
+		response_desc_3="AAAAAHHAHAHAHHAHHAAH **!dontlaugh** HHEJHJHHAHAHAHA!",
+		response_desc_4="OOOOOO OOOOO OOOO OOOOO OO OO O O O O OOO!",
+		response_command="dontlaugh",
+		rarity=prank_rarity_heinous,
+		gambit=2,
+	),
+	EwPrankItem(
+		id_item=item_id_genitalmutilationinstrument,
+		str_name="Genital Mutilation Instrument",
+		str_desc="A horrid, nightmarish mechanism which should have been hidden away off ages ago, but has somehow returned. Legends say the Double Headless Double Horseman had one in his possession." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="{} has your genitals in an iron grip! Type **!resisttorture** to minimize the extreme pain!",
+		response_desc_1="{} has your genitals in an iron grip! Type **!resisttorture** to minimize the extreme pain!",
+		response_desc_2="{} has your genitals in an iron grip! Type **!resisttorture** to minimize the extreme pain!",
+		response_desc_3="{} has your genitals in an iron grip! Type **!resisttorture** to minimize the extreme pain!",
+		response_desc_4="{} has your genitals in an iron grip! Type **!resisttorture** to minimize the extreme pain!",
+		response_command="resisttorture",
+		rarity=prank_rarity_forbidden,
+		gambit=7,
+	),
+	EwPrankItem(
+		id_item=item_id_gamerficationasmr,
+		str_name="Gamerfication ASMR",
+		str_desc="An incredibly long recording of some depraved hypnotization method. You wouldn't wish this kind of thing on your worst enemy." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! {} approaches you with a 10-hour YouTube video of Gamerification ASMR. Type **!closeyourears** to try not to listen.",
+		response_desc_1="woooOOOooo yooouuu are becooooming a gaaaamer. yoou playy temple ruuuun on the toiiiilet. **!closeyourears** to turn off the video.",
+		response_desc_2="ooooooo yoooou seeeee a csgo major at a bar and kiiiinda enjoooy iiiit. **!closeyourears** to stop the damage any further.",
+		response_desc_3="oooohhhhhh youuuuu plaaaaayyy dota 2 and flaaaame your teammates !votekick **!closeyourears**.",
+		response_desc_4="yooouu suudeenly waant too speeend eeight houurs debuuugiiinng skyriiim moooodsss oooOOOoooo.",
+		response_command="closeyourears",
+		rarity=prank_rarity_scandalous,
+		gambit=5,
+	),
+	EwPrankItem(
+		id_item=item_id_beansinacan,
+		str_name="Beans In A Can",
+		str_desc="A tin of beans. Warning: Place In A Microwave-Safe Container Before Heating." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! {} approches you with a can of Bush's Baked Beans in one hand, and a spoon in the other. They are making train noises. Type **!duckthebeans** to dodge the choo-choo.",
+		response_desc_1="You ate the entire can of baked beans, but {} pulls out another can. This time it's Pinto Beans in Liquid. **!duckthebeans** so you don't have to eat slimy beans.",
+		response_desc_2="You polish off another can of beans. {} pulls out an entire 8-layer Bean Dip and a bag of Tostito's. Honestly it looks pretty good, but you are full. Type **!duckthebeans** because you can't bear to eat anything more.",
+		response_desc_3="Now {} pulls out a baggie of Jelly Beans. You think it could be a nice desert. Maybe you don't want to **!duckthebeans** this time.",
+		response_desc_4="You finish off the Jelly Beans, but {} pulls out a handful of toe beans. It looks like they just poached them off a pack of furries. They still have hair on them. Absolutely disgusting.",
+		response_command="duckthebeans",
+		rarity=prank_rarity_scandalous,
+		gambit=4,
+	),
+	EwPrankItem(
+		id_item=item_id_brandingiron,
+		str_name="Branding Iron",
+		str_desc="A big, red hot iron used for branding cattle. Is this how we're doing !vouches nowawadays?" + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Oh no! {} lunges towards you with a white-hot branding iron. Type **!deflectthebrand** to attempt to knock it away.",
+		response_desc_1="{} jabs you with the white-hot brand. It's only one letter, any tattoo artist could work it into another word. They still looks angry, and the brand is still yellow hot, so you should probably try to **!deflectthebrand**.",
+		response_desc_2="{} drives the brand into you a few more times. It looks like they are trying to spell their name. Type **!deflectthebrand** before they can remember the last few letters.",
+		response_desc_3="At this point it looks like {} is using you like a loose-leaf paper. They are taking Social Studies notes using an orange-hot metal rod on your flesh. Type **!deflectthebrand** before they can get to your face.",
+		response_desc_4="You are fully covered in brands. You look like a human crossword puzzle, children run by and sharpie circles on you. You look down at your abdomen and notice a few choice epithets.",
+		response_command="deflectthebrand",
+		rarity=prank_rarity_scandalous,
+		gambit=3,
+	),
+	EwPrankItem(
+		id_item=item_id_lasso,
+		str_name="Lasso",
+		str_desc="A rope with a hoop tied at the end. You're reminded of Quickdraw Saloon, if only because of the blatantly out-of-place cowboy theming this item represents." + prank_type_text_response,
+		prank_type=prank_type_response,
+		prank_desc="Aw shucks! {} is wavin' their lasso high in the air! Type **!escapethelasso** to git on out of their, partner!",
+		response_desc_1="YEEHAW! {} lassos you up once! Type **!escapethelasso** and maybe you can walk away with your bounty intact!",
+		response_desc_2="YEEEEHAAW!! {} lassos you up twice! Type **!escapethelasso** to buck away that twine!",
+		response_desc_3="YEEEEEEHAAAW!!! {} lassos you up thrice! Holy hell, you're a goddamn rope mummy at this point, partner! Type **!escapethelasso** and maybe you can still *rope* your way out of this one!",
+		response_desc_4="YYYYYYYYEEEEEEEEHHHHHHHAAAAAAWWWWWWW!!!!! {} has made a lasso cocoon out of you! There's no way out!!",
+		response_command="escapethelasso",
+		rarity=prank_rarity_heinous,
+		gambit=2,
+	),
+	EwPrankItem(
+		id_item=item_id_whoopiecushion,
+		str_name="Whoopie Cushion",
+		str_desc="A classic tool of the pranking trade. You'd be surprised if anyone actually fell for it these days, though." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="You step on a Whoopie Cushion by mistake, emitting a noise most foul. Strangers and passersby look at you like you just shit your fucking pants.",
+		trap_chance=35,
+		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_beartrap,
+		str_name="Bear Trap",
+		str_desc="A hunk of metal jaws, with a trigger plate in the middle. Stepping on it would be a bad idea." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Oh fuck! You just stepped inside a bear trap! After several minutes of bleeding profusely, you manage to pry it open and lift out your numbed, chomped up ankle.!",
+		trap_chance=30,
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_bananapeel,
+		str_name="Banana Peel",
+		str_desc="A rotten leftover banana peel. God, can't people fucking clean up after themselves anymore?" + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="You slip and slide on a Banana Peel and land right on your tailbone! Oof, ouch, your bones!!",
+		trap_chance=35,
+		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_windupbox,
+		str_name="Wind-up Box",
+		str_desc="One of those old-timey toys that somehow manages to scare the living daylights out of you. It has a jester on the inside, who by all means takes great joy in your fear, and the fear of others." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="What's this? You find a box with a crank on the side... hey! When you crank it, it starts to play music! This is pretty co- AH JESUS FUCK!!",
+		trap_chance=35,
+		rarity=prank_rarity_scandalous,
+		gambit=25,
+	),
+	EwPrankItem(
+		id_item=item_id_windupchatterteeth,
+		str_name="Wind-up Chatter Teeth",
+		str_desc="A set of plastic teeth that chomp away the more you wind up the little dial on the side. It chugs along on a pair of feet while the gears inside tick away." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="OUCH!! What the fuck? A pair of Wind-up Chatter Teeth are nipping at your heels! Shoo, you fucking wannabe memorabilia!",
+		trap_chance=40,
+		rarity=prank_rarity_heinous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_snakeinacan,
+		str_name="Snake In A Can",
+		str_desc="An undeniable classic. Pop it open, and watch the color drain from some poor dim-wit's face as the vinyl-coated viper reaches for the skies." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="What the heck... no way! A can of peanuts! You just gotta unscrew the lid, and... ***!!!***\n\nAfter a brief lapse in consciousness, you awake to find yourself lying on the ground next to that shitty Snake In A Can you can't believe you fell for.",
+		trap_chance=30,
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_landmine,
+		str_name="Land Mine",
+		str_desc="A round metal plate, charged with explosives. These are normally only reserved for tanks, but during Swilldermuk, civilians have been given clearance to use them at their personal discretion.",
+		prank_type=prank_type_trap,
+		prank_desc="**HOLY FUCKING SHIT!!** You just stepped on a God damn Land Mine! The blast knocks you on your ass and fractures several bones in the lower half of your body. Haha, fucking pranked, bro!!",
+		trap_chance=40,
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_freeipad,
+		str_name="Free Ipad",
+		str_desc="A free iPad. On the back, there's a logo sticker for... Cinemassacre? Oh god, you better drop this thing before that cyborg puts you out of your misery." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc='Well what do ya know! A free iPad! You bend over to pick it up...\n\nENDLESS WAR judges you harshly! He shoots out two shots of a non-lethal variant of the Bone-hurting-beam, which is even more embarrassing than if he had just killed you, honestly. He told you to shut up, but you didn\'t listen.\n\n**"OH LOOK, A FREE IPAD."**',
+		trap_chance=35,
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_perfectlynormalfood,
+		str_name="Perfectly Normal Food",
+		str_desc="A plate of perfectly normal food, which in no way has been tampered with in any capacity" + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Oh damn! A plate of perfectly normal food? Well, what could be the harm in having a bite, you wonder... **COUGH COUGH COUGH** OH GOD IT'S LACED WITH RAT POISON!",
+		trap_chance=30,
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+	),
+	EwPrankItem(
+		id_item=item_id_pitfall,
+		str_name="Pitfall Trap",
+		str_desc="A round sphere, with an exclamation mark painted on. You don't really know how it works, but aparrently all you gotta do to set it up is dig a hole in the ground and throw it in." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Ah fuck! The ground caves underneath you, causing you to fall inside a Pitfall Trap! After a moment or two, you manage to climb back up out of the pit it so deviously hid from sight.",
+		trap_chance=40,
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_electrocage,
+		str_name="Electro Cage",
+		str_desc="A cage with iron bars that are hooked up to some kind of electrical current. Apparently they used to use these things at the Slime Circus, to keep all the beasts this thing housed tempered and in line." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Oh shit. Before you know it, you're 3 steps too far into an Electro Cage. The door locks behind you, and you're forced to endure an agonizing 1 Million Volt shock, with a decent amount of Amps to back it up. Incidentally, the overstimulation also forces you to vacate your bladder, worsening the embarrassment of the situation.",
+		trap_chance=40,
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+	),
+	EwPrankItem(
+		id_item=item_id_ironmaiden,
+		str_name="Iron Maiden",
+		str_desc="An ancient instrument of torture, in the form of a human-shaped closet with spears on the inside. Hauling it around is a pain in the fucking ass, so you hope someone at least gets tricked by it when the time comes." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Like a complete fucking dumbass, you walk into a nearby Iron Maiden, which closes shut behind you. The spikes impale you on every limb and into every orifice, causing the whole thing to get damn near coated in slime on the inside. Try taking your eyes off your phone for once, dummy!",
+		trap_chance=25,
+		rarity=prank_rarity_forbidden,
+		gambit=50,
 	),
 ]
 item_list += ewdebug.debugitem_set
@@ -6493,6 +6935,18 @@ food_list = [
 		str_eat = "*siiiiiip*, Ahhh, that's the stuff. You drink through the entire juice box in one go.",
 		str_desc = "A small rectangular box of apple juice. Suitable for children, and perhaps small slimeoids.",
 		vendors=[vendor_greencakecafe, vendor_beachresort, vendor_bar, vendor_pizzahut, vendor_kfc, vendor_tacobell]
+	),
+	EwFood(
+		id_food = "defectivecreampie",
+		alias = [
+			"defective",
+			"dfcp",
+		],
+		recover_hunger = 100,
+		str_name = "Defective Coconut Cream Pie",
+		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
+		str_desc = "A cream pie not even worth throwing at someone. This thing is practically spoiling away in your hands!",
+		acquisition = "swilldermuk"
 	)
 ]
 
@@ -15327,6 +15781,35 @@ for slimexodia in item_list:
 	else:
 		pass
 
+prank_items_heinous = [] # common
+prank_items_scandalous = [] # uncommon
+prank_items_forbidden = [] # rare
+swilldermuk_food = []
+
+# Gather all prank items
+for p in item_list:
+	if p.context == context_prankitem and p.rarity == prank_rarity_heinous:
+		prank_items_heinous.append(p)
+	else:
+		pass
+for p in item_list:
+	if p.context == context_prankitem and p.rarity == prank_rarity_scandalous:
+		prank_items_scandalous.append(p)
+	else:
+		pass
+for p in item_list:
+	if p.context == context_prankitem and p.rarity == prank_rarity_forbidden:
+		prank_items_forbidden.append(p)
+	else:
+		pass
+
+# Pity-pies will also spawn across the map.
+for p in food_list:
+	if p.acquisition == "swilldermuk":
+		swilldermuk_food.append(p)
+	else:
+		pass
+
 status_effect_type_miss = "miss"
 status_effect_type_crit = "crit"
 status_effect_type_damage = "dmg"
@@ -16725,3 +17208,9 @@ def set_client(cl):
 	client_ref = cl
 
 	return client_ref
+
+# scream = ""
+# for i in range(1, 10000):
+#     scream += "A"
+#     
+# print(scream)

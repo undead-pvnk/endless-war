@@ -451,6 +451,8 @@ cmd_map = {
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
+	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
+	ewcfg.cmd_creategeneralitem: ewcmd.create_general_item,
 	#ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
@@ -663,6 +665,14 @@ cmd_map = {
 	# Yo, Slimernalia
 	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
 	
+	# Swilldermuk
+	ewcfg.cmd_gambit: ewcmd.gambit,
+	ewcfg.cmd_credence: ewcmd.credence, #debug
+	ewcfg.cmd_get_credence: ewcmd.get_credence, #debug
+	ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
+	ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
+	ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
+	
 }
 
 debug = False
@@ -831,6 +841,9 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+		# SWILLDERMUK
+		asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
+		asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -1307,6 +1320,8 @@ async def on_message(message):
 					elif swear == "shit" and "shit" not in content_tolower:
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
+					elif swear == "fag" and "fag" not in content_tolower:
+						continue
 
 					for i in range(swear_count):
 						swear_multiplier += ewcfg.curse_words[swear]
@@ -1690,6 +1705,13 @@ async def on_message(message):
 				
 			market_data.persist()
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+			
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'postleaderboard'):
+			try:
+				for server in client.servers:
+					await ewleaderboard.post_leaderboards(client=client, server=server)
+			except:
+				pass
 			
 			
 		# didn't match any of the command words.

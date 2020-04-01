@@ -26,6 +26,7 @@ from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewitem import EwItem
+from ewprank import calculate_gambit_exchange
 
 TERMINATE = False
 DEBUG = False
@@ -43,10 +44,11 @@ active_trades = {}
 # Contains the items being offered by players
 trading_offers = {}
 
-# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc. 
+# Map of users to their target. This includes apartments, potential Russian Roulette players, potential Slimeoid Battle players, etc. For SWILLDERMUK, response item exchanges will occur here as well.
 active_target_map = {}
 # Map of users to their restriction level, typically in a mini-game. This prevents people from moving, teleporting, boarding, retiring, or suiciding in Russian Roulette/Duels
 active_restrictions = {}
+
 
 class Message:
 	# Send the message to this exact channel by name.
@@ -1640,6 +1642,223 @@ def sap_tick(id_server):
 				enemy_data.persist()
 	except:
 		logMsg("An error occured in sap tick for server {}".format(id_server))
+		
+async def spawn_prank_items_tick_loop(id_server):
+	#DEBUG
+	# interval = 10
+	
+	interval = 180
+	while not TERMINATE:
+		await asyncio.sleep(interval)
+		await spawn_prank_items(id_server = id_server)
+
+async def spawn_prank_items(id_server):
+	
+	try:
+		district_id = random.choice(ewcfg.capturable_districts)
+		
+		#Debug
+		#district_id = 'wreckington'
+		
+		district_channel_name = ewcfg.id_to_poi.get(district_id).channel
+		
+		client = get_client()
+		
+		server = client.get_server(id_server)
+	
+		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		
+		pie_or_prank = random.randrange(3)
+		
+		if pie_or_prank == 0:
+			swilldermuk_food_item = random.choice(ewcfg.swilldermuk_food)
+
+			item_props = ewitem.gen_item_props(swilldermuk_food_item)
+
+			swilldermuk_food_item_id = ewitem.item_create(
+				item_type=swilldermuk_food_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+
+			#print('{} with id {} spawned in {}!'.format(swilldermuk_food_item.str_name, swilldermuk_food_item_id, district_id))
+
+			response = "That smell... it's unmistakeable!! Someone's left a fresh {} on the ground!".format(swilldermuk_food_item.str_name)
+			await send_message(client, district_channel, response)
+		else:
+			rarity_roll = random.randrange(10)
+			
+			if rarity_roll > 3:
+				prank_item = random.choice(ewcfg.prank_items_heinous)
+			elif rarity_roll > 0:
+				prank_item = random.choice(ewcfg.prank_items_scandalous)
+			else:
+				prank_item = random.choice(ewcfg.prank_items_forbidden)
+				
+			#Debug
+			#prank_item = ewcfg.prank_items_heinous[1] # Chinese Finger Trap
+		
+			item_props = ewitem.gen_item_props(prank_item)
+		
+			prank_item_id = ewitem.item_create(
+				item_type=prank_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+		
+			# print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
+	
+			response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
+			await send_message(client, district_channel, response)
+
+	except:
+		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
+		
+async def generate_credence_tick_loop(id_server):
+	# DEBUG
+	# interval = 10
+	
+	while not TERMINATE:
+		interval = (random.randrange(121) + 120)  # anywhere from 2-4 minutes
+		await asyncio.sleep(interval)
+		await generate_credence(id_server)
+		
+async def generate_credence(id_server):
+	# print("CREDENCE GENERATED")
+	
+	if id_server != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+	
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
+				life_state = ewcfg.col_life_state,
+				poi = ewcfg.col_poi,
+				life_state_corpse = ewcfg.life_state_corpse,
+				life_state_kingpin = ewcfg.life_state_kingpin
+			), (
+				id_server,
+				ewcfg.capturable_districts,
+			))
+	
+			users = cursor.fetchall()
+	
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				added_credence = 0
+				lowered_credence_used = 0
+				
+				if user_data.credence >= 1000:
+					added_credence = 1 + random.randrange(5)
+				elif user_data.credence >= 500:
+					added_credence = 10 + random.randrange(41)
+				elif user_data.credence >= 100:
+					added_credence = 25 + random.randrange(76)
+				else:
+					added_credence = 50 + random.randrange(151)
+					
+				if user_data.credence_used > 0:
+					lowered_credence_used = int(user_data.credence_used/10)
+					
+					if lowered_credence_used == 1:
+						lowered_credence_used = 0
+						
+					user_data.credence_used = lowered_credence_used
+					
+				added_credence = max(0, added_credence - lowered_credence_used)
+				user_data.credence += added_credence
+					
+				user_data.persist()
+				
+	
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+			
+async def activate_trap_items(district, id_server, id_user):
+	# Return if --> User has 0 credence, there are no traps, or if the trap setter is the one who entered the district.
+	#print("TRAP FUNCTION")
+	
+	user_data = EwUser(id_user=id_user, id_server=id_server)
+	if user_data.credence == 0:
+		#print('no credence')
+		return
+	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		#print('get out ghosts reeeee!')
+		return
+	
+	try:
+		conn_info = databaseConnect()
+		conn = conn_info.get('conn')
+		cursor = conn.cursor();
+
+		district_channel_name = ewcfg.id_to_poi.get(district).channel
+
+		client = get_client()
+
+		server = client.get_server(id_server)
+
+		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		
+		searched_id = district + '_trap'
+		
+		cursor.execute("SELECT id_item, id_user FROM items WHERE id_user = %s AND id_server = %s".format(
+			id_item = ewcfg.col_id_item,
+			id_user = ewcfg.col_id_user
+		), (
+			searched_id,
+			id_server,
+		))
+
+		traps = cursor.fetchall()
+		
+		if len(traps) == 0:
+			#print('no traps')
+			return
+		
+		trap_used = traps[0]
+		
+		trap_id_item = trap_used[0]
+		#trap_id_user = trap_used[1]
+		
+		trap_item_data = EwItem(id_item=trap_id_item)
+		
+		trap_chance = int(trap_item_data.item_props.get('trap_chance'))
+		trap_user_id = trap_item_data.item_props.get('trap_user_id')
+		
+		if trap_user_id == user_data.id_user:
+			#print('trap same user id')
+			return
+		
+		if random.randrange(101) < trap_chance:
+			# Trap was triggered!
+			pranker_data = EwUser(id_user=trap_user_id, id_server=id_server)
+			pranked_data = user_data
+
+			response = trap_item_data.item_props.get('prank_desc')
+			
+			calculate_gambit_exchange(pranker_data, pranked_data, trap_item_data, trap_used=True)
+		else:
+			# Trap was a dud.
+			response = "Close call! You were just about to eat shit and fall right into someone's {}, but luckily, it was a dud.".format(trap_item_data.item_props.get('item_name'))
+		
+		ewitem.item_delete(trap_id_item)
+		
+	finally:
+		# Clean up the database handles.
+		cursor.close()
+		databaseClose(conn_info)
+		
+	player_data = EwPlayer(id_user=id_user)
+
+	# A bit dangerous. This is the only time player data is sent in to formatMessage rather than a member object. But it works nonetheless.
+	await send_message(client, district_channel, formatMessage(player_data, response))
 
 def check_fursuit_active(id_server):
 	market_data = EwMarket(id_server=id_server)
@@ -1812,3 +2031,12 @@ async def add_pvp_role(cmd = None):
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_rowdyfuckers_pvp])
 	elif ewcfg.role_juvenile in roles_map_user and ewcfg.role_juvenile_pvp not in roles_map_user:
 		await cmd.client.add_roles(member, cmd.roles_map[ewcfg.role_juvenile_pvp])
+		
+"""
+	Returns true if the specified name is used by any POI.
+"""
+def channel_name_is_poi(channel_name):
+	if channel_name != None:
+		return channel_name in ewcfg.chname_to_poi
+
+	return False
