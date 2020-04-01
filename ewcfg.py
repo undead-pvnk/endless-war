@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.26i2"
+version = "v3.3i2-SWILLDERMUK"
 
 
 dir_msgqueue = 'msgqueue'
