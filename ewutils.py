@@ -1789,6 +1789,10 @@ async def activate_trap_items(district, id_server, id_user):
 		#print('no credence')
 		return
 	
+	if user_data.life_state == ewcfg.life_state_corpse:
+		#print('get out ghosts reeeee!')
+		return
+	
 	try:
 		conn_info = databaseConnect()
 		conn = conn_info.get('conn')
