@@ -1719,9 +1719,9 @@ async def spawn_prank_items(id_server):
 async def generate_credence_tick_loop(id_server):
 	# DEBUG
 	# interval = 10
-
-	interval = random.randrange(121) + 180 # anywhere from 3-5 minutes
+	
 	while not TERMINATE:
+		interval = (random.randrange(121) + 120)  # anywhere from 2-4 minutes
 		await asyncio.sleep(interval)
 		await generate_credence(id_server)
 		
