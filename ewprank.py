@@ -1,9 +1,9 @@
-import asyncio
+#import asyncio
 
 import ewutils
 
 from ew import EwUser
-from ewplayer import EwPlayer
+#from ewplayer import EwPlayer
 
 """
 	Prank items for Swilldermuk
