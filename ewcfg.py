@@ -517,7 +517,7 @@ channel_apt_dreadford ="dreadford-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 
-
+channel_prankfeed = "prank-feed"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -1253,8 +1253,11 @@ time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or somethin
 time_pvp_duel = 3 * 60
 time_pvp_pride = 1 * 60
 
-# time to get kicked out of subzone
+# time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
+
+# For SWILLDERMUK, this isused to prevent AFK people from being pranked.
+time_afk_swilldermuk = 60 * 60 * 2 # 1 hours
 
 # time after coming online before you can act
 time_offline = 10
@@ -12984,7 +12987,7 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
-        EwCosmeticItem(
+    EwCosmeticItem(
 		id_cosmetic = "knightarmor",
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
@@ -12992,6 +12995,14 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
+	EwCosmeticItem(
+		id_cosmetic = "velcroshoes",
+		str_name = "Velcro Shoes",
+		str_desc = "Juveniles in the city always had a hard time tying their laces, so these stylish kicks are perfect for them.",
+		rarity = rarity_plebeian,
+		vendors = [vendor_bazaar],
+		price = 1000,
+	)
 ]
 
 

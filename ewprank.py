@@ -1,5 +1,5 @@
 #import asyncio
-
+import time
 import ewutils
 
 from ew import EwUser
@@ -83,6 +83,9 @@ class EwPrankItem:
 		self.acquisition = acquisition
 		self.vendors = vendors
 		
+response_timer = 6 # How long does it take for a response item to send out its attacks
+afk_timer = 60 * 60 * 2 # 2 hours
+		
 def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 0, trap_used = False):
 	pranker_credence = pranker_data.credence
 	pranked_credence = pranked_data.credence
@@ -140,6 +143,14 @@ async def prank_item_effect_instantuse(cmd, item):
 		if pranker_data.id_user == pranked_data.id_user:
 			response = "A bit masochistic, don't you think?"
 			return item_action, response, use_mention_displayname, side_effect
+		
+		if pranked_data.time_last_action < (int(time.time()) - afk_timer):
+			response = "Whoa whoa WHOA! Slow down there, big guy, this person's practically asleep! Where's the fun in pranking them right now, when you won't even be able to get a reaction out of them?\n**(Hint: {} is AFK! Try pranking someone else.)**".format(member.display_name)
+			return item_action, response, use_mention_displayname, side_effect
+		
+		if pranker_data.poi != pranked_data.poi:
+			response = "You need to be in the same place as your target to prank them with that item."
+			return item_action, response, use_mention_displayname, side_effect
 
 		if pranker_data.credence == 0 or pranked_data.credence == 0:
 			if pranker_data.credence == 0:
@@ -188,6 +199,10 @@ async def prank_item_effect_response(cmd, item):
 		
 		if pranker_data.id_user == pranked_data.id_user:
 			response = "A bit masochistic, don't you think?"
+			return item_action, response, use_mention_displayname, side_effect
+		
+		if pranked_data.time_last_action < (int(time.time()) - afk_timer):
+			response = "Whoa whoa WHOA! Slow down there, big guy, this person's practically asleep! Where's the fun in pranking them right now, when you won't even be able to get a reaction out of them?\n**(Hint: {} is AFK! Try pranking someone else.)**".format(member.display_name)
 			return item_action, response, use_mention_displayname, side_effect
 		
 		if pranker_data.poi != pranked_data.poi:
@@ -258,6 +273,9 @@ async def prank_item_effect_response(cmd, item):
 					pass
 				
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
+				prank_feed_channel = ewutils.get_channel(cmd.message.server, 'prank-feed')
+				await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
+
 				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
 				pranker_data = EwUser(member=cmd.message.author)
 				pranked_data = EwUser(member=member)
@@ -266,7 +284,7 @@ async def prank_item_effect_response(cmd, item):
 	
 				accepted = 0
 				try:
-					msg = await cmd.client.wait_for_message(timeout=3, author=member)
+					msg = await cmd.client.wait_for_message(timeout=response_timer, author=member)
 	
 					if msg != None:
 						if msg.content == "!" + response_command:

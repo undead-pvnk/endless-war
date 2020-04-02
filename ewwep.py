@@ -2372,7 +2372,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	district_data.persist()
 
-	# If an enemy is a raidboss or sandbag, announce that kill in the killfeed
+	# If an enemy is a raidboss, announce that kill in the killfeed
 	if was_killed and (enemy_data.enemytype in ewcfg.raid_bosses):
 		# announce raid boss kill in kill feed channel
 

@@ -1135,11 +1135,13 @@ async def item_use(cmd):
 						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
 						
 					if side_effect != "":
-			
 						response += await perform_prank_item_side_effect(cmd, side_effect)
 						
 					if item_action == "delete":
 						item_delete(item.id_item)
+						prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+						await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
+						
 					elif item_action == "drop":
 						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
 						#print(item.item_props)
@@ -1767,7 +1769,7 @@ async def perform_prank_item_side_effect(cmd, side_effect):
 				item_props=item_props,
 			)
 
-			response = "\n\nWhat's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly."
+			response = "\n\n*{}*: What's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly.".format(target_member.display_name)
 
 	return response
 
