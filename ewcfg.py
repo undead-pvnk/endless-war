@@ -12987,7 +12987,7 @@ cosmetic_items_list = [
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
 	),
-        EwCosmeticItem(
+    EwCosmeticItem(
 		id_cosmetic = "knightarmor",
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
@@ -12995,6 +12995,14 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
+	EwCosmeticItem(
+		id_cosmetic = "velcroshoes",
+		str_name = "Velcro Shoes",
+		str_desc = "Juveniles in the city always had a hard time tying their laces, so these stylish kicks are perfect for them.",
+		rarity = rarity_plebeian,
+		vendors = [vendor_bazaar],
+		price = 1000,
+	)
 ]
 
 
