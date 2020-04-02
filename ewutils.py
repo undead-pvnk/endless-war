@@ -1647,14 +1647,63 @@ async def spawn_prank_items_tick_loop(id_server):
 	#DEBUG
 	# interval = 10
 	
+	# If there are more active people, items spawn more frequently, and less frequently if there are less active people.
 	interval = 180
+	new_interval = 0
 	while not TERMINATE:
+		if new_interval > 0:
+			interval = new_interval
+			
+		#print("newinterval:{}".format(new_interval))
+		
 		await asyncio.sleep(interval)
-		await spawn_prank_items(id_server = id_server)
+		new_interval = await spawn_prank_items(id_server = id_server)
 
 async def spawn_prank_items(id_server):
+	new_interval = 0
+	base_interval = 60
 	
 	try:
+		active_users_count = 0
+
+		if id_server != None:
+			try:
+				conn_info = databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor();
+
+				cursor.execute(
+					"SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
+						life_state=ewcfg.col_life_state,
+						poi=ewcfg.col_poi,
+						life_state_corpse=ewcfg.life_state_corpse,
+						life_state_kingpin=ewcfg.life_state_kingpin,
+						time_last_action=ewcfg.col_time_last_action,
+					), (
+						id_server,
+						ewcfg.capturable_districts,
+						(int(time.time()) - ewcfg.time_kickout),
+					))
+
+				users = cursor.fetchall()
+
+				active_users_count = len(users)
+
+				conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				databaseClose(conn_info)
+		
+		# Avoid division by 0
+		if active_users_count == 0:
+			active_users_count = 1
+		else:
+			#print(active_users_count)
+			pass
+		
+		new_interval = (math.ceil(base_interval/active_users_count) * 5) # 5 active users = 1 minute timer, 10 = 30 second timer, and so on.
+		
 		district_id = random.choice(ewcfg.capturable_districts)
 		
 		#Debug
@@ -1716,6 +1765,8 @@ async def spawn_prank_items(id_server):
 	except:
 		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
 		
+	return new_interval
+		
 async def generate_credence_tick_loop(id_server):
 	# DEBUG
 	# interval = 10
@@ -1726,7 +1777,7 @@ async def generate_credence_tick_loop(id_server):
 		await generate_credence(id_server)
 		
 async def generate_credence(id_server):
-	# print("CREDENCE GENERATED")
+	#print("CREDENCE GENERATED")
 	
 	if id_server != None:
 		try:
@@ -1734,14 +1785,16 @@ async def generate_credence(id_server):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 	
-			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin})".format(
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
 				life_state = ewcfg.col_life_state,
 				poi = ewcfg.col_poi,
 				life_state_corpse = ewcfg.life_state_corpse,
-				life_state_kingpin = ewcfg.life_state_kingpin
+				life_state_kingpin = ewcfg.life_state_kingpin,
+				time_last_action = ewcfg.col_time_last_action,
 			), (
 				id_server,
 				ewcfg.capturable_districts,
+				(int(time.time()) - ewcfg.time_afk_swilldermuk),
 			))
 	
 			users = cursor.fetchall()
@@ -1783,6 +1836,7 @@ async def generate_credence(id_server):
 async def activate_trap_items(district, id_server, id_user):
 	# Return if --> User has 0 credence, there are no traps, or if the trap setter is the one who entered the district.
 	#print("TRAP FUNCTION")
+	trap_was_dud = False
 	
 	user_data = EwUser(id_user=id_user, id_server=id_server)
 	if user_data.credence == 0:
@@ -1846,6 +1900,7 @@ async def activate_trap_items(district, id_server, id_user):
 			calculate_gambit_exchange(pranker_data, pranked_data, trap_item_data, trap_used=True)
 		else:
 			# Trap was a dud.
+			trap_was_dud = True
 			response = "Close call! You were just about to eat shit and fall right into someone's {}, but luckily, it was a dud.".format(trap_item_data.item_props.get('item_name'))
 		
 		ewitem.item_delete(trap_id_item)
@@ -1859,6 +1914,16 @@ async def activate_trap_items(district, id_server, id_user):
 
 	# A bit dangerous. This is the only time player data is sent in to formatMessage rather than a member object. But it works nonetheless.
 	await send_message(client, district_channel, formatMessage(player_data, response))
+	
+	if not trap_was_dud:
+		client = get_client()
+		server = client.get_server(id_server)
+		
+		prank_feed_channel = get_channel(server, 'prank-feed')
+		
+		response += "\n`-------------------------`"
+		await send_message(client, prank_feed_channel, formatMessage(player_data, response))
+
 
 def check_fursuit_active(id_server):
 	market_data = EwMarket(id_server=id_server)

@@ -517,7 +517,7 @@ channel_apt_dreadford ="dreadford-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
 
-
+channel_prankfeed = "prank-feed"
 
 hideout_channels = [channel_rowdyroughhouse, channel_copkilltown]
 hideout_by_faction = {
@@ -1253,8 +1253,11 @@ time_pvp_knock = 1 * 60 #temp fix. will probably add spam prevention or somethin
 time_pvp_duel = 3 * 60
 time_pvp_pride = 1 * 60
 
-# time to get kicked out of subzone
+# time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
+
+# For SWILLDERMUK, this isused to prevent AFK people from being pranked.
+time_afk_swilldermuk = 60 * 60 * 2 # 1 hours
 
 # time after coming online before you can act
 time_offline = 10
