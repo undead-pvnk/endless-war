@@ -1771,6 +1771,17 @@ async def perform_prank_item_side_effect(cmd, side_effect):
 
 			response = "\n\n*{}*: What's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly.".format(target_member.display_name)
 
+	elif side_effect == "bensaintsign_effect":
+
+		target_member = cmd.mentions[0]
+		client = cmd.client
+		
+		new_nickname = 'Ben Saint'
+
+		await client.change_nickname(target_member, new_nickname)
+
+		response = "\n\nYou are now now {}.".format(target_member.display_name)
+	
 	return response
 
 
