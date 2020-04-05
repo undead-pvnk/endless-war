@@ -1857,6 +1857,8 @@ async def activate_trap_items(district, id_server, id_user):
 		client = get_client()
 
 		server = client.get_server(id_server)
+		
+		member = server.get_member(id_user)
 
 		district_channel = get_channel(server=server, channel_name=district_channel_name)
 		
@@ -1896,6 +1898,11 @@ async def activate_trap_items(district, id_server, id_user):
 			pranked_data = user_data
 
 			response = trap_item_data.item_props.get('prank_desc')
+
+			side_effect = trap_item_data.item_props.get('side_effect')
+
+			if side_effect != None:
+				response += await ewitem.perform_prank_item_side_effect(side_effect, member=member)
 			
 			calculate_gambit_exchange(pranker_data, pranked_data, trap_item_data, trap_used=True)
 		else:
@@ -1909,11 +1916,7 @@ async def activate_trap_items(district, id_server, id_user):
 		# Clean up the database handles.
 		cursor.close()
 		databaseClose(conn_info)
-		
-	player_data = EwPlayer(id_user=id_user)
-
-	# A bit dangerous. This is the only time player data is sent in to formatMessage rather than a member object. But it works nonetheless.
-	await send_message(client, district_channel, formatMessage(player_data, response))
+	await send_message(client, district_channel, formatMessage(member, response))
 	
 	if not trap_was_dud:
 		client = get_client()
@@ -1922,7 +1925,7 @@ async def activate_trap_items(district, id_server, id_user):
 		prank_feed_channel = get_channel(server, 'prank-feed')
 		
 		response += "\n`-------------------------`"
-		await send_message(client, prank_feed_channel, formatMessage(player_data, response))
+		await send_message(client, prank_feed_channel, formatMessage(member, response))
 
 
 def check_fursuit_active(id_server):

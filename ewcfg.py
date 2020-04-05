@@ -2029,6 +2029,7 @@ item_id_beansinacan = "beansinacan"
 item_id_brandingiron = "brandingiron"
 item_id_lasso = "lasso"
 item_id_fakecandy = "fakecandy"
+item_id_crabarmy = "crabarmy"
 # Trap items
 item_id_whoopiecushion = "whoopiecushion"
 item_id_beartrap = "beartrap"
@@ -2046,7 +2047,7 @@ item_id_ironmaiden = "ironmaiden"
 item_id_signthatmakesyoubensaint = "signthatmakesyoubensaint"
 item_id_piebomb = "piebomb"
 item_id_defectivealarmclock = "defectivealarmclock"
-item_id_faketunnel = "faketunnel"
+item_id_alligatortoy = "alligatortoy"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -2857,6 +2858,34 @@ item_list = [
 		gambit=20,
 	),
 	EwPrankItem(
+		id_item=item_id_banggun,
+		str_name="BANG! Gun",
+		str_desc="A firearm that shoots out a tiny little flag. Also capable of shooting real bullets." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} points a gun at your! Oh, haha, it just shoots out a little flag with the word 'BANG!' on it, how cu-\n\n**The gun then ejects the flag and fires a bullet right into your foot.**",
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_pranknote,
+		str_name="Prank Note",
+		str_desc="A mysterious notebook. It's said that if you write someone's name down in it, they get pranked hardcore.",
+		prank_type=prank_type_instantuse,
+		prank_desc="{} writes your name down in the Prank Note! You are almost instantly assaulted by a barrage of cream pies, water baloons, and air horns! Holy fucking shit!!",
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_bodynotifier,
+		str_name="Body Notifier",
+		str_desc="An item that notifies someone of their basic bodily functions.",
+		prank_type=prank_type_instantuse,
+		prank_desc="{} notifies you of your basic bodily functions.",
+		rarity=prank_rarity_heinous,
+		gambit=15,
+		side_effect="bodynotifier_effect"
+	),
+	EwPrankItem(
 		id_item=item_id_chinesefingertrap,
 		str_name="Chinese Finger Trap",
 		str_desc="An item of oriental origin. Wrap it around someone's finger to totally prank them!" + prank_type_text_response,
@@ -3009,6 +3038,34 @@ item_list = [
 		response_command="escapethelasso",
 		rarity=prank_rarity_heinous,
 		gambit=2,
+	),
+	EwPrankItem(
+		id_item=item_id_fakecandy,
+		str_name="Fake Candy",
+		str_desc="A bag of fake candy, disguised as candy from last year's Double Halloween",
+		prank_type=prank_type_response,
+		prank_desc="You see a bag of candy lying on the ground. Neaby, you can see {} cackling to themselves like a madman. Maybe it's best to **!ignorethecandy**.",
+		response_desc_1="You scoop up the bag and ingest its contents instead. Yuck! These taste awful! Another bag of candy dropped close by catches your attention. **!ignorethecandy**.",
+		response_desc_2="You eat the next bag of candy, which tastes even worse than the previous! Seriously, maybe you should stop being retarded and **!ignorethecandy**.",
+		response_desc_3="You eat the third bag of candy in a row. Oh jesus fucking christ, you just cant help yourself at this point, and gobble up the awful confectionary without a second thought. Maybe it's time to **!ignorethecandy**.",
+		response_desc_4="You eat the last and final bag of candy. They taste like literal dogshit. What the fuck were you thinking?",
+		response_command="ignorethecandy",
+		rarity=prank_rarity_heinous,
+		gambit=2,
+	),
+	EwPrankItem(
+		id_item=item_id_crabarmy,
+		str_name="Crab Army",
+		str_desc="An army of crabs, ready to be snip and snap at will.",
+		prank_type=prank_type_response,
+		prank_desc="{} calls forth their Crab Army, and directs it towards you! Oh man, you better type **!jumpovercrabs** before it's too late!",
+		response_desc_1="A lonesome crab snips and snaps at your leg! Ow, the pain is just brutal! Others are skittering closely behind, type **!jumpovercrabs**.",
+		response_desc_2="A few more crabs come and attack your sides! Oh god! You gotta get these things off of you and **!jumpovercrabs** fast to make sure no more can latch on!!",
+		response_desc_3="Five or six more crabs grab on with their snippers and squeeze tightly against your arms and face. Despite everything, it's still you. With determination in hand, maybe you can **!jumpovercrabs** and escape them before they clutch victory in their crustacean appendages.",
+		response_desc_4="It's too late to **!jumpovercrabs** now. In light of their overwhelming victory against you, they hold a celebratory rave. The music they play, you will not soon forget.",
+		response_command="jumpovercrabs",
+		rarity=prank_rarity_scandalous,
+		gambit=4
 	),
 	EwPrankItem(
 		id_item=item_id_whoopiecushion,
@@ -3170,7 +3227,18 @@ item_list = [
 		trap_chance=35,
 		rarity=prank_rarity_forbidden,
 		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_alligatortoy,
+		str_name="Alligator Toy",
+		str_desc="A toy alligator, where the objective is to brush its teeth without tripping its jaws. The top jaw on this one is mysteriously outfitted with razor blades instead of plastic, however.",
+		prank_type=prank_type_trap,
+		prank_desc='Oh hey! A toy alligator! You had so much fun with these as a kid! You just gotta press on the teeth in the right combination, and...\nOH JESUS CHRIST, THE RAZOR BLADES HIDDEN INSIDE BURY THEMSELVES INTO YOUR HAND!!',
+		trap_chance=35,
+		rarity=prank_rarity_heinous,
+		gambit=20,
 	)
+	
 ]
 item_list += ewdebug.debugitem_set
 
