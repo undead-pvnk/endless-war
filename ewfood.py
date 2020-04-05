@@ -328,7 +328,11 @@ async def order(cmd):
 					# and 4 times as much for enemy gangsters
 					elif user_data.faction != "":
 						value *= 4
-
+				
+				# Raise the price for togo ordering. This gets lowered back down later if someone does togo ordering on a non-food item by mistake.
+				if togo:
+					value *= 1.5
+					
 				value = int(value)
 
 				food_ordered = False
@@ -366,7 +370,7 @@ async def order(cmd):
 							response = "You can't order anything for them because they aren't here!"
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-						if len(food_items) >= user_data.get_food_capacity() and target_data != None and togo:
+						if len(food_items) >= user_data.get_food_capacity() and target_data == None and togo:
 							# user_data never got persisted so the player won't lose money unnecessarily
 							response = "You can't carry any more food than that."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -413,8 +417,9 @@ async def order(cmd):
 							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-					if food_ordered and togo:
-						value = int(value*1.5)
+					# Only food should have the value multiplied. If someone togo orders a non-food item by mistake, lower it back down.
+					if not food_ordered and togo:
+						value = int(value/1.5)
 
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 

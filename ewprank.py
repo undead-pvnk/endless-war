@@ -83,6 +83,88 @@ class EwPrankItem:
 		self.acquisition = acquisition
 		self.vendors = vendors
 		
+# A bit of a hack, but at the time I couldn't really import ewcfg without causing other issues, so here these go. 
+# It's really the only place they get used anyways.
+
+#SWILLDERMUK
+col_id_user_pranker = 'id_user_pranker'
+col_id_user_pranked = 'id_user_pranked'
+col_prank_count = 'prank_count'
+col_id_server = 'id_server'
+		
+class PrankIndex:
+	id_server = ""
+	id_user_pranker = ""
+	id_user_pranked = ""
+	prank_count = 0 # How many times has user 1 (pranker) pranked user 2 (pranked)?
+	
+	def __init__(
+		self,
+		id_server = "",
+		id_user_pranker = "",
+		id_user_pranked = "",
+		prank_count = 0,
+	):
+		self.id_server = id_server
+		self.id_user_pranker = id_user_pranker
+		self.id_user_pranked = id_user_pranked
+		self.prank_count = prank_count
+
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			# Retrieve object
+			cursor.execute("SELECT {count} FROM swilldermuk_prank_index WHERE {id_user_pranker} = %s AND {id_user_pranked} = %s AND {id_server} = %s".format(
+				count=col_prank_count,
+				id_user_pranker=col_id_user_pranker,
+				id_user_pranked=col_id_user_pranked,
+				id_server=col_id_server,
+			), (
+				self.id_user_pranker,
+				self.id_user_pranked,
+				self.id_server,
+			))
+			result = cursor.fetchone();
+
+			if result != None:
+				# Record found: apply the data to this object.
+				self.prank_count = result[0]
+
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+
+	def persist(self):
+		try:
+			conn_info = ewutils.databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor()
+
+			# Save the object.
+			cursor.execute(
+				"REPLACE INTO swilldermuk_prank_index({}, {}, {}, {}) VALUES(%s, %s, %s, %s)".format(
+					col_id_server,
+					col_id_user_pranker,
+					col_id_user_pranked,
+					col_prank_count,
+				), (
+					self.id_server,
+					self.id_user_pranker,
+					self.id_user_pranked,
+					self.prank_count,
+				))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			ewutils.databaseClose(conn_info)
+			
+	
+		
 response_timer = 6 # How long does it take for a response item to send out its attacks
 afk_timer = 60 * 60 * 2 # 2 hours
 		
@@ -112,6 +194,27 @@ def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_mu
 		pranked_data.credence = 0
 	else:
 		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
+		
+	# Masochism is not to be encouraged. The more someone has been pranked, the less gambit is generated in the exchange.
+	current_prank_index = PrankIndex(pranker_data.id_user, pranked_data.id_user, pranker_data.id_server)
+	
+	#print(total_gambit_value)
+	
+	current_count = current_prank_index.prank_count
+	
+	#print(current_count)
+	
+	if current_prank_index != None:
+		if current_count > 0:
+			total_gambit_value_modifier = (int(current_count/3) + 1)
+			total_gambit_value = int(total_gambit_value/total_gambit_value_modifier)
+			
+			#print(total_gambit_value_modifier)
+			
+	#print(total_gambit_value)
+			
+	current_prank_index.prank_count += 1
+	current_prank_index.persist()
 	
 	pranker_data.credence_used += total_gambit_value
 	pranked_data.credence_used += total_gambit_value

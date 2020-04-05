@@ -1129,13 +1129,16 @@ async def item_use(cmd):
 				else:
 					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
 						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+						if side_effect != "":
+							response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
+							
 					elif item.item_props['prank_type'] == ewcfg.prank_type_response:
 						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+						if side_effect != "":
+							response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
+							
 					elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
 						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
-						
-					if side_effect != "":
-						response += await perform_prank_item_side_effect(cmd, side_effect)
 						
 					if item_action == "delete":
 						item_delete(item.id_item)
@@ -1726,7 +1729,7 @@ def surrendersoul(giver = None, receiver = None, id_server=None):
 			return item_id
 
 # SWILLDERMUK
-async def perform_prank_item_side_effect(cmd, side_effect):
+async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
 	response = ""
 	
 	if side_effect == "bungisbeam_effect":
@@ -1770,6 +1773,26 @@ async def perform_prank_item_side_effect(cmd, side_effect):
 			)
 
 			response = "\n\n*{}*: What's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly.".format(target_member.display_name)
+
+	elif side_effect == "bensaintsign_effect":
+
+		target_member = member
+		client = ewutils.get_client()
+		
+		new_nickname = 'Ben Saint'
+
+		await client.change_nickname(target_member, new_nickname)
+
+		response = "\n\nYou are now Ben Saint.".format(target_member.display_name)
+		
+	elif side_effect == "bodynotifier_effect":
+		target_member = cmd.mentions[0]
+		
+		direct_message = "You are now manually breathing.\nYou are now manually blinking.\nYour tounge is now uncomfortable inside your mouth.\nYou just lost THE GAME."
+		try:
+			await ewutils.send_message(cmd.client, target_member, direct_message)
+		except:
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
 
 	return response
 

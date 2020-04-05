@@ -445,3 +445,12 @@ CREATE TABLE book_sales (
 
     PRIMARY KEY (id_book, id_server, id_user)
 );
+
+CREATE TABLE swilldermuk_prank_index (
+    id_server varchar(128) NOT NULL,
+    id_user_pranker varchar(128) NOT NULL,
+    id_user_pranked varchar(128) NOT NULL,
+    prank_count int NOT NULL DEFAULT '0',
+    
+    PRIMARY KEY (id_user_pranker, id_user_pranked)
+);

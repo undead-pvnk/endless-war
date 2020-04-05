@@ -2013,6 +2013,9 @@ item_id_bloodtransfusion = "bloodtransfusion"
 item_id_transformationmask = "transformationmask"
 item_id_emptychewinggumpacket = "emptychewinggumpacket"
 item_id_airhorn = "airhorn"
+item_id_banggun = "banggun"
+item_id_pranknote = "pranknote"
+item_id_bodynotifier = "bodynotifier"
 # Response items
 item_id_chinesefingertrap = "chinesefingertrap"
 item_id_japanesefingertrap = "japanesefingertrap"
@@ -2025,6 +2028,8 @@ item_id_gamerficationasmr = "gamerficationasmr"
 item_id_beansinacan = "beansinacan"
 item_id_brandingiron = "brandingiron"
 item_id_lasso = "lasso"
+item_id_fakecandy = "fakecandy"
+item_id_crabarmy = "crabarmy"
 # Trap items
 item_id_whoopiecushion = "whoopiecushion"
 item_id_beartrap = "beartrap"
@@ -2034,10 +2039,15 @@ item_id_windupchatterteeth = "windupchatterteeth"
 item_id_snakeinacan = "snakeinacan"
 item_id_landmine = "landmine"
 item_id_freeipad = "freeipad"
+item_id_freeipad_alt = "freeipad_alt"
 item_id_perfectlynormalfood = "perfectlynormalfood"
 item_id_pitfall = "pitfall"
 item_id_electrocage = "electrocage"
 item_id_ironmaiden = "ironmaiden"
+item_id_signthatmakesyoubensaint = "signthatmakesyoubensaint"
+item_id_piebomb = "piebomb"
+item_id_defectivealarmclock = "defectivealarmclock"
+item_id_alligatortoy = "alligatortoy"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -2804,8 +2814,8 @@ item_list = [
 	),
 	EwPrankItem(
 		id_item=item_id_transbeamreplica,
-		str_name="Trans Beam Replica",
-		str_desc="A scientifically perfected replica of the famous Trans Beam. Could SlimeCorp be responsible?" + prank_type_text_instantuse,
+		str_name="Legally Distinct Trans Beam Replica",
+		str_desc="A scientifically perfected replica of the famous Trans Beam. Could SlimeCorp be responsible?\n\n**THIS IS A LEGALLY DISTINCT VERSION OF THE TRANS BEAM. IT IS IN NO WAY AN ACT OF PLAGIARISM AGAINST PARADOX CROCS OR THE PARADOX CROCS FAN CLUB TREEHOUSE LLC**" + prank_type_text_instantuse,
 		prank_type=prank_type_instantuse,
 		prank_desc="***PSHOOOOOOOO!!!*** {} calls upon the all powerful **Trans Beam!** Your gender dysphoria levels are off the fucking charts!! You, dare I say it, might just be Transgendered now.",
 		rarity=prank_rarity_forbidden,
@@ -2846,6 +2856,34 @@ item_list = [
 		prank_desc="{} blasts an Air Horn and ruptures your eardrums! What an asshole!",
 		rarity=prank_rarity_heinous,
 		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_banggun,
+		str_name="BANG! Gun",
+		str_desc="A firearm that shoots out a tiny little flag. Also capable of shooting real bullets." + prank_type_text_instantuse,
+		prank_type=prank_type_instantuse,
+		prank_desc="{} points a gun at your! Oh, haha, it just shoots out a little flag with the word 'BANG!' on it, how cu-\n\n**The gun then ejects the flag and fires a bullet right into your foot.**",
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	),
+	EwPrankItem(
+		id_item=item_id_pranknote,
+		str_name="Prank Note",
+		str_desc="A mysterious notebook. It's said that if you write someone's name down in it, they get pranked hardcore.",
+		prank_type=prank_type_instantuse,
+		prank_desc="{} writes your name down in the Prank Note! You are almost instantly assaulted by a barrage of cream pies, water baloons, and air horns! Holy fucking shit!!",
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_bodynotifier,
+		str_name="Body Notifier",
+		str_desc="An item that notifies someone of their basic bodily functions.",
+		prank_type=prank_type_instantuse,
+		prank_desc="{} notifies you of your basic bodily functions.",
+		rarity=prank_rarity_heinous,
+		gambit=15,
+		side_effect="bodynotifier_effect"
 	),
 	EwPrankItem(
 		id_item=item_id_chinesefingertrap,
@@ -3002,6 +3040,34 @@ item_list = [
 		gambit=2,
 	),
 	EwPrankItem(
+		id_item=item_id_fakecandy,
+		str_name="Fake Candy",
+		str_desc="A bag of fake candy, disguised as candy from last year's Double Halloween",
+		prank_type=prank_type_response,
+		prank_desc="You see a bag of candy lying on the ground. Neaby, you can see {} cackling to themselves like a madman. Maybe it's best to **!ignorethecandy**.",
+		response_desc_1="You scoop up the bag and ingest its contents instead. Yuck! These taste awful! Another bag of candy dropped close by catches your attention. **!ignorethecandy**.",
+		response_desc_2="You eat the next bag of candy, which tastes even worse than the previous! Seriously, maybe you should stop being retarded and **!ignorethecandy**.",
+		response_desc_3="You eat the third bag of candy in a row. Oh jesus fucking christ, you just cant help yourself at this point, and gobble up the awful confectionary without a second thought. Maybe it's time to **!ignorethecandy**.",
+		response_desc_4="You eat the last and final bag of candy. They taste like literal dogshit. What the fuck were you thinking?",
+		response_command="ignorethecandy",
+		rarity=prank_rarity_heinous,
+		gambit=2,
+	),
+	EwPrankItem(
+		id_item=item_id_crabarmy,
+		str_name="Crab Army",
+		str_desc="An army of crabs, ready to be snip and snap at will.",
+		prank_type=prank_type_response,
+		prank_desc="{} calls forth their Crab Army, and directs it towards you! Oh man, you better type **!jumpovercrabs** before it's too late!",
+		response_desc_1="A lonesome crab snips and snaps at your leg! Ow, the pain is just brutal! Others are skittering closely behind, type **!jumpovercrabs**.",
+		response_desc_2="A few more crabs come and attack your sides! Oh god! You gotta get these things off of you and **!jumpovercrabs** fast to make sure no more can latch on!!",
+		response_desc_3="Five or six more crabs grab on with their snippers and squeeze tightly against your arms and face. Despite everything, it's still you. With determination in hand, maybe you can **!jumpovercrabs** and escape them before they clutch victory in their crustacean appendages.",
+		response_desc_4="It's too late to **!jumpovercrabs** now. In light of their overwhelming victory against you, they hold a celebratory rave. The music they play, you will not soon forget.",
+		response_command="jumpovercrabs",
+		rarity=prank_rarity_scandalous,
+		gambit=4
+	),
+	EwPrankItem(
 		id_item=item_id_whoopiecushion,
 		str_name="Whoopie Cushion",
 		str_desc="A classic tool of the pranking trade. You'd be surprised if anyone actually fell for it these days, though." + prank_type_text_trap,
@@ -3016,7 +3082,7 @@ item_list = [
 		str_name="Bear Trap",
 		str_desc="A hunk of metal jaws, with a trigger plate in the middle. Stepping on it would be a bad idea." + prank_type_text_trap,
 		prank_type=prank_type_trap,
-		prank_desc="Oh fuck! You just stepped inside a bear trap! After several minutes of bleeding profusely, you manage to pry it open and lift out your numbed, chomped up ankle.!",
+		prank_desc="Oh fuck! You just stepped inside a bear trap! After several minutes of bleeding profusely, you manage to pry it open and lift out your numbed, chomped up ankle!",
 		trap_chance=30,
 		rarity=prank_rarity_heinous,
 		gambit=20,
@@ -3121,6 +3187,58 @@ item_list = [
 		rarity=prank_rarity_forbidden,
 		gambit=50,
 	),
+	EwPrankItem(
+		id_item=item_id_signthatmakesyoubensaint,
+		str_name="Sign That Makes You Ben Saint When You Read It",
+		str_desc="An otherworldy artifact. Has the fantastical effect of transforming someone into Ben Saint, should they trigger its effects by reading what it says." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Hey, there's a sign over in the distance. You squint to make out what it says... Oh no! Upon closer inspection, it's a Sign That Makes You Ben Saint When You Read It!",
+		trap_chance=50,
+		rarity=prank_rarity_forbidden,
+		gambit=15,
+		side_effect = "bensaintsign_effect"
+	),
+	EwPrankItem(
+		id_item=item_id_piebomb,
+		str_name="Pie Bomb",
+		str_desc="A bomb cleverly disguised as a Defective Coconut Cream Pie." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="Oh sweet! Another Defective Coconut Cream Pie for the taking!\n**BOOM!**\nAw man, someone set up a Pie Bomb and got you good!",
+		trap_chance=30,
+		rarity=prank_rarity_scandalous,
+		gambit=30,
+	),
+	EwPrankItem(
+		id_item=item_id_defectivealarmclock,
+		str_name="Defective Alarm Clock",
+		str_desc="A factory-rejected Alarm Clock. This thing just won't stop fucking beeping at you!!" + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc="BLAAAP BLAAAP BLAAAP BLAAAP BLAAAP\nBLAAAP BLAAAP BLAAAP BLAAAP BLAAAP\nBLAAAP BLAAAP BLAAAP BLAAAP BLAAAP\nBLAAAP BLAAAP BLAAAP BLAAAP BLAAAP\nBLAAAP BLAAAP BLAAAP BLAAAP BLAAAP\nYou crush the Defective Alarm Clock with your bare hands. Good fucking riddance.",
+		trap_chance=40,
+		rarity=prank_rarity_scandalous,
+		gambit=15,
+	),
+	EwPrankItem(
+		id_item=item_id_freeipad_alt,
+		str_name="Free Ipad...?",
+		str_desc="A free iPad. On the back, there's a logo sticker for... Cinemassacre? Oh god, you better drop this thing before that android puts you out of your misery." + prank_type_text_trap,
+		prank_type=prank_type_trap,
+		prank_desc='Well what do ya know! A free iPad! You bend over to pick it up...\n\nENDLESS WAR judges you harshly! He shoots out two shots of a non-lethal variant of the Bone-hurting-beam, which is even more embarrassing than if he had just killed you, honestly. He told you to shut up, but you didn\'t listen.\n\n**"It always... ends like this..."**\n\n**"OH LOOK, A FREE IPAD."**',
+		trap_chance=35,
+		rarity=prank_rarity_forbidden,
+		gambit=45,
+	),
+	EwPrankItem(
+		id_item=item_id_alligatortoy,
+		str_name="Alligator Toy",
+		str_desc="A toy alligator, where the objective is to brush its teeth without tripping its jaws. The top jaw on this one is mysteriously outfitted with razor blades instead of plastic, however.",
+		prank_type=prank_type_trap,
+		prank_desc='Oh hey! A toy alligator! You had so much fun with these as a kid! You just gotta press on the teeth in the right combination, and...\nOH JESUS CHRIST, THE RAZOR BLADES HIDDEN INSIDE BURY THEMSELVES INTO YOUR HAND!!',
+		trap_chance=35,
+		rarity=prank_rarity_heinous,
+		gambit=20,
+	)
+	
 ]
 item_list += ewdebug.debugitem_set
 
@@ -6945,7 +7063,7 @@ food_list = [
 			"defective",
 			"dfcp",
 		],
-		recover_hunger = 100,
+		recover_hunger = 1000,
 		str_name = "Defective Coconut Cream Pie",
 		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
 		str_desc = "A cream pie not even worth throwing at someone. This thing is practically spoiling away in your hands!",
