@@ -12,6 +12,7 @@ import ewdistrict
 import ewrolemgr
 import ewsmelting
 import ewprank
+import ewdebug
 
 from ew import EwUser
 from ewplayer import EwPlayer
@@ -1148,6 +1149,13 @@ async def item_use(cmd):
 					elif item_action == "drop":
 						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
 						#print(item.item_props)
+					
+			elif context == "swordofseething":
+
+				item_delete(item.id_item)
+				await ewdebug.begin_cataclysm(user_data)
+				
+				response = ewdebug.last_words
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

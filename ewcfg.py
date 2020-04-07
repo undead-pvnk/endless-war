@@ -706,6 +706,7 @@ cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_creategeneralitem = cmd_prefix + 'creategeneralitem'
+cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
 cmd_discard_alt1 = cmd_prefix + 'drop'
@@ -870,7 +871,7 @@ cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
 cmd_debug4 = cmd_prefix + ewdebug.cmd_debug4
-debug5 = ewdebug.debug5
+#debug5 = ewdebug.debug5
 cmd_debug6 = cmd_prefix + ewdebug.cmd_debug6
 cmd_debug7 = cmd_prefix + ewdebug.cmd_debug7
 cmd_debug8 = cmd_prefix + ewdebug.cmd_debug8
@@ -952,7 +953,7 @@ offline_cmds = [
 	cmd_survey,
 	cmd_scout,
 	cmd_scout_alt1,
-	cmd_scrutinize
+	# cmd_scrutinize
 ]
 
 # Slime costs/values
@@ -2048,6 +2049,8 @@ item_id_signthatmakesyoubensaint = "signthatmakesyoubensaint"
 item_id_piebomb = "piebomb"
 item_id_defectivealarmclock = "defectivealarmclock"
 item_id_alligatortoy = "alligatortoy"
+item_id_janusmask = "janusmask"
+item_id_swordofseething = "swordofseething"
 
 prank_type_instantuse = 'instantuse'
 prank_type_response = 'response'
@@ -3237,12 +3240,17 @@ item_list = [
 		trap_chance=35,
 		rarity=prank_rarity_heinous,
 		gambit=20,
+	),
+	EwGeneralItem(
+		id_item=item_id_swordofseething,
+		str_name="SWORD OF SEETHING",
+		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
+		context="swordofseething",
 	)
-	
 ]
-item_list += ewdebug.debugitem_set
+#item_list += ewdebug.debugitem_set
 
-debugitem = ewdebug.debugitem
+#debugitem = ewdebug.debugitem
 
 # A map of id_item to EwGeneralItem objects.
 item_map = {}
@@ -13120,7 +13128,15 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian,
 		vendors = [vendor_bazaar],
 		price = 1000,
-	)
+	),
+	EwCosmeticItem(
+		id_cosmetic = "janusmask",
+		str_name = "Janus Mask",
+		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
+		rarity = "Swilldermuk",
+		acquisition = "SwilldermukEnd",
+		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
+	),
 ]
 
 
@@ -13727,7 +13743,7 @@ EwSmeltingRecipe(
 		products = ['gourdmaracas']
 	),
 ]
-smelting_recipe_list += ewdebug.debugrecipes
+#smelting_recipe_list += ewdebug.debugrecipes
 
 # A map of id_recipe to EwSmeltingRecipe objects.
 smelting_recipe_map = {}
