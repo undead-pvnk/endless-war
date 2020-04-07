@@ -761,6 +761,7 @@ cmd_get_credence = cmd_prefix + 'getcredence'
 cmd_reset_prank_stats = cmd_prefix + 'resetprankstats'
 cmd_set_gambit = cmd_prefix + 'setgambit'
 cmd_pointandlaugh = cmd_prefix + 'pointandlaugh'
+cmd_prank = cmd_prefix + 'prank'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'

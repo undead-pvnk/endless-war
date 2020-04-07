@@ -153,7 +153,7 @@ async def exalt(cmd):
 		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
-	recipient_data = EwUser(id_user=recipient.id)
+	recipient_data = EwUser(member=recipient)
 	
 	# DOUBLE HALLOWEEN
 
@@ -185,7 +185,6 @@ async def exalt(cmd):
 	
 	if recipient_data.gambit > 0:
 		# Give the user the Janus Mask
-		response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
 
 		mask_results = []
 		for m in ewcfg.cosmetic_items_list:
@@ -205,6 +204,8 @@ async def exalt(cmd):
 		)
 
 		ewitem.soulbind(mask_id)
+		
+		response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
 		
 	else:
 		# Give the user the Sword of Seething

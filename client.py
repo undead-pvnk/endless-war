@@ -672,6 +672,7 @@ cmd_map = {
 	ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
 	ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
+	ewcfg.cmd_prank: ewcmd.prank,
 	
 }
 
