@@ -409,7 +409,7 @@ cmd_map = {
 	ewcfg.cmd_survey: ewmap.survey,
 	
 	# Inspect objects in a POI
-	ewcfg.cmd_scrutinize: ewdebug.scrutinize,
+	# ewcfg.cmd_scrutinize: ewdebug.scrutinize,
 
 	# Look around an adjacent POI
 	ewcfg.cmd_scout: ewmap.scout,
@@ -453,7 +453,7 @@ cmd_map = {
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	ewcfg.cmd_creategeneralitem: ewcmd.create_general_item,
-	#ewcfg.cmd_exalt: ewkingpin.exalt,
+	ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -616,14 +616,14 @@ cmd_map = {
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 
 	# debug commands
-	#ewcfg.cmd_debug1: ewdebug.debug1,
-	#ewcfg.cmd_debug2: ewdebug.debug2,
-	ewcfg.cmd_debug3: ewdebug.debug3,
-	ewcfg.cmd_debug4: ewdebug.debug4,
-	ewcfg.debug5: ewdebug.debug5,
-	ewcfg.cmd_debug6: ewdebug.debug6,
-	ewcfg.cmd_debug7: ewdebug.debug7,
-	ewcfg.cmd_debug8: ewdebug.debug8,
+	# ewcfg.cmd_debug1: ewdebug.debug1,
+	# ewcfg.cmd_debug2: ewdebug.debug2,
+	# ewcfg.cmd_debug3: ewdebug.debug3,
+	# ewcfg.cmd_debug4: ewdebug.debug4,
+	# ewcfg.debug5: ewdebug.debug5,
+	# ewcfg.cmd_debug6: ewdebug.debug6,
+	# ewcfg.cmd_debug7: ewdebug.debug7,
+	# ewcfg.cmd_debug8: ewdebug.debug8,
 
 	# ban a player from using commands
 	ewcfg.cmd_arrest: ewcmd.arrest,
@@ -672,6 +672,7 @@ cmd_map = {
 	ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
 	ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
+	ewcfg.cmd_prank: ewcmd.prank,
 	
 }
 

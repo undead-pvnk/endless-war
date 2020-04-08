@@ -708,32 +708,32 @@ async def reel(cmd):
 					response += levelup_response
 
 				market_data = EwMarket(id_server=user_data.id_server)
-				if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
-					
-					item = ewcfg.debugitem
-					
-					ewitem.item_create(
-						item_type=ewcfg.it_item,
-						id_user=user_data.id_user,
-						id_server=user_data.id_server,
-						item_props={
-							'id_item': item.id_item,
-							'context': item.context,
-							'item_name': item.str_name,
-							'item_desc': item.str_desc,
-						}
-					),
-					ewutils.logMsg('Created item: {}'.format(item.id_item))
-					item = EwItem(id_item=item.id_item)
-					item.persist()
-					
-					response += ewcfg.debugfish_response
-					market_data.caught_fish += 1
-					market_data.persist()
-		
-				elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
-					market_data.caught_fish += 1
-					market_data.persist()
+				# if market_data.caught_fish == ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
+				# 	
+				# 	item = ewcfg.debugitem
+				# 	
+				# 	ewitem.item_create(
+				# 		item_type=ewcfg.it_item,
+				# 		id_user=user_data.id_user,
+				# 		id_server=user_data.id_server,
+				# 		item_props={
+				# 			'id_item': item.id_item,
+				# 			'context': item.context,
+				# 			'item_name': item.str_name,
+				# 			'item_desc': item.str_desc,
+				# 		}
+				# 	),
+				# 	ewutils.logMsg('Created item: {}'.format(item.id_item))
+				# 	item = EwItem(id_item=item.id_item)
+				# 	item.persist()
+				# 	
+				# 	response += ewcfg.debugfish_response
+				# 	market_data.caught_fish += 1
+				# 	market_data.persist()
+				# 
+				# elif market_data.caught_fish < ewcfg.debugfish_goal and fisher.pier.id_poi in ewcfg.debugpiers:
+				# 	market_data.caught_fish += 1
+				# 	market_data.persist()
 
 				fisher.stop()
 
