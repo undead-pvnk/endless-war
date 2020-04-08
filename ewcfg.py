@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.3i2-SWILLDERMUK"
+version = "v3.3i2"
 
 
 dir_msgqueue = 'msgqueue'
@@ -1259,7 +1259,7 @@ time_pvp_pride = 1 * 60
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
 
-# For SWILLDERMUK, this isused to prevent AFK people from being pranked.
+# For SWILLDERMUK, this is used to prevent AFK people from being pranked.
 time_afk_swilldermuk = 60 * 60 * 2 # 1 hours
 
 # time after coming online before you can act
@@ -15946,7 +15946,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
-swilldermuk_food = []
+#swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
@@ -15966,11 +15966,11 @@ for p in item_list:
 		pass
 
 # Pity-pies will also spawn across the map.
-for p in food_list:
-	if p.acquisition == "swilldermuk":
-		swilldermuk_food.append(p)
-	else:
-		pass
+# for p in food_list:
+# 	if p.acquisition == "swilldermuk":
+# 		swilldermuk_food.append(p)
+# 	else:
+# 		pass
 
 status_effect_type_miss = "miss"
 status_effect_type_crit = "crit"
