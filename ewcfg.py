@@ -706,6 +706,7 @@ cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
+cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -3246,10 +3247,10 @@ item_list = [
 		gambit=20,
 	),
 	EwGeneralItem(
-		id_item=item_id_swordofseething,
-		str_name="SWORD OF SEETHING",
-		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
-		context="swordofseething",
+		id_item="brokensword",
+		str_name="Broken Sword",
+		str_desc="The lower half of a broken sword. A useless trinket now, but perhaps one day it can be turned into something useful.",
+		context="brokensword",
 	),
 	EwGeneralItem(
 		id_item = item_id_prankcapsule,
