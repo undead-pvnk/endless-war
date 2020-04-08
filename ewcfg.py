@@ -1994,6 +1994,7 @@ item_id_munchywrappingpaper = "munchywrappingpaper"
 item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 item_id_royaltypoudrin = "royaltypoudrin"
+item_id_prankcapsule = "prankcapsule"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -3249,6 +3250,18 @@ item_list = [
 		str_name="SWORD OF SEETHING",
 		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
 		context="swordofseething",
+	),
+	EwGeneralItem(
+		id_item = item_id_prankcapsule,
+		alias = [
+			"prank",
+			"capsule",
+		],
+		str_name = "Prank Capsule",
+		str_desc = "A small little plastic capsule, which holds a devious prank item on the inside.",
+		price = 20000,
+		vendors = [vendor_vendingmachine],
+		context = "prankcapsule"
 	)
 ]
 #item_list += ewdebug.debugitem_set

@@ -402,7 +402,7 @@ async def prank_item_effect_trap(cmd, item):
 		item.persist()
 		pranker_data.persist()
 
-		response = "You store some of your credence in a {}. Hopefully someone's dumb enough to fall for it.".format(item.item_props.get('item_name'))
+		response = "You lay down a {}. Hopefully someone's dumb enough to fall for it.".format(item.item_props.get('item_name'))
 		item_action = "drop"
 
 	return item_action, response, use_mention_displayname, side_effect
