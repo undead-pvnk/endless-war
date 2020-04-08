@@ -1915,7 +1915,7 @@ async def manual_soulbind(cmd):
 		item.soulbound = True
 		item.persist()
 		
-		response = "Soulbound item **{}**."
+		response = "Soulbound item **{}**.".format(id_item)
 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
 	else:
 		return
