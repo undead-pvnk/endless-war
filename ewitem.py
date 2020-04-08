@@ -1150,12 +1150,8 @@ async def item_use(cmd):
 						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
 						#print(item.item_props)
 					
-			elif context == "swordofseething":
-
-				item_delete(item.id_item)
-				await ewdebug.begin_cataclysm(user_data)
-				
-				response = ewdebug.last_words
+			elif context == "prankcapsule":
+				response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)

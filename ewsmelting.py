@@ -254,3 +254,27 @@ def unwrap(id_user = None, id_server = None, item = None):
 		response += " But… it’s mostly just repeats and late edition cards. You toss them away."
 
 	return response
+
+def popcapsule(id_user = None, id_server = None, item = None):
+	rarity_roll = random.randrange(10)
+	ewitem.item_delete(item.id_item)
+
+	if rarity_roll > 3:
+		prank_item = random.choice(ewcfg.prank_items_heinous)
+	elif rarity_roll > 0:
+		prank_item = random.choice(ewcfg.prank_items_scandalous)
+	else:
+		prank_item = random.choice(ewcfg.prank_items_forbidden)
+
+	item_props = ewitem.gen_item_props(prank_item)
+
+	prank_item_id = ewitem.item_create(
+		item_type=prank_item.item_type,
+		id_user=id_user.id,
+		id_server=id_server.id,
+		item_props=item_props
+	)
+	
+	response = "You pop open the Prank Capsule to reveal a {}! Whoa, sick!!".format(prank_item.str_name)
+	
+	return response
