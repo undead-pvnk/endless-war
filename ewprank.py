@@ -163,69 +163,8 @@ class PrankIndex:
 			cursor.close()
 			ewutils.databaseClose(conn_info)
 			
-	
-		
 response_timer = 6 # How long does it take for a response item to send out its attacks
 afk_timer = 60 * 60 * 2 # 2 hours
-		
-def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 0, trap_used = False):
-	pranker_credence = pranker_data.credence
-	pranked_credence = pranked_data.credence
-	
-	if trap_used:
-		pranker_credence = int(item.item_props.get('trap_stored_credence'))
-	
-	#print(pranker_credence)
-	#print(pranked_credence)
-	
-	item_props = item.item_props
-	gambit_multiplier = int(item_props.get('gambit'))
-	
-	# A multiplier of 0 means that a response item isn't being used.
-	# A multiplier of 6 means that a response item is done being used.
-	if response_item_multiplier == 0 or response_item_multiplier == 6:
-		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier)
-		
-		if response_item_multiplier == 6:
-			total_gambit_value = 0
-		
-		if not trap_used:
-			pranker_data.credence = 0
-		pranked_data.credence = 0
-	else:
-		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
-		
-	# Masochism is not to be encouraged. The more someone has been pranked, the less gambit is generated in the exchange.
-	current_prank_index = PrankIndex(pranker_data.id_user, pranked_data.id_user, pranker_data.id_server)
-	
-	#print(total_gambit_value)
-	
-	current_count = current_prank_index.prank_count
-	
-	#print(current_count)
-	
-	if current_prank_index != None:
-		if current_count > 0:
-			total_gambit_value_modifier = (int(current_count/3) + 1)
-			total_gambit_value = int(total_gambit_value/total_gambit_value_modifier)
-			
-			#print(total_gambit_value_modifier)
-			
-	#print(total_gambit_value)
-			
-	current_prank_index.prank_count += 1
-	current_prank_index.persist()
-	
-	pranker_data.credence_used += total_gambit_value
-	pranked_data.credence_used += total_gambit_value
-	
-	pranker_data.gambit += total_gambit_value
-	pranked_data.gambit -= total_gambit_value
-	
-	#print('response multi: {}'.format(response_item_multiplier))
-	
-	pranker_data.persist()
-	pranked_data.persist()
 
 # Use an instant use item
 async def prank_item_effect_instantuse(cmd, item):
@@ -255,14 +194,14 @@ async def prank_item_effect_instantuse(cmd, item):
 			response = "You need to be in the same place as your target to prank them with that item."
 			return item_action, response, use_mention_displayname, side_effect
 
-		if pranker_data.credence == 0 or pranked_data.credence == 0:
-			if pranker_data.credence == 0:
-
-				response = "You can't prank that person right now, you don't have any credence!"
-			else:
-				response = "You can't prank that person right now, they don't have any credence!"
-
-			return item_action, response, use_mention_displayname, side_effect
+		# if pranker_data.credence == 0 or pranked_data.credence == 0:
+		# 	if pranker_data.credence == 0:
+		# 
+		# 		response = "You can't prank that person right now, you don't have any credence!"
+		# 	else:
+		# 		response = "You can't prank that person right now, they don't have any credence!"
+		# 
+		# 	return item_action, response, use_mention_displayname, side_effect
 		
 		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
 			response = "You can't prank that person right now."
@@ -270,7 +209,7 @@ async def prank_item_effect_instantuse(cmd, item):
 		
 		prank_item_data = item
 		
-		calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data)
+		#calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data)
 		
 		response = prank_item_data.item_props.get('prank_desc')
 		
@@ -312,14 +251,14 @@ async def prank_item_effect_response(cmd, item):
 			response = "You need to be in the same place as your target to prank them with that item."
 			return item_action, response, use_mention_displayname, side_effect
 		
-		if pranker_data.credence == 0 or pranked_data.credence == 0:
-			if pranker_data.credence == 0:
-				
-				response = "You can't prank that person right now, you don't have any credence!"
-			else:
-				response = "You can't prank that person right now, they don't have any credence!"
-				
-			return item_action, response, use_mention_displayname, side_effect
+		# if pranker_data.credence == 0 or pranked_data.credence == 0:
+		# 	if pranker_data.credence == 0:
+		# 		
+		# 		response = "You can't prank that person right now, you don't have any credence!"
+		# 	else:
+		# 		response = "You can't prank that person right now, they don't have any credence!"
+		# 		
+		# 	return item_action, response, use_mention_displayname, side_effect
 		
 		if (ewutils.active_restrictions.get(pranker_data.id_user) != None and ewutils.active_restrictions.get(pranker_data.id_user) == 2) or (ewutils.active_restrictions.get(pranked_data.id_user) != None and ewutils.active_restrictions.get(pranked_data.id_user) == 2):
 			response = "You can't prank that person right now."
@@ -383,7 +322,7 @@ async def prank_item_effect_response(cmd, item):
 				pranker_data = EwUser(member=cmd.message.author)
 				pranked_data = EwUser(member=member)
 				
-				calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
+				#calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
 	
 				accepted = 0
 				try:
@@ -413,7 +352,7 @@ async def prank_item_effect_response(cmd, item):
 		pranker_data = EwUser(member=cmd.message.author)
 		pranked_data = EwUser(member=member)
 		
-		calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
+		#calculate_gambit_exchange(pranker_data, pranked_data, prank_item_data, limit)
 		
 		# Remove restrictions
 		ewutils.active_target_map[pranker_data.id_user] = ""
@@ -443,20 +382,21 @@ async def prank_item_effect_trap(cmd, item):
 
 		pranker_data = EwUser(member=cmd.message.author)
 
-		if pranker_data.credence == 0:
-			response = "You can't lay down a trap without any credence!"
-			return item_action, response, use_mention_displayname, side_effect
+		# if pranker_data.credence == 0:
+		# 	response = "You can't lay down a trap without any credence!"
+		# 	return item_action, response, use_mention_displayname, side_effect
 
 		# Store values inside the trap's item_props
 		
-		halved_credence = int(pranker_data.credence / 2)
-		if halved_credence == 0:
-			halved_credence = 1
-		
-		pranker_data.credence = halved_credence
-		pranker_data.credence_used += halved_credence
+		# halved_credence = int(pranker_data.credence / 2)
+		# if halved_credence == 0:
+		# 	halved_credence = 1
+		# 
+		# pranker_data.credence = halved_credence
+		# pranker_data.credence_used += halved_credence
 
-		item.item_props["trap_stored_credence"] = halved_credence
+		#item.item_props["trap_stored_credence"] = halved_credence
+		item.item_props["trap_stored_credence"] = 0
 		item.item_props["trap_user_id"] = pranker_data.id_user
 		
 		item.persist()

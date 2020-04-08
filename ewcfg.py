@@ -705,7 +705,7 @@ cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
-cmd_creategeneralitem = cmd_prefix + 'creategeneralitem'
+cmd_createitem = cmd_prefix + 'createitem'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -1561,15 +1561,17 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
-col_gambit = 'gambit'
-col_credence = 'credence'
-col_credence_used = 'credence_used'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_festivity_from_slimecoin = 'festivity_from_slimecoin'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 col_slimernalia_kingpin = 'slimernalia_kingpin'
+
+# SWILLDERMUK
+col_gambit = 'gambit'
+col_credence = 'credence'
+col_credence_used = 'credence_used'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -7075,7 +7077,7 @@ food_list = [
 		recover_hunger = 1000,
 		str_name = "Defective Coconut Cream Pie",
 		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
-		str_desc = "A cream pie not even worth throwing at someone. This thing is practically spoiling away in your hands!",
+		str_desc = "A cream pie not even worth throwing at someone.",
 		acquisition = "swilldermuk"
 	)
 ]
