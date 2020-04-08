@@ -1143,8 +1143,8 @@ async def item_use(cmd):
 						
 					if item_action == "delete":
 						item_delete(item.id_item)
-						prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
-						await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
+						#prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+						#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
 						
 					elif item_action == "drop":
 						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)

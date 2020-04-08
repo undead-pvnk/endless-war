@@ -1728,14 +1728,14 @@ async def activate_trap_items(district, id_server, id_user):
 		databaseClose(conn_info)
 	await send_message(client, district_channel, formatMessage(member, response))
 	
-	if not trap_was_dud:
-		client = get_client()
-		server = client.get_server(id_server)
-		
-		prank_feed_channel = get_channel(server, 'prank-feed')
-		
-		response += "\n`-------------------------`"
-		await send_message(client, prank_feed_channel, formatMessage(member, response))
+	# if not trap_was_dud:
+	# 	client = get_client()
+	# 	server = client.get_server(id_server)
+	# 
+	# 	prank_feed_channel = get_channel(server, 'prank-feed')
+	# 
+	# 	response += "\n`-------------------------`"
+	# 	await send_message(client, prank_feed_channel, formatMessage(member, response))
 
 
 def check_fursuit_active(id_server):

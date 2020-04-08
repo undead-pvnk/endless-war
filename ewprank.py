@@ -315,8 +315,8 @@ async def prank_item_effect_response(cmd, item):
 					pass
 				
 				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), chosen_response))
-				prank_feed_channel = ewutils.get_channel(cmd.message.server, 'prank-feed')
-				await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
+				#prank_feed_channel = ewutils.get_channel(cmd.message.server, 'prank-feed')
+				#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (chosen_response+"\n`-------------------------`")))
 
 				# The longer time goes on without the pranked person typing in the command, the more gambit they lose
 				pranker_data = EwUser(member=cmd.message.author)
