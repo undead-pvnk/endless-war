@@ -1981,81 +1981,87 @@ async def create_general_item(cmd):
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
 		
 async def prank(cmd):
-	# User must have the Janus Mask adorned
+	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
 	user_data = EwUser(member=cmd.message.author)
+
+	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
+		response = "The powers of the mask don't really resonate with you here."
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
+	mentions_user = False
+	use_mention_displayname = False
 	if cmd.mentions_count > 0:
+		mentions_user = True
 		
-		cosmetics = ewitem.inventory(
-			id_user=user_data.id_user,
-			id_server=user_data.id_server,
-			item_type_filter=ewcfg.it_cosmetic
-		)
-		adorned_cosmetics = []
-		
-		response = "You aren't funny enough to do that. Please be funnier." # If it's not overwritten
+	cosmetics = ewitem.inventory(
+		id_user=user_data.id_user,
+		id_server=user_data.id_server,
+		item_type_filter=ewcfg.it_cosmetic
+	)
+	adorned_cosmetics = []
+	
+	response = "You aren't funny enough to do that. Please be funnier." # If it's not overwritten
 
-		for cosmetic in cosmetics:
-			cos = EwItem(id_item=cosmetic.get('id_item'))
-			if cos.item_props['adorned'] == 'true':
-				if cos.item_props['rarity'] == 'Swilldermuk':
-					print('success')
-					
-					item_action = ""
-					use_mention_displayname = False
-					reroll = True
-					item = None
-					
-					while reroll:
-						rarity_roll = random.randrange(10)
-		
-						if rarity_roll > 3:
-							prank_item = random.choice(ewcfg.prank_items_heinous)
-						elif rarity_roll > 0:
-							prank_item = random.choice(ewcfg.prank_items_scandalous)
-						else:
-							prank_item = random.choice(ewcfg.prank_items_forbidden)
-		
-						item_props = ewitem.gen_item_props(prank_item)
-		
-						# Set the user ID to 0 so it can't be given, looted, etc, before it gets deleted.
-						prank_item_id = ewitem.item_create(
-							item_type=prank_item.item_type,
-							id_user=0,
-							id_server=user_data.id_server,
-							item_props=item_props
-						)
-		
-						item = EwItem(id_item=prank_item_id)
+	for cosmetic in cosmetics:
+		cos = EwItem(id_item=cosmetic.get('id_item'))
+		if cos.item_props['adorned'] == 'true':
+			if cos.item_props['rarity'] == 'Swilldermuk':
+				#print('success')
+				
+				item_action = ""
+				use_mention_displayname = False
+				reroll = True
+				item = None
+				
+				while reroll:
+					rarity_roll = random.randrange(10)
 	
-						if item.item_props['prank_type'] != ewcfg.prank_type_trap:
-							# Don't reroll the item choice.
-							reroll = False
+					if rarity_roll > 3:
+						prank_item = random.choice(ewcfg.prank_items_heinous)
+					elif rarity_roll > 0:
+						prank_item = random.choice(ewcfg.prank_items_scandalous)
+					else:
+						prank_item = random.choice(ewcfg.prank_items_forbidden)
 	
-					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
-						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
-						if side_effect != "":
-							response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+					item_props = ewitem.gen_item_props(prank_item)
 	
-					elif item.item_props['prank_type'] == ewcfg.prank_type_response:
-						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
-						if side_effect != "":
-							response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+					# Set the user ID to 0 so it can't be given, looted, etc, before it gets deleted.
+					prank_item_id = ewitem.item_create(
+						item_type=prank_item.item_type,
+						id_user=0,
+						id_server=user_data.id_server,
+						item_props=item_props
+					)
 	
-					# elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
-					# 	item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
-	
-					if item_action == "delete":
-						ewitem.item_delete(item.id_item)
-						prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
-						await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
-	
-					# elif item_action == "drop":
-					# 	ewitem.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
+					item = EwItem(id_item=prank_item_id)
 
-					break
-					
-	else:
-		response = "You gotta find someone to prank, first!"
+					if (item.item_props['prank_type'] != ewcfg.prank_type_trap and mentions_user) or (item.item_props['prank_type'] == ewcfg.prank_type_trap and not mentions_user):
+						# Don't reroll the item choice.
+						reroll = False
+						
+				response = "With the power of the Janus Mask, {} plucks a prank item from the ether!\n".format(cmd.message.author.display_name)
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
+					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+					if side_effect != "":
+						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+
+				elif item.item_props['prank_type'] == ewcfg.prank_type_response:
+					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+					if side_effect != "":
+						response += await ewitem.perform_prank_item_side_effect(side_effect, cmd=cmd)
+
+				elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
+					item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+
+				if item_action == "delete":
+					ewitem.item_delete(item.id_item)
+					prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+					await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
+
+				elif item_action == "drop":
+					ewitem.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
+
+				break
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
