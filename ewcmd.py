@@ -1898,6 +1898,27 @@ async def create_item(cmd):
 		response = "Could not find item."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+#Debug
+async def manual_soulbind(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if len(cmd.tokens) > 1:
+		id_item = cmd.tokens[1]
+	else:
+		return
+
+	item = EwItem(id_item=id_item)
+	
+	if item != None:
+		item.soulbound = True
+		item.persist()
+		
+		response = "Soulbound item **{}**."
+		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	else:
+		return
 		
 async def prank(cmd):
 	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
