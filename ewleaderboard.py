@@ -37,10 +37,10 @@ async def post_leaderboards(client = None, server = None):
 	#await ewutils.send_message(client, leaderboard_channel, topfestivity)
 	topzines = make_zines_top_board(server=server)
 	await ewutils.send_message(client, leaderboard_channel, topzines)
-	topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high)
-	await ewutils.send_message(client, leaderboard_channel, topgambit)
-	bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
-	await ewutils.send_message(client, leaderboard_channel, bottomgambit)
+	#topgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_high)
+	#await ewutils.send_message(client, leaderboard_channel, topgambit)
+	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
+	#await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(

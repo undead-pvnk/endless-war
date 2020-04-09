@@ -1787,129 +1787,6 @@ async def festivity(cmd):
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-async def gambit(cmd):
-	if cmd.mentions_count == 0:
-		user_data = EwUser(member=cmd.message.author)
-		response = "You currently have {:,} gambit.".format(user_data.gambit)
-
-	else:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-		response = "{} currently has {:,} gambit.".format(member.display_name, user_data.gambit)
-
-	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-async def credence(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		adminmode = False
-	else:
-		adminmode = True
-	
-	if cmd.mentions_count == 0:
-		user_data = EwUser(member=cmd.message.author)
-		if adminmode:
-			response = "DEBUG: You currently have {:,} credence, and {:,} credence used.".format(user_data.credence, user_data.credence_used)
-		else:
-			if user_data.credence > 0:
-				response = "You have credence. Don't fuck this up."
-			else:
-				response = "You don't have any credence. You'll need to build some up in the city before you can get to pranking again."
-
-	else:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-		if adminmode:
-			response = "{} currently has {:,} credence, and {:,} credence used.".format(member.display_name, user_data.credence, user_data.credence_used)
-		else:
-			if user_data.credence > 0:
-				response = "They have credence. Time for a little anarchy."
-			else:
-				response = "They don't have any credence."
-
-	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-async def get_credence(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		return
-	
-	response = "DEBUG: You get 1,000 credence!"
-	user_data = EwUser(member=cmd.message.author)
-	
-	user_data.credence += 1000
-	user_data.credence_used = 0
-	user_data.persist()
-	
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def reset_prank_stats(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		return
-	
-	if cmd.mentions_count == 0:
-		member = cmd.message.author
-		user_data = EwUser(member=member)
-	else:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-
-	user_data.gambit = 0
-	user_data.credence = 100
-	user_data.credence_used = 0
-
-	response = "Prank stats reset for {}.".format(member.display_name)
-		
-	user_data.persist()
-	await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	
-async def set_gambit(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		return
-
-	if cmd.mentions_count == 1:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-	else:
-		return
-		
-	if not len(cmd.tokens) > 1:
-		return
-		
-	gambit_set = int(cmd.tokens[1])
-
-	user_data.gambit = gambit_set
-	user_data.credence = 100
-	user_data.credence_used = 0
-
-	response = "Gambit for {} set to {:,}.".format(member.display_name, gambit_set)
-
-	user_data.persist()
-	await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	
-async def point_and_laugh(cmd):
-	if cmd.mentions_count == 1:
-		member = cmd.mentions[0]
-		
-		response_choices = [
-			"WHAT an *Asshole!*",
-			"They have quite possibly NEVER had SEX!",
-			"Dumbass!",
-			"What a fucking freak!",
-			"Holy shit, can you get any lower than this dude?",
-			"Friccin Moron!",
-			"Guess we're not all born winners..."
-		]
-		
-		choice_response = random.choice(response_choices)
-		
-		response = "You point and laugh at {}! {} LOL!!!".format(member.display_name, choice_response)
-	else:
-		response = "You point and laugh at... who, exactly?"
-	
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
 async def forge_master_poudrin(cmd):
 	if not cmd.message.author.server_permissions.administrator:
 		return
@@ -1946,39 +1823,102 @@ async def forge_master_poudrin(cmd):
 	response = "A pillar of light envelops {}! All of their slime is condensed into one, all-powerful Master Poudrin!\nDon't !crush it all in one place, kiddo.".format(
 		member.display_name)
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	
-async def create_general_item(cmd):
+
+# Debug
+async def create_item(cmd):
 	if not cmd.message.author.server_permissions.administrator:
 		return
 
 	if len(cmd.tokens) > 1:
-		searched_item_id = cmd.tokens[1]
+		value = cmd.tokens[1]
 	else:
 		return
 	
-	found_item = None
+	item = None
 	
-	for item in ewcfg.item_list:
-		if item.id_item == searched_item_id:
-			found_item = item
-			break
+	# for item in ewcfg.item_list:
+	# 	if item.id_item == searched_item_id:
+	# 		found_item = item
+	# 		break
+
+	item = ewcfg.item_map.get(value)
+
+	item_type = ewcfg.it_item
+	if item != None:
+		item_id = item.id_item
+		name = item.str_name
+
+	# Finds the item if it's an EwFood item.
+	if item == None:
+		item = ewcfg.food_map.get(value)
+		item_type = ewcfg.it_food
+		if item != None:
+			item_id = item.id_food
+			name = item.str_name
+
+	# Finds the item if it's an EwCosmeticItem.
+	if item == None:
+		item = ewcfg.cosmetic_map.get(value)
+		item_type = ewcfg.it_cosmetic
+		if item != None:
+			item_id = item.id_cosmetic
+			name = item.str_name
+
+	if item == None:
+		item = ewcfg.furniture_map.get(value)
+		item_type = ewcfg.it_furniture
+		if item != None:
+			item_id = item.id_furniture
+			name = item.str_name
+			if item_id in ewcfg.furniture_pony:
+				item.vendors = [ewcfg.vendor_bazaar]
+
+	if item == None:
+		item = ewcfg.weapon_map.get(value)
+		item_type = ewcfg.it_weapon
+		if item != None:
+			item_id = item.id_weapon
+			name = item.str_weapon
 			
-	if found_item != None:
+	if item != None:
 		
 		item_props = ewitem.gen_item_props(item)
-		
+
 		generated_item_id = ewitem.item_create(
-			item_type=item.item_type,
+			item_type=item_type,
 			id_user=cmd.message.author.id,
 			id_server=cmd.message.server.id,
+			stack_max=20 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else -1,
+			stack_size=1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 			item_props=item_props
 		)
 		
-		response = "Created item **{}** with id **{}** for **{}**".format(item_props.get('item_name'), generated_item_id, cmd.message.author.display_name)
+		response = "Created item **{}** with id **{}** for **{}**".format(name, generated_item_id, cmd.message.author.display_name)
 	else:
 		response = "Could not find item."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	
+#Debug
+async def manual_soulbind(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	if len(cmd.tokens) > 1:
+		id_item = cmd.tokens[1]
+	else:
+		return
+
+	item = EwItem(id_item=id_item)
+	
+	if item != None:
+		item.soulbound = True
+		item.persist()
+		
+		response = "Soulbound item **{}**.".format(id_item)
+		await ewutils.send_message(cmd.client, cmd.message.channel, response)
+	else:
+		return
 		
 async def prank(cmd):
 	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
@@ -2056,8 +1996,8 @@ async def prank(cmd):
 
 				if item_action == "delete":
 					ewitem.item_delete(item.id_item)
-					prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
-					await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
+					#prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+					#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response + "\n`-------------------------`")))
 
 				elif item_action == "drop":
 					ewitem.give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)

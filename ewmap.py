@@ -1282,7 +1282,7 @@ async def look(cmd):
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else ""),
 				ad_formatting
-			) + get_random_prank_item(user_data, district_data) # SWILLDERMUK
+			) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
 		if len(ad_resp) > 0:
 			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(
@@ -1321,7 +1321,7 @@ async def survey(cmd):
 				("\n\n{}".format(
 					ewcmd.weather_txt(cmd.message.server.id)
 				) if cmd.message.server != None else "")
-			) + get_random_prank_item(user_data, district_data) # SWILLDERMUK
+			) #+ get_random_prank_item(user_data, district_data) # SWILLDERMUK
 		))
 		
 		

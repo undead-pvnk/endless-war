@@ -452,8 +452,9 @@ cmd_map = {
 	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
-	ewcfg.cmd_creategeneralitem: ewcmd.create_general_item,
-	ewcfg.cmd_exalt: ewkingpin.exalt,
+	ewcfg.cmd_createitem: ewcmd.create_item,
+	ewcfg.cmd_manualsoulbind: ewcmd.manual_soulbind,
+	# ewcfg.cmd_exalt: ewkingpin.exalt,
 	ewcfg.cmd_dyecosmetic: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt1: ewcosmeticitem.dye,
 	ewcfg.cmd_dyecosmetic_alt2: ewcosmeticitem.dye,
@@ -666,12 +667,12 @@ cmd_map = {
 	#ewcfg.cmd_yoslimernalia: ewcmd.yoslimernalia
 	
 	# Swilldermuk
-	ewcfg.cmd_gambit: ewcmd.gambit,
-	ewcfg.cmd_credence: ewcmd.credence, #debug
-	ewcfg.cmd_get_credence: ewcmd.get_credence, #debug
-	ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
-	ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
-	ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
+	# ewcfg.cmd_gambit: ewcmd.gambit,
+	# ewcfg.cmd_credence: ewcmd.credence, #debug
+	# ewcfg.cmd_get_credence: ewcmd.get_credence, #debug
+	# ewcfg.cmd_reset_prank_stats: ewcmd.reset_prank_stats, #debug
+	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
+	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
 	ewcfg.cmd_prank: ewcmd.prank,
 	
 }
@@ -842,9 +843,6 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
-		# SWILLDERMUK
-		asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
-		asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)

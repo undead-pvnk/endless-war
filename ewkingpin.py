@@ -136,98 +136,98 @@ async def create(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """
-	Command that grants someone a specific cosmetic
+	Command that grants someone a specific cosmetic for an event.
 """
-async def exalt(cmd):
-	author = cmd.message.author
-	user_data = EwUser(member=author)
-
-	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
-		response = "You do not have the power within you worthy of !exalting another player."
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-
-	if cmd.mentions[0]:
-		recipient = cmd.mentions[0]
-	else:
-		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-	recipient_data = EwUser(member=recipient)
-	
-	# DOUBLE HALLOWEEN
-
-	# # Gather the Medallion
-	# medallion_results = []
-	# for m in ewcfg.cosmetic_items_list:
-	# 	if m.ingredients == 'HorsemanSoul':
-	# 		medallion_results.append(m)
-	# 	else:
-	# 		pass
-
-	# medallion = medallion_results[0]
-	# medallion_props = ewitem.gen_item_props(medallion)
-	# 
-	# medallion_id = ewitem.item_create(
-	# 	item_type=medallion.item_type,
-	# 	id_user=recipient.id,
-	# 	id_server=cmd.message.server.id,
-	# 	item_props=medallion_props
-	# )
-	# 
-	# # Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
-	# # I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
-	# ewitem.soulbind(medallion_id)
-	# 
-	# response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
-	
-	# SWILLDERMUK
-	
-	if recipient_data.gambit > 0:
-		# Give the user the Janus Mask
-
-		mask_results = []
-		for m in ewcfg.cosmetic_items_list:
-			if m.ingredients == 'SwilldermukFinalGambit':
-				mask_results.append(m)
-			else:
-				pass
-	
-		mask = mask_results[0]
-		mask_props = ewitem.gen_item_props(mask)
-	
-		mask_id = ewitem.item_create(
-			item_type=mask.item_type,
-			id_user=recipient.id,
-			id_server=cmd.message.server.id,
-			item_props=mask_props
-		)
-
-		ewitem.soulbind(mask_id)
-		
-		response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
-		
-	else:
-		# Give the user the Sword of Seething
-		sword_results = []
-		for s in ewcfg.item_list:
-			if s.context == 'swordofseething':
-				sword_results.append(s)
-			else:
-				pass
-
-		sword = sword_results[0]
-		sword_props = ewitem.gen_item_props(sword)
-
-		sword_id = ewitem.item_create(
-			item_type=sword.item_type,
-			id_user=recipient.id,
-			id_server=cmd.message.server.id,
-			item_props=sword_props
-		)
-
-		ewitem.soulbind(sword_id)
-		
-		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
-	
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+# async def exalt(cmd):
+# 	author = cmd.message.author
+# 	user_data = EwUser(member=author)
+# 
+# 	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
+# 		response = "You do not have the power within you worthy of !exalting another player."
+# 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+# 
+# 
+# 	if cmd.mentions_count > 0:
+# 		recipient = cmd.mentions[0]
+# 	else:
+# 		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
+# 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+# 	
+# 	recipient_data = EwUser(member=recipient)
+# 	
+# 	DOUBLE HALLOWEEN
+# 
+# 	# Gather the Medallion
+# 	medallion_results = []
+# 	for m in ewcfg.cosmetic_items_list:
+# 		if m.ingredients == 'HorsemanSoul':
+# 			medallion_results.append(m)
+# 		else:
+# 			pass
+# 
+# 	medallion = medallion_results[0]
+# 	medallion_props = ewitem.gen_item_props(medallion)
+# 
+# 	medallion_id = ewitem.item_create(
+# 		item_type=medallion.item_type,
+# 		id_user=recipient.id,
+# 		id_server=cmd.message.server.id,
+# 		item_props=medallion_props
+# 	)
+# 
+# 	# Soulbind the medallion. A player can get at most twice, but later on a new command could be added to destroy them/trade them in.
+# 	# I imagine this would be something similar to how players can destroy Australium Wrenches in TF2, which broadcasts a message to everyone in the game, or something.
+# 	ewitem.soulbind(medallion_id)
+# 
+# 	response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
+# 	
+# 	SWILLDERMUK
+# 	
+# 	if recipient_data.gambit > 0:
+# 		# Give the user the Janus Mask
+# 
+# 		mask_results = []
+# 		for m in ewcfg.cosmetic_items_list:
+# 			if m.ingredients == 'SwilldermukFinalGambit':
+# 				mask_results.append(m)
+# 			else:
+# 				pass
+# 
+# 		mask = mask_results[0]
+# 		mask_props = ewitem.gen_item_props(mask)
+# 
+# 		mask_id = ewitem.item_create(
+# 			item_type=mask.item_type,
+# 			id_user=recipient.id,
+# 			id_server=cmd.message.server.id,
+# 			item_props=mask_props
+# 		)
+# 
+# 		ewitem.soulbind(mask_id)
+# 
+# 		response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
+# 
+# 	else:
+# 		# Give the user the Sword of Seething
+# 		sword_results = []
+# 		for s in ewcfg.item_list:
+# 			if s.context == 'swordofseething':
+# 				sword_results.append(s)
+# 			else:
+# 				pass
+# 
+# 		sword = sword_results[0]
+# 		sword_props = ewitem.gen_item_props(sword)
+# 
+# 		sword_id = ewitem.item_create(
+# 			item_type=sword.item_type,
+# 			id_user=recipient.id,
+# 			id_server=cmd.message.server.id,
+# 			item_props=sword_props
+# 		)
+# 
+# 		ewitem.soulbind(sword_id)
+# 
+# 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
+# 
+# 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

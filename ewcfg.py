@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.3i2-SWILLDERMUK"
+version = "v3.3i2"
 
 
 dir_msgqueue = 'msgqueue'
@@ -705,7 +705,8 @@ cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
 cmd_dyecosmetic_alt3 = cmd_prefix + 'saturatehat'
 cmd_create = cmd_prefix + 'create'
 cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
-cmd_creategeneralitem = cmd_prefix + 'creategeneralitem'
+cmd_createitem = cmd_prefix + 'createitem'
+cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -1258,7 +1259,7 @@ time_pvp_pride = 1 * 60
 # time to get kicked out of subzone. 
 time_kickout = 60 * 60  # 1 hour
 
-# For SWILLDERMUK, this isused to prevent AFK people from being pranked.
+# For SWILLDERMUK, this is used to prevent AFK people from being pranked.
 time_afk_swilldermuk = 60 * 60 * 2 # 1 hours
 
 # time after coming online before you can act
@@ -1561,15 +1562,17 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
-col_gambit = 'gambit'
-col_credence = 'credence'
-col_credence_used = 'credence_used'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
 col_festivity_from_slimecoin = 'festivity_from_slimecoin'
 col_slimernalia_coin_gambled = 'slimernalia_coin_gambled'
 col_slimernalia_kingpin = 'slimernalia_kingpin'
+
+# SWILLDERMUK
+col_gambit = 'gambit'
+col_credence = 'credence'
+col_credence_used = 'credence_used'
 
 #Database columns for bartering
 col_offer_give = 'offer_give'
@@ -1992,6 +1995,7 @@ item_id_munchywrappingpaper = "munchywrappingpaper"
 item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 item_id_royaltypoudrin = "royaltypoudrin"
+item_id_prankcapsule = "prankcapsule"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -3243,10 +3247,22 @@ item_list = [
 		gambit=20,
 	),
 	EwGeneralItem(
-		id_item=item_id_swordofseething,
-		str_name="SWORD OF SEETHING",
-		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
-		context="swordofseething",
+		id_item="brokensword",
+		str_name="Broken Sword",
+		str_desc="The lower half of a broken sword. A useless trinket now, but perhaps one day it can be turned into something useful.",
+		context="brokensword",
+	),
+	EwGeneralItem(
+		id_item = item_id_prankcapsule,
+		alias = [
+			"prank",
+			"capsule",
+		],
+		str_name = "Prank Capsule",
+		str_desc = "A small little plastic capsule, which holds a devious prank item on the inside.",
+		price = 20000,
+		vendors = [vendor_vendingmachine],
+		context = "prankcapsule"
 	)
 ]
 #item_list += ewdebug.debugitem_set
@@ -7075,7 +7091,7 @@ food_list = [
 		recover_hunger = 1000,
 		str_name = "Defective Coconut Cream Pie",
 		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
-		str_desc = "A cream pie not even worth throwing at someone. This thing is practically spoiling away in your hands!",
+		str_desc = "A cream pie not even worth throwing at someone.",
 		acquisition = "swilldermuk"
 	)
 ]
@@ -15930,7 +15946,7 @@ for slimexodia in item_list:
 prank_items_heinous = [] # common
 prank_items_scandalous = [] # uncommon
 prank_items_forbidden = [] # rare
-swilldermuk_food = []
+#swilldermuk_food = []
 
 # Gather all prank items
 for p in item_list:
@@ -15950,11 +15966,11 @@ for p in item_list:
 		pass
 
 # Pity-pies will also spawn across the map.
-for p in food_list:
-	if p.acquisition == "swilldermuk":
-		swilldermuk_food.append(p)
-	else:
-		pass
+# for p in food_list:
+# 	if p.acquisition == "swilldermuk":
+# 		swilldermuk_food.append(p)
+# 	else:
+# 		pass
 
 status_effect_type_miss = "miss"
 status_effect_type_crit = "crit"
