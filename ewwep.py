@@ -394,8 +394,8 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
-		elif time_now > shootee_data.time_expirpvp and shootee_data.life_state != ewcfg.life_state_shambler:
-			# Target is not flagged for PvP.
+		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.id_inhabit_target == user_data.id_user):
+			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabitting the player
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.

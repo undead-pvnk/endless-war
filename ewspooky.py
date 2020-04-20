@@ -142,7 +142,8 @@ async def haunt(cmd):
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
 		market_data = EwMarket(id_server = cmd.message.server.id)
-		target_isshambler = haunted_data.life_state == ewcfg.life_state_shambler
+		target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
+		target_is_inhabitted = haunted_data.id_user == user_data.id_inhabit_target
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
@@ -155,7 +156,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
+		elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
