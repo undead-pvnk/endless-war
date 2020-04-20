@@ -269,6 +269,12 @@ cmd_map = {
 	# how ghosts leave the sewers
 	ewcfg.cmd_manifest: ewspooky.manifest,
 
+	# ghosts can inhabit players to follow them around
+	ewcfg.cmd_inhabit: ewspooky.inhabit,
+
+	# remove inhabitted status
+	ewcfg.cmd_letgo: ewspooky.let_go,
+	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
 

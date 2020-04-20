@@ -562,6 +562,8 @@ cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_manifest = cmd_prefix + 'manifest'
+cmd_inhabit = cmd_prefix + 'inhabit'
+cmd_letgo = cmd_prefix + 'letgo'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -1562,6 +1564,7 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_id_inhabit_target = 'id_inhabit_target'
 
 #SLIMERNALIA
 col_festivity = 'festivity'

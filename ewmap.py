@@ -983,6 +983,19 @@ async def move(cmd = None, isApt = False):
 					# SWILLDERMUK
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
+					# also move any ghosts inhabitting the player
+					inhabitants = user_data.get_inhabitants()
+					if len(inhabitants) > 0:
+						server = client.get_server(user_data.id_server)
+						for ghost in inhabitants:
+							ghost_data = EwUser(id_user = ghost, id_server = user_data.id_server)
+							ghost_data.poi = poi_current.id_poi
+							ghost_data.time_lastenter = int(time.time())
+							ghost_data.persist()
+
+							ghost_member = server.get_member(ghost)
+							await ewrolemgr.updateRoles(client = client, member = ghost_member)
+
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
 						if len(ads) > 0:
