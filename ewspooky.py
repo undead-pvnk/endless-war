@@ -415,6 +415,7 @@ async def inhabit(cmd):
 				# Can't target the player's killer
 				response = "You wouldn't want a repeat of last time, better find someone else."
 			else:
+				ewutils.moves_active[cmd.message.author.id] = 0
 				user_data.id_inhabit_target = target_data.id_user
 				user_data.persist()
 
