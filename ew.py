@@ -211,8 +211,6 @@ class EwUser:
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
-			
-
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -224,6 +222,7 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now		
+			self.id_inhabit_target = ""
 	
 			if self.life_state == ewcfg.life_state_shambler:
 				self.degradation += 1
