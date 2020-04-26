@@ -5033,7 +5033,7 @@ food_list = [
 			"slimeka",
 		],
 		recover_hunger = 9,
-		price = 100,
+		price = 200,
 		inebriation = 2,
 		str_name = 'shot of slimeka',
 		vendors = [vendor_bar],
