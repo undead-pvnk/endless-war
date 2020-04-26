@@ -13146,14 +13146,6 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
-	EwCosmeticItem(
-		id_cosmetic = "janusmask",
-		str_name = "Janus Mask",
-		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
-		rarity = "Swilldermuk",
-		acquisition = "SwilldermukEnd",
-		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
-	),
     EwCosmeticItem(
 		id_cosmetic = "crocs",
 		str_name = "Crocs",
@@ -13161,6 +13153,14 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian,
 		vendors = [vendor_bazaar],
 		price = 1000,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "janusmask",
+		str_name = "Janus Mask",
+		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
+		rarity = "Swilldermuk",
+		acquisition = "SwilldermukEnd",
+		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
 	),
     EwCosmeticItem(
 		id_cosmetic = "afrowig",
