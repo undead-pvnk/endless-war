@@ -13213,7 +13213,7 @@ cosmetic_items_list = [
     EwCosmeticItem(
 		id_cosmetic = "firefightershelmet",
 		str_name = "Firefighter's Helmet",
-		str_desc = "A old NLAakaNM wide brimmed firefighter's helmet; no one knows what happened to the firefighters of endless war.",
+		str_desc = "A old NLAakaNM wide brimmed red firefighter's helmet; no one knows what happened to the firefighters of endless war.",
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
 		is_hat = True,
