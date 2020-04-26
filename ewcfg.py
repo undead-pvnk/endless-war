@@ -13154,6 +13154,38 @@ cosmetic_items_list = [
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
 	),
+    EwCosmeticItem(
+		id_cosmetic = "crocs",
+		str_name = "crocs",
+		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet,unless you're wearing socks that is. If that's the case ignore that earlier statement.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "afrowig",
+		str_name = "Afro wig",
+		str_desc = "The perfect hair-do for a 70's party or a pool party just be sure to keep a can of hairspray and comb at hand.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pompadourwig",
+		str_name = "Pompadour wig",
+		str_desc = "A must have for any wanna-be greaser or school delinquent in general; make sure to wear it like a true king.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "powderedwig",
+		str_name = "Powdered wig",
+		str_desc = "If it was good enough for the british and founding fathers ut's good enough for us right? Just make sure you don't share this wig without cleaning it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
 ]
 
 
