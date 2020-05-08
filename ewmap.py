@@ -989,17 +989,7 @@ async def move(cmd = None, isApt = False):
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
 					# also move any ghosts inhabitting the player
-					inhabitants = user_data.get_inhabitants()
-					if inhabitants:
-						server = client.get_server(user_data.id_server)
-						for ghost in inhabitants:
-							ghost_data = EwUser(id_user = ghost, id_server = user_data.id_server)
-							ghost_data.poi = poi_current.id_poi
-							ghost_data.time_lastenter = int(time.time())
-							ghost_data.persist()
-
-							ghost_member = server.get_member(ghost)
-							await ewrolemgr.updateRoles(client = client, member = ghost_member)
+					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
 
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
@@ -1153,7 +1143,7 @@ async def teleport(cmd):
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-				
+			await user_data.move_inhabitants(id_poi = poi.id_poi)
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
 			await resp_cont.post()
 

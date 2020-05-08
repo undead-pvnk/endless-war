@@ -8,6 +8,7 @@ import ewstats
 import ewitem
 import ewstatuseffects
 import ewdistrict
+import ewrolemgr 
 from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -739,6 +740,20 @@ class EwUser:
 		except:
 			# otherwise return None
 			return None
+
+	async def move_inhabitants(self, id_poi = None):
+		client = ewutils.get_client()
+		inhabitants = self.get_inhabitants()
+		if inhabitants:
+			server = client.get_server(self.id_server)
+			for ghost in inhabitants:
+				ghost_data = EwUser(id_user = ghost, id_server = self.id_server)
+				ghost_data.poi = id_poi
+				ghost_data.time_lastenter = int(time.time())
+				ghost_data.persist()
+    
+				ghost_member = server.get_member(ghost)
+				await ewrolemgr.updateRoles(client = client, member = ghost_member)
   
 	def remove_inhabitation(self):
 		user_is_alive = self.life_state != ewcfg.life_state_corpse

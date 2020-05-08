@@ -310,6 +310,7 @@ async def embark(cmd):
 
 						response = "You enter the {}.".format(transport_data.transport_type)
 						await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
+						await user_data.move_inhabitants(id_poi = transport_data.poi)
 						return await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, transport_poi.channel), ewutils.formatMessage(cmd.message.author, response))
 					else:
 						response = "The {} starts moving just as you try to get on.".format(transport_data.transport_type)
@@ -404,6 +405,7 @@ async def disembark(cmd):
 				resp_cont.add_channel_response(channel = stop_poi.channel, response = response)
 				user_data.poi = stop_poi.id_poi
 				user_data.persist()
+				await user_data.move_inhabitants(id_poi = stop_poi.id_poi)
 				await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 				return await resp_cont.post()
 			district_data = EwDistrict(id_server = user_data.id_server, district = stop_poi.id_poi)
@@ -429,6 +431,7 @@ async def disembark(cmd):
 
 			user_data.poi = stop_poi.id_poi
 			user_data.persist()
+			await user_data.move_inhabitants(id_poi = stop_poi.id_poi)
 			response = "You enter {}".format(stop_poi.str_name)
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, stop_poi.channel), ewutils.formatMessage(cmd.message.author, response))
