@@ -459,6 +459,29 @@ async def data(cmd):
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 		
+		server = ewutils.get_client().get_server(user_data.id_server)
+		if user_data.life_state == ewcfg.life_state_corpse:
+			inhabitee_id = user_data.get_inhabitee()
+			if inhabitee_id:
+					inhabitee_name = server.get_member(inhabitee_id).display_name
+					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
+		else:
+			inhabitant_ids = user_data.get_inhabitants()
+			if inhabitant_ids:
+				inhabitant_names = []
+				for inhabitant_id in inhabitant_ids:
+					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
+
+				if len(inhabitant_names) == 1:
+					response_block += "You are inhabited by the ghost of {}. ".format(inhabitant_names[0])
+				else:
+					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
+						", ".join(inhabitant_names[:-1]), 
+						"" if len(inhabitant_names) == 2 else ",", 
+						inhabitant_names[-1]
+					)
+
+  
 		if user_data.swear_jar >= 500:
 			response_block += "You're going to The Underworld for the things you've said."
 		elif user_data.swear_jar >= 100:

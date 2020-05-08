@@ -447,7 +447,7 @@ async def let_go(cmd):
 	if user_data.life_state != ewcfg.life_state_corpse:
 		# Only ghosts can inhabit other players
 		response = "You feel a bit more at peace with the world."
-	elif not user_data.is_inhabiting():
+	elif not user_data.get_inhabitee():
 		response = "You're not inhabitting anyone right now."
 	else:
 		user_data.remove_inhabitation()

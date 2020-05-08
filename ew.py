@@ -723,14 +723,22 @@ class EwUser:
 
 		return inhabitants
 
-	def is_inhabiting(self):
-		return bool(ewutils.execute_sql_query("SELECT 1 from inhabitations where {id_ghost} = %s and {id_server} = %s".format(
+	def get_inhabitee(self):
+		data = ewutils.execute_sql_query("SELECT {id_fleshling} from inhabitations where {id_ghost} = %s and {id_server} = %s".format(
+			id_fleshling = ewcfg.col_id_fleshling,
 			id_ghost = ewcfg.col_id_ghost,
 			id_server = ewcfg.col_id_server,
 		),(
 			self.id_user,
 			self.id_server
-		)))
+		))
+
+		try:
+			# return ID of inhabited player if there is one
+			return data[0][0]
+		except:
+			# otherwise return None
+			return None
   
 	def remove_inhabitation(self):
 		user_is_alive = self.life_state != ewcfg.life_state_corpse

@@ -990,7 +990,7 @@ async def move(cmd = None, isApt = False):
 
 					# also move any ghosts inhabitting the player
 					inhabitants = user_data.get_inhabitants()
-					if len(inhabitants) > 0:
+					if inhabitants:
 						server = client.get_server(user_data.id_server)
 						for ghost in inhabitants:
 							ghost_data = EwUser(id_user = ghost, id_server = user_data.id_server)
