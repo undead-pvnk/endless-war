@@ -186,7 +186,8 @@ class EwUser:
 
 		deathreport = ''
 		
-		self.remove_inhabitants()
+		# remove ghosts inhabiting player
+		self.remove_inhabitation()
 
 		# Make The death report
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
@@ -708,9 +709,9 @@ class EwUser:
 
 	def get_inhabitants(self):
 		inhabitants = []
-		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {id_inhabit_target} = %s AND {id_server} = %s".format(
-			id_user = ewcfg.col_id_user,
-			id_inhabit_target = ewcfg.col_id_inhabit_target,
+		data = ewutils.execute_sql_query("SELECT {id_ghost} FROM inhabitations WHERE {id_fleshling} = %s AND {id_server} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_fleshling = ewcfg.col_id_fleshling,
 			id_server = ewcfg.col_id_server,
 		),(
 			self.id_user,
@@ -722,15 +723,27 @@ class EwUser:
 
 		return inhabitants
 
-	def remove_inhabitants(self):
-		ewutils.execute_sql_query("UPDATE users SET {id_inhabit_target} = '' WHERE {id_inhabit_target} = %s AND {id_server} = %s".format(
-			id_inhabit_target = ewcfg.col_id_inhabit_target,
+	def is_inhabiting(self):
+		return bool(ewutils.execute_sql_query("SELECT 1 from inhabitations where {id_ghost} = %s and {id_server} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		)))
+  
+	def remove_inhabitation(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		ewutils.execute_sql_query("DELETE FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s".format(
+			# remove ghosts inhabiting player if user is a fleshling,
+			# or remove fleshling inhabited by player if user is a ghost
+			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
 			id_server = ewcfg.col_id_server,
 		),(
 			self.id_user,
 			self.id_server
 		))
-		
+
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\

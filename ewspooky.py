@@ -411,13 +411,28 @@ async def inhabit(cmd):
 			elif target_data.life_state == ewcfg.life_state_corpse:
 				# Can't target ghosts
 				response = "You can't do that to your fellow ghost."
+			elif ewmap.poi_is_pvp(target_data.poi) == False:
+				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 			elif user_data.id_killer == target_data.id_user:
 				# Can't target the player's killer
 				response = "You wouldn't want a repeat of last time, better find someone else."
 			else:
+				# cancel the ghost's movement
 				ewutils.moves_active[cmd.message.author.id] = 0
-				user_data.id_inhabit_target = target_data.id_user
-				user_data.persist()
+				# drop any previous inhabitation by the ghost
+				user_data.remove_inhabitation()
+				# add the new inhabitation
+				ewutils.execute_sql_query(
+					"REPLACE INTO inhabitations({id_ghost}, {id_fleshling}, {id_server}) VALUES (%s, %s, %s)".format(
+						id_ghost = ewcfg.col_id_ghost,
+						id_fleshling = ewcfg.col_id_fleshling,
+						id_server = ewcfg.col_id_server,
+					),(
+						user_data.id_user,
+						target_data.id_user,
+						user_data.id_server,
+					)
+				)
 
 				response = "{}\'s body is inhabitted by the ghost of {}!".format(member.display_name, cmd.message.author.display_name)
 		else:
@@ -428,16 +443,14 @@ async def inhabit(cmd):
 async def let_go(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	response = ""
-	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
 	if user_data.life_state != ewcfg.life_state_corpse:
 		# Only ghosts can inhabit other players
 		response = "You feel a bit more at peace with the world."
-	elif user_data.id_inhabit_target == "":
+	elif not user_data.is_inhabiting():
 		response = "You're not inhabitting anyone right now."
 	else:
-		user_data.id_inhabit_target = ""
-		user_data.persist()
+		user_data.remove_inhabitation()
 		response = "You let go of the soul you've been tormenting."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

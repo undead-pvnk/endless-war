@@ -1730,6 +1730,12 @@ col_contents = "contents"
 # Database columns for book sales
 col_bought = "bought"
 
+# Database columns for inhabitation
+col_id_ghost = "id_ghost"
+col_id_fleshling = "id_fleshling"
+col_time_of_proposal = "time_of_proposal"
+col_empowered = "empowered"
+
 # Item type names
 it_item = "item"
 it_medal = "medal"
