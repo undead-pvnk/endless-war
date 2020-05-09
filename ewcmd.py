@@ -463,7 +463,10 @@ async def data(cmd):
 		if user_data.life_state == ewcfg.life_state_corpse:
 			inhabitee_id = user_data.get_inhabitee()
 			if inhabitee_id:
-					inhabitee_name = server.get_member(inhabitee_id).display_name
+				inhabitee_name = server.get_member(inhabitee_id).display_name
+				if user_data.get_weapon_possession():
+					response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+				else:
 					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
 		else:
 			inhabitant_ids = user_data.get_inhabitants()
@@ -471,15 +474,17 @@ async def data(cmd):
 				inhabitant_names = []
 				for inhabitant_id in inhabitant_ids:
 					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
-
+					ghost_in_weapon = user_data.get_weapon_possession()
 				if len(inhabitant_names) == 1:
-					response_block += "You are inhabited by the ghost of {}. ".format(inhabitant_names[0])
+					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your weapon' if ghost_in_weapon else '')
 				else:
 					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
 						", ".join(inhabitant_names[:-1]), 
 						"" if len(inhabitant_names) == 2 else ",", 
 						inhabitant_names[-1]
 					)
+					if ghost_in_weapon:
+							response_block += "{} is also possessing your weapon. ".format(server.get_member(ghost_in_weapon[0]).display_name)
 
   
 		if user_data.swear_jar >= 500:

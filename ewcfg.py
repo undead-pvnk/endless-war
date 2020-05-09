@@ -564,6 +564,8 @@ cmd_haunt = cmd_prefix + 'haunt'
 cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
+cmd_possess_weapon = cmd_prefix + 'possessweapon'
+cmd_consent = cmd_prefix + 'consent'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -974,6 +976,7 @@ slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_to_possess_weapon = -100000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
 slimes_shambler = 1000000
@@ -1281,6 +1284,9 @@ time_raidcountdown = 60
 
 # time for a raid boss to stay in a district before it can move again
 time_raidboss_movecooldown = 150
+
+# time for the window between a ghost's proposal and !consent, before having to renew the proposal
+time_consent = 30
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
@@ -1906,6 +1912,7 @@ source_weather = 15
 source_crush = 16
 source_casino = 17
 source_slimeoid_betting = 18
+source_ghost_contract = 19
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0

@@ -274,6 +274,12 @@ cmd_map = {
 
 	# remove inhabitted status
 	ewcfg.cmd_letgo: ewspooky.let_go,
+
+	# ghosts can empower the weapon of the player they're inhabiting
+	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+
+	# consent to ghost shenanigans
+	ewcfg.cmd_consent: ewspooky.consent,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,

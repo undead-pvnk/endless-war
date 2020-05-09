@@ -725,7 +725,7 @@ class EwUser:
 		return inhabitants
 
 	def get_inhabitee(self):
-		data = ewutils.execute_sql_query("SELECT {id_fleshling} from inhabitations where {id_ghost} = %s and {id_server} = %s".format(
+		data = ewutils.execute_sql_query("SELECT {id_fleshling} FROM inhabitations WHERE {id_ghost} = %s AND {id_server} = %s".format(
 			id_fleshling = ewcfg.col_id_fleshling,
 			id_ghost = ewcfg.col_id_ghost,
 			id_server = ewcfg.col_id_server,
@@ -765,6 +765,38 @@ class EwUser:
 		),(
 			self.id_user,
 			self.id_server
+		))
+
+	def get_weapon_possession(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		data = ewutils.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {empowered} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_server = ewcfg.col_id_server,
+			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
+			empowered = ewcfg.col_empowered,
+		),(
+			self.id_user,
+			self.id_server,
+			True,
+		))
+
+		try:
+			# return inhabitation data if available
+			return data[0]
+		except:
+			# otherwise return None
+			return None
+
+	def has_been_proposed_contract(self):
+		return bool(ewutils.execute_sql_query(
+			"SELECT 1 FROM inhabitations WHERE {id_fleshling} = %s AND {time_of_proposal} >= %s".format(
+				id_fleshling = ewcfg.col_id_fleshling,
+				time_of_proposal = ewcfg.col_time_of_proposal,
+			), (
+				self.id_user,
+				int(time.time()) - ewcfg.time_consent
+			)
 		))
 
 	def get_festivity(self):
