@@ -446,9 +446,8 @@ CREATE TABLE book_sales (
 CREATE TABLE inhabitations (
     id_ghost varchar(128) NOT NULL,
     id_fleshling varchar(128) NOT NULL,
-		id_server varchar(128) NOT NULL,
-		time_of_proposal int NOT NULL DEFAULT '0',
-		empowered boolean NOT NULL DEFAULT false,
+    id_server varchar(128) NOT NULL,
+    empowered boolean NOT NULL DEFAULT false,
 
-    PRIMARY KEY (id_ghost, id_fleshling, id_server)
+		PRIMARY KEY (id_ghost, id_fleshling, id_server)
 );

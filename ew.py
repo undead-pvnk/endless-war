@@ -788,17 +788,6 @@ class EwUser:
 			# otherwise return None
 			return None
 
-	def has_been_proposed_contract(self):
-		return bool(ewutils.execute_sql_query(
-			"SELECT 1 FROM inhabitations WHERE {id_fleshling} = %s AND {time_of_proposal} >= %s".format(
-				id_fleshling = ewcfg.col_id_fleshling,
-				time_of_proposal = ewcfg.col_time_of_proposal,
-			), (
-				self.id_user,
-				int(time.time()) - ewcfg.time_consent
-			)
-		))
-
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\

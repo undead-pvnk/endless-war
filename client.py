@@ -277,9 +277,6 @@ cmd_map = {
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
-
-	# consent to ghost shenanigans
-	ewcfg.cmd_consent: ewspooky.consent,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,

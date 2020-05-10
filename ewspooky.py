@@ -469,57 +469,46 @@ async def possess_weapon(cmd):
 		server = ewutils.get_client().get_server(user_data.id_server)
 		inhabitee_id = user_data.get_inhabitee()
 		inhabitee_data = EwUser(id_user = inhabitee_id, id_server = user_data.id_server)
-		inhabitee_name = server.get_member(inhabitee_id).display_name
+		inhabitee_member = server.get_member(inhabitee_id)
+		inhabitee_name = inhabitee_member.display_name
 		if inhabitee_data.weapon < 0:
 			response = "{} is not wielding a weapon right now.".format(inhabitee_name)
 		elif inhabitee_data.get_weapon_possession():
 			response = "{}'s weapon is already being possessed.".format(inhabitee_name)
-		elif inhabitee_data.has_been_proposed_contract():
-			response = "{} has recently been proposed another contract, wait a moment and try again.".format(inhabitee_name)
 		else:
-			ewutils.execute_sql_query(
-				"UPDATE inhabitations SET {time_of_proposal} = %s WHERE {id_ghost} = %s AND {id_server} = %s".format(
-					time_of_proposal = ewcfg.col_time_of_proposal,
-					id_ghost = ewcfg.col_id_ghost,
-					id_server = ewcfg.col_id_server,
-				),(
-					int(time.time()),
-					user_data.id_user,
-					user_data.id_server,
-				)
-			)
-
-			response = "You propose a trade to {}. " \
+			proposal_response = "You propose a trade to {}. " \
 				"You will possess their weapon to empower it, and in return they'll sacrifice half their slime to your name upon their next kill. " \
-				"Will they **{}** to this exchange?".format(inhabitee_name, ewcfg.cmd_consent)
+				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
+    
+			accepted = False
+			try:
+				msg = await cmd.client.wait_for_message(timeout = 30, author = inhabitee_member, check = ewutils.check_accept_or_refuse)
+				if msg != None:
+					if msg.content.lower() == ewcfg.cmd_accept:
+						accepted = True
+					elif message.content.lower() == ewcfg.cmd_refuse:
+						accepted = False
+			except:
+				accepted = False
 
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def consent(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	response = ""
-	if user_data.has_been_proposed_contract():
-		ewutils.execute_sql_query(
-    "UPDATE inhabitations A SET A.{empowered} = %s WHERE A.{id_fleshling} = %s AND A.{time_of_proposal} = " \
-		"(SELECT max({time_of_proposal}) FROM (SELECT {time_of_proposal}, {id_fleshling} from inhabitations) B WHERE B.{id_fleshling} = %s)".format(
-			empowered = ewcfg.col_empowered,
-			id_fleshling = ewcfg.col_id_fleshling,
-			time_of_proposal = ewcfg.col_time_of_proposal,
-		), (
-			True,
-			user_data.id_user,
-			user_data.id_user,
-		))
-  
-		ghost_id = user_data.get_weapon_possession()[0]
-		ghost_data = EwUser(id_user = ghost_id, id_server = user_data.id_server)
-		ghost_data.change_slimes(n = -ewcfg.slimes_to_possess_weapon, source = ewcfg.source_ghost_contract)
-		ghost_data.persist()
-
-		server = ewutils.get_client().get_server(user_data.id_server)
-		ghost_name = server.get_member(ghost_id).display_name
-		response = "You feel a metallic taste in your mouth as you sign {}'s spectral contract. You see them bind themselves to your weapon, which now bears their mark. It feels cold to the touch.".format(ghost_name)
-	else:
-		response = "Consent to what, slut?"
-
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			if accepted:
+				ewutils.execute_sql_query(
+				"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_ghost} = %s".format(
+					empowered = ewcfg.col_empowered,
+					id_fleshling = ewcfg.col_id_fleshling,
+					id_ghost = ewcfg.col_id_ghost,
+				), (
+					True,
+					inhabitee_id,
+					user_data.id_user,
+				))
+				user_data.change_slimes(n = -ewcfg.slimes_to_possess_weapon, source = ewcfg.source_ghost_contract)
+				user_data.persist()
+				accepted_response = "You feel a metallic taste in your mouth as you sign {}'s spectral contract. You see them bind themselves to your weapon, which now bears their mark. It feels cold to the touch.".format(cmd.message.author.display_name)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(inhabitee_member, accepted_response))
+			else:
+				response = "You should've known better, why would anyone ever trust you?"
+	
+	if response:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

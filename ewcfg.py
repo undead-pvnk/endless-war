@@ -565,7 +565,6 @@ cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
 cmd_possess_weapon = cmd_prefix + 'possessweapon'
-cmd_consent = cmd_prefix + 'consent'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -1284,9 +1283,6 @@ time_raidcountdown = 60
 
 # time for a raid boss to stay in a district before it can move again
 time_raidboss_movecooldown = 150
-
-# time for the window between a ghost's proposal and !consent, before having to renew the proposal
-time_consent = 30
 
 # maximum amount of enemies a district can hold before it stops spawning them
 max_enemies = 5
