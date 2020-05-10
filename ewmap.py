@@ -749,9 +749,9 @@ async def move(cmd = None, isApt = False):
 
 	movement_method = ""
 
-	if user_data.id_inhabit_target != "":
+	if user_data.get_inhabitee():
     # prevent ghosts currently inhabiting other players from moving on their own
-		response = "You might want to {} of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:

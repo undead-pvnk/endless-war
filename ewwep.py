@@ -360,6 +360,8 @@ def canAttack(cmd):
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
+  
+		weapon_possession_data = user_data.get_weapon_possession()
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -394,11 +396,11 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
-		elif shootee_data.id_user == user_data.get_weapon_possession()[0]:
+		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
 			# Target is possessing user's weapon
 			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
 
-		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.id_inhabit_target == user_data.id_user):
+		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user):
 			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabitting the player
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 

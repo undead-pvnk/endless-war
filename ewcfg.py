@@ -1566,7 +1566,6 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
-col_id_inhabit_target = 'id_inhabit_target'
 
 #SLIMERNALIA
 col_festivity = 'festivity'

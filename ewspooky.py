@@ -143,7 +143,7 @@ async def haunt(cmd):
 		haunted_data = EwUser(member = member)
 		market_data = EwMarket(id_server = cmd.message.server.id)
 		target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
-		target_is_inhabitted = haunted_data.id_user == user_data.id_inhabit_target
+		target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.

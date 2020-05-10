@@ -243,9 +243,9 @@ async def embark(cmd):
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if user_data.id_inhabit_target != "":
+	if user_data.get_inhabitee():
 		# prevent ghosts currently inhabiting other players from moving on their own
-		response = "You might want to {} of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
@@ -334,8 +334,13 @@ async def disembark(cmd):
 	response = ""
 	resp_cont = ewutils.EwResponseContainer(client = cmd.client, id_server = user_data.id_server)
 
+	# prevent ghosts currently inhabiting other players from moving on their own
+	if user_data.get_inhabitee():
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	# can only disembark when you're on a transport vehicle
-	if user_data.poi in ewcfg.transports:
+	elif user_data.poi in ewcfg.transports:
 		transport_data = EwTransport(id_server = user_data.id_server, poi = user_data.poi)
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
