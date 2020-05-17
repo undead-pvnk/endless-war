@@ -295,7 +295,7 @@ def canAttack(cmd):
 	#	else:
 	#		response = "You lack the moral fiber necessary for violence."
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
@@ -1047,7 +1047,7 @@ async def suicide(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
 	# Only allowed in the combat zone.
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
 	else:
 		# Get the user data.
@@ -1091,6 +1091,7 @@ async def suicide(cmd):
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
 			user_data.trauma = ewcfg.trauma_id_suicide
+			user_data.visiting = ewcfg.location_id_empty
 			die_resp = user_data.die(cause = ewcfg.cause_suicide)
 			resp_cont.add_response_container(die_resp)
 			user_data.persist()
@@ -2371,7 +2372,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	district_data.persist()
 
-	# If an enemy is a raidboss or sandbag, announce that kill in the killfeed
+	# If an enemy is a raidboss, announce that kill in the killfeed
 	if was_killed and (enemy_data.enemytype in ewcfg.raid_bosses):
 		# announce raid boss kill in kill feed channel
 

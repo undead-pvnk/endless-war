@@ -11,6 +11,8 @@ import ewstats
 import ewdistrict
 import ewrolemgr
 import ewsmelting
+import ewprank
+import ewdebug
 
 from ew import EwUser
 from ewplayer import EwPlayer
@@ -1065,6 +1067,8 @@ async def item_look(cmd):
 
 # this is basically just the item_look command with some other stuff at the bottom
 async def item_use(cmd):
+	use_mention_displayname = False
+	
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	author = cmd.message.author
 	server = cmd.message.server
@@ -1113,9 +1117,43 @@ async def item_use(cmd):
 				else:
 					response = "You turn on your gellphone."
 					item.item_props['active'] = 'true'
-				
+					
+
 				item.persist()
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+					
+			elif context == ewcfg.context_prankitem:
+				item_action = ""
+				side_effect = ""
+
+				if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
+					response = "You need to be on the city streets to unleash that prank item's full potential."
+				else:
+					if item.item_props['prank_type'] == ewcfg.prank_type_instantuse:
+						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_instantuse(cmd, item)
+						if side_effect != "":
+							response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
+							
+					elif item.item_props['prank_type'] == ewcfg.prank_type_response:
+						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_response(cmd, item)
+						if side_effect != "":
+							response += await perform_prank_item_side_effect(side_effect, cmd=cmd)
+							
+					elif item.item_props['prank_type'] == ewcfg.prank_type_trap:
+						item_action, response, use_mention_displayname, side_effect = await ewprank.prank_item_effect_trap(cmd, item)
+						
+					if item_action == "delete":
+						item_delete(item.id_item)
+						#prank_feed_channel = ewutils.get_channel(cmd.message.server, ewcfg.channel_prankfeed)
+						#await ewutils.send_message(cmd.client, prank_feed_channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), (response+"\n`-------------------------`")))
+						
+					elif item_action == "drop":
+						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
+						#print(item.item_props)
+					
+			elif context == "prankcapsule":
+				response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
+
+		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage((cmd.message.author if use_mention_displayname == False else cmd.mentions[0]), response))
 		await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
 	else:
@@ -1402,6 +1440,24 @@ def gen_item_props(item):
 		if item.context == ewcfg.context_slimeoidfood:
 			item_props["increase"] = item.increase
 			item_props["decrease"] = item.decrease
+		if item.context == ewcfg.context_prankitem:
+			item_props["prank_type"] = item.prank_type
+			item_props["prank_desc"] = item.prank_desc
+			item_props["rarity"] = item.rarity
+			item_props["gambit"] = item.gambit
+			# Response items
+			item_props["response_command"] = item.response_command
+			item_props["response_desc_1"] = item.response_desc_1
+			item_props["response_desc_2"] = item.response_desc_2
+			item_props["response_desc_3"] = item.response_desc_3
+			item_props["response_desc_4"] = item.response_desc_4
+			# Trap items
+			item_props["trap_chance"] = item.trap_chance
+			item_props["trap_stored_credence"] = item.trap_stored_credence
+			item_props["trap_user_id"] = item.trap_user_id
+			# Some prank items have nifty side effects
+			item_props["side_effect"] = item.side_effect
+			
 
 	elif item.item_type == ewcfg.it_weapon:
 		captcha = ""
@@ -1459,7 +1515,7 @@ async def soulextract(cmd):
 		usermodel.has_soul = 0
 		usermodel.persist()
 		response = "You tremble at the thought of trying this. Nothing ventured, nothing gained, you suppose. With all your mental fortitude you jam your hand deep into your chest and begin to pull out the very essence of your being. Your spirit, aspirations, everything that made you who you are begins to slowly drain from your mortal effigy until you feel absolutely nothing. Your soul flickers about, taunting you from outside your body. You capture it in a jar, almost reflexively.\n\nWow. Your personality must suck now."
-	elif usermodel.has_soul == 1 and usermodel.rr_challenger != "":
+	elif usermodel.has_soul == 1 and ewutils.active_target_map.get(usermodel.id_user) != "":
 		response = "Now's not the time to be playing with your soul, dumbass! You have to focus on pointing the gun at your head!"
 	else:
 		response = "There's nothing left in you to extract. You already spent the soul you had."
@@ -1498,6 +1554,10 @@ async def returnsoul(cmd):
 async def squeeze(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	soul_inv = inventory(id_user=cmd.message.author.id, id_server=cmd.message.server.id, item_type_filter=ewcfg.it_cosmetic)
+	
+	if usermodel.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	if usermodel.life_state == ewcfg.life_state_corpse:
 		response = "Alas, you lack the mortal appendages required to wring the slime out of someone's soul."
@@ -1672,5 +1732,72 @@ def surrendersoul(giver = None, receiver = None, id_server=None):
 			)
 			return item_id
 
+# SWILLDERMUK
+async def perform_prank_item_side_effect(side_effect, cmd=None, member=None):
+	response = ""
+	
+	if side_effect == "bungisbeam_effect":
+
+		target_member = cmd.mentions[0]
+		client = cmd.client
+		
+		current_nickname = target_member.display_name
+		new_nickname = current_nickname + ' (Bungis)'
+		
+		if len(new_nickname) > 32:
+			# new nickname is too long, cut out some parts of original nickname
+			new_nickname = current_nickname[:20]
+			new_nickname += '... (Bungis)'
+
+		await client.change_nickname(target_member, new_nickname)
+		
+		response = "\n\nYou are now known as {}!".format(target_member.display_name)
+
+	elif side_effect == "cumjar_effect":
+
+		target_member = cmd.mentions[0]
+		target_data = EwUser(member=target_member)
+
+		if random.randrange(2) == 0:
+			
+			figurine_id = random.choice(ewcfg.furniture_pony)
+			
+			#print(figurine_id)
+			item = ewcfg.furniture_map.get(figurine_id)
+			
+			item_props = gen_item_props(item)
+			
+			#print(item_props)
+
+			item_create(
+				id_user=target_data.id_user,
+				id_server=target_data.id_server,
+				item_type=ewcfg.it_furniture,
+				item_props=item_props,
+			)
+
+			response = "\n\n*{}*: What's this? It looks like a pony figurine was inside the Cum Jar all along! You stash it in your inventory quickly.".format(target_member.display_name)
+
+	elif side_effect == "bensaintsign_effect":
+
+		target_member = member
+		client = ewutils.get_client()
+		
+		new_nickname = 'Ben Saint'
+
+		await client.change_nickname(target_member, new_nickname)
+
+		response = "\n\nYou are now Ben Saint.".format(target_member.display_name)
+		
+	elif side_effect == "bodynotifier_effect":
+		target_member = cmd.mentions[0]
+		
+		direct_message = "You are now manually breathing.\nYou are now manually blinking.\nYour tounge is now uncomfortable inside your mouth.\nYou just lost THE GAME."
+		try:
+			await ewutils.send_message(cmd.client, target_member, direct_message)
+		except:
+			await ewutils.send_message(cmd.client, ewutils.get_channel(cmd.message.server, cmd.message.channel), ewutils.formatMessage(target_member, direct_message))
+
+	return response
 
 

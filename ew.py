@@ -43,10 +43,13 @@ class EwUser:
 	splattered_slimes = 0
 	sap = 0
 	hardened_sap = 0
+	
+	#TODO: Remove these...?
 	#SLIMERNALIA
 	festivity = 0
 	festivity_from_slimecoin = 0
 	slimernalia_kingpin = False
+	
 	manuscript = -1
 	swear_jar = 0
 	degradation = 0

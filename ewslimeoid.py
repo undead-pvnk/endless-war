@@ -2441,7 +2441,7 @@ async def slimeoidbattle(cmd):
 
 async def negaslimeoidbattle(cmd):
 
-	if not ewmap.channel_name_is_poi(cmd.message.channel.name):
+	if not ewutils.channel_name_is_poi(cmd.message.channel.name):
 		response = "You must go into the city to challenge an eldritch abomination."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
