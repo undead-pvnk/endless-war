@@ -298,6 +298,7 @@ map_height = len(map_world)
 sem_wall = -1
 sem_city = -2
 sem_city_alias = -3
+sem_bridge = -4
 
 landmarks = {}
 
@@ -307,8 +308,9 @@ def pairToString(pair):
 """
 	Find the cost to move through ortho-adjacent cells.
 """
-def neighbors(coord):
+def neighbors(coord, coord_penult = None):
 	neigh = []
+	sem_current = map_world[coord[1]][coord[0]]
 
 	if coord[1] > 0 and map_world[coord[1] - 1][coord[0]] != sem_wall:
 		neigh.append((coord[0], coord[1] - 1))
@@ -320,6 +322,18 @@ def neighbors(coord):
 	if coord[0] < (map_width - 1) and map_world[coord[1]][coord[0] + 1] != sem_wall:
 		neigh.append((coord[0] + 1, coord[1]))
 
+	if coord_penult in neigh:
+		neigh.remove(coord_penult)
+
+		if sem_current == sem_bridge:
+			direction = (coord[0] - coord_penult[0], coord[1] - coord_penult[1])
+					
+			valid_neigh = (coord[0] + direction[0], coord[1] + direction[1])
+
+			if valid_neigh in neigh:
+				neigh = [valid_neigh]
+			else:
+				neigh = []	
 	return neigh
 
 
@@ -398,6 +412,9 @@ def path_step(path, coord_next, user_data, coord_end, landmark_mode = False):
 				else:
 					cost_next = 0
 
+	if cost_next == sem_bridge:
+		cost_next = 0
+
 	path.steps.append(coord_next)
 
 	cost_next = int(cost_next / user_data.move_speed)
@@ -469,9 +486,7 @@ def score_map_from(
 
 
 			path_base = path
-			neighs = neighbors(step_last)
-			if step_penult in neighs:
-				neighs.remove(step_penult)
+			neighs = neighbors(step_last, step_penult)
 
 			num_neighbors = len(neighs)
 			for i in range(num_neighbors):
@@ -581,9 +596,8 @@ def path_to(
 						continue
 
 			path_base = path
-			neighs = neighbors(step_last)
-			if step_penult in neighs:
-				neighs.remove(step_penult)
+			neighs = neighbors(step_last, step_penult)
+				
 
 			num_neighbors = len(neighs)
 			for i in range(num_neighbors):
