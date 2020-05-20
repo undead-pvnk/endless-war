@@ -466,7 +466,7 @@ def formatMessage(user_target, message):
 	except:
 		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
 
-""" Decay slime totals for all users """
+""" Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
 	if id_server != None:
 		try:
@@ -474,8 +474,10 @@ def decaySlimes(id_server = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {slimes} > 1".format(
-				slimes = ewcfg.col_slimes
+			cursor.execute("SELECT id_user, life_state FROM users WHERE id_server = %s AND {slimes} > 1 AND NOT {life_state} = {life_state_kingpin}".format(
+				slimes = ewcfg.col_slimes,
+				life_state = ewcfg.col_life_state,
+				life_state_kingpin = ewcfg.life_state_kingpin
 			), (
 				id_server,
 			))
