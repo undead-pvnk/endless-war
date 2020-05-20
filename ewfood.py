@@ -393,7 +393,12 @@ async def order(cmd):
 									has_weapon = True
 									weapon.stack_size += 1
 									weapon.persist()
-									response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
+									
+									if value == 0:
+										response = "You swipe a {} from the counter at {}.".format(item.str_weapon, current_vendor)
+									else:
+										response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_weapon)
+										
 									user_data.change_slimes(n=-value, source=ewcfg.source_spending)
 									user_data.persist()
 									return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -448,8 +453,11 @@ async def order(cmd):
 						stack_size = 1 if item_type == ewcfg.it_weapon and ewcfg.weapon_class_thrown in item.classes else 0,
 						item_props = item_props
 					)
-
-					response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_name)
+					
+					if value == 0:
+						response = "You swipe a {} from the counter at {}.".format(item.str_name, current_vendor)
+					else:
+						response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_name)
 
 					if food_ordered and not togo:
 						item_data = EwItem(id_item=id_item)
@@ -458,14 +466,21 @@ async def order(cmd):
 						if target_data != None:
 
 							target_player_data = EwPlayer(id_user=target_data.id_user)
-
-							response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, item.str_name, target_player_data.display_name)
+							
+							if value == 0:
+								response = "You swipe a {} from the counter at {} and give it to {}.".format(item.str_name, current_vendor, target_player_data.display_name)
+							else:
+								response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, item.str_name, target_player_data.display_name)
 
 							response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
 							target_data.persist()
 							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
 						else:
-							response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, item.str_name)
+							
+							if value == 0:
+								response = "You swipe a {} from the counter at {} and eat it right on the spot.".format(item.str_name, current_vendor)
+							else:
+								response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, item.str_name)
 
 							user_player_data = EwPlayer(id_user=user_data.id_user)
 

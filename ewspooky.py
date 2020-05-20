@@ -29,6 +29,9 @@ async def revive(cmd):
 	else:
 		player_data = EwUser(member = cmd.message.author)
 
+		# For SWILLDERMUK, max possible respawn timers will be decreased by lowering degradation.
+		# player_data.degradation = min(player_data.degradation, 600)
+
 		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
 		
 		if time_until_revive > 0:
@@ -142,7 +145,8 @@ async def haunt(cmd):
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
 		market_data = EwMarket(id_server = cmd.message.server.id)
-		target_isshambler = haunted_data.life_state == ewcfg.life_state_shambler
+		target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
+		target_is_inhabitted = haunted_data.id_user == user_data.id_inhabit_target
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
@@ -155,7 +159,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
+		elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -376,3 +380,67 @@ async def manifest(cmd):
 	user_data.persist()
 
 	await ewrolemgr.updateRoles(cmd.client, cmd.message.author)
+
+
+"""
+	allows ghosts to hook on to living players and follow them around
+"""
+async def inhabit(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+		
+	if user_data.life_state != ewcfg.life_state_corpse:
+		# Only ghosts can inhabit other players
+		response = "You have no idea what you're doing."
+	else:
+		if cmd.mentions_count > 1:
+			response = "Are you trying to split yourself in half? You can only inhabit one body at a time."
+		elif cmd.mentions_count == 1:
+			member = cmd.mentions[0]
+			target_data = EwUser(member = member)
+
+			if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+				# Has to be done in a gameplay channel
+				response = "You can't disturb the living from here."
+			elif cmd.message.channel.name == ewcfg.channel_sewers:
+				# Can't be done from the sewers
+				response = "Try doing that in the overworld, it's difficult from down here."
+			elif target_data.life_state == ewcfg.life_state_kingpin:
+				# Can't target generals
+				response = "He is far too strong for you to inhabit his body."
+			elif user_data.poi != target_data.poi:
+				# Player must be on the same location as their target
+				response = "You'll have to find them first."
+			elif target_data.life_state == ewcfg.life_state_corpse:
+				# Can't target ghosts
+				response = "You can't do that to your fellow ghost."
+			elif user_data.id_killer == target_data.id_user:
+				# Can't target the player's killer
+				response = "You wouldn't want a repeat of last time, better find someone else."
+			else:
+				ewutils.moves_active[cmd.message.author.id] = 0
+				user_data.id_inhabit_target = target_data.id_user
+				user_data.persist()
+
+				response = "{}\'s body is inhabitted by the ghost of {}!".format(member.display_name, cmd.message.author.display_name)
+		else:
+			response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def let_go(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
+
+	if user_data.life_state != ewcfg.life_state_corpse:
+		# Only ghosts can inhabit other players
+		response = "You feel a bit more at peace with the world."
+	elif user_data.id_inhabit_target == "":
+		response = "You're not inhabitting anyone right now."
+	else:
+		user_data.id_inhabit_target = ""
+		user_data.persist()
+		response = "You let go of the soul you've been tormenting."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

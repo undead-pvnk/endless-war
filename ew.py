@@ -15,6 +15,7 @@ class EwUser:
 	id_user = ""
 	id_server = ""
 	id_killer = ""
+	id_inhabit_target = ""
 
 	combatant_type = "player"
 
@@ -44,7 +45,6 @@ class EwUser:
 	sap = 0
 	hardened_sap = 0
 	
-	#TODO: Remove these...?
 	#SLIMERNALIA
 	festivity = 0
 	festivity_from_slimecoin = 0
@@ -53,6 +53,11 @@ class EwUser:
 	manuscript = -1
 	swear_jar = 0
 	degradation = 0
+	
+	#SWILLDERMUK
+	gambit = 0
+	credence = 0
+	credence_used = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -185,6 +190,7 @@ class EwUser:
 
 		deathreport = ''
 		
+		self.remove_inhabitants()
 
 		# Make The death report
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
@@ -222,6 +228,7 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now		
+			self.id_inhabit_target = ""
 	
 			# if self.life_state == ewcfg.life_state_shambler:
 			# 	self.degradation += 1
@@ -707,6 +714,31 @@ class EwUser:
 
 		return vouchers
 
+	def get_inhabitants(self):
+		inhabitants = []
+		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {id_inhabit_target} = %s AND {id_server} = %s".format(
+			id_user = ewcfg.col_id_user,
+			id_inhabit_target = ewcfg.col_id_inhabit_target,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+		for row in data:
+			inhabitants.append(row[0])
+
+		return inhabitants
+
+	def remove_inhabitants(self):
+		ewutils.execute_sql_query("UPDATE users SET {id_inhabit_target} = '' WHERE {id_inhabit_target} = %s AND {id_server} = %s".format(
+			id_inhabit_target = ewcfg.col_id_inhabit_target,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		))
+		
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
@@ -755,7 +787,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -803,6 +835,10 @@ class EwUser:
 					ewcfg.col_swear_jar,
 					ewcfg.col_degradation,
 					ewcfg.col_time_lastdeath,
+					ewcfg.col_gambit,
+					ewcfg.col_credence,
+					ewcfg.col_credence_used,
+					ewcfg.col_id_inhabit_target,
 				), (
 					id_user,
 					id_server
@@ -857,6 +893,10 @@ class EwUser:
 					self.swear_jar = result[43]
 					self.degradation = result[44]
 					self.time_lastdeath = result[45]
+					self.gambit = result[46]
+					self.credence = result[47]
+					self.credence_used = result[48]
+					self.id_inhabit_target = result[49]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -912,7 +952,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -962,6 +1002,10 @@ class EwUser:
 				ewcfg.col_swear_jar,
 				ewcfg.col_degradation,
 				ewcfg.col_time_lastdeath,
+				ewcfg.col_gambit,
+				ewcfg.col_credence,
+				ewcfg.col_credence_used,
+				ewcfg.col_id_inhabit_target,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1012,6 +1056,10 @@ class EwUser:
 				self.swear_jar,
 				self.degradation,
 				self.time_lastdeath,
+				self.gambit,
+				self.credence,
+				self.credence_used,
+				self.id_inhabit_target
 			))
 
 			conn.commit()

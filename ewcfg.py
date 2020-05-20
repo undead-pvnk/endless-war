@@ -562,6 +562,8 @@ cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_manifest = cmd_prefix + 'manifest'
+cmd_inhabit = cmd_prefix + 'inhabit'
+cmd_letgo = cmd_prefix + 'letgo'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -1562,6 +1564,7 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_id_inhabit_target = 'id_inhabit_target'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -3245,6 +3248,12 @@ item_list = [
 		trap_chance=35,
 		rarity=prank_rarity_heinous,
 		gambit=20,
+	),
+	EwGeneralItem(
+		id_item=item_id_swordofseething,
+		str_name="SWORD OF SEETHING",
+		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
+		context="swordofseething",
 	),
 	EwGeneralItem(
 		id_item="brokensword",
@@ -11810,7 +11819,7 @@ poi_list = [
 			"cliff"
 		],
 		str_name = "Slime's End Cliffs",
-		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
 		role = "Slime's End Cliffs",
 		mother_district = poi_id_slimesend,
@@ -17299,7 +17308,7 @@ captcha_dict = [
 	'KFC', 'GAY', 'LOL', 'GUN', 'MUK',
 	'POW', 'WOW', 'POP', 'OWO', 'HIP',
 	'END', 'HAT', 'CUP', '911', '711',
-	'SIX', 'SMG', 'BOW', 'AWO',
+	'SIX', 'SMG', 'BOW',
 	#4
 	'GOON', 'DOOR', 'CORP', 'SPAM', 'BLAM',
 	'FISH', 'MINE', 'LOCK', 'OURS', 'ROCK',
@@ -17314,38 +17323,37 @@ captcha_dict = [
 	'SLOSH', 'PARTY', 'JUVIE', 'BASED', 'TULPA',
 	'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
 	'GREEN', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
-	'LUCKY', 'RIFLE', '56709', 'AWOOO',
+	'LUCKY', 'RIFLE', '56709',
 	#6
 	'SLUDGE', 'KILLER', 'MUNCHY', 'BLAAAP', 'BARTER',
 	'ARTIST', 'FUCKER', 'MINING', 'SURVEY', 'THRASH',
 	'BEWARE', 'STOCKS', 'COWARD', 'CRINGE', 'INVEST', 
 	'BUSTAH', 'KILLAH', 'KATANA', 'GHOSTS', 'BASSED', 
-	'REVIVE', 'BATTLE', 'PAWPAW', 'AWOOOO',
+	'REVIVE', 'BATTLE', 'PAWPAW',
 	#7
 	'KINGPIN', 'ENDLESS', 'ATTACKS', 'FUCKERS', 'FISHING',
 	'VIOLENT', 'SQUEEZE', 'LOBSTER', 'WESTERN', 'EASTERN', 
 	'REGIONS', 'DISCORD', 'KNUCKLE', 'MOLOTOV', 'SHAMBLE',
 	'WARFARE', 'BIGIRON', 'POUDRIN', 'PATRIOT', 'MINIGUN',
-	'AWOOOOO',
 	#8
 	'GAMEPLAY', 'SHAMBLER', 'CONFLICT', 'EXCHANGE', 'FEEDBACK',
 	'VIOLENCE', 'TACOBELL', 'PIZZAHUT', 'OUTSKIRT', 'WHATEVER',
 	'WITHDRAW', 'SOUTHERN', 'NORTHERN', 'ASTATINE', 'SLIMEOID',
 	'SHAMBLIN', 'STAYDEAD', 'JUVENILE', 'DOWNTOWN', 'DISTRICT',
 	'BIGBONES', 'LONEWOLF', 'KEENSMELL', 'RAZORNUTS', 'REVOLVER',
-	'BASEBALL', 'GRENADES', 'AWOOOOOO',
+	'BASEBALL', 'GRENADES',
 	#9
 	'APARTMENT', 'SURVIVORS', 'NEGASLIME', 'COMMUNITY', 'GIGASLIME',
 	'DETENTION', 'CATHEDRAL', 'TOXINGTON', 'SLIMEGIRL', 'INVESTING',
 	'SLIMECOIN', 'RATELIMIT', 'NARRATIVE', 'COMMANDO', 'SHAMBLERS',
 	'NUNCHUCKS', 'SLIMECORP', 'ARSONBROOK','SMOGSBURG', 'SLIMEFEST', 
-	'COMMANDER', 'FATCHANCE', 'DANKWHEAT', 'AWOOOOOOO',
+	'COMMANDER', 'FATCHANCE', 'DANKWHEAT',
 	#10
 	'SLUDGECORE', 'LOREMASTER', 'ROUGHHOUSE', 'GLOCKSBURY', 'CALCULATED',
 	'PLAYGROUND', 'NEWYONKERS', 'OLDYONKERS', 'VANDALPARK', 'SLIMERMAID',
 	'SLIMEXODIA', 'WEBBEDFEET', 'NOSEFERATU', 'BINGEEATER', 'TRASHMOUTH',
 	'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
-	'DRAGONCLAW', 'AWOOOOOOOO',
+	'DRAGONCLAW',
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id

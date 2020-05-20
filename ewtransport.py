@@ -243,6 +243,11 @@ async def embark(cmd):
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if user_data.id_inhabit_target != "":
+		# prevent ghosts currently inhabiting other players from moving on their own
+		response = "You might want to {} of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 	# must be at a transport stop to enter a transport

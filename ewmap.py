@@ -749,6 +749,11 @@ async def move(cmd = None, isApt = False):
 
 	movement_method = ""
 
+	if user_data.id_inhabit_target != "":
+    # prevent ghosts currently inhabiting other players from moving on their own
+		response = "You might want to {} of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -982,6 +987,19 @@ async def move(cmd = None, isApt = False):
 
 					# SWILLDERMUK
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
+
+					# also move any ghosts inhabitting the player
+					inhabitants = user_data.get_inhabitants()
+					if len(inhabitants) > 0:
+						server = client.get_server(user_data.id_server)
+						for ghost in inhabitants:
+							ghost_data = EwUser(id_user = ghost, id_server = user_data.id_server)
+							ghost_data.poi = poi_current.id_poi
+							ghost_data.time_lastenter = int(time.time())
+							ghost_data.persist()
+
+							ghost_member = server.get_member(ghost)
+							await ewrolemgr.updateRoles(client = client, member = ghost_member)
 
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
