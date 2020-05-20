@@ -257,10 +257,26 @@ async def smoke(cmd):
 			item.item_props['id_cosmetic'] = "cigarettebutt"
 			item.item_props['cosmetic_name'] = "cigarette butt"
 			item.persist()
+		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
+			response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+			item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
+			item.item_props['adorned'] = "true"
+			item.persist()
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+			await asyncio.sleep(300)
+			item = EwItem(id_item=item_sought.get('id_item'))
+
+			response = "The cigar fizzled out."
+
+			item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
+			item.item_props['adorned'] = "false"
+			item.item_props['id_cosmetic'] = "cigarstump"
+			item.item_props['cosmetic_name'] = "cigar stump"
+			item.persist()
 		else:
-			response = "There aren't any usable cigarettes in your inventory."
+			response = "There aren't any usable cigarettes or cigars in your inventory."
 	else:
-		response = "There aren't any usable cigarettes in your inventory."
+		response = "There aren't any usable cigarettes or cigars in your inventory."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 

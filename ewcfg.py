@@ -922,6 +922,7 @@ cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
+cmd_clear_quadrant = cmd_prefix + "clearquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
 cmd_get_flushed = cmd_prefix + "flushed"
 cmd_get_flushed_alt1 = cmd_prefix + "matesprit"

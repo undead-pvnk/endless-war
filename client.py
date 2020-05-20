@@ -558,6 +558,7 @@ cmd_map = {
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
 	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
 	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
