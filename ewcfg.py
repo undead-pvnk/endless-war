@@ -2317,6 +2317,13 @@ item_list = [
 		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
+		id_item = "browndye",
+		context = "dye",
+		str_name = "Brown Dye",
+		str_desc = "A small vial of brown dye.",
+		acquisition = acquisition_smelting,
+	),
+	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
 		alias = [
 			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
@@ -12983,6 +12990,24 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
+		id_cosmetic="kilt",
+		str_name="Kilt",
+		str_desc="A traditional scottish garmet that's plaid, and it's not a fuckin' skirt, aight?",
+		rarity=rarity_plebeian,
+		acquisition=acquisition_smelting,
+		price=50000,
+		vendors=[vendor_bazaar],
+	),
+	EwCosmeticItem(
+		id_cosmetic="cigar",
+		str_name="Cigar",
+		str_desc="Much more manly then a puny cigarette. This cigar has been freshly imported from cuba and is thick enough to last for hours.",
+		rarity=rarity_plebeian,
+		acquisition=acquisition_smelting,
+		price=50000,
+		vendors=[vendor_bazaar],
+	),
+	EwCosmeticItem(
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
@@ -13157,6 +13182,14 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
+    EwCosmeticItem(
+		id_cosmetic = "crocs",
+		str_name = "Crocs",
+		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
+		rarity = rarity_plebeian,
+		vendors = [vendor_bazaar],
+		price = 1000,
+	),
 	EwCosmeticItem(
 		id_cosmetic = "janusmask",
 		str_name = "Janus Mask",
@@ -13164,6 +13197,158 @@ cosmetic_items_list = [
 		rarity = "Swilldermuk",
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
+	),
+	EwCosmeticItem(
+		id_cosmetic = "leatherjacket",
+		str_name = "Leather Jacket",
+		str_desc = "A black leather jacket. Gangs of killers stalking the streets are often found wearing these.",
+		rarity = rarity_patrician,
+		vendors = [vendor_bazaar],
+		price = 50000,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "afrowig",
+		str_name = "Afro Wig",
+		str_desc = "The perfect hair-do for a 70's party or a pool party just be sure to keep a can of hairspray and comb at hand.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pompadourwig",
+		str_name = "Pompadour Wig",
+		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "powderedwig",
+		str_name = "Powdered Wig",
+		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "rainbowafrowig",
+		str_name = "Rainbow Afro Wig",
+		str_desc = "A colorful wig worthy of a real chuckle.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "ghostlygibus",
+		str_name = "Ghostly Gibus",
+		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "gasmask",
+		str_name = "Gas Mask",
+		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "firefightershelmet",
+		str_name = "Firefighter's Helmet",
+		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pairofpoindexterglasses",
+		str_name = "Pair Of Poindexter Glasses",
+		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "duncecap",
+		str_name = "Dunce Cap",
+		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "vrheadset",
+		str_name = "VR Headset",
+		str_desc = "Endless War -- now in stunning VR!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "blindfold",
+		str_name = "Blindfold",
+		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "chickenmask",
+		str_name = "Chicken Mask",
+		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "mountiehat",
+		str_name = "Mountie Hat",
+		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "bearskinhat",
+		str_name = "Bearskin Hat",
+		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "aviatorshat",
+		str_name = "Aviator's Hat",
+		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "militaryberet",
+		str_name = "Military Beret",
+		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "felinehat",
+		str_name = "Feline Hat",
+		str_desc = "A hat striped with red and white is quite right for a fanciful fight! It’s a funny hat at that, and it looks like it’s been worn by a cat!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "tikihead",
+		str_name = "Tiki Head",
+		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
 	),
 ]
 
@@ -13565,7 +13750,7 @@ smelting_recipe_list = [
 		},
 		products = ['slimepoudrin']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "humancorpse",
 		str_name = "a corpse",
 		alias = [
@@ -13581,7 +13766,7 @@ EwSmeltingRecipe(
 		},
 		products = ['humancorpse']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "popeonarope",
 		str_name = "pope on a rope",
 		alias = [
@@ -13598,7 +13783,7 @@ EwSmeltingRecipe(
 		},
 		products = ['popeonarope']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "reanimatedcorpse",
 		str_name = "reanimated corpse",
 		alias = [
@@ -13612,7 +13797,7 @@ EwSmeltingRecipe(
 		},
 		products = ['reanimatedcorpse']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "soul",
 		str_name = "soul",
 		alias = [
@@ -13625,7 +13810,7 @@ EwSmeltingRecipe(
 		},
 		products = ['soul']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
 		str_name = "handmade chair",
 		alias = [
@@ -13640,7 +13825,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatechair', 'shittychair']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadebench",
 		str_name = "handmade bench",
 		alias = [
@@ -13655,7 +13840,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatebench', 'shittybench']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadebed",
 		str_name = "handmade bed",
 		alias = [
@@ -13670,7 +13855,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatebed', 'shittybed']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadedesk",
 		str_name = "handmade desk",
 		alias = [
@@ -13685,7 +13870,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "clarinet",
 		str_name = "clarinet",
 		alias = [
@@ -13704,7 +13889,7 @@ EwSmeltingRecipe(
 		},
 		products = ['craftsmansclarinet', 'woodenvuvuzela']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "guitar",
 		str_name = "solid poudrin guitar",
 		alias = [
@@ -13735,7 +13920,7 @@ EwSmeltingRecipe(
 		},
 		products = ['beastskindrums']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "xylophone",
 		str_name = "fish bone xylophone",
 		alias = [
@@ -13752,7 +13937,7 @@ EwSmeltingRecipe(
 		},
 		products = ['fishbonexylophone']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "maracas",
 		str_name = "gourd maracas",
 		alias = [
@@ -13770,6 +13955,18 @@ EwSmeltingRecipe(
 		},
 		products = ['gourdmaracas']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "browndye",
+		str_name = "Brown Dye",
+		alias = [
+			'brown',
+		],
+		ingredients = {
+			'reddye' : 1,
+			'blackdye': 1,
+		},
+		products = ['browndye']
+	)
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
