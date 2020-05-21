@@ -15252,7 +15252,7 @@ hue_id_rainbow = "rainbow"
 hue_id_white = "white"
 hue_id_grey = "grey"
 hue_id_black = "black"
-
+hue_id_brown = "brown"
 
 
 # All color attributes in the game.
@@ -15509,6 +15509,15 @@ hue_list = [
 			hue_id_rainbow: hue_full_complementary
 		}
 
+	),
+	EwHue(
+		id_hue = hue_id_brown,
+		alias = [
+			"browndye",
+		],
+		str_saturate = "It turned an earthly brown!",
+		str_name = "brown",
+		str_desc = "Its earthly brown hue imbues with it with a humble, down-to-earth personality.",
 	),
 ]
 

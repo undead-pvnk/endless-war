@@ -455,16 +455,18 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
-	try:
-		if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-			return "{}".format(message)
-		else:
-			# Send messages normally if the raid boss is activated or if user_target is a player
-			return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
-	# If the user has the name of a raid boss, catch the exception and format the message correctly
-	except:
-		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+    # If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+    try:
+        if user_target.life_state == ewcfg.enemy_lifestate_alive:
+            # Send messages for normal enemies, and mentioning with @
+            return "*{}:* {}".format(user_target.display_name, message)
+
+        elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+            return "{}".format(message)
+
+    # If user_target isn't an enemy, catch the exception.
+    except:
+        return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
 
 """ Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
