@@ -236,7 +236,7 @@ async def smoke(cmd):
 	item_stash = ewitem.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	for item_piece in item_stash:
 		item = EwItem(id_item=item_piece.get('id_item'))
-		if item_piece.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette" and "lit" not in item.item_props.get('cosmetic_desc'):
+		if item_piece.get('item_type') == ewcfg.it_cosmetic and (item.item_props.get('id_cosmetic') == "cigarette" or item.item_props.get('id_cosmetic') == "cigar") and "lit" not in item.item_props.get('cosmetic_desc'):
 			item_sought = item_piece
 
 	if item_sought:
@@ -258,7 +258,7 @@ async def smoke(cmd):
 			item.item_props['cosmetic_name'] = "cigarette butt"
 			item.persist()
 		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
-			response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+			response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
 			item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
 			item.item_props['adorned'] = "true"
 			item.persist()
@@ -274,7 +274,7 @@ async def smoke(cmd):
 			item.item_props['cosmetic_name'] = "cigar stump"
 			item.persist()
 		else:
-			response = "There aren't any usable cigarettes or cigars in your inventory."
+			response = "You can't smoke that."
 	else:
 		response = "There aren't any usable cigarettes or cigars in your inventory."
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
