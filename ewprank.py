@@ -165,65 +165,6 @@ class PrankIndex:
 			
 response_timer = 6 # How long does it take for a response item to send out its attacks
 afk_timer = 60 * 60 * 2 # 2 hours
-		
-def calculate_gambit_exchange(pranker_data, pranked_data, item, response_item_multiplier = 0, trap_used = False):
-	pranker_credence = pranker_data.credence
-	pranked_credence = pranked_data.credence
-	
-	if trap_used:
-		pranker_credence = int(item.item_props.get('trap_stored_credence'))
-	
-	#print(pranker_credence)
-	#print(pranked_credence)
-	
-	item_props = item.item_props
-	gambit_multiplier = int(item_props.get('gambit'))
-	
-	# A multiplier of 0 means that a response item isn't being used.
-	# A multiplier of 6 means that a response item is done being used.
-	if response_item_multiplier == 0 or response_item_multiplier == 6:
-		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier)
-		
-		if response_item_multiplier == 6:
-			total_gambit_value = 0
-		
-		if not trap_used:
-			pranker_data.credence = 0
-		pranked_data.credence = 0
-	else:
-		total_gambit_value = ((pranked_credence + pranker_credence) * gambit_multiplier * response_item_multiplier)
-		
-	# Masochism is not to be encouraged. The more someone has been pranked, the less gambit is generated in the exchange.
-	current_prank_index = PrankIndex(pranker_data.id_user, pranked_data.id_user, pranker_data.id_server)
-	
-	#print(total_gambit_value)
-	
-	current_count = current_prank_index.prank_count
-	
-	#print(current_count)
-	
-	if current_prank_index != None:
-		if current_count > 0:
-			total_gambit_value_modifier = (int(current_count/3) + 1)
-			total_gambit_value = int(total_gambit_value/total_gambit_value_modifier)
-			
-			#print(total_gambit_value_modifier)
-			
-	#print(total_gambit_value)
-			
-	current_prank_index.prank_count += 1
-	current_prank_index.persist()
-	
-	pranker_data.credence_used += total_gambit_value
-	pranked_data.credence_used += total_gambit_value
-	
-	pranker_data.gambit += total_gambit_value
-	pranked_data.gambit -= total_gambit_value
-	
-	#print('response multi: {}'.format(response_item_multiplier))
-	
-	pranker_data.persist()
-	pranked_data.persist()
 
 # Use an instant use item
 async def prank_item_effect_instantuse(cmd, item):

@@ -455,3 +455,12 @@ CREATE TABLE swilldermuk_prank_index (
     
     PRIMARY KEY (id_user_pranker, id_user_pranked)
 );
+
+CREATE TABLE inhabitations (
+    id_ghost varchar(128) NOT NULL,
+    id_fleshling varchar(128) NOT NULL,
+    id_server varchar(128) NOT NULL,
+    empowered boolean NOT NULL DEFAULT false,
+
+	PRIMARY KEY (id_ghost, id_fleshling, id_server)
+);

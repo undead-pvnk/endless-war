@@ -564,6 +564,7 @@ cmd_haunt = cmd_prefix + 'haunt'
 cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
+cmd_possess_weapon = cmd_prefix + 'possessweapon'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -975,6 +976,7 @@ slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_to_possess_weapon = -100000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
 slimes_shambler = 1000000
@@ -1731,6 +1733,12 @@ col_contents = "contents"
 # Database columns for book sales
 col_bought = "bought"
 
+# Database columns for inhabitation
+col_id_ghost = "id_ghost"
+col_id_fleshling = "id_fleshling"
+col_time_of_proposal = "time_of_proposal"
+col_empowered = "empowered"
+
 # Item type names
 it_item = "item"
 it_medal = "medal"
@@ -1901,6 +1909,7 @@ source_weather = 15
 source_crush = 16
 source_casino = 17
 source_slimeoid_betting = 18
+source_ghost_contract = 19
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0

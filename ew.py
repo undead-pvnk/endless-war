@@ -8,6 +8,7 @@ import ewstats
 import ewitem
 import ewstatuseffects
 import ewdistrict
+import ewrolemgr 
 from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -190,7 +191,8 @@ class EwUser:
 
 		deathreport = ''
 		
-		self.remove_inhabitants()
+		# remove ghosts inhabiting player
+		self.remove_inhabitation()
 
 		# Make The death report
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
@@ -215,8 +217,6 @@ class EwUser:
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
-			
-
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -716,9 +716,9 @@ class EwUser:
 
 	def get_inhabitants(self):
 		inhabitants = []
-		data = ewutils.execute_sql_query("SELECT {id_user} FROM users WHERE {id_inhabit_target} = %s AND {id_server} = %s".format(
-			id_user = ewcfg.col_id_user,
-			id_inhabit_target = ewcfg.col_id_inhabit_target,
+		data = ewutils.execute_sql_query("SELECT {id_ghost} FROM inhabitations WHERE {id_fleshling} = %s AND {id_server} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_fleshling = ewcfg.col_id_fleshling,
 			id_server = ewcfg.col_id_server,
 		),(
 			self.id_user,
@@ -730,15 +730,70 @@ class EwUser:
 
 		return inhabitants
 
-	def remove_inhabitants(self):
-		ewutils.execute_sql_query("UPDATE users SET {id_inhabit_target} = '' WHERE {id_inhabit_target} = %s AND {id_server} = %s".format(
-			id_inhabit_target = ewcfg.col_id_inhabit_target,
+	def get_inhabitee(self):
+		data = ewutils.execute_sql_query("SELECT {id_fleshling} FROM inhabitations WHERE {id_ghost} = %s AND {id_server} = %s".format(
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_ghost = ewcfg.col_id_ghost,
 			id_server = ewcfg.col_id_server,
 		),(
 			self.id_user,
 			self.id_server
 		))
-		
+
+		try:
+			# return ID of inhabited player if there is one
+			return data[0][0]
+		except:
+			# otherwise return None
+			return None
+
+	async def move_inhabitants(self, id_poi = None):
+		client = ewutils.get_client()
+		inhabitants = self.get_inhabitants()
+		if inhabitants:
+			server = client.get_server(self.id_server)
+			for ghost in inhabitants:
+				ghost_data = EwUser(id_user = ghost, id_server = self.id_server)
+				ghost_data.poi = id_poi
+				ghost_data.time_lastenter = int(time.time())
+				ghost_data.persist()
+    
+				ghost_member = server.get_member(ghost)
+				await ewrolemgr.updateRoles(client = client, member = ghost_member)
+  
+	def remove_inhabitation(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		ewutils.execute_sql_query("DELETE FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s".format(
+			# remove ghosts inhabiting player if user is a fleshling,
+			# or remove fleshling inhabited by player if user is a ghost
+			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+	def get_weapon_possession(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		data = ewutils.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {empowered} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_server = ewcfg.col_id_server,
+			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
+			empowered = ewcfg.col_empowered,
+		),(
+			self.id_user,
+			self.id_server,
+			True,
+		))
+
+		try:
+			# return inhabitation data if available
+			return data[0]
+		except:
+			# otherwise return None
+			return None
+
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\

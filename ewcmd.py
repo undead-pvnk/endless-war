@@ -459,6 +459,34 @@ async def data(cmd):
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 		
+		server = ewutils.get_client().get_server(user_data.id_server)
+		if user_data.life_state == ewcfg.life_state_corpse:
+			inhabitee_id = user_data.get_inhabitee()
+			if inhabitee_id:
+				inhabitee_name = server.get_member(inhabitee_id).display_name
+				if user_data.get_weapon_possession():
+					response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+				else:
+					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
+		else:
+			inhabitant_ids = user_data.get_inhabitants()
+			if inhabitant_ids:
+				inhabitant_names = []
+				for inhabitant_id in inhabitant_ids:
+					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
+					ghost_in_weapon = user_data.get_weapon_possession()
+				if len(inhabitant_names) == 1:
+					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your weapon' if ghost_in_weapon else '')
+				else:
+					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
+						", ".join(inhabitant_names[:-1]), 
+						"" if len(inhabitant_names) == 2 else ",", 
+						inhabitant_names[-1]
+					)
+					if ghost_in_weapon:
+							response_block += "{} is also possessing your weapon. ".format(server.get_member(ghost_in_weapon[0]).display_name)
+
+  
 		if user_data.swear_jar >= 500:
 			response_block += "You're going to The Underworld for the things you've said."
 		elif user_data.swear_jar >= 100:
@@ -1786,129 +1814,6 @@ async def festivity(cmd):
 
 	# Send the response to the player.
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def gambit(cmd):
-	if cmd.mentions_count == 0:
-		user_data = EwUser(member=cmd.message.author)
-		response = "You currently have {:,} gambit.".format(user_data.gambit)
-
-	else:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-		response = "{} currently has {:,} gambit.".format(member.display_name, user_data.gambit)
-
-	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-async def credence(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		adminmode = False
-	else:
-		adminmode = True
-	
-	if cmd.mentions_count == 0:
-		user_data = EwUser(member=cmd.message.author)
-		if adminmode:
-			response = "DEBUG: You currently have {:,} credence, and {:,} credence used.".format(user_data.credence, user_data.credence_used)
-		else:
-			if user_data.credence > 0:
-				response = "You have credence. Don't fuck this up."
-			else:
-				response = "You don't have any credence. You'll need to build some up in the city before you can get to pranking again."
-
-	else:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-		if adminmode:
-			response = "{} currently has {:,} credence, and {:,} credence used.".format(member.display_name, user_data.credence, user_data.credence_used)
-		else:
-			if user_data.credence > 0:
-				response = "They have credence. Time for a little anarchy."
-			else:
-				response = "They don't have any credence."
-
-	# Send the response to the player.
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	
-async def get_credence(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		return
-	
-	response = "DEBUG: You get 1,000 credence!"
-	user_data = EwUser(member=cmd.message.author)
-	
-	user_data.credence += 1000
-	user_data.credence_used = 0
-	user_data.persist()
-	
-	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def reset_prank_stats(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		return
-	
-	if cmd.mentions_count == 0:
-		member = cmd.message.author
-		user_data = EwUser(member=member)
-	else:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-
-	user_data.gambit = 0
-	user_data.credence = 100
-	user_data.credence_used = 0
-
-	response = "Prank stats reset for {}.".format(member.display_name)
-		
-	user_data.persist()
-	await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	
-async def set_gambit(cmd):
-	if not cmd.message.author.server_permissions.administrator:
-		return
-
-	if cmd.mentions_count == 1:
-		member = cmd.mentions[0]
-		user_data = EwUser(member=member)
-	else:
-		return
-		
-	if not len(cmd.tokens) > 1:
-		return
-		
-	gambit_set = int(cmd.tokens[1])
-
-	user_data.gambit = gambit_set
-	user_data.credence = 100
-	user_data.credence_used = 0
-
-	response = "Gambit for {} set to {:,}.".format(member.display_name, gambit_set)
-
-	user_data.persist()
-	await ewutils.send_message(cmd.client, cmd.message.channel, response)
-	
-async def point_and_laugh(cmd):
-	if cmd.mentions_count == 1:
-		member = cmd.mentions[0]
-		
-		response_choices = [
-			"WHAT an *Asshole!*",
-			"They have quite possibly NEVER had SEX!",
-			"Dumbass!",
-			"What a fucking freak!",
-			"Holy shit, can you get any lower than this dude?",
-			"Friccin Moron!",
-			"Guess we're not all born winners..."
-		]
-		
-		choice_response = random.choice(response_choices)
-		
-		response = "You point and laugh at {}! {} LOL!!!".format(member.display_name, choice_response)
-	else:
-		response = "You point and laugh at... who, exactly?"
-	
-	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
 
 async def forge_master_poudrin(cmd):
 	if not cmd.message.author.server_permissions.administrator:
