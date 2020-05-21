@@ -2076,7 +2076,7 @@ item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
-item_id_snipercannon = "snipercannon"
+item_id_sni = "sni"
 item_id_twixten = "twixten"
 item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
@@ -6705,24 +6705,24 @@ food_list = [
 			"twix",
 		],
 		recover_hunger = 150,
-	price = 100,
+		price = 100,
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
 		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_snipercannon,
-		alias = [
-			"sniper",
-			"cannon",
+		id_food=item_id_sni,
+		alias=[
+			"blatantracism",
 		],
-		recover_hunger = 100,
-		price = 100,
-		str_name = 'Sniper Cannon',
-		str_eat = "You take a bite out of your Sniper Cannon bar.",
-		str_desc = "A chocolate bar with wafers on the inside. It's shaped like a bulky, rectangular version of the cannon found on the arm of the Unnerving Fighting Operator. On the back of the wrapper, there's some text that reads: 'We at Slimy Persuits had only the best intentions in our initial run of the [REDACTED] bar. We hope this rebranding will allow you to continue to enjoy our products without having to fear of blatant racism.'",
+		recover_hunger=100,
+		price=100,
+		str_name='SNI-',
+		str_eat="You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
+		str_desc="A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
 		vendors = [vendor_slimypersuits]
+		#acquisition=acquisition_trickortreating
 	),
 	EwFood(
 		id_food = item_id_slimybears,
