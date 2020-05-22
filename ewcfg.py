@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.3i2"
+version = "v3.3-boneworks"
 
 
 dir_msgqueue = 'msgqueue'
