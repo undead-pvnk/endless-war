@@ -5,6 +5,7 @@ import ewitem
 import ewutils
 import ewcfg
 import ewrolemgr
+import ewmap
 from ew import EwUser
 
 """
@@ -39,6 +40,10 @@ async def pardon(cmd):
 					member_data.life_state = ewcfg.life_state_juvenile
 
 				response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
+
+			member_poi = ewcfg.id_to_poi.get(member_data.poi)
+			if ewmap.inaccessible(user_data = member_data, poi = member_poi):
+				member_data.poi = ewcfg.poi_id_downtown
 			member_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
@@ -68,6 +73,9 @@ async def banish(cmd):
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 
+			member_poi = ewcfg.id_to_poi.get(member_data.poi)
+			if ewmap.inaccessible(user_data = member_data, poi = member_poi):
+				member_data.poi = ewcfg.poi_id_downtown
 			member_data.persist()
 			response = "{} has been banned from enlisting in the {}".format(member.display_name, user_data.faction)
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
@@ -136,7 +144,7 @@ async def create(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 """
-	Command that grants someone a specific cosmetic
+	Command that grants someone a specific cosmetic for an event.
 """
 # async def exalt(cmd):
 # 	author = cmd.message.author
@@ -145,13 +153,17 @@ async def create(cmd):
 # 	if not author.server_permissions.administrator and user_data.life_state != ewcfg.life_state_kingpin:
 # 		response = "You do not have the power within you worthy of !exalting another player."
 # 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-# 	
-# 	
-# 	if cmd.mentions[0]:
+# 
+# 
+# 	if cmd.mentions_count > 0:
 # 		recipient = cmd.mentions[0]
 # 	else:
 # 		response = 'You need to specify a recipient. Usage: !exalt @[recipient].'
 # 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+# 	
+# 	recipient_data = EwUser(member=recipient)
+# 	
+# 	DOUBLE HALLOWEEN
 # 
 # 	# Gather the Medallion
 # 	medallion_results = []
@@ -160,7 +172,7 @@ async def create(cmd):
 # 			medallion_results.append(m)
 # 		else:
 # 			pass
-# 	
+# 
 # 	medallion = medallion_results[0]
 # 	medallion_props = ewitem.gen_item_props(medallion)
 # 
@@ -176,4 +188,54 @@ async def create(cmd):
 # 	ewitem.soulbind(medallion_id)
 # 
 # 	response = "**{} has been gifted the Double Halloween Medallion!!**\n".format(recipient.display_name)
+# 	
+# 	SWILLDERMUK
+# 	
+# 	if recipient_data.gambit > 0:
+# 		# Give the user the Janus Mask
+# 
+# 		mask_results = []
+# 		for m in ewcfg.cosmetic_items_list:
+# 			if m.ingredients == 'SwilldermukFinalGambit':
+# 				mask_results.append(m)
+# 			else:
+# 				pass
+# 
+# 		mask = mask_results[0]
+# 		mask_props = ewitem.gen_item_props(mask)
+# 
+# 		mask_id = ewitem.item_create(
+# 			item_type=mask.item_type,
+# 			id_user=recipient.id,
+# 			id_server=cmd.message.server.id,
+# 			item_props=mask_props
+# 		)
+# 
+# 		ewitem.soulbind(mask_id)
+# 
+# 		response = "In light of their supreme reign over Swilldermuk, and in honor of their pranking prowess, {} recieves the Janus Mask!".format(recipient.display_name)
+# 
+# 	else:
+# 		# Give the user the Sword of Seething
+# 		sword_results = []
+# 		for s in ewcfg.item_list:
+# 			if s.context == 'swordofseething':
+# 				sword_results.append(s)
+# 			else:
+# 				pass
+# 
+# 		sword = sword_results[0]
+# 		sword_props = ewitem.gen_item_props(sword)
+# 
+# 		sword_id = ewitem.item_create(
+# 			item_type=sword.item_type,
+# 			id_user=recipient.id,
+# 			id_server=cmd.message.server.id,
+# 			item_props=sword_props
+# 		)
+# 
+# 		ewitem.soulbind(sword_id)
+# 
+# 		response = "In response to their unparalleled ability to let everything go to shit and be the laughingstock of all of NLACakaNM, {} recieves the SWORD OF SEETHING! God help us all...".format(recipient.display_name)
+# 
 # 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

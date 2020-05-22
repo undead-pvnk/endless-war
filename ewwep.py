@@ -299,17 +299,20 @@ def canAttack(cmd):
 		captcha = weapon_item.item_props.get('captcha')
 
 	statuses = user_data.getStatusEffects()
-
+	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	#if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 	#	if user_data.life_state == ewcfg.life_state_enlisted:
 	#		response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
 	#	else:
 	#		response = "You lack the moral fiber necessary for violence."
 
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
+	elif channel_poi.id_poi != user_data.poi and channel_poi.mother_district != user_data.poi:
+		#Only way to do this right now is by using the gellphone
+		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
@@ -784,7 +787,7 @@ async def attack(cmd):
 
 			if was_shot:
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 				resp_cont.add_member_to_update(cmd.message.author)
 
@@ -1086,7 +1089,7 @@ async def attack(cmd):
 				resp_cont.add_channel_response(ewcfg.channel_killfeed, "`-------------------------`")
 
 				# Flag the user for PvP
-				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_kill))
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_kill, True)
 
 				user_data.persist()
 				resp_cont.add_member_to_update(cmd.message.author)
@@ -1119,7 +1122,7 @@ async def suicide(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 
 	# Only allowed in the combat zone.
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		response = "You must go into the city to commit {}.".format(cmd.tokens[0][1:])
 	else:
 		# Get the user data.
@@ -1164,6 +1167,7 @@ async def suicide(cmd):
 			# Set the id_killer to the player himself, remove his slime and slime poudrins.
 			user_data.id_killer = cmd.message.author.id
 			user_data.trauma = ewcfg.trauma_id_suicide
+			user_data.visiting = ewcfg.location_id_empty
 			die_resp = user_data.die(cause = ewcfg.cause_suicide)
 			resp_cont.add_response_container(die_resp)
 			user_data.persist()
@@ -1551,7 +1555,7 @@ async def spar(cmd):
 					weaker_player.time_lastspar = time_now
 
 					# Flag the user for PvP
-					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_spar))
+					user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_spar, True)
 
 					user_data.persist()
 					sparred_data.persist()
@@ -2455,7 +2459,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	# Persist user data.
 	# Flag the user for PvP
 	if not sandbag_mode:
-		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+		user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	resp_cont.add_member_to_update(cmd.message.author)
 	user_data.persist()
@@ -2464,7 +2468,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 
 	district_data.persist()
 
-	# If an enemy is a raidboss or sandbag, announce that kill in the killfeed
+	# If an enemy is a raidboss, announce that kill in the killfeed
 	if was_killed and (enemy_data.enemytype in ewcfg.raid_bosses):
 		# announce raid boss kill in kill feed channel
 
@@ -2608,7 +2612,7 @@ async def dodge(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 
 	user_data.persist()
 
@@ -2670,7 +2674,7 @@ async def taunt(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to taunt {} into attacking you.".format(sap_cost, target.display_name)
@@ -2727,7 +2731,7 @@ async def aim(cmd):
 
 	user_data.sap -= sap_cost
 
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack, True)
 	user_data.persist()
 
 	response = "You spend {} sap to aim at {}'s weak spot.".format(sap_cost, target.display_name)
@@ -3117,7 +3121,8 @@ def get_hitzone(injury_map = None):
 def get_injury_severity(shootee_data, slimes_damage, crit):
 
 	severity = 0
-	severity += slimes_damage / shootee_data.slimes
+	if shootee_data.slimes > 0:
+		severity += slimes_damage / shootee_data.slimes
 	severity *= 10
 
 	if crit:

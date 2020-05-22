@@ -10,6 +10,7 @@ import random
 import ewrolemgr
 import ewstatuseffects
 from ew import EwUser
+from ewplayer import EwPlayer
 from ewmarket import EwMarket, EwCompany, EwStock
 from ewitem import EwItem
 from ewdistrict import EwDistrict
@@ -201,7 +202,6 @@ async def order(cmd):
 
 	market_data = EwMarket(id_server = cmd.message.server.id)
 	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
-	customtext = cmd.message.content[(len(cmd.tokens[0])+len(cmd.tokens[1])+2):]
 	if poi is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."
@@ -212,10 +212,25 @@ async def order(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+		#value = ewutils.flattenTokenListToString(cmd.tokens[1:2])
+
 		#if cmd.tokens_count > 1:
 		#	value = cmd.tokens[1]
 		#	value = value.lower()
+
+		value = None
+
+		togo = False
+		if cmd.tokens_count > 1:
+			for token in cmd.tokens[1:]:
+				if token.startswith('<@') == False and token.lower() not in "togo":  # togo can be spelled together or separate
+					value = token
+					break
+
+			for token in cmd.tokens[1:]:
+				if token.lower() in "togo":  # lets people get away with just typing only to or only go (or only t etc.) but whatever
+					togo = True
+					break
 
 		# Finds the item if it's an EwGeneralItem.
 
@@ -313,8 +328,15 @@ async def order(cmd):
 					# and 4 times as much for enemy gangsters
 					elif user_data.faction != "":
 						value *= 4
-
+				
+				# Raise the price for togo ordering. This gets lowered back down later if someone does togo ordering on a non-food item by mistake.
+				if togo:
+					value *= 1.5
+					
 				value = int(value)
+
+				food_ordered = False
+				target_data = None
 
 				# Kingpins eat free.
 				if (user_data.life_state == ewcfg.life_state_kingpin or user_data.life_state == ewcfg.life_state_grandfoe) and item_type == ewcfg.it_food:
@@ -325,13 +347,30 @@ async def order(cmd):
 					response = "A {} costs {:,} slime, and you only have {:,}.".format(name, value, user_data.slimes)
 				else:
 					if item_type == ewcfg.it_food:
+						food_ordered = True
+
 						food_items = ewitem.inventory(
 							id_user = cmd.message.author.id,
 							id_server = cmd.message.server.id,
 							item_type_filter = ewcfg.it_food
 						)
 
-						if len(food_items) >= user_data.get_food_capacity():
+						target = None
+						target_data = None
+						if not togo:  # cant order togo for someone else, you can just give it to them in person
+							if cmd.mentions_count == 1:
+								target = cmd.mentions[0]
+								if target.id == cmd.message.author.id:
+									target = None
+
+						if target != None:
+							target_data = EwUser(member=target)
+
+						if (target_data != None) and (target_data.poi != user_data.poi):
+							response = "You can't order anything for them because they aren't here!"
+							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+						if len(food_items) >= user_data.get_food_capacity() and target_data == None and togo:
 							# user_data never got persisted so the player won't lose money unnecessarily
 							response = "You can't carry any more food than that."
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -371,10 +410,17 @@ async def order(cmd):
 
 					item_props = ewitem.gen_item_props(item)
 
+					customtext = cmd.message.content[(len(cmd.tokens[0]) + len(cmd.tokens[1]) + 2):]
+
 					if item.item_type == ewcfg.it_furniture and "custom" in item_props.get('id_furniture'):
 						if customtext == "":
 							response = "You need to specify the customization text before buying a custom item. Come on, isn't that self-evident?"
 							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+					# Only food should have the value multiplied. If someone togo orders a non-food item by mistake, lower it back down.
+					if not food_ordered and togo:
+						value = int(value/1.5)
+
 					user_data.change_slimes(n = -value, source = ewcfg.source_spending)
 
 					if company_data is not None:
@@ -393,7 +439,8 @@ async def order(cmd):
 							item_props['furniture_place_desc'] = item_props['furniture_place_desc'].format(custom=customtext)
 							item.str_name = item.str_name.format(custom = customtext)
 
-					ewitem.item_create(
+
+					id_item = ewitem.item_create(
 						item_type = item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
@@ -403,6 +450,29 @@ async def order(cmd):
 					)
 
 					response = "You slam {:,} slime down on the counter at {} for {}.".format(value, current_vendor, item.str_name)
+
+					if food_ordered and not togo:
+						item_data = EwItem(id_item=id_item)
+
+						# Eat food on the spot!
+						if target_data != None:
+
+							target_player_data = EwPlayer(id_user=target_data.id_user)
+
+							response = "You slam {:,} slime down on the counter at {} for {} and give it to {}.".format(value, current_vendor, item.str_name, target_player_data.display_name)
+
+							response += "\n\n*{}*: ".format(target_player_data.display_name) + target_data.eat(item_data)
+							target_data.persist()
+							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+						else:
+							response = "You slam {:,} slime down on the counter at {} for {} and eat it right on the spot.".format(value, current_vendor, item.str_name)
+
+							user_player_data = EwPlayer(id_user=user_data.id_user)
+
+							response += "\n\n*{}*: ".format(user_player_data.display_name) + user_data.eat(item_data)
+							user_data.persist()
+							asyncio.ensure_future(ewutils.decrease_food_multiplier(user_data.id_user))
+
 					user_data.persist()
 
 		else:

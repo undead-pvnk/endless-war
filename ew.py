@@ -44,10 +44,13 @@ class EwUser:
 	splattered_slimes = 0
 	sap = 0
 	hardened_sap = 0
+	
+	#TODO: Remove these...?
 	#SLIMERNALIA
 	festivity = 0
 	festivity_from_slimecoin = 0
 	slimernalia_kingpin = False
+	
 	manuscript = -1
 	spray = "https://img.booru.org/rfck//images/3/a69d72cf29cb750882de93b4640a175a88cdfd70.png"
 	swear_jar = 0
@@ -222,10 +225,10 @@ class EwUser:
 			self.bounty = 0
 			self.time_lastdeath = time_now		
 	
-			if self.life_state == ewcfg.life_state_shambler:
-				self.degradation += 1
-			else:
-				self.degradation += 5
+			# if self.life_state == ewcfg.life_state_shambler:
+			# 	self.degradation += 1
+			# else:
+			# 	self.degradation += 5
 
 			ewstats.increment_stat(user = self, metric = ewcfg.stat_lifetime_deaths)
 			ewstats.change_stat(user = self, metric = ewcfg.stat_lifetime_slimeloss, n = self.slimes)
@@ -460,6 +463,8 @@ class EwUser:
 			response = "Ghosts can't equip weapons."
 		elif self.life_state == ewcfg.life_state_juvenile:
 			response = "Juvies can't equip weapons."
+		elif self.life_state == ewcfg.life_state_shambler:
+			response = "Shamblers can't equip weapons."
 		elif self.weaponmarried == True:
 			current_weapon = ewitem.EwItem(id_item = self.weapon)
 			if weapon_item.item_props.get("married") == self.id_user:

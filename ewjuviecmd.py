@@ -34,6 +34,8 @@ mines_map = {
 	ewcfg.channel_cv_mines: cratersville_mines
 }
 
+scavenge_combos = {}
+scavenge_captchas = {}
 
 class EwMineGrid:
 	grid_type = ""
@@ -107,7 +109,9 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist))
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			for faction in vouchers:
+				user_data.unvouch(faction)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -132,7 +136,9 @@ async def enlist(cmd):
 			user_data.life_state = ewcfg.life_state_enlisted
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_enlist))
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			for faction in vouchers:
+				user_data.unvouch(faction)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -420,7 +426,8 @@ async def mine(cmd):
 
 			was_pvp = user_data.time_expirpvp > time_now
 			# Flag the user for PvP
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_mine))
+			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
 
 			user_data.persist()
 			if not was_pvp:
@@ -654,23 +661,32 @@ async def scavenge(cmd):
 	# currently not active - no cooldown
 	if time_since_last_scavenge < ewcfg.cd_scavenge:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Slow down, you filthy hyena."))
+	
+	if cmd.message.channel.name == ewcfg.channel_slimesea:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You consider diving down to the bottom of the sea to grab some sick loot, but quickly change your mind when you {}.".format(random.choice(ewcfg.sea_scavenge_responses))))
 
 	# Scavenge only in location channels
-	if ewmap.channel_name_is_poi(cmd.message.channel.name) == True:
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == True:
 		if user_data.hunger >= user_data.get_hunger_max():
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You are too exhausted to scrounge up scraps of slime off the street! Go get some grub!"))
 		else:
+
+			if scavenge_combos.get(user_data.id_user) == None:
+				scavenge_combos[user_data.id_user] = 0
+
+			combo = scavenge_combos.get(user_data.id_user)
+
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.author.server.id)
 
 			user_initial_level = user_data.slimelevel
 			# add scavenged slime to user
 			if ewcfg.mutation_id_trashmouth in mutations:
-				time_since_last_scavenge *= 3
+				combo += 5
 
 			time_since_last_scavenge = min(max(1, time_since_last_scavenge), ewcfg.soft_cd_scavenge)
 
-
-			scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
+			#scavenge_mod = 0.003 * (time_since_last_scavenge ** 0.9)
+			scavenge_mod = 0.005 * combo
 
 			if ewcfg.mutation_id_whitenationalist in mutations and market_data.weather == "snow":
 				scavenge_mod *= 1.5
@@ -689,14 +705,29 @@ async def scavenge(cmd):
 				response += levelup_response + "\n\n"
 			#response += "You scrape together {} slime from the streets.\n\n".format(scavenge_yield)
 			if cmd.tokens_count > 1:
-				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
-				loot_resp = ewitem.item_lootspecific(
-					id_server = user_data.id_server,
-					id_user = user_data.id_user,
-					item_search = item_search
-				)
 
-				response += loot_resp
+				item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+				has_comboed = False
+
+				if scavenge_combos.get(user_data.id_user) > 0 and (time_now - user_data.time_lastscavenge) < 60:
+					if scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
+						scavenge_combos[user_data.id_user] += 1
+						new_captcha = gen_scavenge_captcha(scavenge_combos.get(user_data.id_user))
+						response += "New captcha: **" + new_captcha + "**"
+						scavenge_captchas[user_data.id_user] = new_captcha
+						has_comboed = True
+					else:
+						scavenge_combos[user_data.id_user] = 0
+
+				if not has_comboed:
+					loot_resp = ewitem.item_lootspecific(
+						id_server = user_data.id_server,
+						id_user = user_data.id_user,
+						item_search = item_search
+					)
+
+					if loot_resp != "":
+						response = loot_resp + "\n\n" + response
 
 			else:
 				loot_multiplier = 1.0 + ewitem.get_inventory_size(owner = user_data.poi, id_server = user_data.id_server)
@@ -708,8 +739,14 @@ async def scavenge(cmd):
 						id_server = user_data.id_server,
 						id_user = user_data.id_user
 					)
-					response += loot_resp
+					
+					if loot_resp != "":
+						response += loot_resp +"\n\n"
 
+				scavenge_combos[user_data.id_user] = 1
+				new_captcha = gen_scavenge_captcha(1)
+				response += "New captcha: **" + new_captcha + "**"
+				scavenge_captchas[user_data.id_user] = new_captcha
 
 			# Fatigue the scavenger.
 			hunger_cost_mod = ewutils.hunger_cost_mod(user_data.slimelevel)
@@ -724,8 +761,10 @@ async def scavenge(cmd):
 			user_data.time_lastscavenge = time_now
 
 			was_pvp = user_data.time_expirpvp > time_now
+
 			# Flag the user for PvP
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_scavenge))
+			enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_scavenge, enlisted)
 
 			user_data.persist()
 			if not was_pvp:
@@ -1458,3 +1497,8 @@ def create_mining_event(cmd):
 				time_expir = time_now + 60*3,
 				event_props = event_props
 			)
+
+def gen_scavenge_captcha(n = 0):
+	captcha_length = math.ceil(n / 3)
+
+	return ewutils.generate_captcha(captcha_length)

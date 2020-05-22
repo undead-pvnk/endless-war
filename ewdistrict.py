@@ -716,7 +716,7 @@ async def capture_progress(cmd):
 	user_data.change_slimes(n = -slimes_cap * capture_discount, source = ewcfg.source_spending)
 
 	# Flag the user for PvP
-	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_annex, True)
 
 	user_data.persist()
 	district_data.persist()
@@ -966,6 +966,7 @@ async def change_spray(cmd):
 		user_data.persist()
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 
 

@@ -30,6 +30,7 @@ async def revive(cmd):
 		player_data = EwUser(member = cmd.message.author)
 
 		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
+		
 		if time_until_revive > 0:
 			response = "ENDLESS WAR is not ready to {} you yet ({}s).".format(cmd.tokens[0], time_until_revive)
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -152,7 +153,7 @@ async def haunt(cmd):
 		elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
 			# Disallow haunting if the user has haunted too recently.
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
-		elif ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
+		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
 		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
 			# Require the target to be flagged for PvP
@@ -180,7 +181,7 @@ async def haunt(cmd):
 			user_data.time_lasthaunt = time_now
 			user_data.busted = False
 
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_attack))
+			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
 			resp_cont.add_member_to_update(cmd.message.author)
 			# Persist changes to the database.
 			user_data.persist()
