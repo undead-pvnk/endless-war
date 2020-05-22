@@ -269,6 +269,15 @@ cmd_map = {
 	# how ghosts leave the sewers
 	ewcfg.cmd_manifest: ewspooky.manifest,
 
+	# ghosts can inhabit players to follow them around
+	ewcfg.cmd_inhabit: ewspooky.inhabit,
+
+	# remove inhabitted status
+	ewcfg.cmd_letgo: ewspooky.let_go,
+
+	# ghosts can empower the weapon of the player they're inhabiting
+	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
 
@@ -552,6 +561,7 @@ cmd_map = {
 
 	# troll romance
 	ewcfg.cmd_add_quadrant: ewquadrants.add_quadrant,
+	ewcfg.cmd_clear_quadrant: ewquadrants.clear_quadrant,
 	ewcfg.cmd_get_quadrants: ewquadrants.get_quadrants,
 	ewcfg.cmd_get_flushed: ewquadrants.get_flushed,
 	ewcfg.cmd_get_flushed_alt1: ewquadrants.get_flushed,
@@ -843,6 +853,9 @@ async def on_ready():
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.sap_tick_loop(id_server = server.id))
+		# SWILLDERMUK
+		# asyncio.ensure_future(ewutils.spawn_prank_items_tick_loop(id_server = server.id))
+		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
 		if not debug:
 			await ewtransport.init_transports(id_server = server.id)
@@ -1320,6 +1333,7 @@ async def on_message(message):
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
 					elif swear == "fag" and "fag" not in content_tolower:
+						#print('swear detection turned off for {}.'.format(swear))
 						continue
 
 					for i in range(swear_count):

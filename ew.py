@@ -8,6 +8,7 @@ import ewstats
 import ewitem
 import ewstatuseffects
 import ewdistrict
+import ewrolemgr 
 from ewstatuseffects import EwStatusEffect
 
 """ User model for database persistence """
@@ -15,6 +16,7 @@ class EwUser:
 	id_user = ""
 	id_server = ""
 	id_killer = ""
+	id_inhabit_target = ""
 
 	combatant_type = "player"
 
@@ -44,7 +46,6 @@ class EwUser:
 	sap = 0
 	hardened_sap = 0
 	
-	#TODO: Remove these...?
 	#SLIMERNALIA
 	festivity = 0
 	festivity_from_slimecoin = 0
@@ -53,6 +54,11 @@ class EwUser:
 	manuscript = -1
 	swear_jar = 0
 	degradation = 0
+	
+	#SWILLDERMUK
+	gambit = 0
+	credence = 0
+	credence_used = 0
 
 	time_lastkill = 0
 	time_lastrevive = 0
@@ -185,6 +191,8 @@ class EwUser:
 
 		deathreport = ''
 		
+		# remove ghosts inhabiting player
+		self.remove_inhabitation()
 
 		# Make The death report
 		deathreport = ewutils.create_death_report(cause = cause, user_data = self)
@@ -209,8 +217,6 @@ class EwUser:
 			self.poi = ewcfg.poi_id_thesewers
 			#self.slimes = int(self.slimes * 0.9)
 		else:
-			
-
 			self.busted = False  # reset busted state on normal death; potentially move this to ewspooky.revive
 			self.slimes = 0
 			self.slimelevel = 1
@@ -222,6 +228,7 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now		
+			self.id_inhabit_target = ""
 	
 			# if self.life_state == ewcfg.life_state_shambler:
 			# 	self.degradation += 1
@@ -707,6 +714,86 @@ class EwUser:
 
 		return vouchers
 
+	def get_inhabitants(self):
+		inhabitants = []
+		data = ewutils.execute_sql_query("SELECT {id_ghost} FROM inhabitations WHERE {id_fleshling} = %s AND {id_server} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+		for row in data:
+			inhabitants.append(row[0])
+
+		return inhabitants
+
+	def get_inhabitee(self):
+		data = ewutils.execute_sql_query("SELECT {id_fleshling} FROM inhabitations WHERE {id_ghost} = %s AND {id_server} = %s".format(
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_ghost = ewcfg.col_id_ghost,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+		try:
+			# return ID of inhabited player if there is one
+			return data[0][0]
+		except:
+			# otherwise return None
+			return None
+
+	async def move_inhabitants(self, id_poi = None):
+		client = ewutils.get_client()
+		inhabitants = self.get_inhabitants()
+		if inhabitants:
+			server = client.get_server(self.id_server)
+			for ghost in inhabitants:
+				ghost_data = EwUser(id_user = ghost, id_server = self.id_server)
+				ghost_data.poi = id_poi
+				ghost_data.time_lastenter = int(time.time())
+				ghost_data.persist()
+    
+				ghost_member = server.get_member(ghost)
+				await ewrolemgr.updateRoles(client = client, member = ghost_member)
+  
+	def remove_inhabitation(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		ewutils.execute_sql_query("DELETE FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s".format(
+			# remove ghosts inhabiting player if user is a fleshling,
+			# or remove fleshling inhabited by player if user is a ghost
+			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
+			id_server = ewcfg.col_id_server,
+		),(
+			self.id_user,
+			self.id_server
+		))
+
+	def get_weapon_possession(self):
+		user_is_alive = self.life_state != ewcfg.life_state_corpse
+		data = ewutils.execute_sql_query("SELECT {id_ghost}, {id_fleshling}, {id_server} FROM inhabitations WHERE {id_target} = %s AND {id_server} = %s AND {empowered} = %s".format(
+			id_ghost = ewcfg.col_id_ghost,
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_server = ewcfg.col_id_server,
+			id_target = ewcfg.col_id_fleshling if user_is_alive else ewcfg.col_id_ghost,
+			empowered = ewcfg.col_empowered,
+		),(
+			self.id_user,
+			self.id_server,
+			True,
+		))
+
+		try:
+			# return inhabitation data if available
+			return data[0]
+		except:
+			# otherwise return None
+			return None
+
 	def get_festivity(self):
 		data = ewutils.execute_sql_query(
 		"SELECT FLOOR({festivity}) + COALESCE(sigillaria, 0) + FLOOR({festivity_from_slimecoin}) FROM users "\
@@ -755,7 +842,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -803,6 +890,10 @@ class EwUser:
 					ewcfg.col_swear_jar,
 					ewcfg.col_degradation,
 					ewcfg.col_time_lastdeath,
+					ewcfg.col_gambit,
+					ewcfg.col_credence,
+					ewcfg.col_credence_used,
+					ewcfg.col_id_inhabit_target,
 				), (
 					id_user,
 					id_server
@@ -857,6 +948,10 @@ class EwUser:
 					self.swear_jar = result[43]
 					self.degradation = result[44]
 					self.time_lastdeath = result[45]
+					self.gambit = result[46]
+					self.credence = result[47]
+					self.credence_used = result[48]
+					self.id_inhabit_target = result[49]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -912,7 +1007,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -962,6 +1057,10 @@ class EwUser:
 				ewcfg.col_swear_jar,
 				ewcfg.col_degradation,
 				ewcfg.col_time_lastdeath,
+				ewcfg.col_gambit,
+				ewcfg.col_credence,
+				ewcfg.col_credence_used,
+				ewcfg.col_id_inhabit_target,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1012,6 +1111,10 @@ class EwUser:
 				self.swear_jar,
 				self.degradation,
 				self.time_lastdeath,
+				self.gambit,
+				self.credence,
+				self.credence_used,
+				self.id_inhabit_target
 			))
 
 			conn.commit()

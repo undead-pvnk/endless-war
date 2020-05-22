@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.3i2"
+version = "v3.3-boneworks"
 
 
 dir_msgqueue = 'msgqueue'
@@ -562,6 +562,9 @@ cmd_suicide_alt1 = cmd_prefix + 'seppuku'
 cmd_suicide_alt2 = cmd_prefix + 'sudoku'
 cmd_haunt = cmd_prefix + 'haunt'
 cmd_manifest = cmd_prefix + 'manifest'
+cmd_inhabit = cmd_prefix + 'inhabit'
+cmd_letgo = cmd_prefix + 'letgo'
+cmd_possess_weapon = cmd_prefix + 'possessweapon'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -920,6 +923,7 @@ cmd_undress_slimeoid = cmd_prefix + 'undressslimeoid'
 cmd_undress_slimeoid_alt1 = cmd_prefix + 'undecorateslimeoid'
 
 cmd_add_quadrant = cmd_prefix + "addquadrant"
+cmd_clear_quadrant = cmd_prefix + "clearquadrant"
 cmd_get_quadrants = cmd_prefix + "quadrants"
 cmd_get_flushed = cmd_prefix + "flushed"
 cmd_get_flushed_alt1 = cmd_prefix + "matesprit"
@@ -972,6 +976,7 @@ slimes_permill = 50000
 slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
+slimes_to_possess_weapon = -100000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
 slimes_shambler = 1000000
@@ -1562,6 +1567,7 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_id_inhabit_target = 'id_inhabit_target'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1726,6 +1732,12 @@ col_contents = "contents"
 
 # Database columns for book sales
 col_bought = "bought"
+
+# Database columns for inhabitation
+col_id_ghost = "id_ghost"
+col_id_fleshling = "id_fleshling"
+col_time_of_proposal = "time_of_proposal"
+col_empowered = "empowered"
 
 # Item type names
 it_item = "item"
@@ -1897,6 +1909,7 @@ source_weather = 15
 source_crush = 16
 source_casino = 17
 source_slimeoid_betting = 18
+source_ghost_contract = 19
 
 # Categories of events that change your slimecoin total, for statistics tracking
 coinsource_spending = 0
@@ -2072,7 +2085,7 @@ item_id_paradoxchocs = "paradoxchocs"
 item_id_licoricelobsters = "licoricelobsters"
 item_id_chocolateslimecorpbadges = "chocolateslimecorpbadges"
 item_id_munchies = "munchies"
-item_id_snipercannon = "snipercannon"
+item_id_sni = "sni"
 item_id_twixten = "twixten"
 item_id_slimybears = "slimybears"
 item_id_marsbar = "marsbar"
@@ -2314,6 +2327,13 @@ item_list = [
 		ingredients = item_id_direapples,
 	),
 	EwGeneralItem(
+		id_item = "browndye",
+		context = "dye",
+		str_name = "Brown Dye",
+		str_desc = "A small vial of brown dye.",
+		acquisition = acquisition_smelting,
+	),
+	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
 		alias = [
 			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
@@ -2475,8 +2495,8 @@ item_list = [
 			"gameguide",
 			"gamergate",
 		],
-		str_name = "The official unofficial ENDLESS WAR Game Guide",
-		str_desc = "A guide on all the game mechanics found in ENDLESS WAR. Use the !help command to crack it open.",
+		str_name = "The official unofficial ENDLESS WAR Game Guide, Version II",
+		str_desc = "A guide on all the game mechanics found in ENDLESS WAR, accurate as of 5/20/2020. Use the !help command to crack it open.",
 		vendors = [vendor_college],
 		price = 10000,
 	),
@@ -3245,6 +3265,12 @@ item_list = [
 		trap_chance=35,
 		rarity=prank_rarity_heinous,
 		gambit=20,
+	),
+	EwGeneralItem(
+		id_item=item_id_swordofseething,
+		str_name="SWORD OF SEETHING",
+		str_desc="An ancient blade of legend. It's said to contain the foul malevolence of the Oozoth, sealed away long ago. The forces resting inside the sword are practically begging you to !use it, before its power fades away into nothingness, so you might as well get it over with.",
+		context="swordofseething",
 	),
 	EwGeneralItem(
 		id_item="brokensword",
@@ -6688,24 +6714,24 @@ food_list = [
 			"twix",
 		],
 		recover_hunger = 150,
-	price = 100,
+		price = 100,
 		str_name = 'Twixten',
 		str_eat = "You sink your teeth into the Twixten, working your way down the blade, and finally giving a huge bite into the hilt. *CRUNCH*",
 		str_desc = "A chocolate bar. It's shaped like a katana.",
 		vendors = [vendor_slimypersuits]
 	),
 	EwFood(
-		id_food = item_id_snipercannon,
-		alias = [
-			"sniper",
-			"cannon",
+		id_food=item_id_sni,
+		alias=[
+			"blatantracism",
 		],
-		recover_hunger = 100,
-		price = 100,
-		str_name = 'Sniper Cannon',
-		str_eat = "You take a bite out of your Sniper Cannon bar.",
-		str_desc = "A chocolate bar with wafers on the inside. It's shaped like a bulky, rectangular version of the cannon found on the arm of the Unnerving Fighting Operator. On the back of the wrapper, there's some text that reads: 'We at Slimy Persuits had only the best intentions in our initial run of the [REDACTED] bar. We hope this rebranding will allow you to continue to enjoy our products without having to fear of blatant racism.'",
+		recover_hunger=100,
+		price=100,
+		str_name='SNI-',
+		str_eat="You take a bite out of your s... sn... ... ... SNI- *CHOMP*.",
+		str_desc="A chocolate bar with wafers on the inside. You can't bring yourself to say the name out loud, though.",
 		vendors = [vendor_slimypersuits]
+		#acquisition=acquisition_trickortreating
 	),
 	EwFood(
 		id_food = item_id_slimybears,
@@ -11810,7 +11836,7 @@ poi_list = [
 			"cliff"
 		],
 		str_name = "Slime's End Cliffs",
-		str_desc = "You stand in the Slime's End Cliffs. Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
+		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
 		role = "Slime's End Cliffs",
 		mother_district = poi_id_slimesend,
@@ -12974,6 +13000,24 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 	),
 	EwCosmeticItem(
+		id_cosmetic="kilt",
+		str_name="Kilt",
+		str_desc="A traditional scottish garmet that's plaid, and it's not a fuckin' skirt, aight?",
+		rarity=rarity_plebeian,
+		acquisition=acquisition_smelting,
+		price=50000,
+		vendors=[vendor_bazaar],
+	),
+	EwCosmeticItem(
+		id_cosmetic="cigar",
+		str_name="Cigar",
+		str_desc="Much more manly then a puny cigarette. This cigar has been freshly imported from cuba and is thick enough to last for hours.",
+		rarity=rarity_plebeian,
+		acquisition=acquisition_smelting,
+		price=50000,
+		vendors=[vendor_bazaar],
+	),
+	EwCosmeticItem(
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
@@ -13148,6 +13192,14 @@ cosmetic_items_list = [
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
+    EwCosmeticItem(
+		id_cosmetic = "crocs",
+		str_name = "Crocs",
+		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
+		rarity = rarity_plebeian,
+		vendors = [vendor_bazaar],
+		price = 1000,
+	),
 	EwCosmeticItem(
 		id_cosmetic = "janusmask",
 		str_name = "Janus Mask",
@@ -13155,6 +13207,158 @@ cosmetic_items_list = [
 		rarity = "Swilldermuk",
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
+	),
+	EwCosmeticItem(
+		id_cosmetic = "leatherjacket",
+		str_name = "Leather Jacket",
+		str_desc = "A black leather jacket. Gangs of killers stalking the streets are often found wearing these.",
+		rarity = rarity_patrician,
+		vendors = [vendor_bazaar],
+		price = 50000,
+	),
+	EwCosmeticItem(
+		id_cosmetic = "afrowig",
+		str_name = "Afro Wig",
+		str_desc = "The perfect hair-do for a 70's party or a pool party just be sure to keep a can of hairspray and comb at hand.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pompadourwig",
+		str_name = "Pompadour Wig",
+		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "powderedwig",
+		str_name = "Powdered Wig",
+		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "rainbowafrowig",
+		str_name = "Rainbow Afro Wig",
+		str_desc = "A colorful wig worthy of a real chuckle.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "ghostlygibus",
+		str_name = "Ghostly Gibus",
+		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "gasmask",
+		str_name = "Gas Mask",
+		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "firefightershelmet",
+		str_name = "Firefighter's Helmet",
+		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "pairofpoindexterglasses",
+		str_name = "Pair Of Poindexter Glasses",
+		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "duncecap",
+		str_name = "Dunce Cap",
+		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "vrheadset",
+		str_name = "VR Headset",
+		str_desc = "Endless War -- now in stunning VR!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "blindfold",
+		str_name = "Blindfold",
+		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "chickenmask",
+		str_name = "Chicken Mask",
+		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "mountiehat",
+		str_name = "Mountie Hat",
+		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "bearskinhat",
+		str_name = "Bearskin Hat",
+		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "aviatorshat",
+		str_name = "Aviator's Hat",
+		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "militaryberet",
+		str_name = "Military Beret",
+		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "felinehat",
+		str_name = "Feline Hat",
+		str_desc = "A hat striped with red and white is quite right for a fanciful fight! It’s a funny hat at that, and it looks like it’s been worn by a cat!",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
+    EwCosmeticItem(
+		id_cosmetic = "tikihead",
+		str_name = "Tiki Head",
+		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
 	),
 ]
 
@@ -13556,7 +13760,7 @@ smelting_recipe_list = [
 		},
 		products = ['slimepoudrin']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "humancorpse",
 		str_name = "a corpse",
 		alias = [
@@ -13572,7 +13776,7 @@ EwSmeltingRecipe(
 		},
 		products = ['humancorpse']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "popeonarope",
 		str_name = "pope on a rope",
 		alias = [
@@ -13589,7 +13793,7 @@ EwSmeltingRecipe(
 		},
 		products = ['popeonarope']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "reanimatedcorpse",
 		str_name = "reanimated corpse",
 		alias = [
@@ -13603,7 +13807,7 @@ EwSmeltingRecipe(
 		},
 		products = ['reanimatedcorpse']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "soul",
 		str_name = "soul",
 		alias = [
@@ -13616,7 +13820,7 @@ EwSmeltingRecipe(
 		},
 		products = ['soul']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadechair",
 		str_name = "handmade chair",
 		alias = [
@@ -13631,7 +13835,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatechair', 'shittychair']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadebench",
 		str_name = "handmade bench",
 		alias = [
@@ -13646,7 +13850,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatebench', 'shittybench']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadebed",
 		str_name = "handmade bed",
 		alias = [
@@ -13661,7 +13865,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatebed', 'shittybed']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "handmadedesk",
 		str_name = "handmade desk",
 		alias = [
@@ -13676,7 +13880,7 @@ EwSmeltingRecipe(
 		},
 		products = ['ornatedesk', 'shittydesk']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "clarinet",
 		str_name = "clarinet",
 		alias = [
@@ -13695,7 +13899,7 @@ EwSmeltingRecipe(
 		},
 		products = ['craftsmansclarinet', 'woodenvuvuzela']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "guitar",
 		str_name = "solid poudrin guitar",
 		alias = [
@@ -13726,7 +13930,7 @@ EwSmeltingRecipe(
 		},
 		products = ['beastskindrums']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "xylophone",
 		str_name = "fish bone xylophone",
 		alias = [
@@ -13743,7 +13947,7 @@ EwSmeltingRecipe(
 		},
 		products = ['fishbonexylophone']
 	),
-EwSmeltingRecipe(
+	EwSmeltingRecipe(
 		id_recipe = "maracas",
 		str_name = "gourd maracas",
 		alias = [
@@ -13761,6 +13965,18 @@ EwSmeltingRecipe(
 		},
 		products = ['gourdmaracas']
 	),
+	EwSmeltingRecipe(
+		id_recipe = "browndye",
+		str_name = "Brown Dye",
+		alias = [
+			'brown',
+		],
+		ingredients = {
+			'reddye' : 1,
+			'blackdye': 1,
+		},
+		products = ['browndye']
+	)
 ]
 #smelting_recipe_list += ewdebug.debugrecipes
 
@@ -15036,7 +15252,7 @@ hue_id_rainbow = "rainbow"
 hue_id_white = "white"
 hue_id_grey = "grey"
 hue_id_black = "black"
-
+hue_id_brown = "brown"
 
 
 # All color attributes in the game.
@@ -15294,6 +15510,15 @@ hue_list = [
 		}
 
 	),
+	EwHue(
+		id_hue = hue_id_brown,
+		alias = [
+			"browndye",
+		],
+		str_saturate = "It turned an earthly brown!",
+		str_name = "brown",
+		str_desc = "Its earthly brown hue imbues with it with a humble, down-to-earth personality.",
+	),
 ]
 
 # A map of id_hue to EwHue objects.
@@ -15478,7 +15703,7 @@ mutations = [
 		id_mutation = mutation_id_quantumlegs,
 		str_describe_self = "You’ve got nothing of note below the belt due to **Quantum Legs**.",
 		str_describe_other = "They’ve got nothing of note below the belt due to **Quantum Legs**.",
-		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
+		str_acquire = "Before you can even register it’s happening, your legs simply evaporate into a light mist that dissolves into the atmosphere. You ungracefully fall to the ground in pure shock, horror, and unrivaled agony. You are now literally half the person you used to be. What the hell are you supposed to do now? You scramble to try and find someone that can help you, moving to a nearby phone booth. Wait… how did you just do that? You have developed the mutation **Quantum Legs**. You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
 		),
 	EwMutationFlavor(
 		id_mutation = mutation_id_chameleonskin,
@@ -16476,14 +16701,14 @@ help_responses = {
 	"dojo":"**The Dojo** is where you acquire weapons to fight and kill other players with. To purchase a weapon, use **'!order [weapon]'**. There are many weapons you can choose from (you can view all of them with !menu), and they all perform differently from one another. Once you've purchased a weapon, you can use **'!equip [weapon]'** to equip it, provided that you're enlisted in a gang beforehand. You can also name your weapon by spending a poudrin on it with **'!annoint [name]'**. Furthermore, annointing will increase your mastery over that weapon, but it's much more efficient to do so through **sparring**. To learn more about the sparring system and weapon ranks, use '!help sparring'.",
 	"subzones":"**Subzones** are areas locations within the districts of the city where gang violence off-limits, with the only exception being the subway stations, the trains, and the base of ENDLESS WAR. If you don't type anything in a sub-zone for 60 minutes, you'll get kicked out for loitering, so be sure to check up often if you don't wanna get booted out into the streets.",
 	"scouting": "Scouting is a way for you to check how many **players** might be in a district that's close by. You can do just **'!scout'** to check the district you're already in, or **'!scout [district]'** to scout out that specific district. For example, if you were in Vagrant's Corner, you could use '!scout gld' to see how many players might be in Green Light District. Scouting will show both **friendly and enemy** gang members, as well as juveniles and even enemies. Scouting will list all players/enemies above your own level, as well as players/enemies below your level, but at a certain **cutoff point**. If you can't scout someone, it's safe to assume they have around **1/10th** the amount of slime that you do, or less. It should be noted that scouting currently only gives an estimate, sending off different messages depending on how many players are in that district.",
-	"otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 	"wanted":"If you find that you have a role with 'Wanted' in the name, be alarmed. This means that you are able to be attacked by gangsters! Always be on the look out and remember to check your corners.",
+	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is ((your slime level)^4 / 60), and the default damage it does to your opponent is ((your slimelevel)^4 / 6). Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
 	# Ways to gain slime
 	"mining": "Mining is the primary way to gain slime in **ENDLESS WAR**. When you type one **'!mine'** command, you raise your hunger by about 0.5%. The more slime you mine for, the higher your level gets. Mining will sometimes endow you with hardened crystals of slime called **slime poudrins**, which can be used for farming and annointing your weapon. **JUVENILES** can mine any time they like, but **ROWDYS** and **KILLERS** are restricted to mining during the day (8AM-6PM) and night (8PM-6AM), respectively. If you are enlisted, you can make use of the **pickaxe**, which increases the amount of slime you gain from mining. Currently mining is event-based. Similarly to clicker games your base action is **!mine**, but various events may dynamically change the way mining works, from simple slimeboosts to full-on minigames. Basic instructions for these events come, when the event starts.",
-	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging, however, raises your hunger by about 1% per use of the '!scavenge' command, so it's often more efficient to do a '!scavenge' command **every 15 seconds** or so, resulting in the highest potential collection of slime at the lowest cost of hunger. You can still spam it, just as you would with '!mine', but you'll gain less and less slime if you don't wait for the 15 second cool-down. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
+	"scavenging":"Scavenging allows you to collect slime that is **stored** in districts. When someone in a district gets hurt or dies, their slime **splatters** onto the ground, allowing you to use **'!scavenge'** and collect it, similarly to mining. Scavenging raises your hunger by 1% with every command entered. If you type **!scavenge** by itself, you will be given a captca to type. The more captchas you type correctly, the more slime you will gain. To check how much slime you can scavenge, use **'!look'** while in a district channel. You can also scavenge for items by doing '!scavenge [item name]'.",
 	"farming":"**Farming** is an alternative way to gain slime, accessible only by **JUVENILES**. It is done by planting poudrins on a farm with the **'!sow'** command. You can only '!sow' one poudrin per farm. After about 12 in-game hours (3 hours in real life), you can use **'!reap'** to gain 200,000 slime, with a 1/30 chance to gain a poudrin. If you do gain a poudrin, you also have 1/3 chance to gain a second poudrin. If your poudrin plant is left alone for too long (around 2 in-game days, or 12 hours in real life), it will **die out**. In addition to slime, farming also provides you with various **crops** which can be used for **milling**. Crops can be eaten by themselves, but it's much more useful if you use **'!mill'** on them while at a farm, granting you **dyes**, as well as food items and cosmetics associated with that crop, all at the cost of 50,000 slime per '!mill'. Dyes can be used on slimeoids with **'!saturateslimeoid'**. Crops can also be sown themselves with '!sow [crop name]', and upon reaping you be rewarded with a bushel of that crop, as well as 100,000 slime. You can, however, increase the slime gained from sowing crops by using **'!checkfarm'**, and performing **'!irrigate'**, **'!fertilize'**, **'!pesticide'** or **'!weed'** if neccessary. Current farms within the city include **JUVIE'S ROW FARMS** (within Juvie's Row), **OOZE GARDENS FARMS** (close by Rowdy Roughhouse), and **ARSONBROOK FARMS** (close by Cop Killtown).",
-	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\nhttps://www.youtube.com/watch?v=tHDeSukIqME\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
-	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Wreckington Outskirts, Toxington -> Toxington Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
+	"fishing": "**Fishing** can be done by performing the **'!cast'** command at one of the six piers, including **Crookline Pier**, **Jaywalker Plain Pier**, **Toxington Pier**, **Assault Flats Beach Pier**, **Slime's End Pier**, **Vagrant's Corner Pier**, as well as **The Ferry**. To reel in a fish, use **'!reel'** when the game tells you that you have a bite. If you don't reel in quick enough, the fish will get away. If you are enlisted and have the **fishing rod** equiped, you will have increased chances of reeling in a fish. For more information about fishing, refer to this helpful guide (credits to Miller#2705).\n<https://www.youtube.com/watch?v=tHDeSukIqME>\nAs an addendum to that video, note that fish can be taken to the labs in Brawlden, where they can be made more valuble in bartering by increasing their size with **'!embiggen [fish]'**.",
+	"hunting": "**Hunting** is another way to gain slime in ENDLESS WAR. To hunt, you can visit **The Outskirts**, which are districts located next to the edge of the map (Wreckington -> Southern Outskirts, Toxington -> Northwest Outskirts, etc). In the outskirts, you will find enemies that you can !kill. Rather than doing '!kill @' like with players, with enemies you can either type their display name ('!kill Dinoslime'), their shorthand name ('!kill dino'), or their identifying letter ('!kill A'), which can be accessed with !look or !survey (WARNING: Raid bosses moving around the city do not have identifying letters. You must use the other targeting methods to attack them). To see how much slime an enemy has, you can do '!data [enemy name]', or just !data with any of the previous types of methods listed. Enemies will drop items and slime upon death, and some enemies are more powerful and threatening than others. In fact, there are enemies powerful enough to hold their own against the gangsters in the city, called **Raid Bosses**, and will enter into the city as a result, rather than just staying in the outskirts like regular enemies. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a raid boss has entered into. Enemies despawn after **3 hours in real life**.",
 	# Additional gameplay mechanics, part 1
 	"mutations": "**Mutations** are helpful bonuses you acquire every five levels. When you acquire a mutation, a short text response will indicate what it can do. To reroll your most recent mutation, you can visit the labs and type **'!rerollmutation'**. To get rid of all your current mutations, you can also do **'!sterilizemutations'**.",
 	"mymutations":"You read some research notes about your current mutations...", # will print out a list of mutations with their specific mechanics
@@ -16491,7 +16716,7 @@ help_responses = {
 	"sparring": "**Sparring** can be done between two players using **'!spar [player]'**. Sparring, provided that both players spar with the same weapon type and are not at full hunger, will increase both of your mastery **LEVEL**, which is a hidden value, by one. The publicly displayed value, mastery **RANK** (which is just your mastery level minus 4), is more important. It should be noted that the damage you deal with your weapon is increased even if you haven't reached rank 1 yet. However, once you do reach at least mastery rank 2 (Again, this would be level 6), when you next revive, you will now **permanently** be at level 6 for that weapon type until you annoint or spar again. Essentially, this means you will always start back at rank 2. Once you reach **rank 6**, you can no longer annoint your weapon rank any higher, and must instead kill other players/enemies (that are higher in slime level than you) to do so. Reaching rank 6 also stops you from increasing your own rank through sparring, unless you are sparring with someone who has a higher weapon rank than you. You can only spar up to someone else's mastery rank, minus 1 (example: Sparring with a rank 15 master of the katana would, at most, allow you to get to rank 14). Sparring has a one minute cooldown and raises your hunger by about 5%. Once you reach rank 8, you may also **'!marry'** your weapon, resulting in a matrimonial ceremony that increases your rank by two.",
 	"ghosts": "Ghosts can perform an action known as **haunting**. Every use of **'!haunt'** takes up the total amount of slime from the haunted player, divided by 400, at a max of 20,000 per !haunt. You may also add a customized message by doing '!haunt [@player] [message]'. It can be done face-to-face like with !kill, or done remotely at the sewers. As a ghost, you can only move within a small radius around the area at which you died, and can only leave the sewers after gaining at least 100,000 negative slime with **'!manifest'**. Furthermore, if a player has consumed **coleslaw**, they can **'!bust'** ghosts, which sends them back to the sewers. **Negative Slime** is gained through haunting, and allows ghosts to summon **negaslimoids** in the city, with the use of **'!summon [name]'**. Negaslimeoids haunt all players within a district, and also decay capture progress. **The Rowdy Roughhouse** and **Cop Killtown** will send out a response that mentions which district a Negaslimeoid has entered into.",
 	# Additional gameplay mechanics, part 2
-	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\nhttps://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif\nhttps://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png",
+	"slimeoids":"**SLIMEOIDS** are sentient masses of slime that you can keep as **pets**. To learn how to make one for yourself, visit **The Slimeoid Laboratory** in Brawlden and check the enclosed **'!instructions'**. After you've made one, you can also battle it out with other slimeoids in **The Arena**, located in Vandal Park. Slimeoids can also be used to fight off **negaslimeoids** that have been summoned by ghosts, though be warned, as this is a fight to the death! If your slimeoid dies, it's **HEART** is dropped, which can be sown in the ground like a poudrin, or taken to the labs to revive your slimeoid with **'!restoreslimeoid'**. In regards to your slimeoid's stats, a slimeoid's **'Moxie'** represents its physical attack, **'Chutzpah'** its special attack, and **'Grit'** its defense. Additionally, the color you dye your slimeoid with **'!saturateslimeoid'** also plays into combat. Your slimeoid gets attack bonuses against slimeoids that have its split complementary hue and resist slimeoids with its analgous hues. For more information, see the diagrams linked below (credits to Connor#3355). There are also various commands you can perform on your slimeoid, such as **'!observeslimeoid'**, **'!petslimeoid'**, **'!walkslimeoid'**, and **'!playfetch'**. To humanely and ethically euthanize your slimeoid, use **'!dissolveslimeoid'** at the laboratory. To store and release your slimeoid in a bottle (Warning: This bottle is dropped upon death!!), use **'!bottleslimeoid'** and **'!unbottleslimeoid [slimeoid]'**, respectively.\n<https://cdn.discordapp.com/attachments/492088204053184533/586310921274523648/SLIMEOID-HUE.png>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662087653064706/SLIMEOID-HUE.gif>\n<https://cdn.discordapp.com/attachments/177891183173959680/586662095848996894/SLIMEOID_HUE_NOTE.png>",
 	"cosmetics":"**Cosmetics** are items that the player may wear. To equip or un-equip a cosmetic, use **'!adorn [cosmetic]'**. If you have two slime poudrins, you can use **'!smelt cosmetic'** to create a new one from scratch. Cosmetics can also be obtained from milling vegetables at farms. Cosmetics can either be of 'plebian' or 'patrician' quality, indicating their rarity. If you win an art contest held for the community, you can also ask a Kingpin to make a **Princep** cosmetic for you, which is custom tailored to your desires, and will not leave your inventory upon death. Cosmetics can be dyed with **!dyecosmetic**. To check which cosmetics you have adorned, you can use !data.",
 	"realestate":"The **Slimecorp Real Estate Agency** is, well, the agency where you buy real estate. First, check out the property you want with **'!consult [district]'**. The real estate agent will tell you a bit about the area. \nOnce you've made your decision, you can **'!signlease [district]'** to seal the deal. There's a down payment, and you will be charged rent every 2 IRL days. Fair warning, though, if you already have an apartment and you rent a second one, you will be moved out of the first.\n\nFinally, if you own an apartment already, you can **'!aptupgrade'** it, improving its storage capabilities, but you'll be charged a huge down payment and your rent will double. The biggest upgrade stores 40 closet items, 20 food items, and 25 pieces of furniture. And if you're ready to cut and run, use **'!breaklease'** to end your contract. It'll cost another down payment, though.\n\nYou can !addkey to acquire a housekey. Giving this item to some lucky fellow gives them access to your apartment, including all your prized posessions. Getting burglarized? Use !changelocks to eliminate all housekeys you created. Both cost a premium, though.",
 	"apartments":"Once you've gotten yourself an apartment, there are a variety of things you can do inside it. To enter your apartment, do **'!retire'** in the district your apartment is located in. There are certain commands related to your apartment that you must do in a direct message to ENDLESS WAR. To change the name and description of your apartment, do **'!aptname [name]'** and **'!aptdesc [description]'**, respectively. To place and remove furniture (purchasable in The Bazaar), do **'!decorate [furniture]'** and **'!undecorate [furniture]'**, respectively. You can store and remove items with **'!stow'** and **'!snag'**, respectively. To store in and remove items from the fridge, do **'!fridge [item]'** and **'!unfridge [item]'**. To store in and remove items from the closet, do **'!closet [item]'** and **'!uncloset [item]'**, respectively. To store and remove your slimeoid, do **'!freeze'** and **'!unfreeze'**, respectively. To store and remove fish, do **'!aquarium [fish]'** and **'!releasefish [fish]'**, respectively. To store and remove items such as weapons and cosmetics, do **'!propstand [item]'** and **'!unstand [item]'**, respectively. To put away zines, do **!shelve [item]** and **!unshelve [item]**. To place crops into flower pots, do **pot [item]** and **unpot [item]** To enter someone else's apartment, you can do **'!knock [player]'**, which will prompt them to let you in. This list of commands can also be accessed by using !help in a direct message to ENDLESS WAR.",
@@ -16499,17 +16724,17 @@ help_responses = {
 	# Additional gameplay mechanics, part 3
 	"trading": "Trading allows you to exchange multiple items at once with another player. You can ask someone to trade with you by using **!trade [player]**. Should they accept, you will be able to offer items with **!offer [item]**. Use **!removeoffer [item]** to remove an item from your offers. You can check both player's offers by using **!trade** again. When you're ready to finish the trade, use **!completetrade**. The items will only be exchanged when both players do the command. Note that if a player adds or removes an item afterwards you will no longer be set as ready and will need to redo the command. Should you want to cancel the trade, you can do so by using **!canceltrade**.",
 	"weather": "The weather of NLACakaNM can have certain outcomes on gameplay, most notably in regards to mutations like White Nationalist or Light As A Feather. Right now, however, you should be most concerned with **Bicarbonate Rain Storms**, which rapidly destroy slime both on the ground and within your very being. It's advised that you pick up a rain coat at The Bazaar to avoid further harm. To check the weather, use **'!weather'**.",
-	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them.",
+	"casino": "**The Casino** is a sub-zone in Green Light District where players may bet their slime and slimecoin in various games, including **'!slimepachinko'**, **'!slimecraps'**, **'!slimeslots'**, **'!slimeroulette'**, **'!slimebaccarat'**, and **!slimeskat**. Some games allow you to bet certain amounts, while other games have a fixed cost. Furthermore, the casino allows you to challenge other players to a game of **'!russianroulette'**, where most of the loser's slime is transferred to the winner. A recent takeover by SlimeCorp has introduced a policy requiring 20% of all winnings to be sent directly to them. To bet with slime, simply add 'slime' to the name of the game you wish to play. Example: **!slimeslots 500 slime**.",
 	"bleeding": "When you get hit by someone using a '!kill' command, certain things happen to your slime. Let's say you take 20,000 points of damage. **50%** of that slime, in this case 10,000, immediately becomes scavengeable. However, the other 50%, provided that you didn't die instantly, will undergo the **bleeding** process. 25% of that slime, in this case 5,000, is immediately added to a 'bleed pool', causing it to slowly trickle out of your body and onto the ground for it to be scavenged. The remaining 25% of that slime will **slowly** be added to the 'bleed pool', where it will then bleed, just as previously stated. Upon dying, your 'bleed pool' is immediately dumped onto the ground, ready to be scavenged. Think of it like the 'rolling HP' system from the game *EarthBound*. When you get hit, you don't take all your damage upfront, it instead slowly trickles down.",
-	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline.",
+	"offline":"Given that ENDLESS WAR is a **Discord** game, there are a few peculiarities surrounding it and how it interacts with Discord itself. When you set your status to **'Offline'**, you can still move between districts if you typed a '!goto' command beforehand. You won't show up on the sidebar in that district's channel, but people can still scout for you, and see the '[player] has entered [district]' message when you do enter the district they're in. Furthermore, you **can't** use commands while offline, and can only use commands **10 seconds** after coming online again. Often times, you may find yourself using '!scout' or '!look' on a district, only to find that **no one** is there besides yourself. This is likely because they're in that district, just with their status set to offline. The exception to this, of course, is if you have the **Chameleon Skin** mutation, which lets you type a handful of commands even while offline, including **!goto**, **!look**, **!scout**, **!survey**, **!embark**, and **!disembark**.",
 	# Additional gameplay mechanics, part 4
 	"profile": "This isn't so much a guide on gameplay mechanics as it is just a guide for what to expect from roleplaying in ENDLESS WAR. The general rule of thumb is that your profile picture will act as your 'persona' that gets depicted in fanworks, and it can be said that many of the colorful characters you'll find in NLCakaNM originated in this way.",
 	"manuscripts": "First of all, to start a manuscript, you're gonna need to head down to the Cafe, either University, or the Comic Shop.\n\nYou can **!beginmanuscript [title]** at the cost of 20k slime.\n\nIf you happen to regret your choice of title, you can just **!settitle [new title]**.\n\nThe author name is already set to your nickname, but if you want to change it, you change your nickname and then **!setpenname**.\n\nYou're required to specify a genre for your future zine by using **!setgenre [genre name]** (Genre list includes: narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper, and experimental).\n\nIf at any time you would like to look at the title, author name, and length of your manuscript, then use **!manuscript**.\n\n*NOW*, if you actually want to start getting stuff done, you're gonna need to **!editpage [page number] [content]**. Every zine has 10 pages (kinda) that you can work with, but you can **!setpages [pages]** to customize it (maximum is 20, minimum is 5). Each holds a maximum of 1500 characters of content. You can fill it with information, image links, smut, whatever floats your freakish boat. If you try to edit a page that already has writing, it will ask you to confirm the change before overwriting it.\n\nYou can also set a cover, which is optional. You do this with **!editpage cover [image link]**.\n\nTo check any of your pages, simply **!viewpage [number]** to see how it looks.\n\nKeep in mind that manuscripts ARE NOT items and can't be lost on death. They're accessible from any authoring location (Cafe, NLACU, NMS, Comics). A player can only have 1 manuscript out at a time.\n\nOnce you are completely finished, you can **!publish** your manuscript (it will ask you to confirm that you are completely done with it), which will enable the citizens of the town to purchase it from any zine place. From there, it will be bought and rated by the people and you may even earn some royalty poudrins for it.",
 	"zines": "Zines are the hot new trend in Neo-Milwaukee and give slimebois of all shapes and sizes access to the free-market of information and culture.\n\nTo obtain a zine, you must head down to any of these locations: Green Cake Cafe, NLAC University, Neo-Milwaukee State, or Glockbury Comics.\n\nFrom there, you can **!browse** for zines. They are ordered by *Zine ID*, but you have many options for sorting them, including: **title, author, datepublished,** any of the genres (including **narrative, historical, comic, ||porn||, instructional, lore, reference, journal, newspaper,** and **experimental**.), **length, sales,** and **rating** (use **!browse [criteria]**). You can also add **reverse** on to any of these in order to make it display in reverse order. Example: **!browse bestsellers reverse** (essentially looks for worse-selling zines). Browsing in the Comic Shop will automatically browse for comic zines and browsing at the Colleges will look for historical zines (keep in mind that any zines can be bought from these places).\n\nYou can also **!browse [Zine ID]** in order to get info about that specific zine, including sales, length, genre, and rating.\n\nOnce you've found a zine that's caught your eye, simply **!orderzine [Zine ID]** to buy it for 10k slime.\n\nAfter absorbing the zine's content, it is your moral obligation as a reader to **!review [Zine Name] [Score]**. The potential scores range from between 1 and 5 *fucks* (whole numbers only). If you hate a zine, then give it one fuck. If you absolutely loved it, give it five fucks. Simple. By the way, if a zine's average rating is less than 2.0 by the time it gets to 10 ratings (or less than 1.5 by 5 ratings), it will be excluded from the default browse. The only way to purchase it will be to use the **worstrated** or **all** sorting methods.\n\nYou can **!shelve [zine name]** in your apartment after you've finished.",
-
-	# Combat
-	"combat": "Once you have enlisted in a gang, you can engage in gang violence. To do so you will need a weapon, which you can find at the Dojo and a target. To attack an enemy, you have to **!equip** a weapon and **!kill [player]**. Attacking costs slime and sap. The default cost for attacking is (your slimelevel)^4 / 60 and the default damage it does to your opponent is (your slimelevel)^4 / 6. Every weapon has an attack cost mod and a damage mod that may change these default values. When you reduce a player's slime count below 0 with your attacks, they die. Most weapons will ask you to input a security code with every attack. This security code, also referred to as a captcha, is displayed after a previous !kill or when you !inspect your weapon. Heavy weapons increase crit chance by 5% and decrease miss chance by 10% against you, when you carry them.",
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
 	"sap": "**Sap** is a resource your body produces to control your slime. It's integral to being able to act in combat. You can have a maximum amount of sap equal to your slime level. When you spend it, it will regenerate at a rate of 1 sap every 5 seconds. You can spend your sap in a variety of ways: **!harden [number]** allows you to dedicate a variable amount of sap to your defense. Hardened sap reduces incoming damage by a factor of 10 / (10 + hardened sap). Your hardened sap counts against your maximum sap pool, so the more you dedicate to defense, the less you will have to attack. You can **!liquefy [number]** hardened sap back into your sap pool. Every attack requires at least 1 sap to complete. Different weapons have different sap costs. Some weapons have the ability to destroy an amount of hardened sap from your target, or ignore a portion of their hardened sap armor. This is referred to as **sap crushing** and **sap piercing** respectively. There are also other actions you can take in combat, that cost sap, such as: **!aim [player]** will slightly increase your hit chance and crit chance against that player for 10 seconds. It costs 2 sap. **!dodge [player]** will decrease that players hit chance against you for 10 seconds. It costs 3 sap. **!taunt [player]** will decrease that player's hit chance against targets other than you for 10 seconds. It costs 5 sap.",
+
+	# Weapons
 	weapon_id_revolver: "**The revolver** is a weapon for sale at the Dojo. Attacking with the revolver costs 1 sap. It has a damage mod of 0.8 and an attack cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The revolver has sap crushing 2. After every 6 shots you will need to **!reload** it.",
 	weapon_id_dualpistols: "**The dual pistols** are a weapon for sale at the Dojo. Attacking with the dual pistols costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2, a miss chance of 40% and a 20% chance for a crit, which does 2x damage. The dual pistols have sap crushing 2. After every 12 shots you will need to **!reload** them.",
 	weapon_id_shotgun: "**The shotgun** is a weapon for sale at the Dojo. Attacking with the shotgun costs 5 sap. It has a damage mod of 1.65 and an attack cost mod of 1.5. It has a captcha length of 6, a miss chance of 10% and a 10% chance for a crit, which does 2x damage. The shotgun has sap crushing 5. After every 2 shots you will need to **!reload** it.",
@@ -16529,25 +16754,25 @@ help_responses = {
 	weapon_id_molotov: "**The molotov bottles** are a weapon for sale at the Dojo. Attacking with the molotovs costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire. They have sap piercing 10. When you attack with a molotov, it is used up, and you have to buy more. Molotovs set every enemy in the district on fire, which deals damage over time.",
 	weapon_id_grenades: "**The grenades** are a weapon for sale at the Dojo. Attacking with the grenades costs 1 sap. They have a damage mod of 0.75 and an attack cost mod of 2. They have a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 4x damage, and a 10% chance to backfire. They have sap crushing 2. When you attack with a grenade, it is used up, and you have to buy more. Grenades damage every enemy in the district.",
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
-	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
+	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
 	
-	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left."
+	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
 help_responses_ordered_keys = [
 	"gangs", "food", "capturing", "transportation", "death",
-	"dojo", "subzones", "scouting", "otp", "wanted",
+	"dojo", "subzones", "scouting", "wanted", "combat",
 	"mining", "scavenging", "farming", "fishing", "hunting",
 	"mutations", "mymutations", "smelting", "sparring", "ghosts",
 	"slimeoids", "cosmetics", "realestate", "apartments", "stocks",
 	"trading", "weather", "casino", "bleeding", "offline",
-	"profile", "manuscripts", "zines", "shambleball",
-	"combat", "sap", weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun,
-	weapon_id_rifle, weapon_id_smg, weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana,
-	weapon_id_broadsword, weapon_id_nunchucks, weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella,
-	weapon_id_knives, weapon_id_molotov, weapon_id_grenades, weapon_id_garrote, weapon_id_minigun,
-
+	"profile", "manuscripts", "zines", "shambleball", "sap",
+	weapon_id_revolver, weapon_id_dualpistols, weapon_id_shotgun, weapon_id_rifle, weapon_id_smg, 
+	weapon_id_bat, weapon_id_brassknuckles, weapon_id_katana, weapon_id_broadsword, weapon_id_nunchucks, 
+	weapon_id_scythe, weapon_id_yoyo, weapon_id_umbrella, weapon_id_knives, weapon_id_molotov, 
+	weapon_id_grenades, weapon_id_garrote, weapon_id_minigun, weapon_id_bow, weapon_id_dclaw,
 ]
 
 mutation_descriptions = {
@@ -16567,7 +16792,7 @@ mutation_descriptions = {
 	mutation_id_fastmetabolism: "Movement speed is increased by 33% when below 40% hunger.",
 	mutation_id_bingeeater: "Upon eating food, the restored hunger is multiplied by the number of dishes you’ve consumed in the past 5 seconds.",
 	mutation_id_lonewolf: "20% capture discount and 50% more damage when in a district without any friendly gangsters. Stacks with the Patriot mutation.",
-	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you instantly, with a cooldown of 3 hours.",
+	mutation_id_quantumlegs: "You can now use the !tp command, allowing you to teleport to a district up to two locations away from you after an uninterrupted 30 second running start, with a cooldown of 3 hours.",
 	mutation_id_chameleonskin: "While offline, you can move to and scout other districts and cannot be scouted.",
 	mutation_id_patriot: "20% capture discount. Stacks with the Lone Wolf mutation.",
 	mutation_id_socialanimal: "Your damage increases by 10% for every ally in your district.",
@@ -16704,18 +16929,18 @@ enemy_spawn_groups = {
 # Enemy drop tables. Values are sorted by the chance to the drop an item, and then the minimum and maximum amount of times to drop that item.
 enemy_drop_tables = {
 	enemy_type_sandbag: [{"poudrin": [100, 1, 1]}],
-	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [10, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
-	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [40, 1, 2]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [40, 1, 2]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_juvie: [{"poudrin": [50, 1, 2]}, {"pleb": [5, 1, 1]}, {"crop": [30, 1, 1]}, {"card": [20, 1, 1]}],
+	enemy_type_dinoslime: [{"poudrin": [100, 2, 4]}, {"pleb": [10, 1, 1]},  {"meat": [33, 1, 2]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_slimeadactyl: [{"poudrin": [100, 3, 5]}, {"pleb": [10, 1, 1]}, {"monsterbones": [100, 3, 5]}],
 	enemy_type_microslime: [{"patrician": [100, 1, 1]}],
 	enemy_type_slimeofgreed: [{"poudrin": [100, 2, 2]}],
-	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [100, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [60, 1, 2]}, {"monsterbones": [100, 1, 3]}],
+	enemy_type_desertraider: [{"poudrin": [100, 1, 2]}, {"pleb": [50, 1, 1]},  {"crop": [50, 3, 6]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_mammoslime: [{"poudrin": [75, 5, 6]},  {"patrician": [20, 1, 1]}, {"monsterbones": [100, 1, 3]}],
 	enemy_type_doubleheadlessdoublehorseman: [{"poudrin": [100, 22, 22]}, {"pleb": [100, 22, 22]}, {"patrician": [100, 22, 22]}, {"crop": [100, 22, 22]}, {"meat": [100, 22, 22]}, {"card": [100, 22, 22]}],
 	enemy_type_doublehorse: [{"poudrin": [100, 22, 22]}],
-	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [100, 1, 3]}, {"patrician": [33, 1, 1]}],
-	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [75, 3, 3]}, {"patrician": [50, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
-	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 2, 4]}, {"monsterbones": [100, 5, 10]}],
+	enemy_type_megaslime: [{"poudrin": [100, 4, 8]}, {"pleb": [80, 1, 2]}, {"patrician": [30, 1, 1]}],
+	enemy_type_slimeasaurusrex: [{"poudrin": [100, 8, 15]}, {"pleb": [50, 1, 2]}, {"patrician": [20, 1, 2]},  {"meat": [100, 3, 4]}, {"monsterbones": [100, 3, 5]}],
+	enemy_type_greeneyesslimedragon: [{"dragonsoul": [100, 1, 1]},{"poudrin": [100, 15, 20]}, {"patrician": [100, 1, 1]}, {"monsterbones": [100, 5, 10]}],
 	enemy_type_unnervingfightingoperator: [{"poudrin": [100, 1, 1]}, {"crop": [100, 1, 1]}, {"meat": [100, 1, 1]}, {"card": [100, 1, 1]}]
 }
 
@@ -17299,7 +17524,7 @@ captcha_dict = [
 	'KFC', 'GAY', 'LOL', 'GUN', 'MUK',
 	'POW', 'WOW', 'POP', 'OWO', 'HIP',
 	'END', 'HAT', 'CUP', '911', '711',
-	'SIX', 'SMG', 'BOW', 'AWO',
+	'SIX', 'SMG', 'BOW',
 	#4
 	'GOON', 'DOOR', 'CORP', 'SPAM', 'BLAM',
 	'FISH', 'MINE', 'LOCK', 'OURS', 'ROCK',
@@ -17314,38 +17539,37 @@ captcha_dict = [
 	'SLOSH', 'PARTY', 'JUVIE', 'BASED', 'TULPA',
 	'SLURP', 'MONTH', 'SEVEN', 'BRASS', 'MINES',
 	'GREEN', 'LIGHT', 'FURRY', 'PIZZA', 'ARENA',
-	'LUCKY', 'RIFLE', '56709', 'AWOOO',
+	'LUCKY', 'RIFLE', '56709',
 	#6
 	'SLUDGE', 'KILLER', 'MUNCHY', 'BLAAAP', 'BARTER',
 	'ARTIST', 'FUCKER', 'MINING', 'SURVEY', 'THRASH',
 	'BEWARE', 'STOCKS', 'COWARD', 'CRINGE', 'INVEST', 
 	'BUSTAH', 'KILLAH', 'KATANA', 'GHOSTS', 'BASSED', 
-	'REVIVE', 'BATTLE', 'PAWPAW', 'AWOOOO',
+	'REVIVE', 'BATTLE', 'PAWPAW',
 	#7
 	'KINGPIN', 'ENDLESS', 'ATTACKS', 'FUCKERS', 'FISHING',
 	'VIOLENT', 'SQUEEZE', 'LOBSTER', 'WESTERN', 'EASTERN', 
 	'REGIONS', 'DISCORD', 'KNUCKLE', 'MOLOTOV', 'SHAMBLE',
 	'WARFARE', 'BIGIRON', 'POUDRIN', 'PATRIOT', 'MINIGUN',
-	'AWOOOOO',
 	#8
 	'GAMEPLAY', 'SHAMBLER', 'CONFLICT', 'EXCHANGE', 'FEEDBACK',
 	'VIOLENCE', 'TACOBELL', 'PIZZAHUT', 'OUTSKIRT', 'WHATEVER',
 	'WITHDRAW', 'SOUTHERN', 'NORTHERN', 'ASTATINE', 'SLIMEOID',
 	'SHAMBLIN', 'STAYDEAD', 'JUVENILE', 'DOWNTOWN', 'DISTRICT',
 	'BIGBONES', 'LONEWOLF', 'KEENSMELL', 'RAZORNUTS', 'REVOLVER',
-	'BASEBALL', 'GRENADES', 'AWOOOOOO',
+	'BASEBALL', 'GRENADES',
 	#9
 	'APARTMENT', 'SURVIVORS', 'NEGASLIME', 'COMMUNITY', 'GIGASLIME',
 	'DETENTION', 'CATHEDRAL', 'TOXINGTON', 'SLIMEGIRL', 'INVESTING',
 	'SLIMECOIN', 'RATELIMIT', 'NARRATIVE', 'COMMANDO', 'SHAMBLERS',
 	'NUNCHUCKS', 'SLIMECORP', 'ARSONBROOK','SMOGSBURG', 'SLIMEFEST', 
-	'COMMANDER', 'FATCHANCE', 'DANKWHEAT', 'AWOOOOOOO',
+	'COMMANDER', 'FATCHANCE', 'DANKWHEAT',
 	#10
 	'SLUDGECORE', 'LOREMASTER', 'ROUGHHOUSE', 'GLOCKSBURY', 'CALCULATED',
 	'PLAYGROUND', 'NEWYONKERS', 'OLDYONKERS', 'VANDALPARK', 'SLIMERMAID',
 	'SLIMEXODIA', 'WEBBEDFEET', 'NOSEFERATU', 'BINGEEATER', 'TRASHMOUTH',
 	'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
-	'DRAGONCLAW', 'AWOOOOOOOO',
+	'DRAGONCLAW',
 ]
 
 # lists of all the discord server objects served by bot, identified by the server id

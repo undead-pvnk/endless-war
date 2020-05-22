@@ -57,6 +57,10 @@ CREATE TABLE users (
 	swear_jar bigint NOT NULL DEFAULT '0',
 	degradation bigint NOT NULL DEFAULT '0',
 	time_lastdeath int NOT NULL DEFAULT '0',
+	gambit int NOT NULL DEFAULT '0',
+	credence int NOT NULL DEFAULT '0',
+	credence_used int NOT NULL DEFAULT '0',
+	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );
@@ -441,4 +445,22 @@ CREATE TABLE book_sales (
     rating int NOT NULL DEFAULT '0',
 
     PRIMARY KEY (id_book, id_server, id_user)
+);
+
+CREATE TABLE swilldermuk_prank_index (
+    id_server varchar(128) NOT NULL,
+    id_user_pranker varchar(128) NOT NULL,
+    id_user_pranked varchar(128) NOT NULL,
+    prank_count int NOT NULL DEFAULT '0',
+    
+    PRIMARY KEY (id_user_pranker, id_user_pranked)
+);
+
+CREATE TABLE inhabitations (
+    id_ghost varchar(128) NOT NULL,
+    id_fleshling varchar(128) NOT NULL,
+    id_server varchar(64) NOT NULL,
+    empowered boolean NOT NULL DEFAULT false,
+
+	PRIMARY KEY (id_ghost, id_fleshling, id_server)
 );
