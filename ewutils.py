@@ -26,6 +26,7 @@ from ewmarket import EwMarket
 from ewstatuseffects import EwStatusEffect
 from ewstatuseffects import EwEnemyStatusEffect
 from ewitem import EwItem
+#from ewprank import calculate_gambit_exchange
 
 TERMINATE = False
 DEBUG = False
@@ -454,18 +455,20 @@ def databaseClose(conn_info):
 
 """ format responses with the username: """
 def formatMessage(user_target, message):
-	# If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
-	try:
-		if user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
-			return "{}".format(message)
-		else:
-			# Send messages normally if the raid boss is activated or if user_target is a player
-			return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
-	# If the user has the name of a raid boss, catch the exception and format the message correctly
-	except:
-		return "*{}*: {}".format(user_target.display_name, message).replace("@", "\{at\}")
+    # If the display name belongs to an unactivated raid boss, hide its name while it's counting down.
+    try:
+        if user_target.life_state == ewcfg.enemy_lifestate_alive:
+            # Send messages for normal enemies, and mentioning with @
+            return "*{}:* {}".format(user_target.display_name, message)
 
-""" Decay slime totals for all users """
+        elif user_target.display_name in ewcfg.raid_boss_names and user_target.life_state == ewcfg.enemy_lifestate_unactivated:
+            return "{}".format(message)
+
+    # If user_target isn't an enemy, catch the exception.
+    except:
+        return "*{}:* {}".format(user_target.display_name, message).replace("@", "{at}")
+
+""" Decay slime totals for all users, with the exception of Kingpins"""
 def decaySlimes(id_server = None):
 	if id_server != None:
 		try:
@@ -473,8 +476,10 @@ def decaySlimes(id_server = None):
 			conn = conn_info.get('conn')
 			cursor = conn.cursor();
 
-			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {slimes} > 1".format(
-				slimes = ewcfg.col_slimes
+			cursor.execute("SELECT id_user, life_state FROM users WHERE id_server = %s AND {slimes} > 1 AND NOT {life_state} = {life_state_kingpin}".format(
+				slimes = ewcfg.col_slimes,
+				life_state = ewcfg.col_life_state,
+				life_state_kingpin = ewcfg.life_state_kingpin
 			), (
 				id_server,
 			))
@@ -1641,7 +1646,196 @@ def sap_tick(id_server):
 				enemy_data.persist()
 	except:
 		logMsg("An error occured in sap tick for server {}".format(id_server))
+		
+async def spawn_prank_items_tick_loop(id_server):
+	#DEBUG
+	# interval = 10
+	
+	# If there are more active people, items spawn more frequently, and less frequently if there are less active people.
+	interval = 180
+	new_interval = 0
+	while not TERMINATE:
+		if new_interval > 0:
+			interval = new_interval
+			
+		#print("newinterval:{}".format(new_interval))
+		
+		await asyncio.sleep(interval)
+		new_interval = await spawn_prank_items(id_server = id_server)
 
+async def spawn_prank_items(id_server):
+	new_interval = 0
+	base_interval = 60
+	
+	try:
+		active_users_count = 0
+
+		if id_server != None:
+			try:
+				conn_info = databaseConnect()
+				conn = conn_info.get('conn')
+				cursor = conn.cursor();
+
+				cursor.execute(
+					"SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
+						life_state=ewcfg.col_life_state,
+						poi=ewcfg.col_poi,
+						life_state_corpse=ewcfg.life_state_corpse,
+						life_state_kingpin=ewcfg.life_state_kingpin,
+						time_last_action=ewcfg.col_time_last_action,
+					), (
+						id_server,
+						ewcfg.capturable_districts,
+						(int(time.time()) - ewcfg.time_kickout),
+					))
+
+				users = cursor.fetchall()
+
+				active_users_count = len(users)
+
+				conn.commit()
+			finally:
+				# Clean up the database handles.
+				cursor.close()
+				databaseClose(conn_info)
+		
+		# Avoid division by 0
+		if active_users_count == 0:
+			active_users_count = 1
+		else:
+			#print(active_users_count)
+			pass
+		
+		new_interval = (math.ceil(base_interval/active_users_count) * 5) # 5 active users = 1 minute timer, 10 = 30 second timer, and so on.
+		
+		district_id = random.choice(ewcfg.capturable_districts)
+		
+		#Debug
+		#district_id = 'wreckington'
+		
+		district_channel_name = ewcfg.id_to_poi.get(district_id).channel
+		
+		client = get_client()
+		
+		server = client.get_server(id_server)
+	
+		district_channel = get_channel(server=server, channel_name=district_channel_name)
+		
+		pie_or_prank = random.randrange(3)
+		
+		if pie_or_prank == 0:
+			swilldermuk_food_item = random.choice(ewcfg.swilldermuk_food)
+
+			item_props = ewitem.gen_item_props(swilldermuk_food_item)
+
+			swilldermuk_food_item_id = ewitem.item_create(
+				item_type=swilldermuk_food_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+
+			#print('{} with id {} spawned in {}!'.format(swilldermuk_food_item.str_name, swilldermuk_food_item_id, district_id))
+
+			response = "That smell... it's unmistakeable!! Someone's left a fresh {} on the ground!".format(swilldermuk_food_item.str_name)
+			await send_message(client, district_channel, response)
+		else:
+			rarity_roll = random.randrange(10)
+			
+			if rarity_roll > 3:
+				prank_item = random.choice(ewcfg.prank_items_heinous)
+			elif rarity_roll > 0:
+				prank_item = random.choice(ewcfg.prank_items_scandalous)
+			else:
+				prank_item = random.choice(ewcfg.prank_items_forbidden)
+				
+			#Debug
+			#prank_item = ewcfg.prank_items_heinous[1] # Chinese Finger Trap
+		
+			item_props = ewitem.gen_item_props(prank_item)
+		
+			prank_item_id = ewitem.item_create(
+				item_type=prank_item.item_type,
+				id_user=district_id,
+				id_server=id_server,
+				item_props=item_props
+			)
+		
+			# print('{} with id {} spawned in {}!'.format(prank_item.str_name, prank_item_id, district_id))
+	
+			response = "An ominous wind blows through the streets. You think you hear someone drop a {} on the ground nearby...".format(prank_item.str_name)
+			await send_message(client, district_channel, response)
+
+	except:
+		logMsg("An error occured in spawn prank items tick for server {}".format(id_server))
+		
+	return new_interval
+		
+async def generate_credence_tick_loop(id_server):
+	# DEBUG
+	# interval = 10
+	
+	while not TERMINATE:
+		interval = (random.randrange(121) + 120)  # anywhere from 2-4 minutes
+		await asyncio.sleep(interval)
+		await generate_credence(id_server)
+		
+async def generate_credence(id_server):
+	#print("CREDENCE GENERATED")
+	
+	if id_server != None:
+		try:
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+	
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND {poi} in %s AND NOT ({life_state} = {life_state_corpse} OR {life_state} = {life_state_kingpin}) AND {time_last_action} > %s".format(
+				life_state = ewcfg.col_life_state,
+				poi = ewcfg.col_poi,
+				life_state_corpse = ewcfg.life_state_corpse,
+				life_state_kingpin = ewcfg.life_state_kingpin,
+				time_last_action = ewcfg.col_time_last_action,
+			), (
+				id_server,
+				ewcfg.capturable_districts,
+				(int(time.time()) - ewcfg.time_afk_swilldermuk),
+			))
+	
+			users = cursor.fetchall()
+	
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				added_credence = 0
+				lowered_credence_used = 0
+				
+				if user_data.credence >= 1000:
+					added_credence = 1 + random.randrange(5)
+				elif user_data.credence >= 500:
+					added_credence = 10 + random.randrange(41)
+				elif user_data.credence >= 100:
+					added_credence = 25 + random.randrange(76)
+				else:
+					added_credence = 50 + random.randrange(151)
+					
+				if user_data.credence_used > 0:
+					lowered_credence_used = int(user_data.credence_used/10)
+					
+					if lowered_credence_used == 1:
+						lowered_credence_used = 0
+						
+					user_data.credence_used = lowered_credence_used
+					
+				added_credence = max(0, added_credence - lowered_credence_used)
+				user_data.credence += added_credence
+					
+				user_data.persist()
+				
+	
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
 			
 async def activate_trap_items(district, id_server, id_user):
 	# Return if --> User has 0 credence, there are no traps, or if the trap setter is the one who entered the district.

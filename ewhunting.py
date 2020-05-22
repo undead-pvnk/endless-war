@@ -544,7 +544,7 @@ class EwEnemy:
 						if used_attacktype != ewcfg.enemy_attacktype_unarmed:
 							response = used_attacktype.str_damage.format(
 								name_enemy=enemy_data.display_name,
-								name_target=target_player.display_name,
+								name_target=("<@!{}>".format(target_data.id_user)),
 								hitzone=randombodypart,
 								strikes=strikes
 							)
@@ -557,7 +557,7 @@ class EwEnemy:
 
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
-								name_target=target_player.display_name,
+								name_target=("<@!{}>".format(target_data.id_user)),
 								emote_skull=ewcfg.emote_slimeskull
 							))
 							target_data.trauma = used_attacktype.id_type
@@ -614,7 +614,7 @@ class EwEnemy:
 							else:
 								response = used_attacktype.str_damage.format(
 									name_enemy=enemy_data.display_name,
-									name_target=target_player.display_name,
+									name_target=("<@!{}>".format(target_data.id_user)),
 									hitzone=randombodypart,
 									strikes=strikes
 								)
