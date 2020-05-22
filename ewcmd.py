@@ -199,6 +199,7 @@ def gen_data_text(
 						weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
+	#todo create data text for the sidearm
 
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
@@ -1212,7 +1213,10 @@ async def recycle(cmd):
 				else:
 					user_data.weapon = -1
 					user_data.persist()
-			
+			elif item.item_type == ewcfg.it_weapon and user_data.sidearm >= 0 and item.id_item == user_data.sidearm:
+				user_data.sidearm = -1
+				user_data.persist()
+
 			ewitem.item_delete(id_item = item.id_item)
 
 			pay = int(random.random() * 10 ** random.randrange(2,6))
@@ -1432,7 +1436,7 @@ async def jump(cmd):
 				pass
 
 			elif item_object.item_type == ewcfg.it_weapon:
-				if item.get('id_item') == user_data.weapon:
+				if item.get('id_item') == user_data.weapon or item.get('id_item') == user_data.sidearm:
 					ewitem.give_item(id_item=item_object.id_item, id_user=ewcfg.poi_id_slimesea, id_server=cmd.message.server.id)
 
 				else:
@@ -1445,7 +1449,7 @@ async def jump(cmd):
 			else:
 				item_off(id_item=item.get('id_item'), is_pushed_off=True, item_name=item.get('name'), id_server=cmd.message.server.id)
 
-		targetmodel.trauma = ewcfg.trauma_id_environment
+		user_data.trauma = ewcfg.trauma_id_environment
 		die_resp = user_data.die(cause = ewcfg.cause_cliff)
 		user_data.persist()
 		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)

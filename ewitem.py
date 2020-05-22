@@ -394,7 +394,7 @@ def item_dropsome(id_server = None, id_user = None, item_type_filter = None, fra
 
 	if item_type_filter == ewcfg.it_weapon:
 		for item in drop_candidates:
-			if item.get('id_item') != user_data.weapon:
+			if item.get('id_item') != user_data.weapon and item.get('id_item') != user_data.sidearm:
 				filtered_items.append(item)
 			else:
 				pass
@@ -1314,6 +1314,9 @@ async def give(cmd):
 			if item_sought.get('id_item') == user_data.weapon:
 				user_data.weapon = -1
 				user_data.persist()
+			elif item_sought.get('id_item') == user_data.sidearm:
+				user_data.sidearm = -1
+				user_data.persist()
 
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -1406,7 +1409,8 @@ def gen_item_props(item):
 			"weapon_desc": item.str_description,
 			"married": "",
 			"ammo": item.clip_size,
-			"captcha": captcha
+			"captcha": captcha,
+			"is_tool" : item.is_tool
 		}
 
 	elif item.item_type == ewcfg.it_cosmetic:

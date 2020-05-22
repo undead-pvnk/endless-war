@@ -125,6 +125,12 @@ class EwWeapon:
 	# length of captcha you need to solve to fire
 	captcha_length = 0
 
+	#whether the weapon is a tool
+	is_tool = 0
+
+	#an array for storing extra string data for differne tools
+	tool_props = {}
+
 	def __init__(
 		self,
 		id_weapon = "",
@@ -159,7 +165,9 @@ class EwWeapon:
 		acquisition = "dojo",
 		stat = "",
 		sap_cost = 0,
-		captcha_length = 0
+		captcha_length = 0,
+		is_tool = 0,
+		tool_props = None
 	):
 		self.item_type = ewcfg.it_weapon
 
@@ -196,8 +204,10 @@ class EwWeapon:
 		self.stat = stat
 		self.sap_cost = sap_cost
 		self.captcha_length = captcha_length
+		self.is_tool = is_tool
+		self.tool_props = tool_props
+		self.str_name = self.str_weapon,
 
-		self.str_name = self.str_weapon
 
 
 """ A data-moving class which holds references to objects we want to modify with weapon effects. """
@@ -414,18 +424,28 @@ def canCap(cmd):
 	time_now_float = time.time()
 	time_now = int(time_now_float)
 	user_data = EwUser(member=cmd.message.author)
-	weapon_item = None
-	weapon = None
+	sidearm_item = None
+	sidearm = None
 	captcha = None
+	sidearm_viable = 0
 
 	tokens_lower = []
 	for token in cmd.tokens:
 		tokens_lower.append(token.lower())
 
-	if user_data.weapon >= 0:
-		weapon_item = EwItem(id_item=user_data.weapon)
-		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
-		captcha = weapon_item.item_props.get('captcha')
+	#if user_data.sidearm >= 0:
+	#	sidearm_item = EwItem(id_item=user_data.sidearm)
+	#	sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+	#	captcha = sidearm_item.item_props.get('captcha')
+	#	if ewcfg.weapon_class_paint in sidearm.classes:
+	#		sidearm_viable = 1
+
+	if user_data.weapon >= 0: #and sidearm_viable == 0
+		sidearm_item = EwItem(id_item=user_data.weapon)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+		captcha = sidearm_item.item_props.get('captcha')
+		if ewcfg.weapon_class_paint in sidearm.classes:
+			sidearm_viable = 1
 
 	statuses = user_data.getStatusEffects()
 
@@ -436,27 +456,22 @@ def canCap(cmd):
 	#		response = "You lack the moral fiber necessary for violence."
 
 	if ewmap.channel_name_is_poi(cmd.message.channel.name) == False:
-		response = "You can't commit violence from here."
+		response = "You can't spray graffiti from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
-		response = "You must go elsewhere to commit gang violence."
-	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
-		response = "You are too exhausted for gang violence right now. Go get some grub!"
-	elif weapon != None and user_data.sap < weapon.sap_cost:
-		response = "You don't have enough sap to attack. ({}/{})".format(user_data.sap, weapon.sap_cost)
-	elif weapon != None and ewcfg.weapon_class_ammo in weapon.classes and int(weapon_item.item_props.get('ammo')) == 0:
-		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
-	elif weapon != None and ewcfg.weapon_class_thrown in weapon.classes and weapon_item.stack_size == 0:
-		response = "You're out of {}! Go buy more at the {}".format(weapon.str_weapon, ewutils.formatNiceList(names=weapon.vendors,  conjunction="or"))
-	elif weapon != None and weapon.cooldown + (
-	float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
-		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=weapon.id_weapon)
-	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
-		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name=weapon.id_weapon, unjam=ewcfg.cmd_unjam, captcha=captcha)
-	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
+		response = "You must go elsewhere to commit vandalism."
+	elif sidearm != None and ewcfg.weapon_class_thrown in sidearm.classes and sidearm_item.stack_size == 0:
+		response = "You're out of {}! Go buy more at the {}".format(sidearm.str_weapon, ewutils.formatNiceList(names=sidearm.vendors,  conjunction="or"))
+	elif sidearm != None and sidearm.cooldown + (
+	float(sidearm_item.item_props.get("time_lastattack")) if sidearm_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
+		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name=sidearm.id_weapon)
+	elif sidearm != None and ewcfg.weapon_class_captcha in sidearm.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
 		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
-
-	elif user_data.weapon == -1:
-		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
+	elif user_data.life_state != ewcfg.life_state_enlisted:
+		response = "Juveniles are too cowardly and/or centrist to be vandalizing anything."
+	elif sidearm != None and ewcfg.weapon_class_ammo in sidearm.classes and int(sidearm_item.item_props.get('ammo')) <= 0:
+		response = "You've run out of ammo and need to {}!".format(ewcfg.cmd_reload)
+	elif sidearm_viable == 0:
+		response = "With what, your piss? Get some paint from Glocksbury Comics and stop fucking around."
 
 	return response
 
@@ -1139,6 +1154,7 @@ async def suicide(cmd):
 				
 			sewer_data = EwDistrict(district=ewcfg.poi_id_thesewers, id_server=user_data.id_server)
 			sewer_data.change_slimes(n = slimes_drained)
+			print(sewer_data.degradation)
 			sewer_data.persist()
 
 			district_data = EwDistrict(district = user_data.poi, id_server = cmd.message.server.id)
@@ -1580,6 +1596,7 @@ async def spar(cmd):
 """ equip a weapon """
 async def equip(cmd):
 	user_data = EwUser(member = cmd.message.author)
+
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -1597,13 +1614,16 @@ async def equip(cmd):
 		item = EwItem(id_item = item_sought.get("id_item"))
 
 		if item.item_type == ewcfg.it_weapon:
+			weapon = ewcfg.weapon_map.get(item.item_props.get("weapon_type"))
+			#if weapon.is_tool == 1 and (user_data.sidearm < 0 or user_data.weapon >= 0):
+			#	return await sidearm(cmd =cmd)
 			response = user_data.equip(item)
 			user_data.persist()
 			item.persist()
 		else:
-			response = "Not a weapon you ignorant juvenile"
+			response = "Not a weapon, you ignorant juvenile."
 	else:
-		response = "You don't have one"
+		response = "You don't have one."
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1823,20 +1843,36 @@ async def reload(cmd):
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
+	response = ""
+	reload_mismatch = True
 
 	if user_data.weapon > 0:
 		weapon_item = EwItem(id_item = user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+
 		if ewcfg.weapon_class_ammo in weapon.classes:
 			weapon_item.item_props["ammo"] = weapon.clip_size
 			weapon_item.persist()
 			response = weapon.str_reload
-		else:
-			response = "What do you think you're going to be reloading with that?"
-	else:
+			reload_mismatch = False
+
+	if user_data.sidearm > 0:
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if ewcfg.weapon_class_ammo in sidearm.classes:
+			sidearm_item.item_props["ammo"] = sidearm.clip_size
+			sidearm_item.persist()
+			if response != "":
+				response += "\n"
+			response += sidearm.str_reload
+			reload_mismatch = False
+
+	if user_data.weapon == -1 and user_data.sidearm == -1:
 		response = "What are you expecting to reload, dumbass? {} a weapon first!".format(ewcfg.cmd_equip)
-	
+	elif reload_mismatch:
+		response = "What do you think you're going to be reloading with that?"
+
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def unjam(cmd):
@@ -2785,21 +2821,40 @@ def get_sap_armor(shootee_data, sap_ignored):
 
 
 
-async def annex2(cmd):
-	#await ewutils.add_pvp_role(cmd)
-	time_now_float = time.time()
+async def spray(cmd):
+	#Get user data, then flag for PVP
 	user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+
+	time_now_float = time.time()
 	time_now = int(time_now_float)
+
+	was_pvp = user_data.time_expirpvp > time_now
+	user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, (int(time.time()) + ewcfg.time_pvp_annex))
+	user_data.persist()
+	if not was_pvp:
+		await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
+		user_data = EwUser(id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+
 	# Get shooting player's info
-	user_mutations = user_data.get_mutations()
+
 	weapon = None
 	weapon_item = None
+	sidearm_viable = 0
+	user_mutations = user_data.get_mutations()
 
 
-	if user_data.weapon >= 0:
+	#if user_data.sidearm >= 0:
+	#	weapon_item = EwItem(id_item=user_data.sidearm)
+	#	weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+	#	captcha = weapon_item.item_props.get('captcha')
+	#	if ewcfg.weapon_class_paint in weapon.classes:
+	#		sidearm_viable = 1
+
+	if user_data.weapon >= 0 and sidearm_viable == 0:
 		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 		captcha = weapon_item.item_props.get('captcha')
+
 	response = canCap(cmd)
 	if response == "":
 		if user_data.slimelevel <= 0:
@@ -2809,8 +2864,6 @@ async def annex2(cmd):
 		#Get district data
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(id_server=cmd.message.server.id, district=poi.id_poi)
-
-
 
 		miss = False
 		crit = False
@@ -2825,25 +2878,17 @@ async def annex2(cmd):
 		sap_damage = 0
 		sap_ignored = 0
 
+		weapon.wef = ewcfg.weapon_type_convert.get(weapon.id_weapon)
+
+
 		miss_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_miss, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
 		crit_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_crit, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
 		dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type=ewcfg.status_effect_type_damage, target=ewcfg.status_effect_target_self, shootee_data=None), 2)
 
-		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+		slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 180)
 		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		statuses = user_data.getStatusEffects()
-		if ewcfg.status_repelled_id in statuses:
-			user_data.clear_status(ewcfg.status_repelled_id)
-			after_effects_response = user_data.applyStatus(ewcfg.status_repelaftereffects_id)
-			await ewutils.send_message(cmd.client, cmd.message.channel,
-									   ewutils.formatMessage(cmd.message.author, after_effects_response))
-			slimes_damage /= 1000
-			slimes_damage = math.ceil(slimes_damage)
 
-		# If the player has cancelled a repel by attacking an enemy, make all their hits do 99% less damage for two seconds, rounded up.
-		if ewcfg.status_repelaftereffects_id in statuses:
-			slimes_damage /= 100
-			slimes_damage = math.ceil(slimes_damage)
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -2863,7 +2908,7 @@ async def annex2(cmd):
 				user_data=user_data,
 				weapon_item=weapon_item,
 				shootee_data=None,
-				time_now=time_now_float,
+				time_now=time_now,
 				bystander_damage=bystander_damage,
 				miss_mod=miss_mod,
 				crit_mod=crit_mod,
@@ -2872,10 +2917,8 @@ async def annex2(cmd):
 				backfire_damage=backfire_damage
 			)
 
-
-
 			# Make adjustments
-			if weapon.id_weapon != ewcfg.weapon_id_garrote:
+			if weapon.id_weapon != ewcfg.weapon_id_watercolors:
 				weapon.fn_effect(ctn)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
@@ -2891,14 +2934,11 @@ async def annex2(cmd):
 			jammed = ctn.jammed
 			slimes_damage = ctn.slimes_damage
 			slimes_spent = ctn.slimes_spent
-			strikes = ctn.strikes
-			bystander_damage = ctn.bystander_damage
 			sap_damage = ctn.sap_damage
-			sap_ignored = ctn.sap_ignored
 			backfire_damage = ctn.backfire_damage
 
 			if district_data.all_neighbors_friendly():
-				backfire = random.choice(True, True, True, False)
+				backfire = True
 
 			if (slimes_spent > user_data.slimes):
 				# Not enough slime to shoot.
@@ -2910,11 +2950,6 @@ async def annex2(cmd):
 			user_data.change_slimes(n=(-user_data.slimes if slimes_spent >= user_data.slimes else -slimes_spent), source=ewcfg.source_spending)
 			user_data.persist()
 
-			user_data.sap -= weapon.sap_cost
-			user_data.limit_fix()
-
-			if weapon.id_weapon == ewcfg.weapon_id_garrote:
-				pass #TODO Create capping behavior for the garrote
 
 			# Remove a bullet from the weapon
 			if ewcfg.weapon_class_ammo in weapon.classes:
@@ -2925,13 +2960,10 @@ async def annex2(cmd):
 				weapon_item.stack_size -= 1
 			if miss or backfire or jammed:
 				slimes_damage = 0
-				sap_damage = 0
+
 				weapon_item.item_props["consecutive_hits"] = 0
 				crit = False
-
-			if crit:
-				sap_damage += 1
-
+			weapon_item.persist()
 			# Remove !revive invulnerability.
 			user_data.time_lastrevive = 0
 			market_data = EwMarket(id_server=cmd.message.server.id)
@@ -2942,11 +2974,25 @@ async def annex2(cmd):
 				market_data=market_data,
 				district_data=district_data
 			)
+			if weapon.id_weapon == ewcfg.weapon_id_watercolors:
+				if not (miss or backfire or jammed):
+					slimes_damage = ewcfg.min_garotte
+
+			elif weapon.id_weapon == ewcfg.weapon_id_thinnerbomb:
+				if user_data.faction == district_data.controlling_faction:
+					slimes_damage *= .3
+				else:
+					slimes_damage *= 3
+
+			slimes_damage = round(slimes_damage / 10)
+
+			if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
+				slimes_damage = round(slimes_damage / 5)
 			if weapon != None:
 				if miss:
-					response = "You try to graffiti a district with the nozzle pointed backwards! A complete miss!"
+					response = weapon.tool_props.get("miss_spray")
 				elif backfire:
-					response = "Backfire! The spray can explodes in your hands!"
+					response = weapon.str_backfire
 
 					if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 						district_data.change_slimes(n=user_data.slimes)
@@ -2963,31 +3009,46 @@ async def annex2(cmd):
 				elif jammed:
 					response = "Your spray can gets clogged with some stray sludge! Better unjam that!"
 				else:
-					response = "Your graffiti conquest earns you {} influence for the {}!".format(slimes_damage, user_data.faction)
+
+					response = weapon.tool_props.get("reg_spray").format(gang = user_data.faction)
+					response += " You got {:,} influence for the {}!".format(abs(slimes_damage), user_data.faction)
 
 
-					if user_data.faction == "killers":
+					if user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == ''):
 						slimes_damage = -slimes_damage
-					district_data.influence += slimes_damage
-					if district_data.influence < 0:
-						district_data.controlling_faction = "killers"
-					else:
-						district_data.controlling_faction = "rowdys"
+					#district_data.change_capture_points()
+
+
+					district_data.change_capture_points(progress=slimes_damage, actor=user_data.faction)
+
+					if crit and weapon.id_weapon == ewcfg.weapon_id_watercolors:
+						district_data.change_capture_points(progress=-district_data.capture_points, actor=user_data.faction)
+
 					district_data.persist()
 
-
 					district_data = EwDistrict(district=district_data.name, id_server=district_data.id_server)
-
-					slimes_damage = abs(slimes_damage)
+					#district_data.capture_points += slimes_damage
+					#if district_data.capture_points < 0:
+					#	district_data.controlling_faction = user_data.faction
+					#	district_data.capture_points *= -1
+					#district_data.persist()
 					#response = weapon.str_damage.format(
 					#	name_player=cmd.message.author.display_name,
 					#	name_target=enemy_data.display_name,
 					#	hitzone=randombodypart,
 					#	strikes=strikes
 					#)
+
 					if crit:
+						if user_data.faction == ewcfg.faction_rowdys:
+							color = "pink"
+						elif user_data.faction == "slimecorp":
+							color = "Slimecorp propaganda"
+						else:
+							color = "purple"
 						response = user_data.spray + "\n\n"
-						response += "You dual wield spray cans, painting an urban masterpiece and shooting toxic chemicals into a cop's mouth. It gets you {} influence! Lordy!".format(slimes_damage)
+						response += weapon.tool_props.get("crit_spray").format(color = color)
+						response += " It gets you {:,} influence!".format(abs(slimes_damage))
 						#response += " {}".format(weapon.str_crit.format(
 						#	name_player=cmd.message.author.display_name,
 						#	name_target=enemy_data.display_name,
@@ -3000,7 +3061,7 @@ async def annex2(cmd):
 						name_player=cmd.message.author.display_name)
 
 				if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-					if weapon.id_weapon != ewcfg.weapon_id_rifle:
+					if weapon.id_weapon != ewcfg.weapon_id_paintgun:
 						loc_array = ewcaptcha.streetcaptcha[poi.id_poi]
 						new_loc = str(random.choice(loc_array))
 						new_captcha = new_loc.replace('the ', '')
@@ -3013,30 +3074,33 @@ async def annex2(cmd):
 						riflearray = ewcaptcha.riflecap
 						direction = str(random.choice(riflearray))
 						weapon_item.item_props['captcha'] = direction
-						response = "\nNext target is {}.".format("**"+direction+"**")
+						response += "\nNext target is {}.".format("**"+direction+"**")
 					weapon_item.persist()
 
-				if district_data.controlling_faction == user_data.faction and abs(district_data.influence) > ewcfg.limit_influence[district_data.property_class]:
-					if user_data.faction == ewcfg.faction_rowdys:
-						color = "pink"
-					else:
-						color = "purple"
-					response += "\nYour district is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.influence) > (ewcfg.min_influence[district_data.property_class] + ewcfg.limit_influence[district_data.property_class])/2:
-					response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
-				elif district_data.controlling_faction == user_data.faction and abs(district_data.influence) > ewcfg.min_influence[district_data.property_class]:
-					response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
+				#if district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.limit_influence[district_data.property_class]:
+				#	if user_data.faction == ewcfg.faction_rowdys:
+						#color = "pink"
+				#	elif user_data.faction == "slimecorp":
+						#color = "Slimecorp propaganda"
+				#	else:
+						#color = "purple"
+				#	#response += "\nYour district is awash in a sea of {}. It's hard to imagine where else you could spray down.".format(color)
+				#elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > (ewcfg.min_influence[district_data.property_class] + ewcfg.limit_influence[district_data.property_class])/2:
+				#	pass
+					#response += "\nThe {} have developed a decent grip on this district.".format(user_data.faction)
+				#elif district_data.controlling_faction == user_data.faction and abs(district_data.capture_points) > ewcfg.min_influence[district_data.property_class]:
+				#	pass
+					#response += "\nThe {} have developed a loose grip on this district.".format(user_data.faction)
 
-			else:
-				if miss:
+		else:
+			if miss:
 					response = "You spray something so obscure nobody notices."
-				else:
-					response = "Nice vandalism! You get {damage} influence out of it!".format(
-						damage=slimes_damage
-					)
-
-
+			else:
+				response = "Nice vandalism! You get {damage} influence out of it!".format(
+					damage=abs(slimes_damage)
+				)
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 
 
 
@@ -3064,3 +3128,55 @@ def get_injury_severity(shootee_data, slimes_damage, crit):
 
 	return severity
 
+
+
+async def sidearm(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to equip a {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+	time_now = int(time.time())
+
+	if user_data.time_lastenlist > time_now:
+		response = "You've enlisted way too recently! You can't sidearm any weapons just yet."
+
+	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+	item_sought = ewitem.find_item(item_search=item_search, id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None)
+
+	if item_sought:
+		item = EwItem(id_item=item_sought.get("id_item"))
+
+		if item.item_type == ewcfg.it_weapon:
+
+			response = user_data.equip_sidearm(sidearm_item = item)
+			user_data.persist()
+			item.persist()
+
+		else:
+			response = "Not a tool, you ignorant juvenile."
+	else:
+		response = "You don't have one."
+
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def switch_weapon(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	weapon_holder = user_data.weapon
+	user_data.weapon = user_data.sidearm
+	user_data.sidearm = user_data.weapon
+	user_data.persist()
+
+	if user_data.weapon == -1 and user_data.sidearm == -1:
+		response = "You switch your nothing for nothing. What a notable exchange."
+	elif user_data.weapon == -1 and user_data.sidearm:
+		response = "You put your sidearm away."
+	elif user_data.sidearm >= 0:
+		weapon_item = EwItem(id_item=user_data.sidearm)
+		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon.str_name)
+	else:
+		response = ""
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+""" name a weapon using a slime poudrin """

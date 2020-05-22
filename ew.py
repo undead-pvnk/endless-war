@@ -28,6 +28,7 @@ class EwUser:
 	bleed_storage = 0
 	bounty = 0
 	weapon = -1
+	sidearm = -1
 	weaponskill = 0
 	trauma = ""
 	poi_death = ""
@@ -256,6 +257,7 @@ class EwUser:
 			self.poi_death = self.poi
 			self.poi = ewcfg.poi_id_thesewers
 			self.weapon = -1
+			self.sidearm = -1
 			self.time_expirpvp = 0
 
 		if cause == ewcfg.cause_killing_enemy:  # If your killer was an Enemy. Duh.
@@ -475,14 +477,41 @@ class EwUser:
 					partner_name = "partner"
 				response = "You reach to pick up a new weapon, but your old {} remains motionless with jealousy. You dug your grave, now decompose in it.".format(partner_name)
 		else:
+
 			response = "You equip your " + (weapon_item.item_props.get("weapon_type") if len(weapon_item.item_props.get("weapon_name")) == 0 else weapon_item.item_props.get("weapon_name")) + "."
 			self.weapon = weapon_item.id_item
+
+			if self.sidearm == self.weapon:
+				self.sidearm = -1
 
 			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
 			if ewcfg.weapon_class_captcha in weapon.classes:
 				captcha = ewutils.generate_captcha(n = weapon.captcha_length)
 				weapon_item.item_props["captcha"] = captcha
 				response += "\nSecurity code: **{}**".format(captcha)
+
+
+		return response
+
+	def equip_sidearm(self, sidearm_item = None):
+		if self.life_state == ewcfg.life_state_corpse:
+			response = "Ghosts can't equip weapons."
+		elif self.life_state == ewcfg.life_state_juvenile:
+			response = "Juvies can't equip weapons."
+		elif self.weaponmarried == True and sidearm_item.item_props.get("married") == self.id_user:
+			current_weapon = ewitem.EwItem(id_item = self.weapon)
+			partner_name = current_weapon.item_props.get("weapon_name")
+			if partner_name in [None, ""]:
+				partner_name = "partner"
+			response = "Your {} is motionless in your hand, frothing with jealousy. You can't sidearm it like one of your side ho pickaxes.".format(partner_name)
+		else:
+
+
+			response = "You sidearm your " + (sidearm_item.item_props.get("weapon_type") if len(sidearm_item.item_props.get("weapon_name")) == 0 else sidearm_item.item_props.get("weapon_name")) + "."
+			self.sidearm = sidearm_item.id_item
+
+			if self.weapon == self.sidearm:
+				self.weapon = -1
 
 		return response
 
@@ -752,7 +781,7 @@ class EwUser:
 
 
 
-				cursor.execute("SELECT {},{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
 					ewcfg.col_hunger,
@@ -800,6 +829,7 @@ class EwUser:
 					ewcfg.col_swear_jar,
 					ewcfg.col_degradation,
 					ewcfg.col_time_lastdeath,
+					ewcfg.col_sidearm
 				), (
 					id_user,
 					id_server
@@ -827,35 +857,35 @@ class EwUser:
 					self.poi = result[16]
 					self.life_state = result[17]
 					self.busted = (result[18] == 1)
-					self.rr_challenger = result[19]
-					self.time_last_action = result[20]
-					self.weaponmarried = (result[21] == 1)
-					self.time_lastscavenge = result[22]
-					self.bleed_storage = result[23]
-					self.time_lastenter = result[24]
-					self.time_lastoffline = result[25]
-					self.time_joined = result[26]
-					self.poi_death = result[27]
-					self.slime_donations = result[28]
-					self.poudrin_donations = result[29]
-					self.arrested = (result[30] == 1)
-					self.splattered_slimes = result[31]
-					self.time_expirpvp = result[32]
-					self.time_lastenlist = result[33]
-					self.apt_zone = result[34]
-					self.visiting = result[35]
-					self.active_slimeoid = result[36]
-					self.has_soul = result[37]
-					self.sap = result[38]
-					self.hardened_sap = result[39]
-					self.festivity = result[40]
-					self.festivity_from_slimecoin = result[41]
-					self.slimernalia_kingpin = (result[42] == 1)
-					self.manuscript = result[43]
-					self.spray = result[44]
-					self.swear_jar = result[45]
-					self.degradation = result[46]
-					self.time_lastdeath = result[47]
+					self.time_last_action = result[19]
+					self.weaponmarried = (result[20] == 1)
+					self.time_lastscavenge = result[21]
+					self.bleed_storage = result[22]
+					self.time_lastenter = result[23]
+					self.time_lastoffline = result[24]
+					self.time_joined = result[25]
+					self.poi_death = result[26]
+					self.slime_donations = result[27]
+					self.poudrin_donations = result[28]
+					self.arrested = (result[29] == 1)
+					self.splattered_slimes = result[30]
+					self.time_expirpvp = result[31]
+					self.time_lastenlist = result[32]
+					self.apt_zone = result[33]
+					self.visiting = result[34]
+					self.active_slimeoid = result[35]
+					self.has_soul = result[36]
+					self.sap = result[37]
+					self.hardened_sap = result[38]
+					self.festivity = result[39]
+					self.festivity_from_slimecoin = result[40]
+					self.slimernalia_kingpin = (result[41] == 1)
+					self.manuscript = result[42]
+					self.spray = result[43]
+					self.swear_jar = result[44]
+					self.degradation = result[45]
+					self.time_lastdeath = result[46]
+					self.sidearm = result[47]
 
 				else:
 					self.poi = ewcfg.poi_id_downtown
@@ -913,7 +943,7 @@ class EwUser:
 
 			# Save the object.
 
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -964,6 +994,7 @@ class EwUser:
 				ewcfg.col_swear_jar,
 				ewcfg.col_degradation,
 				ewcfg.col_time_lastdeath,
+				ewcfg.col_sidearm
 			), (
 				self.id_user,
 				self.id_server,
@@ -1015,6 +1046,7 @@ class EwUser:
 				self.swear_jar,
 				self.degradation,
 				self.time_lastdeath,
+				self.sidearm,
 			))
 
 			conn.commit()

@@ -609,6 +609,7 @@ cmd_negaslime = cmd_prefix + 'negaslime'
 cmd_endlesswar = cmd_prefix + 'endlesswar'
 cmd_swear_jar = cmd_prefix + 'swearjar'
 cmd_equip = cmd_prefix + 'equip'
+cmd_sidearm = cmd_prefix + 'sidearm'
 cmd_data = cmd_prefix + 'data'
 cmd_mutations = cmd_prefix + 'mutations'
 cmd_mutations_alt_1 = cmd_prefix + 'stds'
@@ -713,8 +714,8 @@ cmd_divorce = cmd_prefix + 'divorce'
 cmd_scavenge = cmd_prefix + 'scavenge'
 cmd_arm = cmd_prefix + 'arm'
 cmd_arsenalize = cmd_prefix + 'arsenalize'
-cmd_annex = cmd_prefix + 'annex'
-cmd_annex_alt1 = cmd_prefix + 'spray'
+cmd_spray = cmd_prefix + 'annex'
+cmd_spray_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_changespray = cmd_prefix + 'changespray'
 cmd_teleport = cmd_prefix + 'tp'
@@ -746,6 +747,7 @@ cmd_wrap = cmd_prefix + 'wrap'
 cmd_unwrap = cmd_prefix + 'unwrap'
 cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
+cmd_switch = cmd_prefix + 'switch'
 
 cmd_retire = cmd_prefix + 'retire'
 cmd_depart = cmd_prefix + 'depart'
@@ -1034,6 +1036,7 @@ min_influence_a = 15000000
 min_influence_b = 7000000
 min_influence_c = 3000000
 
+min_garotte = 2000
 
 # district capture rates assigned to property classes
 max_capture_points = {
@@ -1104,7 +1107,7 @@ capture_gradient = 1
 decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = 1  # more means slower
+decay_modifier = .5  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -1561,6 +1564,7 @@ col_spray = "spray"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
+col_sidearm = 'sidearm'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1869,6 +1873,12 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
+stat_spraycan_kills = 'spraycan_kills'
+stat_paintgun_kills = 'paintgun_kills'
+stat_paintroller_kills = 'paintroller_kills'
+stat_paintbrush_kills = 'paintbrush_kills'
+stat_watercolor_kills = 'watercolor_kills'
+stat_thinnerbomb_kills = 'thinnerbomb_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2072,6 +2082,12 @@ weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
+weapon_id_spraycan = 'spraycan'
+weapon_id_paintgun = 'paintgun'
+weapon_id_paintroller = 'paintroller'
+weapon_id_paintbrush = 'paintbrush'
+weapon_id_watercolors = 'watercolors'
+weapon_id_thinnerbomb = 'thinnerbomb'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -3362,6 +3378,18 @@ weapon_class_jammable = "jammable"
 weapon_class_captcha = "captcha"
 weapon_class_defensive = "defensive"
 weapon_class_heavy = "heavy"
+weapon_class_paint = "paint"
+
+weapon_type_convert = {
+weapon_id_watercolors:wef_garrote,
+weapon_id_spraycan:wef_revolver,
+weapon_id_paintroller:wef_scythe,
+weapon_id_thinnerbomb:wef_molotov,
+weapon_id_paintgun:wef_revolver,
+weapon_id_paintbrush:wef_knives
+}
+
+
 
 # All weapons in the game.
 weapon_list = [
@@ -3928,7 +3956,8 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_pickaxe_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 19
 		id_weapon = "fishingrod",
@@ -3959,7 +3988,8 @@ weapon_list = [
 		acquisition = acquisition_smelting,
 		stat = stat_fishingrod_kills,
 		sap_cost = 2,
-		captcha_length = 2
+		captcha_length = 2,
+		is_tool = 1
 	),
 	EwWeapon(  # 20
 		id_weapon = weapon_id_bass,
@@ -4068,7 +4098,233 @@ weapon_list = [
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
 		sap_cost = 5,
-		captcha_length = 2)
+		captcha_length = 2),
+	EwWeapon(  # 24
+		id_weapon=weapon_id_spraycan,
+		alias=[
+			"spray can",
+			"spray"
+		],
+		str_crit="**Critical hit!!** {name_player} flicks the nozzle off their spray can and lights it like a fuse! {name_target} gets nasty burns and a fresh coat of paint! **WHOOSH!!!**",
+		str_miss="**MISS!!** {name_player} attempts a spray attack, but the wind blows it back in their face!",
+		str_equip="You hold the spray can tightly, hoping to god somebody confuses it for a gun.",
+		str_name="spray can",
+		str_weapon="a spray can",
+		str_weaponmaster_self="You are a rank {rank} vandal of the spray can.",
+		str_weaponmaster="They are a rank {rank} vandal of the spray can.",
+		# str_trauma_self = "You're having trouble breathing, and the inside of your mouth is off-color.",
+		# str_trauma = "They're weirdly short of breath, and their mouth and tongue are off-color.",
+		str_kill="***PPPPPPSSSSSSSSSHHHHHhhhhhfff.*** {name_player} forcibly opens {name_target}'s mouth and sprays everything they have into their lungs. Their eyes roll back into their head and, trembling, they slowly asphyxiate in your arms. {emote_skull}",
+		str_killdescriptor="suffocated",
+		str_damage=random.choice(["{name_target} is whacked across the {hitzone}!!",
+								  "{name_player} sprays {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} humiliates {name_target} by bringing a spray can to a gunfight, mentally damaging them in the {hitzone}!!"]),
+		str_duel="**PSSS PSSS PSSSSSHH!** {name_player} and {name_target} spray the dojo walls until they get dizzy from the smell.",
+		str_scalp="The scalp is a nice shade of mauve.",
+		fn_effect=wef_tool,
+		str_description="It's a Glocksbury Comics brand spray can, in your gang's color. The blurb on the backside preaches about the merits of street art and murals, but you're pretty sure that's just to cover their ass.",
+		vendors = [vendor_glocksburycomics],
+		stat=stat_spraycan_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=2,
+		is_tool = 1,
+		tool_props = {
+			"reg_spray":"You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
+			"miss_spray":"**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
+			"crit_spray":"**Critical hit!** You dual wield spray cans, painting an urban masterpiece in one hand and shooting toxic chemicals into a cop's mouth with the other!",
+			"equip_tool": "You get your trusty spray paint at the ready."
+		}),
+	EwWeapon(  # 25
+		id_weapon=weapon_id_paintgun,
+		alias=[
+			"paint gun",
+			"splatoon"
+		],
+		str_crit="**Critical hit!!** {name_player} aims down the sights with the precision of a video game real life sniper, shooting {name_target} in the eyes from 30 yards! **SPLAAAAAT!!!**",
+		str_miss="**MISS!!** {name_player} fires off a volley of paint, but {name_target} jumps behind cover.",
+		str_equip="Now listen here. You just equipped a paint gun. Keep in mind this is the weapon that boomer families shoot each other with to have fun. Enjoy trying to kill with it.",
+		str_name="paint gun",
+		str_weapon="a paint gun",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint gun.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint gun.",
+		# str_trauma_self = "You have a splitting headache.",
+		# str_trauma = "They look hungover, almost like their entire body exploded.",
+		str_kill="***SPLAAAAART!!!!*** {name_player} fatally strikes {name_target}, and they explode from the inside out! There's a lot more gore than when you see it happen in Splatoon, though.{emote_skull}",
+		str_killdescriptor="imploded",
+		str_damage=random.choice(["{name_target} is splatted in the {hitzone}!!",
+								  "{name_player} shoots {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} attacks {name_target} with harmless paint!!"]),
+		str_duel="**SPLAT TAT TAT!!** {name_player} and {name_target} harass everyone in the dojo with their paint guns.",
+		str_scalp="The scalp is colorful, from both blood and paint.",
+		fn_effect=wef_tool,
+		str_description="It's an industrial strength two handed paint gun with a sniper scope attached. What do they use this for in industry, anyway?",
+		vendors=[vendor_glocksburycomics],
+		stat=stat_paintgun_kills,
+		classes=[weapon_class_paint, weapon_class_ammo, weapon_class_captcha],
+		clip_size = 15,
+		price = 5000,
+		sap_cost=2,
+		captcha_length=2,
+		is_tool = 1,
+		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
+		tool_props={
+			"reg_spray": "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
+			"miss_spray": "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
+			"crit_spray": "**Critical hit!** The paint bullet skids a wall, spreading your paint across the whole thing!",
+			"equip_tool": "You load a clip of paint into the gun and throw it onto your back, kinda like Rambo if he were an art major."
+		}
+	),
+	EwWeapon(  # 26
+		id_weapon=weapon_id_paintroller,
+		alias=[
+			"paint roller",
+			"roller"
+		],
+		str_crit="**Critical hit!!** {name_player}  knocks {name_target} to the ground and does a golf swing to their vulnerable little head, sending them spinning. **FWAP!!!**",
+		str_miss="**MISS!!** {name_player} does cringey bo staff jujitsu moves with the roller and forgets to actually attack {name_target}!",
+		str_equip="You hold the paint roller in your hand. The light plastic broom handle and spongy brush are sure to deal at least 10 damage.",
+		str_name="paint roller",
+		str_weapon="a paint roller",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paint roller.",
+		str_weaponmaster="They are a rank {rank} vandal of the paint roller.",
+		# str_trauma_self = "There's a gaudy colored dent in your skull.",
+		# str_trauma = "There is a gaudy colored dent in their skull.",
+		str_kill="***CA-CRACK!*** {name_player} opens {name_target}'s skull like an egg using the dull metal edge of the roller. It appears to be hollow, after all, {name_target} was stupid enough to get killed with a fucking paint roller.{emote_skull}",
+		str_killdescriptor="cracked open",
+		str_damage=random.choice(["{name_target} is swatted in the {hitzone}!!",
+								  "{name_player} slaps {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} rolls paint all over {name_target}'s {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} quietly pass the time rolling paint over the windows of nearby houses You both have learned tranquility.",
+		str_scalp="The scalp is split in half, with a big cole right in the middle.",
+		fn_effect=wef_tool,
+		price = 4500,
+		str_description="It's a long, broom-like plastic paint roller with a spongy brush and metal axle. The modern man's bo staff.",
+		vendors=[vendor_glocksburycomics],
+		stat=stat_paintroller_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		captcha_length=2,
+		is_tool=1,
+		tool_props={
+			"reg_spray": "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
+			"miss_spray": "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
+			"crit_spray": "**Critical hit!** Your mind goes blank in a painting-induced rage. When you wake up, all your surroundings are {color} You should do that more often!",
+			"equip_tool": "You grab your paint roller and strap it on your back."
+		}
+		),
+	EwWeapon(  # 27
+		id_weapon=weapon_id_paintbrush,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="**Critical hit!!** {name_player}  stabs {name_target} with one brush and paints over their eyes with another!  **DAMN!!!**",
+		str_miss="**MISS!!** {name_player} throws the brushes at {name_target}, but they get hit with the soft bristles instead of the pointy bit!",
+		str_equip="If only you had a whittling knife that could sharpen paintbrush handles. That way you could equip the knife as a weapon instead of this.",
+		str_name="paintbrushes",
+		str_weapon="a set of paintbrushes",
+		str_weaponmaster_self="You are a rank {rank} vandal of the paintbrush.",
+		str_weaponmaster="They are a rank {rank} vandal of the paintbrush.",
+		# str_trauma_self = "You have bruises all over your body and you can't get the paint out of your clothes.",
+		# str_trauma = "They have bruises all over their body, and they can't get the paint out of their clothes.",
+		str_kill="***MASTERPIECE!*** {name_target} takes a mortal brush to the forehead, courtesy of {name_player}'s talent as a painter. {emote_skull}",
+		str_killdescriptor="paintbrushed to death",
+		str_damage=random.choice(["{name_target} is handlestabbed in the {hitzone}!!",
+								  "{name_player} flecks {name_target} with paint, making them a gaudy color in the {hitzone}!!",
+								  "{name_player} grazes {name_target}'s {hitzone} with coarse bristles!!"]),
+		str_duel="{name_player} and {name_target} paint random text commands on the walls outside the Dojo. {name_target} paints some furry art when nobody's looking.",
+		str_scalp="The scalp has a bunch of welts, and has a faint smell of lead.",
+		fn_effect=wef_tool,
+		str_description="A stack of large, coarse-bristled paintbrushes, linked together on a burlap string.",
+		vendors=[vendor_glocksburycomics],
+		stat=stat_paintbrush_kills,
+		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
+		sap_cost=2,
+		price = 100,
+		captcha_length=2,
+		is_tool=1,
+		tool_props={
+			"reg_spray": "You paint vulgar {gang} symbols on as many buildings as you can.",
+			"miss_spray": "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
+			"crit_spray": "**Critical hit!**  You hold the paint can in your mouth and start crab walking, throwing paint along the wall as you do it! Somehow, this is more efficient!",
+			"equip_tool": "You get your brushes at the ready."
+		}
+	),
+EwWeapon(  # 28
+		id_weapon=weapon_id_watercolors,
+		alias=[
+			"paint brushes",
+			"brush"
+		],
+		str_crit="```css\n\"oooOOOOOOOH LA LA! {name_target} is exposed to {name_player}'s watercolor pornography! They won't be able to recover from that!\"\n```",
+		str_miss="```css\n[{name_player} paints a picture for {name_target}. It does no damage, as expected.]\n```",
+		str_equip="```ini\n[You get a nice mug to dip your little paintbrush in, and open your 12 set of watercolors. Look out world, here comes you!]\n```",
+		str_name="watercolors",
+		str_weapon="a set of watercolors",
+		str_weaponmaster_self="You are a rank {rank} vandal of watercolors.",
+		str_weaponmaster="They are a rank {rank} vandal of watercolors.",
+		# str_trauma_self = "You are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		# str_trauma = "They are eternally humiliated after being murdered by a gangster wielding watercolor paints.",
+		str_kill="```bash\n\"HUUUUUUH?? {name_target} goes and kills themselves after having an existential crisis! {name_player} seems to have done this with retardation alone!\"\n```",
+		str_killdescriptor="driven to suicide",
+		str_damage="```ini\n[{name_player} paints a picture of {name_target}. Their self esteem takes a hit!]\n```",
+		str_duel="```json\n\"{name_player} and {name_target} paint random furry art on the walls outside the Dojo. {name_target} paints a !harvest when nobody's looking.\"\n```",
+		str_scalp="The scalp is perfectly intact.",
+		fn_effect=wef_tool,
+		str_description="A 12 pack of watercolors, the kind you used when you were a 5 years old boy.",
+		vendors=[vendor_glocksburycomics],
+		stat=stat_watercolor_kills,
+		classes=[weapon_class_paint, weapon_class_captcha],
+		sap_cost=2,
+		price = 1300,
+		captcha_length=2,
+		is_tool=1,
+		tool_props={
+			"reg_spray": "Nice drawing, fag! ",
+			"miss_spray": "**Miss!** Your painting sucks. God, you're stupid. ",
+			"crit_spray": "**Critical hit!** You manage to make a painting so completely magificent that, for a moment, the gangs set aside their differences. You find your fellow gang members and call them together \"It's time we got this city back to normal,\" you say, with that shitty embarrassing voice of yours. You, some Rowdys and a few Killers steal all the paint thinner from Ace Hardware and work to restore the city, good as new. \nOf course, once the dust is settled, you realize all this kum bay yah shit is gay, and so you rejoin your gangs once again.",
+			"equip_tool": "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
+		}
+		),
+	EwWeapon(  # 29
+		id_weapon=weapon_id_thinnerbomb,
+		alias=[
+			"thinner",
+			"thinnerbombs"
+		],
+		str_crit="**Critical hit!!** {name_player} slams {name_target} with a bottle of paint thinner, showering their face with broken glass and getting some of the thinner down their gullet. They fall back, dazed and bleeding.",
+		str_miss="**MISS!!** {name_player} is too dazed by their own chemicals to make a move! They drop the bottle on accident, throwing vapors all over the place.",
+		str_equip="You pull out the thinner bombs and hold their bottlenecks between your fingers. Never has a not-weapon ever felt so cool.",
+		str_name="thinner bombs",
+		str_weapon="a stack of thinner bombs",
+		str_weaponmaster_self="You are a rank {rank} vandal of the thinner bomb.",
+		str_weaponmaster="They are a rank {rank} vandal of the thinner bomb.",
+		# str_trauma_self = "You have the hangover from hell.",
+		# str_trauma = "They have the hangover from hell.",
+		str_kill="***OH THE HUMANITY!*** {name_target}, dazed from the concentrated toxic chemicals in the air, falls to the ground, giving {name_player} the chance to stab them through the neck with the broken bottle. Inhalants. Not even once. {emote_skull}",
+		str_killdescriptor="drugged",
+		str_damage=random.choice(["{name_target} gets a thinnerbomb to the {hitzone}!!",
+								  "{name_player} slashes {name_target} with a broken thinnerbomb! Ooh, right in the {hitzone}!!"]),
+		str_duel="{name_player} and {name_target} build a resistance to the noxious chemicals they're using by drinking paint thinner together. Cheers.",
+		str_scalp="The scalp smells awful, you can hardly hold it.",
+		fn_effect=wef_tool,
+		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
+		vendors=[vendor_glocksburycomics],
+		stat=stat_thinnerbomb_kills,
+		classes=[weapon_class_paint, weapon_class_thrown],
+		sap_cost=2,
+		price = 150,
+		captcha_length=2,
+		is_tool = 1,
+		tool_props = {
+			"reg_spray": "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
+			"miss_spray": "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
+			"crit_spray": "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
+			"equip_tool": "You get your glass thinner bombs out you you can throw them in a moment's notice."
+			}
+			),
+
 ]
 
 
