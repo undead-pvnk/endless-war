@@ -1947,12 +1947,55 @@ async def manual_soulbind(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
 	else:
 		return
+	
+#Debug
+async def set_slime(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	response = ""
+	
+	if cmd.mentions_count != 1:
+		response = "Invalid use of command. Example: !setslime @player 100"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		target = cmd.mentions[0]
+
+	target_user_data = EwUser(id_user=target.id, id_server=cmd.message.server.id)
+
+	if len(cmd.tokens) > 2:
+		new_slime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+		if new_slime == None:
+			response = "Invalid number entered."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
+		new_slime -= target_user_data.slimes
+	else:
+		return
+	
+	if target_user_data != None:
+
+		user_initial_level = target_user_data.slimelevel
+		levelup_response = target_user_data.change_slimes(n=new_slime)
+
+		was_levelup = True if user_initial_level < target_user_data.slimelevel else False
+
+		if was_levelup:
+			response += " {}".format(levelup_response)
+		target_user_data.persist()
+		
+		response = "Set {}'s slime to {}.".format(cmd.message.author, target_user_data.slimes)
+	else:
+		return
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def prank(cmd):
 	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
 	user_data = EwUser(member=cmd.message.author)
 
-	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
+	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): #or (user_data.poi not in ewcfg.capturable_districts):
 		response = "The powers of the mask don't really resonate with you here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	

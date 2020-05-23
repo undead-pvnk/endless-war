@@ -1285,6 +1285,7 @@ def find_enemy(enemy_search=None, user_data=None):
 	if enemy_search != None:
 
 		enemy_search_tokens = enemy_search.split(' ')
+		enemy_search_tokens_upper = enemy_search.upper().split(' ')
 
 		for enemy_type in ewcfg.enemy_data_table:
 			aliases = ewcfg.enemy_data_table[enemy_type]["aliases"]
@@ -1295,10 +1296,22 @@ def find_enemy(enemy_search=None, user_data=None):
 				enemy_search_alias = enemy_type
 				break
 
-		tokens_set_upper = set(enemy_search.upper().split(' '))
+		# Check if the identifier letter inputted was a user's captcha. If so, ignore it.
+		if user_data.weapon >= 0:
+			weapon_item = EwItem(id_item=user_data.weapon)
+			weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+			captcha = weapon_item.item_props.get('captcha')
+
+			if weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha in enemy_search_tokens_upper:
+				enemy_search_tokens_upper.remove(captcha)
+
+		tokens_set_upper = set(enemy_search_tokens_upper)
+		
 		identifiers_found = tokens_set_upper.intersection(set(ewcfg.identifier_letters))
+		
 
 		if len(identifiers_found) > 0:
+
 			# user passed in an identifier for a district specific enemy
 
 			searched_identifier = identifiers_found.pop()
