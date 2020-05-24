@@ -1199,7 +1199,7 @@ async def pray(cmd):
 		market_data = EwMarket(id_server=cmd.message.server.id)
 		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
 		market_data.persist()
-		user_data.swear_jar = max(0, user_data.swear_jar - 3)
+		user_data.swear_jar = 0
 		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
