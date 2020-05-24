@@ -1876,6 +1876,7 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
+stat_sboard_kills = 'sboard_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2142,6 +2143,7 @@ weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
+weapon_id_sboard = 'sboard'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -3921,6 +3923,39 @@ def wef_dclaw(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
 
+# weapon effect function for "skateboard"
+def wef_sboard(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 0.7)
+	aim = (random.randrange(0, 13) - 2)
+	user_mutations = ctn.user_data.get_mutations()
+	dmg = ctn.slimes_damage
+	ctn.sap_damage = 2
+
+	# Increased miss chance if attacking within less than two seconds after last attack
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+	ctn.miss_mod += (((3 - min(time_lastattack, 3)) / 3) ** 2) / 13 * 10
+
+	ctn.slimes_damage = int(ctn.slimes_damage * ((aim/5) + 0.5) )
+
+	if aim <= (-2 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.backfire = True
+				ctn.backfire_damage = ctn.slimes_damage
+		else:
+			ctn.backfire = True
+			ctn.backfire_damage = ctn.slimes_damage
+
+	elif aim <= (-1 + int(13 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(13 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage = int(dmg * 4)
 
 vendor_dojo = "Dojo"
 
