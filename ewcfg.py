@@ -940,6 +940,19 @@ cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
+# race
+cmd_set_race = cmd_prefix + 'setrace'
+cmd_reset_race = cmd_prefix + 'resetrace'
+cmd_exist = cmd_prefix + 'exist'
+cmd_ree = cmd_prefix + 'ree'
+cmd_autocannibalize = cmd_prefix + 'autocannibalize'
+cmd_rattle = cmd_prefix + 'rattle'
+cmd_beep = cmd_prefix + 'beep'
+cmd_yiff = cmd_prefix + 'yiff'
+cmd_hiss = cmd_prefix + 'hiss'
+cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_confuse = cmd_prefix + 'confuse'
+
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -1246,6 +1259,9 @@ cd_slimeoiddefeated = 300
 cd_scavenge = 0
 soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
+
+cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
+cd_drop_bone = 5 * 60
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -1567,7 +1583,8 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
-col_id_inhabit_target = 'id_inhabit_target'
+col_race = 'race'
+col_racial_cooldown = 'time_racialability'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -17570,6 +17587,18 @@ captcha_dict = [
 	'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
 	'DRAGONCLAW',
 ]
+
+races = {
+	'humanoid': 'humanoid',
+	'amphibian': 'amphibian',
+	'food': 'food',
+	'skeleton': 'skeleton',
+	'robot': 'robot',
+	'furry': 'furry',
+	'scalie': 'scalie',
+	'slime-derived': 'slime-derived',
+	'abomination': 'abomination'
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}
