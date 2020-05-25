@@ -33,7 +33,7 @@ class EwWeapon:
 	id_weapon = ""
 
 	# An array of names that might be used to identify this weapon by the player.
-	alias = []
+	alias = None#[]
 
 	# Displayed when !equip-ping this weapon
 	str_equip = ""
@@ -76,7 +76,7 @@ class EwWeapon:
 	str_duel = ""
 
 	# Function that applies the special effect for this weapon.
-	fn_effect = None
+	fn_effect = None#[]
 
 	# Displayed when a weapon effect causes a critical hit.
 	str_crit = ""
@@ -109,10 +109,10 @@ class EwWeapon:
 	cooldown = 0
 
 	# Vendor
-	vendors = []
+	vendors = None#[]
 
 	# Classes the weapon belongs to
-	classes = []
+	classes = None#[]
 
 	acquisition = "dojo"
 
@@ -128,13 +128,19 @@ class EwWeapon:
 	#whether the weapon is a tool
 	is_tool = 0
 
-	#an array for storing extra string data for differne tools
-	tool_props = {}
+	#an array for storing extra string data for different tools
+	reg_spray = ""
+
+	miss_spray = ""
+
+	crit_spray = ""
+
+	equip_spray = ""
 
 	def __init__(
 		self,
 		id_weapon = "",
-		alias = [],
+		alias =   [],
 		str_equip = "",
 		str_kill = "",
 		str_killdescriptor = "",
@@ -167,7 +173,10 @@ class EwWeapon:
 		sap_cost = 0,
 		captcha_length = 0,
 		is_tool = 0,
-		tool_props = None
+		reg_spray="",
+		miss_spray = "",
+		crit_spray = "",
+		equip_spray = ""
 	):
 		self.item_type = ewcfg.it_weapon
 
@@ -205,8 +214,11 @@ class EwWeapon:
 		self.sap_cost = sap_cost
 		self.captcha_length = captcha_length
 		self.is_tool = is_tool
-		self.tool_props = tool_props
-		self.str_name = self.str_weapon,
+		self.reg_spray = reg_spray
+		self.miss_spray = miss_spray
+		self.crit_spray = crit_spray
+		self.equip_spray = equip_spray,
+
 
 
 
@@ -2994,7 +3006,7 @@ async def spray(cmd):
 				slimes_damage = round(slimes_damage / 5)
 			if weapon != None:
 				if miss:
-					response = weapon.tool_props.get("miss_spray")
+					response = weapon.miss_spray
 				elif backfire:
 					response = weapon.str_backfire
 
@@ -3014,7 +3026,7 @@ async def spray(cmd):
 					response = "Your spray can gets clogged with some stray sludge! Better unjam that!"
 				else:
 
-					response = weapon.tool_props.get("reg_spray").format(gang = user_data.faction)
+					response = weapon.reg_spray.format(gang = user_data.faction)
 					response += " You got {:,} influence for the {}!".format(abs(slimes_damage), user_data.faction)
 
 
@@ -3051,7 +3063,7 @@ async def spray(cmd):
 						else:
 							color = "purple"
 						response = user_data.spray + "\n\n"
-						response += weapon.tool_props.get("crit_spray").format(color = color)
+						response += weapon.crit_spray.format(color = color)
 						response += " It gets you {:,} influence!".format(abs(slimes_damage))
 						#response += " {}".format(weapon.str_crit.format(
 						#	name_player=cmd.message.author.display_name,
@@ -3170,16 +3182,18 @@ async def switch_weapon(cmd):
 	user_data = EwUser(member = cmd.message.author)
 	weapon_holder = user_data.weapon
 	user_data.weapon = user_data.sidearm
-	user_data.sidearm = user_data.weapon
+	user_data.sidearm = weapon_holder
 	user_data.persist()
 
 	if user_data.weapon == -1 and user_data.sidearm == -1:
 		response = "You switch your nothing for nothing. What a notable exchange."
 	elif user_data.weapon == -1 and user_data.sidearm:
 		response = "You put your sidearm away."
-	elif user_data.sidearm >= 0:
-		weapon_item = EwItem(id_item=user_data.sidearm)
+	elif user_data.weapon >= 0:
+		weapon_item = EwItem(id_item=user_data.weapon)
 		weapon = ewcfg.weapon_map.get(weapon_item.item_props.get("weapon_type"))
+		print(weapon.str_name)
+		print(weapon.str_weapon)
 		response = "**FWIP-CLICK!** You whip out your {}.".format(weapon.str_name)
 	else:
 		response = ""

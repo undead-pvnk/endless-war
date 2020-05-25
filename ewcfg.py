@@ -1059,6 +1059,11 @@ min_influence_c = 3000000
 
 min_garotte = 2000
 
+toolprop_regspray = 1
+toolprop_missspray = 2
+toolprop_critspray = 3
+toolprop_equipspray = 4
+
 # district capture rates assigned to property classes
 max_capture_points = {
 	property_class_s: max_capture_points_s,
@@ -4730,12 +4735,11 @@ weapon_list = [
 		sap_cost=2,
 		captcha_length=2,
 		is_tool = 1,
-		tool_props = {
-			"reg_spray":"You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
-			"miss_spray":"**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
-			"crit_spray":"**Critical hit!** You dual wield spray cans, painting an urban masterpiece in one hand and shooting toxic chemicals into a cop's mouth with the other!",
-			"equip_tool": "You get your trusty spray paint at the ready."
-		}),
+		reg_spray = "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
+		miss_spray = "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
+		crit_spray = "**Critical hit!** You dual wield spray cans, painting an urban masterpiece in one hand and shooting toxic chemicals into a cop's mouth with the other!",
+		equip_spray = "You get your trusty spray paint at the ready."
+		),
 	EwWeapon(  # 25
 		id_weapon=weapon_id_paintgun,
 		alias=[
@@ -4769,12 +4773,12 @@ weapon_list = [
 		captcha_length=2,
 		is_tool = 1,
 		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
-		tool_props={
-			"reg_spray": "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
-			"miss_spray": "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
-			"crit_spray": "**Critical hit!** The paint bullet skids a wall, spreading your paint across the whole thing!",
-			"equip_tool": "You load a clip of paint into the gun and throw it onto your back, kinda like Rambo if he were an art major."
-		}
+
+		reg_spray =  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
+		miss_spray = "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
+		crit_spray = "**Critical hit!** The paint bullet skids a wall, spreading your paint across the whole thing!",
+		equip_spray = "You load a clip of paint into the gun and throw it onto your back, kinda like Rambo if he were an art major."
+
 	),
 	EwWeapon(  # 26
 		id_weapon=weapon_id_paintroller,
@@ -4807,12 +4811,10 @@ weapon_list = [
 		sap_cost=2,
 		captcha_length=2,
 		is_tool=1,
-		tool_props={
-			"reg_spray": "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
-			"miss_spray": "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
-			"crit_spray": "**Critical hit!** Your mind goes blank in a painting-induced rage. When you wake up, all your surroundings are {color} You should do that more often!",
-			"equip_tool": "You grab your paint roller and strap it on your back."
-		}
+		reg_spray = "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
+		miss_spray = "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
+		crit_spray = "**Critical hit!** Your mind goes blank in a painting-induced rage. When you wake up, all your surroundings are {color} You should do that more often!",
+		equip_spray = "You grab your paint roller and strap it on your back."
 		),
 	EwWeapon(  # 27
 		id_weapon=weapon_id_paintbrush,
@@ -4845,12 +4847,10 @@ weapon_list = [
 		price = 100,
 		captcha_length=2,
 		is_tool=1,
-		tool_props={
-			"reg_spray": "You paint vulgar {gang} symbols on as many buildings as you can.",
-			"miss_spray": "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
-			"crit_spray": "**Critical hit!**  You hold the paint can in your mouth and start crab walking, throwing paint along the wall as you do it! Somehow, this is more efficient!",
-			"equip_tool": "You get your brushes at the ready."
-		}
+		reg_spray = "You paint vulgar {gang} symbols on as many buildings as you can.",
+		miss_spray = "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
+		crit_spray = "**Critical hit!**  You hold the paint can in your mouth and start crab walking, throwing paint along the wall as you do it! Somehow, this is more efficient!",
+		equip_spray = "You get your brushes at the ready."
 	),
 EwWeapon(  # 28
 		id_weapon=weapon_id_watercolors,
@@ -4881,12 +4881,10 @@ EwWeapon(  # 28
 		price = 1300,
 		captcha_length=2,
 		is_tool=1,
-		tool_props={
-			"reg_spray": "Nice drawing, fag! ",
-			"miss_spray": "**Miss!** Your painting sucks. God, you're stupid. ",
-			"crit_spray": "**Critical hit!** You manage to make a painting so completely magificent that, for a moment, the gangs set aside their differences. You find your fellow gang members and call them together \"It's time we got this city back to normal,\" you say, with that shitty embarrassing voice of yours. You, some Rowdys and a few Killers steal all the paint thinner from Ace Hardware and work to restore the city, good as new. \nOf course, once the dust is settled, you realize all this kum bay yah shit is gay, and so you rejoin your gangs once again.",
-			"equip_tool": "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
-		}
+		reg_spray = "Nice drawing, fag! ",
+		miss_spray = "**Miss!** Your painting sucks. God, you're stupid. ",
+		crit_spray = "**Critical hit!** You manage to make a painting so completely magificent that, for a moment, the gangs set aside their differences. You find your fellow gang members and call them together \"It's time we got this city back to normal,\" you say, with that shitty embarrassing voice of yours. You, some Rowdys and a few Killers steal all the paint thinner from Ace Hardware and work to restore the city, good as new. \nOf course, once the dust is settled, you realize all this kum bay yah shit is gay, and so you rejoin your gangs once again.",
+		equip_spray = "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
 		),
 	EwWeapon(  # 29
 		id_weapon=weapon_id_thinnerbomb,
@@ -4918,12 +4916,10 @@ EwWeapon(  # 28
 		price = 150,
 		captcha_length=2,
 		is_tool = 1,
-		tool_props = {
-			"reg_spray": "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
-			"miss_spray": "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
-			"crit_spray": "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
-			"equip_tool": "You get your glass thinner bombs out you you can throw them in a moment's notice."
-			}
+		reg_spray = "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
+		miss_spray = "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",
+		crit_spray = "**Critical hit!** You take out a paint bomb and throw it at a particularly fragile looking building. The chemicals you used were so caustic that they burned a hole through the whole wall, preventing anyone from painting it for all of time!",
+		equip_spray = "You get your glass thinner bombs out you you can throw them in a moment's notice."
 			),
 
 ]
