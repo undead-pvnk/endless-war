@@ -1512,7 +1512,7 @@ async def trickortreat(cmd = None):
 				treat = False
 				if ewutils.active_target_map.get(user_data.id_user) == target_data.apt_zone:
 					# For Double Halloween spam knocking isn't really an issue. Just clear up their slot in the active target map for now.
-					print('DEBUG: Spam knock in trickortreat command.')
+					#print('DEBUG: Spam knock in trickortreat command.')
 					ewutils.active_target_map[user_data.id_user] = ""
 					return #returns if the user is spam knocking. However, the person in the apt still gets each of the DMs above.
 				else:
