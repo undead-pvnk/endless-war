@@ -365,10 +365,12 @@ async def order(cmd):
 
 						if target != None:
 							target_data = EwUser(member=target)
-
-						if (target_data != None) and (target_data.poi != user_data.poi):
-							response = "You can't order anything for them because they aren't here!"
-							return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							if target_data.life_state == ewcfg.life_state_corpse and target_data.get_weapon_possession():
+								response = "How are you planning to feed a weapon?"
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+							elif target_data.poi != user_data.poi:
+								response = "You can't order anything for them because they aren't here!"
+								return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 						if len(food_items) >= user_data.get_food_capacity() and target_data == None and togo:
 							# user_data never got persisted so the player won't lose money unnecessarily
