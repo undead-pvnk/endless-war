@@ -1484,15 +1484,20 @@ def gen_item_props(item):
 			'id_cosmetic': item.id_cosmetic,
 			'cosmetic_name': item.str_name,
 			'cosmetic_desc': item.str_desc,
-			'cosmetic_onadorn': item.str_onadorn,
+			'cosmetic_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+			'cosmetic_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+			'cosmetic_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
 			'rarity': item.rarity,
-			'attack': item.stats.attack if not None else 0,
-			'defense': item.stats.defense if not None else 0,
-			'speed': item.stats.speed if not None else 0,
+			'attack': item.stats['attack'] if item.stats['attack'] else 0,
+			'defense': item.stats['defense'] if item.stats['defense'] else 0,
+			'speed': item.stats['speed'] if item.stats['speed'] else 0,
 			'cosmetic_ability': item.ability,
 			'cosmetic_durability': item.durability,
 			'cosmetic_size': item.size,
-			'adorned': 'false'
+			'cosmetic_style': item.style if item.style else ewcfg.style_neutral,
+			'cosmetic_freshness': item.freshness if item.freshness else 0,
+			'adorned': 'false',
+			'activated': 'false'
 		}
 	elif item.item_type == ewcfg.it_furniture:
 		item_props = {

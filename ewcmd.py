@@ -352,11 +352,15 @@ async def data(cmd):
 			item_type_filter=ewcfg.it_cosmetic
 		)
 		adorned_cosmetics = []
+		adorned_cosmetics_styles = []
+		adorned_cosmetics_totalfreshness = 0
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item=cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
 				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+				adorned_cosmetics_styles.append(cos.item_props.get('style') if not None else "")
+				adorned_cosmetics_totalfreshness += int(cos.item_props.get('freshness')) if not None else 0
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
@@ -421,6 +425,30 @@ async def data(cmd):
 
 		if len(adorned_cosmetics) > 0:
 			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			style = adorned_cosmetics_styles[0]
+			cohesive_outfit = True
+
+			for item in adorned_cosmetics_styles:
+				if style != item:
+					cohesive_outfit = False
+					break
+
+			rating = ""
+
+			if cohesive_outfit:
+				if style == ewcfg.style_neutral:
+					if adorned_cosmetics_totalfreshness < 20:
+						rating = "Your normal outfit is lowkey on-point."
+					elif adorned_cosmetics_totalfreshness < 40:
+						rating = "Your normal outfit is gettin' kinda fleeky, not gonna lie."
+					elif adorned_cosmetics_totalfreshness < 80:
+						rating = "For real, your normal outfit is really fuckin' kino, my friend"
+					elif adorned_cosmetics_totalfreshness < 100:
+						rating = "Your normal outfit is STELLAR! I wanna know who your tailor is!"
+
+			if rating != "":
+				response_block += rating
 
 		if user_data.hunger > 0:
 			response_block += "You are {}% hungry. ".format(

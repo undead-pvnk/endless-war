@@ -27,6 +27,12 @@ class EwCosmeticItem:
 	# The text displayed when you !adorn it
 	str_onadorn = ""
 
+	# The text displayed when you take it off
+	str_unadorn = ""
+
+	# The text displayed when it breaks! Oh no!
+	str_onbreak = ""
+
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
 
@@ -41,6 +47,12 @@ class EwCosmeticItem:
 
 	# How much space this item takes up on your person-- You can only wear so many items at a time, the amount is determined by your level
 	size = 0
+
+	# What fashion style the cosmetic belongs to: Goth, jock, prep, nerd
+	style = ""
+
+	# How fresh a cosmetic is, in other words how fleek, in other words how godDAMN it is, in other words how good it looks
+	freshness = 0
 
 	# The ingredients necessary to make this item via it's acquisition method
 	ingredients = ""
@@ -60,11 +72,15 @@ class EwCosmeticItem:
 		str_name = "",
 		str_desc = "",
 		str_onadorn = "",
+		str_unadorn = "",
+		str_onbreak = "",
 		rarity = "",
 		stats = {},
 		ability = "",
 		durability = 0,
 		size = 0,
+		style = "",
+		freshness = 0,
 		ingredients = "",
 		acquisition = "",
 		price = 0,
@@ -78,11 +94,15 @@ class EwCosmeticItem:
 		self.str_name = str_name
 		self.str_desc = str_desc
 		self.str_onadorn = str_onadorn
+		self.str_unadorn = str_unadorn
+		self.str_onbreak = str_onbreak
 		self.rarity = rarity
 		self.stats = stats
 		self.ability = ability
 		self.durability = durability
 		self.size = size
+		self.style = style
+		self.freshness = freshness
 		self.ingredients = ingredients
 		self.acquisition = acquisition
 		self.price = price
@@ -91,7 +111,15 @@ class EwCosmeticItem:
 
 async def adorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	item_id = None
+
+	passive_adorn = False
+
+	for token in cmd.tokens[1:]:  # Searches through all arguments presented to find...
+		if token.startswith('--p'):  # If the cosmetic is being equipped passively.
+			passive_adorn = True
+		else:
+			item_id = ewutils.flattenTokenListToString(token)
 
 	try:
 		item_id_int = int(item_id)
@@ -137,10 +165,18 @@ async def adorn(cmd):
 			item_sought = item_from_slimeoid
 
 		if item_sought != None:
-
 			if already_adorned:
 				item_sought.item_props['adorned'] = 'false'
-				response = "You successfully dedorn your " + item_sought.item_props['cosmetic_name'] + "."
+
+				if item_sought.item_props['activated'] == 'true':
+					item_sought.item_props['activated'] = 'false'
+
+				if 'cosmetic_unadorn' in item_sought.item_props.keys():
+					unadorn_response = item_sought.item_props['cosmetic_unadorn']
+				else:
+					unadorn_response = ewcfg.str_generic_unadorn
+
+				response = unadorn_response.format(item_sought.item_props['cosmetic_name'])
 
 				if ewcfg.stat_attack in item_sought.item_props:
 					user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
@@ -151,22 +187,36 @@ async def adorn(cmd):
 				if ewcfg.stat_speed in item_sought.item_props:
 					user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
-				user_data.persist()
-
-				item_sought.persist()
-
 			else:
-
-				adorned_items = 0
+				passive_adorned_items = 0
 				for it in items:
 					i = EwItem(it.get('id_item'))
 					if i.item_props['adorned'] == 'true':
-						adorned_items += 1
+						if 'activated' not in i.item_props.keys() or i.item_props['activated'] == 'false':
+							if 'cosmetic_size' in i.item_props.keys() and int(i.item_props['cosmetic_size']) > 0:
+								passive_adorned_items += int(i.item_props['cosmetic_size'])
+							else:
+								passive_adorned_items += 1
 
-				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-					response = "You can't adorn anymore cosmetics."
+				print(passive_adorned_items)
+				print(ewutils.max_adornspace_passive_bylevel(user_data.slimelevel))
+
+				activated_adorned_items = 0
+				for it in items:
+					i = EwItem(it.get('id_item'))
+					if i.item_props['adorned'] == 'true' and 'activated' in i.item_props.keys() and i.item_props['activated'] == 'true':
+						if 'cosmetic_size' in i.item_props.keys() and int(i.item_props['cosmetic_size']) > 0:
+							activated_adorned_items += int(i.item_props['cosmetic_size'])
+						else:
+							activated_adorned_items += 1
+
+				if passive_adorn == True and passive_adorned_items >= ewutils.max_adornspace_passive_bylevel(user_data.slimelevel):
+					response = "You can't adorn anymore passive cosmetics."
+				elif passive_adorn == False and activated_adorned_items >= ewutils.max_adornspace_active_bylevel(user_data.slimelevel):
+					response = "You can't adorn anymore active cosmetics."
 				else:
 					item_sought.item_props['adorned'] = 'true'
+					item_sought.item_props['activated'] = 'true'
 
 					if ewcfg.stat_attack in item_sought.item_props:
 						user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
@@ -177,16 +227,23 @@ async def adorn(cmd):
 					if ewcfg.stat_speed in item_sought.item_props:
 						user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
-					user_data.persist()
-
 					if item_sought.item_props.get('slimeoid') == 'true':
 						item_sought.item_props['slimeoid'] = 'false'
 						response = "You take your {} from your slimeoid and successfully adorn it.".format(item_sought.item_props.get('cosmetic_name'))
 
 					else:
-						response = "You successfully adorn your " + item_sought.item_props['cosmetic_name'] + "."
+						if 'cosmetic_onadorn' in item_sought.item_props.keys():
+							onadorn_response = item_sought.item_props['cosmetic_onadorn']
+						else:
+							onadorn_response = ewcfg.str_generic_onadorn
 
-					item_sought.persist()
+						response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
+
+						if passive_adorn:
+							response += "...Passively."
+
+			user_data.persist()
+			item_sought.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:

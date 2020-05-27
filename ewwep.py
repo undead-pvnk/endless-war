@@ -757,11 +757,12 @@ async def attack(cmd):
 					item_type_filter = ewcfg.it_cosmetic
 				)
 
-				broken_cosmetics = []
+				onbreak_responses = []
 
 				for cosmetic in victim_cosmetics:
 						c = EwItem(cosmetic.get('id_item'))
-						if c.item_props.get("adorned") == 'true':
+						# If the cosmetic is adorned, and has the activated and durability attributes and they true and > 0 respectively
+						if c.item_props.get("adorned") == 'true' and 'activated' in c.item_props.keys() and c.item_props['activated'] == "true" and 'cosmetic_durability' in c.item_props.keys() and int(c.item_props['cosmetic_durability']) > 0:
 							durability_afterhit = int(c.item_props['cosmetic_durability']) - slimes_damage
 
 							if durability_afterhit <= 0:
@@ -781,11 +782,11 @@ async def attack(cmd):
 
 								ewitem.item_delete(id_item = c.id_item)
 
-								broken_cosmetics.append(c.item_props.get('cosmetic_name'))
+								onbreak_responses.append(str(c.item_props['cosmetic_onbreak']).format(c.item_props['cosmetic_name']))
 
 							else:
 								c.item_props['cosmetic_durability'] = durability_afterhit
-								c.persist()
+
 						else:
 							pass
 
@@ -898,6 +899,12 @@ async def attack(cmd):
 								hitzone = randombodypart,
 							))
 
+						response = ""
+
+						if len(onbreak_responses) != 0:
+							for onbreak_response in onbreak_responses:
+								response += "\n\n" + onbreak_response
+
 						response += "\n\n{}".format(weapon.str_kill.format(
 							name_player = cmd.message.author.display_name,
 							name_target = member.display_name,
@@ -916,11 +923,13 @@ async def attack(cmd):
 						shootee_data.trauma = weapon.id_weapon
 
 					else:
-						response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
+						response = ""
 
-						if len(broken_cosmetics) != 0:
-							for cosmetic in broken_cosmetics:
-								response += "\n\nNo way, their {} broke too! Hah, what a moron.".format(cosmetic)
+						if len(onbreak_responses) != 0:
+							for onbreak_response in onbreak_responses:
+								response = onbreak_response + "\n\n"
+
+						response += "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
 
 						shootee_data.trauma = ewcfg.trauma_id_environment
 
@@ -934,10 +943,6 @@ async def attack(cmd):
 					if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
 						brain = ewcfg.brain_map.get(shootee_slimeoid.ai)
 						response += "\n\n" + brain.str_death.format(slimeoid_name = shootee_slimeoid.name)
-
-					if len(broken_cosmetics) != 0:
-						for cosmetic in broken_cosmetics:
-							response += "No way, their {} broke too! Hah, what a moron.".format(cosmetic)
 					
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
@@ -1012,16 +1017,16 @@ async def attack(cmd):
 								sap_response = sap_response
 							)
 
-							if len(broken_cosmetics) != 0:
-								for cosmetic in broken_cosmetics:
-									response += "\n\nNo way, their {} broke too! They shed a single tear... R.I.P., you guess.".format(cosmetic)
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
 						
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
-							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
+							response += "\nn"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes or jammed:
 							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-							response += "\nNew security code: **{}**".format(new_captcha)
+							response += "\nnNew security code: **{}**".format(new_captcha)
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
 					else:
@@ -1032,9 +1037,10 @@ async def attack(cmd):
 								target_name = member.display_name,
 								damage = damage
 							)
-							if len(broken_cosmetics) != 0:
-								for cosmetic in broken_cosmetics:
-									response += "\n\nNo way, their {} broke too! They shed a single tear... R.I.P., you guess.".format(cosmetic)
+
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
 
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 			else:

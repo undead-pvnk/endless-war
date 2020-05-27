@@ -1024,7 +1024,8 @@ inebriation_pertick = 2
 
 # max item amounts
 max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player's slime level is divided by this number to calculate the number of carriable food items
-max_adorn_mod = 2
+max_adornspace_active_mod = 4
+max_adornspace_passive_mod = 2
 max_weapon_mod = 16
 
 # item acquisition methods
@@ -1478,7 +1479,11 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
-str_genericonadorn = "You successfully adorn your "
+str_generic_onadorn = "You successfully adorn your {}"
+str_generic_unadorn = "You successfully dedorn your {}"
+str_generic_onbreak = "No way! Their {} broke!"
+
+
 
 generic_role_name = 'NLACakaNM'
 
@@ -12608,6 +12613,12 @@ for line in transport_lines:
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
 
+
+# Fashion styles for cosmetics
+style_neutral = "boring"
+
+
+
 cosmetic_id_raincoat = "raincoat"
 
 id_cosmeticAbility = "cosmeticAbility"
@@ -12617,7 +12628,6 @@ cosmetic_items_list = [
 		id_cosmetic = "propellerhat",
 		str_name = "propeller hat",
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
-		str_onadorn = str_genericonadorn + "propeller hat.",
 		rarity = rarity_plebeian,
 		stats = {
 			stat_attack : 1,
@@ -12626,7 +12636,7 @@ cosmetic_items_list = [
 		},
 		ability = id_cosmeticAbility,
 		durability = 1000000,
-		size = 1,
+		size = 4,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
