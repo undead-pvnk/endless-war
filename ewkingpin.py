@@ -50,6 +50,7 @@ async def pardon(cmd):
 
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+
 async def banish(cmd):
 	user_data = EwUser(member = cmd.message.author)
 

@@ -21,11 +21,26 @@ class EwCosmeticItem:
 	# The string name of the cosmetic item
 	str_name = ""
 
-	# The text displayed when you look at it
+	# The text displayed when you !inspect it
 	str_desc = ""
+
+	# The text displayed when you !adorn it
+	str_onadorn = ""
 
 	# How rare the item is, can be "Plebeian", "Patrician", or "Princeps"
 	rarity = ""
+
+	# The stats the item increases/decreases
+	stats = {}
+
+	# Some items have special abilities that act like less powerful Mutations
+	ability = ""
+
+	# While !adorn'd, this item takes damage-- If this reaches 0, it breaks
+	durability = 0
+
+	# How much space this item takes up on your person-- You can only wear so many items at a time, the amount is determined by your level
+	size = 0
 
 	# The ingredients necessary to make this item via it's acquisition method
 	ingredients = ""
@@ -44,7 +59,12 @@ class EwCosmeticItem:
 		id_cosmetic = "",
 		str_name = "",
 		str_desc = "",
+		str_onadorn = "",
 		rarity = "",
+		stats = {},
+		ability = "",
+		durability = 0,
+		size = 0,
 		ingredients = "",
 		acquisition = "",
 		price = 0,
@@ -57,7 +77,12 @@ class EwCosmeticItem:
 		self.id_cosmetic = id_cosmetic
 		self.str_name = str_name
 		self.str_desc = str_desc
+		self.str_onadorn = str_onadorn
 		self.rarity = rarity
+		self.stats = stats
+		self.ability = ability
+		self.durability = durability
+		self.size = size
 		self.ingredients = ingredients
 		self.acquisition = acquisition
 		self.price = price
@@ -119,6 +144,17 @@ async def adorn(cmd):
 				response = "You can't adorn anymore cosmetics."
 			else:
 				item_sought.item_props['adorned'] = 'true'
+
+				if ewcfg.stat_attack in item_sought.item_props:
+					user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
+
+				if ewcfg.stat_defense in item_sought.item_props:
+					user_data.hardened_sap += int(item_sought.item_props[ewcfg.stat_defense])
+
+				if ewcfg.stat_speed in item_sought.item_props:
+					user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
+
+				user_data.persist()
 
 				if item_sought.item_props.get('slimeoid') == 'true':
 					item_sought.item_props['slimeoid'] = 'false'

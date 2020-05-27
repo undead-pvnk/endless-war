@@ -1484,7 +1484,14 @@ def gen_item_props(item):
 			'id_cosmetic': item.id_cosmetic,
 			'cosmetic_name': item.str_name,
 			'cosmetic_desc': item.str_desc,
+			'cosmetic_onadorn': item.str_onadorn,
 			'rarity': item.rarity,
+			'attack': item.stats.attack if not None else 0,
+			'defense': item.stats.defense if not None else 0,
+			'speed': item.stats.speed if not None else 0,
+			'cosmetic_ability': item.ability,
+			'cosmetic_durability': item.durability,
+			'cosmetic_size': item.size,
 			'adorned': 'false'
 		}
 	elif item.item_type == ewcfg.it_furniture:

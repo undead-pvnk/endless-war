@@ -434,7 +434,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfckevent", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -1429,6 +1429,8 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+
+	move_speed += (float(user_data.speed / 100))
 
 	move_speed = max(0.1, move_speed)
 

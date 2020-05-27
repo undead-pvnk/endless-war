@@ -1481,6 +1481,13 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Poudrin created."))
 
+		# Shows damage
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
+			user_data = EwUser(member = message.author)
+			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
+			slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))
+
 		# Gives the user some slime
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getslime'):
 			user_data = EwUser(member = message.author)

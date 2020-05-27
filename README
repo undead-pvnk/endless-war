@@ -61,6 +61,8 @@ CREATE TABLE users (
 	credence int NOT NULL DEFAULT '0',
 	credence_used int NOT NULL DEFAULT '0',
 	id_inhabit_target varchar(128) NOT NULL DEFAULT '',
+	attack int NOT NULL DEFAULT '0',
+	speed int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );

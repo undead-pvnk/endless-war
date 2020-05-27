@@ -97,7 +97,7 @@ async def smelt(cmd):
 			else:
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
 				if found_recipe.id_recipe == "cosmetic":
-					patrician_rarity = 20
+					patrician_rarity = 100
 					patrician_smelted = random.randint(1, patrician_rarity)
 					patrician = False
 
@@ -122,6 +122,8 @@ async def smelt(cmd):
 
 					item = items[random.randint(0, len(items) - 1)]
 
+					print(item.stats)
+
 					ewitem.item_create(
 						item_type = ewcfg.it_cosmetic,
 						id_user = cmd.message.author.id,
@@ -130,7 +132,14 @@ async def smelt(cmd):
 							'id_cosmetic': item.id_cosmetic,
 							'cosmetic_name': item.str_name,
 							'cosmetic_desc': item.str_desc,
+							'cosmetic_onadorn': item.str_onadorn,
 							'rarity': item.rarity,
+							'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats else 0,
+							'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats else 0,
+							'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats else 0,
+							'cosmetic_ability': item.ability,
+							'cosmetic_durability': item.durability,
+							'cosmetic_size': item.size,
 							'adorned': 'false'
 						}
 					)
