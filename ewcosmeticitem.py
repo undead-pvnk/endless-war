@@ -146,7 +146,7 @@ async def adorn(cmd):
 					user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
 
 				if ewcfg.stat_defense in item_sought.item_props:
-					user_data.hardened_sap -= int(item_sought.item_props[ewcfg.stat_defense])
+					user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
 
 				if ewcfg.stat_speed in item_sought.item_props:
 					user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
@@ -172,7 +172,7 @@ async def adorn(cmd):
 						user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
 
 					if ewcfg.stat_defense in item_sought.item_props:
-						user_data.hardened_sap += int(item_sought.item_props[ewcfg.stat_defense])
+						user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
 
 					if ewcfg.stat_speed in item_sought.item_props:
 						user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
@@ -358,7 +358,7 @@ async def sew(cmd):
 				if 'cosmetic_durability' in item_sought.item_props:
 					cosmetic_name = item_sought.item_props['cosmetic_name']
 
-					platonic_ideal = ewcfg.cosmetic_map.get(cosmetic_name)
+					platonic_ideal = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
 
 					cosmetic_durability_int = int(item_sought.item_props['cosmetic_durability'])
 
@@ -369,9 +369,9 @@ async def sew(cmd):
 						cost_ofrepair = difference * 4
 
 						if cost_ofrepair > user_data.slimes:
-							response = "Get out of here! Scram, weirdo! It costs {} to repair that cosmetic, which you don't have! Die! Die! Fucking Die!"
+							response = "Get out of here! Scram, weirdo! It costs {} to repair that cosmetic, which you don't have! Die! Die! Fucking Die!".format(cost_ofrepair)
 						else:
-							response = "It costs {} to repair this. Are you sure you wanna?"
+							response = "It costs {} to repair this. Are you sure you wanna?".format(cost_ofrepair)
 							response += "\n**!accept** or **!refuse** the deal."
 
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -402,9 +402,10 @@ async def sew(cmd):
 								user_data.slimes -= cost_ofrepair
 								user_data.persist()
 
+								item_sought.item_props['durability'] = platonic_ideal.durability
+								item_sought.persist()
 
-
-								response += '"Pleasure doing business with you, laddy!"'
+								response = '"Pleasure doing business with you, laddy!"'
 
 							else:
 								response = '"Ok, sure, whatever. No, I dont care. No, yeah. sure."'
@@ -415,7 +416,8 @@ async def sew(cmd):
 
 				else:
 					response = "Huh? Looks like your clothing is too old, it doesn't have any durability!"
-
+		else:
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Sew which cosmetic? Check your **!inventory**.'))
 	else:
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
 

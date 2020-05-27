@@ -686,7 +686,7 @@ async def attack(cmd):
 					sap_damage -= 1
 
 			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
-			slimes_damage *= sap_armor
+			slimes_damage *= (sap_armor + shootee_data.defense)
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
@@ -772,7 +772,7 @@ async def attack(cmd):
 									user_data.attack -= int(c.item_props[ewcfg.stat_attack])
 
 								if ewcfg.stat_defense in c.item_props:
-									user_data.hardened_sap -= int(c.item_props[ewcfg.stat_defense])
+									user_data.defense -= int(c.item_props[ewcfg.stat_defense])
 
 								if ewcfg.stat_speed in c.item_props:
 									user_data.speed -= int(c.item_props[ewcfg.stat_speed])

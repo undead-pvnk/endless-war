@@ -832,7 +832,8 @@ cmd_addkey = cmd_prefix + 'addkey'
 cmd_changelocks = cmd_prefix + 'changelocks'
 cmd_setalarm = cmd_prefix + 'setalarm'
 cmd_jam = cmd_prefix + 'jam'
-
+cmd_sew = cmd_prefix + 'sew'
+cmd_retrofit = cmd_prefix + 'retrofit'
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'

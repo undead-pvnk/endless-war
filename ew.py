@@ -46,6 +46,7 @@ class EwUser:
 	sap = 0
 	hardened_sap = 0
 	attack = 0
+	defense = 0
 	speed = 0
 	
 	#SLIMERNALIA
@@ -278,7 +279,9 @@ class EwUser:
 		self.sap = 0
 		self.hardened_sap = 0
 		self.attack = 0
+		self.defense = 0
 		self.speed = 0
+
 		ewutils.moves_active[self.id_user] = 0
 		ewutils.active_target_map[self.id_user] = ""
 		ewutils.active_restrictions[self.id_user] = 0
@@ -866,7 +869,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -919,6 +922,7 @@ class EwUser:
 					ewcfg.col_credence_used,
 					ewcfg.col_id_inhabit_target,
 					ewcfg.col_attack,
+					ewcfg.col_defense,
 					ewcfg.col_speed,
 				), (
 					id_user,
@@ -979,7 +983,8 @@ class EwUser:
 					self.credence_used = result[48]
 					self.id_inhabit_target = result[49]
 					self.attack = result[50]
-					self.speed = result[51]
+					self.defense = result[51]
+					self.speed = result[52]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1035,7 +1040,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1090,6 +1095,7 @@ class EwUser:
 				ewcfg.col_credence_used,
 				ewcfg.col_id_inhabit_target,
 				ewcfg.col_attack,
+				ewcfg.col_defense,
 				ewcfg.col_speed,
 			), (
 				self.id_user,
@@ -1146,6 +1152,7 @@ class EwUser:
 				self.credence_used,
 				self.id_inhabit_target,
 				self.attack,
+				self.defense,
 				self.speed,
 			))
 
