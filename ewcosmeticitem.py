@@ -90,6 +90,7 @@ class EwCosmeticItem:
 		self.is_hat = is_hat
 
 async def adorn(cmd):
+	user_data = EwUser(member = cmd.message.author)
 	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	try:
@@ -109,6 +110,7 @@ async def adorn(cmd):
 		item_sought = None
 		item_from_slimeoid = None
 		already_adorned = False
+
 		for item in items:
 			if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
 				i = EwItem(item.get('id_item'))
@@ -118,6 +120,9 @@ async def adorn(cmd):
 
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
+					item_sought = i
+					break
+
 				elif i.item_props.get("context") == 'costume':
 					if not ewutils.check_fursuit_active(i.id_server):
 						response = "You can't adorn your costume right now."
@@ -132,82 +137,60 @@ async def adorn(cmd):
 			item_sought = item_from_slimeoid
 
 		if item_sought != None:
-			adorned_items = 0
-			for it in items:
-				i = EwItem(it.get('id_item'))
-				if i.item_props['adorned'] == 'true':
-					adorned_items += 1
 
-			user_data = EwUser(member = cmd.message.author)
-
-			if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-				response = "You can't adorn anymore cosmetics."
-			else:
-				item_sought.item_props['adorned'] = 'true'
+			if already_adorned:
+				item_sought.item_props['adorned'] = 'false'
+				response = "You successfully dedorn your " + item_sought.item_props['cosmetic_name'] + "."
 
 				if ewcfg.stat_attack in item_sought.item_props:
-					user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
+					user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
 
 				if ewcfg.stat_defense in item_sought.item_props:
-					user_data.hardened_sap += int(item_sought.item_props[ewcfg.stat_defense])
+					user_data.hardened_sap -= int(item_sought.item_props[ewcfg.stat_defense])
 
 				if ewcfg.stat_speed in item_sought.item_props:
-					user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
+					user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
 				user_data.persist()
 
-				if item_sought.item_props.get('slimeoid') == 'true':
-					item_sought.item_props['slimeoid'] = 'false'
-					response = "You take your {} from your slimeoid and successfully adorn it.".format(
-						item_sought.item_props.get('cosmetic_name'))
-
-				else:
-					response = "You successfully adorn your " + item_sought.item_props['cosmetic_name'] + "."
-
 				item_sought.persist()
 
-		elif already_adorned:
-			response = "You already have it adorned."
+			else:
+
+				adorned_items = 0
+				for it in items:
+					i = EwItem(it.get('id_item'))
+					if i.item_props['adorned'] == 'true':
+						adorned_items += 1
+
+				if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
+					response = "You can't adorn anymore cosmetics."
+				else:
+					item_sought.item_props['adorned'] = 'true'
+
+					if ewcfg.stat_attack in item_sought.item_props:
+						user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
+
+					if ewcfg.stat_defense in item_sought.item_props:
+						user_data.hardened_sap += int(item_sought.item_props[ewcfg.stat_defense])
+
+					if ewcfg.stat_speed in item_sought.item_props:
+						user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
+
+					user_data.persist()
+
+					if item_sought.item_props.get('slimeoid') == 'true':
+						item_sought.item_props['slimeoid'] = 'false'
+						response = "You take your {} from your slimeoid and successfully adorn it.".format(item_sought.item_props.get('cosmetic_name'))
+
+					else:
+						response = "You successfully adorn your " + item_sought.item_props['cosmetic_name'] + "."
+
+					item_sought.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Adorn which cosmetic? Check your **!inventory**.'))
-
-async def dedorn(cmd):
-	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
-
-	try:
-		item_id_int = int(item_id)
-	except:
-		item_id_int = None
-
-	if item_id != None and len(item_id) > 0:
-		response = "You don't have one."
-
-		items = ewitem.inventory(
-			id_user = cmd.message.author.id,
-			id_server = cmd.message.server.id,
-			item_type_filter = ewcfg.it_cosmetic
-		)
-
-		item_sought = None
-		for item in items:
-			if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
-				i = EwItem(item.get('id_item'))
-				if i.item_props.get("adorned") == 'true':
-					item_sought = i
-					break
-
-		if item_sought != None:
-			item_sought.item_props['adorned'] = 'false'
-
-			response = "You successfully dedorn your " + item_sought.item_props['cosmetic_name'] + "."
-
-			item_sought.persist()
-
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-	else:
-		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Dedorn which cosmetic? Check your **!inventory**.'))
 
 
 async def dye(cmd):
@@ -330,3 +313,110 @@ def dedorn_all_costumes():
 		costume_count += 1
 		
 	ewutils.logMsg("Dedorned {} costumes after full moon ended.".format(costume_count))
+
+async def sew(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	if cmd.message.channel.name == ewcfg.channel_bodega:
+
+		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+		try:
+			item_id_int = int(item_id)
+		except:
+			item_id_int = None
+
+		if item_id != None and len(item_id) > 0:
+			response = "You don't have one."
+
+			items = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+
+			item_sought = None
+			item_from_slimeoid = None
+			already_adorned = False
+
+			for item in items:
+				if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
+					i = EwItem(item.get('id_item'))
+
+					if item_from_slimeoid == None and i.item_props.get("slimeoid") == 'true':
+						item_from_slimeoid = i
+						continue
+					else:
+						item_sought = i
+						break
+
+			if item_sought == None:
+				item_sought = item_from_slimeoid
+
+			if item_sought != None:
+
+				# If the cosmetic is new enough to even have durability
+				if 'cosmetic_durability' in item_sought.item_props:
+					cosmetic_name = item_sought.item_props['cosmetic_name']
+
+					platonic_ideal = ewcfg.cosmetic_map.get(cosmetic_name)
+
+					cosmetic_durability_int = int(item_sought.item_props['cosmetic_durability'])
+
+					# If the cosmetic is actually damaged at all
+					if cosmetic_durability_int < int(platonic_ideal.durability):
+						difference = abs(cosmetic_durability_int - int(platonic_ideal.durability))
+
+						cost_ofrepair = difference * 4
+
+						if cost_ofrepair > user_data.slimes:
+							response = "Get out of here! Scram, weirdo! It costs {} to repair that cosmetic, which you don't have! Die! Die! Fucking Die!"
+						else:
+							response = "It costs {} to repair this. Are you sure you wanna?"
+							response += "\n**!accept** or **!refuse** the deal."
+
+							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+							# Wait for an answer
+							accepted = False
+
+							try:
+								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+
+								if message != None:
+									if message.content.lower() == "!accept":
+										accepted = True
+									if message.content.lower() == "!refuse":
+										accepted = False
+							except:
+								accepted = False
+
+							# Cancel deal if the hat is no longer in user's inventory
+							if item_sought.id_owner != user_data.id_user:
+								accepted = False
+
+							# Cancel deal if the user has left Krak Bay
+							if user_data.poi != ewcfg.poi_id_krakbay:
+								accepted = False
+
+							if accepted == True:
+								user_data.slimes -= cost_ofrepair
+								user_data.persist()
+
+
+
+								response += '"Pleasure doing business with you, laddy!"'
+
+							else:
+								response = '"Ok, sure, whatever. No, I dont care. No, yeah. sure."'
+
+
+					else:
+						response = "What're you talking about? This looks fine to me!"
+
+				else:
+					response = "Huh? Looks like your clothing is too old, it doesn't have any durability!"
+
+	else:
+		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

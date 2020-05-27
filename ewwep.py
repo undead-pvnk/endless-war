@@ -749,6 +749,46 @@ async def attack(cmd):
 				slimes_directdamage = slimes_damage - slimes_tobleed
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
+				# Damage victim's fashion
+
+				victim_cosmetics = ewitem.inventory(
+					id_user = member.id,
+					id_server = cmd.message.server.id,
+					item_type_filter = ewcfg.it_cosmetic
+				)
+
+				broken_cosmetics = []
+
+				for cosmetic in victim_cosmetics:
+						c = EwItem(cosmetic.get('id_item'))
+						if c.item_props.get("adorned") == 'true':
+							durability_afterhit = int(c.item_props['cosmetic_durability']) - slimes_damage
+
+							if durability_afterhit <= 0:
+								c.item_props['cosmetic_durability'] = durability_afterhit
+								c.persist()
+
+								if ewcfg.stat_attack in c.item_props:
+									user_data.attack -= int(c.item_props[ewcfg.stat_attack])
+
+								if ewcfg.stat_defense in c.item_props:
+									user_data.hardened_sap -= int(c.item_props[ewcfg.stat_defense])
+
+								if ewcfg.stat_speed in c.item_props:
+									user_data.speed -= int(c.item_props[ewcfg.stat_speed])
+
+								user_data.persist()
+
+								ewitem.item_delete(id_item = c.id_item)
+
+								broken_cosmetics.append(c.item_props.get('cosmetic_name'))
+
+							else:
+								c.item_props['cosmetic_durability'] = durability_afterhit
+								c.persist()
+						else:
+							pass
+
 				market_data.splattered_slimes += slimes_damage
 				market_data.persist()
 				user_data.splattered_slimes += slimes_damage
@@ -878,6 +918,10 @@ async def attack(cmd):
 					else:
 						response = "{name_target} is hit!!\n\n{name_target} has died.".format(name_target = member.display_name)
 
+						if len(broken_cosmetics) != 0:
+							for cosmetic in broken_cosmetics:
+								response += "\n\nNo way, their {} broke too! Hah, what a moron.".format(cosmetic)
+
 						shootee_data.trauma = ewcfg.trauma_id_environment
 
 					if shootee_data.faction != "" and shootee_data.faction == user_data.faction:
@@ -890,6 +934,10 @@ async def attack(cmd):
 					if shootee_slimeoid.life_state == ewcfg.slimeoid_state_active:
 						brain = ewcfg.brain_map.get(shootee_slimeoid.ai)
 						response += "\n\n" + brain.str_death.format(slimeoid_name = shootee_slimeoid.name)
+
+					if len(broken_cosmetics) != 0:
+						for cosmetic in broken_cosmetics:
+							response += "No way, their {} broke too! Hah, what a moron.".format(cosmetic)
 					
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
@@ -963,6 +1011,10 @@ async def attack(cmd):
 								damage = damage,
 								sap_response = sap_response
 							)
+
+							if len(broken_cosmetics) != 0:
+								for cosmetic in broken_cosmetics:
+									response += "\n\nNo way, their {} broke too! They shed a single tear... R.I.P., you guess.".format(cosmetic)
 						
 						if ewcfg.weapon_class_ammo in weapon.classes and weapon_item.item_props.get("ammo") == 0:
 							response += "\n"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
@@ -980,6 +1032,9 @@ async def attack(cmd):
 								target_name = member.display_name,
 								damage = damage
 							)
+							if len(broken_cosmetics) != 0:
+								for cosmetic in broken_cosmetics:
+									response += "\n\nNo way, their {} broke too! They shed a single tear... R.I.P., you guess.".format(cosmetic)
 
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
 			else:

@@ -130,7 +130,7 @@ poi_id_slimesea = "slimesea"
 poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
-
+poi_id_bodega = "bodega"
 
 
 # transports
@@ -527,6 +527,7 @@ channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
+channel_bodega = "bodega"
 
 channel_prankfeed = "prank-feed"
 
@@ -1476,7 +1477,7 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
-str_genericonadorn = "You successfully adorn your"
+str_genericonadorn = "You successfully adorn your "
 
 generic_role_name = 'NLACakaNM'
 
@@ -11858,7 +11859,20 @@ poi_list = [
 		pvp = True,
 		is_subzone = True,
 	),
-
+	EwPoi(  # Clothing store in Krak Bay
+		id_poi = poi_id_bodega,
+		alias = [
+			"clothingstore",
+		],
+		str_in = "just behind the Snapple machine at",
+		str_name = "Bodega",
+		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
+		channel = channel_bodega,
+		role = "Bodega",
+		mother_district = poi_id_krakbay,
+		pvp = False,
+		is_subzone = True,
+	),
 	EwPoi(  # Outskirts - 1
 		id_poi=poi_id_south_outskirts,
 		alias=[
@@ -12610,63 +12624,63 @@ cosmetic_items_list = [
 			stat_speed : 1
 		},
 		ability = id_cosmeticAbility,
-		durability = 0,
-		size = 0,
+		durability = 1000000,
+		size = 1,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
 		is_hat = True,
 	),
-	EwCosmeticItem(
-		id_cosmetic = "mininghelmet",
-		str_name = "mining helmet",
-		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		price = 50000,
-		vendors = [vendor_bazaar],
-		is_hat = True,
-	),
-	EwCosmeticItem(
-		id_cosmetic = "pickelhaube",
-		str_name = "pickelhaube",
-		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		price = 50000,
-		vendors = [vendor_bazaar],
-		is_hat=True,
-	),
-	EwCosmeticItem(
-		id_cosmetic = "fedora",
-		str_name = "fedora",
-		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		price = 50000,
-		vendors = [vendor_bazaar],
-		is_hat=True,
-	),
-	EwCosmeticItem(
-		id_cosmetic = "baseballcap",
-		str_name = "baseball cap",
-		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		price = 50000,
-		vendors = [vendor_bazaar],
-		is_hat=True,
-	),
-	EwCosmeticItem(
-		id_cosmetic = "backwardsbaseballcap",
-		str_name = "backwards baseball cap",
-		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		price = 50000,
-		vendors = [vendor_bazaar],
-		is_hat=True,
-	),
+	# EwCosmeticItem(
+	# 	id_cosmetic = "mininghelmet",
+	# 	str_name = "mining helmet",
+	# 	str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
+	# 	rarity = rarity_plebeian,
+	# 	acquisition = acquisition_smelting,
+	# 	price = 50000,
+	# 	vendors = [vendor_bazaar],
+	# 	is_hat = True,
+	# ),
+	# EwCosmeticItem(
+	# 	id_cosmetic = "pickelhaube",
+	# 	str_name = "pickelhaube",
+	# 	str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
+	# 	rarity = rarity_plebeian,
+	# 	acquisition = acquisition_smelting,
+	# 	price = 50000,
+	# 	vendors = [vendor_bazaar],
+	# 	is_hat=True,
+	# ),
+	# EwCosmeticItem(
+	# 	id_cosmetic = "fedora",
+	# 	str_name = "fedora",
+	# 	str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
+	# 	rarity = rarity_plebeian,
+	# 	acquisition = acquisition_smelting,
+	# 	price = 50000,
+	# 	vendors = [vendor_bazaar],
+	# 	is_hat=True,
+	# ),
+	# EwCosmeticItem(
+	# 	id_cosmetic = "baseballcap",
+	# 	str_name = "baseball cap",
+	# 	str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
+	# 	rarity = rarity_plebeian,
+	# 	acquisition = acquisition_smelting,
+	# 	price = 50000,
+	# 	vendors = [vendor_bazaar],
+	# 	is_hat=True,
+	# ),
+	# EwCosmeticItem(
+	# 	id_cosmetic = "backwardsbaseballcap",
+	# 	str_name = "backwards baseball cap",
+	# 	str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
+	# 	rarity = rarity_plebeian,
+	# 	acquisition = acquisition_smelting,
+	# 	price = 50000,
+	# 	vendors = [vendor_bazaar],
+	# 	is_hat=True,
+	# ),
 	# EwCosmeticItem(
 	# 	id_cosmetic = "piratehat",
 	# 	str_name = "pirate hat",

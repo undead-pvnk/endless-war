@@ -277,6 +277,8 @@ class EwUser:
 
 		self.sap = 0
 		self.hardened_sap = 0
+		self.attack = 0
+		self.speed = 0
 		ewutils.moves_active[self.id_user] = 0
 		ewutils.active_target_map[self.id_user] = ""
 		ewutils.active_restrictions[self.id_user] = 0

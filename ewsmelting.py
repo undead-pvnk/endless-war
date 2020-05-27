@@ -122,8 +122,6 @@ async def smelt(cmd):
 
 					item = items[random.randint(0, len(items) - 1)]
 
-					print(item.stats)
-
 					ewitem.item_create(
 						item_type = ewcfg.it_cosmetic,
 						id_user = cmd.message.author.id,
