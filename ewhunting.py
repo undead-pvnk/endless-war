@@ -1611,18 +1611,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
@@ -1640,18 +1637,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 

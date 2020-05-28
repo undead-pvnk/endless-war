@@ -1048,7 +1048,86 @@ async def item_look(cmd):
 
 				response += "You have killed {} people with it.".format(item.item_props.get("kills") if item.item_props.get("kills") != None else 0)
 
-			if item.item_type == ewcfg.it_cosmetic or item.item_type == ewcfg.it_furniture:
+			if item.item_type == ewcfg.it_cosmetic:
+				response += "\n\n"
+
+				response += "It's an article of {rarity} rank.\n".format(rarity = item.item_props['rarity'])
+
+				if any(stat in item.item_props.keys() for stat in ewcfg.playerstats_list):
+
+					response += "Adorning it "
+
+					stats_breakdown = []
+
+					for stat in ewcfg.playerstats_list:
+
+						if abs(int(item.item_props[stat])) > 0:
+
+							if int(item.item_props[stat]) > 0:
+								stat_response = "increases your "
+							else:
+								stat_response = "decreases your "
+
+							stat_response += "{stat} by {amount}".format(stat = stat, amount = item.item_props[stat])
+
+							stats_breakdown.append(stat_response)
+
+					response += ewutils.formatNiceList(names = stats_breakdown, conjunction = "and") + ". \n"
+
+				if item.item_props['durability'] is None:
+					response += "It can't be destroyed.\n"
+				else:
+					if item.item_props['id_cosmetic'] == "scalp":
+						response += "It looks mangled and disgusting, you have no idea how much longer it'll last."
+					else:
+						original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
+						original_durability = int(original_item.durability)
+						current_durability = int(item.item_props['durability'])
+
+						relative_change = round(current_durability / original_durability * 100)
+
+						if current_durability == original_durability:
+							response += "It looks brand new.\n"
+
+						else:
+							if relative_change > 80:
+								response += "It's got a few minor scratches on it.\n"
+							elif relative_change > 60:
+								response += "It's a little torn from use.\n"
+							elif relative_change > 40:
+								response += "It's not looking so great...\n"
+							elif relative_change > 20:
+								response += "It's going to break soon!\n"
+
+				if item.item_props['size'] == 0:
+					response += "It doesn't take up any space at all.\n"
+				else:
+					response += "It costs about {amount} space to adorn.\n".format(amount = item.item_props['size'])
+
+				if item.item_props['fashion_style'] == ewcfg.style_neutral:
+					response += "It's got a casual feel to it. "
+				if item.item_props['fashion_style'] == ewcfg.style_cool:
+					response += "It's lookin' pretty fuckin' punk. "
+				if item.item_props['fashion_style'] == ewcfg.style_tough:
+					response += "It's lookin' grunge as hell, my friend. "
+				if item.item_props['fashion_style'] == ewcfg.style_smart:
+					response += "It's ggot sort of a hipstery vibe. "
+				if item.item_props['fashion_style'] == ewcfg.style_beautiful:
+					response += "It's got a modern, refined feel. "
+				if item.item_props['fashion_style'] == ewcfg.style_cute:
+					response += "It's super kawaiiiiiiiiii~ deeeessuusususususususuusususufuswvgslgerphi4hjetbhjhjbetbjtrrpo"
+				if item.item_props['fashion_style'] == ewcfg.style_sporty:
+					response += "It's got a atheletic kinda feel. "
+				if item.item_props['fashion_style'] == ewcfg.style_weird:
+					response += "It's clusterpunk. As. Fuck. "
+
+				response += "It's freshness rating is {rating}".format(rating = item.item_props['freshness'])
+
+				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
+				if hue != None:
+					response += " It's been dyed in {} paint.".format(hue.str_name)
+
+			if item.item_type == ewcfg.it_furniture:
 				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
 				if hue != None:
 					response += " It's been dyed in {} paint.".format(hue.str_name)
@@ -1484,20 +1563,19 @@ def gen_item_props(item):
 			'id_cosmetic': item.id_cosmetic,
 			'cosmetic_name': item.str_name,
 			'cosmetic_desc': item.str_desc,
-			'cosmetic_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
-			'cosmetic_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
-			'cosmetic_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
-			'rarity': item.rarity,
-			'attack': item.stats['attack'] if item.stats['attack'] else 0,
-			'defense': item.stats['defense'] if item.stats['defense'] else 0,
-			'speed': item.stats['speed'] if item.stats['speed'] else 0,
-			'cosmetic_ability': item.ability,
-			'cosmetic_durability': item.durability,
-			'cosmetic_size': item.size,
-			'cosmetic_style': item.style if item.style else ewcfg.style_neutral,
-			'cosmetic_freshness': item.freshness if item.freshness else 0,
+			'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+			'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+			'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+			'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+			'attack': item.stats[ewcfg.stat_attack] if item.stats[ewcfg.stat_attack] else 0,
+			'defense': item.stats[ewcfg.stat_defense] if item.stats[ewcfg.stat_defense] else 0,
+			'speed': item.stats[ewcfg.stat_speed] if item.stats[ewcfg.stat_speed] else 0,
+			'ability': item.ability if item.ability else None,
+			'durability': item.durability if item.durability else ewcfg.base_durability,
+			'size': item.size if item.size else 1,
+			'fashion_style': item.style if item.style else ewcfg.style_neutral,
+			'freshness': item.freshness if item.freshness else 0,
 			'adorned': 'false',
-			'activated': 'false'
 		}
 	elif item.item_type == ewcfg.it_furniture:
 		item_props = {
@@ -1525,11 +1603,23 @@ async def soulextract(cmd):
 				'id_cosmetic': "soul",
 				'cosmetic_name': "{}'s soul".format(playermodel.display_name),
 				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(playermodel.display_name, cmd.message.author.id),
+				'str_onadorn': ewcfg.str_generic_onadorn,
+				'str_unadorn': ewcfg.str_generic_unadorn,
+				'str_onbreak': ewcfg.str_generic_onbreak,
 				'rarity': ewcfg.rarity_patrician,
+				'attack': 6,
+				'defense': 6,
+				'speed': 6,
+				'ability': None,
+				'durability': None,
+				'size': 6,
+				'fashion_style': ewcfg.style_weird,
+				'freshness': 10,
 				'adorned': 'false',
 				'user_id': usermodel.id_user
 			}
 		)
+
 		usermodel.has_soul = 0
 		usermodel.persist()
 		response = "You tremble at the thought of trying this. Nothing ventured, nothing gained, you suppose. With all your mental fortitude you jam your hand deep into your chest and begin to pull out the very essence of your being. Your spirit, aspirations, everything that made you who you are begins to slowly drain from your mortal effigy until you feel absolutely nothing. Your soul flickers about, taunting you from outside your body. You capture it in a jar, almost reflexively.\n\nWow. Your personality must suck now."
@@ -1743,11 +1833,23 @@ def surrendersoul(giver = None, receiver = None, id_server=None):
 					'cosmetic_name': "{}'s soul".format(giverplayer.display_name),
 					'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(
 						giverplayer.display_name, givermodel.id_user),
+					'str_onadorn': ewcfg.str_generic_onadorn,
+					'str_unadorn': ewcfg.str_generic_unadorn,
+					'str_onbreak': ewcfg.str_generic_onbreak,
 					'rarity': ewcfg.rarity_patrician,
+					'attack': 6,
+					'defense': 6,
+					'speed': 6,
+					'ability': None,
+					'durability': None,
+					'size': 6,
+					'fashion_style': ewcfg.style_weird,
+					'freshness': 10,
 					'adorned': 'false',
 					'user_id': givermodel.id_user
 				}
 			)
+
 			return item_id
 
 # SWILLDERMUK

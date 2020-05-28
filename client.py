@@ -1567,17 +1567,13 @@ async def on_message(message):
 
 			item = items[random.randint(0, len(items) - 1)]
 
-			item_id = ewitem.item_create(
-				item_type = ewcfg.it_cosmetic,
-				id_user = message.author.id,
-				id_server = message.server.id,
-				item_props = {
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+			item_props = ewitem.gen_item_props(item)
+
+			ewitem.item_create(
+				item_type = item.item_type,
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_props = item_props
 			)
 
 			ewutils.logMsg('Created item: {}'.format(item_id))

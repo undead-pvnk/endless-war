@@ -749,8 +749,7 @@ async def attack(cmd):
 				slimes_directdamage = slimes_damage - slimes_tobleed
 				slimes_splatter = slimes_damage - slimes_toboss - slimes_tobleed - slimes_drained
 
-				# Damage victim's fashion
-
+				# Damage victim's wardrobe (heh, WARdrobe... get it??)
 				victim_cosmetics = ewitem.inventory(
 					id_user = member.id,
 					id_server = cmd.message.server.id,
@@ -761,28 +760,25 @@ async def attack(cmd):
 
 				for cosmetic in victim_cosmetics:
 						c = EwItem(cosmetic.get('id_item'))
-						# If the cosmetic is adorned, and has the activated and durability attributes and they true and > 0 respectively
-						if c.item_props.get("adorned") == 'true' and 'activated' in c.item_props.keys() and c.item_props['activated'] == "true" and 'cosmetic_durability' in c.item_props.keys() and int(c.item_props['cosmetic_durability']) > 0:
+
+						# Damage it if the cosmetic is adorned and it has a durability limit
+						if c.item_props.get("adorned") == 'true' and c.item_props['cosmetic_durability'] is not None:
+
 							durability_afterhit = int(c.item_props['cosmetic_durability']) - slimes_damage
 
-							if durability_afterhit <= 0:
+							if durability_afterhit <= 0: # If it breaks
 								c.item_props['cosmetic_durability'] = durability_afterhit
 								c.persist()
 
-								if ewcfg.stat_attack in c.item_props:
-									user_data.attack -= int(c.item_props[ewcfg.stat_attack])
-
-								if ewcfg.stat_defense in c.item_props:
-									user_data.defense -= int(c.item_props[ewcfg.stat_defense])
-
-								if ewcfg.stat_speed in c.item_props:
-									user_data.speed -= int(c.item_props[ewcfg.stat_speed])
+								user_data.attack -= int(c.item_props[ewcfg.stat_attack])
+								user_data.defense -= int(c.item_props[ewcfg.stat_defense])
+								user_data.speed -= int(c.item_props[ewcfg.stat_speed])
 
 								user_data.persist()
 
-								ewitem.item_delete(id_item = c.id_item)
-
 								onbreak_responses.append(str(c.item_props['cosmetic_onbreak']).format(c.item_props['cosmetic_name']))
+
+								ewitem.item_delete(id_item = c.id_item)
 
 							else:
 								c.item_props['cosmetic_durability'] = durability_afterhit
@@ -851,10 +847,21 @@ async def attack(cmd):
 								'id_cosmetic': 'scalp',
 								'cosmetic_name': "{}'s scalp".format(shootee_name),
 								'cosmetic_desc': "A scalp.{}".format(scalp_text),
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_patrician,
+								'attack': 1,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) * 4,
+								'size': 1,
+								'fashion_style': ewcfg.style_weird,
+								'freshness': 10,
 								'adorned': 'false'
 							}
 						)
-
 					
 					explode_damage = ewutils.slime_bylevel(shootee_data.slimelevel) / 5
 

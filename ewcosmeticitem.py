@@ -111,25 +111,19 @@ class EwCosmeticItem:
 
 async def adorn(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	item_id = None
 
-	passive_adorn = False
-
-	for token in cmd.tokens[1:]:  # Searches through all arguments presented to find...
-		if token.startswith('--p'):  # If the cosmetic is being equipped passively.
-			passive_adorn = True
-		else:
-			item_id = ewutils.flattenTokenListToString(token)
+	# Check to see if you even have the item you want to repair
+	item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 	try:
 		item_id_int = int(item_id)
 	except:
 		item_id_int = None
 
-	if item_id != None and len(item_id) > 0:
+	if item_id is not None and len(item_id) > 0:
 		response = "You don't have one."
 
-		items = ewitem.inventory(
+		cosmetic_items = ewitem.inventory(
 			id_user = cmd.message.author.id,
 			id_server = cmd.message.server.id,
 			item_type_filter = ewcfg.it_cosmetic
@@ -138,19 +132,23 @@ async def adorn(cmd):
 		item_sought = None
 		item_from_slimeoid = None
 		already_adorned = False
+		space_adorned = 0
 
-		for item in items:
+		# Check all cosmetics found
+		for item in cosmetic_items:
+			i = EwItem(item.get('id_item'))
+
+			# Search for desired cosmetic
 			if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
-				i = EwItem(item.get('id_item'))
+
+
 				if item_from_slimeoid == None and i.item_props.get("slimeoid") == 'true':
 					item_from_slimeoid = i
 					continue
-
 				if i.item_props.get("adorned") == 'true':
 					already_adorned = True
 					item_sought = i
 					break
-
 				elif i.item_props.get("context") == 'costume':
 					if not ewutils.check_fursuit_active(i.id_server):
 						response = "You can't adorn your costume right now."
@@ -161,89 +159,55 @@ async def adorn(cmd):
 					item_sought = i
 					break
 
+			# Get space used adorned cosmetics
+			if i.item_props['adorned'] == 'true':
+				space_adorned += int(i.item_props['size'])
+
 		if item_sought == None:
 			item_sought = item_from_slimeoid
 
+		# If the cosmetic you want to adorn is found
 		if item_sought != None:
+
+			# Unadorn the cosmetic
 			if already_adorned:
 				item_sought.item_props['adorned'] = 'false'
 
-				if item_sought.item_props['activated'] == 'true':
-					item_sought.item_props['activated'] = 'false'
-
-				if 'cosmetic_unadorn' in item_sought.item_props.keys():
-					unadorn_response = item_sought.item_props['cosmetic_unadorn']
-				else:
-					unadorn_response = ewcfg.str_generic_unadorn
+				unadorn_response = str(item_sought.item_props['str_unadorn'])
 
 				response = unadorn_response.format(item_sought.item_props['cosmetic_name'])
 
-				if ewcfg.stat_attack in item_sought.item_props:
-					user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
+				user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
+				user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
+				user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
-				if ewcfg.stat_defense in item_sought.item_props:
-					user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
-
-				if ewcfg.stat_speed in item_sought.item_props:
-					user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
-
+			# Attempt to adorn the cosmetic
 			else:
-				passive_adorned_items = 0
-				for it in items:
-					i = EwItem(it.get('id_item'))
-					if i.item_props['adorned'] == 'true':
-						if 'activated' not in i.item_props.keys() or i.item_props['activated'] == 'false':
-							if 'cosmetic_size' in i.item_props.keys() and int(i.item_props['cosmetic_size']) > 0:
-								passive_adorned_items += int(i.item_props['cosmetic_size'])
-							else:
-								passive_adorned_items += 1
+				# Calculate how much space you'll have after adorning...
+				if int(item_sought.item_props['cosmetic_size']) > 0:
+					space_adorned += int(item_sought.item_props['size'])
 
-				print(passive_adorned_items)
-				print(ewutils.max_adornspace_passive_bylevel(user_data.slimelevel))
+				# If you don't have enough space, abort
+				if space_adorned >= ewutils.max_adornspace_active_bylevel(user_data.slimelevel):
+					response = "You can't adorn anymore cosmetics."
 
-				activated_adorned_items = 0
-				for it in items:
-					i = EwItem(it.get('id_item'))
-					if i.item_props['adorned'] == 'true' and 'activated' in i.item_props.keys() and i.item_props['activated'] == 'true':
-						if 'cosmetic_size' in i.item_props.keys() and int(i.item_props['cosmetic_size']) > 0:
-							activated_adorned_items += int(i.item_props['cosmetic_size'])
-						else:
-							activated_adorned_items += 1
-
-				if passive_adorn == True and passive_adorned_items >= ewutils.max_adornspace_passive_bylevel(user_data.slimelevel):
-					response = "You can't adorn anymore passive cosmetics."
-				elif passive_adorn == False and activated_adorned_items >= ewutils.max_adornspace_active_bylevel(user_data.slimelevel):
-					response = "You can't adorn anymore active cosmetics."
 				else:
 					item_sought.item_props['adorned'] = 'true'
-					item_sought.item_props['activated'] = 'true'
 
-					if ewcfg.stat_attack in item_sought.item_props:
-						user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
-
-					if ewcfg.stat_defense in item_sought.item_props:
-						user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
-
-					if ewcfg.stat_speed in item_sought.item_props:
-						user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
+					user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
+					user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
+					user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
 					if item_sought.item_props.get('slimeoid') == 'true':
 						item_sought.item_props['slimeoid'] = 'false'
 						response = "You take your {} from your slimeoid and successfully adorn it.".format(item_sought.item_props.get('cosmetic_name'))
 
 					else:
-						if 'cosmetic_onadorn' in item_sought.item_props.keys():
-							onadorn_response = item_sought.item_props['cosmetic_onadorn']
-						else:
-							onadorn_response = ewcfg.str_generic_onadorn
-
+						onadorn_response = item_sought.item_props['cosmetic_onadorn']
 						response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
 
-						if passive_adorn:
-							response += "...Passively."
-
-			user_data.persist()
-			item_sought.persist()
+					user_data.persist()
+					item_sought.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
@@ -373,8 +337,9 @@ def dedorn_all_costumes():
 
 async def sew(cmd):
 	user_data = EwUser(member = cmd.message.author)
-	if cmd.message.channel.name == ewcfg.channel_bodega:
 
+	# Player must be at the Bodega
+	if cmd.message.channel.name == ewcfg.channel_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:
@@ -382,10 +347,11 @@ async def sew(cmd):
 		except:
 			item_id_int = None
 
+		# Check to see if you even have the item you want to repair
 		if item_id != None and len(item_id) > 0:
 			response = "You don't have one."
 
-			items = ewitem.inventory(
+			cosmetic_items = ewitem.inventory(
 				id_user = cmd.message.author.id,
 				id_server = cmd.message.server.id,
 				item_type_filter = ewcfg.it_cosmetic
@@ -393,9 +359,8 @@ async def sew(cmd):
 
 			item_sought = None
 			item_from_slimeoid = None
-			already_adorned = False
 
-			for item in items:
+			for item in cosmetic_items:
 				if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
 					i = EwItem(item.get('id_item'))
 
@@ -409,21 +374,27 @@ async def sew(cmd):
 			if item_sought == None:
 				item_sought = item_from_slimeoid
 
+			# If the cosmetic you want to have repaired is found
 			if item_sought != None:
+				# Can't repair scalps because we don't know what the original durability limit was
+				if item_sought.item_props['id_cosmetic'] == 'scalp':
+					response = "What the hell is this? I'm not gonna repair some dude's fucking scalp, are you retarded?"
 
-				# If the cosmetic is new enough to even have durability
-				if 'cosmetic_durability' in item_sought.item_props:
+				# Can't repair items without durability limits, since they couldn't have been damaged in the first place
+				elif item_sought.item_props['durability'] is None:
+					response = "I'm sorry, but I can't repair that piece of clothing!"
+
+				else:
 					cosmetic_name = item_sought.item_props['cosmetic_name']
 
-					platonic_ideal = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
-
-					cosmetic_durability_int = int(item_sought.item_props['cosmetic_durability'])
+					original_durability = int(ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic']))
+					current_durability = int(item_sought.item_props['durability'])
 
 					# If the cosmetic is actually damaged at all
-					if cosmetic_durability_int < int(platonic_ideal.durability):
-						difference = abs(cosmetic_durability_int - int(platonic_ideal.durability))
+					if current_durability < original_durability:
+						difference = abs(current_durability - original_durability)
 
-						cost_ofrepair = difference * 4
+						cost_ofrepair = difference * 4 # NO ONE SAID IT WOULD BE EASY
 
 						if cost_ofrepair > user_data.slimes:
 							response = "Get out of here! Scram, weirdo! It costs {} to repair that cosmetic, which you don't have! Die! Die! Fucking Die!".format(cost_ofrepair)
@@ -459,22 +430,17 @@ async def sew(cmd):
 								user_data.slimes -= cost_ofrepair
 								user_data.persist()
 
-								item_sought.item_props['durability'] = platonic_ideal.durability
+								item_sought.item_props['durability'] = original_durability
 								item_sought.persist()
 
 								response = '"Pleasure doing business with you, laddy!"'
 
 							else:
 								response = '"Ok, sure, whatever. No, I dont care. No, yeah. sure."'
-
-
 					else:
 						response = "What're you talking about? This looks fine to me!"
-
-				else:
-					response = "Huh? Looks like your clothing is too old, it doesn't have any durability!"
 		else:
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, 'Sew which cosmetic? Check your **!inventory**.'))
+			response = "Sew which cosmetic? Check your **!inventory**."
 	else:
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
 

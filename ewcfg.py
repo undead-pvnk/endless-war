@@ -62,12 +62,12 @@ life_state_grandfoe = 8
 life_state_kingpin = 10
 life_state_observer = 20
 
-# Stats. Ever played an RPG before, kid?
-stat_attack = "attack"
-stat_defense = "defense"
-stat_speed = "speed"
+# Player stats. What, you ever play an RPG before, kid?
+stat_attack = 'attack'
+stat_defense = 'defense'
+stat_speed = 'speed'
 
-stats_list = [
+playerstats_list = [
 	stat_attack,
 	stat_defense,
 	stat_speed,
@@ -1479,11 +1479,9 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
-str_generic_onadorn = "You successfully adorn your {}"
-str_generic_unadorn = "You successfully dedorn your {}"
-str_generic_onbreak = "No way! Their {} broke!"
-
-
+str_generic_onadorn = "You successfully adorn your {}."
+str_generic_unadorn = "You successfully dedorn your {}."
+str_generic_onbreak = "Their {} broke!!"
 
 generic_role_name = 'NLACakaNM'
 
@@ -12615,9 +12613,19 @@ for line in transport_lines:
 
 
 # Fashion styles for cosmetics
-style_neutral = "boring"
+style_neutral = "casual"
+style_cool = "punk"
+style_tough = "grunge"
+style_smart = "hipster"
+style_beautiful = "modern"
+style_cute = "kawaii"
+style_sporty = "athletic"
+style_weird = "clusterpunk"
 
-
+# Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
+base_durability = 2000000 # 2.5 mega
+# weak_durability = base_durability * 0.5 # 1 mega
+# strong_durability = base_durability * 2 # 4 mega
 
 cosmetic_id_raincoat = "raincoat"
 
@@ -12635,7 +12643,7 @@ cosmetic_items_list = [
 			stat_speed : 1
 		},
 		ability = id_cosmeticAbility,
-		durability = 1000000,
+		durability = base_durability * 0.5,
 		size = 4,
 		acquisition = acquisition_smelting,
 		price = 50000,
