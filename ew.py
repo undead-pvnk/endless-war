@@ -334,6 +334,10 @@ class EwUser:
 			self.weaponskill += int(n)
 			ewstats.track_maximum(user = self, metric = ewcfg.stat_max_wepskill, value = self.weaponskill)
 
+			weapon = ewcfg.weapon_map.get(weapon_type)
+			if ewcfg.weapon_class_paint in weapon.classes and self.weaponskill > 16:
+				self.weaponskill = 16
+
 			ewutils.weaponskills_set(
 				id_server = self.id_server,
 				id_user = self.id_user,

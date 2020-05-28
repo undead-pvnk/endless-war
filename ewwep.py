@@ -2877,7 +2877,7 @@ async def spray(cmd):
 		miss = False
 		crit = False
 		backfire = False
-		backfire_damage = 0
+
 		jammed = False
 		strikes = 0
 		bystander_damage = 0
@@ -2898,6 +2898,8 @@ async def spray(cmd):
 		slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
 		slimes_spent *= .3
 		statuses = user_data.getStatusEffects()
+
+		backfire_damage = int(ewutils.slime_bylevel(user_data.slimelevel) / 20)
 
 		if weapon is None:
 			slimes_damage /= 2  # penalty for not using a weapon, otherwise fists would be on par with other weapons
@@ -2942,12 +2944,12 @@ async def spray(cmd):
 			sap_damage = ctn.sap_damage
 			backfire_damage = ctn.backfire_damage
 
-			if district_data.all_neighbors_friendly():
+			if district_data.all_neighbors_friendly() and user_data.faction != district_data.controlling_faction:
 				backfire = True
 
 			if (slimes_spent > user_data.slimes):
 				# Not enough slime to shoot.
-				response = "You don't have enough slime to attack. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
+				response = "You don't have enough slime to cap. ({:,}/{:,})".format(user_data.slimes, slimes_spent)
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 			weapon_item.item_props['time_lastattack'] = time_now_float
@@ -2985,14 +2987,14 @@ async def spray(cmd):
 
 			elif weapon.id_weapon == ewcfg.weapon_id_thinnerbomb:
 				if user_data.faction == district_data.controlling_faction:
-					slimes_damage *= .2
+					slimes_damage = round(slimes_damage * .2)
 				else:
-					slimes_damage *= 5
+					slimes_damage *= 2
 
 			if ewcfg.mutation_id_patriot in user_mutations:
-				slimes_damage *= 2
+				slimes_damage *= 1.25
 			if len(gangsters_in_district) == 1 and ewcfg.mutation_id_lonewolf in user_mutations:
-				slimes_damage *= 2
+				slimes_damage *= 1.25
 
 			if (user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == '')) and district_data.capture_points > ewcfg.limit_influence[district_data.property_class]:
 				slimes_damage = round(slimes_damage / 5)
@@ -3001,7 +3003,7 @@ async def spray(cmd):
 				if miss:
 					response = weapon.tool_props[0].get('miss_spray')
 				elif backfire:
-					response = weapon.str_backfire
+					response = "You're in a dangerous place, and it's having an effect on your nerves...\n" + weapon.str_backfire.format(name_player = cmd.message.author.display_name) + "\nNext time, don't cap this deep in enemy territory.\n {} loses {} slime!".format(cmd.message.author.display_name, backfire_damage)
 
 					if user_data.slimes - user_data.bleed_storage <= backfire_damage:
 						district_data.change_slimes(n=user_data.slimes)
@@ -3019,11 +3021,11 @@ async def spray(cmd):
 					response = "Your spray can gets clogged with some stray sludge! Better unjam that!"
 				else:
 
-					response = weapon.tool_props[0].get('reg_spray').format(gang = user_data.faction)
-					response += " You got {:,} influence for the {}!".format(abs(slimes_damage), user_data.faction)
+					response = weapon.tool_props[0].get('reg_spray').format(gang = user_data.faction[:-1].capitalize(), curse = random.choice(list(ewcfg.curse_words.keys())))
+					response += " You got {:,} influence for the {}!".format(abs(slimes_damage), user_data.faction.capitalize())
 
 
-					if user_data.faction != district_data.controlling_faction and (user_data.faction is None or user_data.faction == ''):
+					if (user_data.faction != district_data.cap_side and district_data.cap_side != "") and (user_data.faction is not None or user_data.faction != ''):
 						slimes_damage = -slimes_damage
 					#district_data.change_capture_points()
 

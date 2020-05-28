@@ -215,7 +215,14 @@ def gen_data_text(
 						weapon_item.item_props.get("weapon_name"))), weapon.str_weapon)
 			if user_data.weaponskill >= 5:
 				response += " {}".format(weapon.str_weaponmaster.format(rank=(user_data.weaponskill - 4)))
-	#todo create data text for the sidearm
+
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if sidearm != None:
+			response += " They have sidearmed {}{}.".format((
+					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
 
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
@@ -280,7 +287,7 @@ def gen_data_text(
 		elif user_data.swear_jar >= 10:
 			response_block += "They've said some naughty things in the past."
 		elif user_data.swear_jar >= 5:
-			response_block += "They've cussed a handfull of times here and there."
+			response_block += "They've cussed a handful of times here and there."
 		elif user_data.swear_jar > 0:
 			response_block += "They've sworn only a few times."
 		else:
@@ -401,6 +408,14 @@ async def data(cmd):
 
 		trauma = ewcfg.trauma_map.get(user_data.trauma)
 
+		sidearm_item = EwItem(id_item=user_data.sidearm)
+		sidearm = ewcfg.weapon_map.get(sidearm_item.item_props.get("weapon_type"))
+
+		if sidearm != None:
+			response += " You have sidearmed {}{}.".format((
+					"" if len(sidearm_item.item_props.get("weapon_name")) == 0 else "{}, ".format(
+						sidearm_item.item_props.get("weapon_name"))), sidearm.str_weapon)
+
 		if trauma != None:
 			response += " {}".format(trauma.str_trauma_self)
 
@@ -469,7 +484,7 @@ async def data(cmd):
 		elif user_data.swear_jar >= 10:
 			response_block += "You've said some naughty things in the past."
 		elif user_data.swear_jar >= 5:
-			response_block += "You've cussed a handfull of times here and there."
+			response_block += "You've cussed a handful of times here and there."
 		elif user_data.swear_jar > 0:
 			response_block += "You've sworn only a few times."
 		else:

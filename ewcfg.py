@@ -526,7 +526,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '~'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -725,6 +725,7 @@ cmd_spray = cmd_prefix + 'annex'
 cmd_spray_alt1 = cmd_prefix + 'spray'
 cmd_capture_progress = cmd_prefix + 'progress'
 cmd_changespray = cmd_prefix + 'changespray'
+cmd_tag = cmd_prefix + 'tag'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
@@ -756,6 +757,7 @@ cmd_yoslimernalia = cmd_prefix + 'yoslimernalia'
 cmd_shamble = cmd_prefix + 'shamble'
 
 cmd_switch = cmd_prefix + 'switch'
+cmd_switch_alt_1 = cmd_prefix + 's'
 
 cmd_shambleball = cmd_prefix + 'shambleball'
 cmd_shamblego = cmd_prefix + 'shamblego'
@@ -1133,7 +1135,7 @@ capture_gradient = 1
 decapture_speed_multiplier = 1  # how much faster de-capturing is than capturing
 
 # district control decay
-decay_modifier = .5  # more means slower
+decay_modifier = 2  # more means slower
 
 # time values
 seconds_per_ingame_day = 21600
@@ -1706,7 +1708,7 @@ col_capturing_faction = 'capturing_faction'
 col_capture_points = 'capture_points'
 col_district_slimes = 'slimes'
 col_time_unlock = 'time_unlock'
-col_influence = 'influence'
+col_cap_side = 'cap_side'
 
 # Database columns for mutations
 col_id_mutation = 'mutation'
@@ -4489,7 +4491,7 @@ weapon_list = [
 		str_miss = "**You missed!!** {name_player}’s poor aim sends their grenade into a nearby alleyway, it’s explosion eliciting a Wilhelm scream and the assumed death of an innocent passerby. LOL!!",
 		str_equip = "You equip the grenades.",
 		str_name = "grenades",
-		str_weapon = "a stack of grenades",
+		str_weapon = "grenades",
 		str_weaponmaster_self = "You are a rank {rank} master of the grenades.",
 		str_weaponmaster = "They are a rank {rank} master of the grenades.",
 		#str_trauma_self = "Blast scars and burned skin are spread unevenly across your body.",
@@ -4733,8 +4735,9 @@ weapon_list = [
 		stat=stat_spraycan_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
 		sap_cost=2,
-		captcha_length=2,
+		captcha_length=3,
 		is_tool = 1,
+		str_backfire = "As {name_player} shakes the can to fire another shot, the thing suddenly explodes on them!",
 		tool_props = {
 		'reg_spray' : "You run down the streets, tagging buildings, street signs and old ladies with spray paint in the image of the {gang}!",
 		'miss_spray' : "**Miss!** Your can seems to be low on spray. You fill it up and give it a good shake. Good as new!",
@@ -4771,9 +4774,10 @@ weapon_list = [
 		clip_size = 15,
 		price = 5000,
 		sap_cost=2,
-		captcha_length=2,
+		captcha_length=4,
 		is_tool = 1,
 		str_reload = "*Click.* You grab a paint cylinder from god knows where and load it into your gun, chucking the leftover one behind an alleyway.",
+		str_backfire = "Whoops, looks like somebody didn't fasten the paint cylinder hard enough! {name_player} gets a thorough spray to the face!",
 		tool_props = {
 			'reg_spray':  "You find a patch of wall several yards away that hasn't been vandalized yet. Time to take aim and...BAM! Nice shot!",
 			'miss_spray': "**Miss!** Your aim was as sharp as ever, but a fucking pigeon took the hit! Christ, what are the odds?",
@@ -4810,8 +4814,9 @@ weapon_list = [
 		stat=stat_paintroller_kills,
 		classes=[weapon_class_paint, weapon_class_captcha],
 		sap_cost=2,
-		captcha_length=2,
+		captcha_length=4,
 		is_tool=1,
+		str_backfire = "{name_player} waves the paint roller around like it's a plastic toy, spreading paint nowhere but giving themselves a thorough welt in the head from the 2 square inches of it that could actually do any damage. How'd they manage that?",
 		tool_props = {
 			'reg_spray' : "You roll paint over as much surface area as your puny little Juvie legs can take you to.",
 			'miss_spray' : "**Miss!** The sponge on your roller snaps off and it takes too long for you to notice. What a waste!",
@@ -4828,7 +4833,7 @@ weapon_list = [
 		str_miss="**MISS!!** {name_player} throws the brushes at {name_target}, but they get hit with the soft bristles instead of the pointy bit!",
 		str_equip="If only you had a whittling knife that could sharpen paintbrush handles. That way you could equip the knife as a weapon instead of this.",
 		str_name="paintbrushes",
-		str_weapon="a set of paintbrushes",
+		str_weapon="paintbrushes",
 		str_weaponmaster_self="You are a rank {rank} vandal of the paintbrush.",
 		str_weaponmaster="They are a rank {rank} vandal of the paintbrush.",
 		# str_trauma_self = "You have bruises all over your body and you can't get the paint out of your clothes.",
@@ -4847,8 +4852,9 @@ weapon_list = [
 		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
 		sap_cost=2,
 		price = 100,
-		captcha_length=2,
+		captcha_length=3,
 		is_tool=1,
+		str_backfire = "In an attempt to paint faster, {name_player} sticks one of the handles in their mouth and try to use it to cover more ground. Instead, they broke your teeth and scraped their cheek on a hard brick surface. Better not try that again...",
 		tool_props = {
 			'reg_spray' : "You paint vulgar {gang} symbols on as many buildings as you can.",
 			'miss_spray' : "**Miss!** You finish with a paint can and have to switch! You waste too much time getting the can open.",
@@ -4882,10 +4888,11 @@ EwWeapon(  # 28
 		classes=[weapon_class_paint, weapon_class_captcha],
 		sap_cost=2,
 		price = 1300,
-		captcha_length=2,
+		captcha_length=3,
 		is_tool=1,
+		str_backfire = "{name_player} has the idea of trying to paint their parents fucking, thinking it will be really funny and everyone will love them. On behalf of all of us in New Los Angeles City aka Neo Milwaukee, I must say that was perhaps the dumbest idea we've seen here.",
 		tool_props = {
-			'reg_spray' : "Nice drawing, fag! ",
+			'reg_spray' : "Nice drawing, {curse}! ",
 			'miss_spray' : "**Miss!** Your painting sucks. God, you're stupid. ",
 			'crit_spray' : "**Critical hit!** You manage to make a painting so completely magificent that, for a moment, the gangs set aside their differences. You find your fellow gang members and call them together \"It's time we got this city back to normal,\" you say, with that shitty embarrassing voice of yours. You, some Rowdys and a few Killers steal all the paint thinner from Ace Hardware and work to restore the city, good as new. \nOf course, once the dust is settled, you realize all this kum bay yah shit is gay, and so you rejoin your gangs once again.",
 			'equip_spray' : "You get out your 12 pack of watercolors. Can't believe you have to use one of these."
@@ -4900,7 +4907,7 @@ EwWeapon(  # 28
 		str_miss="**MISS!!** {name_player} is too dazed by their own chemicals to make a move! They drop the bottle on accident, throwing vapors all over the place.",
 		str_equip="You pull out the thinner bombs and hold their bottlenecks between your fingers. Never has a not-weapon ever felt so cool.",
 		str_name="thinner bombs",
-		str_weapon="a stack of thinner bombs",
+		str_weapon="thinner bombs",
 		str_weaponmaster_self="You are a rank {rank} vandal of the thinner bomb.",
 		str_weaponmaster="They are a rank {rank} vandal of the thinner bomb.",
 		# str_trauma_self = "You have the hangover from hell.",
@@ -4915,11 +4922,12 @@ EwWeapon(  # 28
 		str_description="A pack of brittle glass bottles filled with paint thinner. This stuff vaporizes like nobody's business, and could strip the osmotic membrane off a slimeoid.",
 		vendors=[vendor_glocksburycomics],
 		stat=stat_thinnerbomb_kills,
-		classes=[weapon_class_paint, weapon_class_thrown],
+		classes=[weapon_class_paint, weapon_class_thrown, weapon_class_captcha],
 		sap_cost=2,
 		price = 150,
-		captcha_length=2,
+		captcha_length=4,
 		is_tool = 1,
+		str_backfire = "You haven't had a good buzz in awhile, so you take a whiff of one of your thinner bombs. Great trip and all, but you rough yourself up convulsing on the ground while it happens.",
 		tool_props = {
 		'reg_spray' : "You find a vandalized wall and toss a thinner bomb on it! You hear a faint sizzling as paint begins to strip off the walls. Sick!",
 		'miss_spray' : "**Miss!** You make a mistake on the throw's distance and it bursts uselessly on the ground. You got to do some littering, so at least there's that.",

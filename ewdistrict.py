@@ -46,7 +46,7 @@ class EwDistrict:
 
 	#Amount of influence in a district
 
-	influence = 0
+	cap_side = ""
 
 	# determines if the zone is functional
 	degradation = 0
@@ -68,7 +68,7 @@ class EwDistrict:
 				self.max_capture_points = 0
 
 
-			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {influence}, {degradation} FROM districts WHERE id_server = %s AND {district} = %s".format(
+			data = ewutils.execute_sql_query("SELECT {controlling_faction}, {capturing_faction}, {capture_points},{slimes}, {time_unlock}, {cap_side}, {degradation} FROM districts WHERE id_server = %s AND {district} = %s".format(
 
 				controlling_faction = ewcfg.col_controlling_faction,
 				capturing_faction = ewcfg.col_capturing_faction,
@@ -76,7 +76,7 @@ class EwDistrict:
 				district = ewcfg.col_district,
 				slimes = ewcfg.col_district_slimes,
 				time_unlock = ewcfg.col_time_unlock,
-				influence = ewcfg.col_influence,
+				cap_side = ewcfg.col_cap_side,
 				degradation = ewcfg.col_degradation,
 			), (
 				id_server,
@@ -90,7 +90,7 @@ class EwDistrict:
 				self.capture_points = data[0][2]
 				self.slimes = data[0][3]
 				self.time_unlock = data[0][4]
-				self.influence = data[0][5]
+				self.cap_side = data[0][5]
 				self.degradation = data[0][6]
 
 				# ewutils.logMsg("EwDistrict object '" + self.name + "' created.  Controlling faction: " + self.controlling_faction + "; Capture progress: %d" % self.capture_points)
@@ -104,14 +104,14 @@ class EwDistrict:
 				))
 
 	def persist(self):
-		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {influence}, {degradation}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+		ewutils.execute_sql_query("REPLACE INTO districts(id_server, {district}, {controlling_faction}, {capturing_faction}, {capture_points}, {slimes}, {time_unlock}, {cap_side}, {degradation}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 			district = ewcfg.col_district,
 			controlling_faction = ewcfg.col_controlling_faction,
 			capturing_faction = ewcfg.col_capturing_faction,
 			capture_points = ewcfg.col_capture_points,
 			slimes = ewcfg.col_district_slimes,
 			time_unlock = ewcfg.col_time_unlock,
-			influence = ewcfg.col_influence,
+			cap_side = ewcfg.col_cap_side,
 			degradation = ewcfg.col_degradation,
 		), (
 			self.id_server,
@@ -121,7 +121,7 @@ class EwDistrict:
 			self.capture_points,
 			self.slimes,
 			self.time_unlock,
-			self.influence,
+			self.cap_side,
 			self.degradation,
 		))
 	
@@ -264,11 +264,11 @@ class EwDistrict:
 
 			if nega_present:
 				decay *= 1.5
-			if self.capture_points > ewcfg.limit_influence[self.property_class]:
+			if self.capture_points + (decay * 2) > ewcfg.limit_influence[self.property_class]:
 				decay *= 2
 
 			#If at minimum influence, or if the decay takes a district below minimum influence, have it settle on the minimum
-			if self.controlling_faction == "" or not all_neighbors_friendly or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
+			if self.controlling_faction == "" or not self.all_neighbors_friendly() or nega_present:  # don't decay if the district is completely surrounded by districts controlled by the same faction
 				# reduces the capture progress at a rate with which it arrives at 0 after 1 in-game day
 				if (self.capture_points + int(decay) < ewcfg.min_influence[self.property_class] and self.capture_points >= ewcfg.min_influence[self.property_class]) and not nega_present and self.controlling_faction != "":
 					responses = self.change_capture_points(self.capture_points - ewcfg.min_influence[self.property_class], ewcfg.actor_decay)
@@ -279,7 +279,7 @@ class EwDistrict:
 		#if self.capture_points < 0:
 		#	self.capture_points = 0
 
-		if self.capture_points < ewcfg.min_influence[self.property_class]/3:
+		if self.capture_points <= 0:
 			if self.controlling_faction != "":  # if it was owned by a faction
 
 				message = "The {faction} have lost control over {district} because of sheer negligence.".format(
@@ -292,7 +292,6 @@ class EwDistrict:
 			responses = self.change_ownership("", ewcfg.actor_decay)
 			resp_cont_decay.add_response_container(responses)
 			self.capturing_faction = ""
-
 		return resp_cont_decay
 
 	def change_capture_lock(self, progress):
@@ -352,11 +351,23 @@ class EwDistrict:
 
 		self.capture_points += progress
 
+
+
 		resp_cont_change_cp = ewutils.EwResponseContainer(client = ewutils.get_client(), id_server = self.id_server)
 
 		# ensures that the value doesn't exceed the bounds
 		if self.capture_points < 0:
 			self.capture_points = 0
+
+
+
+		if self.cap_side == "" and actor != ewcfg.actor_decay:
+			self.cap_side = actor
+		if self.capture_points <= 0:
+			self.cap_side = ""
+			self.controlling_faction = ""
+
+
 		#elif self.capture_points > self.max_capture_points:
 		#	self.capture_points = self.max_capture_points
 		#where we're going we don't need roads
@@ -372,8 +383,13 @@ class EwDistrict:
 		#	responses = self.change_capture_lock(base_time_unlock + (num_lock - 1) * ewcfg.capture_lock_per_gangster)
 		#	resp_cont_change_cp.add_response_container(responses)
 
-		if progress > 0 and actor != ewcfg.actor_decay:
+		if actor != ewcfg.actor_decay:
 			self.capturing_faction = actor
+
+		if self.controlling_faction == "" and progress > 0 and self.cap_side == actor and self.capture_points + progress > ewcfg.min_influence[self.property_class]:
+			self.controlling_faction = actor
+
+
 
 		# display a message if it's reached a certain amount
 		if (progress_percent_after // ewcfg.capture_milestone) != (progress_percent_before // ewcfg.capture_milestone):  # if a progress milestone was reached
@@ -582,6 +598,8 @@ async def capture_progress(cmd):
 
 	if district_data.controlling_faction != "":
 		response += "{} control this district. ".format(district_data.controlling_faction.capitalize())
+	elif district_data.capturing_faction != "" and district_data.cap_side != district_data.capturing_faction:
+		response += "{} are de-capturing this district. ".format(district_data.capturing_faction.capitalize())
 	elif district_data.capturing_faction != "":
 		response += "{} are capturing this district. ".format(district_data.capturing_faction.capitalize())
 	else:
@@ -954,7 +972,7 @@ async def give_kingpins_slime_and_decay_capture_points(id_server):
 
 async def change_spray(cmd):
 	user_data = EwUser(member=cmd.message.author)
-	newspray = ewutils.flattenTokenListToString(cmd.tokens[1:])
+	newspray = cmd.message.content[(len(ewcfg.cmd_changespray)):].strip()
 
 	if newspray == "":
 		response = "You need to add an image link to change your spray."
@@ -968,6 +986,8 @@ async def change_spray(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-
-
+async def tag(cmd):
+	user_data = EwUser(member=cmd.message.author)
+	response = user_data.spray
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
