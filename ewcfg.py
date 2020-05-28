@@ -33,6 +33,8 @@ version = "v3.3-boneworks"
 
 dir_msgqueue = 'msgqueue'
 
+database = "rfckevent"
+
 discord_message_length_limit = 2000
 
 # Update intervals
