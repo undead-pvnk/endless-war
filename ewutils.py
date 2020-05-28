@@ -1230,6 +1230,12 @@ def level_byslime(slime):
 
 
 """
+	Calculate the maximum sap amount a player can have at their given slime level
+"""
+def sap_max_bylevel(slimelevel):
+	return int(1.6 * slimelevel ** 0.75)
+
+"""
 	Calculate the maximum hunger level at the player's slimelevel
 """
 def hunger_max_bylevel(slimelevel):
@@ -1601,7 +1607,7 @@ async def sap_tick_loop(id_server):
 def sap_tick(id_server):
 
 	try:
-		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < {level}".format(
+		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < FLOOR(1.6 * POW({level}, 0.75))".format(
 			id_user = ewcfg.col_id_user,
 			life_state = ewcfg.col_life_state,
 			sap = ewcfg.col_sap,
