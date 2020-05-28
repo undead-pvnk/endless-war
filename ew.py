@@ -99,9 +99,9 @@ class EwUser:
 		if self.move_speed <= 0:
 			self.move_speed = 1
 
-		self.sap = max(0, min(self.sap, self.slimelevel - self.hardened_sap))
+		self.sap = max(0, min(self.sap, ewutils.sap_max_bylevel(self.slimelevel) - self.hardened_sap))
 
-		self.hardened_sap = max(0, self.hardened_sap)
+		self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
 
 		self.degradation = max(0, self.degradation)
 

@@ -288,7 +288,7 @@ def canAttack(cmd):
 		captcha = weapon_item.item_props.get('captcha')
 
 	statuses = user_data.getStatusEffects()
-
+	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	#if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 	#	if user_data.life_state == ewcfg.life_state_enlisted:
 	#		response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
@@ -299,6 +299,9 @@ def canAttack(cmd):
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
+	elif channel_poi.id_poi != user_data.poi and channel_poi.mother_district != user_data.poi:
+		#Only way to do this right now is by using the gellphone
+		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
