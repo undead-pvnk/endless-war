@@ -2929,9 +2929,9 @@ async def spray(cmd):
 			)
 
 			# Make adjustments
-			if weapon.id_weapon != ewcfg.weapon_id_watercolors:
 
-				weapon.fn_effect(ctn)
+
+			weapon.fn_effect(ctn)
 
 			# Apply effects for non-reference values
 			resp_cont = ewutils.EwResponseContainer(id_server=cmd.message.server.id)
