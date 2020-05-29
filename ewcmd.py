@@ -624,7 +624,7 @@ async def fashion(cmd):
 			if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
 				for stat in ewcfg.playerstats_list:
 					if abs(int(c.item_props[stat])) > 0:
-						stats_breakdown[stat] = c.item_props[stat]
+						stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
 			space_adorned += int(c.item_props['size'])
 
 	# show all the cosmetics that you have adorned.
@@ -743,15 +743,15 @@ async def fashion(cmd):
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 
 
-			#gameplay relvant stuff, inspect order
+		#gameplay relvant stuff, inspect order
 
-			response += "All told, your outfit "
+		response += "All told, your outfit "
 
-			stat_responses = []
+		stat_responses = []
 
-			for stat in ewcfg.playerstats_list:
-				print(abs(int(stats_breakdown[stat])))
+		for stat in ewcfg.playerstats_list:
 
+			if stat in stats_breakdown.keys():
 				if abs(int(stats_breakdown[stat])) > 0:
 
 					if int(stats_breakdown[stat]) > 0:
@@ -763,14 +763,14 @@ async def fashion(cmd):
 
 					stat_responses.append(stat_response)
 
-			response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
+		response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
 
-			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
+		space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
 
-			if space_remaining == 0:
-				response += "You don't have cosmetic space left."
-			else:
-				response += "You have about {amount} adornable space.\n".format(amount = space_remaining)
+		if space_remaining == 0:
+			response += "You don't have cosmetic space left."
+		else:
+			response += "You have about {amount} adornable space.\n".format(amount = space_remaining)
 
 	else:
 		response = "You aren't wearing anything!"

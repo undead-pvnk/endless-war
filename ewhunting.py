@@ -479,7 +479,7 @@ class EwEnemy:
 			
 					# apply hardened sap armor
 					sap_armor = ewwep.get_sap_armor(shootee_data = target_data, sap_ignored = sap_ignored)
-					slimes_damage *= sap_armor
+					slimes_damage *= (sap_armor + target_data.defense)
 					slimes_damage = int(max(slimes_damage, 0))
     
 					sap_damage = min(sap_damage, target_data.hardened_sap)
@@ -506,6 +506,45 @@ class EwEnemy:
 
 					slimes_directdamage = slimes_damage - slimes_tobleed
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
+
+					# Damage victim's wardrobe (heh, WARdrobe... get it??)
+					victim_cosmetics = ewitem.inventory(
+						id_user = target_data.id_user,
+						id_server = target_data.id_server,
+						item_type_filter = ewcfg.it_cosmetic
+					)
+
+					onbreak_responses = []
+
+					for cosmetic in victim_cosmetics:
+						c = EwItem(cosmetic.get('id_item'))
+
+						# Damage it if the cosmetic is adorned and it has a durability limit
+						if c.item_props.get("adorned") == 'true' and c.item_props['cosmetic_durability'] is not None:
+
+							durability_afterhit = int(c.item_props['cosmetic_durability']) - slimes_damage
+
+							if durability_afterhit <= 0:  # If it breaks
+								c.item_props['cosmetic_durability'] = durability_afterhit
+								c.persist()
+
+								target_data.attack -= int(c.item_props[ewcfg.stat_attack])
+								target_data.defense -= int(c.item_props[ewcfg.stat_defense])
+								target_data.speed -= int(c.item_props[ewcfg.stat_speed])
+								target_data.freshness = ewutils.get_total_freshness(id_user = target_data.id_user, id_server = target_data.id_server)
+
+								target_data.persist()
+
+								onbreak_responses.append(
+									str(c.item_props['cosmetic_onbreak']).format(c.item_props['cosmetic_name']))
+
+								ewitem.item_delete(id_item = c.id_item)
+
+							else:
+								c.item_props['cosmetic_durability'] = durability_afterhit
+
+						else:
+							pass
 
 					market_data.splattered_slimes += slimes_damage
 					market_data.persist()

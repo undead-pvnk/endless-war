@@ -770,12 +770,12 @@ async def attack(cmd):
 								c.item_props['cosmetic_durability'] = durability_afterhit
 								c.persist()
 
-								user_data.attack -= int(c.item_props[ewcfg.stat_attack])
-								user_data.defense -= int(c.item_props[ewcfg.stat_defense])
-								user_data.speed -= int(c.item_props[ewcfg.stat_speed])
-								user_data.freshness = ewutils.get_total_freshness(id_user = shootee_data.id_user, id_server = cmd.message.server)
+								shootee_data.attack -= int(c.item_props[ewcfg.stat_attack])
+								shootee_data.defense -= int(c.item_props[ewcfg.stat_defense])
+								shootee_data.speed -= int(c.item_props[ewcfg.stat_speed])
+								shootee_data.freshness = ewutils.get_total_freshness(id_user = shootee_data.id_user, id_server = cmd.message.server)
 
-								user_data.persist()
+								shootee_data.persist()
 
 								onbreak_responses.append(str(c.item_props['cosmetic_onbreak']).format(c.item_props['cosmetic_name']))
 
@@ -2012,7 +2012,7 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 	dmg_mod += round(apply_combat_mods(user_data=user_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_self, shootee_data = enemy_data, hitzone = hitzone) + apply_combat_mods(user_data=enemy_data, desired_type = ewcfg.status_effect_type_damage, target = ewcfg.status_effect_target_other, shooter_data = user_data, hitzone = hitzone), 2)
 
 	slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
-	slimes_damage = int((slimes_spent * 10) * (100 + (user_data.weaponskill * 5)) / 100.0)
+	slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
 	
 	if user_data.weaponskill < 5:
 		miss_mod += (5 - user_data.weaponskill) / 10

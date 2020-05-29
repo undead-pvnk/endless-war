@@ -757,9 +757,9 @@ def inventory(
 							'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
 							'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
 							'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-							'attack': item.stats[ewcfg.stat_attack] if item.stats[ewcfg.stat_attack] else 0,
-							'defense': item.stats[ewcfg.stat_defense] if item.stats[ewcfg.stat_defense] else 0,
-							'speed': item.stats[ewcfg.stat_speed] if item.stats[ewcfg.stat_speed] else 0,
+							'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats.keys() else 0,
+							'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats.keys() else 0,
+							'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats.keys() else 0,
 							'ability': item.ability if item.ability else None,
 							'durability': item.durability if item.durability else ewcfg.base_durability,
 							'size': item.size if item.size else 1,
@@ -768,9 +768,8 @@ def inventory(
 							'adorned': 'false',
 						}
 
-					item_data.persist()
-
-					ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
+						item_data.persist()
+						ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
 					    
 				item_def = ewcfg.item_def_map.get(item_type)
 
@@ -1113,12 +1112,12 @@ async def item_look(cmd):
 						original_durability = int(original_item.durability)
 						current_durability = int(item.item_props['durability'])
 
-						relative_change = round(current_durability / original_durability * 100)
-
 						if current_durability == original_durability:
 							response += "It looks brand new.\n"
 
-						else:
+						elif original_durability != 0:
+							relative_change = round(current_durability / original_durability * 100)
+
 							if relative_change > 80:
 								response += "It's got a few minor scratches on it.\n"
 							elif relative_change > 60:
@@ -1127,6 +1126,9 @@ async def item_look(cmd):
 								response += "It's not looking so great...\n"
 							elif relative_change > 20:
 								response += "It's going to break soon!\n"
+
+						else:
+							response += "You have no idea how much longer this'll last."
 
 				if item.item_props['size'] == 0:
 					response += "It doesn't take up any space at all.\n"
@@ -1596,9 +1598,9 @@ def gen_item_props(item):
 			'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
 			'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
 			'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-			'attack': item.stats[ewcfg.stat_attack] if item.stats[ewcfg.stat_attack] else 0,
-			'defense': item.stats[ewcfg.stat_defense] if item.stats[ewcfg.stat_defense] else 0,
-			'speed': item.stats[ewcfg.stat_speed] if item.stats[ewcfg.stat_speed] else 0,
+			'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats.keys() else 0,
+			'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats.keys() else 0,
+			'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats.keys() else 0,
 			'ability': item.ability if item.ability else None,
 			'durability': item.durability if item.durability else ewcfg.base_durability,
 			'size': item.size if item.size else 1,
