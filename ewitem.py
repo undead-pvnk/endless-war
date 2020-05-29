@@ -1618,6 +1618,7 @@ async def squeeze(cmd):
 			server = ewcfg.server_list[targetmodel.id_server]
 			member_object = server.get_member(targetmodel.id_user)
 
+			targetmodel = EwUser(member=target)
 			penalty = (targetmodel.slimes* -0.25)
 			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
 			targetmodel.persist()
