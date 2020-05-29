@@ -2162,6 +2162,8 @@ def get_total_freshness(id_user, id_server):
 
 	adorned_styles = []
 
+	majority_style_map = None
+
 	total_freshness = 0
 
 	for cosmetic in cosmetic_items:
@@ -2173,7 +2175,8 @@ def get_total_freshness(id_user, id_server):
 			adorned_styles.append(c.item_props.get('fashion_style'))
 			total_freshness += int(c.item_props.get('freshness'))
 
-	majority_style_map = retrieve_majority_style(adorned_styles = adorned_styles, adorned_cosmetics = adorned_cosmetics, total_freshness = total_freshness)
+	if len(adorned_cosmetics) != 0 and len(adorned_styles) != 0:
+		majority_style_map = retrieve_majority_style(adorned_styles = adorned_styles, adorned_cosmetics = adorned_cosmetics, total_freshness = total_freshness)
 
 	if majority_style_map is not None:
 		total_freshness = int(majority_style_map['total_freshness'])

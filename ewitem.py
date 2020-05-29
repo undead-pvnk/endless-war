@@ -742,6 +742,35 @@ def inventory(
 					item_data.persist()
 
 					ewutils.logMsg('Updated poudrin to new format: {}'.format(id_item))
+
+				if item_type == ewcfg.it_cosmetic:
+					item_data = EwItem(id_item = id_item)
+					item_type = ewcfg.it_cosmetic
+					item_data.item_type = item_type
+					if item_data.item_props['fashion_style'] is None:
+						item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+						item_data.item_props = {
+							'id_cosmetic': item.id_cosmetic,
+							'cosmetic_name': item.str_name,
+							'cosmetic_desc': item.str_desc,
+							'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+							'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+							'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+							'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+							'attack': item.stats[ewcfg.stat_attack] if item.stats[ewcfg.stat_attack] else 0,
+							'defense': item.stats[ewcfg.stat_defense] if item.stats[ewcfg.stat_defense] else 0,
+							'speed': item.stats[ewcfg.stat_speed] if item.stats[ewcfg.stat_speed] else 0,
+							'ability': item.ability if item.ability else None,
+							'durability': item.durability if item.durability else ewcfg.base_durability,
+							'size': item.size if item.size else 1,
+							'fashion_style': item.style if item.style else ewcfg.style_neutral,
+							'freshness': item.freshness if item.freshness else 0,
+							'adorned': 'false',
+						}
+
+					item_data.persist()
+
+					ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
 					    
 				item_def = ewcfg.item_def_map.get(item_type)
 

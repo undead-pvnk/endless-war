@@ -386,6 +386,10 @@ def board_header(title):
 		emote = ewcfg.emote_janus1
 		emote2 = ewcfg.emote_janus2
 		bar += " "
+
+	elif title == ewcfg.leaderboard_fashion:
+		emote = ewcfg.emote_111
+		bar += " "
 		
 	if emote2 != None:
 		return emote + bar + title + bar + emote2 + "\n"
