@@ -3280,7 +3280,7 @@ def wef_bow(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 	ctn.miss_mod += (((10 - min(time_lastattack, 10)) / 10) ** 2) / 13 * 10
 
-	ctn.slimes_damage = int(ctn.slimes_damage * 3)
+	#ctn.slimes_damage = int(ctn.slimes_damage * 3)
 
 	if aim <= (-2 + int(13 * ctn.miss_mod)):
 		if mutation_id_sharptoother in user_mutations:
@@ -3291,7 +3291,7 @@ def wef_bow(ctn = None):
 
 	elif aim >= (9 - int(16 * ctn.crit_mod)):
 		ctn.crit = True
-		ctn.slimes_damage = int(dmg * 6)
+		ctn.slimes_damage = int(dmg * 3)
 
 # weapon effect function for "Dragon Claw"
 
