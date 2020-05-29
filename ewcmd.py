@@ -1461,7 +1461,7 @@ async def toss_off_cliff(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		if item_sought:
-			if item_sought.get('name')=="brick" and cmd.mentions_count > 0:
+			if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
 				item = EwItem(id_item=item_sought.get('id_item'))
 				target = EwUser(member = cmd.mentions[0])
 				if target.apt_zone == user_data.poi:
