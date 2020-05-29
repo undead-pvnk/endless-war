@@ -64,6 +64,7 @@ CREATE TABLE users (
 	attack int NOT NULL DEFAULT '0',
 	defense int NOT NULL DEFAULT '0',
 	speed int NOT NULL DEFAULT '0',
+	freshness int NOT NULL DEFAULT '0',
 
 	CONSTRAINT id_user_server PRIMARY KEY (id_user, id_server)
 );

@@ -834,6 +834,8 @@ cmd_setalarm = cmd_prefix + 'setalarm'
 cmd_jam = cmd_prefix + 'jam'
 cmd_sew = cmd_prefix + 'sew'
 cmd_retrofit = cmd_prefix + 'retrofit'
+cmd_sip = cmd_prefix + 'sip'
+cmd_fashion = cmd_prefix + 'fashion'
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
@@ -1024,8 +1026,7 @@ inebriation_pertick = 2
 
 # max item amounts
 max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player's slime level is divided by this number to calculate the number of carriable food items
-max_adornspace_active_mod = 4
-max_adornspace_passive_mod = 2
+max_adornspace_mod = 4
 max_weapon_mod = 16
 
 # item acquisition methods
@@ -1588,6 +1589,7 @@ col_time_lastdeath = 'time_lastdeath'
 col_id_inhabit_target = 'id_inhabit_target'
 col_attack = 'attack'
 col_speed = 'speed'
+col_freshness = 'freshness'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1784,6 +1786,7 @@ leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
+leaderboard_fashion = "NLACakaNM'S TOP MODELS"
 #SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
 #INTERMISSION2
@@ -12629,6 +12632,9 @@ base_durability = 2000000 # 2.5 mega
 
 cosmetic_id_raincoat = "raincoat"
 
+cosmeticAbility_id_drinkable = "drinkable"
+cosmeticAbility_id_lucky = "lucky"
+
 id_cosmeticAbility = "cosmeticAbility"
 
 cosmetic_items_list = [
@@ -12638,13 +12644,14 @@ cosmetic_items_list = [
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
 		stats = {
-			stat_attack : 1,
+			stat_attack : 6,
 			stat_defense : 1,
 			stat_speed : 1
 		},
-		ability = id_cosmeticAbility,
+		ability = cosmeticAbility_id_lucky,
 		durability = base_durability * 0.5,
-		size = 4,
+		size = 1,
+		freshness = 50,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],

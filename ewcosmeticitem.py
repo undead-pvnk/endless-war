@@ -181,14 +181,18 @@ async def adorn(cmd):
 				user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
 				user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
+				item_sought.persist()
+				user_data.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				user_data.persist()
+
 			# Attempt to adorn the cosmetic
 			else:
 				# Calculate how much space you'll have after adorning...
-				if int(item_sought.item_props['cosmetic_size']) > 0:
+				if int(item_sought.item_props['size']) > 0:
 					space_adorned += int(item_sought.item_props['size'])
 
 				# If you don't have enough space, abort
-				if space_adorned >= ewutils.max_adornspace_active_bylevel(user_data.slimelevel):
+				if space_adorned >= ewutils.max_adornspace_bylevel(user_data.slimelevel):
 					response = "You can't adorn anymore cosmetics."
 
 				else:
@@ -201,13 +205,13 @@ async def adorn(cmd):
 					if item_sought.item_props.get('slimeoid') == 'true':
 						item_sought.item_props['slimeoid'] = 'false'
 						response = "You take your {} from your slimeoid and successfully adorn it.".format(item_sought.item_props.get('cosmetic_name'))
-
 					else:
-						onadorn_response = item_sought.item_props['cosmetic_onadorn']
+						onadorn_response = item_sought.item_props['str_onadorn']
 						response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
 
-					user_data.persist()
 					item_sought.persist()
+					user_data.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+					user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	else:
@@ -273,46 +277,101 @@ async def smoke(cmd):
 	usermodel = EwUser(member=cmd.message.author)
 	#item_sought = ewitem.find_item(item_search="cigarette", id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	item_sought = None
+	space_adorned = 0
 	item_stash = ewitem.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	for item_piece in item_stash:
 		item = EwItem(id_item=item_piece.get('id_item'))
+		if item.item_props['adorned'] == 'true':
+			space_adorned += int(item.item_props['size'])
+
 		if item_piece.get('item_type') == ewcfg.it_cosmetic and (item.item_props.get('id_cosmetic') == "cigarette" or item.item_props.get('id_cosmetic') == "cigar") and "lit" not in item.item_props.get('cosmetic_desc'):
 			item_sought = item_piece
+
 
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
 		if item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette":
-			response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
-			item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
-			item.item_props['adorned'] = "true"
-			item.persist()
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			await asyncio.sleep(60)
-			item = EwItem(id_item=item_sought.get('id_item'))
+			if int(item_sought.item_props['size']) > 0:
+				space_adorned += int(item_sought.item_props['size'])
 
-			response = "The cigarette fizzled out."
+			if space_adorned <= ewutils.max_adornspace_bylevel(usermodel.slimelevel):
+				response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+				item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
+				item.item_props['adorned'] = "true"
+				item.persist()
 
-			item.item_props['cosmetic_desc'] = "It's a cigarette butt. What kind of hoarder holds on to these?"
-			item.item_props['adorned'] = "false"
-			item.item_props['id_cosmetic'] = "cigarettebutt"
-			item.item_props['cosmetic_name'] = "cigarette butt"
-			item.persist()
+				usermodel.attack += int(item_sought.item_props[ewcfg.stat_attack])
+				usermodel.defense += int(item_sought.item_props[ewcfg.stat_defense])
+				usermodel.speed += int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+
+				usermodel.persist()
+
+
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(60)
+				item = EwItem(id_item=item_sought.get('id_item'))
+
+				response = "The cigarette fizzled out."
+
+				item.item_props['cosmetic_desc'] = "It's a cigarette butt. What kind of hoarder holds on to these?"
+				item.item_props['adorned'] = "false"
+				item.item_props['id_cosmetic'] = "cigarettebutt"
+				item.item_props['cosmetic_name'] = "cigarette butt"
+				item.persist()
+
+				usermodel.attack -= int(item_sought.item_props[ewcfg.stat_attack])
+				usermodel.defense -= int(item_sought.item_props[ewcfg.stat_defense])
+				usermodel.speed -= int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+
+				usermodel.persist()
+
+			else:
+				response = "Sadly, you cannot smoke the cigarette. To smoke it, you'd have to have it inbetween your lips for approximately a minute, which technically counts as adorning something. " \
+						   "And, seeing as you are out of adornable cosmetic space, you cannot do that. Sorry. Weird how this message doesn't show up when you suck all that dick though, huh?"
+
 		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
-			response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
-			item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
-			item.item_props['adorned'] = "true"
-			item.persist()
-			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-			await asyncio.sleep(300)
-			item = EwItem(id_item=item_sought.get('id_item'))
+			if int(item_sought.item_props['size']) > 0:
+				space_adorned += int(item_sought.item_props['size'])
 
-			response = "The cigar fizzled out."
+			if space_adorned <= ewutils.max_adornspace_bylevel(usermodel.slimelevel):
+				response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
+				item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
+				item.item_props['adorned'] = "true"
 
-			item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
-			item.item_props['adorned'] = "false"
-			item.item_props['id_cosmetic'] = "cigarstump"
-			item.item_props['cosmetic_name'] = "cigar stump"
-			item.persist()
+				item.persist()
+
+				usermodel.attack += int(item_sought.item_props[ewcfg.stat_attack])
+				usermodel.defense += int(item_sought.item_props[ewcfg.stat_defense])
+				usermodel.speed += int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author,
+																  id_server = cmd.message.server)
+
+				usermodel.persist()
+
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+				await asyncio.sleep(300)
+				item = EwItem(id_item=item_sought.get('id_item'))
+
+				response = "The cigar fizzled out."
+
+				item.item_props['cosmetic_desc'] = "It's a cigar stump. It's seen better days."
+				item.item_props['adorned'] = "false"
+				item.item_props['id_cosmetic'] = "cigarstump"
+				item.item_props['cosmetic_name'] = "cigar stump"
+				item.persist()
+
+				usermodel.attack -= int(item_sought.item_props[ewcfg.stat_attack])
+				usermodel.defense -= int(item_sought.item_props[ewcfg.stat_defense])
+				usermodel.speed -= int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+
+				usermodel.persist()
+
+			else:
+				response = "Sadly, you cannot smoke the cigar. To smoke it, you'd have to have it inbetween your lips for approximately a minute, which technically counts as adorning something. " \
+						   "And, seeing as you are out of adornable cosmetic space, you cannot do that. Sorry. Weird how this message doesn't show up when you suck all that dick though, huh?"
 		else:
 			response = "You can't smoke that."
 	else:
@@ -326,8 +385,19 @@ def dedorn_all_costumes():
 
 	for costume_id in costumes:
 		costume_item = EwItem(id_item=costume_id)
+
+		usermodel = EwUser(id_user = costume_item.id_owner, id_server = costume_item.id_server)
 		
 		costume_item.item_props['adorned'] = 'false'
+
+		if costume_item.item_props['slimeoid'] == 'false':
+			usermodel.attack -= int(costume_item.item_props[ewcfg.stat_attack])
+			usermodel.defense -= int(costume_item.item_props[ewcfg.stat_defense])
+			usermodel.speed -= int(costume_item.item_props[ewcfg.stat_speed])
+			usermodel.freshness = ewutils.get_total_freshness(id_user = costume_item.id_owner, id_server = costume_item.id_server)
+
+			usermodel.persist()
+
 		costume_item.item_props['slimeoid'] = 'false'
 		costume_item.persist()
 		
@@ -445,3 +515,131 @@ async def sew(cmd):
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def retrofit(cmd):
+	user_data = EwUser(member = cmd.message.author)
+
+	# Player must be at the Bodega
+	if cmd.message.channel.name == ewcfg.channel_bodega:
+		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
+
+		try:
+			item_id_int = int(item_id)
+		except:
+			item_id_int = None
+
+		# Check to see if you even have the item you want to retrofit
+		if item_id != None and len(item_id) > 0:
+			response = "You don't have one."
+
+			cosmetic_items = ewitem.inventory(
+				id_user = cmd.message.author.id,
+				id_server = cmd.message.server.id,
+				item_type_filter = ewcfg.it_cosmetic
+			)
+
+			item_sought = None
+			item_from_slimeoid = None
+
+			for item in cosmetic_items:
+				if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
+					i = EwItem(item.get('id_item'))
+
+					if item_from_slimeoid == None and i.item_props.get("slimeoid") == 'true':
+						item_from_slimeoid = i
+						continue
+					else:
+						item_sought = i
+						break
+
+			if item_sought == None:
+				item_sought = item_from_slimeoid
+
+			# If the cosmetic you want to have repaired is found
+			if item_sought != None:
+				# Can't retrofit scalps because we just can't, okay?
+				if item_sought.item_props['id_cosmetic'] == 'scalp':
+					response = "What the hell is this? I'm not gonna retrofit some dude's fucking scalp, are you retarded?"
+
+				else:
+					desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+
+					desired_item_stats = {
+						ewcfg.stat_attack: desired_item.stats[ewcfg.stat_attack],
+						ewcfg.stat_defense: desired_item.stats[ewcfg.stat_defense],
+						ewcfg.stat_speed: desired_item.stats[ewcfg.stat_speed],
+					}
+
+					current_item_stats = {
+						ewcfg.stat_attack: item_sought.item_props[ewcfg.stat_attack],
+						ewcfg.stat_defense: item_sought.item_props[ewcfg.stat_defense],
+						ewcfg.stat_speed: item_sought.item_props[ewcfg.stat_speed],
+					}
+
+					# If the cosmetic is actually damaged at all
+					if current_item_stats != desired_item_stats:
+						cost_ofretrofit = desired_item.price if desired_item.price else 50000
+
+						if cost_ofretrofit > user_data.slimes:
+							response = "Get out of here! Scram, weirdo! It costs {} to retrofit that cosmetic, which you don't have! Die! Die! Fucking Die!".format(cost_ofretrofit)
+						else:
+							response = "It costs {} to repair this. Are you sure you wanna?".format(cost_ofretrofit)
+							response += "\n**!accept** or **!refuse** the deal."
+
+							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+							# Wait for an answer
+							accepted = False
+
+							try:
+								message = await cmd.client.wait_for_message(timeout = 20, author = cmd.message.author, check = ewutils.check_accept_or_refuse)
+
+								if message != None:
+									if message.content.lower() == "!accept":
+										accepted = True
+									if message.content.lower() == "!refuse":
+										accepted = False
+							except:
+								accepted = False
+
+							# Cancel deal if the hat is no longer in user's inventory
+							if item_sought.id_owner != user_data.id_user:
+								accepted = False
+
+							# Cancel deal if the user has left Krak Bay
+							if user_data.poi != ewcfg.poi_id_krakbay:
+								accepted = False
+
+							if accepted == True:
+								user_data.slimes -= cost_ofretrofit
+								user_data.persist()
+
+								item_sought.item_props[ewcfg.stat_attack] = desired_item.stats[ewcfg.stat_attack]
+								item_sought.item_props[ewcfg.stat_defense] = desired_item.stats[ewcfg.stat_defense]
+								item_sought.item_props[ewcfg.stat_speed] = desired_item.stats[ewcfg.stat_speed]
+								item_sought.persist()
+
+								response = '"Pleasure doing business with you, laddy!"'
+
+							else:
+								response = '"Ok, sure, whatever. No, I dont care. No, yeah. sure."'
+					else:
+						response = "What're you talking about? This looks fine to me!"
+		else:
+			response = "Sew which cosmetic? Check your **!inventory**."
+	else:
+		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def sip(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+
+	if ewcfg.cosmeticAbility_id_drinkable in cosmetic_abilites:
+		hunger_restored = 5
+		user_data.hunger -= hunger_restored
+		if user_data.hunger < 0:
+			user_data.hunger = 0
+		response = "You take a sip from your FUCK ENERGY™ novelty baseball helmet! TASTY!"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

@@ -3280,12 +3280,18 @@ async def dress_slimeoid(cmd):
 					# Remove hat from player if adorned
 					if item_sought.item_props.get('adorned') == 'true':
 						item_sought.item_props['adorned'] = 'false'
+						user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
+						user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
+						user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
+
 						response = "You take off your {} and give it to {}.".format(item_sought.item_props.get('cosmetic_name'), slimeoid.name)
 					else:
 						response = "You give {} a {}.".format(slimeoid.name, item_sought.item_props.get('cosmetic_name'))
 					
 					item_sought.item_props['slimeoid'] = 'true'
 					item_sought.persist()
+					user_data.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+					user_data.persist()
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'
 			elif already_adorned:

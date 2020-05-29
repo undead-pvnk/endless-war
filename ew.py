@@ -48,6 +48,7 @@ class EwUser:
 	attack = 0
 	defense = 0
 	speed = 0
+	freshness = 0
 	
 	#SLIMERNALIA
 	festivity = 0
@@ -504,26 +505,6 @@ class EwUser:
 
 		return response
 
-	def get_cosmeticAbilities(self): #todo
-		result = []
-		try:
-			mutations = ewutils.execute_sql_query("SELECT {id_mutation} FROM mutations WHERE {id_server} = %s AND {id_user} = %s;".format(
-					id_mutation = ewcfg.col_id_mutation,
-					id_server = ewcfg.col_id_server,
-					id_user = ewcfg.col_id_user
-				),(
-					self.id_server,
-					self.id_user
-				))
-
-			for mutation_data in mutations:
-				result.append(mutation_data[0])
-		except:
-			ewutils.logMsg("Failed to fetch mutations for user {}.".format(self.id_user))
-
-		finally:
-			return result
-
 	def getStatusEffects(self):
 		values = []
 
@@ -869,7 +850,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -924,6 +905,7 @@ class EwUser:
 					ewcfg.col_attack,
 					ewcfg.col_defense,
 					ewcfg.col_speed,
+					ewcfg.col_freshness
 				), (
 					id_user,
 					id_server
@@ -985,6 +967,7 @@ class EwUser:
 					self.attack = result[50]
 					self.defense = result[51]
 					self.speed = result[52]
+					self.freshness = result[53]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1040,7 +1023,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1097,6 +1080,7 @@ class EwUser:
 				ewcfg.col_attack,
 				ewcfg.col_defense,
 				ewcfg.col_speed,
+				ewcfg.col_freshness,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1154,6 +1138,7 @@ class EwUser:
 				self.attack,
 				self.defense,
 				self.speed,
+				self.freshness,
 			))
 
 			conn.commit()

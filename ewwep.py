@@ -773,6 +773,7 @@ async def attack(cmd):
 								user_data.attack -= int(c.item_props[ewcfg.stat_attack])
 								user_data.defense -= int(c.item_props[ewcfg.stat_defense])
 								user_data.speed -= int(c.item_props[ewcfg.stat_speed])
+								user_data.freshness = ewutils.get_total_freshness(id_user = shootee_data.id_user, id_server = cmd.message.server)
 
 								user_data.persist()
 
@@ -2764,20 +2765,32 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		items = ewitem.inventory(
+		cosmetic_items = ewitem.inventory(
 			id_user = user_data.id_user,
 			id_server = user_data.id_server,
 			item_type_filter = ewcfg.it_cosmetic
 		)
 
-		adorned_items = 0
-		for it in items:
-			i = EwItem(it.get('id_item'))
-			if i.item_props['adorned'] == 'true':
-				adorned_items += 1
+		adorned_cosmetics = []
 
-		if adorned_items >= ewutils.max_adorn_bylevel(user_data.slimelevel):
-			damage_mod *= 1.5
+		adorned_styles = []
+
+		total_freshness = 0
+
+		for cosmetic in cosmetic_items:
+			c = EwItem(id_item = cosmetic.get('id_item'))
+
+			if c.item_props['adorned'] == 'true':
+				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+				adorned_styles.append(c.item_props.get('fashion_style'))
+				total_freshness += int(c.item_props.get('freshness'))
+
+
+		majority_style_map = ewutils.retrieve_majority_style(adorned_styles, adorned_cosmetics, user_data.freshness)
+
+		if majority_style_map != None:
+			damage_mod *= 2
 
 	return damage_mod
 

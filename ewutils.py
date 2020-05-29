@@ -1,5 +1,6 @@
 import sys
 import traceback
+import collections
 
 import MySQLdb
 import datetime
@@ -1261,11 +1262,8 @@ def food_carry_capacity_bylevel(slimelevel):
 def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
-def max_adornspace_active_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adornspace_active_mod)
-
-def max_adornspace_passive_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adornspace_passive_mod)
+def max_adornspace_bylevel(slimelevel):
+        return math.ceil(slimelevel / ewcfg.max_adornspace_mod)
 
 """
 	Returns an EwUser object of the selected kingpin
@@ -2118,3 +2116,67 @@ def channel_name_is_poi(channel_name):
 		return channel_name in ewcfg.chname_to_poi
 
 	return False
+
+def get_cosmetic_abilities(id_user, id_server):
+	active_abilities = []
+
+	cosmetic_items = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	for item in cosmetic_items:
+		i = EwItem(item.get('id_item'))
+		if i.item_props['adorned'] == "true" and i.item_props['ability'] is not None:
+			active_abilities.append(i.item_props['ability'])
+		else:
+			pass
+
+	return active_abilities
+
+def retrieve_majority_style(adorned_styles, adorned_cosmetics, total_freshness):
+	counted_styles = collections.Counter(adorned_styles)
+	majority_style = max(counted_styles, key = counted_styles.get)
+	total_freshness * 2
+
+	relative_amount = round(int(counted_styles.get(majority_style) / len(adorned_cosmetics) * 100))
+
+	if relative_amount >= 75:
+		majority_style_map = {
+			'majority_style': majority_style,
+			'total_freshness': total_freshness
+		}
+		return majority_style_map
+	else:
+		return None
+
+def get_total_freshness(id_user, id_server):
+	cosmetic_items = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	adorned_cosmetics = []
+
+	adorned_styles = []
+
+	total_freshness = 0
+
+	for cosmetic in cosmetic_items:
+		c = EwItem(id_item = cosmetic.get('id_item'))
+
+		if c.item_props['adorned'] == 'true':
+			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+			adorned_styles.append(c.item_props.get('fashion_style'))
+			total_freshness += int(c.item_props.get('freshness'))
+
+	majority_style_map = retrieve_majority_style(adorned_styles = adorned_styles, adorned_cosmetics = adorned_cosmetics, total_freshness = total_freshness)
+
+	if majority_style_map is not None:
+		total_freshness = int(majority_style_map['total_freshness'])
+		return total_freshness
+	else:
+		return total_freshness

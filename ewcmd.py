@@ -1,6 +1,7 @@
 import random
 import asyncio
 import time
+import collections
 
 import ewcfg
 import ewutils
@@ -423,7 +424,7 @@ async def data(cmd):
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
 
-		if len(adorned_cosmetics) > 0:
+		if len(adorned_cosmetics) > 0: #todo
 			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 			style = adorned_cosmetics_styles[0]
@@ -555,8 +556,6 @@ async def data(cmd):
 
 
 """ Finally, separates mutations from !data """
-
-
 async def mutations(cmd):
 	response = ""
 	if cmd.mentions_count == 0:
@@ -594,6 +593,187 @@ async def hunger(cmd):
 		)
 	else:
 		response = "You aren't hungry at all."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+""" Check your outfit. """
+async def fashion(cmd):
+	user_data = EwUser(member=cmd.message.author)
+
+	cosmetic_items = ewitem.inventory(
+		id_user = cmd.message.author.id,
+		id_server = cmd.message.server.id,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	adorned_cosmetics = []
+
+	adorned_styles = []
+
+	stats_breakdown = {}
+
+	space_adorned = 0
+
+	for cosmetic in cosmetic_items:
+		c = EwItem(id_item = cosmetic.get('id_item'))
+
+		if c.item_props['adorned'] == 'true':
+			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+			adorned_styles.append(c.item_props.get('fashion_style'))
+			if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+				for stat in ewcfg.playerstats_list:
+					if abs(int(c.item_props[stat])) > 0:
+						stats_breakdown[stat] = c.item_props[stat]
+			space_adorned += int(c.item_props['size'])
+
+	# show all the cosmetics that you have adorned.
+	if len(adorned_cosmetics) > 0:
+		response = "You whip out your smartphone and reverse your camera around to thoroughly analyze yourself.\n\n"
+		response += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+		# fashion outfit, freshness rating.
+		if len(adorned_cosmetics) >= 2:
+			response += "\n\n"
+
+			majority_style_map = ewutils.retrieve_majority_style(adorned_styles = adorned_styles, adorned_cosmetics = adorned_cosmetics, total_freshness = user_data.freshness)
+
+			if majority_style_map is not None:
+
+				if majority_style_map['majority_style'] == ewcfg.style_neutral:
+					if user_data.freshness < 20:
+						response += "Your normal outfit is lowkey on-point."
+					elif user_data.freshness < 40:
+						response += "Your normal outfit is gettin' kinda fleeky, not gonna lie."
+					elif user_data.freshness < 80:
+						response += "For real, your normal outfit is really fuckin' kino, my friend"
+					elif user_data.freshness < 100:
+						response += "Your normal outfit is STELLAR! I wanna know who your tailor is!"
+					else:
+						response += "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
+				if majority_style_map['majority_style'] == ewcfg.style_cool:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+				if majority_style_map['majority_style'] == ewcfg.style_tough:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+				if majority_style_map['majority_style'] == ewcfg.style_smart:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+				if majority_style_map['majority_style'] == ewcfg.style_beautiful:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+				if majority_style_map['majority_style'] == ewcfg.style_cute:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+				if majority_style_map['majority_style'] == ewcfg.style_sporty:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+				if majority_style_map['majority_style'] == ewcfg.style_weird:
+					if user_data.freshness < 20:
+						response += ""
+					elif user_data.freshness < 40:
+						response += ""
+					elif user_data.freshness < 80:
+						response += ""
+					elif user_data.freshness < 100:
+						response += ""
+					else:
+						response += ""
+			else:
+				if user_data.freshness < 20:
+					response += ""
+				elif user_data.freshness < 40:
+					response += ""
+				elif user_data.freshness < 80:
+					response += ""
+				elif user_data.freshness < 100:
+					response += ""
+				else:
+					response += ""
+
+			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
+
+
+			#gameplay relvant stuff, inspect order
+
+			response += "All told, your outfit "
+
+			stat_responses = []
+
+			for stat in ewcfg.playerstats_list:
+				print(abs(int(stats_breakdown[stat])))
+
+				if abs(int(stats_breakdown[stat])) > 0:
+
+					if int(stats_breakdown[stat]) > 0:
+						stat_response = "increases your "
+					else:
+						stat_response = "decreases your "
+
+					stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
+
+					stat_responses.append(stat_response)
+
+			response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
+
+			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
+
+			if space_remaining == 0:
+				response += "You don't have cosmetic space left."
+			else:
+				response += "You have about {amount} adornable space.\n".format(amount = space_remaining)
+
+	else:
+		response = "You aren't wearing anything!"
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

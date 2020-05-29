@@ -459,6 +459,10 @@ cmd_map = {
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
 	ewcfg.cmd_sew: ewcosmeticitem.sew,
+	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
+	ewcfg.cmd_fashion: ewcmd.fashion,
+
+	ewcfg.cmd_sip: ewcosmeticitem.sip,
 
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
