@@ -13937,7 +13937,7 @@ smelting_recipe_list = [
 			"hat",
 		],
 		ingredients = {
-			item_id_slimepoudrin : 2
+			item_id_slimepoudrin : 16
 		},
 		products = cosmetic_names
 	),
