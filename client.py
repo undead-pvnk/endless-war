@@ -646,6 +646,7 @@ cmd_map = {
 	ewcfg.cmd_arrest: ewcmd.arrest,
 	ewcfg.cmd_release: ewcmd.release,
 	ewcfg.cmd_release_alt1: ewcmd.release,
+	ewcfg.cmd_balance_cosmetics: ewcmd.balance_cosmetics,
 
 	# grant slimecorp executive status
 	ewcfg.cmd_promote: ewcmd.promote,
@@ -1610,6 +1611,82 @@ async def on_message(message):
 			item.persist()
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Food created."))
+
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldhat'):
+			patrician_rarity = 20
+			patrician_smelted = random.randint(1, patrician_rarity)
+			patrician = False
+
+			if patrician_smelted == 1:
+				patrician = True
+
+			cosmetics_list = []
+
+			for result in ewcfg.cosmetic_items_list:
+				if result.acquisition == ewcfg.acquisition_smelting:
+					cosmetics_list.append(result)
+				else:
+					pass
+
+			items = []
+
+			for cosmetic in cosmetics_list:
+				if patrician and cosmetic.rarity == ewcfg.rarity_patrician:
+					items.append(cosmetic)
+				elif not patrician and cosmetic.rarity == ewcfg.rarity_plebeian:
+					items.append(cosmetic)
+
+			item = items[random.randint(0, len(items) - 1)]
+
+			ewitem.item_create(
+				item_type = ewcfg.it_cosmetic,
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_props = {
+					'id_cosmetic': item.id_cosmetic,
+					'cosmetic_name': item.str_name,
+					'cosmetic_desc': item.str_desc,
+					'rarity': item.rarity,
+					'adorned': 'false'
+				}
+			)
+
+			response = "Success! You've smelted a {}!".format(item.str_name)
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldscalp'):
+			ewitem.item_create(
+				item_type = ewcfg.it_cosmetic,
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_props = {
+					'id_cosmetic': 'scalp',
+					'cosmetic_name': "My scalp",
+					'cosmetic_desc': "A scalp.",
+					'adorned': 'false'
+				}
+			)
+			response = "Success! You've smelted a scalp!"
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldsoul'):
+			ewitem.item_create(
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_type = ewcfg.it_cosmetic,
+				item_props = {
+					'id_cosmetic': "soul",
+					'cosmetic_name': "My soul",
+					'cosmetic_desc': "The immortal soul of me. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: me.",
+					'rarity': ewcfg.rarity_patrician,
+					'adorned': 'false',
+					'user_id': "usermodel.id_user",
+				}
+			)
+
+			response = "Success! You've smelted a soul!"
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		# FIXME debug
 		# Test item deletion

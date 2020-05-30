@@ -446,18 +446,23 @@ async def sew(cmd):
 
 			# If the cosmetic you want to have repaired is found
 			if item_sought != None:
-				# Can't repair scalps because we don't know what the original durability limit was
-				if item_sought.item_props['id_cosmetic'] == 'scalp':
-					response = "What the hell is this? I'm not gonna repair some dude's fucking scalp, are you retarded?"
-
 				# Can't repair items without durability limits, since they couldn't have been damaged in the first place
-				elif item_sought.item_props['durability'] is None:
+				if item_sought.item_props['durability'] is None:
 					response = "I'm sorry, but I can't repair that piece of clothing!"
 
 				else:
-					cosmetic_name = item_sought.item_props['cosmetic_name']
+					if item_sought.item_props['id_cosmetic'] == 'soul':
+						original_durability = ewcfg.soul_durability
 
-					original_durability = int(ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic']))
+					elif item_sought.item_props['id_cosmetic'] == 'scalp':
+						if 'original_durability' not in item_sought.item_props.keys():
+							original_durability = ewcfg.generic_scalp_durability
+						else:
+							original_durability = int(item_sought.item_props['original_durability'])
+					else:
+						original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+						original_durability = original_item.durability
+
 					current_durability = int(item_sought.item_props['durability'])
 
 					# If the cosmetic is actually damaged at all
@@ -494,6 +499,10 @@ async def sew(cmd):
 
 							# Cancel deal if the user has left Krak Bay
 							if user_data.poi != ewcfg.poi_id_krakbay:
+								accepted = False
+
+							# Candel deal if the user doesn't have enough slime anymore
+							if cost_ofrepair > user_data.slimes:
 								accepted = False
 
 							if accepted == True:
@@ -562,23 +571,48 @@ async def retrofit(cmd):
 					response = "What the hell is this? I'm not gonna retrofit some dude's fucking scalp, are you retarded?"
 
 				else:
-					desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+					current_item_stats = {}
 
-					desired_item_stats = {
-						ewcfg.stat_attack: desired_item.stats[ewcfg.stat_attack],
-						ewcfg.stat_defense: desired_item.stats[ewcfg.stat_defense],
-						ewcfg.stat_speed: desired_item.stats[ewcfg.stat_speed],
-					}
+					for stat in ewcfg.playerstats_list:
+						if stat in item_sought.item_props.keys():
+							if abs(int(item_sought.item_props[stat])) > 0:
+								current_item_stats[stat] = int(item_sought.item_props[stat])
 
-					current_item_stats = {
-						ewcfg.stat_attack: item_sought.item_props[ewcfg.stat_attack],
-						ewcfg.stat_defense: item_sought.item_props[ewcfg.stat_defense],
-						ewcfg.stat_speed: item_sought.item_props[ewcfg.stat_speed],
-					}
+					if item_sought.item_props.get('id_cosmetic') == 'soul':
+						desired_item_stats = {
+							ewcfg.stat_attack: 6,
+							ewcfg.stat_defense: 6,
+							ewcfg.stat_speed: 6,
+
+						}
+					elif item_sought.item_props.get('id_cosmetic') == 'scalp':
+						desired_item_stats = {
+							ewcfg.stat_attack: 1,
+						}
+
+					else:
+						desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+
+						desired_item_stats = {}
+
+						for stat in ewcfg.playerstats_list:
+							if stat in desired_item.stats.keys():
+								if abs(int(desired_item.stats[stat])) > 0:
+									desired_item_stats[stat] = desired_item.stats[stat]
 
 					# If the cosmetic is actually damaged at all
 					if current_item_stats != desired_item_stats:
-						cost_ofretrofit = desired_item.price if desired_item.price else 50000
+						if item_sought.item_props['id_cosmetic'] == 'soul':
+							cost_ofretrofit = 0
+
+						elif item_sought.item_props['id_cosmetic'] == 'scalp':
+							cost_ofretrofit = ewcfg.generic_scalp_durability * 4
+
+						elif desired_item.price:
+							cost_ofretrofit = desired_item.price * 4
+
+						else:
+							cost_ofretrofit = 1000000 # 1 mega
 
 						if cost_ofretrofit > user_data.slimes:
 							response = "Get out of here! Scram, weirdo! It costs {} to retrofit that cosmetic, which you don't have! Die! Die! Fucking Die!".format(cost_ofretrofit)
@@ -610,14 +644,29 @@ async def retrofit(cmd):
 							if user_data.poi != ewcfg.poi_id_krakbay:
 								accepted = False
 
-							if accepted == True:
-								user_data.slimes -= cost_ofretrofit
-								user_data.persist()
+							# Candel deal if the user doesn't have enough slime anymore
+							if cost_ofretrofit > user_data.slimes:
+								accepted = False
 
-								item_sought.item_props[ewcfg.stat_attack] = desired_item.stats[ewcfg.stat_attack]
-								item_sought.item_props[ewcfg.stat_defense] = desired_item.stats[ewcfg.stat_defense]
-								item_sought.item_props[ewcfg.stat_speed] = desired_item.stats[ewcfg.stat_speed]
+							if accepted == True:
+								for stat in ewcfg.playerstats_list:
+									if stat in desired_item_stats.keys():
+										item_sought.item_props[stat] = desired_item_stats[stat]
+
+								if item_sought.item_props['id_cosmetic'] == 'soul':
+									item_sought.item_props['durability'] = ewcfg.soul_durability
+								if item_sought.item_props['id_cosmetic'] == 'scalp' and 'original_durability' not in item_sought.item_props.keys():
+									item_sought.item_props['durability'] = ewcfg.generic_scalp_durability
+
 								item_sought.persist()
+
+								user_data.slimes -= cost_ofretrofit
+								if item_sought.item_props['adorned'] == "true":
+									user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
+									user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
+									user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
+
+								user_data.persist()
 
 								response = '"Pleasure doing business with you, laddy!"'
 
@@ -631,15 +680,3 @@ async def retrofit(cmd):
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-
-async def sip(cmd):
-	user_data = EwUser(member = cmd.message.author)
-	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-
-	if ewcfg.cosmeticAbility_id_drinkable in cosmetic_abilites:
-		hunger_restored = 5
-		user_data.hunger -= hunger_restored
-		if user_data.hunger < 0:
-			user_data.hunger = 0
-		response = "You take a sip from your FUCK ENERGY™ novelty baseball helmet! TASTY!"
-		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

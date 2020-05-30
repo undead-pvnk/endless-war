@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.3-boneworks"
+version = "v3.4"
 
 
 dir_msgqueue = 'msgqueue'
@@ -886,6 +886,7 @@ cmd_promote = cmd_prefix + 'promote'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_release = cmd_prefix + 'release'
+cmd_balance_cosmetics = cmd_prefix + 'balancecosmetic'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
@@ -1483,6 +1484,9 @@ str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you fe
 str_generic_onadorn = "You successfully adorn your {}."
 str_generic_unadorn = "You successfully dedorn your {}."
 str_generic_onbreak = "Their {} broke!!"
+str_soul_onadorn = ""
+str_soul_unadorn = ""
+str_soul_onbreak = ""
 
 generic_role_name = 'NLACakaNM'
 
@@ -1998,6 +2002,8 @@ vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
+vendor_bodega = "Bodega" # Clothing store in Krak Bay
+vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_monstersoup = 'monstersoup'
@@ -11878,6 +11884,11 @@ poi_list = [
 		role = "Bodega",
 		mother_district = poi_id_krakbay,
 		pvp = False,
+		vendors = [
+			vendor_bodega,
+			vendor_secretbodega,
+
+		],
 		is_subzone = True,
 	),
 	EwPoi(  # Outskirts - 1
@@ -12626,16 +12637,14 @@ style_sporty = "athletic"
 style_weird = "clusterpunk"
 
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
-base_durability = 2000000 # 2.5 mega
-# weak_durability = base_durability * 0.5 # 1 mega
-# strong_durability = base_durability * 2 # 4 mega
+base_durability = 2500000 # 2.5 mega
+
+generic_scalp_durability = 25000 # 25k
+soul_durability = 100000000 # 100 mega
 
 cosmetic_id_raincoat = "raincoat"
 
-cosmeticAbility_id_drinkable = "drinkable"
 cosmeticAbility_id_lucky = "lucky"
-
-id_cosmeticAbility = "cosmeticAbility"
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -12654,7 +12663,7 @@ cosmetic_items_list = [
 		freshness = 2,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat = True,
 	),
 	EwCosmeticItem(
@@ -12668,7 +12677,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat = True,
 	),
 	EwCosmeticItem(
@@ -12682,7 +12691,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12696,7 +12705,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12710,7 +12719,7 @@ cosmetic_items_list = [
 		durability = base_durability,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(

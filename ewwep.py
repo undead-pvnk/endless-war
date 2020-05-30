@@ -686,7 +686,8 @@ async def attack(cmd):
 					sap_damage -= 1
 
 			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
-			slimes_damage *= (sap_armor + shootee_data.defense)
+			slimes_damage *= sap_armor
+			slimes_damage *= shootee_data.defense
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
@@ -762,12 +763,16 @@ async def attack(cmd):
 						c = EwItem(cosmetic.get('id_item'))
 
 						# Damage it if the cosmetic is adorned and it has a durability limit
-						if c.item_props.get("adorned") == 'true' and c.item_props['cosmetic_durability'] is not None:
+						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
 
-							durability_afterhit = int(c.item_props['cosmetic_durability']) - slimes_damage
+							print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+
+							durability_afterhit = int(c.item_props['durability']) - slimes_damage
+
+							print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
 
 							if durability_afterhit <= 0: # If it breaks
-								c.item_props['cosmetic_durability'] = durability_afterhit
+								c.item_props['durability'] = durability_afterhit
 								c.persist()
 
 								shootee_data.attack -= int(c.item_props[ewcfg.stat_attack])
@@ -777,12 +782,13 @@ async def attack(cmd):
 
 								shootee_data.persist()
 
-								onbreak_responses.append(str(c.item_props['cosmetic_onbreak']).format(c.item_props['cosmetic_name']))
+								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['str_name']))
 
 								ewitem.item_delete(id_item = c.id_item)
 
 							else:
-								c.item_props['cosmetic_durability'] = durability_afterhit
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
 
 						else:
 							pass
@@ -856,7 +862,8 @@ async def attack(cmd):
 								'defense': 0,
 								'speed': 0,
 								'ability': None,
-								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) * 4,
+								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 2,
+								'original_durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 2,
 								'size': 1,
 								'fashion_style': ewcfg.style_weird,
 								'freshness': 10,
@@ -2816,7 +2823,10 @@ def damage_mod_defend(shootee_data, shootee_mutations, market_data, shootee_weap
 
 def get_sap_armor(shootee_data, sap_ignored):
 	# apply hardened sap armor
-	effective_hardened_sap = max(0, shootee_data.hardened_sap - sap_ignored)
+	try:
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored + shootee_data.defense
+	except: # If shootee_data doesn't have defense, aka it's a monster
+		effective_hardened_sap = shootee_data.hardened_sap - sap_ignored
 	level = 0
 
 	if hasattr(shootee_data, "slimelevel"):
@@ -2824,7 +2834,10 @@ def get_sap_armor(shootee_data, sap_ignored):
 	elif hasattr(shootee_data, "level"):
 		level = shootee_data.level
 
-	sap_armor = 10 / (10+effective_hardened_sap)
+	if effective_hardened_sap >= 0:
+		sap_armor = 10 / (10 + effective_hardened_sap)
+	else:
+		sap_armor = (10 + abs(effective_hardened_sap)) / 10
 	return sap_armor
 
 def get_hitzone(injury_map = None):

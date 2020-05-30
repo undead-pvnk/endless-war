@@ -747,26 +747,66 @@ def inventory(
 					item_data = EwItem(id_item = id_item)
 					item_type = ewcfg.it_cosmetic
 					item_data.item_type = item_type
-					if item_data.item_props['fashion_style'] is None:
-						item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
-						item_data.item_props = {
-							'id_cosmetic': item.id_cosmetic,
-							'cosmetic_name': item.str_name,
-							'cosmetic_desc': item.str_desc,
-							'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
-							'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
-							'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
-							'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
-							'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats.keys() else 0,
-							'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats.keys() else 0,
-							'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats.keys() else 0,
-							'ability': item.ability if item.ability else None,
-							'durability': item.durability if item.durability else ewcfg.base_durability,
-							'size': item.size if item.size else 1,
-							'fashion_style': item.style if item.style else ewcfg.style_neutral,
-							'freshness': item.freshness if item.freshness else 0,
-							'adorned': 'false',
-						}
+					if 'fashion_style' not in item_data.item_props.keys():
+						if item_data.item_props['id_cosmetic'] == 'soul':
+							item_data.item_props = {
+								'id_cosmetic': item_data.item_props['id_cosmetic'],
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_soul_onadorn,
+								'str_unadorn': ewcfg.str_soul_unadorn,
+								'str_onbreak': ewcfg.str_soul_onbreak,
+								'rarity': ewcfg.rarity_patrician,
+								'attack': 6,
+								'defense': 6,
+								'speed': 6,
+								'ability': None,
+								'durability': ewcfg.soul_durability,
+								'size': 6,
+								'fashion_style': ewcfg.style_weird,
+								'freshness': 10,
+								'adorned': 'false',
+								'user_id': item_data.item_props['user_id']
+							}
+						elif item_data.item_props['id_cosmetic'] == 'scalp':
+							item_data.item_props = {
+								'id_cosmetic': item_data.item_props['id_cosmetic'],
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 0,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.generic_scalp_durability,
+								'size': 1,
+								'fashion_style': ewcfg.style_neutral,
+								'freshness': 0,
+								'adorned': 'false',
+							}
+						else:
+							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							item_data.item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+								'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+								'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+								'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+								'attack': 0,
+								'defense': 0,
+								'speed': 0,
+								'ability': item.ability if item.ability else None,
+								'durability': item.durability if item.durability else ewcfg.base_durability,
+								'size': item.size if item.size else 1,
+								'fashion_style': item.style if item.style else ewcfg.style_neutral,
+								'freshness': item.freshness if item.freshness else 0,
+								'adorned': 'false',
+							}
 
 						item_data.persist()
 						ewutils.logMsg('Updated cosmetic to new format: {}'.format(id_item))
@@ -1087,6 +1127,8 @@ async def item_look(cmd):
 
 					stats_breakdown = []
 
+
+
 					for stat in ewcfg.playerstats_list:
 
 						if abs(int(item.item_props[stat])) > 0:
@@ -1100,35 +1142,44 @@ async def item_look(cmd):
 
 							stats_breakdown.append(stat_response)
 
-					response += ewutils.formatNiceList(names = stats_breakdown, conjunction = "and") + ". \n"
+					if len(stats_breakdown) == 0:
+						response += "doesn't affect your stats at all.\n"
+					else:
+						response += ewutils.formatNiceList(names = stats_breakdown, conjunction = "and") + ". \n"
 
 				if item.item_props['durability'] is None:
 					response += "It can't be destroyed.\n"
 				else:
-					if item.item_props['id_cosmetic'] == "scalp":
-						response += "It looks mangled and disgusting, you have no idea how much longer it'll last."
+					if item.item_props['id_cosmetic'] == "soul":
+						original_durability = ewcfg.soul_durability
+					elif item.item_props['id_cosmetic'] == 'scalp':
+						if 'original_durability' in item.item_props.keys():
+							original_durability = int(item.item_props['original_durability'])
+						else:
+							original_durability = ewcfg.generic_scalp_durability
 					else:
 						original_item = ewcfg.cosmetic_map.get(item.item_props['id_cosmetic'])
 						original_durability = int(original_item.durability)
-						current_durability = int(item.item_props['durability'])
 
-						if current_durability == original_durability:
-							response += "It looks brand new.\n"
+					current_durability = int(item.item_props['durability'])
 
-						elif original_durability != 0:
-							relative_change = round(current_durability / original_durability * 100)
+					if current_durability == original_durability:
+						response += "It looks brand new.\n"
 
-							if relative_change > 80:
-								response += "It's got a few minor scratches on it.\n"
-							elif relative_change > 60:
-								response += "It's a little torn from use.\n"
-							elif relative_change > 40:
-								response += "It's not looking so great...\n"
-							elif relative_change > 20:
-								response += "It's going to break soon!\n"
+					elif original_durability != 0:
+						relative_change = round(current_durability / original_durability * 100)
 
-						else:
-							response += "You have no idea how much longer this'll last."
+						if relative_change > 80:
+							response += "It's got a few minor scratches on it.\n"
+						elif relative_change > 60:
+							response += "It's a little torn from use.\n"
+						elif relative_change > 40:
+							response += "It's not looking so great...\n"
+						elif relative_change > 20:
+							response += "It's going to break soon!\n"
+
+					else:
+						response += "You have no idea how much longer this'll last."
 
 				if item.item_props['size'] == 0:
 					response += "It doesn't take up any space at all.\n"
@@ -1634,15 +1685,15 @@ async def soulextract(cmd):
 				'id_cosmetic': "soul",
 				'cosmetic_name': "{}'s soul".format(playermodel.display_name),
 				'cosmetic_desc': "The immortal soul of {}. It dances with a vivacious energy inside its jar.\n If you listen to it closely you can hear it whispering numbers: {}.".format(playermodel.display_name, cmd.message.author.id),
-				'str_onadorn': ewcfg.str_generic_onadorn,
-				'str_unadorn': ewcfg.str_generic_unadorn,
-				'str_onbreak': ewcfg.str_generic_onbreak,
+				'str_onadorn': ewcfg.str_soul_onadorn,
+				'str_unadorn': ewcfg.str_soul_unadorn,
+				'str_onbreak': ewcfg.str_soul_onbreak,
 				'rarity': ewcfg.rarity_patrician,
 				'attack': 6,
 				'defense': 6,
 				'speed': 6,
 				'ability': None,
-				'durability': None,
+				'durability': ewcfg.soul_durability,
 				'size': 6,
 				'fashion_style': ewcfg.style_weird,
 				'freshness': 10,

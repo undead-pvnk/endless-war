@@ -119,7 +119,15 @@ async def menu(cmd):
 
 		response = "{} Menu:\n\n".format(poi.str_name)
 
-		for vendor in poi.vendors:
+		vendors_list = poi.vendors
+
+		for vendor in vendors_list:
+			if vendor == ewcfg.vendor_secretbodega:
+				if user_data.freshness < 100:
+					continue
+				else:
+					response += '\nThe hipster behind the counter nearly falls out of his chair after laying eyes on the sheer, unadulterated freshness before him.\n"S-Sir! Your outfit... i-it is positively ***on fleek!!*** As I see you are a fashion enthusiast like myself, let me show you the good stuff…"\n'
+
 			items = []
 			# If the vendor is the bazaar get the current rotation of items from the market_data
 			vendor_inv = ewcfg.vendor_inv[vendor] if vendor != ewcfg.vendor_bazaar else market_data.bazaar_wares.values()
@@ -129,7 +137,6 @@ async def menu(cmd):
 				cosmetic_item = ewcfg.cosmetic_map.get(item_name)
 				furniture_item = ewcfg.furniture_map.get(item_name)
 				weapon_item = ewcfg.weapon_map.get(item_name)
-
 
 				# increase profits for the stock market
 				stock_data = None
@@ -175,6 +182,10 @@ async def menu(cmd):
 					items.append(item_name)
 
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = items))
+
+			if vendor == ewcfg.vendor_bodega:
+				if user_data.freshness < 100:
+					response += "\nThe hipster behind the counter is utterly repulsed by the fashion disaster in front of him. Looks like you just aren’t fresh enough for him."
 			if user_data.has_soul == 0:
 				if vendor == ewcfg.vendor_dojo:
 					response += "\n\nThe Dojo master looks at your soulless form with pity."
@@ -188,6 +199,10 @@ async def menu(cmd):
 					response += "\n\nAll the shops seem so lively. You wish you had a soul so you could be like them."
 				elif vendor == ewcfg.vendor_beachresort or vendor == ewcfg.vendor_countryclub:
 					response += "\n\nEverything looks so fancy here, but it doesn't really appeal to you since you don't have a soul."
+				elif vendor == ewcfg.vendor_bodega:
+					if user_data.freshness < 100:
+						response += ".. and you probably never will be."
+
 
 
 	# Send the response to the player.

@@ -1234,6 +1234,111 @@ async def promote(cmd):
 
 		await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
+
+"""
+	Load new values into these and reboot to balance cosmetics.
+"""
+async def balance_cosmetics(cmd):
+	author = cmd.message.author
+
+	if not author.server_permissions.administrator:
+		return
+
+	if cmd.tokens_count == 2:
+		id_cosmetic = cmd.tokens[1]
+
+		try:
+			data = ewutils.execute_sql_query(
+				"SELECT {id_item}, {item_type}, {col_soulbound}, {col_stack_max}, {col_stack_size} FROM items WHERE {id_server} = {server_id} AND {item_type} = '{type_item}'".format(
+					id_item = ewcfg.col_id_item,
+					item_type = ewcfg.col_item_type,
+					col_soulbound = ewcfg.col_soulbound,
+					col_stack_max = ewcfg.col_stack_max,
+					col_stack_size = ewcfg.col_stack_size,
+					id_server = ewcfg.col_id_server,
+
+					server_id = cmd.message.server.id,
+					type_item = ewcfg.it_cosmetic
+				))
+
+			if data != None:
+				for row in data:
+					id_item = row[0]
+
+					item_data = EwItem(id_item = id_item)
+					item_type = ewcfg.it_cosmetic
+					item_data.item_type = item_type
+					if id_cosmetic == "soul":
+						if item_data.item_props['id_cosmetic'] == 'soul':
+							item_data.item_props = {
+								'id_cosmetic': item_data.item_props['id_cosmetic'],
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_soul_onadorn,
+								'str_unadorn': ewcfg.str_soul_unadorn,
+								'str_onbreak': ewcfg.str_soul_onbreak,
+								'rarity': ewcfg.rarity_patrician,
+								'attack': 6,
+								'defense': 6,
+								'speed': 6,
+								'ability': None,
+								'durability': ewcfg.soul_durability,
+								'size': 1,
+								'fashion_style': ewcfg.style_weird,
+								'freshness': 10,
+								'adorned': 'false',
+								'user_id': item_data.item_props['user_id']
+							}
+					elif id_cosmetic == "scalp":
+						if item_data.item_props['id_cosmetic'] == 'scalp':
+							item_data.item_props = {
+								'id_cosmetic': item_data.item_props['id_cosmetic'],
+								'cosmetic_name': item_data.item_props['cosmetic_name'],
+								'cosmetic_desc': item_data.item_props['cosmetic_desc'],
+								'str_onadorn': ewcfg.str_generic_onadorn,
+								'str_unadorn': ewcfg.str_generic_unadorn,
+								'str_onbreak': ewcfg.str_generic_onbreak,
+								'rarity': ewcfg.rarity_plebeian,
+								'attack': 0,
+								'defense': 0,
+								'speed': 0,
+								'ability': None,
+								'durability': ewcfg.generic_scalp_durability,
+								'size': 16,
+								'fashion_style': ewcfg.style_neutral,
+								'freshness': 0,
+								'adorned': 'false',
+							}
+					else:
+						if item_data.item_props['id_cosmetic'] == id_cosmetic:
+							item = ewcfg.cosmetic_map.get(item_data.item_props['id_cosmetic'])
+							item_data.item_props = {
+								'id_cosmetic': item.id_cosmetic,
+								'cosmetic_name': item.str_name,
+								'cosmetic_desc': item.str_desc,
+								'str_onadorn': item.str_onadorn if item.str_onadorn else ewcfg.str_generic_onadorn,
+								'str_unadorn': item.str_unadorn if item.str_unadorn else ewcfg.str_generic_unadorn,
+								'str_onbreak': item.str_onbreak if item.str_onbreak else ewcfg.str_generic_onbreak,
+								'rarity': item.rarity if item.rarity else ewcfg.rarity_plebeian,
+								'attack': item.stats[ewcfg.stat_attack] if ewcfg.stat_attack in item.stats.keys() else 0,
+								'defense': item.stats[ewcfg.stat_defense] if ewcfg.stat_defense in item.stats.keys() else 0,
+								'speed': item.stats[ewcfg.stat_speed] if ewcfg.stat_speed in item.stats.keys() else 0,
+								'ability': item.ability if item.ability else None,
+								'durability': item.durability if item.durability else ewcfg.base_durability,
+								'size': item.size if item.size else 1,
+								'fashion_style': item.style if item.style else ewcfg.style_neutral,
+								'freshness': item.freshness if item.freshness else 0,
+								'adorned': 'false',
+							}
+
+					item_data.persist()
+
+					ewutils.logMsg('Balanced cosmetic: {}'.format(id_item))
+		except:
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Failure."))
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Success!"))
+
 """ !piss """
 async def piss(cmd):
 	user_data = EwUser(member = cmd.message.author)
