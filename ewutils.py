@@ -1440,10 +1440,10 @@ def get_move_speed(user_data):
 
 	move_speed = max(0.1, move_speed)
 
-	if abs(user_data.speed) != 0:
-		move_speed = round(move_speed * (1 + float(user_data.speed / 100)))
+	move_speed += user_data.speed
 
 	return move_speed
+
 
 """ Damage all players in a district """
 def explode(damage = 0, district_data = None, market_data = None):
