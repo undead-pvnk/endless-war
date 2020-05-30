@@ -785,7 +785,7 @@ async def attack(cmd):
 
 								shootee_data.persist()
 
-								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['str_name']))
+								onbreak_responses.append(str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
 
 								ewitem.item_delete(id_item = c.id_item)
 
