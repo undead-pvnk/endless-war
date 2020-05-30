@@ -1438,9 +1438,11 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 
-	move_speed = max(0.1, move_speed)
+	print("1 = " + str(move_speed))
+	move_speed += int(user_data.speed)
+	print("2 = " + str(move_speed))
 
-	move_speed += user_data.speed
+	move_speed = max(0.1, move_speed)
 
 	return move_speed
 
