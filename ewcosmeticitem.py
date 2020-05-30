@@ -171,7 +171,7 @@ async def adorn(cmd):
 				space_adorned += int(item_sought.item_props['size'])
 
 			# If you don't have enough space, abort
-			if space_adorned >= ewutils.max_adornspace_bylevel(user_data.slimelevel):
+			if space_adorned > ewutils.max_adornspace_bylevel(user_data.slimelevel):
 				response = "Oh yeah? And, pray tell, just how do you expect to do that? You’re out of space, you can’t adorn any more garments!"
 
 			# If you have enough space, adorn
@@ -339,7 +339,7 @@ async def smoke(cmd):
 			if int(item_sought.item_props['size']) > 0:
 				space_adorned += int(item_sought.item_props['size'])
 
-			if space_adorned <= ewutils.max_adornspace_bylevel(usermodel.slimelevel):
+			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
 				response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
 				item.item_props['cosmetic_desc'] = "A single lit cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool."
 				item.item_props['adorned'] = "true"
@@ -380,7 +380,7 @@ async def smoke(cmd):
 			if int(item_sought.item_props['size']) > 0:
 				space_adorned += int(item_sought.item_props['size'])
 
-			if space_adorned <= ewutils.max_adornspace_bylevel(usermodel.slimelevel):
+			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
 				response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
 				item.item_props['cosmetic_desc'] = "A single lit cigar sticking out of your mouth. These thing take their time to kick in, but it's all worth it to look like a supreme gentleman."
 				item.item_props['adorned'] = "true"
