@@ -862,10 +862,10 @@ async def attack(cmd):
 								'defense': 0,
 								'speed': 0,
 								'ability': None,
-								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 2,
-								'original_durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 2,
+								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 4,
+								'original_durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 4,
 								'size': 1,
-								'fashion_style': ewcfg.style_weird,
+								'fashion_style': ewcfg.style_cool,
 								'freshness': 10,
 								'adorned': 'false'
 							}

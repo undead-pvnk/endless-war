@@ -458,6 +458,7 @@ cmd_map = {
 
 	#cosmetics
 	ewcfg.cmd_adorn: ewcosmeticitem.adorn,
+	ewcfg.cmd_dedorn: ewcosmeticitem.dedorn,
 	ewcfg.cmd_sew: ewcosmeticitem.sew,
 	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
 	ewcfg.cmd_fashion: ewcmd.fashion,
@@ -1574,8 +1575,8 @@ async def on_message(message):
 
 			ewitem.item_create(
 				item_type = item.item_type,
-				id_user = cmd.message.author.id,
-				id_server = cmd.message.server.id,
+				id_user = message.author.id,
+				id_server = message.server.id,
 				item_props = item_props
 			)
 
@@ -1699,12 +1700,7 @@ async def on_message(message):
 			response = "Success! You've smelted a soul!"
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
-		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getoutfit'):
-			ewutils.get_outfit(id_user = message.author.id, id_server = message.server.id)
 
-			response = "Consider it gotten."
-
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 
 		# FIXME debug
 		# Test item deletion

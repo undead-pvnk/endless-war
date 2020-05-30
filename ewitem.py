@@ -763,7 +763,7 @@ def inventory(
 								'ability': None,
 								'durability': ewcfg.soul_durability,
 								'size': 6,
-								'fashion_style': ewcfg.style_weird,
+								'fashion_style': ewcfg.style_cool,
 								'freshness': 10,
 								'adorned': 'false',
 								'user_id': item_data.item_props['user_id']
@@ -783,7 +783,7 @@ def inventory(
 								'ability': None,
 								'durability': ewcfg.generic_scalp_durability,
 								'size': 1,
-								'fashion_style': ewcfg.style_neutral,
+								'fashion_style': ewcfg.style_cool,
 								'freshness': 0,
 								'adorned': 'false',
 							}
@@ -803,7 +803,7 @@ def inventory(
 								'ability': item.ability if item.ability else None,
 								'durability': item.durability if item.durability else ewcfg.base_durability,
 								'size': item.size if item.size else 1,
-								'fashion_style': item.style if item.style else ewcfg.style_neutral,
+								'fashion_style': item.style if item.style else ewcfg.style_cool,
 								'freshness': item.freshness if item.freshness else 0,
 								'adorned': 'false',
 							}
@@ -1186,10 +1186,8 @@ async def item_look(cmd):
 				else:
 					response += "It costs about {amount} space to adorn.\n".format(amount = item.item_props['size'])
 
-				if item.item_props['fashion_style'] == ewcfg.style_neutral:
-					response += "It's got a casual feel to it. "
 				if item.item_props['fashion_style'] == ewcfg.style_cool:
-					response += "It's lookin' pretty fuckin' punk. "
+					response += "It's got a casual feel to it. "
 				if item.item_props['fashion_style'] == ewcfg.style_tough:
 					response += "It's lookin' grunge as hell, my friend. "
 				if item.item_props['fashion_style'] == ewcfg.style_smart:
@@ -1198,12 +1196,8 @@ async def item_look(cmd):
 					response += "It's got a modern, refined feel. "
 				if item.item_props['fashion_style'] == ewcfg.style_cute:
 					response += "It's super kawaiiiiiiiiii~ deeeessuusususususususuusususufuswvgslgerphi4hjetbhjhjbetbjtrrpo"
-				if item.item_props['fashion_style'] == ewcfg.style_sporty:
-					response += "It's got a atheletic kinda feel. "
-				if item.item_props['fashion_style'] == ewcfg.style_weird:
-					response += "It's clusterpunk. As. Fuck. "
 
-				response += "It's freshness rating is {rating}".format(rating = item.item_props['freshness'])
+				response += "\n\nIt's freshness rating is {rating}.".format(rating = item.item_props['freshness'])
 
 				hue = ewcfg.hue_map.get(item.item_props.get('hue'))
 				if hue != None:
@@ -1655,8 +1649,8 @@ def gen_item_props(item):
 			'ability': item.ability if item.ability else None,
 			'durability': item.durability if item.durability else ewcfg.base_durability,
 			'size': item.size if item.size else 1,
-			'fashion_style': item.style if item.style else ewcfg.style_neutral,
-			'freshness': item.freshness if item.freshness else 0,
+			'fashion_style': item.style if item.style else ewcfg.style_cool,
+			'freshness': item.freshness if item.freshness else 5,
 			'adorned': 'false',
 		}
 	elif item.item_type == ewcfg.it_furniture:
@@ -1695,7 +1689,7 @@ async def soulextract(cmd):
 				'ability': None,
 				'durability': ewcfg.soul_durability,
 				'size': 6,
-				'fashion_style': ewcfg.style_weird,
+				'fashion_style': ewcfg.style_cool,
 				'freshness': 10,
 				'adorned': 'false',
 				'user_id': usermodel.id_user
@@ -1925,7 +1919,7 @@ def surrendersoul(giver = None, receiver = None, id_server=None):
 					'ability': None,
 					'durability': None,
 					'size': 6,
-					'fashion_style': ewcfg.style_weird,
+					'fashion_style': ewcfg.style_cool,
 					'freshness': 10,
 					'adorned': 'false',
 					'user_id': givermodel.id_user

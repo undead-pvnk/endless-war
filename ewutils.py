@@ -2193,105 +2193,100 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 		}
 		return outfit_map
 
-def get_style_freshness_rating(user_data, dominant_style = None):
-	if dominant_style == ewcfg.style_neutral:
-		if user_data.freshness < 20:
-			response = "Your normal outfit is lowkey on-point."
-		elif user_data.freshness < 40:
-			response = "Your normal outfit is gettin' kinda fleeky, not gonna lie."
-		elif user_data.freshness < 80:
-			response = "For real, your normal outfit is really fuckin' kino, my friend"
-		elif user_data.freshness < 100:
-			response = "Your normal outfit is STELLAR! I wanna know who your tailor is!"
-		else:
-			response = "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
-	elif dominant_style == ewcfg.style_cool:
-		if user_data.freshness < 20:
-			response = "cool 1"
-		elif user_data.freshness < 40:
-			response = "cool 2"
-		elif user_data.freshness < 80:
-			response = "cool 3"
-		elif user_data.freshness < 100:
-			response = "cool 4"
-		else:
-			response = "cool 5"
-	elif dominant_style == ewcfg.style_tough:
-		if user_data.freshness < 20:
-			response = "tough 1"
-		elif user_data.freshness < 40:
-			response = "tough 2"
-		elif user_data.freshness < 80:
-			response = "tough 3"
-		elif user_data.freshness < 100:
-			response = "tough 4"
-		else:
-			response = "tough 5"
-	elif dominant_style == ewcfg.style_smart:
-		if user_data.freshness < 20:
-			response = "smart 1"
-		elif user_data.freshness < 40:
-			response = "smart 2"
-		elif user_data.freshness < 80:
-			response = "smart 3"
-		elif user_data.freshness < 100:
-			response = "smart 4"
-		else:
-			response = "smart 5"
-	elif dominant_style == ewcfg.style_beautiful:
-		if user_data.freshness < 20:
-			response = "beauty 1"
-		elif user_data.freshness < 40:
-			response = "beauty 2"
-		elif user_data.freshness < 80:
-			response = "beauty 3"
-		elif user_data.freshness < 100:
-			response = "beauty 4"
-		else:
-			response = "beauty 5"
-	elif dominant_style == ewcfg.style_cute:
-		if user_data.freshness < 20:
-			response = "cute 1"
-		elif user_data.freshness < 40:
-			response = "cute 2"
-		elif user_data.freshness < 80:
-			response = "cute 3"
-		elif user_data.freshness < 100:
-			response = "cute 4"
-		else:
-			response = "cute 5"
-	elif dominant_style == ewcfg.style_sporty:
-		if user_data.freshness < 20:
-			response = "sporty 1"
-		elif user_data.freshness < 40:
-			response = "sporty 2"
-		elif user_data.freshness < 80:
-			response = "sporty 3"
-		elif user_data.freshness < 100:
-			response = "sporty 4"
-		else:
-			response = "sport 5"
-	elif dominant_style == ewcfg.style_weird:
-		if user_data.freshness < 20:
-			response = "weird 1"
-		elif user_data.freshness < 40:
-			response = "weird 2"
-		elif user_data.freshness < 80:
-			response = "weird 2"
-		elif user_data.freshness < 100:
-			response = "weird 3"
-		else:
-			response = "weird 4"
+def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None):
+
+	if dominant_style == None:
+		dominant_style = "fresh"
+
+	if user_data.freshness < 20:
+		response = "{pronoun} outfit is starting to look kinda {style}, not gonna lie.".format(pronoun = pronoun, style = dominant_style)
+	elif user_data.freshness < 40:
+		response = "{pronoun} outfit is low-key on-point, and pretty {style}.".format(pronoun = pronoun, style = dominant_style)
+	elif user_data.freshness < 80:
+		response = "{pronoun} outfit is getting really {style} now! I mean, just look at it! Damn!".format(pronoun = pronoun, style = dominant_style)
+	elif user_data.freshness < 100:
+		response = "{pronoun} outfit is totally **on fire!** People are taking notice of {pronoun} {style}ness, and low-level imposters are popping up on Grimstagram.".format(pronoun = pronoun, style = dominant_style)
 	else:
-		if user_data.freshness < 20:
-			response = "none 1"
-		elif user_data.freshness < 40:
-			response = "none 2"
-		elif user_data.freshness < 80:
-			response = "none 3"
-		elif user_data.freshness < 100:
-			response = "none 4"
-		else:
-			response = "none 5"
+		response = "{pronoun} outfit is positively, without a doubt, 100% ***ON FLEEK!!*** {pronoun} Grimstagram has EXPLODED, and a collab with Rarity™ from My Little Pony™ is in the WORKS. " \
+				   "It is just so. fucking. {style}.".format(pronoun = pronoun, style = dominant_style)
+
+	# Lol, I'll add these later.
+	# if dominant_style == ewcfg.style_cool:
+	# 	if user_data.freshness < 20:
+	# 		response = "Your normal outfit is lowkey on-point."
+	# 	elif user_data.freshness < 40:
+	# 		response = "Your normal outfit is gettin' kinda fleeky, not gonna lie."
+	# 	elif user_data.freshness < 80:
+	# 		response = "For real, your normal outfit is really fuckin' kino, my friend"
+	# 	elif user_data.freshness < 100:
+	# 		response = "Your normal outfit is STELLAR! I wanna know who your tailor is!"
+	# 	else:
+	# 		response = "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
+	# elif dominant_style == ewcfg.style_cool:
+	# 	if user_data.freshness < 20:
+	# 		response = "cool 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "cool 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "cool 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "cool 4"
+	# 	else:
+	# 		response = "cool 5"
+	# elif dominant_style == ewcfg.style_tough:
+	# 	if user_data.freshness < 20:
+	# 		response = "tough 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "tough 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "tough 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "tough 4"
+	# 	else:
+	# 		response = "tough 5"
+	# elif dominant_style == ewcfg.style_smart:
+	# 	if user_data.freshness < 20:
+	# 		response = "smart 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "smart 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "smart 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "smart 4"
+	# 	else:
+	# 		response = "smart 5"
+	# elif dominant_style == ewcfg.style_beautiful:
+	# 	if user_data.freshness < 20:
+	# 		response = "beauty 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "beauty 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "beauty 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "beauty 4"
+	# 	else:
+	# 		response = "beauty 5"
+	# elif dominant_style == ewcfg.style_cute:
+	# 	if user_data.freshness < 20:
+	# 		response = "cute 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "cute 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "cute 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "cute 4"
+	# 	else:
+	# 		response = "cute 5"
+	# else:
+	# 	if user_data.freshness < 20:
+	# 		response = "none 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "none 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "none 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "none 4"
+	# 	else:
+	# 		response = "none 5"
 
 	return response

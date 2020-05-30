@@ -242,6 +242,13 @@ def gen_data_text(
 		if len(adorned_cosmetics) > 0:
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
+			outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
+			user_data.freshness = int(outfit_map['total_freshness'])
+			user_data.persist()
+
+			if outfit_map is not None:
+				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "Their") + " "
+
 		statuses = user_data.getStatusEffects()
 
 		for status in statuses:
@@ -353,15 +360,13 @@ async def data(cmd):
 			item_type_filter=ewcfg.it_cosmetic
 		)
 		adorned_cosmetics = []
-		adorned_cosmetics_styles = []
-		adorned_cosmetics_totalfreshness = 0
+
 		for cosmetic in cosmetics:
 			cos = EwItem(id_item=cosmetic.get('id_item'))
 			if cos.item_props['adorned'] == 'true':
 				hue = ewcfg.hue_map.get(cos.item_props.get('hue'))
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
-				adorned_cosmetics_styles.append(cos.item_props.get('style') if not None else "")
-				adorned_cosmetics_totalfreshness += int(cos.item_props.get('freshness')) if not None else 0
+
 
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		if poi != None:
@@ -424,32 +429,15 @@ async def data(cmd):
 		if coinbounty != 0:
 			response_block += "SlimeCorp offers a bounty of {:,} SlimeCoin for your death. ".format(coinbounty)
 
-		if len(adorned_cosmetics) > 0: #todo
+		if len(adorned_cosmetics) > 0:
 			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
-			style = adorned_cosmetics_styles[0]
-			cohesive_outfit = True
+			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+			user_data.freshness = int(outfit_map['total_freshness'])
+			user_data.persist()
 
-			for item in adorned_cosmetics_styles:
-				if style != item:
-					cohesive_outfit = False
-					break
-
-			rating = ""
-
-			if cohesive_outfit:
-				if style == ewcfg.style_neutral:
-					if adorned_cosmetics_totalfreshness < 20:
-						rating = "Your normal outfit is lowkey on-point."
-					elif adorned_cosmetics_totalfreshness < 40:
-						rating = "Your normal outfit is gettin' kinda fleeky, not gonna lie."
-					elif adorned_cosmetics_totalfreshness < 80:
-						rating = "For real, your normal outfit is really fuckin' kino, my friend"
-					elif adorned_cosmetics_totalfreshness < 100:
-						rating = "Your normal outfit is STELLAR! I wanna know who your tailor is!"
-
-			if rating != "":
-				response_block += rating
+			if outfit_map is not None:
+				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "Your") + " "
 
 		if user_data.hunger > 0:
 			response_block += "You are {}% hungry. ".format(
@@ -641,7 +629,7 @@ async def fashion(cmd):
 			user_data.persist()
 
 			if outfit_map is not None:
-				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
+				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "Your")
 
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 
@@ -666,7 +654,10 @@ async def fashion(cmd):
 
 					stat_responses.append(stat_response)
 
-		response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
+		if len(stat_responses) == 0:
+			response += "doesn't affect your stats at all."
+		else:
+			response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
 
 		space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
 
@@ -1187,7 +1178,7 @@ async def balance_cosmetics(cmd):
 								'ability': None,
 								'durability': ewcfg.soul_durability,
 								'size': 1,
-								'fashion_style': ewcfg.style_weird,
+								'fashion_style': ewcfg.style_cool,
 								'freshness': 10,
 								'adorned': 'false',
 								'user_id': item_data.item_props['user_id']
@@ -1208,7 +1199,7 @@ async def balance_cosmetics(cmd):
 								'ability': None,
 								'durability': ewcfg.generic_scalp_durability,
 								'size': 16,
-								'fashion_style': ewcfg.style_neutral,
+								'fashion_style': ewcfg.style_cool,
 								'freshness': 0,
 								'adorned': 'false',
 							}
@@ -1229,7 +1220,7 @@ async def balance_cosmetics(cmd):
 								'ability': item.ability if item.ability else None,
 								'durability': item.durability if item.durability else ewcfg.base_durability,
 								'size': item.size if item.size else 1,
-								'fashion_style': item.style if item.style else ewcfg.style_neutral,
+								'fashion_style': item.style if item.style else ewcfg.style_cool,
 								'freshness': item.freshness if item.freshness else 0,
 								'adorned': 'false',
 							}
