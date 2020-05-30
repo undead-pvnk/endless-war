@@ -110,6 +110,8 @@ async def enlist(cmd):
 			user_data.faction = ewcfg.faction_killers
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			for faction in vouchers:
+				user_data.unvouch(faction)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -135,6 +137,8 @@ async def enlist(cmd):
 			user_data.faction = ewcfg.faction_rowdys
 			user_data.time_lastenlist = time_now + ewcfg.cd_enlist
 			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_enlist, True)
+			for faction in vouchers:
+				user_data.unvouch(faction)
 			user_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = cmd.message.author)
 
@@ -796,7 +800,7 @@ async def crush(cmd):
 			sap_resp = ""
 			if ewcfg.status_sapfatigue_id not in status_effects:
 				sap_gain = 5
-				sap_gain = max(0, min(sap_gain, user_data.slimelevel - (user_data.hardened_sap + user_data.sap)))
+				sap_gain = max(0, min(sap_gain, ewutils.sap_max_bylevel(user_data.slimelevel) - (user_data.hardened_sap + user_data.sap)))
 				if sap_gain > 0:
 					user_data.sap += sap_gain
 					user_data.applyStatus(id_status = ewcfg.status_sapfatigue_id, source = user_data.id_user)

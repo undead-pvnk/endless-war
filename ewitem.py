@@ -1149,6 +1149,12 @@ async def item_use(cmd):
 					elif item_action == "drop":
 						give_item(id_user=(user_data.poi + '_trap'), id_server=item.id_server, id_item=item.id_item)
 						#print(item.item_props)
+			# elif context == "swordofseething":
+			# 
+			# 	item_delete(item.id_item)
+			# 	await ewdebug.begin_cataclysm(user_data)
+			# 
+			# 	response = ewdebug.last_words
 					
 			elif context == "prankcapsule":
 				response = ewsmelting.popcapsule(id_user=author, id_server=server, item=item)
@@ -1568,7 +1574,11 @@ async def squeeze(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	
 	target = cmd.mentions[0]
-	targetmodel = EwUser(member=target)
+	if target.id == cmd.message.author.id:
+		targetmodel = usermodel
+	else:
+		targetmodel = EwUser(member=target)
+
 	if cmd.mentions_count > 1:
 		response = "One dehumanizing soul-clutch at a time, please."
 	elif targetmodel.life_state == ewcfg.life_state_corpse:
@@ -1609,9 +1619,6 @@ async def squeeze(cmd):
 			usermodel.time_lasthaunt = int(time.time())
 			usermodel.persist()
 
-			server = ewcfg.server_list[targetmodel.id_server]
-			member_object = server.get_member(targetmodel.id_user)
-
 			penalty = (targetmodel.slimes* -0.25)
 			targetmodel.change_slimes(n=penalty, source=ewcfg.source_haunted)
 			targetmodel.persist()
@@ -1622,7 +1629,7 @@ async def squeeze(cmd):
 
 			if receivingreport != "":
 				loc_channel = ewutils.get_channel(cmd.message.server, poi.channel)
-				await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(member_object, receivingreport))
+				await ewutils.send_message(cmd.client, loc_channel, ewutils.formatMessage(target, receivingreport))
 
 			response = "You tightly squeeze {}'s soul in your hand, jeering into it as you do so. This thing was worth every penny.".format(playermodel.display_name)
 

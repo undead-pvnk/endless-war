@@ -5,6 +5,7 @@ import ewitem
 import ewutils
 import ewcfg
 import ewrolemgr
+import ewmap
 from ew import EwUser
 
 """
@@ -37,8 +38,13 @@ async def pardon(cmd):
 
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
+					member_data.weapon = -1
 
 				response = "{} has been released from their association with the {}.".format(member.display_name, faction_old)
+
+			member_poi = ewcfg.id_to_poi.get(member_data.poi)
+			if ewmap.inaccessible(user_data = member_data, poi = member_poi):
+				member_data.poi = ewcfg.poi_id_downtown
 			member_data.persist()
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)
 
@@ -68,6 +74,9 @@ async def banish(cmd):
 				if member_data.life_state == ewcfg.life_state_enlisted:
 					member_data.life_state = ewcfg.life_state_juvenile
 
+			member_poi = ewcfg.id_to_poi.get(member_data.poi)
+			if ewmap.inaccessible(user_data = member_data, poi = member_poi):
+				member_data.poi = ewcfg.poi_id_downtown
 			member_data.persist()
 			response = "{} has been banned from enlisting in the {}".format(member.display_name, user_data.faction)
 			await ewrolemgr.updateRoles(client = cmd.client, member = member)

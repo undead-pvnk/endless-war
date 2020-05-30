@@ -288,7 +288,7 @@ def canAttack(cmd):
 		captcha = weapon_item.item_props.get('captcha')
 
 	statuses = user_data.getStatusEffects()
-
+	channel_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 	#if user_data.life_state == ewcfg.life_state_enlisted or user_data.life_state == ewcfg.life_state_corpse:
 	#	if user_data.life_state == ewcfg.life_state_enlisted:
 	#		response = "Not so fast, you scrooge! Only Juveniles can attack during Slimernalia."
@@ -299,6 +299,9 @@ def canAttack(cmd):
 		response = "You can't commit violence from here."
 	elif ewmap.poi_is_pvp(user_data.poi) == False and cmd.mentions_count >= 1:
 		response = "You must go elsewhere to commit gang violence."
+	elif channel_poi.id_poi != user_data.poi and channel_poi.mother_district != user_data.poi:
+		#Only way to do this right now is by using the gellphone
+		response = "Alas, you still can't shoot people through your phone."
 	elif cmd.mentions_count > 1:
 		response = "One shot at a time!"
 	elif user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
@@ -360,6 +363,8 @@ def canAttack(cmd):
 		user_isrowdys = user_data.life_state == ewcfg.life_state_enlisted and user_data.faction == ewcfg.faction_rowdys
 		user_isslimecorp = user_data.life_state == ewcfg.life_state_lucky
 		user_isshambler = user_data.life_state == ewcfg.life_state_shambler
+  
+		weapon_possession_data = user_data.get_weapon_possession()
 
 		if shootee_data.life_state == ewcfg.life_state_kingpin:
 			# Disallow killing generals.
@@ -394,8 +399,12 @@ def canAttack(cmd):
 			# Target is a ghost but user is not able to bust 
 			response = "You don't know how to fight a ghost."
 
-		elif time_now > shootee_data.time_expirpvp and shootee_data.life_state != ewcfg.life_state_shambler:
-			# Target is not flagged for PvP.
+		elif weapon_possession_data and (shootee_data.id_user == weapon_possession_data[0]):
+			# Target is possessing user's weapon
+			response = "{}'s contract forbids you from harming them. You should've read the fine print.".format(member.display_name)
+
+		elif time_now > shootee_data.time_expirpvp and not (shootee_data.life_state == ewcfg.life_state_shambler or shootee_data.get_inhabitee() == user_data.id_user):
+			# Target is neither flagged for PvP, nor a shambler, nor a ghost inhabitting the player
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 
 		# Identify if the shooter and the shootee are on the same team.
@@ -887,6 +896,10 @@ async def attack(cmd):
 					
 					if coinbounty > 0:
 						response += "\n\n SlimeCorp transfers {:,} SlimeCoin to {}\'s account.".format(coinbounty, cmd.message.author.display_name)
+      
+					weapon_possession = user_data.get_weapon_possession()
+					if weapon_possession:
+						response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
 
 					shootee_data.persist()
 					resp_cont.add_response_container(die_resp)
@@ -2251,6 +2264,10 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 			response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 				name_target=enemy_data.display_name)
 
+		weapon_possession = user_data.get_weapon_possession()
+		if weapon_possession:
+			response += fulfill_ghost_weapon_contract(weapon_possession, market_data, user_data, cmd.message.author.display_name)
+
 		# When a raid boss dies, use this response instead so its drops aren't shown in the killfeed
 		old_response = response
 
@@ -2644,6 +2661,11 @@ async def aim(cmd):
 
 def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 	damage_mod = 1
+
+	# Weapon possession
+	if user_data.get_weapon_possession():
+		damage_mod *= 1.2
+
 	# Lone wolf
 	if ewcfg.mutation_id_lonewolf in user_mutations:
 		allies_in_district = district_data.get_players_in_district(
@@ -2740,7 +2762,8 @@ def get_hitzone(injury_map = None):
 def get_injury_severity(shootee_data, slimes_damage, crit):
 
 	severity = 0
-	severity += slimes_damage / shootee_data.slimes
+	if shootee_data.slimes > 0:
+		severity += slimes_damage / shootee_data.slimes
 	severity *= 10
 
 	if crit:
@@ -2750,3 +2773,33 @@ def get_injury_severity(shootee_data, slimes_damage, crit):
 	severity = max(0, round(severity))
 
 	return severity
+
+def fulfill_ghost_weapon_contract(possession_data, market_data, user_data, user_name):
+	ghost_id = possession_data[0]
+	ghost_data = EwUser(id_user = ghost_id, id_server = user_data.id_server)
+	
+	# shooter loses half their slime, which ghost gains as negative slime up to a cap of 500k
+	slime_sacrificed = int(user_data.slimes * 0.5)
+	user_data.change_slimes(n = -slime_sacrificed, source = ewcfg.source_ghost_contract)
+	negaslime_gained = min(500000, slime_sacrificed)
+	ghost_data.change_slimes(n = -negaslime_gained, source = ewcfg.source_ghost_contract)
+	ghost_data.persist()
+	market_data.negaslime -= -negaslime_gained
+	market_data.persist()
+
+	# cancel possession
+	ewutils.execute_sql_query(
+		"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_server} = %s".format(
+			empowered = ewcfg.col_empowered,
+			id_fleshling = ewcfg.col_id_fleshling,
+			id_server = ewcfg.col_id_server,
+		),(
+			False,
+			user_data.id_user,
+			user_data.id_server,
+		)
+	)
+
+	server = ewutils.get_client().get_server(user_data.id_server)
+	ghost_name = server.get_member(ghost_id).display_name
+	return "\n\n {} winces in pain as half their slime is corrupted into negaslime. {}'s contract has been fulfilled.".format(user_name, ghost_name)

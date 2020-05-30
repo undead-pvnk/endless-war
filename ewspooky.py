@@ -29,6 +29,9 @@ async def revive(cmd):
 	else:
 		player_data = EwUser(member = cmd.message.author)
 
+		# For SWILLDERMUK, max possible respawn timers will be decreased by lowering degradation.
+		# player_data.degradation = min(player_data.degradation, 600)
+
 		time_until_revive = (player_data.time_lastdeath + player_data.degradation) - time_now
 		
 		if time_until_revive > 0:
@@ -142,7 +145,8 @@ async def haunt(cmd):
 		member = cmd.mentions[0]
 		haunted_data = EwUser(member = member)
 		market_data = EwMarket(id_server = cmd.message.server.id)
-		target_isshambler = haunted_data.life_state == ewcfg.life_state_shambler
+		target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
+		target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
 		if user_data.life_state != ewcfg.life_state_corpse:
 			# Only dead players can haunt.
@@ -155,7 +159,7 @@ async def haunt(cmd):
 			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
 		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp and not target_isshambler:
+		elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
 			# Require the target to be flagged for PvP
 			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
 		elif haunted_data.life_state == ewcfg.life_state_corpse:
@@ -376,3 +380,138 @@ async def manifest(cmd):
 	user_data.persist()
 
 	await ewrolemgr.updateRoles(cmd.client, cmd.message.author)
+
+
+"""
+	allows ghosts to hook on to living players and follow them around
+"""
+async def inhabit(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+		
+	if user_data.life_state != ewcfg.life_state_corpse:
+		# Only ghosts can inhabit other players
+		response = "You have no idea what you're doing."
+	else:
+		if cmd.mentions_count > 1:
+			response = "Are you trying to split yourself in half? You can only inhabit one body at a time."
+		elif cmd.mentions_count == 1:
+			member = cmd.mentions[0]
+			target_data = EwUser(member = member)
+
+			if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+				# Has to be done in a gameplay channel
+				response = "You can't disturb the living from here."
+			elif cmd.message.channel.name == ewcfg.channel_sewers:
+				# Can't be done from the sewers
+				response = "Try doing that in the overworld, it's difficult from down here."
+			elif target_data.life_state == ewcfg.life_state_kingpin:
+				# Can't target generals
+				response = "He is far too strong for you to inhabit his body."
+			elif user_data.poi != target_data.poi:
+				# Player must be on the same location as their target
+				response = "You'll have to find them first."
+			elif target_data.life_state == ewcfg.life_state_corpse:
+				# Can't target ghosts
+				response = "You can't do that to your fellow ghost."
+			elif ewmap.poi_is_pvp(target_data.poi) == False:
+				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+			elif user_data.id_killer == target_data.id_user:
+				# Can't target the player's killer
+				response = "You wouldn't want a repeat of last time, better find someone else."
+			else:
+				# cancel the ghost's movement
+				ewutils.moves_active[cmd.message.author.id] = 0
+				# drop any previous inhabitation by the ghost
+				user_data.remove_inhabitation()
+				# add the new inhabitation
+				ewutils.execute_sql_query(
+					"REPLACE INTO inhabitations({id_ghost}, {id_fleshling}, {id_server}) VALUES (%s, %s, %s)".format(
+						id_ghost = ewcfg.col_id_ghost,
+						id_fleshling = ewcfg.col_id_fleshling,
+						id_server = ewcfg.col_id_server,
+					),(
+						user_data.id_user,
+						target_data.id_user,
+						user_data.id_server,
+					)
+				)
+
+				response = "{}\'s body is inhabitted by the ghost of {}!".format(member.display_name, cmd.message.author.display_name)
+		else:
+			response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def let_go(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+
+	if user_data.life_state != ewcfg.life_state_corpse:
+		# Only ghosts can inhabit other players
+		response = "You feel a bit more at peace with the world."
+	elif not user_data.get_inhabitee():
+		response = "You're not inhabitting anyone right now."
+	else:
+		user_data.remove_inhabitation()
+		response = "You let go of the soul you've been tormenting."
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def possess_weapon(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.life_state != ewcfg.life_state_corpse:
+		response = "You have no idea what you're doing."
+	elif not user_data.get_inhabitee():
+		response = "You're not inhabitting anyone right now."
+	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_possess_weapon):
+		# prevent ghosts from using so much antislime they can't manifest afterwards
+		response = "You'll have to become stronger before you can perform occult arts of this level."
+	else:
+		server = ewutils.get_client().get_server(user_data.id_server)
+		inhabitee_id = user_data.get_inhabitee()
+		inhabitee_data = EwUser(id_user = inhabitee_id, id_server = user_data.id_server)
+		inhabitee_member = server.get_member(inhabitee_id)
+		inhabitee_name = inhabitee_member.display_name
+		if inhabitee_data.weapon < 0:
+			response = "{} is not wielding a weapon right now.".format(inhabitee_name)
+		elif inhabitee_data.get_weapon_possession():
+			response = "{}'s weapon is already being possessed.".format(inhabitee_name)
+		else:
+			proposal_response = "You propose a trade to {}. " \
+				"You will possess their weapon to empower it, and in return they'll sacrifice half their slime to your name upon their next kill. " \
+				"Will they **{}** this exchange, or **{}** it?".format(inhabitee_name, ewcfg.cmd_accept, ewcfg.cmd_refuse)
+			await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, proposal_response))
+    
+			accepted = False
+			try:
+				msg = await cmd.client.wait_for_message(timeout = 30, author = inhabitee_member, check = ewutils.check_accept_or_refuse)
+				if msg != None:
+					if msg.content.lower() == ewcfg.cmd_accept:
+						accepted = True
+					elif message.content.lower() == ewcfg.cmd_refuse:
+						accepted = False
+			except:
+				accepted = False
+
+			if accepted:
+				ewutils.execute_sql_query(
+				"UPDATE inhabitations SET {empowered} = %s WHERE {id_fleshling} = %s AND {id_ghost} = %s".format(
+					empowered = ewcfg.col_empowered,
+					id_fleshling = ewcfg.col_id_fleshling,
+					id_ghost = ewcfg.col_id_ghost,
+				), (
+					True,
+					inhabitee_id,
+					user_data.id_user,
+				))
+				user_data.change_slimes(n = -ewcfg.slimes_to_possess_weapon, source = ewcfg.source_ghost_contract)
+				user_data.persist()
+				accepted_response = "You feel a metallic taste in your mouth as you sign {}'s spectral contract. You see them bind themselves to your weapon, which now bears their mark. It feels cold to the touch.".format(cmd.message.author.display_name)
+				await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(inhabitee_member, accepted_response))
+			else:
+				response = "You should've known better, why would anyone ever trust you?"
+	
+	if response:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

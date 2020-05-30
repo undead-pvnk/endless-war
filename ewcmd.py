@@ -459,6 +459,34 @@ async def data(cmd):
 		if (slimeoid.life_state == ewcfg.slimeoid_state_active) and (user_data.life_state != ewcfg.life_state_corpse):
 			response_block += "You are accompanied by {}, a {}-foot-tall Slimeoid. ".format(slimeoid.name, str(slimeoid.level))
 		
+		server = ewutils.get_client().get_server(user_data.id_server)
+		if user_data.life_state == ewcfg.life_state_corpse:
+			inhabitee_id = user_data.get_inhabitee()
+			if inhabitee_id:
+				inhabitee_name = server.get_member(inhabitee_id).display_name
+				if user_data.get_weapon_possession():
+					response_block += "You are currently possessing {}'s weapon. ".format(inhabitee_name)
+				else:
+					response_block += "You are currently inhabiting the body of {}. ".format(inhabitee_name)
+		else:
+			inhabitant_ids = user_data.get_inhabitants()
+			if inhabitant_ids:
+				inhabitant_names = []
+				for inhabitant_id in inhabitant_ids:
+					inhabitant_names.append(server.get_member(inhabitant_id).display_name)
+					ghost_in_weapon = user_data.get_weapon_possession()
+				if len(inhabitant_names) == 1:
+					response_block += "You are inhabited by the ghost of {}{}. ".format(inhabitant_names[0], ', who is possessing your weapon' if ghost_in_weapon else '')
+				else:
+					response_block += "You are inhabited by the ghosts of {}{} and {}. ".format(
+						", ".join(inhabitant_names[:-1]), 
+						"" if len(inhabitant_names) == 2 else ",", 
+						inhabitant_names[-1]
+					)
+					if ghost_in_weapon:
+							response_block += "{} is also possessing your weapon. ".format(server.get_member(ghost_in_weapon[0]).display_name)
+
+  
 		if user_data.swear_jar >= 500:
 			response_block += "You're going to The Underworld for the things you've said."
 		elif user_data.swear_jar >= 100:
@@ -1171,7 +1199,7 @@ async def pray(cmd):
 		market_data = EwMarket(id_server=cmd.message.server.id)
 		market_data.global_swear_jar = max(0, market_data.global_swear_jar - 3)
 		market_data.persist()
-		user_data.swear_jar = max(0, user_data.swear_jar - 3)
+		user_data.swear_jar = 0
 		user_data.persist()
 
 		if diceroll < probabilityofpoudrin: # Player gets a poudrin.
@@ -1499,7 +1527,7 @@ async def toss_off_cliff(cmd):
 
 	if cmd.message.channel.name != ewcfg.channel_slimesendcliffs:
 		if item_sought:
-			if item_sought.get('name')=="brick" and cmd.mentions_count > 0:
+			if item_sought.get('name') == "brick" and cmd.mentions_count > 0:
 				item = EwItem(id_item=item_sought.get('id_item'))
 				target = EwUser(member = cmd.mentions[0])
 				if target.apt_zone == user_data.poi:
@@ -1507,10 +1535,33 @@ async def toss_off_cliff(cmd):
 					item.persist()
 					response = "You throw a brick through {}'s window. Oh shit! Quick, scatter before they see you!".format(cmd.mentions[0].display_name)
 					if ewcfg.id_to_poi.get(target.poi).is_apartment	and target.visiting == ewcfg.location_id_empty:
-						await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
-
+						try:
+							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], "SMAAASH! A brick flies through your window!"))
+						except:
+							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
+				elif target.poi == user_data.poi:
+					if target.life_state == ewcfg.life_state_corpse:
+						response = "You reel back and chuck the brick at a ghost. As much as we both would like to teach the dirty staydead a lesson, the brick passes right through."
+						item.id_owner = target.poi
+						item.persist()
+					elif target.life_state == ewcfg.life_state_shambler:
+						response = "The brick is buried into the shambler's soft, malleable head, but the decayed fellow doesn't seem to notice. It looks like it phased into its inventory."
+						item.id_owner = target.id_user
+						item.persist()
+					elif target.life_state == ewcfg.life_state_kingpin:
+						response = "The brick is hurtling toward the kingpin's head, but they've long since gotten used to bricks to the head. It bounces off like nothing."
+						item.id_owner = target.poi
+						item.persist()
+					else:
+						response = ":bricks::boom: BONK! The brick slams against {}'s head!".format(cmd.mentions[0].display_name)
+						item.id_owner = target.poi
+						item.persist()
+						try:
+							await ewutils.send_message(cmd.client, cmd.mentions[0], ewutils.formatMessage(cmd.mentions[0], random.choice(["!!!!!!", "BRICK!", "FUCK", "SHIT", "?!?!?!?!?", "BONK!", "F'TAAAAANG!", "SPLAT!", "SPLAPP!", "WHACK"])))
+						except:
+							ewutils.logMsg("failed to send brick message to user {}".format(target.id_user))
 				else:
-					response = "There's no apartment here."
+					response = "There's nobody here."
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			else:
 				return await ewitem.discard(cmd=cmd)
@@ -1919,12 +1970,55 @@ async def manual_soulbind(cmd):
 		await ewutils.send_message(cmd.client, cmd.message.channel, response)
 	else:
 		return
+	
+#Debug
+async def set_slime(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	response = ""
+	
+	if cmd.mentions_count != 1:
+		response = "Invalid use of command. Example: !setslime @player 100"
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		target = cmd.mentions[0]
+
+	target_user_data = EwUser(id_user=target.id, id_server=cmd.message.server.id)
+
+	if len(cmd.tokens) > 2:
+		new_slime = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
+		if new_slime == None:
+			response = "Invalid number entered."
+			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 		
+		new_slime -= target_user_data.slimes
+	else:
+		return
+	
+	if target_user_data != None:
+
+		user_initial_level = target_user_data.slimelevel
+		levelup_response = target_user_data.change_slimes(n=new_slime)
+
+		was_levelup = True if user_initial_level < target_user_data.slimelevel else False
+
+		if was_levelup:
+			response += " {}".format(levelup_response)
+		target_user_data.persist()
+		
+		response = "Set {}'s slime to {}.".format(cmd.message.author, target_user_data.slimes)
+	else:
+		return
+
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 async def prank(cmd):
 	# User must have the Janus Mask adorned, and must use the command in a capturable district's channel
 	user_data = EwUser(member=cmd.message.author)
 
-	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False) or (user_data.poi not in ewcfg.capturable_districts):
+	if (ewutils.channel_name_is_poi(cmd.message.channel.name) == False): #or (user_data.poi not in ewcfg.capturable_districts):
 		response = "The powers of the mask don't really resonate with you here."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	

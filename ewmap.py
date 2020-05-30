@@ -749,6 +749,11 @@ async def move(cmd = None, isApt = False):
 
 	movement_method = ""
 
+	if user_data.get_inhabitee():
+    # prevent ghosts currently inhabiting other players from moving on their own
+		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
 		response = "You can't do that right now."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -983,6 +988,9 @@ async def move(cmd = None, isApt = False):
 					# SWILLDERMUK
 					await ewutils.activate_trap_items(poi.id_poi, user_data.id_server, user_data.id_user)
 
+					# also move any ghosts inhabitting the player
+					await user_data.move_inhabitants(id_poi = poi_current.id_poi)
+
 					if poi_current.has_ads:
 						ads = ewads.get_ads(id_server = user_data.id_server)
 						if len(ads) > 0:
@@ -1135,7 +1143,7 @@ async def teleport(cmd):
 			user_data.persist()
 
 			await ewrolemgr.updateRoles(client=cmd.client, member=cmd.message.author)
-				
+			await user_data.move_inhabitants(id_poi = poi.id_poi)
 			resp_cont.add_channel_response(poi.channel, ewutils.formatMessage(cmd.message.author, response))
 			await resp_cont.post()
 
