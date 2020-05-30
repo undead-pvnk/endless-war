@@ -435,7 +435,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = "rfck", charset = "utf8"),
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -1234,6 +1234,12 @@ def slime_bylevel(slimelevel):
 def level_byslime(slime):
 	return int(abs(slime) ** 0.25)
 
+
+"""
+	Calculate the maximum sap amount a player can have at their given slime level
+"""
+def sap_max_bylevel(slimelevel):
+	return int(1.6 * slimelevel ** 0.75)
 
 """
 	Calculate the maximum hunger level at the player's slimelevel

@@ -694,9 +694,13 @@ cmd_map = {
 }
 
 debug = False
+db_prefix = '--db='
 while sys.argv:
-	if sys.argv[0].lower() == '--debug':
+	arg_lower = sys.argv[0].lower()
+	if arg_lower == '--debug':
 		debug = True
+	elif arg_lower.startswith(db_prefix):
+		ewcfg.database = arg_lower[len(db_prefix):]
 
 	sys.argv = sys.argv[1:]
 
@@ -704,6 +708,8 @@ while sys.argv:
 if debug == True:
 	ewutils.DEBUG = True
 	ewutils.logMsg('Debug mode enabled.')
+
+ewutils.logMsg('Using database: {}'.format(ewcfg.database))
 
 @client.event
 async def on_member_remove(member):
