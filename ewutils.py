@@ -435,15 +435,7 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-<<<<<<< HEAD
-
 		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
-
-
-
-=======
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
->>>>>>> 715db9684731341315fb8b85e78614a77b68806f
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -2130,11 +2122,6 @@ def channel_name_is_poi(channel_name):
 		return channel_name in ewcfg.chname_to_poi
 
 	return False
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 715db9684731341315fb8b85e78614a77b68806f
 
 def get_cosmetic_abilities(id_user, id_server):
 	active_abilities = []
@@ -2309,7 +2296,4 @@ def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None)
 	# 		response = "none 5"
 
 	return response
-<<<<<<< HEAD
 
-=======
->>>>>>> 715db9684731341315fb8b85e78614a77b68806f
