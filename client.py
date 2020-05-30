@@ -462,8 +462,6 @@ cmd_map = {
 	ewcfg.cmd_retrofit: ewcosmeticitem.retrofit,
 	ewcfg.cmd_fashion: ewcmd.fashion,
 
-	ewcfg.cmd_sip: ewcosmeticitem.sip,
-
 	ewcfg.cmd_create: ewkingpin.create,
 	ewcfg.cmd_forgemasterpoudrin: ewcmd.forge_master_poudrin,
 	ewcfg.cmd_createitem: ewcmd.create_item,
@@ -1612,6 +1610,20 @@ async def on_message(message):
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "Food created."))
 
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createdye'):
+			item = ewcfg.dye_list[random.randint(0, len(ewcfg.dye_list) - 1)]
+
+			item_props = ewitem.gen_item_props(item)
+
+			ewitem.item_create(
+				item_type = item.item_type,
+				id_user = message.author.id,
+				id_server = message.server.id,
+				item_props = item_props
+			)
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{} created.".format(item.str_name)))
+
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createoldhat'):
 			patrician_rarity = 20
 			patrician_smelted = random.randint(1, patrician_rarity)
@@ -1685,6 +1697,12 @@ async def on_message(message):
 			)
 
 			response = "Success! You've smelted a soul!"
+
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+		elif debug == True and cmd == (ewcfg.cmd_prefix + 'getoutfit'):
+			ewutils.get_outfit(id_user = message.author.id, id_server = message.server.id)
+
+			response = "Consider it gotten."
 
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
 

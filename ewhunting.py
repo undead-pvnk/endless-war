@@ -535,7 +535,7 @@ class EwEnemy:
 								target_data.attack -= int(c.item_props[ewcfg.stat_attack])
 								target_data.defense -= int(c.item_props[ewcfg.stat_defense])
 								target_data.speed -= int(c.item_props[ewcfg.stat_speed])
-								target_data.freshness = ewutils.get_total_freshness(id_user = target_data.id_user, id_server = target_data.id_server)
+								target_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 								target_data.persist()
 

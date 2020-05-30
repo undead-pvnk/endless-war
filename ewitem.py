@@ -777,7 +777,7 @@ def inventory(
 								'str_unadorn': ewcfg.str_generic_unadorn,
 								'str_onbreak': ewcfg.str_generic_onbreak,
 								'rarity': ewcfg.rarity_plebeian,
-								'attack': 0,
+								'attack': 1,
 								'defense': 0,
 								'speed': 0,
 								'ability': None,

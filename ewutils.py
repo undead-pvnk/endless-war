@@ -2135,23 +2135,7 @@ def get_cosmetic_abilities(id_user, id_server):
 
 	return active_abilities
 
-def retrieve_majority_style(adorned_styles, adorned_cosmetics, total_freshness):
-	counted_styles = collections.Counter(adorned_styles)
-	majority_style = max(counted_styles, key = counted_styles.get)
-	total_freshness * 2
-
-	relative_amount = round(int(counted_styles.get(majority_style) / len(adorned_cosmetics) * 100))
-
-	if relative_amount >= 75:
-		majority_style_map = {
-			'majority_style': majority_style,
-			'total_freshness': total_freshness
-		}
-		return majority_style_map
-	else:
-		return None
-
-def get_total_freshness(id_user, id_server):
+def get_outfit_info(id_user, id_server, wanted_info = None):
 	cosmetic_items = ewitem.inventory(
 		id_user = id_user,
 		id_server = id_server,
@@ -2161,8 +2145,9 @@ def get_total_freshness(id_user, id_server):
 	adorned_cosmetics = []
 
 	adorned_styles = []
+	dominant_style = None
 
-	majority_style_map = None
+	adorned_hues = []
 
 	total_freshness = 0
 
@@ -2170,16 +2155,40 @@ def get_total_freshness(id_user, id_server):
 		c = EwItem(id_item = cosmetic.get('id_item'))
 
 		if c.item_props['adorned'] == 'true':
-			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
-			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 			adorned_styles.append(c.item_props.get('fashion_style'))
+
+			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+			adorned_hues.append(c.item_props.get('hue'))
+
 			total_freshness += int(c.item_props.get('freshness'))
 
-	if len(adorned_cosmetics) != 0 and len(adorned_styles) != 0:
-		majority_style_map = retrieve_majority_style(adorned_styles = adorned_styles, adorned_cosmetics = adorned_cosmetics, total_freshness = total_freshness)
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
-	if majority_style_map is not None:
-		total_freshness = int(majority_style_map['total_freshness'])
+	if len(adorned_cosmetics) != 0:
+		# Assess if there's a cohesive style
+		if len(adorned_styles) != 0:
+			counted_styles = collections.Counter(adorned_styles)
+			dominant_style = max(counted_styles, key = counted_styles.get)
+
+			relative_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+
+			# Adds the relative amount to the total freshness as a percentage of itself, which means having a completely cohesive outfit doubles your freshness.
+			total_freshness = round(total_freshness * (1 + float(relative_amount / 100)))
+
+		#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
+		if len(adorned_hues) != 0:
+			counted_hues = collections.Counter(adorned_hues)
+
+			if None not in counted_hues.keys() and len(counted_hues.keys()) <= 3:
+				total_freshness *= 1.5
+
+	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
+		return dominant_style
+	elif wanted_info is not None and wanted_info == "total_freshness":
 		return total_freshness
 	else:
-		return total_freshness
+		outfit_map = {
+			'dominant_style': dominant_style,
+			'total_freshness': total_freshness
+		}
+		return outfit_map

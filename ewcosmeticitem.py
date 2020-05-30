@@ -141,7 +141,6 @@ async def adorn(cmd):
 			# Search for desired cosmetic
 			if item.get('id_item') == item_id_int or item_id in ewutils.flattenTokenListToString(item.get('name')):
 
-
 				if item_from_slimeoid == None and i.item_props.get("slimeoid") == 'true':
 					item_from_slimeoid = i
 					continue
@@ -182,7 +181,7 @@ async def adorn(cmd):
 				user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
 				item_sought.persist()
-				user_data.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 				user_data.persist()
 
 			# Attempt to adorn the cosmetic
@@ -193,8 +192,9 @@ async def adorn(cmd):
 
 				# If you don't have enough space, abort
 				if space_adorned >= ewutils.max_adornspace_bylevel(user_data.slimelevel):
-					response = "You can't adorn anymore cosmetics."
+					response = "Oh yeah? And, pray tell, just how do you expect to do that? You’re out of space, you can’t adorn any more garments!"
 
+				# If you have enough space, adorn
 				else:
 					item_sought.item_props['adorned'] = 'true'
 
@@ -202,6 +202,7 @@ async def adorn(cmd):
 					user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
 					user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
+					# Take the hat from your slimeoid if necessary
 					if item_sought.item_props.get('slimeoid') == 'true':
 						item_sought.item_props['slimeoid'] = 'false'
 						response = "You take your {} from your slimeoid and successfully adorn it.".format(item_sought.item_props.get('cosmetic_name'))
@@ -210,7 +211,7 @@ async def adorn(cmd):
 						response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
 
 					item_sought.persist()
-					user_data.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+					user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 					user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -303,7 +304,7 @@ async def smoke(cmd):
 				usermodel.attack += int(item_sought.item_props[ewcfg.stat_attack])
 				usermodel.defense += int(item_sought.item_props[ewcfg.stat_defense])
 				usermodel.speed += int(item_sought.item_props[ewcfg.stat_speed])
-				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -323,7 +324,7 @@ async def smoke(cmd):
 				usermodel.attack -= int(item_sought.item_props[ewcfg.stat_attack])
 				usermodel.defense -= int(item_sought.item_props[ewcfg.stat_defense])
 				usermodel.speed -= int(item_sought.item_props[ewcfg.stat_speed])
-				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -345,8 +346,7 @@ async def smoke(cmd):
 				usermodel.attack += int(item_sought.item_props[ewcfg.stat_attack])
 				usermodel.defense += int(item_sought.item_props[ewcfg.stat_defense])
 				usermodel.speed += int(item_sought.item_props[ewcfg.stat_speed])
-				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author,
-																  id_server = cmd.message.server)
+				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -365,7 +365,7 @@ async def smoke(cmd):
 				usermodel.attack -= int(item_sought.item_props[ewcfg.stat_attack])
 				usermodel.defense -= int(item_sought.item_props[ewcfg.stat_defense])
 				usermodel.speed -= int(item_sought.item_props[ewcfg.stat_speed])
-				usermodel.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -394,7 +394,7 @@ def dedorn_all_costumes():
 			usermodel.attack -= int(costume_item.item_props[ewcfg.stat_attack])
 			usermodel.defense -= int(costume_item.item_props[ewcfg.stat_defense])
 			usermodel.speed -= int(costume_item.item_props[ewcfg.stat_speed])
-			usermodel.freshness = ewutils.get_total_freshness(id_user = costume_item.id_owner, id_server = costume_item.id_server)
+			usermodel.freshness = ewutils.get_outfit_info(id_user = usermodel.id_user, id_server = usermodel.id_server, wanted_info = "total_freshness")
 
 			usermodel.persist()
 
@@ -455,11 +455,12 @@ async def sew(cmd):
 						original_durability = ewcfg.soul_durability
 
 					elif item_sought.item_props['id_cosmetic'] == 'scalp':
-						if 'original_durability' not in item_sought.item_props.keys():
+						if 'original_durability' not in item_sought.item_props.keys(): # If it's a scalp created before this update
 							original_durability = ewcfg.generic_scalp_durability
 						else:
-							original_durability = int(item_sought.item_props['original_durability'])
-					else:
+							original_durability = int(item_sought.item_props['original_durability']) # If it's a scalp created after
+
+					else: # Find the mold of the item in ewcfg.cosmetic_items_list
 						original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
 						original_durability = original_item.durability
 
@@ -472,9 +473,9 @@ async def sew(cmd):
 						cost_ofrepair = difference * 4 # NO ONE SAID IT WOULD BE EASY
 
 						if cost_ofrepair > user_data.slimes:
-							response = "Get out of here! Scram, weirdo! It costs {} to repair that cosmetic, which you don't have! Die! Die! Fucking Die!".format(cost_ofrepair)
+							response = 'The hipster behind the counter narrows his gaze, his thick-rimmed glasses magnify his hatred of your ignoble ancestry.\n"Sir… it would cost {:,} to sew this garment back together. That’s more slime than you or your clan could ever accrue. Good day, sir. I SAID GOOD DAY. Come back when you’re a little, mmmmhh, *richer*."'.format(cost_ofrepair)
 						else:
-							response = "It costs {} to repair this. Are you sure you wanna?".format(cost_ofrepair)
+							response ='"Let’s see, all told… including tax… plus gratuity… and a hefty tip, of course… your total comes out to {}, sir."'.format(cost_ofrepair)
 							response += "\n**!accept** or **!refuse** the deal."
 
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -512,16 +513,16 @@ async def sew(cmd):
 								item_sought.item_props['durability'] = original_durability
 								item_sought.persist()
 
-								response = '"Pleasure doing business with you, laddy!"'
+								response = '"Excellent. Just a moment… one more stitch and-- there, perfect! Your {}, sir. It’s good as new, no? Well, no refunds in any case."'.format(item_sought.item_props['str_name'])
 
 							else:
-								response = '"Ok, sure, whatever. No, I dont care. No, yeah. sure."'
+								response = '"Oh, yes, of course. I understand, sir. No, really that’s okay. I get it. I totally get it. That’s your decision. Really, it’s okay. No problem here. Yep. Yup. Uh-huh, uh-huh. Yep. It’s fine, sir. That’s completely fine. For real. Seriously. I understand, sir. It’s okay. I totally get it. Yep. Uh-huh. Yes, sir. Really, it’s okay. Some people just don’t care how they look. I understand, sir."'
 					else:
-						response = "What're you talking about? This looks fine to me!"
+						response = 'The hipster behind the counter looks over your {} with the thoroughness that a true man would only spend making sure all the blood really was wrung from his most recent hunt’s neck or all the cum was ejactulated from his partner’s throbbing cock…\n"Sir," he begins to say, turning back to you before almost vomiting at the sight. After he regains his composure, he continues, "I understand you are an, shall we say, uneducated peasant, to put it delicately, but even still you should be able to tell that your {} is in mint condition. Please, do not bother me with such wastes of my boss’ time again. I do enough of that on my own."'.format(item_sought.item_props['str_name'], item_sought.item_props['str_name'])
 		else:
 			response = "Sew which cosmetic? Check your **!inventory**."
 	else:
-		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
+		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally fucking lame, everyone knows that! Even people who sew know that! You’re gonna have to find some nerd to do it for you."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -566,58 +567,43 @@ async def retrofit(cmd):
 
 			# If the cosmetic you want to have repaired is found
 			if item_sought != None:
-				# Can't retrofit scalps because we just can't, okay?
-				if item_sought.item_props['id_cosmetic'] == 'scalp':
-					response = "What the hell is this? I'm not gonna retrofit some dude's fucking scalp, are you retarded?"
-
+				if item_sought.item_props.get('id_cosmetic') == 'soul' or item_sought.item_props.get('id_cosmetic') == 'scalp':
+					response = 'The hipster behind the counter is taken aback by your total lack of self awareness. "By Doctor Who!" He exclaims. "This is a place where fine clothing is sold, sir. Not a common circus freak show for ill-bred worms to feed upon the suffering of others, where surely someone of your morally bankrupt description must surely have originated! That or the whore house, oh my Rainbow Dash..." He begins to tear up. "Just… go. Take your {} and go. Do come back if you want it sewn back together, though."'.format(item_sought.item_props['str_name'])
 				else:
 					current_item_stats = {}
-
+					# Get the current stats of your cosmetic
 					for stat in ewcfg.playerstats_list:
 						if stat in item_sought.item_props.keys():
 							if abs(int(item_sought.item_props[stat])) > 0:
 								current_item_stats[stat] = int(item_sought.item_props[stat])
 
-					if item_sought.item_props.get('id_cosmetic') == 'soul':
-						desired_item_stats = {
-							ewcfg.stat_attack: 6,
-							ewcfg.stat_defense: 6,
-							ewcfg.stat_speed: 6,
+					if 'ability' in item_sought.item_props.keys():
+						current_item_stats['ability'] = item_sought.item_props['ability']
 
-						}
-					elif item_sought.item_props.get('id_cosmetic') == 'scalp':
-						desired_item_stats = {
-							ewcfg.stat_attack: 1,
-						}
+					# Get the stats retrofitting would give you from the item model in ewcfg.cosmetic_items_list
+					desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+					desired_item_stats = {}
 
-					else:
-						desired_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])
+					for stat in ewcfg.playerstats_list:
+						if stat in desired_item.stats.keys():
+							if abs(int(desired_item.stats[stat])) > 0:
+								desired_item_stats[stat] = desired_item.stats[stat]
 
-						desired_item_stats = {}
+					if desired_item.ability is not None:
+						desired_item_stats['ability'] = desired_item.ability
 
-						for stat in ewcfg.playerstats_list:
-							if stat in desired_item.stats.keys():
-								if abs(int(desired_item.stats[stat])) > 0:
-									desired_item_stats[stat] = desired_item.stats[stat]
-
-					# If the cosmetic is actually damaged at all
+					# Check to see if the cosmetic is actually outdated
 					if current_item_stats != desired_item_stats:
-						if item_sought.item_props['id_cosmetic'] == 'soul':
-							cost_ofretrofit = 0
-
-						elif item_sought.item_props['id_cosmetic'] == 'scalp':
-							cost_ofretrofit = ewcfg.generic_scalp_durability * 4
-
-						elif desired_item.price:
+						if desired_item.price:
 							cost_ofretrofit = desired_item.price * 4
 
 						else:
-							cost_ofretrofit = 1000000 # 1 mega
+							cost_ofretrofit = 1000000 # This is a completely random number that I arbitrarily pulled out of my ass
 
 						if cost_ofretrofit > user_data.slimes:
-							response = "Get out of here! Scram, weirdo! It costs {} to retrofit that cosmetic, which you don't have! Die! Die! Fucking Die!".format(cost_ofretrofit)
+							response = 'The hipster behind the counter narrows his gaze, his thick-rimmed glasses magnify his hatred of your ignoble ancestry.\n"Sir… it would cost {:,} to retrofit this garment with updated combat abilities. That’s more slime than you or your clan could ever accrue. Good day, sir. I SAID GOOD DAY. Come back when you’re a little, mmmmhh, *richer*."'.format(cost_ofretrofit)
 						else:
-							response = "It costs {} to repair this. Are you sure you wanna?".format(cost_ofretrofit)
+							response = '"Let’s see, all told… including tax… plus gratuity… and a hefty tip, of course… your total comes out to {}, sir."'.format(cost_ofretrofit)
 							response += "\n**!accept** or **!refuse** the deal."
 
 							await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -653,27 +639,24 @@ async def retrofit(cmd):
 									if stat in desired_item_stats.keys():
 										item_sought.item_props[stat] = desired_item_stats[stat]
 
-								if item_sought.item_props['id_cosmetic'] == 'soul':
-									item_sought.item_props['durability'] = ewcfg.soul_durability
-								if item_sought.item_props['id_cosmetic'] == 'scalp' and 'original_durability' not in item_sought.item_props.keys():
-									item_sought.item_props['durability'] = ewcfg.generic_scalp_durability
-
 								item_sought.persist()
 
 								user_data.slimes -= cost_ofretrofit
+
 								if item_sought.item_props['adorned'] == "true":
 									user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
 									user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
 									user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
+								user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 								user_data.persist()
 
-								response = '"Pleasure doing business with you, laddy!"'
+								response = '"Excellent. Just a moment… one more iron press and-- there, perfect! Your {}, sir. It’s like you just smelted it, no? Well, no refunds in any case."'.format(item_sought.item_props['str_name'])
 
 							else:
-								response = '"Ok, sure, whatever. No, I dont care. No, yeah. sure."'
+								response = '"Oh, yes, of course. I understand, sir. No, really that’s okay. I get it. I totally get it. That’s your decision. Really, it’s okay. No problem here. Yep. Yup. Uh-huh, uh-huh. Yep. It’s fine, sir. That’s completely fine. For real. Seriously. I understand, sir. It’s okay. I totally get it. Yep. Uh-huh. Yes, sir. Really, it’s okay. Some people just don’t care how they look. I understand, sir."'
 					else:
-						response = "What're you talking about? This looks fine to me!"
+						response = 'The hipster behind the counter looks over your {} with the thoroughness that a true man would only spend making sure all the blood really was wrung from his most recent hunt’s neck or all the cum was ejactulated from his partner’s throbbing cock…\n"Sir," he begins to say, turning back to you before almost vomiting at the sight. After he regains his composure, he continues, "I understand you are an, shall we say, uneducated peasant, to put it delicately, but even still you should be able to tell that your {} is already completely up-to-date. Please, do not bother me with such wastes of my boss’ time again. I do enough of that on my own."'.format(item_sought.item_props['str_name'], item_sought.item_props['str_name'])
 		else:
 			response = "Sew which cosmetic? Check your **!inventory**."
 	else:

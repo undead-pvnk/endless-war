@@ -636,11 +636,11 @@ async def fashion(cmd):
 		if len(adorned_cosmetics) >= 2:
 			response += "\n\n"
 
-			majority_style_map = ewutils.retrieve_majority_style(adorned_styles = adorned_styles, adorned_cosmetics = adorned_cosmetics, total_freshness = user_data.freshness)
+			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
 
-			if majority_style_map is not None:
+			if outfit_map is not None:
 
-				if majority_style_map['majority_style'] == ewcfg.style_neutral:
+				if outfit_map['dominant_style'] == ewcfg.style_neutral:
 					if user_data.freshness < 20:
 						response += "Your normal outfit is lowkey on-point."
 					elif user_data.freshness < 40:
@@ -651,7 +651,7 @@ async def fashion(cmd):
 						response += "Your normal outfit is STELLAR! I wanna know who your tailor is!"
 					else:
 						response += "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
-				if majority_style_map['majority_style'] == ewcfg.style_cool:
+				if outfit_map['dominant_style'] == ewcfg.style_cool:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:
@@ -662,7 +662,7 @@ async def fashion(cmd):
 						response += ""
 					else:
 						response += ""
-				if majority_style_map['majority_style'] == ewcfg.style_tough:
+				if outfit_map['dominant_style'] == ewcfg.style_tough:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:
@@ -673,7 +673,7 @@ async def fashion(cmd):
 						response += ""
 					else:
 						response += ""
-				if majority_style_map['majority_style'] == ewcfg.style_smart:
+				if outfit_map['dominant_style'] == ewcfg.style_smart:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:
@@ -684,7 +684,7 @@ async def fashion(cmd):
 						response += ""
 					else:
 						response += ""
-				if majority_style_map['majority_style'] == ewcfg.style_beautiful:
+				if outfit_map['dominant_style'] == ewcfg.style_beautiful:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:
@@ -695,7 +695,7 @@ async def fashion(cmd):
 						response += ""
 					else:
 						response += ""
-				if majority_style_map['majority_style'] == ewcfg.style_cute:
+				if outfit_map['dominant_style'] == ewcfg.style_cute:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:
@@ -706,7 +706,7 @@ async def fashion(cmd):
 						response += ""
 					else:
 						response += ""
-				if majority_style_map['majority_style'] == ewcfg.style_sporty:
+				if outfit_map['dominant_style'] == ewcfg.style_sporty:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:
@@ -717,7 +717,7 @@ async def fashion(cmd):
 						response += ""
 					else:
 						response += ""
-				if majority_style_map['majority_style'] == ewcfg.style_weird:
+				if outfit_map['dominant_style'] == ewcfg.style_weird:
 					if user_data.freshness < 20:
 						response += ""
 					elif user_data.freshness < 40:

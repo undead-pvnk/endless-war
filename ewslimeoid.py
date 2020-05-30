@@ -2601,6 +2601,7 @@ class EwHue:
 	str_name= ""
 	str_desc = ""
 	effectiveness = {}
+	palette = []
 	def __init__(
 		self,
 		id_hue = "",
@@ -2609,6 +2610,7 @@ class EwHue:
 		str_name= "",
 		str_desc = "",
 		effectiveness = {},
+		palette = []
 	):
 		self.id_hue = id_hue
 		self.alias = alias
@@ -2616,6 +2618,7 @@ class EwHue:
 		self.str_name= str_name
 		self.str_desc = str_desc
 		self.effectiveness = effectiveness
+		self.style_palette = palette
 
 async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)
@@ -3290,7 +3293,7 @@ async def dress_slimeoid(cmd):
 					
 					item_sought.item_props['slimeoid'] = 'true'
 					item_sought.persist()
-					user_data.freshness = ewutils.get_total_freshness(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+					user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 					user_data.persist()
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'

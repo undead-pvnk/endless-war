@@ -778,7 +778,7 @@ async def attack(cmd):
 								shootee_data.attack -= int(c.item_props[ewcfg.stat_attack])
 								shootee_data.defense -= int(c.item_props[ewcfg.stat_defense])
 								shootee_data.speed -= int(c.item_props[ewcfg.stat_speed])
-								shootee_data.freshness = ewutils.get_total_freshness(id_user = shootee_data.id_user, id_server = cmd.message.server)
+								shootee_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 								shootee_data.persist()
 
@@ -2794,10 +2794,12 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				total_freshness += int(c.item_props.get('freshness'))
 
 
-		majority_style_map = ewutils.retrieve_majority_style(adorned_styles, adorned_cosmetics, user_data.freshness)
+		outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
 
-		if majority_style_map != None:
-			damage_mod *= 2
+		if outfit_map != None:
+			if "total_freshness" in outfit_map.keys():
+				if int(outfit_map['total_freshness']) >= 100:
+					damage_mod *= 4
 
 	return damage_mod
 
