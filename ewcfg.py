@@ -12640,11 +12640,11 @@ for line in transport_lines:
 
 
 # Fashion styles for cosmetics
-style_cool = "casual"
-style_tough = "grunge"
-style_smart = "hipster"
-style_beautiful = "modern"
-style_cute = "kawaii"
+style_cool = "cool"
+style_tough = "tough"
+style_smart = "smart"
+style_beautiful = "beautiful"
+style_cute = "cute"
 
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
 base_durability = 250000 # 1 mega

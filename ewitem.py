@@ -1187,15 +1187,15 @@ async def item_look(cmd):
 					response += "It costs about {amount} space to adorn.\n".format(amount = item.item_props['size'])
 
 				if item.item_props['fashion_style'] == ewcfg.style_cool:
-					response += "It's got a casual feel to it. "
+					response += "It's got a cool feel to it. "
 				if item.item_props['fashion_style'] == ewcfg.style_tough:
-					response += "It's lookin' grunge as hell, my friend. "
+					response += "It's lookin' tough as hell, my friend. "
 				if item.item_props['fashion_style'] == ewcfg.style_smart:
-					response += "It's ggot sort of a hipstery vibe. "
+					response += "It's got sort of a smart vibe. "
 				if item.item_props['fashion_style'] == ewcfg.style_beautiful:
-					response += "It's got a modern, refined feel. "
+					response += "It's got a beautiful, refined feel. "
 				if item.item_props['fashion_style'] == ewcfg.style_cute:
-					response += "It's super kawaiiiiiiiiii~ deeeessuusususususususuusususufuswvgslgerphi4hjetbhjhjbetbjtrrpo"
+					response += "It's super cuuuutttiieeeeeeeeeeeee~ deeeessuusususususususuusususufuswvgslgerphi4hjetbhjhjbetbjtrrpo"
 
 				response += "\n\nIt's freshness rating is {rating}.".format(rating = item.item_props['freshness'])
 
