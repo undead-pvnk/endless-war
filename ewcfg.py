@@ -12640,11 +12640,11 @@ for line in transport_lines:
 
 
 # Fashion styles for cosmetics
-style_cool = "casual"
-style_tough = "grunge"
-style_smart = "hipster"
-style_beautiful = "modern"
-style_cute = "kawaii"
+style_cool = "cool"
+style_tough = "tough"
+style_smart = "smart"
+style_beautiful = "beautiful"
+style_cute = "cute"
 
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
 base_durability = 250000 # 1 mega
@@ -13707,6 +13707,7 @@ cosmetic_items_list = [
 		style = style_cool,
 		freshness = 7,
 		vendors = [vendor_bodega],
+		price = 50000,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13812,6 +13813,7 @@ cosmetic_items_list = [
 		style = style_smart,
 		freshness = 8,
 		vendors = [vendor_bodega],
+		price = 50000,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13890,6 +13892,7 @@ cosmetic_items_list = [
 		style = style_beautiful,
 		freshness = 7,
 		vendors = [vendor_bodega],
+		price = 50000,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13905,6 +13908,7 @@ cosmetic_items_list = [
 		str_desc = "A hat striped with red and white is quite right for a fanciful fight! It’s a funny hat at that, and it looks like it’s been worn by a cat!", # fuck you.
 		rarity = rarity_plebeian, # fuck you.
 		vendors = [vendor_secretbodega],
+		price = 100,
 		acquisition = acquisition_smelting, # fuck you.
 		is_hat = True, # fuck you.
 	),
