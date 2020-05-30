@@ -46,6 +46,7 @@ update_market = 900 #15 min
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
 
+
 # Market delta
 max_iw_swing = 30
 
