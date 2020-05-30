@@ -181,7 +181,7 @@ async def adorn(cmd):
 				user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
 				item_sought.persist()
-				user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
+				user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 				user_data.persist()
 
 			# Attempt to adorn the cosmetic
@@ -211,7 +211,7 @@ async def adorn(cmd):
 						response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
 
 					item_sought.persist()
-					user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
+					user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 					user_data.persist()
 
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -648,7 +648,7 @@ async def retrofit(cmd):
 									user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
 									user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
-								user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
+								user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 								user_data.persist()
 
 								response = '"Excellent. Just a moment… one more iron press and-- there, perfect! Your {}, sir. It’s like you just smelted it, no? Well, no refunds in any case."'.format(item_sought.item_props['str_name'])

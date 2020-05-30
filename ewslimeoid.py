@@ -3293,7 +3293,7 @@ async def dress_slimeoid(cmd):
 					
 					item_sought.item_props['slimeoid'] = 'true'
 					item_sought.persist()
-					user_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
+					user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 					user_data.persist()
 				else:
 					response = 'Your slimeoid is too small to wear any more clothes.'

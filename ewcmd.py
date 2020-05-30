@@ -637,108 +637,11 @@ async def fashion(cmd):
 			response += "\n\n"
 
 			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+			user_data.freshness = int(outfit_map['total_freshness'])
+			user_data.persist()
 
 			if outfit_map is not None:
-
-				if outfit_map['dominant_style'] == ewcfg.style_neutral:
-					if user_data.freshness < 20:
-						response += "Your normal outfit is lowkey on-point."
-					elif user_data.freshness < 40:
-						response += "Your normal outfit is gettin' kinda fleeky, not gonna lie."
-					elif user_data.freshness < 80:
-						response += "For real, your normal outfit is really fuckin' kino, my friend"
-					elif user_data.freshness < 100:
-						response += "Your normal outfit is STELLAR! I wanna know who your tailor is!"
-					else:
-						response += "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
-				if outfit_map['dominant_style'] == ewcfg.style_cool:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-				if outfit_map['dominant_style'] == ewcfg.style_tough:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-				if outfit_map['dominant_style'] == ewcfg.style_smart:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-				if outfit_map['dominant_style'] == ewcfg.style_beautiful:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-				if outfit_map['dominant_style'] == ewcfg.style_cute:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-				if outfit_map['dominant_style'] == ewcfg.style_sporty:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-				if outfit_map['dominant_style'] == ewcfg.style_weird:
-					if user_data.freshness < 20:
-						response += ""
-					elif user_data.freshness < 40:
-						response += ""
-					elif user_data.freshness < 80:
-						response += ""
-					elif user_data.freshness < 100:
-						response += ""
-					else:
-						response += ""
-			else:
-				if user_data.freshness < 20:
-					response += ""
-				elif user_data.freshness < 40:
-					response += ""
-				elif user_data.freshness < 80:
-					response += ""
-				elif user_data.freshness < 100:
-					response += ""
-				else:
-					response += ""
+				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
 
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 
