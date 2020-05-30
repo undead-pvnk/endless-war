@@ -2204,13 +2204,13 @@ def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None)
 	if dominant_style == None:
 		dominant_style = "fresh"
 
-	if user_data.freshness < 200:
+	if user_data.freshness < 100:
 		response = "{pronoun} outfit is starting to look kinda {style}, not gonna lie.".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 400:
+	elif user_data.freshness < 200:
 		response = "{pronoun} outfit is low-key on-point, and pretty {style}.".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 800:
+	elif user_data.freshness < 300:
 		response = "{pronoun} outfit is getting really {style} now! I mean, just look at it! Damn!".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 1000:
+	elif user_data.freshness < 500:
 		response = "{pronoun} outfit is totally **on fire!** People are taking notice of {pronoun} {style}ness, and low-level imposters are popping up on Grimstagram.".format(pronoun = pronoun, style = dominant_style)
 	else:
 		response = "{pronoun} outfit is positively, without a doubt, 100% ***ON FLEEK!!*** {pronoun} Grimstagram has EXPLODED, and a collab with Rarity™ from My Little Pony™ is in the WORKS. " \

@@ -123,7 +123,7 @@ async def menu(cmd):
 
 		for vendor in vendors_list:
 			if vendor == ewcfg.vendor_secretbodega:
-				if user_data.freshness < 1000:
+				if user_data.freshness < 500:
 					continue
 				else:
 					response += '\nThe hipster behind the counter nearly falls out of his chair after laying eyes on the sheer, unadulterated freshness before him.\n"S-Sir! Your outfit... i-it is positively ***on fleek!!*** As I see you are a fashion enthusiast like myself, let me show you the good stuff…"\n'
