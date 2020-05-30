@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.3-boneworks"
+version = "v3.4"
 
 
 dir_msgqueue = 'msgqueue'
@@ -63,6 +63,17 @@ life_state_lucky = 7
 life_state_grandfoe = 8
 life_state_kingpin = 10
 life_state_observer = 20
+
+# Player stats. What, you ever play an RPG before, kid?
+stat_attack = 'attack'
+stat_defense = 'defense'
+stat_speed = 'speed'
+
+playerstats_list = [
+	stat_attack,
+	stat_defense,
+	stat_speed,
+]
 
 slimeoid_tick_length = 5 * 60 #5 minutes
 
@@ -121,7 +132,7 @@ poi_id_slimesea = "slimesea"
 poi_id_slimesendcliffs = "slimesendcliffs"
 poi_id_greencakecafe = "greencakecafe"
 poi_id_sodafountain = "sodafountain"
-
+poi_id_bodega = "bodega"
 
 
 # transports
@@ -518,6 +529,7 @@ channel_apt_crookline ="crookline-apartments"
 channel_apt_dreadford ="dreadford-apartments"
 
 channel_slimesendcliffs = "slimes-end-cliffs"
+channel_bodega = "bodega"
 
 channel_prankfeed = "prank-feed"
 
@@ -822,7 +834,10 @@ cmd_addkey = cmd_prefix + 'addkey'
 cmd_changelocks = cmd_prefix + 'changelocks'
 cmd_setalarm = cmd_prefix + 'setalarm'
 cmd_jam = cmd_prefix + 'jam'
-
+cmd_sew = cmd_prefix + 'sew'
+cmd_retrofit = cmd_prefix + 'retrofit'
+cmd_sip = cmd_prefix + 'sip'
+cmd_fashion = cmd_prefix + 'fashion'
 
 cmd_beginmanuscript = cmd_prefix + 'beginmanuscript'
 cmd_beginmanuscript_alt_1 = cmd_prefix + 'createmanuscript'
@@ -873,6 +888,7 @@ cmd_promote = cmd_prefix + 'promote'
 
 cmd_arrest = cmd_prefix + 'arrest'
 cmd_release = cmd_prefix + 'release'
+cmd_balance_cosmetics = cmd_prefix + 'balancecosmetic'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
@@ -1013,7 +1029,7 @@ inebriation_pertick = 2
 
 # max item amounts
 max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player's slime level is divided by this number to calculate the number of carriable food items
-max_adorn_mod = 2
+max_adornspace_mod = 4
 max_weapon_mod = 16
 
 # item acquisition methods
@@ -1467,6 +1483,12 @@ str_weapon_wielding = "They are wielding"
 str_weapon_married_self = "You are married to"
 str_weapon_married = "They are married to"
 str_eat_raw_material = "You chomp into the raw {}. It isn't terrible, but you feel like there is a more constructive use for it."
+str_generic_onadorn = "You successfully adorn your {}."
+str_generic_unadorn = "You successfully dedorn your {}."
+str_generic_onbreak = "Their {} broke!!"
+str_soul_onadorn = "{} has begun swirling around you."
+str_soul_unadorn = "{} has stopped swirling around you and you place it back into your hammerspace."
+str_soul_onbreak = "{} has ***SHATTERED.*** Uh oh."
 
 generic_role_name = 'NLACakaNM'
 
@@ -1571,6 +1593,9 @@ col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_id_inhabit_target = 'id_inhabit_target'
+col_attack = 'attack'
+col_speed = 'speed'
+col_freshness = 'freshness'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -1767,6 +1792,7 @@ leaderboard_bounty = "MOST WANTED"
 leaderboard_kingpins = "KINGPINS' COFFERS"
 leaderboard_districts = "DISTRICTS CONTROLLED"
 leaderboard_donated = "LOYALEST CONSUMERS"
+leaderboard_fashion = "NLACakaNM'S TOP MODELS"
 #SLIMERNALIA
 leaderboard_slimernalia = "MOST FESTIVE"
 #INTERMISSION2
@@ -1978,6 +2004,8 @@ vendor_college = "College" #You can buy game guides from either of the colleges
 vendor_glocksburycomics = "Glocksbury Comics" #Repels and trading cards are sold here
 vendor_slimypersuits = "Slimy Persuits" #You can buy candy from here
 vendor_greencakecafe = "Green Cake Cafe" #Brunch foods
+vendor_bodega = "Bodega" # Clothing store in Krak Bay
+vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 
 item_id_slimepoudrin = 'slimepoudrin'
 item_id_monstersoup = 'monstersoup'
@@ -7124,6 +7152,16 @@ food_list = [
 		str_eat = "You chomp your way through the sub-par confectionary. Food is hard to come by in these trying times, so you don't mind the taste.",
 		str_desc = "A cream pie not even worth throwing at someone.",
 		acquisition = "swilldermuk"
+	),
+	EwFood(
+		id_food = "desiccantpacket",
+		recover_hunger = 1750,
+		str_name = "Desiccant Packet",
+		str_eat = "You rip open the packet and pour it’s forbidden fruit into your mouth, taking great delight in chewing up and then sloshing around the silica gel in your mouth before swallowing. Your stomach growls angrily, but… nothing else really happens. Huh, really? Usually these things go on forever. I guess you’ve eaten so much other indigestible garbage before that your stomach’s just sort of used to it.",
+		str_desc = "It’s a tiny pocket full of highly-toxic, moisture-absorbing, gel beads. You know you shouldn’t eat this, but… just an ounce couldn’t hurt, right?",
+		vendors = [
+			vendor_secretbodega
+		]
 	)
 ]
 
@@ -11846,7 +11884,25 @@ poi_list = [
 		pvp = True,
 		is_subzone = True,
 	),
+	EwPoi(  # Clothing store in Krak Bay
+		id_poi = poi_id_bodega,
+		alias = [
+			"clothingstore",
+		],
+		str_in = "just behind the Snapple machine at",
+		str_name = "Bodega",
+		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
+		channel = channel_bodega,
+		role = "Bodega",
+		mother_district = poi_id_krakbay,
+		pvp = False,
+		vendors = [
+			vendor_bodega,
+			vendor_secretbodega,
 
+		],
+		is_subzone = True,
+	),
 	EwPoi(  # Outskirts - 1
 		id_poi=poi_id_south_outskirts,
 		alias=[
@@ -12581,7 +12637,23 @@ for line in transport_lines:
 		if (poi in line.schedule.keys()) or (poi == line.last_stop):
 			poi_data.transport_lines.add(line.id_line)
 
+
+# Fashion styles for cosmetics
+style_cool = "casual"
+style_tough = "grunge"
+style_smart = "hipster"
+style_beautiful = "modern"
+style_cute = "kawaii"
+
+# Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
+base_durability = 250000 # 1 mega
+
+generic_scalp_durability = 25000 # 25k
+soul_durability = 100000000 # 100 mega
+
 cosmetic_id_raincoat = "raincoat"
+
+cosmeticAbility_id_lucky = "lucky"
 
 cosmetic_items_list = [
 	EwCosmeticItem(
@@ -12589,6 +12661,13 @@ cosmetic_items_list = [
 		str_name = "propeller hat",
 		str_desc = "A simple multi-color striped hat with a propeller on top. A staple of every juvenile’s youth.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed : 1,
+		},
+		durability = base_durability,
+		size = 1,
+		style = style_cute,
+		freshness = 3,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12599,6 +12678,14 @@ cosmetic_items_list = [
 		str_name = "mining helmet",
 		str_desc = "A typical construction hard hat with a head lamp strapped onto it.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense : 2,
+		},
+		ability = cosmeticAbility_id_lucky,
+		durability = base_durability * 2,
+		size = 2,
+		style = style_tough,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12609,9 +12696,16 @@ cosmetic_items_list = [
 		str_name = "pickelhaube",
 		str_desc = "A traditional Prussian spiked helmet from the nineteenth century.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+		},
+		durability = base_durability * 1.5,
+		style = style_tough,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12619,9 +12713,15 @@ cosmetic_items_list = [
 		str_name = "fedora",
 		str_desc = "A soft brimmed hat with a pinched crown. A classic piece of vintage Americana and a staple of film noir. Not to be confused with the trilby, the fedora is a hat befitting the hardboiled men of it’s time.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: -2,
+		},
+		durability = base_durability * 0.5,
+		style = style_smart,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12629,6 +12729,12 @@ cosmetic_items_list = [
 		str_name = "baseball cap",
 		str_desc = "A classic baseball cap. A staple of American culture and subsequently freedom from tyranny. If you don’t own at least one of these hats you might as well have hopped the fence from Tijuana last night. Yeah, I’m racist, that going to be a problem for you??",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1
+		},
+		durability = base_durability,
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12639,6 +12745,13 @@ cosmetic_items_list = [
 		str_name = "backwards baseball cap",
 		str_desc = "A classic baseball cap… with an urban twist! Heh, 'sup dawg? Nothing much, man. You know me, just mining some goddamn slime. Word 'n shit. Hell yeah.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 1,
+		},
+		durability = base_durability,
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12649,6 +12762,12 @@ cosmetic_items_list = [
 		str_name = "pirate hat",
 		str_desc = "A swashbuckling buccaneer’s tricorne, stylized with a jolly roger on the front.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		durability = base_durability,
+		style = style_cool,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12659,6 +12778,11 @@ cosmetic_items_list = [
 		str_name = "eyepatch",
 		str_desc = "A black eyepatch. A striking accessory for the particularly swashbuckling, chauvinistic, or generally hardboiled of you. Genuine lack of two eyes optional and not recommended.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12668,6 +12792,12 @@ cosmetic_items_list = [
 		str_name = "cigarette",
 		str_desc = "A single cigarette sticking out of your mouth. You huff these things down in seconds but you’re never seen without one. Everyone thinks you’re really, really cool.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 3,
+			stat_defense: -1
+		},
+		style = style_cool,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12677,6 +12807,11 @@ cosmetic_items_list = [
 		str_name = "headband",
 		str_desc = "A headband wrapped tightly around your forehead with long, flowing ends.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed: 1,
+		},
+		style = style_tough,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12687,6 +12822,10 @@ cosmetic_items_list = [
 		str_name = "handkerchief",
 		str_desc = "A bandanna tied on your head, creating a simple cap.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12696,6 +12835,10 @@ cosmetic_items_list = [
 		str_name = "bandanna",
 		str_desc = "A handkerchief tied around your neck and covering your lower face.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12705,24 +12848,39 @@ cosmetic_items_list = [
 		str_name = "pair of sunglasses",
 		str_desc = "An iconic pair of black sunglasses. Widely recognized as the coolest thing you can wear.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "pairofglasses",
 		str_name = "pair of glasses",
 		str_desc = "A simple pair of eyeglasses. You have perfectly serviceable eyesight, but you are a sucker for the bookworm aesthetic. People with actual issues with sight hate you.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		freshness = 9,
+		style = style_smart,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "birthdayhat",
 		str_name = "birthday hat",
 		str_desc = "A striped, multi-color birthday hat. ",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cute,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12733,6 +12891,13 @@ cosmetic_items_list = [
 		str_name = "scarf",
 		str_desc = "A very thick striped wool scarf, in case 110° degrees is too nippy for you.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: -1,
+			stat_defense: 2,
+			stat_speed: 2,
+		},
+		style = style_smart,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12742,6 +12907,11 @@ cosmetic_items_list = [
 		id_cosmetic = "witchhat",
 		str_desc = "A pointy, cone-shaped hat with a wide brim. It exudes a spooky essence.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_smart,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12752,6 +12922,13 @@ cosmetic_items_list = [
 		str_name = "bomber hat",
 		str_desc = "A thick fur and leather aviator’s hat.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 1,
+		},
+		freshness = 7,
+		durability = base_durability * 1.5,
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12762,15 +12939,26 @@ cosmetic_items_list = [
 		str_name = "tuxedo",
 		str_desc = "A classy, semi-formal suit for dashing rogues you can’t help but love. Instant charisma granted upon each !adorn.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_defense: -1,
+			stat_speed: 3
+		},
+		freshness = 10,
+		style = style_beautiful,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "beanie",
 		str_name = "beanie",
 		str_desc = "A simple beanie with a pointed top and a slip stitch brim.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12781,6 +12969,12 @@ cosmetic_items_list = [
 		str_name = "jester's hat",
 		str_desc = "A ridiculous, multi-colored hat with four bells dangling from protruding sleeves.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 1
+		},
+		freshness = 8,
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12791,6 +12985,11 @@ cosmetic_items_list = [
 		str_name = "pair of 3D glasses",
 		str_desc = "A pair of totally tubular, ridiculously radical 3D glasses. Straight up stereoscopic, dude!",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed: 3,
+		},
+		freshness = 9,
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12800,6 +12999,11 @@ cosmetic_items_list = [
 		str_name = "necktie",
 		str_desc = "A vintage necktie, reeking of coffee, college, and shaving cream.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_beautiful,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12809,6 +13013,12 @@ cosmetic_items_list = [
 		str_name = "viking helmet",
 		str_desc = "A pointy bronze helmet with two sharp horns jutting out of the base.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_defense: 1
+		},
+		style = style_tough,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12819,6 +13029,12 @@ cosmetic_items_list = [
 		str_name = "pair of flip flops",
 		str_desc = "A pair of loud, obnoxious flip flops. The price of your comfort is higher than you could ever know.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: -1,
+		},
+		style = style_smart,
+		freshness = 3,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12828,9 +13044,15 @@ cosmetic_items_list = [
 		str_name = "fez",
 		str_desc = "A short fez with a tassel attached to the top. Fezzes are cool. Or, are bowties cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2,
+		},
+		style = style_smart,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12838,6 +13060,11 @@ cosmetic_items_list = [
 		str_name = "bowtie",
 		str_desc = "A quite dapper, neatly tied butterfly bowtie. Bowties are cool. Or, are fezzes cool? You forget, and frankly you’re embarrassed you remember either one of them.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_smart,
+		freshness = 8,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12847,6 +13074,13 @@ cosmetic_items_list = [
 		str_name = "cowboy hat",
 		str_desc = "An essential piece of Wild West memorabilia, a bonafide ten gallon Stetson. Befitting the individualistic individuals that made them famous. Yeehaw, and all that stuff.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 3,
+			stat_defense: -2,
+			stat_speed: 2
+		},
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12857,6 +13091,10 @@ cosmetic_items_list = [
 		str_name = "kepi",
 		str_desc = "A short kepi with a sunken top and an insignia on the front.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12866,6 +13104,11 @@ cosmetic_items_list = [
 		str_name = "tam o' shanter",
 		str_desc = "A traditional Scottish wool bonnet with a plaid pattern.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+			stat_speed: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12876,6 +13119,15 @@ cosmetic_items_list = [
 		str_name = "ushanka",
 		str_desc = "A traditional Russian fur cap with thick wool ear flaps.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 3,
+			stat_speed: -2
+		},
+		size = 2,
+		style = style_tough,
+		freshness = 7,
+		durability = base_durability * 2,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12886,6 +13138,13 @@ cosmetic_items_list = [
 		str_name = "karategi",
 		str_desc = "A traditional Japanese karateka’s outfiit, complete with a belt with extended ends that easily flow in the wind for dramatic effect.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1,
+		},
+		style = style_tough,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12895,6 +13154,11 @@ cosmetic_items_list = [
 		str_name = "turban",
 		str_desc = "A traditional Arabian headdress, lavishly decorated with a single large jewel and protruding peacock feather.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_speed: 2,
+		},
+		style = style_beautiful,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12905,6 +13169,11 @@ cosmetic_items_list = [
 		str_name = "nemes",
 		str_desc = "The traditional ancient Egyptian pharaoh's striped head cloth.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_beautiful,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12915,15 +13184,26 @@ cosmetic_items_list = [
 		str_name = "varsity jacket",
 		str_desc = "An American baseball jacket, with a large insignia on the left side of the chest.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_speed: 1
+		},
+		style = style_cool,
+		freshness = 9,
 		acquisition = acquisition_smelting,
 		price = 50000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "sombrero",
 		str_name = "sombrero",
 		str_desc = "A traditional Mexican sombrero, with an extra-wide brim to protect you from the blistering Arizonian sun.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
+		freshness = 7,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12934,6 +13214,11 @@ cosmetic_items_list = [
 		str_name = "hawaiian shirt",
 		str_desc = "A brightly colored Hawaiian shirt with a floral pattern. It reeks of slima colada and the complementary shampoo from the resort in Assault Flats Beach.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_smart,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12943,27 +13228,49 @@ cosmetic_items_list = [
 		str_name = "fursuit",
 		str_desc = "A fursuit. Custom-made and complete with high quality faux fur, padded digitigrade legs, follow-me eyes, adjustable facial expressions, and a fan in the head. It is modeled off your original character, also known as your fursona. Some would call its character design “ugly” or “embarrassing,” but you think it's perfect.",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 4,
+			stat_defense: 6,
+			stat_speed: -4
+		},
+		size = 2,
+		style = style_cute,
+		freshness = 11,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "diadem",
 		str_name = "diadem",
 		str_desc = "The traditional Greco-Roman laurel wreath symbolizing sovereignty and power. Be careful about wearing this around in public, you might just wake up with 23 stab wounds.",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 4,
+		},
+		style = style_beautiful,
+		freshness = 10,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "billshat",
 		str_name = "Bill's Hat",
 		str_desc = "A military beret with a shield insignia on the front.",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 3,
+			stat_defense: 1
+		},
+		freshness = 9,
+		style = style_beautiful,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 		is_hat=True,
 	),
 	EwCosmeticItem(
@@ -12971,24 +13278,43 @@ cosmetic_items_list = [
 		str_name = "wedding ring",
 		str_desc = "A silver ring with a decently large diamond on top. For the person you love most in the entire world. <3",
 		rarity = rarity_patrician,
+		stats = {
+			stat_attack: 2,
+			stat_defense: 2,
+			stat_speed: 2
+		},
+		style = style_beautiful,
+		freshness = 10,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_secretbodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "earbuds",
 		str_name = "earbuds",
 		str_desc = "A pair of white standard iPod earbuds. Who knows what sort of tasty jams you must be listening to while walking down the street?",
 		rarity = rarity_patrician,
+		stats = {
+			stat_speed: 4,
+		},
+		freshness = 10,
+		style = style_smart,
+		durability = base_durability * 4,
 		acquisition = acquisition_smelting,
 		price = 1000000,
-		vendors = [vendor_bazaar],
+		vendors = [vendor_bazaar, vendor_bodega],
 	),
 	EwCosmeticItem(
 		id_cosmetic = "nursesoutfit",
 		str_name = "nurse's outfit",
 		str_desc = "A disturbingly revealing nurse’s outfit that shows off your lumpy, fleshy visage. No one likes that you wear this. Theming bonus for responding to people’s crackpot ideas in the nurse’s office, though.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_beautiful,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -12998,6 +13324,11 @@ cosmetic_items_list = [
 		str_name = "heart boxers",
 		str_desc = "A staple of comedy. A pair of white boxers with stylized cartoon hearts tiled all over it. Sure hope your pants aren’t hilariously ripped or unadorned while you’re wearing these, how embarrassing! Hahaha! We like to have fun here.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 1
+		},
+		style = style_cute,
 		acquisition = acquisition_smelting,
 		price = 50000,
 		vendors = [vendor_bazaar],
@@ -13007,6 +13338,10 @@ cosmetic_items_list = [
 		str_name="Kilt",
 		str_desc="A traditional scottish garmet that's plaid, and it's not a fuckin' skirt, aight?",
 		rarity=rarity_plebeian,
+		stats = {
+			stat_speed: 1,
+		},
+		style = style_tough,
 		acquisition=acquisition_smelting,
 		price=50000,
 		vendors=[vendor_bazaar],
@@ -13016,6 +13351,13 @@ cosmetic_items_list = [
 		str_name="Cigar",
 		str_desc="Much more manly then a puny cigarette. This cigar has been freshly imported from cuba and is thick enough to last for hours.",
 		rarity=rarity_plebeian,
+		stats = {
+			stat_attack: 6,
+			stat_defense: -2,
+			stat_speed: -1
+		},
+		style = style_tough,
+		freshness = 8,
 		acquisition=acquisition_smelting,
 		price=50000,
 		vendors=[vendor_bazaar],
@@ -13024,6 +13366,10 @@ cosmetic_items_list = [
 		id_cosmetic = "captainshat",
 		str_name = "Captain's Hat",
 		str_desc = "The perfect hat for sailing across the Slime Sea, commanding a navy fleet, or prematurely ending your lucrative My Little Pony review series in favor of starting a shitty Pokemon Nuzlocke series. For shame.",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_poketubers,
 		is_hat=True,
@@ -13032,6 +13378,10 @@ cosmetic_items_list = [
 		id_cosmetic = "juveolantern",
 		str_name = "Juve-O'-Lantern",
 		str_desc = "Hand-carved with a hole just barely big enough to fit your head in, this Juve O' Lantern severely hinders your combat ability. But, you look fucking sick while wearing it, so who cares.",
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_cute,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pulpgourds,
 		is_hat=True,
@@ -13040,6 +13390,11 @@ cosmetic_items_list = [
 		id_cosmetic = "bowlerhat",
 		str_name = "Bowler Hat",
 		str_desc = "A simply traditional billyock. You’re gonna be the talk of the toy box with this dashing felt cosmetic! Now you just have to work on the moustache.",
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_smart,
+		freshness = 6,
 		acquisition = acquisition_milling,
 		ingredients = item_id_sourpotatoes,
 		is_hat=True,
@@ -13048,6 +13403,10 @@ cosmetic_items_list = [
 		id_cosmetic = "cabbagetreehat",
 		str_name = "Cabbage Tree Hat",
 		str_desc = "An unmistakably Australian hat, with a wide brim and a high crown.",
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_bloodcabbages,
 		is_hat=True,
@@ -13056,6 +13415,13 @@ cosmetic_items_list = [
 		id_cosmetic = "braces",
 		str_name = "Braces",
 		str_desc = "An old fashioned orthodontic headgear. Elaborate metal wires and braces hold your nearly eroded, crooked teeth together in what can genously be called a mouth. You are in agony, and so is everyone that looks at you.",
+		stats = {
+			stat_defense: 2,
+			stat_speed: -1
+		},
+		style = style_smart,
+		freshness = 1,
+		durability = base_durability * 1.5,
 		acquisition = acquisition_milling,
 		ingredients = item_id_joybeans,
 	),
@@ -13063,12 +13429,22 @@ cosmetic_items_list = [
 		id_cosmetic = "hoodie",
 		str_name = "Hoodie",
 		str_desc = "Perfect for keeping warm in the middle of the blisteringly hot Arizonian desert! Heatstroke or bust!",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_purplekilliflower,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "copbadge",
 		str_name = "Cop Badge",
+		stats = {
+			stat_attack: 3,
+			stat_defense: -3,
+		},
+		style = style_smart,
+		freshness = 2,
 		str_desc = "What the fuck are you doing with this thing? Are you TRYING to make the sewers your permanent residence? Acquaint yourself with the !drop command and FAST, before you don’t have a body to wear the badge on.",
 		acquisition = acquisition_milling,
 		ingredients = item_id_razornuts,
@@ -13077,6 +13453,10 @@ cosmetic_items_list = [
 		id_cosmetic = "strawhat",
 		str_name = "Straw Hat",
 		str_desc = "A wide-brimmed straw hat, the perfect hat for farming.",
+		stats = {
+			stat_speed: 1,
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pawpaw,
 		is_hat=True,
@@ -13085,6 +13465,11 @@ cosmetic_items_list = [
 		id_cosmetic = "cosplayhorns",
 		str_name = "Cosplay Horns",
 		str_desc = "You’re not entirely sure what these things are, but they sort of look like brightly painted, candy corn colored, paper mache horns that are hot glued onto a black headband. Their purpose is mysterious, but for some reason you are inclined to adorn them… perhaps you understood their importance in a past life.",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cute,
+		freshness = 6,
 		acquisition = acquisition_milling,
 		ingredients = item_id_sludgeberries,
 	),
@@ -13092,6 +13477,13 @@ cosmetic_items_list = [
 		id_cosmetic = "youfavoritehat",
 		str_name = "***Your Favorite Hat***",
 		str_desc = "***It fits perfectly, and it’s just your style! You love wearing this cosmetic far more than any other, it’s simply the best.***",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		style = style_cute,
+		freshness = 10,
 		acquisition = acquisition_milling,
 		ingredients = item_id_suganmanuts,
 		is_hat=True,
@@ -13100,6 +13492,12 @@ cosmetic_items_list = [
 		id_cosmetic = "pajamaonesie",
 		str_name = "Pajama Onesie",
 		str_desc = "A soft jumpsuit with an audacious, repeating design printed over the entire cosmetic. You feel like getting a little bit fucking rowdy wearing this outrageous onesie. ",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2
+		},
+		style = style_cute,
+		freshness = 6,
 		acquisition = acquisition_milling,
 		ingredients = item_id_pinkrowddishes,
 	),
@@ -13107,12 +13505,23 @@ cosmetic_items_list = [
 		id_cosmetic = "pairofcircularsunglasses",
 		str_name = "Pair of Circular Sunglasses",
 		str_desc = "Sunglasses, but in a circle! Genius! You can't wait to show the world your hot takes on television shows for girls.",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: -1
+		},
+		style = style_cool,
 		acquisition = acquisition_milling,
 		ingredients = item_id_dankwheat,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "flowercrown",
 		str_name = "Flower Crown",
+		stats = {
+			stat_speed: 2,
+		},
+		style = style_cute,
+		freshness = 7,
 		str_desc = "A lovingly handcrafted crown of flowers, connected by a string. You’re gonna be famous on Pinterest with a look like this!",
 		acquisition = acquisition_milling,
 		ingredients = item_id_brightshade,
@@ -13121,12 +13530,25 @@ cosmetic_items_list = [
 		id_cosmetic = "spikedbracelets",
 		str_name = "Spiked Bracelets",
 		str_desc = "Hilariously unrealistic spiked bracelets, ala Bowser, King of the Koopas. You’re hyper aware of these fashion disasters whenever you’re walking, making sure to swing them as far away from your body as possible.",
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_blacklimes,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "slimecorppin",
 		str_name = "SlimeCorp Pin",
+		stats = {
+			stat_attack: 6,
+			stat_defense: 6,
+			stat_speed: 6
+		},
+		style = style_smart,
+		freshness = 10,
+		durability = base_durability * 4,
 		str_desc = "An enamel pin of the SlimeCorp logo, a badge of loyalty to your favorite charismatic megacorporation. Dude, like, *”Follow He Who Turns The Wheels”*, bro!!",
 		acquisition = acquisition_milling,
 		ingredients = item_id_phosphorpoppies,
@@ -13135,6 +13557,10 @@ cosmetic_items_list = [
 		id_cosmetic = "overalls",
 		str_name = "Overalls",
 		str_desc = "Simple, humble denim overalls, for a simple, humble farmer such as yourself.",
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_tough,
 		acquisition = acquisition_milling,
 		ingredients = item_id_direapples,
 	),
@@ -13142,6 +13568,10 @@ cosmetic_items_list = [
 		id_cosmetic = cosmetic_id_raincoat,
 		str_name = "Raincoat",
 		str_desc = "A specially engineered piece of personal armor, that protects you from the deadly threat from above.",
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
 		price = 50000,
@@ -13152,6 +13582,7 @@ cosmetic_items_list = [
 		str_name = "Double Halloween Medallion",
 		str_desc = "A glistening crystal medallion, carved in the shape of a pumpkin. It is strewn together with black pearls. Awarded only to the bravest of souls who managed to best the Double Headless Double Horseman in combat.",
 		rarity = "Double Halloween",
+		style = style_cool,
 		acquisition = "DH-bossfight",
 		ingredients = "HorsemanSoul" # used here as a substitute for the 'context' attribute found on general items.
 	),
@@ -13160,6 +13591,7 @@ cosmetic_items_list = [
 		str_name = "Pileus",
 		str_desc = "A symbol of freedom and liberty. In ancient times, these felt caps were given to slaves who had been emancipated.",
 		rarity = rarity_plebeian,
+		style = style_cool,
 	#	vendors = [vendor_bazaar, vendor_college],
 		price = 100,
 	),
@@ -13167,14 +13599,23 @@ cosmetic_items_list = [
 		id_cosmetic = "seacowcostume",
 		str_name = "Attractive Gray Sea Cow Mascot Costume for Adult",
 		str_desc = "Attractive. That's really all there is to say on the matter.",
-		rarity = rarity_promotional,
-		vendors = [vendor_bazaar],
+		rarity = rarity_patrician,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_beautiful,
+		freshness = 2,
+		vendors = [vendor_bazaar, vendor_secretbodega],
 		price = 100000000,
 	),
 	EwCosmeticItem(
 		id_cosmetic = "wrappingpaperhat",
 		str_name = "Wrapping Paper Hat",
 		str_desc = "A hat made out of wrapping paper, fashioned in a way rather similar to a newspaper hat. How festive!",
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_cute,
 		rarity = rarity_plebeian,
 		vendors = [vendor_glocksburycomics],
 		price = 1000,
@@ -13184,6 +13625,12 @@ cosmetic_items_list = [
 		str_name = "Steel knight armor",
 		str_desc = "A shining set of steel armor.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2,
+			stat_speed: -1
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13192,6 +13639,11 @@ cosmetic_items_list = [
 		str_name = "Velcro Shoes",
 		str_desc = "Juveniles in the city always had a hard time tying their laces, so these stylish kicks are perfect for them.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 1
+		},
+		style = style_cute,
 		vendors = [vendor_bazaar],
 		price = 1000,
 	),
@@ -13200,7 +13652,13 @@ cosmetic_items_list = [
 		str_name = "Crocs",
 		str_desc = "The perfect pair of footwear for when you want spotted dots of sunburn on your feet, unless you're wearing socks that is. If that's the case ignore that earlier statement.",
 		rarity = rarity_plebeian,
-		vendors = [vendor_bazaar],
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1
+		},
+		style = style_cute,
+		freshness = 6,
+		vendors = [vendor_bazaar, vendor_secretbodega],
 		price = 1000,
 	),
 	EwCosmeticItem(
@@ -13208,15 +13666,20 @@ cosmetic_items_list = [
 		str_name = "Janus Mask",
 		str_desc = "A simple, yet elegant mask, awarded to those deemed worthy by Janus himself at the end of every Swilldermuk. It's enigmatic powers allow you to procure prank items from thin air.",
 		rarity = "Swilldermuk",
+		style = style_cool,
 		acquisition = "SwilldermukEnd",
 		ingredients = "SwilldermukFinalGambit" # used here as a substitute for the 'context' attribute found on general items.
 	),
 	EwCosmeticItem(
 		id_cosmetic = "leatherjacket",
 		str_name = "Leather Jacket",
-		str_desc = "A black leather jacket. Gangs of killers stalking the streets are often found wearing these.",
+		str_desc = "A black leather jacket. Gangs of Killers stalking the streets are often found wearing these.",
 		rarity = rarity_patrician,
-		vendors = [vendor_bazaar],
+		stats = {
+			stat_attack: 3,
+		},
+		style = style_cool,
+		vendors = [vendor_bazaar, vendor_bodega],
 		price = 50000,
 	),
 	EwCosmeticItem(
@@ -13224,6 +13687,10 @@ cosmetic_items_list = [
 		str_name = "Afro Wig",
 		str_desc = "The perfect hair-do for a 70's party or a pool party just be sure to keep a can of hairspray and comb at hand.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13232,6 +13699,13 @@ cosmetic_items_list = [
 		str_name = "Pompadour Wig",
 		str_desc = "A must have for any wannabe greaser or school delinquent in general. Make sure to wear it like a true king.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_speed: 2
+		},
+		style = style_cool,
+		freshness = 7,
+		vendors = [vendor_bodega],
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13239,6 +13713,10 @@ cosmetic_items_list = [
 		id_cosmetic = "powderedwig",
 		str_name = "Powdered Wig",
 		str_desc = "If it was good enough for the british and founding fathers, it's good enough for us, right? Just make sure you don't share this wig without cleaning it.",
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_smart,
 		rarity = rarity_plebeian,
 		acquisition = acquisition_smelting,
 		is_hat = True,
@@ -13248,6 +13726,12 @@ cosmetic_items_list = [
 		str_name = "Rainbow Afro Wig",
 		str_desc = "A colorful wig worthy of a real chuckle.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 1,
+			stat_speed: 1
+		},
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13256,6 +13740,10 @@ cosmetic_items_list = [
 		str_name = "Ghostly Gibus",
 		str_desc = "A crooked old top hat with a spooky toy ghost popping out of the top.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13264,6 +13752,11 @@ cosmetic_items_list = [
 		str_name = "Gas Mask",
 		str_desc = "A dysfunctional cold war era gas mask that fully encapsulates the head.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+			stat_defense: 2
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13272,6 +13765,11 @@ cosmetic_items_list = [
 		str_name = "Firefighter's Helmet",
 		str_desc = "A old NLACakaNM wide brimmed red firefighter's helmet. No one knows what happened to the firefighters of Endless War.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_tough,
+		durability = base_durability * 1.5,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13280,6 +13778,10 @@ cosmetic_items_list = [
 		str_name = "Pair Of Poindexter Glasses",
 		str_desc = "A pair of thick rim glasses taped together at the middle. Worthy of any true nerd or nerdette.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 2,
+		},
+		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13288,6 +13790,13 @@ cosmetic_items_list = [
 		str_name = "Dunce Cap",
 		str_desc = "It’s a pointy cap that says dunce on it, duh! You’re a real smartie aren't you?",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: -1,
+			stat_defense: -1,
+			stat_speed: -1
+		},
+		style = style_cute,
+		freshness = 2,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13296,6 +13805,12 @@ cosmetic_items_list = [
 		str_name = "VR Headset",
 		str_desc = "Endless War -- now in stunning VR!",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_smart,
+		freshness = 8,
+		vendors = [vendor_bodega],
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13304,6 +13819,12 @@ cosmetic_items_list = [
 		str_name = "Blindfold",
 		str_desc = "Ok now you’re just bragging. Walking around with a blindfold of all things? How ridiculous!",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+			stat_defense: -2,
+			stat_speed: 1
+		},
+		style = style_tough,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13312,6 +13833,10 @@ cosmetic_items_list = [
 		str_name = "Chicken Mask",
 		str_desc = "The rubber chicken mask gives you a strange vibe, it stinks of sweat and dried blood.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 2,
+		},
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13320,6 +13845,11 @@ cosmetic_items_list = [
 		str_name = "Mountie Hat",
 		str_desc = "A hat that's mostly used by canada's royal mounted police, but how did it get here? Did it float down the slime river?",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: -1,
+			stat_defense: 2
+		},
+		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13328,6 +13858,10 @@ cosmetic_items_list = [
 		str_name = "Bearskin Hat",
 		str_desc = "A towering fuzzy hat that’s commonly worn by guards of the british royal guard.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_smart,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13336,6 +13870,11 @@ cosmetic_items_list = [
 		str_name = "Aviator's Hat",
 		str_desc = "A leather hat with a neat pair of goggles on it. Perfect for an unfortunate circumnavigation of the world.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_tough,
+		freshness = 6,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -13344,22 +13883,39 @@ cosmetic_items_list = [
 		str_name = "Military Beret",
 		str_desc = "A good soldier needs good headwear,and that’s where this beret comes in.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_attack: 1,
+		},
+		style = style_beautiful,
+		freshness = 7,
+		vendors = [vendor_bodega],
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
     EwCosmeticItem(
-		id_cosmetic = "felinehat",
-		str_name = "Feline Hat",
-		str_desc = "A hat striped with red and white is quite right for a fanciful fight! It’s a funny hat at that, and it looks like it’s been worn by a cat!",
-		rarity = rarity_plebeian,
-		acquisition = acquisition_smelting,
-		is_hat = True,
+		id_cosmetic = "felinehat", # fuck you.
+		str_name = "Feline Hat", # fuck you.
+		stats = {
+			stat_attack: -10, # fuck you.
+		},
+		durability = 100,
+		style = style_cute,
+		freshness = 1,
+		str_desc = "A hat striped with red and white is quite right for a fanciful fight! It’s a funny hat at that, and it looks like it’s been worn by a cat!", # fuck you.
+		rarity = rarity_plebeian, # fuck you.
+		vendors = [vendor_secretbodega],
+		acquisition = acquisition_smelting, # fuck you.
+		is_hat = True, # fuck you.
 	),
     EwCosmeticItem(
 		id_cosmetic = "tikihead",
 		str_name = "Tiki Head",
 		str_desc = "A wearable tiki head worthy of any luau or tropical island themed party.",
 		rarity = rarity_plebeian,
+		stats = {
+			stat_defense: 1,
+		},
+		style = style_cool,
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
@@ -15268,7 +15824,7 @@ hue_list = [
 		],
 		str_saturate = "It begins to glow a ghostly white!",
 		str_name = "white",
-		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe."
+		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe.",
 	),
 	EwHue(
 		id_hue = hue_id_yellow,
@@ -15285,7 +15841,8 @@ hue_list = [
 			hue_id_purple: hue_atk_complementary,
 			hue_id_cobalt: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
+
 	),
 	EwHue(
 		id_hue = hue_id_orange,
@@ -15302,7 +15859,7 @@ hue_list = [
 			hue_id_blue: hue_atk_complementary,
 			hue_id_cyan: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_red,
@@ -15320,7 +15877,8 @@ hue_list = [
 			hue_id_cobalt: hue_atk_complementary,
 			hue_id_teal: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
+
 	),
 	EwHue(
 		id_hue = hue_id_magenta,
@@ -15337,7 +15895,7 @@ hue_list = [
 			hue_id_teal: hue_atk_complementary,
 			hue_id_lime: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_purple,
@@ -15355,7 +15913,7 @@ hue_list = [
 			hue_id_green: hue_atk_complementary,
 			hue_id_yellow: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_blue,
@@ -15372,7 +15930,7 @@ hue_list = [
 			hue_id_lime: hue_atk_complementary,
 			hue_id_orange: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
+		},
 	),
 	EwHue(
 		id_hue = hue_id_green,
@@ -15390,8 +15948,7 @@ hue_list = [
 			hue_id_pink: hue_atk_complementary,
 			hue_id_purple: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_teal,
@@ -15408,8 +15965,7 @@ hue_list = [
 			hue_id_red: hue_atk_complementary,
 			hue_id_magenta: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_rainbow,
@@ -15419,7 +15975,7 @@ hue_list = [
 		],
 		str_saturate = "It turns a fantastic shade of... well, everything!!",
 		str_name = "***Rainbow***",
-		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!"
+		str_desc = "Its ***Rainbow*** hue dazzles and amazes you. It comprises the whole color spectrum in an crude, Photoshop-tier gradient. It’s so obnoxious… and yet, decadent!",
 	),
 	EwHue(
 		id_hue = hue_id_pink,
@@ -15436,8 +15992,7 @@ hue_list = [
 			hue_id_cyan: hue_atk_complementary,
 			hue_id_green: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_grey,
@@ -15447,7 +16002,7 @@ hue_list = [
 		],
 		str_saturate = "It turns a dull, somber grey.",
 		str_name = "grey",
-		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. "
+		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. ",
 	),
 	EwHue(
 		id_hue = hue_id_cobalt,
@@ -15464,8 +16019,7 @@ hue_list = [
 			hue_id_yellow: hue_atk_complementary,
 			hue_id_red: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_black,
@@ -15475,7 +16029,7 @@ hue_list = [
 		],
 		str_saturate = "It turns pitch black!",
 		str_name = "black",
-		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality."
+		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality.",
 	),
 	EwHue(
 		id_hue = hue_id_lime,
@@ -15492,8 +16046,7 @@ hue_list = [
 			hue_id_magenta: hue_atk_complementary,
 			hue_id_blue: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_cyan,
@@ -15510,8 +16063,7 @@ hue_list = [
 			hue_id_orange: hue_atk_complementary,
 			hue_id_pink: hue_special_complementary,
 			hue_id_rainbow: hue_full_complementary
-		}
-
+		},
 	),
 	EwHue(
 		id_hue = hue_id_brown,

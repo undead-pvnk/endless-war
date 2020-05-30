@@ -25,6 +25,8 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
+	topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
+	await ewutils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
 	# topdegraded = make_userdata_board(server = server, category = ewcfg.col_degradation, title = ewcfg.leaderboard_degradation)
@@ -131,7 +133,6 @@ def make_userdata_board(server = None, category = "", title = "", lowscores = Fa
 		), (
 			server.id, 
 		))
-
 		i = 0
 		row = cursor.fetchone()
 		while (row != None) and (i < rows):
@@ -384,6 +385,10 @@ def board_header(title):
 	elif title == ewcfg.leaderboard_gambit_low:
 		emote = ewcfg.emote_janus1
 		emote2 = ewcfg.emote_janus2
+		bar += " "
+
+	elif title == ewcfg.leaderboard_fashion:
+		emote = ewcfg.emote_111
 		bar += " "
 		
 	if emote2 != None:

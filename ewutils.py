@@ -1,5 +1,6 @@
 import sys
 import traceback
+import collections
 
 import MySQLdb
 import datetime
@@ -434,7 +435,11 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
-			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+
+		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+
+
+
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -1267,8 +1272,9 @@ def food_carry_capacity_bylevel(slimelevel):
 def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
-def max_adorn_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adorn_mod)
+def max_adornspace_bylevel(slimelevel):
+        return math.ceil(slimelevel / ewcfg.max_adornspace_mod)
+
 """
 	Returns an EwUser object of the selected kingpin
 """
@@ -1435,6 +1441,8 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
+
+	move_speed += (float(user_data.speed / 100))
 
 	move_speed = max(0.1, move_speed)
 
@@ -2118,3 +2126,180 @@ def channel_name_is_poi(channel_name):
 		return channel_name in ewcfg.chname_to_poi
 
 	return False
+
+
+
+def get_cosmetic_abilities(id_user, id_server):
+	active_abilities = []
+
+	cosmetic_items = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	for item in cosmetic_items:
+		i = EwItem(item.get('id_item'))
+		if i.item_props['adorned'] == "true" and i.item_props['ability'] is not None:
+			active_abilities.append(i.item_props['ability'])
+		else:
+			pass
+
+	return active_abilities
+
+def get_outfit_info(id_user, id_server, wanted_info = None):
+	cosmetic_items = ewitem.inventory(
+		id_user = id_user,
+		id_server = id_server,
+		item_type_filter = ewcfg.it_cosmetic
+	)
+
+	adorned_cosmetics = []
+
+	adorned_styles = []
+	dominant_style = None
+
+	adorned_hues = []
+
+	total_freshness = 0
+
+	for cosmetic in cosmetic_items:
+		c = EwItem(id_item = cosmetic.get('id_item'))
+
+		if c.item_props['adorned'] == 'true':
+			adorned_styles.append(c.item_props.get('fashion_style'))
+
+			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+			adorned_hues.append(c.item_props.get('hue'))
+
+			total_freshness += int(c.item_props.get('freshness'))
+
+			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+
+	if len(adorned_cosmetics) != 0:
+		# Assess if there's a cohesive style
+		if len(adorned_styles) != 0:
+			counted_styles = collections.Counter(adorned_styles)
+			dominant_style = max(counted_styles, key = counted_styles.get)
+
+			relative_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+
+			# Adds the relative amount to the total freshness as a percentage of itself, which means having a completely cohesive outfit doubles your freshness.
+			total_freshness = round(total_freshness * (1 + float(relative_amount / 100)))
+
+		#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
+		if len(adorned_hues) != 0:
+			counted_hues = collections.Counter(adorned_hues)
+
+			if None not in counted_hues.keys() and len(counted_hues.keys()) <= 3:
+				total_freshness *= 1.5
+
+	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
+		return dominant_style
+	elif wanted_info is not None and wanted_info == "total_freshness":
+		return total_freshness
+	else:
+		outfit_map = {
+			'dominant_style': dominant_style,
+			'total_freshness': total_freshness
+		}
+		return outfit_map
+
+def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None):
+
+	if dominant_style == None:
+		dominant_style = "fresh"
+
+	if user_data.freshness < 20:
+		response = "{pronoun} outfit is starting to look kinda {style}, not gonna lie.".format(pronoun = pronoun, style = dominant_style)
+	elif user_data.freshness < 40:
+		response = "{pronoun} outfit is low-key on-point, and pretty {style}.".format(pronoun = pronoun, style = dominant_style)
+	elif user_data.freshness < 80:
+		response = "{pronoun} outfit is getting really {style} now! I mean, just look at it! Damn!".format(pronoun = pronoun, style = dominant_style)
+	elif user_data.freshness < 100:
+		response = "{pronoun} outfit is totally **on fire!** People are taking notice of {pronoun} {style}ness, and low-level imposters are popping up on Grimstagram.".format(pronoun = pronoun, style = dominant_style)
+	else:
+		response = "{pronoun} outfit is positively, without a doubt, 100% ***ON FLEEK!!*** {pronoun} Grimstagram has EXPLODED, and a collab with Rarity™ from My Little Pony™ is in the WORKS. " \
+				   "It is just so. fucking. {style}.".format(pronoun = pronoun, style = dominant_style)
+
+	# Lol, I'll add these later.
+	# if dominant_style == ewcfg.style_cool:
+	# 	if user_data.freshness < 20:
+	# 		response = "Your normal outfit is lowkey on-point."
+	# 	elif user_data.freshness < 40:
+	# 		response = "Your normal outfit is gettin' kinda fleeky, not gonna lie."
+	# 	elif user_data.freshness < 80:
+	# 		response = "For real, your normal outfit is really fuckin' kino, my friend"
+	# 	elif user_data.freshness < 100:
+	# 		response = "Your normal outfit is STELLAR! I wanna know who your tailor is!"
+	# 	else:
+	# 		response = "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
+	# elif dominant_style == ewcfg.style_cool:
+	# 	if user_data.freshness < 20:
+	# 		response = "cool 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "cool 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "cool 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "cool 4"
+	# 	else:
+	# 		response = "cool 5"
+	# elif dominant_style == ewcfg.style_tough:
+	# 	if user_data.freshness < 20:
+	# 		response = "tough 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "tough 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "tough 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "tough 4"
+	# 	else:
+	# 		response = "tough 5"
+	# elif dominant_style == ewcfg.style_smart:
+	# 	if user_data.freshness < 20:
+	# 		response = "smart 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "smart 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "smart 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "smart 4"
+	# 	else:
+	# 		response = "smart 5"
+	# elif dominant_style == ewcfg.style_beautiful:
+	# 	if user_data.freshness < 20:
+	# 		response = "beauty 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "beauty 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "beauty 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "beauty 4"
+	# 	else:
+	# 		response = "beauty 5"
+	# elif dominant_style == ewcfg.style_cute:
+	# 	if user_data.freshness < 20:
+	# 		response = "cute 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "cute 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "cute 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "cute 4"
+	# 	else:
+	# 		response = "cute 5"
+	# else:
+	# 	if user_data.freshness < 20:
+	# 		response = "none 1"
+	# 	elif user_data.freshness < 40:
+	# 		response = "none 2"
+	# 	elif user_data.freshness < 80:
+	# 		response = "none 3"
+	# 	elif user_data.freshness < 100:
+	# 		response = "none 4"
+	# 	else:
+	# 		response = "none 5"
+
+	return response
+
