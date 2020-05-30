@@ -507,6 +507,50 @@ class EwEnemy:
 					slimes_directdamage = slimes_damage - slimes_tobleed
 					slimes_splatter = slimes_damage - slimes_tobleed - slimes_drained
 
+					# Damage victim's wardrobe (heh, WARdrobe... get it??)
+					victim_cosmetics = ewitem.inventory(
+						id_user = target_data.id_user,
+						id_server = target_data.id_server,
+						item_type_filter = ewcfg.it_cosmetic
+					)
+
+					onbreak_responses = []
+
+					for cosmetic in victim_cosmetics:
+						c = EwItem(cosmetic.get('id_item'))
+
+						# Damage it if the cosmetic is adorned and it has a durability limit
+						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
+
+							print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+
+							durability_afterhit = int(c.item_props['durability']) - slimes_damage
+
+							print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+
+							if durability_afterhit <= 0:  # If it breaks
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+								target_data.attack -= int(c.item_props[ewcfg.stat_attack])
+								target_data.defense -= int(c.item_props[ewcfg.stat_defense])
+								target_data.speed -= int(c.item_props[ewcfg.stat_speed])
+								target_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
+
+								target_data.persist()
+
+								onbreak_responses.append(
+									str(c.item_props['str_onbreak']).format(c.item_props['cosmetic_name']))
+
+								ewitem.item_delete(id_item = c.id_item)
+
+							else:
+								c.item_props['durability'] = durability_afterhit
+								c.persist()
+
+						else:
+							pass
+
 					market_data.splattered_slimes += slimes_damage
 					market_data.persist()
 					district_data.change_slimes(n=slimes_splatter, source=ewcfg.source_killing)
@@ -555,6 +599,10 @@ class EwEnemy:
 									name_target=target_player.display_name
 								))
 
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n\n" + onbreak_response
+
 							response += "\n\n{}".format(used_attacktype.str_kill.format(
 								name_enemy=enemy_data.display_name,
 								name_target=("<@!{}>".format(target_data.id_user)),
@@ -563,6 +611,12 @@ class EwEnemy:
 							target_data.trauma = used_attacktype.id_type
 
 						else:
+							response = ""
+
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response = onbreak_response + "\n\n"
+
 							response = "{name_target} is hit!!\n\n{name_target} has died.".format(
 								name_target=target_player.display_name)
 
@@ -631,6 +685,9 @@ class EwEnemy:
 									damage=damage,
 									sap_response=sap_response
 								)
+								if len(onbreak_responses) != 0:
+									for onbreak_response in onbreak_responses:
+										response += "\n\n" + onbreak_response
 						else:
 							if miss:
 								response = "{target_name} dodges the {enemy_name}'s strike.".format(
@@ -640,6 +697,10 @@ class EwEnemy:
 									target_name=target_player.display_name,
 									damage=damage
 								)
+							if len(onbreak_responses) != 0:
+								for onbreak_response in onbreak_responses:
+									response += "\n" + onbreak_response
+
 						resp_cont.add_channel_response(ch_name, response)
 				else:
 					response = '{} is unable to attack {}.'.format(enemy_data.display_name, target_player.display_name)
@@ -1611,18 +1672,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 
@@ -1640,18 +1698,15 @@ def drop_enemy_loot(enemy_data, district_data):
 
 			item = items[random.randint(0, len(items) - 1)]
 
+			item_props = ewitem.gen_item_props(item)
+
 			ewitem.item_create(
-				item_type=ewcfg.it_cosmetic,
-				id_user=district_data.name,
-				id_server=district_data.id_server,
-				item_props={
-					'id_cosmetic': item.id_cosmetic,
-					'cosmetic_name': item.str_name,
-					'cosmetic_desc': item.str_desc,
-					'rarity': item.rarity,
-					'adorned': 'false'
-				}
+				item_type = ewcfg.it_cosmetic,
+				id_user = district_data.name,
+				id_server = district_data.id_server,
+				item_props = item_props
 			)
+
 			response = "They dropped a {item_name}!".format(item_name=item.str_name)
 			loot_resp_cont.add_channel_response(loot_poi.channel, response)
 

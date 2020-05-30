@@ -45,6 +45,10 @@ class EwUser:
 	splattered_slimes = 0
 	sap = 0
 	hardened_sap = 0
+	attack = 0
+	defense = 0
+	speed = 0
+	freshness = 0
 	
 	#SLIMERNALIA
 	festivity = 0
@@ -99,9 +103,9 @@ class EwUser:
 		if self.move_speed <= 0:
 			self.move_speed = 1
 
-		self.sap = max(0, min(self.sap, self.slimelevel - self.hardened_sap))
+		self.sap = max(0, min(self.sap, ewutils.sap_max_bylevel(self.slimelevel) - self.hardened_sap))
 
-		self.hardened_sap = max(0, self.hardened_sap)
+		self.hardened_sap = max(0, min(self.hardened_sap, ewutils.sap_max_bylevel(self.slimelevel) - self.sap))
 
 		self.degradation = max(0, self.degradation)
 
@@ -257,6 +261,7 @@ class EwUser:
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_cosmetic, fraction = cosmetic_fraction) # Drop a random fraction of your unadorned cosmetics on the ground.
 				ewitem.item_dedorn_cosmetics(id_server = self.id_server, id_user = self.id_user) # Unadorn all of your adorned hats.
+				self.freshness = 0
 
 				ewitem.item_dropsome(id_server = self.id_server, id_user = self.id_user, item_type_filter = ewcfg.it_weapon, fraction = 1) # Drop random fraction of your unequipped weapons on the ground.
 				ewutils.weaponskills_clear(id_server = self.id_server, id_user = self.id_user, weaponskill = ewcfg.weaponskill_max_onrevive)
@@ -275,6 +280,10 @@ class EwUser:
 
 		self.sap = 0
 		self.hardened_sap = 0
+		self.attack = 0
+		self.defense = 0
+		self.speed = 0
+
 		ewutils.moves_active[self.id_user] = 0
 		ewutils.active_target_map[self.id_user] = ""
 		ewutils.active_restrictions[self.id_user] = 0
@@ -842,7 +851,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -894,6 +903,10 @@ class EwUser:
 					ewcfg.col_credence,
 					ewcfg.col_credence_used,
 					ewcfg.col_id_inhabit_target,
+					ewcfg.col_attack,
+					ewcfg.col_defense,
+					ewcfg.col_speed,
+					ewcfg.col_freshness
 				), (
 					id_user,
 					id_server
@@ -952,6 +965,10 @@ class EwUser:
 					self.credence = result[47]
 					self.credence_used = result[48]
 					self.id_inhabit_target = result[49]
+					self.attack = result[50]
+					self.defense = result[51]
+					self.speed = result[52]
+					self.freshness = result[53]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1007,7 +1024,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1061,6 +1078,10 @@ class EwUser:
 				ewcfg.col_credence,
 				ewcfg.col_credence_used,
 				ewcfg.col_id_inhabit_target,
+				ewcfg.col_attack,
+				ewcfg.col_defense,
+				ewcfg.col_speed,
+				ewcfg.col_freshness,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1114,7 +1135,11 @@ class EwUser:
 				self.gambit,
 				self.credence,
 				self.credence_used,
-				self.id_inhabit_target
+				self.id_inhabit_target,
+				self.attack,
+				self.defense,
+				self.speed,
+				self.freshness,
 			))
 
 			conn.commit()
