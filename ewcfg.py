@@ -33,7 +33,7 @@ version = "v3.4"
 
 dir_msgqueue = 'msgqueue'
 
-database = "rfck"
+database = "rfckevent"
 
 discord_message_length_limit = 2000
 
