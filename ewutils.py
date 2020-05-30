@@ -435,11 +435,15 @@ def databaseConnect():
 	if conn_info == None:
 		db_pool_id += 1
 		conn_info = {
+<<<<<<< HEAD
 
 		'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
 
 
 
+=======
+			'conn': MySQLdb.connect(host = "localhost", user = "rfck-bot", passwd = "rfck" , db = ewcfg.database, charset = "utf8"),
+>>>>>>> 715db9684731341315fb8b85e78614a77b68806f
 			'created': int(time.time()),
 			'count': 1,
 			'closed': False
@@ -1620,7 +1624,7 @@ async def sap_tick_loop(id_server):
 def sap_tick(id_server):
 
 	try:
-		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < FLOOR(1.6 * POW({level}, 0.75))".format(
+		users = execute_sql_query("SELECT {id_user} FROM users WHERE {id_server} = %s AND {life_state} > 0 AND {sap} + {hardened_sap} < {level}".format(
 			id_user = ewcfg.col_id_user,
 			life_state = ewcfg.col_life_state,
 			sap = ewcfg.col_sap,
@@ -2126,8 +2130,11 @@ def channel_name_is_poi(channel_name):
 		return channel_name in ewcfg.chname_to_poi
 
 	return False
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 715db9684731341315fb8b85e78614a77b68806f
 
 def get_cosmetic_abilities(id_user, id_server):
 	active_abilities = []
@@ -2302,4 +2309,7 @@ def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None)
 	# 		response = "none 5"
 
 	return response
+<<<<<<< HEAD
 
+=======
+>>>>>>> 715db9684731341315fb8b85e78614a77b68806f
