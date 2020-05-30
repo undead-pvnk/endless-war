@@ -13398,6 +13398,14 @@ cosmetic_items_list = [
 		acquisition = acquisition_smelting,
 		is_hat = True,
 	),
+    EwCosmeticItem(
+		id_cosmetic = "surgicalmask",
+		str_name = "Surgical Mask",
+		str_desc = "A neat face mask made to keep the coughs and colds from the outside world from offending your face.",
+		rarity = rarity_plebeian,
+		acquisition = acquisition_smelting,
+		is_hat = True,
+	),
 ]
 
 
@@ -13706,7 +13714,20 @@ smelting_recipe_list = [
 		},
 		products = ['dclaw']
     ),
-
+	    EwSmeltingRecipe(
+		id_recipe = "fishskinhat",
+		str_name = "a Fishskin Hat",
+		alias = [
+			"fishskinhat"
+		],
+		ingredients = {
+			'dragonsoul' : 1,
+			item_id_slimepoudrin : 5,
+			'ironingot':1,
+			'leather':1
+		},
+		products = ['dclaw']
+    ),
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
 		str_name = "a leather couch",
