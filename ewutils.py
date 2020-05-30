@@ -1444,6 +1444,7 @@ def get_move_speed(user_data):
 
 	return move_speed
 
+
 """ Damage all players in a district """
 def explode(damage = 0, district_data = None, market_data = None):
 	id_server = district_data.id_server
