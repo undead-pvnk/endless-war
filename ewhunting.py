@@ -532,9 +532,6 @@ class EwEnemy:
 								c.item_props['durability'] = durability_afterhit
 								c.persist()
 
-								target_data.attack -= int(c.item_props[ewcfg.stat_attack])
-								target_data.defense -= int(c.item_props[ewcfg.stat_defense])
-								target_data.speed -= int(c.item_props[ewcfg.stat_speed])
 								target_data.freshness = ewutils.get_outfit_info(id_user = target_data.id_user, id_server = target_data.id_server, wanted_info = "total_freshness")
 
 								target_data.persist()

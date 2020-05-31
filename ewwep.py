@@ -777,9 +777,6 @@ async def attack(cmd):
 								c.item_props['durability'] = durability_afterhit
 								c.persist()
 
-								shootee_data.attack -= int(c.item_props[ewcfg.stat_attack])
-								shootee_data.defense -= int(c.item_props[ewcfg.stat_defense])
-								shootee_data.speed -= int(c.item_props[ewcfg.stat_speed])
 								shootee_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 								shootee_data.persist()
