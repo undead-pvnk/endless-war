@@ -687,6 +687,7 @@ cmd_map = {
 
 	# race
 	ewcfg.cmd_set_race: ewcmd.set_race,
+	ewcfg.cmd_set_race_alt1: ewcmd.set_race,
 	ewcfg.cmd_reset_race: ewcmd.reset_race,
 	ewcfg.cmd_exist: ewcmd.exist,
 	ewcfg.cmd_ree: ewcmd.ree,

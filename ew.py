@@ -894,7 +894,7 @@ class EwUser:
 					ewcfg.col_credence,
 					ewcfg.col_credence_used,
 					ewcfg.col_race,
-					ewcfg.col_racial_cooldown,
+					ewcfg.col_time_racialability,
 				), (
 					id_user,
 					id_server
@@ -1063,7 +1063,7 @@ class EwUser:
 				ewcfg.col_credence,
 				ewcfg.col_credence_used,
 				ewcfg.col_race,
-				ewcfg.col_racial_cooldown,
+				ewcfg.col_time_racialability,
 			), (
 				self.id_user,
 				self.id_server,

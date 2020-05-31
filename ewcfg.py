@@ -942,6 +942,7 @@ cmd_canceltrade = cmd_prefix + 'canceltrade'
 
 # race
 cmd_set_race = cmd_prefix + 'setrace'
+cmd_set_race_alt1 = cmd_prefix + 'identifyas'
 cmd_reset_race = cmd_prefix + 'resetrace'
 cmd_exist = cmd_prefix + 'exist'
 cmd_ree = cmd_prefix + 'ree'
@@ -1262,6 +1263,7 @@ cd_enlist = 60
 
 cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
 cd_drop_bone = 5 * 60
+cd_change_race = 24 * 60 * 60 # can only change your race once per day
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -1584,7 +1586,7 @@ col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
 col_race = 'race'
-col_racial_cooldown = 'time_racialability'
+col_time_racialability = 'time_racialability'
 
 #SLIMERNALIA
 col_festivity = 'festivity'
@@ -2348,6 +2350,12 @@ item_list = [
 		str_name = "Brown Dye",
 		str_desc = "A small vial of brown dye.",
 		acquisition = acquisition_smelting,
+	),
+	EwGeneralItem(
+		id_item = "bone",
+		str_name = "Bone",
+		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
+		context = 'player_bone',
 	),
 	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
@@ -17597,7 +17605,7 @@ races = {
 	'furry': 'furry',
 	'scalie': 'scalie',
 	'slime-derived': 'slime-derived',
-	'abomination': 'abomination'
+	'other': 'other'
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
