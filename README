@@ -468,3 +468,17 @@ CREATE TABLE inhabitations (
 
 	PRIMARY KEY (id_ghost, id_fleshling, id_server)
 );
+
+DELIMITER //
+
+CREATE FUNCTION fashion(id_user char(128), id_server char(128), name char(128))
+	RETURNS int
+	RETURN (
+		SELECT SUM(CAST(ip.value AS INT))
+		FROM items_prop ip
+		INNER JOIN items i ON ip.id_item = i.id_item
+		WHERE ip.name = name AND i.id_server = id_server AND i.id_user = id_user
+		GROUP BY i.id_user, i.id_server
+	);//
+
+DELIMITER ;

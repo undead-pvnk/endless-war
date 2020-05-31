@@ -178,9 +178,6 @@ async def adorn(cmd):
 			else:
 				item_sought.item_props['adorned'] = 'true'
 
-				user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
-				user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
-				user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
 				# Take the hat from your slimeoid if necessary
 				if item_sought.item_props.get('slimeoid') == 'true':
@@ -246,9 +243,6 @@ async def dedorn(cmd):
 
 				response = unadorn_response.format(item_sought.item_props['cosmetic_name'])
 
-				user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
-				user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
-				user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
 				item_sought.persist()
 				user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
@@ -345,9 +339,6 @@ async def smoke(cmd):
 				item.item_props['adorned'] = "true"
 				item.persist()
 
-				usermodel.attack += int(item.item_props.get(ewcfg.stat_attack))
-				usermodel.defense += int(item.item_props.get(ewcfg.stat_defense))
-				usermodel.speed += int(item.item_props.get(ewcfg.stat_speed))
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -365,9 +356,6 @@ async def smoke(cmd):
 				item.item_props['cosmetic_name'] = "cigarette butt"
 				item.persist()
 
-				usermodel.attack -= int(item.item_props.get(ewcfg.stat_attack))
-				usermodel.defense -= int(item.item_props.get(ewcfg.stat_defense))
-				usermodel.speed -= int(item.item_props.get(ewcfg.stat_speed))
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -387,9 +375,6 @@ async def smoke(cmd):
 
 				item.persist()
 
-				usermodel.attack += int(item.item_props[ewcfg.stat_attack])
-				usermodel.defense += int(item.item_props[ewcfg.stat_defense])
-				usermodel.speed += int(item.item_props[ewcfg.stat_speed])
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -406,9 +391,6 @@ async def smoke(cmd):
 				item.item_props['cosmetic_name'] = "cigar stump"
 				item.persist()
 
-				usermodel.attack -= int(item.item_props[ewcfg.stat_attack])
-				usermodel.defense -= int(item.item_props[ewcfg.stat_defense])
-				usermodel.speed -= int(item.item_props[ewcfg.stat_speed])
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -435,9 +417,6 @@ def dedorn_all_costumes():
 		costume_item.item_props['adorned'] = 'false'
 
 		if costume_item.item_props['slimeoid'] == 'false':
-			usermodel.attack -= int(costume_item.item_props[ewcfg.stat_attack])
-			usermodel.defense -= int(costume_item.item_props[ewcfg.stat_defense])
-			usermodel.speed -= int(costume_item.item_props[ewcfg.stat_speed])
 			usermodel.freshness = ewutils.get_outfit_info(id_user = usermodel.id_user, id_server = usermodel.id_server, wanted_info = "total_freshness")
 
 			usermodel.persist()
@@ -687,10 +666,6 @@ async def retrofit(cmd):
 
 								user_data.slimes -= cost_ofretrofit
 
-								if item_sought.item_props['adorned'] == "true":
-									user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
-									user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
-									user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
 								user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 								user_data.persist()

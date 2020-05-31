@@ -3283,9 +3283,6 @@ async def dress_slimeoid(cmd):
 					# Remove hat from player if adorned
 					if item_sought.item_props.get('adorned') == 'true':
 						item_sought.item_props['adorned'] = 'false'
-						user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
-						user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
-						user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
 						response = "You take off your {} and give it to {}.".format(item_sought.item_props.get('cosmetic_name'), slimeoid.name)
 					else:

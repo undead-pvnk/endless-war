@@ -640,6 +640,12 @@ async def fashion(cmd):
 
 		stat_responses = []
 
+
+
+		stats_breakdown["attack"] = user_data.attack
+		stats_breakdown["defense"] = user_data.defense
+		stats_breakdown["speed"] = user_data.speed
+
 		for stat in ewcfg.playerstats_list:
 
 			if stat in stats_breakdown.keys():
