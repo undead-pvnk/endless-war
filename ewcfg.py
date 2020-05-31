@@ -2196,6 +2196,7 @@ weapon_id_paintroller = 'paintroller'
 weapon_id_paintbrush = 'paintbrush'
 weapon_id_watercolors = 'watercolors'
 weapon_id_thinnerbomb = 'thinnerbomb'
+
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -3974,6 +3975,55 @@ def wef_dclaw(ctn = None):
 	elif aim >= (9 - int(13 * ctn.crit_mod)):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
+
+
+def wef_paintgun(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * .6)
+	ctn.slimes_spent = int(ctn.slimes_spent * .75)
+	aim = (random.randrange(10) + 1)
+	ctn.sap_ignored = 10
+	ctn.sap_damage = 2
+
+	if aim >= (9 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+
+def wef_paintroller(ctn = None):
+	ctn.slimes_damage = int(ctn.slimes_damage * 1.75)
+	ctn.slimes_spent = int(ctn.slimes_spent * 3)
+
+	aim = (random.randrange(10) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+
+	if aim <= (1 + int(10 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim >= (10 - int(10 * ctn.crit_mod)):
+		ctn.crit = True
+		ctn.slimes_damage *= 2
+		ctn.sap_damage *= 2
+
+def wef_watercolors(ctn = None):
+	ctn.slimes_damage = 4000
+	aim = (random.randrange(1000) + 1)
+	user_mutations = ctn.user_data.get_mutations()
+	ctn.sap_damage = 0
+
+	if aim <= (1 + int(1000 * ctn.miss_mod)):
+		if mutation_id_sharptoother in user_mutations:
+			if random.random() < 0.5:
+				ctn.miss = True
+		else:
+			ctn.miss = True
+
+	elif aim == 1000:
+		ctn.crit = True
+		ctn.slimes_damage *= 1
+
 
 
 vendor_dojo = "Dojo"
@@ -16765,7 +16815,7 @@ help_responses = {
 	# Introductions, part 1
 	"gangs":"**Gang Violence** is the center focus of **Rowdy Fuckers Cop Killers' ENDLESS WAR**. Enlisting in a gang allows you to attack other gang members, juveniles, ghosts, and slime beasts with the **'!kill'** command. To enlist in a gang, use **'!enlist'**, provided you also have at least 50,000 slime on hand. However, a member of that gang must use **'!vouch'** for you beforehand. Enlisting will permanently affiliate you with that gang, unless you are !pardon'd by the **ROWDY FUCKER** (Munchy), or the **COP KILLER** (Ben Saint). You may use **'!renounce'** to return to the life of a juvenile, but you will lose half of your current slime, and you will still be affiliated with that gang, thus disallowing you from entering the enemy's gang base. Additionally, a Kingpin, should they feel the need to, can inflict the '!banned' status upon you, preventing you from enlisting in their gang.",
 	"food":"Food lowers your hunger by a set amount, and can be ordered from various **restaurants** within the city. Generally speaking, the more expensive food is, the more hunger it sates. You can **'!order'** food to place it in your inventory, and **'!use [food name]'** to use it. You can only carry a certain amount of food depending on your level. Regular food items expire after 2 in-game days, or 12 hours in real life, while crops expire after 8 in-game days (48 hours), and food items gained from milling expire after a whole 2 weeks in real life. Three popular restauraunts close by various gang bases include **THE SPEAKEASY** (juveniles), **THE SMOKER'S COUGH** (rowdys), and **RED MOBSTER SEAFOOD** (killers), though there are other places to order food as well, such as the **Food Court**.",
-	"capturing":"Capturing districts is the primary objective of **ENDLESS WAR**. Once you get at least 50,000 slime, you are able to capture districts and generate slime for your team's **Kingpin**. The rate at which you capture a district is determined by various factors. If more **people** are capturing a district, that district will take **less** time to capture. The **property class** (which can range from S at the highest to C at the lowest) of that district will also increase capture time, with S class districts taking more time to capture than C class districts. Districts will take **less** time to capture if they are nearby **friendly** districts, and **more** time to capture if they are nearby **enemy** districts. Districts will have their capture progress **decay** over time, but if a captured district is **fully surrounded** by friendly districts (example: Assault Flats Beach is surrounded by Vagrant's Corner and New New Yonkers), then it will **not** decay. Inversely, districts will decay **faster** if they are next to **enemy** districts. **DECAPTURING** (lowering an enemy's capture progress on districts they control) and **RENEWING** (increasing capture progress on districts your team currently controls) can also be done, but only if that district is **not** fully surrounded. Once a district has been fully captured, it will stay locked at 100% for a duration depending on its property class and the number of people involved in capturing it. **JUVIE'S ROW**, **ROWDY ROUGHHOUSE**, and **COP KILLTOWN** are gang bases, and thus cannot be captured, nor do they decay. To check the capture progress of a district, use **'!progress'**. To view the status of the map itself and check what property class each district has, use **'!map'**.",
+	"capturing":"Capping is a battle for influence in the 31 capturable districts of NLACakaNM, one of your main goals as a gangster. Capped territories award your kingpin slime, and provide your teammates with benefits while visiting. To get started, visit Glocksbury Comics and equip one of the many paint tools sold there. Once you have that, you can **!spray <captcha>** while in a capturable district to accumulate influence for your gang. Spraying some of your slime in districts will increase influence for neutral or allied territory, and decrease it for enemy territory. Think of dealing influence to a district like dealing damage to a Juvie's soft squishy body, with critical hits, misses, and backfires all being possibilities. As you go, you can check your **!progress** to see how much influence you still need. It can be more or less depending on the class of the territory you're in, from C-S. Also, keep in mind that territories adjacent to non-friendly districts will slowly decay influence at a set rate.\n\n So you've made it to the goal. District capped, everyone's cheering. We're done, right? NO. Sure, you could stop at the minimum influence needed to cap, but you don't need to. In fact, you can cap as high as you want, which means it's all the harder to decap, and will take longer to decay.\n\nA few more things to note. \nDon't attack enemy territory when it is surrounded by enemy territory/outskirts. Juvies like yourself are prone to fucking up severely under that much pressure.\nThe watercolor tool may seem completely useless, but if you use it to decap a particularly well-fortified territory something cool might happen.\nYou're right to be worried about gangsters attacking while you have a weak-ass paint tool equipped. Luckily, you can **!sidearm** a weapon or tool and quickly switch between your two equipped weapons using **switch** or **!s**\nYou are able to capture as high as you like, but after a certain point, called the limit, decay will happen twice as fast. ",
 	"transportation":"There are various methods of transportation within the city, the quickest and most efficient of them being **The Subway System**. Trains can be boarded with **'!board'** or **'!embark'**, and to board specific trains, you can add your destination to the command. For example, to board the red line to Cratersville, you would use '!board redtocv'. **'!disembark'** can be used to exit a train. **The Ferry** (which moves between Vagrant's Corner and Wreckington) and **The Blimp** (which moves between Dreadford and Assault Flats Beach) can also be used as methods of transportation, though they take longer to arrive at their destinations than the trains do. Refer to the diagram below (credits to Connor#3355) on understanding which districts have subway stations on them, though take note that the white subway line is currently non-operational.\nhttps://cdn.discordapp.com/attachments/431238867459375145/570392908780404746/t_system_final_stop_telling_me_its_wrong_magicks.png",
 	"death": "Death is an integral mechanic to Endless War. Even the most experienced players will face the sewers every now and again. If you find yourself in such a situation, use **'!revive'** in the sewers channel, and you will return to the land of the living as a juvenile at the base of ENDLESS WAR. Dying will drop some of your unadorned cosmetics and food, and all of your unequiped weapons, but your currently adorned cosmetics and equiped weapon will remain in your inventory (Gangsters will lose half of their food/unadorned cosmetics, while Juveniles lose only a quarter). Try not to die too often however, as using !revive collects a 'death tax', which is 1/10th of your current slimecoin. Alternatively, you can hold off on reviving and remain a **ghost**, which has its own gameplay mechanics associated with it. To learn more, use '!help ghosts' at one of the colleges or with a game guide.",
 	# Introductions, part 2
@@ -16827,7 +16877,17 @@ help_responses = {
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
 	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 4 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
 	
-	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left."
+	"shambleball": "Shambleball is a sport where two teams of shamblers compete to get the ball into the opposing team's goal to score points. A game of Shambleball is started when a player does !shambleball [team] in a district. Other players can join in by doing the same command in the same district. Once you've joined a game, you can do !shambleball to see your data, the ball's location and the score. To move around the field, use !shamblego [coordinates]. You can kick the ball by running into it. To stop, use !shamblestop. Each team's goal is open between 20 and 30 Y, and located at the ends of the field (0 and 99 X for purple and pink respectively). To leave a game, do !shambleleave, or join a different game. A game of Shambleball ends when no players are left.",
+
+	weapon_id_bow: "The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 10. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you takes less than 10 seconds between attacks, your miss chance will increase.",
+
+	weapon_id_spraycan: "**The spray can** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.8 and a spray cost mod of 1. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence.",
+	weapon_id_paintgun: "**The paint gun** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 1.25 and a spray cost mod of 1.5. It has a captcha length of 6, a miss chance of O% and a 20% chance for a crit, which does 2x influence.",
+	weapon_id_paintroller: "**The paint roller** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of [] and a spray cost mod of []. It has a captcha length of [], a miss chance of [] and a [] chance for a crit, which does [] influence.",
+	weapon_id_paintbrush: "**The paint brush** is a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.5 and a spray cost mod of .25. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 1.5x influence.",
+	weapon_id_watercolors: "**Watercolors** are a paint tool for sale at Glocksbury Comics. It does a set 4000 influence. It has a captcha length of 2, a miss chance of [] and a [] chance for a crit, which zeros out the whole district.",
+	weapon_id_thinnerbomb: "**Thinner bombs** are a paint tool for sale at Glocksbury Comics. It has a capping modifier of 0.15 and a spray cost mod of 2. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 2x influence. They are finite and throwable. When decapping, damage is multiplied by 10.",
+
 }
 
 # Keys are retrieved out of order in older versions of python. This list circumvents the issue.
