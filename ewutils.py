@@ -1413,7 +1413,7 @@ def get_move_speed(user_data):
 	statuses = user_data.getStatusEffects()
 	market_data = EwMarket(id_server = user_data.id_server)
 	trauma = ewcfg.trauma_map.get(user_data.trauma)
-	move_speed = 1
+	move_speed = 1.05 ** user_data.speed
 
 	if user_data.life_state == ewcfg.life_state_shambler:
 		if market_data.weather == ewcfg.weather_bicarbonaterain:
@@ -1437,8 +1437,6 @@ def get_move_speed(user_data):
 		move_speed *= 2
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
-
-	move_speed += int(user_data.speed)
 
 	move_speed = max(0.1, move_speed)
 

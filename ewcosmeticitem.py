@@ -326,8 +326,8 @@ async def smoke(cmd):
 	item_stash = ewitem.inventory(id_user=cmd.message.author.id, id_server=usermodel.id_server)
 	for item_piece in item_stash:
 		item = EwItem(id_item=item_piece.get('id_item'))
-		if item.item_props['adorned'] == 'true':
-			space_adorned += int(item.item_props['size'])
+		if item.item_props.get('adorned') == 'true':
+			space_adorned += int(item.item_props.get('size'))
 
 		if item_piece.get('item_type') == ewcfg.it_cosmetic and (item.item_props.get('id_cosmetic') == "cigarette" or item.item_props.get('id_cosmetic') == "cigar") and "lit" not in item.item_props.get('cosmetic_desc'):
 			item_sought = item_piece
@@ -336,8 +336,8 @@ async def smoke(cmd):
 	if item_sought:
 		item = EwItem(id_item=item_sought.get('id_item'))
 		if item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigarette":
-			if int(item_sought.item_props['size']) > 0:
-				space_adorned += int(item_sought.item_props['size'])
+			if int(item.item_props.get('size')) > 0:
+				space_adorned += int(item.item_props.get('size'))
 
 			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
 				response = "You light a cig and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
@@ -345,9 +345,9 @@ async def smoke(cmd):
 				item.item_props['adorned'] = "true"
 				item.persist()
 
-				usermodel.attack += int(item_sought.item_props[ewcfg.stat_attack])
-				usermodel.defense += int(item_sought.item_props[ewcfg.stat_defense])
-				usermodel.speed += int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.attack += int(item.item_props.get(ewcfg.stat_attack))
+				usermodel.defense += int(item.item_props.get(ewcfg.stat_defense))
+				usermodel.speed += int(item.item_props.get(ewcfg.stat_speed))
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -365,9 +365,9 @@ async def smoke(cmd):
 				item.item_props['cosmetic_name'] = "cigarette butt"
 				item.persist()
 
-				usermodel.attack -= int(item_sought.item_props[ewcfg.stat_attack])
-				usermodel.defense -= int(item_sought.item_props[ewcfg.stat_defense])
-				usermodel.speed -= int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.attack -= int(item.item_props.get(ewcfg.stat_attack))
+				usermodel.defense -= int(item.item_props.get(ewcfg.stat_defense))
+				usermodel.speed -= int(item.item_props.get(ewcfg.stat_speed))
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -377,8 +377,8 @@ async def smoke(cmd):
 						   "And, seeing as you are out of adornable cosmetic space, you cannot do that. Sorry. Weird how this message doesn't show up when you suck all that dick though, huh?"
 
 		elif item_sought.get('item_type') == ewcfg.it_cosmetic and item.item_props.get('id_cosmetic') == "cigar":
-			if int(item_sought.item_props['size']) > 0:
-				space_adorned += int(item_sought.item_props['size'])
+			if int(item.item_props['size']) > 0:
+				space_adorned += int(item.item_props['size'])
 
 			if space_adorned < ewutils.max_adornspace_bylevel(usermodel.slimelevel):
 				response = "You light up your stogie and bring it to your mouth. So relaxing. So *cool*. All those naysayers and PSAs in Health class can go fuck themselves."
@@ -387,9 +387,9 @@ async def smoke(cmd):
 
 				item.persist()
 
-				usermodel.attack += int(item_sought.item_props[ewcfg.stat_attack])
-				usermodel.defense += int(item_sought.item_props[ewcfg.stat_defense])
-				usermodel.speed += int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.attack += int(item.item_props[ewcfg.stat_attack])
+				usermodel.defense += int(item.item_props[ewcfg.stat_defense])
+				usermodel.speed += int(item.item_props[ewcfg.stat_speed])
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
@@ -406,9 +406,9 @@ async def smoke(cmd):
 				item.item_props['cosmetic_name'] = "cigar stump"
 				item.persist()
 
-				usermodel.attack -= int(item_sought.item_props[ewcfg.stat_attack])
-				usermodel.defense -= int(item_sought.item_props[ewcfg.stat_defense])
-				usermodel.speed -= int(item_sought.item_props[ewcfg.stat_speed])
+				usermodel.attack -= int(item.item_props[ewcfg.stat_attack])
+				usermodel.defense -= int(item.item_props[ewcfg.stat_defense])
+				usermodel.speed -= int(item.item_props[ewcfg.stat_speed])
 				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()

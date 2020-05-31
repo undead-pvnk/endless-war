@@ -690,7 +690,6 @@ async def attack(cmd):
 
 			sap_armor = get_sap_armor(shootee_data = shootee_data, sap_ignored = sap_ignored)
 			slimes_damage *= sap_armor
-			slimes_damage *= shootee_data.defense
 			slimes_damage = int(max(slimes_damage, 0))
 
 			sap_damage = min(sap_damage, shootee_data.hardened_sap)
