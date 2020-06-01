@@ -445,7 +445,7 @@ async def data(cmd):
 			user_data.persist()
 
 			if outfit_map is not None:
-				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "you") + " "
+				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style']) + " "
 
 		if user_data.hunger > 0:
 			response_block += "You are {}% hungry. ".format(
@@ -637,7 +637,7 @@ async def fashion(cmd):
 			user_data.persist()
 
 			if outfit_map is not None:
-				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "you")
+				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
 
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 
