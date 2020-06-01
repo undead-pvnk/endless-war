@@ -1269,7 +1269,12 @@ def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
 def max_adornspace_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adornspace_mod)
+	if slimelevel < 4:
+		adorn_space = 0
+	else:
+		adorn_space = math.floor(math.sqrt(slimelevel- 2) - 0.40)
+
+	return adorn_space
 
 """
 	Returns an EwUser object of the selected kingpin
@@ -2148,6 +2153,7 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 	)
 
 	adorned_cosmetics = []
+	adorned_ids = []
 
 	adorned_styles = []
 	dominant_style = None
@@ -2165,8 +2171,10 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
 			adorned_hues.append(c.item_props.get('hue'))
 
-			total_freshness += int(c.item_props.get('freshness'))
+			if c.item_props['id_cosmetic'] not in adorned_ids:
+				total_freshness += int(c.item_props.get('freshness'))
 
+			adorned_ids.append(c.item_props['id_cosmetic'])
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if len(adorned_cosmetics) != 0:
@@ -2175,17 +2183,38 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			counted_styles = collections.Counter(adorned_styles)
 			dominant_style = max(counted_styles, key = counted_styles.get)
 
-			relative_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
-
-			# Adds the relative amount to the total freshness as a percentage of itself, which means having a completely cohesive outfit doubles your freshness.
-			total_freshness = round(total_freshness * (1 + float(relative_amount / 100)))
+			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+			# If the outfit has a dominant style
+			if relative_style_amount >= 60:
+				total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
 
 		#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
 		if len(adorned_hues) != 0:
 			counted_hues = collections.Counter(adorned_hues)
+			dominant_hue = max(counted_hues, key = counted_hues.get)
 
-			if None not in counted_hues.keys() and len(counted_hues.keys()) <= 3:
-				total_freshness *= 1.5
+			relative_hue_amount = round(int(counted_hues.get(dominant_hue) / len(adorned_hues) * 100))
+
+			# If the outfit has a dominant hue
+			if dominant_hue != '' and relative_hue_amount >= 60:
+				color_design = False
+
+				neutrals = [ewcfg.hue_id_white, ewcfg.hue_id_grey, ewcfg.hue_id_black, ewcfg.hue_id_brown]
+				complementaries = []
+
+				for hue in ewcfg.hue_list:
+					if hue.id_hue == dominant_hue:
+						complementaries = list(hue.effectiveness.keys()) # Add that hue's complimentary, analogus complementaries, and analogus hues to it's complementaries list
+
+				for hue in adorned_hues:
+					if hue == dominant_hue or hue in complementaries or hue in neutrals:
+						color_design = True
+					else:
+						color_design = False
+						break
+
+				if color_design:
+					total_freshness *= 5
 
 	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
 		return dominant_style
@@ -2198,101 +2227,47 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 		}
 		return outfit_map
 
-def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None):
-
+def get_style_freshness_rating(user_data, dominant_style = None):
 	if dominant_style == None:
 		dominant_style = "fresh"
 
-	if user_data.freshness < 100:
-		response = "{pronoun} outfit is starting to look kinda {style}, not gonna lie.".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 200:
-		response = "{pronoun} outfit is low-key on-point, and pretty {style}.".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 300:
-		response = "{pronoun} outfit is getting really {style} now! I mean, just look at it! Damn!".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 500:
-		response = "{pronoun} outfit is totally **on fire!** People are taking notice of {pronoun} {style}ness, and low-level imposters are popping up on Grimstagram.".format(pronoun = pronoun, style = dominant_style)
+	if user_data.freshness < 1000:
+		response = "Your outfit is starting to look pretty fresh, but you’ve got a long way to go if you wanna be NLACakaNM’s next top model."
 	else:
-		response = "{pronoun} outfit is positively, without a doubt, 100% ***ON FLEEK!!*** {pronoun} Grimstagram has EXPLODED, and a collab with Rarity™ from My Little Pony™ is in the WORKS. " \
-				   "It is just so. fucking. {style}.".format(pronoun = pronoun, style = dominant_style)
+		if user_data.freshness < 3000:
+			response = "Your outfit is low-key on point, not gonna lie. You’re goin’ places, kid."
+		elif user_data.freshness < 4000:
+			response = "Your outfit is lookin’ fresh as hell, goddamn! You shop so much you can probably speak Italian."
+		elif user_data.freshness < 5000:
+			response = "Your outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Your Grimstagram has attracted a small following."
+		else:
+			response = "Holy shit! Your outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** You’ve blown up on Grimstagram, and you’ve got modeling gigs with fashion labels all across the city."
 
-	# Lol, I'll add these later.
-	# if dominant_style == ewcfg.style_cool:
-	# 	if user_data.freshness < 20:
-	# 		response = "Your normal outfit is lowkey on-point."
-	# 	elif user_data.freshness < 40:
-	# 		response = "Your normal outfit is gettin' kinda fleeky, not gonna lie."
-	# 	elif user_data.freshness < 80:
-	# 		response = "For real, your normal outfit is really fuckin' kino, my friend"
-	# 	elif user_data.freshness < 100:
-	# 		response = "Your normal outfit is STELLAR! I wanna know who your tailor is!"
-	# 	else:
-	# 		response = "HOLY FUCKING SHIT YOUR OUTFIT... JUST AMAZING..."
-	# elif dominant_style == ewcfg.style_cool:
-	# 	if user_data.freshness < 20:
-	# 		response = "cool 1"
-	# 	elif user_data.freshness < 40:
-	# 		response = "cool 2"
-	# 	elif user_data.freshness < 80:
-	# 		response = "cool 3"
-	# 	elif user_data.freshness < 100:
-	# 		response = "cool 4"
-	# 	else:
-	# 		response = "cool 5"
-	# elif dominant_style == ewcfg.style_tough:
-	# 	if user_data.freshness < 20:
-	# 		response = "tough 1"
-	# 	elif user_data.freshness < 40:
-	# 		response = "tough 2"
-	# 	elif user_data.freshness < 80:
-	# 		response = "tough 3"
-	# 	elif user_data.freshness < 100:
-	# 		response = "tough 4"
-	# 	else:
-	# 		response = "tough 5"
-	# elif dominant_style == ewcfg.style_smart:
-	# 	if user_data.freshness < 20:
-	# 		response = "smart 1"
-	# 	elif user_data.freshness < 40:
-	# 		response = "smart 2"
-	# 	elif user_data.freshness < 80:
-	# 		response = "smart 3"
-	# 	elif user_data.freshness < 100:
-	# 		response = "smart 4"
-	# 	else:
-	# 		response = "smart 5"
-	# elif dominant_style == ewcfg.style_beautiful:
-	# 	if user_data.freshness < 20:
-	# 		response = "beauty 1"
-	# 	elif user_data.freshness < 40:
-	# 		response = "beauty 2"
-	# 	elif user_data.freshness < 80:
-	# 		response = "beauty 3"
-	# 	elif user_data.freshness < 100:
-	# 		response = "beauty 4"
-	# 	else:
-	# 		response = "beauty 5"
-	# elif dominant_style == ewcfg.style_cute:
-	# 	if user_data.freshness < 20:
-	# 		response = "cute 1"
-	# 	elif user_data.freshness < 40:
-	# 		response = "cute 2"
-	# 	elif user_data.freshness < 80:
-	# 		response = "cute 3"
-	# 	elif user_data.freshness < 100:
-	# 		response = "cute 4"
-	# 	else:
-	# 		response = "cute 5"
-	# else:
-	# 	if user_data.freshness < 20:
-	# 		response = "none 1"
-	# 	elif user_data.freshness < 40:
-	# 		response = "none 2"
-	# 	elif user_data.freshness < 80:
-	# 		response = "none 3"
-	# 	elif user_data.freshness < 100:
-	# 		response = "none 4"
-	# 	else:
-	# 		response = "none 5"
+		if dominant_style == ewcfg.style_cool:
+			if user_data.freshness < 5000:
+				response += " You’re lookin’ wicked cool, dude. Like, straight up radical, man. For real, like, ta-haaa, seriously? Damn, bro. Sick."
+			else:
+				response += " Hey, kids, the world just got cooler. You’re the swingingest thing from coast-to-coast, and that ain’t no boast. You’re every slimegirl’s dream, you know what I mean? You’re where it’s at, and a far-out-happenin’ cat to boot. Man, it must hurt to be this hip."
+		elif dominant_style == ewcfg.style_tough:
+			if user_data.freshness < 5000:
+				response += " You’re lookin’ tough as hell. Juveniles of all affiliations are starting to act nervous around you."
+			else:
+				response += " You’re just about the toughest-lookin' juveniledelinquent in the whole detention center. Ain’t nobody gonna pick a fight with you anymore, goddamn."
+		elif dominant_style == ewcfg.style_smart:
+			if user_data.freshness < 5000:
+				response += " You’re starting to look like a real hipster, wearing all these smartypants garments. You love it, the people around you hate it."
+			else:
+				response += " You know extensive facts about bands that are so underground they’ve released their albums through long-since-expired Vocaroo links. You’re a leading hashtag warrior on various internet forums, and your opinions are well known by everyone who has spoken to you for more than five minutes. Everyone wants to knock your lights out, but… you’re just too fresh. "
+		elif dominant_style == ewcfg.style_beautiful:
+			if user_data.freshness < 5000:
+				response += " You’re looking extremely handsome in all of those beautiful garments. If only this refined, elegant reflected in your manners when cracking into a Arizonian Kingpin Crab."
+			else:
+				response += " You’re the belle of the ball at every ball you attend, which has never happened. But, if you *were* to ever attend one, your beautiful outfit would surely distinguish you from the crowd. Who knows, you might even find TRUE LOVE because of it and get MARRIED. That is, if you weren’t already married to slime."
+		elif dominant_style == ewcfg.style_cute:
+			if user_data.freshness < 5000:
+				response += " Awwwhhh, look at you! You’re sooo cute~, oh my gosh. I could just eat you up, and then vomit you back up after I read back the previous line I’ve just written."
+			else:
+				response += " It is almost kowai how kawaii you are right now. Your legions of fans slobber all over each new post on Grimstagram and leave very strange comments. You’re stopped for autographs in public now, and there hasn’t been a selfie taken with you that hasn’t featured a hover hand."
 
 	return response
 
