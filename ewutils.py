@@ -2148,6 +2148,7 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 	)
 
 	adorned_cosmetics = []
+	adorned_ids = []
 
 	adorned_styles = []
 	dominant_style = None
@@ -2165,8 +2166,10 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
 			adorned_hues.append(c.item_props.get('hue'))
 
-			total_freshness += int(c.item_props.get('freshness'))
+			if cosmetic.get('id_cosmetic') not in adorned_ids:
+				total_freshness += int(c.item_props.get('freshness'))
 
+			adorned_ids.append(cosmetic.get('id_cosmetic'))
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if len(adorned_cosmetics) != 0:
@@ -2175,17 +2178,39 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			counted_styles = collections.Counter(adorned_styles)
 			dominant_style = max(counted_styles, key = counted_styles.get)
 
-			relative_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
 
-			# Adds the relative amount to the total freshness as a percentage of itself, which means having a completely cohesive outfit doubles your freshness.
-			total_freshness = round(total_freshness * (1 + float(relative_amount / 100)))
+			# If the outfit has a dominant style
+			if relative_style_amount >= 60:
+				total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
 
 		#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
 		if len(adorned_hues) != 0:
 			counted_hues = collections.Counter(adorned_hues)
+			dominant_hue = max(counted_hues, key = counted_hues.get)
 
-			if None not in counted_hues.keys() and len(counted_hues.keys()) <= 3:
-				total_freshness *= 1.5
+			relative_hue_amount = round(int(counted_hues.get(dominant_hue) / len(adorned_hues) * 100))
+
+			# If the outfit has a dominant hue
+			if relative_hue_amount >= 60:
+				color_design = False
+
+				neutrals = [ewcfg.hue_id_white, ewcfg.hue_id_grey, ewcfg.hue_id_black, ewcfg.hue_id_brown]
+				complementaries = []
+
+				for hue in ewcfg.hue_list:
+					if hue.id_hue == dominant_hue:
+						complementaries = list(hue.effectiveness.keys()) # Add that hue's complimentary, analogus complementaries, and analogus hues to it's complementaries list
+
+				for hue in adorned_hues:
+					if hue == dominant_hue or hue in complementaries or hue in neutrals:
+						color_design = True
+					else:
+						color_design = False
+						break
+
+				if color_design:
+					total_freshness *= 5
 
 	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
 		return dominant_style
@@ -2209,7 +2234,7 @@ def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None)
 		response = "{pronoun} outfit is low-key on-point, and pretty {style}.".format(pronoun = pronoun, style = dominant_style)
 	elif user_data.freshness < 300:
 		response = "{pronoun} outfit is getting really {style} now! I mean, just look at it! Damn!".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 500:
+	elif user_data.freshness < 5000:
 		response = "{pronoun} outfit is totally **on fire!** People are taking notice of {pronoun} {style}ness, and low-level imposters are popping up on Grimstagram.".format(pronoun = pronoun, style = dominant_style)
 	else:
 		response = "{pronoun} outfit is positively, without a doubt, 100% ***ON FLEEK!!*** {pronoun} Grimstagram has EXPLODED, and a collab with Rarity™ from My Little Pony™ is in the WORKS. " \
