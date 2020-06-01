@@ -26,7 +26,9 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
-	topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
+	#topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
+	topfashion = make_freshness_top_board(server = server)
+	ewutils.logMsg(topfashion)
 	await ewutils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
@@ -51,9 +53,9 @@ def make_stocks_top_board(server = None):
 		data = ewutils.execute_sql_query((
 			"SELECT pl.display_name, u.life_state, u.faction, shares_value(u.id_user, u.id_server, %(stock_kfc)s) + shares_value(u.id_user, u.id_server, %(stock_tacobell)s) + shares_value(u.id_user, u.id_server, %(stock_pizzahut)s) + u.slimecoin AS net_worth " +
 			"FROM users AS u " +
-			"LEFT JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
 			"WHERE u.id_server = %(id_server)s " +
-			"ORDER BY net_worth DESC LIMIT 1"
+			"ORDER BY net_worth DESC LIMIT 5"
 		), {
 			"id_server" : server.id,
 			"stock_kfc" : ewcfg.stock_kfc,
@@ -77,9 +79,9 @@ def make_freshness_top_board(server = None):
 		data = ewutils.execute_sql_query((
 			"SELECT pl.display_name, u.life_state, u.faction, freshness(u.id_user, u.id_server) AS fresh " +
 			"FROM users AS u " +
-			"LEFT JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
 			"WHERE u.id_server = %(id_server)s " +
-			"ORDER BY fresh DESC LIMIT 1"
+			"ORDER BY fresh DESC LIMIT 5"
 		), {
 			"id_server" : server.id,
 		})
@@ -90,7 +92,8 @@ def make_freshness_top_board(server = None):
 					entries.append(row)
 	except:
 		ewutils.logMsg("Error occured while fetching fashion leaderboard")
-
+	finally:
+		ewutils.logMsg("finished fetching {} entries for fashion board: {}".format(len(entries), entries))
 	
 	return format_board(entries = entries, title = ewcfg.leaderboard_fashion)
 
@@ -107,7 +110,7 @@ def make_slimeoids_top_board(server = None):
 		cursor.execute((
 			"SELECT pl.display_name, sl.name, sl.clout " +
 			"FROM slimeoids AS sl " +
-			"LEFT JOIN players AS pl ON sl.id_user = pl.id_user " +
+			"INNER JOIN players AS pl ON sl.id_user = pl.id_user " +
 			"WHERE sl.id_server = %s AND sl.life_state = 2 " +
 			"ORDER BY sl.clout DESC LIMIT 3"
 		), (
@@ -453,9 +456,16 @@ def board_entry(entry, entry_type, divide_by):
 		faction = ewutils.get_faction(life_state = entry[1], faction = entry[2])
 		faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
 
+		number = int(entry[3] / divide_by)
+
+		if number > 999999999:
+			num_str = "{:.3e}".format(number)
+		else:
+			num_str = "{:,}".format(number)
+
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
-			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
+			num_str,
 			entry[0].replace("`","")
 		)
 
