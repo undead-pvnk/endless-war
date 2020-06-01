@@ -98,6 +98,9 @@ class EwPoi:
 
 	# Discord role associated with this zone (control channel visibility).
 	role = None
+	
+	# Discord permissions associated with this zone (control channel visibility) - 5/28/20
+	permissions = None
 
 	# Zone allows PvP combat and interactions.
 	pvp = True
@@ -186,6 +189,7 @@ class EwPoi:
 		coord_alias = [],
 		channel = "",
 		role = None,
+		permissions = None,
 		pvp = True,
 		factions = [],
 		life_states = [],
@@ -222,6 +226,7 @@ class EwPoi:
 		self.coord_alias = coord_alias
 		self.channel = channel
 		self.role = role
+		self.permissions = permissions
 		self.pvp = pvp
 		self.factions = factions
 		self.life_states = life_states
@@ -1108,6 +1113,10 @@ async def move(cmd = None, isApt = False):
 						break
 
 				if user_data.poi != poi_current.id_poi:
+					
+					poi_previous = user_data.poi
+					print('previous poi: {}'.format(poi_previous))
+					
 					user_data.poi = poi_current.id_poi
 					user_data.time_lastenter = int(time.time())
 					user_data.persist()

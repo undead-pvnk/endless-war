@@ -43,6 +43,9 @@ update_twitch = 60
 update_pvp = 60
 update_market = 900 #15 min
 
+# Number of times the bot should try a permissions-related API call. This is done purely for safety measures.
+permissions_tries = 2
+
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
 
@@ -354,6 +357,14 @@ role_tutorial = "newintown"
 role_slimernalia = "kingpinofslimernalia"
 role_gellphone = "gellphone"
 
+permission_read_messages = "read"
+permission_send_messages = "send"
+#permission_see_history = "history"
+#permission_upload_files = "upload" -- everything else including this should be true by default. 
+# Read, Send, and History should be false by default but set to true.
+
+permissions_general = [permission_read_messages, permission_send_messages]
+
 faction_roles = [
 	role_juvenile,
 	role_juvenile_pvp,
@@ -539,6 +550,7 @@ hideout_by_faction = {
 	faction_rowdys: channel_rowdyroughhouse,
 	faction_killers: channel_copkilltown
 }
+
 
 # Commands
 cmd_prefix = '!'
@@ -892,6 +904,8 @@ cmd_release = cmd_prefix + 'release'
 cmd_balance_cosmetics = cmd_prefix + 'balancecosmetic'
 cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
+cmd_changepermissions = cmd_prefix + 'changeperms'
+cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
 cmd_debug2 = cmd_prefix + ewdebug.cmd_debug2
 cmd_debug3 = cmd_prefix + ewdebug.cmd_debug3
@@ -9395,6 +9409,7 @@ poi_list = [
 		],
 		channel = "downtown",
 		role = "Downtown",
+		#permissions = {poi_id_downtown:permissions_general},
 		property_class = property_class_s,
 		is_capturable = True
 	),
@@ -12238,6 +12253,12 @@ poi_list = [
 		is_subzone = True
 	),
 ]
+
+for poi in poi_list:
+	if poi.permissions == None:
+		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
+	
+	
 
 debugroom = ewdebug.debugroom
 debugroom_short = ewdebug.debugroom_short

@@ -630,6 +630,12 @@ cmd_map = {
 
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
+	
+	# sets permissions for all poi channels in the server
+	ewcfg.cmd_changepermissions: ewrolemgr.change_perms,
+	
+	# removes all user overwrites in the server's poi channels
+	ewcfg.cmd_removeuseroverwrites: ewrolemgr.remove_user_overwrites,
 
 	# debug commands
 	# ewcfg.cmd_debug1: ewdebug.debug1,
@@ -757,8 +763,8 @@ async def on_ready():
 	fake_observer = EwUser()
 	fake_observer.life_state = ewcfg.life_state_observer
 	for poi in ewcfg.poi_list:
-		if poi.role != None:
-			poi.role = ewutils.mapRoleName(poi.role)
+		# if poi.role != None:
+		# 	poi.role = ewutils.mapRoleName(poi.role)
 
 		neighbors = []
 		neighbor_ids = []
@@ -821,9 +827,12 @@ async def on_ready():
 
 		# find roles and add them to the database
 		ewrolemgr.setupRoles(client = client, id_server = server.id)
+		
+		# Refresh the permissions of all users
+		await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
 
 		# hides the names of poi roles
-		await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
+		# await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))
@@ -860,7 +869,6 @@ async def on_ready():
 		asyncio.ensure_future(ewdistrict.capture_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.bleed_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.enemy_action_tick_loop(id_server=server.id))
-		asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.burn_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewutils.remove_status_loop(id_server = server.id))
 		asyncio.ensure_future(ewworldevent.event_tick_loop(id_server = server.id))
@@ -870,6 +878,7 @@ async def on_ready():
 		# asyncio.ensure_future(ewutils.generate_credence_tick_loop(id_server = server.id))
 		
 		if not debug:
+			asyncio.ensure_future(ewutils.spawn_enemies_tick_loop(id_server=server.id))
 			await ewtransport.init_transports(id_server = server.id)
 			asyncio.ensure_future(ewweather.weather_tick_loop(id_server = server.id))
 		asyncio.ensure_future(ewslimeoid.slimeoid_tick_loop(id_server = server.id))
@@ -1193,7 +1202,7 @@ async def on_ready():
 
 @client.event
 async def on_member_join(member):
-	ewutils.logMsg("New member \"{}\" joined. Configuring default roles now.".format(member.display_name))
+	ewutils.logMsg("New member \"{}\" joined. Configuring default roles / permissions now.".format(member.display_name))
 	await ewrolemgr.updateRoles(client = client, member = member)
 	ewplayer.player_update(
 		member = member,
@@ -1406,8 +1415,8 @@ async def on_message(message):
 			# Nothing else to do in a DM.
 			return
 
-		# assign the appropriate roles to a user with less than @everyone, faction, location
-		if len(message.author.roles) < 3:
+		# assign the appropriate roles to a user with less than @everyone, faction
+		if len(message.author.roles) < 2:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)
