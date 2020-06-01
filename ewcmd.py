@@ -246,8 +246,16 @@ def gen_data_text(
 			user_data.freshness = int(outfit_map['total_freshness'])
 			user_data.persist()
 
-			if outfit_map is not None:
-				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "Their") + " "
+			if user_data.freshness < 1000:
+				response = "Their outfit is starting to look pretty fresh. "
+			elif user_data.freshness < 3000:
+				response = "Their outfit is low-key on point, not gonna lie. "
+			elif user_data.freshness < 4000:
+				response = "Their outfit is lookin’ fresh as hell, goddamn! "
+			elif user_data.freshness < 5000:
+				response = "Their outfit is straight up **GOALS!** "
+			else:
+				response = "Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** "
 
 		statuses = user_data.getStatusEffects()
 
@@ -437,7 +445,7 @@ async def data(cmd):
 			user_data.persist()
 
 			if outfit_map is not None:
-				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "Your") + " "
+				response_block += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style']) + " "
 
 		if user_data.hunger > 0:
 			response_block += "You are {}% hungry. ".format(
@@ -629,7 +637,7 @@ async def fashion(cmd):
 			user_data.persist()
 
 			if outfit_map is not None:
-				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'], pronoun = "Your")
+				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
 
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 

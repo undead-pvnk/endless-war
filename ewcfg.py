@@ -15845,6 +15845,7 @@ hue_list = [
 			hue_id_lime: hue_analogous,
 			hue_id_purple: hue_atk_complementary,
 			hue_id_cobalt: hue_special_complementary,
+			hue_id_blue: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 
@@ -15863,6 +15864,7 @@ hue_list = [
 			hue_id_yellow: hue_analogous,
 			hue_id_blue: hue_atk_complementary,
 			hue_id_cyan: hue_special_complementary,
+			hue_id_cobalt: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -15881,6 +15883,7 @@ hue_list = [
 			hue_id_orange: hue_analogous,
 			hue_id_cobalt: hue_atk_complementary,
 			hue_id_teal: hue_special_complementary,
+			hue_id_cyan: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 
@@ -15899,6 +15902,7 @@ hue_list = [
 			hue_id_purple: hue_analogous,
 			hue_id_teal: hue_atk_complementary,
 			hue_id_lime: hue_special_complementary,
+			hue_id_green: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -15917,6 +15921,7 @@ hue_list = [
 			hue_id_magenta: hue_analogous,
 			hue_id_green: hue_atk_complementary,
 			hue_id_yellow: hue_special_complementary,
+			hue_id_lime: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -15934,6 +15939,7 @@ hue_list = [
 			hue_id_purple: hue_analogous,
 			hue_id_lime: hue_atk_complementary,
 			hue_id_orange: hue_special_complementary,
+			hue_id_yellow: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -15952,6 +15958,7 @@ hue_list = [
 			hue_id_teal: hue_analogous,
 			hue_id_pink: hue_atk_complementary,
 			hue_id_purple: hue_special_complementary,
+			hue_id_magenta: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -15969,6 +15976,7 @@ hue_list = [
 			hue_id_cyan: hue_analogous,
 			hue_id_red: hue_atk_complementary,
 			hue_id_magenta: hue_special_complementary,
+			hue_id_pink: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -15996,6 +16004,7 @@ hue_list = [
 			hue_id_red: hue_analogous,
 			hue_id_cyan: hue_atk_complementary,
 			hue_id_green: hue_special_complementary,
+			hue_id_teal: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -16023,6 +16032,7 @@ hue_list = [
 			hue_id_blue: hue_analogous,
 			hue_id_yellow: hue_atk_complementary,
 			hue_id_red: hue_special_complementary,
+			hue_id_orange: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -16050,6 +16060,7 @@ hue_list = [
 			hue_id_green: hue_analogous,
 			hue_id_magenta: hue_atk_complementary,
 			hue_id_blue: hue_special_complementary,
+			hue_id_purple: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
@@ -16067,6 +16078,7 @@ hue_list = [
 			hue_id_cobalt: hue_analogous,
 			hue_id_orange: hue_atk_complementary,
 			hue_id_pink: hue_special_complementary,
+			hue_id_red: hue_full_complementary,
 			hue_id_rainbow: hue_full_complementary
 		},
 	),
