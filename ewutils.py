@@ -2171,10 +2171,12 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
 			adorned_hues.append(c.item_props.get('hue'))
 
-			if cosmetic.get('id_cosmetic') not in adorned_ids:
+			if c.item_props['id_cosmetic'] not in adorned_ids:
+
 				total_freshness += int(c.item_props.get('freshness'))
 
-			adorned_ids.append(cosmetic.get('id_cosmetic'))
+			adorned_ids.append(c.item_props['id_cosmetic'])
+			print(adorned_ids)
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if len(adorned_cosmetics) != 0:
