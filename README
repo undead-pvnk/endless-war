@@ -536,7 +536,7 @@ CREATE FUNCTION freshness(id_user varchar(128), id_server varchar(128))
 			FROM items_prop ips
 			INNER JOIN items i ON ips.id_item = i.id_item
 			INNER JOIN items_prop ida ON ida.id_item = ips.id_item
-			WHERE i.id_server = id_server AND i.id_user = id_user AND ips.name = 'style' AND ida.name = 'adorned' AND ida.value = 'true'
+			WHERE i.id_server = id_server AND i.id_user = id_user AND ips.name = 'fashion_style' AND ida.name = 'adorned' AND ida.value = 'true'
 			GROUP BY style
 			ORDER BY style_count DESC LIMIT 1
 			INTO max_style, max_style_count;

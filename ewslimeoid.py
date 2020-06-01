@@ -2602,6 +2602,7 @@ class EwHue:
 	str_desc = ""
 	effectiveness = {}
 	palette = []
+	is_neutral = False
 	def __init__(
 		self,
 		id_hue = "",
@@ -2610,7 +2611,8 @@ class EwHue:
 		str_name= "",
 		str_desc = "",
 		effectiveness = {},
-		palette = []
+		palette = [],
+		is_neutral = False
 	):
 		self.id_hue = id_hue
 		self.alias = alias
@@ -2619,6 +2621,7 @@ class EwHue:
 		self.str_desc = str_desc
 		self.effectiveness = effectiveness
 		self.style_palette = palette
+		self.is_neutral = is_neutral
 
 async def saturateslimeoid(cmd):
 	user_data = EwUser(member = cmd.message.author)

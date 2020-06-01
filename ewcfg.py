@@ -1768,6 +1768,16 @@ col_id_fleshling = "id_fleshling"
 col_time_of_proposal = "time_of_proposal"
 col_empowered = "empowered"
 
+# Database columns for hues
+col_id_hue = "id_hue"
+col_is_neutral = "is_neutral"
+col_hue_analogous_1 = "hue_analogous_1"
+col_hue_analogous_2 = "hue_analogous_2"
+col_hue_splitcomp_1 = "hue_splitcomp_1"
+col_hue_splitcomp_2 = "hue_splitcomp_2"
+col_hue_fullcomp_1 = "hue_fullcomp_1"
+col_hue_fullcomp_2 = "hue_fullcomp_2"
+
 # Item type names
 it_item = "item"
 it_medal = "medal"
@@ -15830,6 +15840,7 @@ hue_list = [
 		str_saturate = "It begins to glow a ghostly white!",
 		str_name = "white",
 		str_desc = "Its pale white body and slight luminescence give it a supernatural vibe.",
+		is_neutral = True,
 	),
 	EwHue(
 		id_hue = hue_id_yellow,
@@ -16017,6 +16028,7 @@ hue_list = [
 		str_saturate = "It turns a dull, somber grey.",
 		str_name = "grey",
 		str_desc = "Its dull grey hue depresses you, lulling you into inaction and complacency. ",
+		is_neutral = True,
 	),
 	EwHue(
 		id_hue = hue_id_cobalt,
@@ -16045,6 +16057,7 @@ hue_list = [
 		str_saturate = "It turns pitch black!",
 		str_name = "black",
 		str_desc = "Its pitch black, nearly vantablack hue absorbs all the light around it, making this Slimeoid appear as though a hole was ripped right out of reality.",
+		is_neutral = True,
 	),
 	EwHue(
 		id_hue = hue_id_lime,
@@ -16089,7 +16102,8 @@ hue_list = [
 		],
 		str_saturate = "It turned an earthly brown!",
 		str_name = "brown",
-		str_desc = "Its earthly brown hue imbues with it with a humble, down-to-earth personality.",
+		str_desc = "Its earthly brown hue imbues it with a humble, down-to-earth personality.",
+		is_neutral = True,
 	),
 ]
 

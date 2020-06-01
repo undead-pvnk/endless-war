@@ -784,6 +784,8 @@ async def on_ready():
 			landmark_mode = True
 		)
 
+	ewcosmeticitem.update_hues()
+
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
