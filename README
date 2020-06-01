@@ -485,7 +485,7 @@ CREATE FUNCTION shares_value (id_user varchar(128), id_server varchar(128), stoc
 		FROM shares sh
 		INNER JOIN stocks st ON (sh.stock = st.stock AND sh.id_server = st.id_server)
 		WHERE sh.id_user = id_user AND sh.id_server = id_server AND st.stock = stock
-		ORDER BY st.timestamp DESC LIMIT 3
+		ORDER BY st.timestamp DESC LIMIT 1
 	);//
 
 DELIMITER ;
