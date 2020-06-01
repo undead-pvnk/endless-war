@@ -470,22 +470,26 @@ DELIMITER //
 
 CREATE FUNCTION fashion(id_user char(128), id_server char(128), name char(128))
 	RETURNS int
-	RETURN (
+	RETURN IFNULL(
+		(
 		SELECT SUM(CAST(ip.value AS INT))
 		FROM items_prop ip
 		INNER JOIN items i ON ip.id_item = i.id_item
 		WHERE ip.name = name AND i.id_server = id_server AND i.id_user = id_user
 		GROUP BY i.id_user, i.id_server
+		), 0
 	);//
 
 CREATE FUNCTION shares_value (id_user varchar(128), id_server varchar(128), stock varchar(32))
 	RETURNS DECIMAL(65)
-	RETURN (
+	RETURN IFNULL(
+		(
 		SELECT CAST(st.exchange_rate AS DECIMAL(65)) * sh.shares / 1000
 		FROM shares sh
 		INNER JOIN stocks st ON (sh.stock = st.stock AND sh.id_server = st.id_server)
 		WHERE sh.id_user = id_user AND sh.id_server = id_server AND st.stock = stock
 		ORDER BY st.timestamp DESC LIMIT 1
+		), 0
 	);//
 
 DELIMITER ;
