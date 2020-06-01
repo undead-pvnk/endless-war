@@ -28,7 +28,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.4"
+version = "v3.23"
 
 
 dir_msgqueue = 'msgqueue'
@@ -1044,7 +1044,7 @@ inebriation_pertick = 2
 
 # max item amounts
 max_food_in_inv_mod = 8  # modifier for how much food you can carry. the player's slime level is divided by this number to calculate the number of carriable food items
-max_adornspace_mod = 4
+max_adornspace_mod = 8
 max_weapon_mod = 16
 
 # item acquisition methods

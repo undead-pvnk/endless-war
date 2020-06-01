@@ -1440,11 +1440,12 @@ def get_move_speed(user_data):
 		
 	move_speed *= 6
 
-	move_speed += (float(user_data.speed / 100))
+	move_speed += int(user_data.speed)
 
 	move_speed = max(0.1, move_speed)
 
 	return move_speed
+
 
 """ Damage all players in a district """
 def explode(damage = 0, district_data = None, market_data = None):
@@ -2206,13 +2207,13 @@ def get_style_freshness_rating(user_data, dominant_style = None, pronoun = None)
 	if dominant_style == None:
 		dominant_style = "fresh"
 
-	if user_data.freshness < 20:
+	if user_data.freshness < 100:
 		response = "{pronoun} outfit is starting to look kinda {style}, not gonna lie.".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 40:
+	elif user_data.freshness < 200:
 		response = "{pronoun} outfit is low-key on-point, and pretty {style}.".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 80:
+	elif user_data.freshness < 300:
 		response = "{pronoun} outfit is getting really {style} now! I mean, just look at it! Damn!".format(pronoun = pronoun, style = dominant_style)
-	elif user_data.freshness < 100:
+	elif user_data.freshness < 500:
 		response = "{pronoun} outfit is totally **on fire!** People are taking notice of {pronoun} {style}ness, and low-level imposters are popping up on Grimstagram.".format(pronoun = pronoun, style = dominant_style)
 	else:
 		response = "{pronoun} outfit is positively, without a doubt, 100% ***ON FLEEK!!*** {pronoun} Grimstagram has EXPLODED, and a collab with Rarity™ from My Little Pony™ is in the WORKS. " \
