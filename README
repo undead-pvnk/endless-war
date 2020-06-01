@@ -466,9 +466,22 @@ CREATE TABLE inhabitations (
 	PRIMARY KEY (id_ghost, id_fleshling, id_server)
 );
 
+CREATE TABLE hues (
+	id_hue varchar(32) NOT NULL,
+	is_neutral int NOT NULL DEFAULT '0',
+	hue_analogous_1 varchar(32) NOT NULL DEFAULT '',
+	hue_analogous_2 varchar(32) NOT NULL DEFAULT '',
+	hue_splitcomp_1 varchar(32) NOT NULL DEFAULT '',
+	hue_splitcomp_2 varchar(32) NOT NULL DEFAULT '',
+	hue_fullcomp_1 varchar(32) NOT NULL DEFAULT '',
+	hue_fullcomp_2 varchar(32) NOT NULL DEFAULT '',
+
+	PRIMARY KEY(id_hue)
+);
+
 DELIMITER //
 
-CREATE FUNCTION fashion(id_user char(128), id_server char(128), name char(128))
+CREATE FUNCTION fashion(id_user varchar(128), id_server varchar(128), name varchar(128))
 	RETURNS int
 	RETURN IFNULL(
 		(
@@ -479,6 +492,92 @@ CREATE FUNCTION fashion(id_user char(128), id_server char(128), name char(128))
 		GROUP BY i.id_user, i.id_server
 		), 0
 	);//
+
+
+CREATE FUNCTION freshness(id_user varchar(128), id_server varchar(128))
+	RETURNS int
+	BEGIN
+		DECLARE result int DEFAULT 0;
+		DECLARE cosmetics_count double DEFAULT 0;
+		DECLARE max_style varchar(32);
+		DECLARE max_style_count int;
+		DECLARE relative_style double DEFAULT 0;
+		DECLARE max_hue varchar(32);
+		DECLARE max_hue_count int;
+		DECLARE relative_hue double DEFAULT 0;
+		DECLARE complementary_hue_count int DEFAULT 0;
+		DECLARE hue_analogous_1 varchar(32);
+		DECLARE hue_analogous_2 varchar(32);
+		DECLARE hue_splitcomp_1 varchar(32);
+		DECLARE hue_splitcomp_2 varchar(32);
+		DECLARE hue_fullcomp_1 varchar(32);
+		DECLARE hue_fullcomp_2 varchar(32);
+
+
+		SET cosmetics_count = (SELECT CAST(COUNT(*) AS DOUBLE) FROM items i
+			INNER JOIN items_prop ip ON ip.id_item = i.id_item
+			WHERE i.id_user = id_user AND i.id_server = id_server AND ip.name = 'adorned' AND ip.value = 'true'
+			);
+
+		SET result = IFNULL(
+				(
+				SELECT SUM(CAST(freshness AS int)) FROM (
+					SELECT DISTINCT ipf.value freshness, ipn.value
+					FROM items_prop ipf
+					INNER JOIN items_prop ipn ON ipf.id_item = ipn.id_item
+					INNER JOIN items_prop ida ON ipf.id_item = ida.id_item
+					INNER JOIN items i ON ipf.id_item = i.id_item
+					WHERE i.id_server = id_server AND i.id_user = id_user AND ipf.name = 'freshness' AND ipn.name = 'id_cosmetic' AND ida.name = 'adorned' AND ida.value = 'true'
+					) fresh
+				), 0
+			);
+
+		SELECT ips.value style, COUNT(*) style_count
+			FROM items_prop ips
+			INNER JOIN items i ON ips.id_item = i.id_item
+			INNER JOIN items_prop ida ON ida.id_item = ips.id_item
+			WHERE i.id_server = id_server AND i.id_user = id_user AND ips.name = 'style' AND ida.name = 'adorned' AND ida.value = 'true'
+			GROUP BY style
+			ORDER BY style_count DESC LIMIT 1
+			INTO max_style, max_style_count;
+
+		SET relative_style = IFNULL(max_style_count, 0) / cosmetics_count;
+
+		SET result = result * IF (relative_style > 0.6, 10 * POW(relative_style, 2), 1);
+
+			
+		SELECT iph.value hue, COUNT(*) hue_count
+			FROM items_prop iph
+			INNER JOIN items i ON iph.id_item = i.id_item
+			INNER JOIN items_prop ida ON ida.id_item = iph.id_item
+			WHERE i.id_server = id_server AND i.id_user = id_user AND iph.name = 'hue' AND ida.name = 'adorned' AND ida.value = 'true'
+			GROUP BY hue
+			ORDER BY hue_count DESC LIMIT 1
+			INTO max_hue, max_hue_count;
+
+
+		SELECT h.hue_analogous_1, h.hue_analogous_2, h.hue_splitcomp_1, h.hue_splitcomp_2, h.hue_fullcomp_1, h.hue_fullcomp_2
+			FROM hues h
+			WHERE h.id_hue = max_hue
+			INTO hue_analogous_1, hue_analogous_2, hue_splitcomp_1, hue_splitcomp_2, hue_fullcomp_1, hue_fullcomp_2;
+
+		SET complementary_hue_count = (
+			SELECT COUNT(*)
+			FROM items_prop iph
+			INNER JOIN items i on iph.id_item = i.id_item
+			INNER JOIN items_prop ida ON ida.id_item = iph.id_item
+			WHERE i.id_server = id_server AND i.id_user = id_user AND iph.name = 'hue' AND ida.name = 'adorned' AND ida.value = 'true'
+			AND (iph.value IN (max_hue, hue_analogous_1, hue_analogous_2, hue_splitcomp_1, hue_splitcomp_2, hue_fullcomp_1, hue_fullcomp_2) OR iph.value IN (SELECT id_hue FROM hues WHERE is_neutral = 1) )
+		);
+
+		SET relative_hue = IFNULL(max_hue_count, 0) / cosmetics_count;
+
+		SET result = result * IF (relative_hue > 0.6 AND complementary_hue_count = cosmetics_count, 5, 1);
+
+
+		RETURN result;
+	END
+//
 
 CREATE FUNCTION shares_value (id_user varchar(128), id_server varchar(128), stock varchar(32))
 	RETURNS DECIMAL(65)
@@ -491,5 +590,7 @@ CREATE FUNCTION shares_value (id_user varchar(128), id_server varchar(128), stoc
 		ORDER BY st.timestamp DESC LIMIT 1
 		), 0
 	);//
+
+
 
 DELIMITER ;
