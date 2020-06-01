@@ -1269,7 +1269,12 @@ def weapon_carry_capacity_bylevel(slimelevel):
 	return math.floor(slimelevel / ewcfg.max_weapon_mod) + 1
 
 def max_adornspace_bylevel(slimelevel):
-        return math.ceil(slimelevel / ewcfg.max_adornspace_mod)
+	if slimelevel < 4:
+		adorn_space = 0
+	else:
+		adorn_space = math.floor(math.sqrt(slimelevel- 2) - 0.40)
+
+	return adorn_space
 
 """
 	Returns an EwUser object of the selected kingpin
