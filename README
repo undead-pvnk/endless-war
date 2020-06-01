@@ -478,4 +478,14 @@ CREATE FUNCTION fashion(id_user char(128), id_server char(128), name char(128))
 		GROUP BY i.id_user, i.id_server
 	);//
 
+CREATE FUNCTION shares_value (id_user varchar(128), id_server varchar(128), stock varchar(32))
+	RETURNS DECIMAL(65)
+	RETURN (
+		SELECT CAST(st.exchange_rate AS DECIMAL(65)) * sh.shares / 1000
+		FROM shares sh
+		INNER JOIN stocks st ON (sh.stock = st.stock AND sh.id_server = st.id_server)
+		WHERE sh.id_user = id_user AND sh.id_server = id_server AND st.stock = stock
+		ORDER BY st.timestamp DESC LIMIT 3
+	);//
+
 DELIMITER ;

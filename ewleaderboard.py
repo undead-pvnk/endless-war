@@ -19,7 +19,8 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
 	await ewutils.send_message(client, leaderboard_channel, topslimes)
-	topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	#topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	topcoins = make_stocks_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
@@ -43,6 +44,32 @@ async def post_leaderboards(client = None, server = None):
 	#await ewutils.send_message(client, leaderboard_channel, topgambit)
 	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
 	#await ewutils.send_message(client, leaderboard_channel, bottomgambit)
+
+def make_stocks_top_board(server = None):
+	entries = []
+	try:
+		data = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, shares_value(u.id_user, u.id_server, %(stock_kfc)s) + shares_value(u.id_user, u.id_server, %(stock_tacobell)s) + shares_value(u.id_user, u.id_server, %(stock_pizzahut)s) + u.slimecoin AS net_worth " +
+			"FROM users AS u " +
+			"LEFT JOIN players AS pl ON u.id_user = pl.id_user " +
+			"WHERE u.id_server = %(id_server)s " +
+			"ORDER BY net_worth DESC LIMIT 1"
+		), {
+			"id_server" : server.id,
+			"stock_kfc" : ewcfg.stock_kfc,
+			"stock_tacobell" : ewcfg.stock_tacobell,
+			"stock_pizzahut" : ewcfg.stock_pizzahut,
+		})
+
+		if data != None:
+			for row in data:
+				if row != None:
+					entries.append(row)
+	except:
+		ewutils.logMsg("Error occured while fetching stock leaderboard")
+
+	
+	return format_board(entries = entries, title = ewcfg.leaderboard_slimecoin)
 
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
