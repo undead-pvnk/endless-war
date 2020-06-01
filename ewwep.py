@@ -777,7 +777,6 @@ async def attack(cmd):
 								c.item_props['durability'] = durability_afterhit
 								c.persist()
 
-								shootee_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 								shootee_data.persist()
 
@@ -2771,34 +2770,8 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		cosmetic_items = ewitem.inventory(
-			id_user = user_data.id_user,
-			id_server = user_data.id_server,
-			item_type_filter = ewcfg.it_cosmetic
-		)
-
-		adorned_cosmetics = []
-
-		adorned_styles = []
-
-		total_freshness = 0
-
-		for cosmetic in cosmetic_items:
-			c = EwItem(id_item = cosmetic.get('id_item'))
-
-			if c.item_props['adorned'] == 'true':
-				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
-				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
-				adorned_styles.append(c.item_props.get('fashion_style'))
-				total_freshness += int(c.item_props.get('freshness'))
-
-
-		outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
-
-		if outfit_map != None:
-			if "total_freshness" in outfit_map.keys():
-				if int(outfit_map['total_freshness']) >= 100:
-					damage_mod *= 4
+		if user_data.freshness >= 100:
+			damage_mod *= 4
 
 	return damage_mod
 

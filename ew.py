@@ -109,12 +109,6 @@ class EwUser:
 
 		self.degradation = max(0, self.degradation)
 
-		if self.attack == None:
-			self.attack = 0
-		if self.defense == None:
-			self.defense = 0
-		if self.speed == None:
-			self.speed = 0
 
 	""" gain or lose slime, recording statistics and potentially leveling up. """
 	def change_slimes(self, n = 0, source = None):
@@ -857,7 +851,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, fashion(%(id_user)s, %(id_server)s, %(stat_attack)s), fashion(%(id_user)s, %(id_server)s, %(stat_defense)s), fashion(%(id_user)s, %(id_server)s, %(stat_speed)s), {} FROM users WHERE id_user = %(id_user)s AND id_server = %(id_server)s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, fashion(%(id_user)s, %(id_server)s, %(stat_attack)s), fashion(%(id_user)s, %(id_server)s, %(stat_defense)s), fashion(%(id_user)s, %(id_server)s, %(stat_speed)s), freshness(%(id_user)s, %(id_server)s) FROM users WHERE id_user = %(id_user)s AND id_server = %(id_server)s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -909,7 +903,6 @@ class EwUser:
 					ewcfg.col_credence,
 					ewcfg.col_credence_used,
 					ewcfg.col_id_inhabit_target,
-					ewcfg.col_freshness
 				), {
 					"id_user" : id_user,
 					"id_server" : id_server,
@@ -1011,7 +1004,6 @@ class EwUser:
 				else:
 					self.weaponskill = 0
 
-				self.limit_fix()
 				self.move_speed = ewutils.get_move_speed(self)
 				self.limit_fix()
 			finally:

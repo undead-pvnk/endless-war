@@ -71,6 +71,29 @@ def make_stocks_top_board(server = None):
 	
 	return format_board(entries = entries, title = ewcfg.leaderboard_slimecoin)
 
+def make_freshness_top_board(server = None):
+	entries = []
+	try:
+		data = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, freshness(u.id_user, u.id_server) AS fresh " +
+			"FROM users AS u " +
+			"LEFT JOIN players AS pl ON u.id_user = pl.id_user " +
+			"WHERE u.id_server = %(id_server)s " +
+			"ORDER BY fresh DESC LIMIT 1"
+		), {
+			"id_server" : server.id,
+		})
+
+		if data != None:
+			for row in data:
+				if row != None:
+					entries.append(row)
+	except:
+		ewutils.logMsg("Error occured while fetching fashion leaderboard")
+
+	
+	return format_board(entries = entries, title = ewcfg.leaderboard_fashion)
+
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
 		mega = "<:megaslime:436877747240042508>"
