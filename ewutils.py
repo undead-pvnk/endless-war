@@ -2172,11 +2172,9 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			adorned_hues.append(c.item_props.get('hue'))
 
 			if c.item_props['id_cosmetic'] not in adorned_ids:
-
 				total_freshness += int(c.item_props.get('freshness'))
 
 			adorned_ids.append(c.item_props['id_cosmetic'])
-			print(adorned_ids)
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 	if len(adorned_cosmetics) != 0:
@@ -2186,7 +2184,6 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			dominant_style = max(counted_styles, key = counted_styles.get)
 
 			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
-
 			# If the outfit has a dominant style
 			if relative_style_amount >= 60:
 				total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
