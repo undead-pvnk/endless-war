@@ -135,6 +135,7 @@ async def reap(cmd):
 	response = ""
 	levelup_response = ""
 	mutations = user_data.get_mutations()
+	cosmetic_abilites = ewutils.get_cosmetic_abilities(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	# Checking availability of reap action
@@ -205,7 +206,7 @@ async def reap(cmd):
 
 					unearthed_item_chance = 50 / ewcfg.unearthed_item_rarity  # 1 in 30 chance
 					
-					if ewcfg.mutation_id_lucky in mutations:
+					if ewcfg.mutation_id_lucky in mutations or ewcfg.cosmeticAbility_id_lucky in cosmetic_abilites:
 						unearthed_item_chance *= 1.33
 
 					if random.random() < unearthed_item_chance:

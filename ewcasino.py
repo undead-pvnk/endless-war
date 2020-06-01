@@ -774,14 +774,15 @@ async def baccarat(cmd):
 
 			else:
 				user_data.persist()
-				ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
-				resp_d = await ewcmd.start(cmd = cmd)
-				resp_f = await ewcmd.start(cmd = cmd)
+				
 				response = "You bet {} {} on {}. The dealer shuffles the deck, then begins to deal.".format(str(value), currency_used, str(bet))
 				if currency_used == ewcfg.currency_soul:
+					ewitem.give_item(id_item=soul_id, id_user="casinosouls_wait", id_server=user_data.id_server)
 					response = "You bet your soul on {}. The dealer shuffles the deck, then begins to deal.".format(str(bet))
 
-
+				resp_d = await ewcmd.start(cmd = cmd)
+				resp_f = await ewcmd.start(cmd = cmd)
+				
 				await ewutils.edit_message(cmd.client, resp, ewutils.formatMessage(cmd.message.author, response))
 				await asyncio.sleep(1)
 
