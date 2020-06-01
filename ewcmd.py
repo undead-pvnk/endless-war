@@ -247,15 +247,15 @@ def gen_data_text(
 			user_data.persist()
 
 			if user_data.freshness < 1000:
-				response = "Their outfit is starting to look pretty fresh. "
+				response_block += "Their outfit is starting to look pretty fresh. "
 			elif user_data.freshness < 3000:
-				response = "Their outfit is low-key on point, not gonna lie. "
+				response_block += "Their outfit is low-key on point, not gonna lie. "
 			elif user_data.freshness < 4000:
-				response = "Their outfit is lookin’ fresh as hell, goddamn! "
+				response_block += "Their outfit is lookin’ fresh as hell, goddamn! "
 			elif user_data.freshness < 5000:
-				response = "Their outfit is straight up **GOALS!** "
+				response_block += "Their outfit is straight up **GOALS!** "
 			else:
-				response = "Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** "
+				response_block += "Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** "
 
 		statuses = user_data.getStatusEffects()
 
