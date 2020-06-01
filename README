@@ -570,7 +570,7 @@ CREATE FUNCTION freshness(id_user varchar(128), id_server varchar(128))
 			AND (iph.value IN (max_hue, hue_analogous_1, hue_analogous_2, hue_splitcomp_1, hue_splitcomp_2, hue_fullcomp_1, hue_fullcomp_2) OR iph.value IN (SELECT id_hue FROM hues WHERE is_neutral = 1) )
 		);
 
-		SET relative_hue = IFNULL(max_hue_count, 0) / cosmetics_count;
+		SET relative_hue = IF(max_hue IN ('', NULL), 0, IFNULL(max_hue_count, 0) / cosmetics_count);
 
 		SET result = result * IF (relative_hue > 0.6 AND complementary_hue_count = cosmetics_count, 5, 1);
 
