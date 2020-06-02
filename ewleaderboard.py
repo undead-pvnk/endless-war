@@ -51,16 +51,14 @@ def make_stocks_top_board(server = None):
 	entries = []
 	try:
 		data = ewutils.execute_sql_query((
-			"SELECT pl.display_name, u.life_state, u.faction, shares_value(u.id_user, u.id_server, %(stock_kfc)s) + shares_value(u.id_user, u.id_server, %(stock_tacobell)s) + shares_value(u.id_user, u.id_server, %(stock_pizzahut)s) + u.slimecoin AS net_worth " +
+			"SELECT pl.display_name, u.life_state, u.faction, nw.total " +
 			"FROM users AS u " +
 			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN net_worth AS nw ON u.id_user = nw.id_user AND u.id_server = nw.id_server "
 			"WHERE u.id_server = %(id_server)s " +
-			"ORDER BY net_worth DESC LIMIT 5"
+			"ORDER BY nw.total DESC LIMIT 5"
 		), {
 			"id_server" : server.id,
-			"stock_kfc" : ewcfg.stock_kfc,
-			"stock_tacobell" : ewcfg.stock_tacobell,
-			"stock_pizzahut" : ewcfg.stock_pizzahut,
 		})
 
 		if data != None:
@@ -77,9 +75,10 @@ def make_freshness_top_board(server = None):
 	entries = []
 	try:
 		data = ewutils.execute_sql_query((
-			"SELECT pl.display_name, u.life_state, u.faction, freshness(u.id_user, u.id_server) AS fresh " +
+			"SELECT pl.display_name, u.life_state, u.faction, f.freshness AS fresh " +
 			"FROM users AS u " +
 			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN freshness AS f ON u.id_user = f.id_user AND u.id_server = f.id_server " +
 			"WHERE u.id_server = %(id_server)s " +
 			"ORDER BY fresh DESC LIMIT 5"
 		), {
