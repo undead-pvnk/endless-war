@@ -507,7 +507,7 @@ CREATE VIEW cosmetics AS SELECT
 	WHERE i.item_type = 'cosmetic'
 ;
 
-ALTER VIEW fashion_stats AS SELECT
+CREATE VIEW fashion_stats AS SELECT
 	u.id_user AS id_user,
 	u.id_server AS id_server,
 	IFNULL(SUM(c.attack), 0) AS attack,
