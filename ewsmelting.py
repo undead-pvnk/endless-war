@@ -44,6 +44,11 @@ class EwSmeltingRecipe:
 # Smelting command. It's like other games call "crafting"... but BETTER and for FREE!!
 async def smelt(cmd):
 	user_data = EwUser(member = cmd.message.author)
+	if user_data.life_state == ewcfg.life_state_shambler:
+		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 
 	# Find sought recipe.
 	if cmd.tokens_count > 1:
@@ -51,6 +56,9 @@ async def smelt(cmd):
 		found_recipe = ewcfg.smelting_recipe_map.get(sought_result)
 
 		if found_recipe != None:
+			if 'soul' in found_recipe.products:
+				return await smeltsoul(cmd=cmd)
+
 			# Checks what ingredients are needed to smelt the recipe.
 			necessary_ingredients = found_recipe.ingredients
 			necessary_ingredients_list = []
@@ -59,6 +67,8 @@ async def smelt(cmd):
 
 			# Seeks out the necessary ingredients in your inventory.
 			missing_ingredients = []
+
+
 			for matched_item in necessary_ingredients:
 				necessary_items = necessary_ingredients.get(matched_item)
 				necessary_str = "{} {}".format(necessary_items, matched_item)
@@ -87,7 +97,7 @@ async def smelt(cmd):
 			else:
 				# If you try to smelt a random cosmetic, use old smelting code to calculate what your result will be.
 				if found_recipe.id_recipe == "cosmetic":
-					patrician_rarity = 20
+					patrician_rarity = 100
 					patrician_smelted = random.randint(1, patrician_rarity)
 					patrician = False
 
@@ -112,17 +122,13 @@ async def smelt(cmd):
 
 					item = items[random.randint(0, len(items) - 1)]
 
+					item_props = ewitem.gen_item_props(item)
+
 					ewitem.item_create(
-						item_type = ewcfg.it_cosmetic,
+						item_type = item.item_type,
 						id_user = cmd.message.author.id,
 						id_server = cmd.message.server.id,
-						item_props = {
-							'id_cosmetic': item.id_cosmetic,
-							'cosmetic_name': item.str_name,
-							'cosmetic_desc': item.str_desc,
-							'rarity': item.rarity,
-							'adorned': 'false'
-						}
+						item_props = item_props
 					)
 
 				# If you're trying to smelt a specific item.
@@ -151,68 +157,33 @@ async def smelt(cmd):
 								pass
 							else:
 								possible_results.append(result)
-
+						if hasattr(result, 'id_furniture'):
+							if result.id_furniture not in found_recipe.products:
+								pass
+							else:
+								possible_results.append(result)
 					# If there are multiple possible products, randomly select one.
 					item = random.choice(possible_results)
 
-					if hasattr(item, 'id_item'):
-						ewitem.item_create(
-							item_type = ewcfg.it_item,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_item': item.id_item,
-								'context': item.context,
-								'item_name': item.str_name,
-								'item_desc': item.str_desc,
-							}
-						),
+					item_props = ewitem.gen_item_props(item)
 
-					elif hasattr(item, 'id_food'):
-						ewitem.item_create(
-							item_type = ewcfg.it_food,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_food': item.id_food,
-								'food_name': item.str_name,
-								'food_desc': item.str_desc,
-								'recover_hunger': item.recover_hunger,
-								'inebriation': item.inebriation,
-								'str_eat': item.str_eat,
-								'time_expir': time.time() + ewcfg.farm_food_expir
-							}
-						),
+					newitem_id = ewitem.item_create(
+						item_type = item.item_type,
+						id_user = cmd.message.author.id,
+						id_server = cmd.message.server.id,
+						item_props = item_props
+					)
 
-					elif hasattr(item, 'id_cosmetic'):
-						ewitem.item_create(
-							item_type = ewcfg.it_cosmetic,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								'id_cosmetic': item.id_cosmetic,
-								'cosmetic_name': item.str_name,
-								'cosmetic_desc': item.str_desc,
-								'rarity': item.rarity,
-								'adorned': 'false'
-							}
-						),
-
-					elif hasattr(item, 'id_weapon'):
-						ewitem.item_create(
-							item_type = ewcfg.it_weapon,
-							id_user = cmd.message.author.id,
-							id_server = cmd.message.server.id,
-							item_props = {
-								"weapon_type": item.id_weapon,
-								"weapon_name": "",
-								"weapon_desc": item.str_description,
-								"married": ""
-							}
-						),
 
 				for id_item in owned_ingredients:
-					ewitem.item_delete(id_item = id_item)
+					item_check = ewitem.EwItem(id_item=id_item)
+					if item_check.item_props.get('id_cosmetic') != 'soul':
+						ewitem.item_delete(id_item = id_item)
+					else:
+						newitem = ewitem.EwItem(id_item=newitem_id)
+						newitem.item_props['target'] = id_item
+						newitem.persist()
+						ewitem.give_item(id_item=id_item, id_user='soulcraft', id_server=cmd.message.server.id)
 
 				name = ""
 				if hasattr(item, 'str_name'):
@@ -233,6 +204,22 @@ async def smelt(cmd):
 	# Send response
 	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+async def smeltsoul(cmd):
+	item = ewitem.find_item(item_search="reanimatedcorpse", id_user=cmd.message.author.id, id_server=cmd.message.server.id)
+	if not item:
+		response = "You can't rip a soul out of a nonexistent object."
+	else:
+		item_obj = ewitem.EwItem(id_item=item.get('id_item'))
+		if item_obj.item_props.get('target') != None and item_obj.item_props.get('target') != "":
+			targetid = item_obj.item_props.get('target')
+			ewitem.give_item(id_user=cmd.message.author.id, id_item=targetid, id_server=cmd.message.server.id)
+			response = "You ripped the soul out of the reanimated corpse. It's in mangled bits now."
+			ewitem.item_delete(id_item=item.get('id_item'))
+		else:
+			response = "That's not a reanimated corpse. It only looks like one. Get rid of the fake shit and we'll get started."
+	await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
 def unwrap(id_user = None, id_server = None, item = None):
 	response = "You eagerly rip open a pack of Secreatures™ trading cards!!"
 	ewitem.item_delete(item.id_item)
@@ -250,19 +237,40 @@ def unwrap(id_user = None, id_server = None, item = None):
 		response += " There’s a single holographic card poking out of the swathes of repeats and late edition cards..."
 		response += " ***...What’s this?! It’s the legendary card {}!! If you’re able to collect the remaining pieces of Slimexodia, you might be able to smelt something incomprehensibly powerful!!***".format(slimexodia_item.str_name)
 
+		item_props = ewitem.gen_item_props(slimexodia_item)
+
 		ewitem.item_create(
-			item_type = ewcfg.it_item,
+			item_type = slimexodia_item.item_type,
 			id_user = id_user.id,
 			id_server = id_server.id,
-			item_props = {
-				'id_item': slimexodia_item.id_item,
-				'context': slimexodia_item.context,
-				'item_name': slimexodia_item.str_name,
-				'item_desc': slimexodia_item.str_desc,
-			}
-		),
+			item_props = item_props
+		)
 
 	else:
 		response += " But… it’s mostly just repeats and late edition cards. You toss them away."
 
+	return response
+
+def popcapsule(id_user = None, id_server = None, item = None):
+	rarity_roll = random.randrange(10)
+	ewitem.item_delete(item.id_item)
+
+	if rarity_roll > 3:
+		prank_item = random.choice(ewcfg.prank_items_heinous)
+	elif rarity_roll > 0:
+		prank_item = random.choice(ewcfg.prank_items_scandalous)
+	else:
+		prank_item = random.choice(ewcfg.prank_items_forbidden)
+
+	item_props = ewitem.gen_item_props(prank_item)
+
+	prank_item_id = ewitem.item_create(
+		item_type=prank_item.item_type,
+		id_user=id_user.id,
+		id_server=id_server.id,
+		item_props=item_props
+	)
+	
+	response = "You pop open the Prank Capsule to reveal a {}! Whoa, sick!!".format(prank_item.str_name)
+	
 	return response
