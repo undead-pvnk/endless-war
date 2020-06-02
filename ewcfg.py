@@ -2592,7 +2592,6 @@ item_list = [
 		alias = [
 			"costumekit",
 			"ck",
-			"fursuit",
 			"kit",
 			"costume",
 		],
