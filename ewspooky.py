@@ -190,7 +190,7 @@ async def haunt(cmd):
 				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
 				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
 				market_data.negaslime -= haunted_slimes
-				# user_data.time_lasthaunt = time_now
+				user_data.time_lasthaunt = time_now
 				user_data.busted = False
 
 				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
