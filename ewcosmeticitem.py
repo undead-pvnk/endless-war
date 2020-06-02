@@ -502,7 +502,7 @@ async def sew(cmd):
 						if 'original_durability' not in item_sought.item_props.keys(): # If it's a scalp created before this update
 							original_durability = ewcfg.generic_scalp_durability
 						else:
-							original_durability = int(item_sought.item_props['original_durability']) # If it's a scalp created after
+							original_durability = int(float(item_sought.item_props['original_durability'])) # If it's a scalp created after
 
 					else: # Find the mold of the item in ewcfg.cosmetic_items_list
 						original_item = ewcfg.cosmetic_map.get(item_sought.item_props['id_cosmetic'])

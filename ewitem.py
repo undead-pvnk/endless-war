@@ -1154,7 +1154,7 @@ async def item_look(cmd):
 						original_durability = ewcfg.soul_durability
 					elif item.item_props['id_cosmetic'] == 'scalp':
 						if 'original_durability' in item.item_props.keys():
-							original_durability = int(item.item_props['original_durability'])
+							original_durability = int(float(item.item_props['original_durability']))
 						else:
 							original_durability = ewcfg.generic_scalp_durability
 					else:
