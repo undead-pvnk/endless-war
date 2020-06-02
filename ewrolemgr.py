@@ -408,7 +408,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
 					overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
 					
-					print(permissions_dict[user_data.poi])
+					#print(permissions_dict[user_data.poi])
 
 					for i in range(ewcfg.permissions_tries):
 						await client.edit_channel_permissions(correct_channel, member, overwrite)

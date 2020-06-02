@@ -12276,11 +12276,6 @@ poi_list = [
 		is_subzone = True
 	),
 ]
-
-for poi in poi_list:
-	if poi.permissions == None:
-		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
-	
 	
 
 debugroom = ewdebug.debugroom
@@ -12302,7 +12297,23 @@ outskirts = []
 tutorial_pois = []
 zine_mother_districts = []
 
+new_coords_map = {
+		poi_id_assaultflatsbeach: (102, 26)
+}
+
 for poi in poi_list:
+
+	# A map of poi IDs to their new set of coordinates. For temporary expermentation purposes ONLY.
+	
+	if poi.permissions == None:
+		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
+
+	if poi.id_poi in new_coords_map.keys():
+		poi.coord = new_coords_map[poi.id_poi]
+	#else:
+		#poi.coord = None
+
+	
 	if poi.coord != None:
 		# Populate the map of coordinates to their point of interest, for looking up from the map.
 		coord_to_poi[poi.coord] = poi

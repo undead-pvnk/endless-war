@@ -879,6 +879,9 @@ async def descend(cmd):
 	Player command to move themselves from one place to another.
 """
 async def move(cmd = None, isApt = False):
+	
+	time_move_start = int(time.time())
+	
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False and isApt == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
@@ -992,6 +995,10 @@ async def move(cmd = None, isApt = False):
 		)))
 		if isApt:
 			await ewapt.depart(cmd=cmd, isGoto=True, movecurrent = move_current)
+
+	time_move_end = int(time.time())
+
+	print('pathfinding in move function took {} seconds'.format(time_move_end - time_move_start))
 
 
 	life_state = user_data.life_state
