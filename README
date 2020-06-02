@@ -507,6 +507,17 @@ CREATE VIEW cosmetics AS SELECT
 	WHERE i.item_type = 'cosmetic'
 ;
 
+ALTER VIEW fashion_stats AS SELECT
+	u.id_user AS id_user,
+	u.id_server AS id_server,
+	IFNULL(SUM(c.attack), 0) AS attack,
+	IFNULL(SUM(c.defense), 0) AS defense,
+	IFNULL(SUM(c.speed), 0) AS speed
+	FROM users u
+	LEFT JOIN cosmetics c ON u.id_user = c.id_user AND u.id_server = c.id_server
+	GROUP BY u.id_user, u.id_server
+;
+
 CREATE VIEW freshness_base AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,

@@ -851,7 +851,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, fashion(%(id_user)s, %(id_server)s, %(stat_attack)s), fashion(%(id_user)s, %(id_server)s, %(stat_defense)s), fashion(%(id_user)s, %(id_server)s, %(stat_speed)s), freshness(%(id_user)s, %(id_server)s) FROM users WHERE id_user = %(id_user)s AND id_server = %(id_server)s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %(id_user)s AND id_server = %(id_server)s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -906,9 +906,6 @@ class EwUser:
 				), {
 					"id_user" : id_user,
 					"id_server" : id_server,
-					"stat_attack" : ewcfg.stat_attack,
-					"stat_defense" : ewcfg.stat_defense,
-					"stat_speed" : ewcfg.stat_speed,
 				})
 				result = cursor.fetchone();
 
@@ -964,10 +961,6 @@ class EwUser:
 					self.credence = result[47]
 					self.credence_used = result[48]
 					self.id_inhabit_target = result[49]
-					self.attack = result[50]
-					self.defense = result[51]
-					self.speed = result[52]
-					self.freshness = result[53]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1003,6 +996,34 @@ class EwUser:
 						self.weaponskill = 0
 				else:
 					self.weaponskill = 0
+
+				cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
+					ewcfg.col_attack,
+					ewcfg.col_defense,
+					ewcfg.col_speed,
+				), (
+
+					id_user,
+					id_server,
+				))
+				result = cursor.fetchone()
+
+				if result != None:
+					self.attack = result[0]
+					self.defense = result[1]
+					self.speed = result[2]
+
+				cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+					ewcfg.col_freshness,
+				),(
+					id_user,
+					id_server
+				))
+
+				result = cursor.fetchone()
+
+				if result != None:
+					self.freshness = result[0]
 
 				self.move_speed = ewutils.get_move_speed(self)
 				self.limit_fix()
