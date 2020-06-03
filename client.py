@@ -1465,6 +1465,12 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item creation
+		elif cmd == (ewcfg.cmd_prefix + 'getfreshness'):
+			data = ewutils.execute_sql_query("SELECT freshness FROM freshness WHERE id_user = %s AND id_server = %s", (message.author.id, message.author.server.id))
+			freshness = data[0][0]
+			response = "You have {} freshness.".format(freshness)
+			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
+
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
