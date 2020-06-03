@@ -28,7 +28,6 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
 	#topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
 	topfashion = make_freshness_top_board(server = server)
-	ewutils.logMsg(topfashion)
 	await ewutils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
@@ -91,8 +90,6 @@ def make_freshness_top_board(server = None):
 					entries.append(row)
 	except:
 		ewutils.logMsg("Error occured while fetching fashion leaderboard")
-	finally:
-		ewutils.logMsg("finished fetching {} entries for fashion board: {}".format(len(entries), entries))
 	
 	return format_board(entries = entries, title = ewcfg.leaderboard_fashion)
 

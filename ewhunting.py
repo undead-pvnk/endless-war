@@ -522,11 +522,11 @@ class EwEnemy:
 						# Damage it if the cosmetic is adorned and it has a durability limit
 						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
 
-							print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
 
 							durability_afterhit = int(c.item_props['durability']) - slimes_damage
 
-							print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
 
 							if durability_afterhit <= 0:  # If it breaks
 								c.item_props['durability'] = durability_afterhit
