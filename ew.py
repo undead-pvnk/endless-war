@@ -16,7 +16,6 @@ class EwUser:
 	id_user = ""
 	id_server = ""
 	id_killer = ""
-	id_inhabit_target = ""
 
 	combatant_type = "player"
 
@@ -45,6 +44,7 @@ class EwUser:
 	splattered_slimes = 0
 	sap = 0
 	hardened_sap = 0
+	race = ""
 	attack = 0
 	defense = 0
 	speed = 0
@@ -76,6 +76,7 @@ class EwUser:
 	time_expirpvp = 0
 	time_lastenlist = 0
 	time_lastdeath = 0
+	time_racialability = 0
 
 	apt_zone = "empty"
 	visiting = "empty"
@@ -232,7 +233,6 @@ class EwUser:
 			self.inebriation = 0
 			self.bounty = 0
 			self.time_lastdeath = time_now		
-			self.id_inhabit_target = ""
 	
 			# if self.life_state == ewcfg.life_state_shambler:
 			# 	self.degradation += 1
@@ -851,7 +851,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %(id_user)s AND id_server = %(id_server)s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -902,11 +902,12 @@ class EwUser:
 					ewcfg.col_gambit,
 					ewcfg.col_credence,
 					ewcfg.col_credence_used,
-					ewcfg.col_id_inhabit_target,
-				), {
-					"id_user" : id_user,
-					"id_server" : id_server,
-				})
+					ewcfg.col_race,
+					ewcfg.col_time_racialability,
+				), (
+					id_user,
+					id_server
+				))
 				result = cursor.fetchone();
 
 				if result != None:
@@ -960,7 +961,8 @@ class EwUser:
 					self.gambit = result[46]
 					self.credence = result[47]
 					self.credence_used = result[48]
-					self.id_inhabit_target = result[49]
+					self.race = result[49]
+					self.time_racialability = result[50]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1044,7 +1046,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1097,7 +1099,8 @@ class EwUser:
 				ewcfg.col_gambit,
 				ewcfg.col_credence,
 				ewcfg.col_credence_used,
-				ewcfg.col_id_inhabit_target,
+				ewcfg.col_race,
+				ewcfg.col_time_racialability,
 			), (
 				self.id_user,
 				self.id_server,
@@ -1151,7 +1154,8 @@ class EwUser:
 				self.gambit,
 				self.credence,
 				self.credence_used,
-				self.id_inhabit_target,
+				self.race,
+				self.time_racialability
 			))
 
 			conn.commit()

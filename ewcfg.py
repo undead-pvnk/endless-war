@@ -960,6 +960,20 @@ cmd_remove_offer = cmd_prefix + 'removeoffer'
 cmd_completetrade = cmd_prefix + 'completetrade'
 cmd_canceltrade = cmd_prefix + 'canceltrade'
 
+# race
+cmd_set_race = cmd_prefix + 'setrace'
+cmd_set_race_alt1 = cmd_prefix + 'identifyas'
+cmd_reset_race = cmd_prefix + 'resetrace'
+cmd_exist = cmd_prefix + 'exist'
+cmd_ree = cmd_prefix + 'ree'
+cmd_autocannibalize = cmd_prefix + 'autocannibalize'
+cmd_rattle = cmd_prefix + 'rattle'
+cmd_beep = cmd_prefix + 'beep'
+cmd_yiff = cmd_prefix + 'yiff'
+cmd_hiss = cmd_prefix + 'hiss'
+cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_confuse = cmd_prefix + 'confuse'
+
 #SLIMERNALIA
 cmd_festivity = cmd_prefix + 'festivity'
 
@@ -1266,6 +1280,10 @@ cd_slimeoiddefeated = 300
 cd_scavenge = 0
 soft_cd_scavenge = 15 # Soft cooldown on scavenging
 cd_enlist = 60
+
+cd_autocannibalize = 60 * 60 # can only eat yourself once per hour
+cd_drop_bone = 5 * 60
+cd_change_race = 24 * 60 * 60 # can only change your race once per day
 
 # PvP timer pushouts
 time_pvp_kill = 30 * 60
@@ -1593,7 +1611,8 @@ col_manuscript = "manuscript"
 col_swear_jar = 'swear_jar'
 col_degradation = 'degradation'
 col_time_lastdeath = 'time_lastdeath'
-col_id_inhabit_target = 'id_inhabit_target'
+col_race = 'race'
+col_time_racialability = 'time_racialability'
 col_attack = 'attack'
 col_speed = 'speed'
 col_freshness = 'freshness'
@@ -1765,7 +1784,6 @@ col_bought = "bought"
 # Database columns for inhabitation
 col_id_ghost = "id_ghost"
 col_id_fleshling = "id_fleshling"
-col_time_of_proposal = "time_of_proposal"
 col_empowered = "empowered"
 
 # Database columns for hues
@@ -2376,6 +2394,12 @@ item_list = [
 		acquisition = acquisition_smelting,
 	),
 	EwGeneralItem(
+		id_item = "bone",
+		str_name = "Bone",
+		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
+		context = 'player_bone',
+	),
+	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
 		alias = [
 			"tcp", # DUDE LOL JUST LIKE THE PROCRASTINATORS HOLY FUCKING SHIT I'M PISSING MYSELF RN
@@ -2602,7 +2626,6 @@ item_list = [
 		alias = [
 			"costumekit",
 			"ck",
-			"fursuit",
 			"kit",
 			"costume",
 		],
@@ -13819,8 +13842,9 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian,
 		stats = {
 			stat_attack: 2,
+			stat_speed: 2,
 		},
-		style = style_smart,
+		style = style_cool,
 		freshness = 8,
 		vendors = [vendor_bodega],
 		price = 50000,
@@ -18157,6 +18181,18 @@ captcha_dict = [
 	'DIREAPPLES', 'BLACKLIMES', 'POKETUBERS', 'PULPGOURDS', 'ROWDDISHES',
 	'DRAGONCLAW',
 ]
+
+races = {
+	'humanoid': 'humanoid',
+	'amphibian': 'amphibian',
+	'food': 'food',
+	'skeleton': 'skeleton',
+	'robot': 'robot',
+	'furry': 'furry',
+	'scalie': 'scalie',
+	'slime-derived': 'slime-derived',
+	'other': 'other'
+}
 
 # lists of all the discord server objects served by bot, identified by the server id
 server_list = {}

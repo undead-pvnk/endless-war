@@ -435,6 +435,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 			user_data.persist()
 
 			ewutils.end_trade(user_data.id_user)
+			await user_data.move_inhabitants(id_poi = poi_dest.id_poi)	
 
 			await ewrolemgr.updateRoles(client=client, member=member_object)
 

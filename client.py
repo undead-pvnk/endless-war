@@ -690,7 +690,20 @@ cmd_map = {
 	# ewcfg.cmd_set_gambit: ewcmd.set_gambit, #debug
 	# ewcfg.cmd_pointandlaugh: ewcmd.point_and_laugh,
 	ewcfg.cmd_prank: ewcmd.prank,
-	
+
+	# race
+	ewcfg.cmd_set_race: ewcmd.set_race,
+	ewcfg.cmd_set_race_alt1: ewcmd.set_race,
+	ewcfg.cmd_reset_race: ewcmd.reset_race,
+	ewcfg.cmd_exist: ewcmd.exist,
+	ewcfg.cmd_ree: ewcmd.ree,
+	ewcfg.cmd_autocannibalize: ewcmd.autocannibalize,
+	ewcfg.cmd_rattle: ewcmd.rattle,
+	ewcfg.cmd_beep: ewcmd.beep,
+	ewcfg.cmd_yiff: ewcmd.yiff,
+	ewcfg.cmd_hiss: ewcmd.hiss,
+	ewcfg.cmd_jiggle: ewcmd.jiggle,
+	ewcfg.cmd_confuse: ewcmd.confuse,
 }
 
 debug = False
