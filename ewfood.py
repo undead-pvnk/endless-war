@@ -94,7 +94,7 @@ class EwFood:
 
 """ show all available food items """
 async def menu(cmd):
-	user_data = EwUser(member = cmd.message.author)
+	user_data = EwUser(member = cmd.message.author, data_level = 1)
 	if user_data.life_state == ewcfg.life_state_shambler:
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

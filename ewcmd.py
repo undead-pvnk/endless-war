@@ -161,7 +161,8 @@ def gen_data_text(
 ):
 	user_data = EwUser(
 		id_user=id_user,
-		id_server=id_server
+		id_server=id_server,
+		data_level = 1
 	)
 	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
@@ -617,7 +618,7 @@ async def hunger(cmd):
 
 """ Check your outfit. """
 async def fashion(cmd):
-	user_data = EwUser(member=cmd.message.author)
+	user_data = EwUser(member=cmd.message.author, data_level = 1)
 
 	cosmetic_items = ewitem.inventory(
 		id_user = cmd.message.author.id,

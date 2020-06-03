@@ -829,7 +829,7 @@ class EwUser:
 		return int(res)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
-	def __init__(self, member = None, id_user = None, id_server = None):
+	def __init__(self, member = None, id_user = None, id_server = None, data_level = 0):
 
 		self.combatant_type = ewcfg.combatant_type_player
 
@@ -999,35 +999,37 @@ class EwUser:
 				else:
 					self.weaponskill = 0
 
-				cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
-					ewcfg.col_attack,
-					ewcfg.col_defense,
-					ewcfg.col_speed,
-				), (
+				if data_level > 0:
+					cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
+						ewcfg.col_attack,
+						ewcfg.col_defense,
+						ewcfg.col_speed,
+					), (
 
-					id_user,
-					id_server,
-				))
-				result = cursor.fetchone()
+						id_user,
+						id_server,
+					))
+					result = cursor.fetchone()
 
-				if result != None:
-					self.attack = result[0]
-					self.defense = result[1]
-					self.speed = result[2]
+					if result != None:
+						self.attack = result[0]
+						self.defense = result[1]
+						self.speed = result[2]
+	
+					cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+						ewcfg.col_freshness,
+					),(
+						id_user,
+						id_server
+					))
 
-				cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
-					ewcfg.col_freshness,
-				),(
-					id_user,
-					id_server
-				))
+					result = cursor.fetchone()
 
-				result = cursor.fetchone()
+					if result != None:
+						self.freshness = result[0]
 
-				if result != None:
-					self.freshness = result[0]
+					self.move_speed = ewutils.get_move_speed(self)
 
-				self.move_speed = ewutils.get_move_speed(self)
 				self.limit_fix()
 			finally:
 				# Clean up the database handles.

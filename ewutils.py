@@ -1470,7 +1470,7 @@ def explode(damage = 0, district_data = None, market_data = None):
 
 	# damage players
 	for user in users:
-		user_data = EwUser(id_user = user, id_server = id_server)
+		user_data = EwUser(id_user = user, id_server = id_server, data_level = 1)
 		mutations = user_data.get_mutations()
 
 		user_weapon = None

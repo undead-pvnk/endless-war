@@ -1465,12 +1465,6 @@ async def on_message(message):
 
 		# FIXME debug
 		# Test item creation
-		elif cmd == (ewcfg.cmd_prefix + 'getfreshness'):
-			data = ewutils.execute_sql_query("SELECT freshness FROM freshness WHERE id_user = %s AND id_server = %s", (message.author.id, message.author.server.id))
-			freshness = data[0][0]
-			response = "You have {} freshness.".format(freshness)
-			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, response))
-
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'createtestitem'):
 			item_id = ewitem.item_create(
 				item_type = 'medal',
@@ -1516,7 +1510,7 @@ async def on_message(message):
 
 		# Shows damage
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
-			user_data = EwUser(member = message.author)
+			user_data = EwUser(member = message.author, data_level = 1)
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
 			slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))

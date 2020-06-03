@@ -738,7 +738,7 @@ async def move(cmd = None, isApt = False):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "Where to?"))
 
 	player_data = EwPlayer(id_user=cmd.message.author.id)
-	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server)
+	user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 	poi_current = ewcfg.id_to_poi.get(user_data.poi)
 	poi = ewcfg.id_to_poi.get(target_name)
 	if poi_current.is_apartment == True:
@@ -1016,7 +1016,8 @@ async def move(cmd = None, isApt = False):
 				if val > 0:
 					val_actual = val - boost
 					boost = 0
-
+					
+					user_data = EwUser(id_user = cmd.message.author.id, id_server=player_data.id_server, data_level = 1)
 					val_actual = int(val_actual / user_data.move_speed)
 					if val_actual > 0:
 						await asyncio.sleep(val_actual)
