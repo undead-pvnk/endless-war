@@ -516,7 +516,7 @@ CREATE OR REPLACE VIEW fashion_stats AS SELECT
 	IFNULL(SUM(c.speed), 0) AS speed
 	FROM cosmetics c
 	WHERE c.adorned = 'true'
-	GROUP BY u.id_user, u.id_server
+	GROUP BY c.id_user, c.id_server
 ;
 
 CREATE OR REPLACE VIEW cosmetics_count AS SELECT
