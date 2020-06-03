@@ -481,7 +481,7 @@ CREATE TABLE hues (
 );
 
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW cosmetics AS SELECT
 	i.id_user AS id_user,
 	i.id_server AS id_server,
 	i.id_item AS id_item,
@@ -508,7 +508,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics AS SELECT
 	WHERE i.item_type = 'cosmetic'
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW fashion_stats AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW fashion_stats AS SELECT
 	u.id_user AS id_user,
 	u.id_server AS id_server,
 	IFNULL(SUM(c.attack), 0) AS attack,
@@ -520,7 +520,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW fashion_stats AS SELECT
 	GROUP BY u.id_user, u.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics_count AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW cosmetics_count AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,
 	c.id_cosmetic AS id_cosmetic,
@@ -530,7 +530,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics_count AS SELECT
 	GROUP BY c.id_user, c.id_server, c.id_cosmetic
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW freshness_base AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW freshness_base AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,
 	CAST(SUM(c.freshness / cc.cosmetics_count) AS int) AS base_freshness,
@@ -541,7 +541,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW freshness_base AS SELECT
 	GROUP BY c.id_user, c.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics_hues AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW cosmetics_hues AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,
 	c.hue AS hue,
@@ -551,7 +551,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics_hues AS SELECT
 	GROUP BY c.id_user, c.id_server, c.hue
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_hues AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW max_hues AS SELECT
 	id_user,
 	id_server,
 	MAX(hue_count) AS max_count 
@@ -559,7 +559,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_hues AS SELECT
 	GROUP BY id_user, id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_hue AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW max_hue AS SELECT
 	ch.id_user AS id_user,
 	ch.id_server AS id_server,
 	ch.hue AS hue,
@@ -569,7 +569,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_hue AS SELECT
 	GROUP BY ch.id_user, ch.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW complementary_hue_count AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW complementary_hue_count AS SELECT
 	mh.id_user AS id_user,
 	mh.id_server AS id_server,
 	SUM(ch.hue_count) AS hue_count
@@ -581,7 +581,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW complementary_hue_count AS SELECT
 	GROUP BY ch.id_user, ch.id_server, mh.hue
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW hue_mod AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW hue_mod AS SELECT
 	mh.id_user AS id_user,
 	mh.id_server AS id_server,
 	IF((mh.hue != '' AND mh.hue_count / fb.cosmetics_count > 0.6 AND chc.hue_count = fb.cosmetics_count), 5, 1) AS hue_mod
@@ -590,7 +590,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW hue_mod AS SELECT
 	LEFT JOIN complementary_hue_count chc ON mh.id_user = chc.id_user AND mh.id_server = chc.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics_styles AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW cosmetics_styles AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,
 	c.style AS style,
@@ -600,7 +600,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW cosmetics_styles AS SELECT
 	GROUP BY c.id_user, c.id_server, c.style
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_styles AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW max_styles AS SELECT
 	id_user,
 	id_server,
 	MAX(style_count) AS max_count
@@ -608,7 +608,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_styles AS SELECT
 	GROUP BY id_user, id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_style AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW max_style AS SELECT
 	cs.id_user AS id_user,
 	cs.id_server AS id_server,
 	cs.style AS hue,
@@ -618,7 +618,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW max_style AS SELECT
 	GROUP BY cs.id_user, cs.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW style_mod AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW style_mod AS SELECT
 	ms.id_user AS id_user,
 	ms.id_server AS id_server,
 	IF(((ms.style_count / fb.cosmetics_count) >= 0.6), (POW(ms.style_count/fb.cosmetics_count, 2) * 10), 1) AS style_mod
@@ -626,7 +626,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW style_mod AS SELECT
 	JOIN freshness_base fb ON ms.id_user = fb.id_user AND ms.id_server = fb.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW freshness AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW freshness AS SELECT
 	u.id_user AS id_user,
 	u.id_server AS id_server,
 	IFNULL(CAST((IF(fb.cosmetics_count > 1, fb.base_freshness, 0) * IFNULL(hm.hue_mod, 1) * IFNULL(sm.style_mod, 1))AS int), 0) AS freshness
@@ -637,7 +637,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW freshness AS SELECT
 ;
 	
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW exchange_rates AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW exchange_rates AS SELECT
 	m.id_server AS id_server,
 	IFNULL(AVG(st_tb.exchange_rate), 0) AS tacobell_rate,
 	IFNULL(AVG(st_kfc.exchange_rate), 0) AS kfc_rate,
@@ -652,7 +652,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW exchange_rates AS SELECT
 	GROUP BY id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW shares_values AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW shares_values AS SELECT
 	u.id_user AS id_user,
 	u.id_server AS id_server,
 	IFNULL((sh_tb.shares * CAST((er.tacobell_rate / 1000) AS DECIMAL(65))), 0) AS value_tacobell,
@@ -665,7 +665,7 @@ CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW shares_values AS SELECT
 	LEFT JOIN exchange_rates er ON er.id_server = u.id_server
 ;
 
-CREATE OR REPLACE ALGORITHM = TEMPTABLE VIEW net_worth AS SELECT
+CREATE OR REPLACE ALGORITHM = MERGE VIEW net_worth AS SELECT
 	u.id_user AS id_user,
 	u.id_server AS id_server,
 	IFNULL((sv.value_tacobell + sv.value_kfc + sv.value_pizzahut + u.slimecoin), 0) AS total
