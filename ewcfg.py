@@ -13832,8 +13832,9 @@ cosmetic_items_list = [
 		rarity = rarity_plebeian,
 		stats = {
 			stat_attack: 2,
+			stat_speed: 2,
 		},
-		style = style_smart,
+		style = style_cool,
 		freshness = 8,
 		vendors = [vendor_bodega],
 		price = 50000,
