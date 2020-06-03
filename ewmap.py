@@ -919,12 +919,12 @@ async def move(cmd = None, isApt = False):
 	elif user_data.poi != ewcfg.debugroom and cmd.tokens[0] == (ewcfg.cmd_descend):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You can't move downwards on a solid surface, bitch."))
 
-	if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
-		poi = fetch_poi_if_coordless(poi.channel)
-		mother_poi = ewcfg.id_to_poi.get(poi.mother_district)
-		if mother_poi is not None: # Reroute you to the sub-zone's mother district if possible.
-			target_name = poi.mother_district
-			poi = mother_poi
+	# if fetch_poi_if_coordless(poi.channel) is not None: # Triggers if your destination is a sub-zone.
+	# 	poi = fetch_poi_if_coordless(poi.channel)
+	# 	mother_poi = ewcfg.id_to_poi.get(poi.mother_district)
+	# 	if mother_poi is not None: # Reroute you to the sub-zone's mother district if possible.
+	# 		target_name = poi.mother_district
+	# 		poi = mother_poi
 
 	if poi.id_poi == user_data.poi:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're already there, bitch."))
@@ -1344,7 +1344,9 @@ async def teleport_player(cmd):
 	if target != None and new_poi != None:
 		target_user = EwUser(member=target)
 		target_player = EwPlayer(id_user=target_user.id_user)
-		
+
+		ewutils.moves_active[target_user.id_user] = 0
+
 		target_user.poi = new_poi.id_poi
 		target_user.persist()
 		

@@ -11164,7 +11164,7 @@ poi_list = [
 		],
 		str_name = "Neo Milwaukee State",
 		str_desc = "An abysmally funded public college, with a student body of high school has-beens and future gas station attendants. With nearly a 100% acceptance rate, it’s needless to say that the riff raff is not kept out of this seedy establishment. People are here to stumble through their meaningless lives, chasing normality and appeasing their poor parent’s ideas of success by enrolling in the first college they get accepted to and walking out four years later with thousands of dollars of debt and a BA in English. No one here is excited to learn, no one is excited to teach, no one is excited for anything here. They all just want to die, and thankfully they will someday. **Use '!help' to get info on game mechanics, or '!order' if you want to purchase a game guide.**\n\nExits into North Sleezeborough. ",
-		coord = (41, 44),
+		coord = (27, 46),
 		channel = channel_neomilwaukeestate,
 		role = "Neo Milwaukee State",
 		pvp = False,
@@ -11769,7 +11769,7 @@ poi_list = [
 		],
 		str_name = "The South Sleezeborough Subway Station",
 		str_desc = str_yellow_subway_station_description + "\n\nExits into South Sleezeborough.",
-		coord = (25, 46),
+		coord = (29, 61),
 		channel = channel_ssb_subway_station,
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
@@ -12748,7 +12748,6 @@ poi_list = [
 		role = "The Sphere",
 		is_subzone = True
 	),
-	),
 	EwPoi(  # Outskirts - 1
 		id_poi=poi_id_wreckington_outskirts,
 		alias=[
@@ -13022,8 +13021,8 @@ for poi in poi_list:
 	if poi.permissions == None:
 		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
 
-	if poi.id_poi in new_coords_map.keys():
-		poi.coord = new_coords_map[poi.id_poi]
+	#if poi.id_poi in new_coords_map.keys():
+		#poi.coord = new_coords_map[poi.id_poi]
 	#else:
 		#poi.coord = None
 
@@ -13031,6 +13030,10 @@ for poi in poi_list:
 	if poi.coord != None:
 		# Populate the map of coordinates to their point of interest, for looking up from the map.
 		coord_to_poi[poi.coord] = poi
+		
+		for poi_2 in poi_list:
+			if (poi.coord == poi_2.coord) and (poi.id_poi != poi_2.id_poi):
+				print('{} has same coords as {}, please fix this.'.format(poi.id_poi, poi_2.id_poi))
 
 		# Populate the map of coordinate aliases to the main coordinate.
 		for coord_alias in poi.coord_alias:

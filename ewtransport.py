@@ -229,14 +229,14 @@ async def embark(cmd):
 	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	user_data = EwUser(member = cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
 
 	if district_data.is_degraded():
 		response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	user_data = EwUser(member = cmd.message.author)
 	response = ""
 
 	if ewutils.active_restrictions.get(user_data.id_user) != None and ewutils.active_restrictions.get(user_data.id_user) > 0:
@@ -248,7 +248,7 @@ async def embark(cmd):
 		response = "You might want to **{}** of the poor soul you've been tormenting first.".format(ewcfg.cmd_letgo)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
 
 	# must be at a transport stop to enter a transport
 	if poi != None and poi.id_poi in ewcfg.transport_stops:
