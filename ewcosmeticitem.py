@@ -178,9 +178,6 @@ async def adorn(cmd):
 			else:
 				item_sought.item_props['adorned'] = 'true'
 
-				user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
-				user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
-				user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
 				# Take the hat from your slimeoid if necessary
 				if item_sought.item_props.get('slimeoid') == 'true':
@@ -191,7 +188,6 @@ async def adorn(cmd):
 					response = onadorn_response.format(item_sought.item_props['cosmetic_name'])
 
 				item_sought.persist()
-				user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 				user_data.persist()
 
 		elif already_adorned:
@@ -246,12 +242,8 @@ async def dedorn(cmd):
 
 				response = unadorn_response.format(item_sought.item_props['cosmetic_name'])
 
-				user_data.attack -= int(item_sought.item_props[ewcfg.stat_attack])
-				user_data.defense -= int(item_sought.item_props[ewcfg.stat_defense])
-				user_data.speed -= int(item_sought.item_props[ewcfg.stat_speed])
 
 				item_sought.persist()
-				user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 				user_data.persist()
 
 			# That garment has not be adorned..
@@ -345,10 +337,6 @@ async def smoke(cmd):
 				item.item_props['adorned'] = "true"
 				item.persist()
 
-				usermodel.attack += int(item.item_props.get(ewcfg.stat_attack))
-				usermodel.defense += int(item.item_props.get(ewcfg.stat_defense))
-				usermodel.speed += int(item.item_props.get(ewcfg.stat_speed))
-				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -365,10 +353,6 @@ async def smoke(cmd):
 				item.item_props['cosmetic_name'] = "cigarette butt"
 				item.persist()
 
-				usermodel.attack -= int(item.item_props.get(ewcfg.stat_attack))
-				usermodel.defense -= int(item.item_props.get(ewcfg.stat_defense))
-				usermodel.speed -= int(item.item_props.get(ewcfg.stat_speed))
-				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -387,10 +371,6 @@ async def smoke(cmd):
 
 				item.persist()
 
-				usermodel.attack += int(item.item_props[ewcfg.stat_attack])
-				usermodel.defense += int(item.item_props[ewcfg.stat_defense])
-				usermodel.speed += int(item.item_props[ewcfg.stat_speed])
-				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -406,10 +386,6 @@ async def smoke(cmd):
 				item.item_props['cosmetic_name'] = "cigar stump"
 				item.persist()
 
-				usermodel.attack -= int(item.item_props[ewcfg.stat_attack])
-				usermodel.defense -= int(item.item_props[ewcfg.stat_defense])
-				usermodel.speed -= int(item.item_props[ewcfg.stat_speed])
-				usermodel.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 				usermodel.persist()
 
@@ -435,10 +411,6 @@ def dedorn_all_costumes():
 		costume_item.item_props['adorned'] = 'false'
 
 		if costume_item.item_props['slimeoid'] == 'false':
-			usermodel.attack -= int(costume_item.item_props[ewcfg.stat_attack])
-			usermodel.defense -= int(costume_item.item_props[ewcfg.stat_defense])
-			usermodel.speed -= int(costume_item.item_props[ewcfg.stat_speed])
-			usermodel.freshness = ewutils.get_outfit_info(id_user = usermodel.id_user, id_server = usermodel.id_server, wanted_info = "total_freshness")
 
 			usermodel.persist()
 
@@ -687,12 +659,7 @@ async def retrofit(cmd):
 
 								user_data.slimes -= cost_ofretrofit
 
-								if item_sought.item_props['adorned'] == "true":
-									user_data.attack += int(item_sought.item_props[ewcfg.stat_attack])
-									user_data.defense += int(item_sought.item_props[ewcfg.stat_defense])
-									user_data.speed += int(item_sought.item_props[ewcfg.stat_speed])
 
-								user_data.freshness = int(ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness"))
 								user_data.persist()
 
 								response = '"Excellent. Just a moment… one more iron press and-- there, perfect! Your {}, sir. It’s like you just smelted it, no? Well, no refunds in any case."'.format(item_sought.item_props['cosmetic_name'])
@@ -707,3 +674,71 @@ async def retrofit(cmd):
 		response = "Heh, yeah right. What kind of self-respecting juvenile delinquent knows how to sew? Sewing totally lame, everyone knows that! Even people who sew know that! Looks like you’re gonna have to find some nerd to do it for you."
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+def update_hues():
+	for hue in ewcfg.hue_list:
+			
+		hue_props = {
+			ewcfg.col_hue_analogous_1 : '',
+			ewcfg.col_hue_analogous_2 : '',
+			ewcfg.col_hue_splitcomp_1 : '',
+			ewcfg.col_hue_splitcomp_2 : '',
+			ewcfg.col_hue_fullcomp_1 : '',
+			ewcfg.col_hue_fullcomp_2 : '',
+		}
+
+		for h in hue.effectiveness:
+			effect = hue.effectiveness.get(h)
+
+			if effect == ewcfg.hue_analogous:
+
+				if hue_props.get(ewcfg.col_hue_analogous_1) == '':
+					hue_props[ewcfg.col_hue_analogous_1] = h
+
+				elif hue_props.get(ewcfg.col_hue_analogous_2) == '':
+					hue_props[ewcfg.col_hue_analogous_2] = h
+
+			elif effect == ewcfg.hue_atk_complementary:
+
+				if hue_props.get(ewcfg.col_hue_splitcomp_1) == '':
+					hue_props[ewcfg.col_hue_splitcomp_1] = h
+
+			elif effect == ewcfg.hue_special_complementary:
+
+				if hue_props.get(ewcfg.col_hue_splitcomp_2) == '':
+					hue_props[ewcfg.col_hue_splitcomp_2] = h
+
+			elif effect == ewcfg.hue_full_complementary:
+
+				if hue_props.get(ewcfg.col_hue_fullcomp_1) == '':
+					hue_props[ewcfg.col_hue_fullcomp_1] = h
+
+				elif hue_props.get(ewcfg.col_hue_fullcomp_2) == '':
+					hue_props[ewcfg.col_hue_fullcomp_2] = h
+
+
+
+		ewutils.execute_sql_query("REPLACE INTO hues ({}, {}, {}, {}, {}, {}, {}, {}) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)".format(
+			ewcfg.col_id_hue,
+			ewcfg.col_is_neutral,
+			ewcfg.col_hue_analogous_1,
+			ewcfg.col_hue_analogous_2,
+			ewcfg.col_hue_splitcomp_1,
+			ewcfg.col_hue_splitcomp_2,
+			ewcfg.col_hue_fullcomp_1,
+			ewcfg.col_hue_fullcomp_2,
+		), (
+			hue.id_hue,
+			1 if hue.is_neutral else 0,
+			hue_props.get(ewcfg.col_hue_analogous_1),
+			hue_props.get(ewcfg.col_hue_analogous_2),
+			hue_props.get(ewcfg.col_hue_splitcomp_1),
+			hue_props.get(ewcfg.col_hue_splitcomp_2),
+			hue_props.get(ewcfg.col_hue_fullcomp_1),
+			hue_props.get(ewcfg.col_hue_fullcomp_2),
+		))
+			
+
+
+

@@ -19,13 +19,15 @@ async def post_leaderboards(client = None, server = None):
 	await ewutils.send_message(client, leaderboard_channel, districts)
 	topslimes = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_slimes)
 	await ewutils.send_message(client, leaderboard_channel, topslimes)
-	topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	#topcoins = make_userdata_board(server = server, category = ewcfg.col_slimecoin, title = ewcfg.leaderboard_slimecoin)
+	topcoins = make_stocks_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topcoins)
 	topghosts = make_userdata_board(server = server, category = ewcfg.col_slimes, title = ewcfg.leaderboard_ghosts, lowscores = True, rows = 3)
 	await ewutils.send_message(client, leaderboard_channel, topghosts)
 	topbounty = make_userdata_board(server = server, category = ewcfg.col_bounty, title = ewcfg.leaderboard_bounty, divide_by = ewcfg.slimecoin_exchangerate)
 	await ewutils.send_message(client, leaderboard_channel, topbounty)
-	topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
+	#topfashion = make_userdata_board(server = server, category = ewcfg.col_freshness, title = ewcfg.leaderboard_fashion)
+	topfashion = make_freshness_top_board(server = server)
 	await ewutils.send_message(client, leaderboard_channel, topfashion)
 	topdonated = make_userdata_board(server = server, category = ewcfg.col_splattered_slimes, title = ewcfg.leaderboard_donated)
 	await ewutils.send_message(client, leaderboard_channel, topdonated)
@@ -44,6 +46,53 @@ async def post_leaderboards(client = None, server = None):
 	#bottomgambit = make_gambit_leaderboard(server = server, title = ewcfg.leaderboard_gambit_low)
 	#await ewutils.send_message(client, leaderboard_channel, bottomgambit)
 
+def make_stocks_top_board(server = None):
+	entries = []
+	try:
+		data = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, nw.total " +
+			"FROM users AS u " +
+			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN net_worth AS nw ON u.id_user = nw.id_user AND u.id_server = nw.id_server "
+			"WHERE u.id_server = %(id_server)s " +
+			"ORDER BY nw.total DESC LIMIT 5"
+		), {
+			"id_server" : server.id,
+		})
+
+		if data != None:
+			for row in data:
+				if row != None:
+					entries.append(row)
+	except:
+		ewutils.logMsg("Error occured while fetching stock leaderboard")
+
+	
+	return format_board(entries = entries, title = ewcfg.leaderboard_slimecoin)
+
+def make_freshness_top_board(server = None):
+	entries = []
+	try:
+		data = ewutils.execute_sql_query((
+			"SELECT pl.display_name, u.life_state, u.faction, f.freshness AS fresh " +
+			"FROM users AS u " +
+			"INNER JOIN players AS pl ON u.id_user = pl.id_user " +
+			"INNER JOIN freshness AS f ON u.id_user = f.id_user AND u.id_server = f.id_server " +
+			"WHERE u.id_server = %(id_server)s " +
+			"ORDER BY fresh DESC LIMIT 5"
+		), {
+			"id_server" : server.id,
+		})
+
+		if data != None:
+			for row in data:
+				if row != None:
+					entries.append(row)
+	except:
+		ewutils.logMsg("Error occured while fetching fashion leaderboard")
+	
+	return format_board(entries = entries, title = ewcfg.leaderboard_fashion)
+
 def make_slimeoids_top_board(server = None):
 	board = "{mega} ▓▓▓▓▓ TOP SLIMEOIDS (CLOUT) ▓▓▓▓▓ {mega}\n".format(
 		mega = "<:megaslime:436877747240042508>"
@@ -57,7 +106,7 @@ def make_slimeoids_top_board(server = None):
 		cursor.execute((
 			"SELECT pl.display_name, sl.name, sl.clout " +
 			"FROM slimeoids AS sl " +
-			"LEFT JOIN players AS pl ON sl.id_user = pl.id_user " +
+			"INNER JOIN players AS pl ON sl.id_user = pl.id_user " +
 			"WHERE sl.id_server = %s AND sl.life_state = 2 " +
 			"ORDER BY sl.clout DESC LIMIT 3"
 		), (
@@ -403,9 +452,16 @@ def board_entry(entry, entry_type, divide_by):
 		faction = ewutils.get_faction(life_state = entry[1], faction = entry[2])
 		faction_symbol = ewutils.get_faction_symbol(faction, entry[2])
 
+		number = int(entry[3] / divide_by)
+
+		if number > 999999999:
+			num_str = "{:.3e}".format(number)
+		else:
+			num_str = "{:,}".format(number)
+
 		result = "{} `{:_>15} | {}`\n".format(
 			faction_symbol,
-			"{:,}".format(entry[3] if divide_by == 1 else int(entry[3] / divide_by)),
+			num_str,
 			entry[0].replace("`","")
 		)
 
