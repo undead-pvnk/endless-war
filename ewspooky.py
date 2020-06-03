@@ -138,79 +138,84 @@ async def haunt(cmd):
 
 	if cmd.mentions_count > 1:
 		response = "You can only spook one person at a time. Who do you think you are, the Lord of Ghosts?"
-	elif cmd.mentions_count == 1:
-		# Get the user and target data from the database.
-		user_data = EwUser(member = cmd.message.author)
+	else: 
+		haunted_data = None
+		member = None
+		if cmd.mentions_count == 0:
+			haunted_data = EwUser(id_user = cmd.tokens[1], id_server = cmd.message.server.id)
+			server = ewutils.get_client().get_server(cmd.message.server.id)
+			member = server.get_member(cmd.tokens[1])
+		elif cmd.mentions_count == 1:
+			member = cmd.mentions[0]
+			haunted_data = EwUser(member = member)
+		
+		if member:
+			# Get the user and target data from the database.
+			user_data = EwUser(member = cmd.message.author)
+			market_data = EwMarket(id_server = cmd.message.server.id)
+			target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
+			target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
 
-		member = cmd.mentions[0]
-		haunted_data = EwUser(member = member)
-		market_data = EwMarket(id_server = cmd.message.server.id)
-		target_is_shambler = haunted_data.life_state == ewcfg.life_state_shambler
-		target_is_inhabitted = haunted_data.id_user == user_data.get_inhabitee()
+			if user_data.life_state != ewcfg.life_state_corpse:
+				# Only dead players can haunt.
+				response = "You can't haunt now. Try {}.".format(ewcfg.cmd_suicide)
+			elif haunted_data.life_state == ewcfg.life_state_kingpin:
+				# Disallow haunting of generals.
+				response = "He is too far from the sewers in his ivory tower, and thus cannot be haunted."
+			elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
+				# Disallow haunting if the user has haunted too recently.
+				response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
+			elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+				response = "You can't commit violence from here."
+			elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
+				# Require the target to be flagged for PvP
+				response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
+			elif haunted_data.life_state == ewcfg.life_state_corpse:
+				# Dead players can't be haunted.
+				response = "{} is already dead.".format(member.display_name)
+			elif haunted_data.life_state == ewcfg.life_state_grandfoe:
+				# Grand foes can't be haunted.
+				response = "{} is invulnerable to ghosts.".format(member.display_name)
+			elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
+				# Target can be haunted by the player.
+				haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
+				# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
+				# 	haunted_slimes *= 2
+				if haunted_slimes > ewcfg.slimes_hauntmax:
+					haunted_slimes = ewcfg.slimes_hauntmax
 
-		if user_data.life_state != ewcfg.life_state_corpse:
-			# Only dead players can haunt.
-			response = "You can't haunt now. Try {}.".format(ewcfg.cmd_suicide)
-		elif haunted_data.life_state == ewcfg.life_state_kingpin:
-			# Disallow haunting of generals.
-			response = "He is too far from the sewers in his ivory tower, and thus cannot be haunted."
-		elif (time_now - user_data.time_lasthaunt) < ewcfg.cd_haunt:
-			# Disallow haunting if the user has haunted too recently.
-			response = "You're being a little TOO spooky lately, don't you think? Try again in {} seconds.".format(int(ewcfg.cd_haunt-(time_now-user_data.time_lasthaunt)))
-		elif ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
-			response = "You can't commit violence from here."
-		elif time_now > haunted_data.time_expirpvp and not (target_is_shambler or target_is_inhabitted):
-			# Require the target to be flagged for PvP
-			response = "{} is not mired in the ENDLESS WAR right now.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_corpse:
-			# Dead players can't be haunted.
-			response = "{} is already dead.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_grandfoe:
-			# Grand foes can't be haunted.
-			response = "{} is invulnerable to ghosts.".format(member.display_name)
-		elif haunted_data.life_state == ewcfg.life_state_enlisted or haunted_data.life_state == ewcfg.life_state_juvenile or haunted_data.life_state == ewcfg.life_state_shambler:
-			# Target can be haunted by the player.
-			haunted_slimes = int(haunted_data.slimes / ewcfg.slimes_hauntratio)
-			# if user_data.poi == haunted_data.poi:  # when haunting someone face to face, there is no cap and you get double the amount
-			# 	haunted_slimes *= 2
-			if haunted_slimes > ewcfg.slimes_hauntmax:
-				haunted_slimes = ewcfg.slimes_hauntmax
+				#if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
+				#	haunted_slimes = -user_data.slimes
 
-			#if -user_data.slimes < haunted_slimes:  # cap on for how much you can haunt
-			#	haunted_slimes = -user_data.slimes
+				haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
+				user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
+				market_data.negaslime -= haunted_slimes
+				user_data.time_lasthaunt = time_now
+				user_data.busted = False
 
-			haunted_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunted)
-			user_data.change_slimes(n = -haunted_slimes, source = ewcfg.source_haunter)
-			market_data.negaslime -= haunted_slimes
-			user_data.time_lasthaunt = time_now
-			user_data.busted = False
+				user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
+				resp_cont.add_member_to_update(cmd.message.author)
+				# Persist changes to the database.
+				user_data.persist()
+				haunted_data.persist()
+				market_data.persist()
 
-			user_data.time_expirpvp = ewutils.calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_attack)
-			resp_cont.add_member_to_update(cmd.message.author)
-			# Persist changes to the database.
-			user_data.persist()
-			haunted_data.persist()
-			market_data.persist()
+				response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
 
-			response = "{} has been haunted by the ghost of {}! Slime has been lost!".format(member.display_name, cmd.message.author.display_name)
-
-			haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
-			haunt_message = "You feel a cold shiver run down your spine"
-			if cmd.tokens_count > 2:
-				haunt_message_content = re.sub("<.+>", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
-				# Cut down really big messages so discord doesn't crash
-				if len(haunt_message_content) > 500:
-					haunt_message_content = haunt_message_content[:-500]
-				haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
-			haunt_message += "."
-			haunt_message = ewutils.formatMessage(member, haunt_message)
-			resp_cont.add_channel_response(haunted_channel, haunt_message)
+				haunted_channel = ewcfg.id_to_poi.get(haunted_data.poi).channel
+				haunt_message = "You feel a cold shiver run down your spine"
+				if cmd.tokens_count > 2:
+					haunt_message_content = re.sub("<.+>" if cmd.mentions_count == 1 else "\d{17,}", "", cmd.message.content[(len(cmd.tokens[0])):]).strip()
+					# Cut down really big messages so discord doesn't crash
+					if len(haunt_message_content) > 500:
+						haunt_message_content = haunt_message_content[:-500]
+					haunt_message += " and faintly hear the words \"{}\"".format(haunt_message_content)
+				haunt_message += "."
+				haunt_message = ewutils.formatMessage(member, haunt_message)
+				resp_cont.add_channel_response(haunted_channel, haunt_message)
 		else:
-			# Some condition we didn't think of.
-			response = "You cannot haunt {}.".format(member.display_name)
-	else:
-		# No mentions, or mentions we didn't understand.
-		response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
+			# No mentions, or mentions we didn't understand.
+			response = "Your spookiness is appreciated, but ENDLESS WAR didn\'t understand that name."
 
 	# Send the response to the player.
 	resp_cont.add_channel_response(cmd.message.channel.name, response)
