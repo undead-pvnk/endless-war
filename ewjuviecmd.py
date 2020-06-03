@@ -341,7 +341,7 @@ async def mine(cmd):
 						return ewutils.logMsg("Error, couldn't find event def for event type {}".format(event_data.event_type))
 					str_event_start = event_def.str_event_start
 					if event_data.event_type == ewcfg.event_type_minecollapse:
-						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = event_data.event_props.get('captcha'))
+						str_event_start = str_event_start.format(cmd = ewcfg.cmd_mine, captcha = ewutils.text_to_regional_indicator(event_data.event_props.get('captcha')))
 					response += str_event_start + "\n"
 				if event_data.event_type in [ewcfg.event_type_minesweeper, ewcfg.event_type_pokemine, ewcfg.event_type_bubblebreaker]:
 					init_grid(channel = event_data.event_props.get('channel'), id_server = event_data.id_server)
@@ -625,7 +625,7 @@ async def mismine(cmd, user_data, cause):
 			response = "You've exhausted yourself from mining. You'll need some refreshment before getting back to work."
 		elif cause == ewcfg.event_type_minecollapse:
 			if captcha != None:
-				response = "The mineshaft is collapsing around you! Get out of there! ({cmd} {captcha})".format(cmd = ewcfg.cmd_mine, captcha = captcha)
+				response = "The mineshaft is collapsing around you!\nGet out of there! ({cmd} {captcha})".format(cmd = ewcfg.cmd_mine, captcha = ewutils.text_to_regional_indicator(captcha))
 			else:
 				return
 		else:
@@ -707,7 +707,7 @@ async def scavenge(cmd):
 					if scavenge_captchas.get(user_data.id_user).lower() == item_search.lower():
 						scavenge_combos[user_data.id_user] += 1
 						new_captcha = gen_scavenge_captcha(scavenge_combos.get(user_data.id_user))
-						response += "New captcha: **" + new_captcha + "**"
+						response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 						scavenge_captchas[user_data.id_user] = new_captcha
 						has_comboed = True
 					else:
@@ -739,7 +739,7 @@ async def scavenge(cmd):
 
 				scavenge_combos[user_data.id_user] = 1
 				new_captcha = gen_scavenge_captcha(1)
-				response += "New captcha: **" + new_captcha + "**"
+				response += "New captcha: **" + ewutils.text_to_regional_indicator(new_captcha) + "**"
 				scavenge_captchas[user_data.id_user] = new_captcha
 
 			# Fatigue the scavenger.
@@ -1439,7 +1439,7 @@ def create_mining_event(cmd):
 			event_props = {}
 			event_props['id_user'] = cmd.message.author.id
 			event_props['poi'] = user_data.poi
-			event_props['captcha'] = ewutils.generate_captcha(n = 8)
+			event_props['captcha'] = ewutils.generate_captcha(length = 8)
 			event_props['channel'] = cmd.message.channel.name
 			return ewworldevent.create_world_event(
 				id_server = cmd.message.server.id,

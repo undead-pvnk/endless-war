@@ -17638,7 +17638,7 @@ world_events = [
 	),
 	EwEventDef(
 		event_type = event_type_minecollapse,
-		str_event_start = "The mineshaft starts collapsing around you. Get out of there quickly! ({cmd} {captcha})",
+		str_event_start = "The mineshaft starts collapsing around you.\nGet out of there quickly! ({cmd} {captcha})",
 	),
 	EwEventDef(
 		event_type = event_type_minesweeper,

@@ -315,9 +315,9 @@ def canAttack(cmd):
 	elif weapon != None and weapon.cooldown + (float(weapon_item.item_props.get("time_lastattack")) if weapon_item.item_props.get("time_lastattack") != None else 0) > time_now_float:
 		response = "Your {weapon_name} isn't ready for another attack yet!".format(weapon_name = weapon.id_weapon)
 	elif weapon != None and weapon_item.item_props.get("jammed") == "True":
-		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = captcha)
+		response = "Your {weapon_name} is jammed, you will need to {unjam} it before shooting again.\nSecurity Code: **{captcha}**".format(weapon_name = weapon.id_weapon, unjam = ewcfg.cmd_unjam, captcha = ewutils.text_to_regional_indicator(captcha))
 	elif weapon != None and ewcfg.weapon_class_captcha in weapon.classes and captcha not in [None, ""] and captcha.lower() not in tokens_lower:
-		response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha)
+		response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 
 	elif user_data.weapon == -1 and user_data.life_state != ewcfg.life_state_shambler:
 		response = "How do you expect to engage in gang violence if you don't even have a weapon yet? Head to the Dojo in South Sleezeborough to pick one up!"
@@ -932,8 +932,8 @@ async def attack(cmd):
 							response += "\n" + weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes:
-							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-							response += "\nNew security code: **{}**".format(new_captcha)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
 
@@ -1042,8 +1042,8 @@ async def attack(cmd):
 							response += "\nn"+weapon.str_reload_warning.format(name_player = cmd.message.author.display_name)
 
 						if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-							new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-							response += "\nnNew security code: **{}**".format(new_captcha)
+							new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+							response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 							weapon_item.item_props['captcha'] = new_captcha
 							weapon_item.persist()
 					else:
@@ -1893,7 +1893,7 @@ async def unjam(cmd):
 					weapon_item.persist()
 					response = weapon.str_unjam.format(name_player = cmd.message.author.display_name)
 				else:
-					response = "ERROR: Invalid security code. Enter **{}** to proceed.".format(captcha.upper())
+					response = "ERROR: Invalid security code.\nEnter **{}** to proceed.".format(ewutils.text_to_regional_indicator(captcha))
 			else:
 				response = "Let’s not get ahead of ourselves, there’s nothing clogging with your {weapon} (yet)!!".format(weapon = weapon.id_weapon)
 		else:
@@ -2331,8 +2331,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 
 			if ewcfg.weapon_class_captcha in weapon.classes:
-				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-				response += "\nNew security code: **{}**".format(new_captcha)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
 		else:
@@ -2423,8 +2423,8 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 					name_player=cmd.message.author.display_name)
 	
 			if ewcfg.weapon_class_captcha in weapon.classes or jammed:
-				new_captcha = ewutils.generate_captcha(n = weapon.captcha_length)
-				response += "\nNew security code: **{}**".format(new_captcha)
+				new_captcha = ewutils.generate_captcha(length = weapon.captcha_length)
+				response += "\nNew security code: **{}**".format(ewutils.text_to_regional_indicator(new_captcha))
 				weapon_item.item_props['captcha'] = new_captcha
 				weapon_item.persist()
 		else:
