@@ -246,7 +246,7 @@ async def mine(cmd):
 						else:
 							return await mismine(cmd, user_data, ewcfg.event_type_minecollapse)
 
-			if cmd.message.channel.name not in mines_map:
+			if user_data.poi not in mines_map:
 				response = "You can't mine here! Go to the mines in Juvie's Row, Toxington, or Cratersville!"
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 			elif user_data.id_server not in mines_map.get(cmd.message.channel.name):

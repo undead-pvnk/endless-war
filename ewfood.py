@@ -100,7 +100,8 @@ async def menu(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if poi is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
@@ -216,7 +217,8 @@ async def order(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	market_data = EwMarket(id_server = cmd.message.server.id)
-	poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	#poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 	if poi is None or len(poi.vendors) == 0:
 		# Only allowed in the food court.
 		response = "There’s nothing to buy here. If you want to purchase some items, go to a sub-zone with a vendor in it, like the food court, the speakeasy, or the bazaar."

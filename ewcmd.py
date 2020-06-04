@@ -954,7 +954,9 @@ async def help(cmd):
 		# user not in college, check what help message would apply to the subzone they are in
 
 		# poi variable assignment used for checking if player is in a vendor subzone or not
-		poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+		# poi = ewmap.fetch_poi_if_coordless(cmd.message.channel.name)
+		
+		poi = ewcfg.id_to_poi.get(user_data.poi)
 
 		dojo_topics = ["dojo", "sparring", "combat", "sap", ewcfg.weapon_id_revolver, ewcfg.weapon_id_dualpistols, ewcfg.weapon_id_shotgun, ewcfg.weapon_id_rifle, ewcfg.weapon_id_smg, ewcfg.weapon_id_minigun, ewcfg.weapon_id_bat, ewcfg.weapon_id_brassknuckles, ewcfg.weapon_id_katana, ewcfg.weapon_id_broadsword, ewcfg.weapon_id_nunchucks, ewcfg.weapon_id_scythe, ewcfg.weapon_id_yoyo, ewcfg.weapon_id_bass, ewcfg.weapon_id_umbrella, ewcfg.weapon_id_knives, ewcfg.weapon_id_molotov, ewcfg.weapon_id_grenades, ewcfg.weapon_id_garrote]
 
