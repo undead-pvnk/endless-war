@@ -497,7 +497,7 @@ CREATE OR REPLACE VIEW cosmetics AS SELECT
 
 	FROM items i
 	LEFT JOIN items_prop ip_name ON ip_name.id_item = i.id_item AND ip_name.name = 'id_cosmetic'
-	LEFT JOIN items_prop ip_atk ON ip_atk.id_item = i.id_item AND ip_name.name = 'attack'
+	LEFT JOIN items_prop ip_atk ON ip_atk.id_item = i.id_item AND ip_atk.name = 'attack'
 	LEFT JOIN items_prop ip_def ON ip_def.id_item = i.id_item AND ip_def.name = 'defense'
 	LEFT JOIN items_prop ip_speed ON ip_speed.id_item = i.id_item AND ip_speed.name = 'speed'
 	LEFT JOIN items_prop ip_fresh ON ip_fresh.id_item = i.id_item AND ip_fresh.name = 'freshness'
