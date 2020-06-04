@@ -920,7 +920,7 @@ async def help(cmd):
 	# checks if user is in a college or if they have a game guide
 	gameguide = ewitem.find_item(item_search="gameguide", id_user=cmd.message.author.id, id_server=cmd.message.server.id if cmd.message.server is not None else None, item_type_filter = ewcfg.it_item)
 
-	if cmd.message.channel.name == ewcfg.channel_neomilwaukeestate or cmd.message.channel.name == ewcfg.channel_nlacu or gameguide:
+	if user_data.poi == ewcfg.poi_id_neomilwaukeestate or user_data.poi == ewcfg.poi_id_nlacu or gameguide:
 		if not len(cmd.tokens) > 1:
 			topic_counter = 0
 			topic_total = 0
@@ -1077,9 +1077,9 @@ async def accept(cmd):
 			ewutils.active_target_map[challenger.id_user] = user.id_user
 			slimeoid_data = EwSlimeoid(member = cmd.message.author)
 			response = ""
-			if cmd.message.channel.name == ewcfg.channel_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
+			if user.poi == ewcfg.poi_id_arena and ewslimeoid.active_slimeoidbattles.get(slimeoid_data.id_slimeoid):
 				response = "You accept the challenge! Both of your Slimeoids ready themselves for combat!"
-			elif cmd.message.channel.name == ewcfg.channel_casino and ewutils.active_restrictions[challenger.id_user] == 1:
+			elif user.poi == ewcfg.poi_id_thecasino and ewutils.active_restrictions[challenger.id_user] == 1:
 				response = "You accept the challenge! Both of you head out back behind the casino and load a bullet into the gun."
 
 			if len(response) > 0:
@@ -1493,7 +1493,7 @@ async def recycle(cmd):
 
 	response = ""
 
-	if cmd.message.channel.name != ewcfg.channel_recyclingplant:
+	if user_data.poi != ewcfg.poi_id_recyclingplant:
 		response = "You can only {} your trash at the SlimeCorp Recycling Plant in Smogsburg.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1865,7 +1865,7 @@ async def purify(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	
-	if cmd.message.channel.name == ewcfg.channel_sodafountain:
+	if user_data.poi == ewcfg.poi_id_sodafountain:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 

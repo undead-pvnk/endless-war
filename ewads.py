@@ -117,7 +117,7 @@ async def advertise(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
-	if cmd.message.channel.name != ewcfg.channel_slimecorphq:
+	if user_data.poi != ewcfg.poi_id_slimecorphq:
 		response = "To buy ad space, you'll need to go SlimeCorp HQ."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

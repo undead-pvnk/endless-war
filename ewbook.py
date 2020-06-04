@@ -1007,10 +1007,10 @@ async def browse_zines(cmd):
 			more_selects = ""
 			quality = "= 1"
 
-			if cmd.message.channel.name in ["nlac-university", "neo-milwaukee-state"]:
+			if user_data.poi in ["nlac-university", "neo-milwaukee-state"]:
 				query_suffix = "AND b.genre = 1 "
 
-			elif cmd.message.channel.name in ["glocksbury-comics"]:
+			elif user_data.poi in ["glocksbury-comics"]:
 				query_suffix = "AND b.genre = 2 "
 
 			if sort_token in ("bookname", "name", "title", "booktitle", "zinename", "zinetitle"):

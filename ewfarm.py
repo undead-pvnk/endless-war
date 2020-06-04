@@ -150,9 +150,9 @@ async def reap(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if cmd.message.channel.name == ewcfg.channel_jr_farms:
+		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif cmd.message.channel.name == ewcfg.channel_og_farms:
+		elif user_data.poi == ewcfg.poi_id_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -189,7 +189,7 @@ async def reap(cmd):
 					if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
 						slime_gain *= 2
 
-					if cmd.message.channel.name == ewcfg.channel_jr_farms:
+					if user_data.poi == ewcfg.poi_id_jr_farms:
 						slime_gain = int(slime_gain / 4)
 
 					trauma = ewcfg.trauma_map.get(user_data.trauma)
@@ -299,9 +299,9 @@ async def sow(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if cmd.message.channel.name == ewcfg.channel_jr_farms:
+		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif cmd.message.channel.name == ewcfg.channel_og_farms:
+		elif user_data.poi == ewcfg.poi_id_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -456,9 +456,9 @@ async def check_farm(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if cmd.message.channel.name == ewcfg.channel_jr_farms:
+		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif cmd.message.channel.name == ewcfg.channel_og_farms:
+		elif user_data.poi == ewcfg.poi_id_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms
@@ -517,9 +517,9 @@ async def cultivate(cmd):
 		if district_data.is_degraded():
 			response = "{} has been degraded by shamblers. You can't {} here anymore.".format(poi.str_name, cmd.tokens[0])
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
-		if cmd.message.channel.name == ewcfg.channel_jr_farms:
+		if user_data.poi == ewcfg.poi_id_jr_farms:
 			farm_id = ewcfg.poi_id_jr_farms
-		elif cmd.message.channel.name == ewcfg.channel_og_farms:
+		elif user_data.poi == ewcfg.poi_id_og_farms:
 			farm_id = ewcfg.poi_id_og_farms
 		else:  # if it's the farm in arsonbrook
 			farm_id = ewcfg.poi_id_ab_farms

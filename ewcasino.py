@@ -1313,8 +1313,10 @@ async def russian_roulette(cmd):
 
 	if cmd.tokens[1] == "soul":
 		soulstake = True
+		
+	user_data = EwUser(member=cmd.message.author)
 
-	if cmd.message.channel.name != ewcfg.channel_casino:
+	if user_data.poi != ewcfg.poi_id_thecasino:
 		#Only at the casino
 		response = "You can only play russian roulette at the casino."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
@@ -2670,7 +2672,7 @@ async def betsoul(cmd):
 				item_select = item_object
 				break
 
-	if cmd.message.channel.name != ewcfg.channel_casino:
+	if user_data.poi != ewcfg.poi_id_thecasino:
 		response = "If you want to exchange your soul for SlimeCoin you have to be in the casino first."
 	elif mention_target and item_select == None:
 		response = "Sorry, you don't have that soul."
@@ -2713,7 +2715,7 @@ async def buysoul(cmd):
 			if mention_target.id == item_object.item_props.get('user_id'):
 				break
 
-	if cmd.message.channel.name != ewcfg.channel_casino:
+	if user_data.poi != ewcfg.poi_id_thecasino:
 		response = "If you want to buy people's souls you have to be in the casino first."
 	elif mention_target and selected_item == None:
 		response = "That soul isn't available. Go torment someone else."

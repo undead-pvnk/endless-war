@@ -453,7 +453,7 @@ async def sew(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# Player must be at the Bodega
-	if cmd.message.channel.name == ewcfg.channel_bodega:
+	if user_data.poi == ewcfg.poi_id_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:
@@ -574,7 +574,7 @@ async def retrofit(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
 	# Player must be at the Bodega
-	if cmd.message.channel.name == ewcfg.channel_bodega:
+	if user_data.poi == ewcfg.poi_id_bodega:
 		item_id = ewutils.flattenTokenListToString(cmd.tokens[1:])
 
 		try:

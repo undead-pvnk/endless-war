@@ -329,6 +329,9 @@ async def cast(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+	
 	market_data = EwMarket(id_server = cmd.message.author.server.id)
 	statuses = user_data.getStatusEffects()
 
@@ -346,7 +349,7 @@ async def cast(cmd):
 		response = "You've already cast a line."
 
 	# Only fish at The Pier
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+	elif user_data.poi in ewcfg.piers:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -525,6 +528,9 @@ async def reel(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	if cmd.message.author.id not in fishers.keys():
 		fishers[cmd.message.author.id] = EwFisher()
 	fisher = fishers[cmd.message.author.id]
@@ -534,7 +540,7 @@ async def reel(cmd):
 	if user_data.life_state == ewcfg.life_state_corpse:
 		response = "You can't fish while you're dead. Try {}.".format(ewcfg.cmd_revive)
 
-	elif cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+	elif user_data.poi in ewcfg.piers:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -662,7 +668,7 @@ async def reel(cmd):
 					slime_gain *= 2
 
 
-				if cmd.message.channel.name == ewcfg.channel_jr_pier:
+				if user_data.poi == ewcfg.poi_id_juviesrow_pier:
 					slime_gain = int(slime_gain / 4)
 
 				trauma = ewcfg.trauma_map.get(user_data.trauma)
@@ -755,6 +761,9 @@ async def appraise(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
@@ -765,7 +774,7 @@ async def appraise(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if user_data.poi in ewcfg.piers:
 			response = 'You ask a nearby fisherman if he could appraise this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'
@@ -871,6 +880,9 @@ async def barter(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
+	if ewutils.channel_name_is_poi(cmd.message.channel.name) == False:
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You must {} in a zone's channel.".format(cmd.tokens[0])))
+
 	market_data = EwMarket(id_server = user_data.id_server)
 	item_search = ewutils.flattenTokenListToString(cmd.tokens[1:])
 	item_sought = ewitem.find_item(item_search = item_search, id_user = cmd.message.author.id, id_server = cmd.message.server.id if cmd.message.server is not None else None)
@@ -880,7 +892,7 @@ async def barter(cmd):
 	#	response = "You ask the bartender if he knows someone who would want to trade you something for your recently caught fish. Apparently, at night, an old commodore by the name of Captain Albert Alexander comes to drown his sorrows at this very tavern. You guess you’ll just have to sit here and wait for him, then."
 
 	if cmd.message.channel.name != ewcfg.channel_speakeasy:
-		if cmd.message.channel.name in [ewcfg.channel_tt_pier, ewcfg.channel_jp_pier, ewcfg.channel_cl_pier, ewcfg.channel_afb_pier, ewcfg.channel_jr_pier, ewcfg.channel_se_pier, ewcfg.channel_ferry]:
+		if user_data.poi in ewcfg.piers:
 			response = 'You ask a nearby fisherman if he wants to trade you anything for this fish you just caught. He tells you to fuck off, but also helpfully informs you that there’s an old sea captain that frequents the Speakeasy that might be able to help you. What an inexplicably helpful/grouchy fisherman!'
 		else:
 			response = 'What random passerby is going to give two shits about your fish? You’ll have to consult a fellow fisherman… perhaps you’ll find some on a pier?'

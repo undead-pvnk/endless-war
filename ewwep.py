@@ -1492,7 +1492,7 @@ async def spar(cmd):
 
 			if user_data.hunger >= ewutils.hunger_max_bylevel(user_data.slimelevel):
 				response = "You are too exhausted to train right now. Go get some grub!"
-			elif cmd.message.channel.name != ewcfg.channel_dojo or sparred_data.poi != ewcfg.poi_id_southsleezeborough:
+			elif user_data.poi != ewcfg.poi_id_dojo or sparred_data.poi != ewcfg.poi_id_dojo:
 				response = "Both players need to be in the dojo to spar."
 			elif sparred_data.hunger >= ewutils.hunger_max_bylevel(sparred_data.slimelevel):
 				response = "{} is too exhausted to train right now. They need a snack!".format(member.display_name)
@@ -1709,7 +1709,7 @@ async def marry(cmd):
 		weapon_name = weapon_item.item_props.get("weapon_name") if len(weapon_item.item_props.get("weapon_name")) > 0 else weapon.str_weapon
 
 	#Checks to make sure you're in the dojo.
-	if cmd.message.channel.name != ewcfg.channel_dojo:
+	if user_data.poi != ewcfg.poi_id_dojo:
 		response = "Do you really expect to just get married on the side of the street in this war torn concrete jungle? No way, you need to see a specialist for this type of thing, someone who can empathize with a man’s love for his arsenal. Maybe someone in the Dojo can help, *hint hint*."
 		await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 	#Informs you that you cannot be a fucking faggot.
@@ -1820,7 +1820,7 @@ async def divorce(cmd):
 	if user_data.weaponmarried == False:
 		response = "I appreciate your forward thinking attitude, but how do you expect to get a divorce when you haven’t even gotten married yet? Throw your life away first, then we can talk."
 	# Checks to make sure you're in the dojo.
-	elif cmd.message.channel.name != ewcfg.channel_dojo:
+	elif user_data.poi != ewcfg.poi_id_dojo:
 		response = "As much as it would be satisfying to just chuck your {} down an alley and be done with it, here in civilization we deal with things *maturely.* You’ll have to speak to the guy that got you into this mess in the first place, or at least the guy that allowed you to make the retarded decision in the first place. Luckily for you, they’re the same person, and he’s at the Dojo.".format(weapon.str_weapon)
 	else:
 		poi = ewcfg.id_to_poi.get(user_data.poi)

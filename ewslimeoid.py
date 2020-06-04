@@ -2304,7 +2304,7 @@ async def slimeoidbattle(cmd):
 	challengee_slimeoid = EwSlimeoid(member = member)
 
 	bet = ewutils.getIntToken(tokens=cmd.tokens, allow_all=True)
-	if bet == None or cmd.message.channel.name != ewcfg.channel_arena:
+	if bet == None or challenger.poi != ewcfg.poi_id_arena:
 		bet = 0
 	elif bet == -1:
 		bet = challenger.slimes

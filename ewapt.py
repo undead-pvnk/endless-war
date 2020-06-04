@@ -200,7 +200,7 @@ async def consult(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !consult at Slimecorp Real Estate in Old New Yonkers."))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -260,7 +260,7 @@ async def signlease(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You have to !signlease at Slimecorp Real Estate in Old New Yonkers."))
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
@@ -890,7 +890,7 @@ async def upgrade(cmd):
 		response = "You don't have an apartment."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	elif cmd.message.channel.name != ewcfg.channel_realestateagency:
+	elif usermodel.poi != ewcfg.poi_id_realestate:
 		response = "Upgrade your home at the apartment agency."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1011,7 +1011,7 @@ async def add_key(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
 	elif user_data.apt_zone == ewcfg.location_id_empty:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't have an apartment."))
@@ -1132,7 +1132,7 @@ async def manual_changelocks(cmd):
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 	apartment_data = EwApartment(id_user=cmd.message.author.id, id_server=playermodel.id_server)
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if user_data.poi != ewcfg.poi_id_realestate:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You need to request a housekey at the Real Estate Agency."))
 	elif user_data.apt_zone == ewcfg.location_id_empty:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You don't have an apartment."))
@@ -1714,7 +1714,7 @@ async def cancel(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if cmd.message.channel.name != ewcfg.channel_realestateagency:
+	if usermodel.poi != ewcfg.poi_id_realestate:
 		response = "You can only null your lease at the Real Estate Agency."
 	elif usermodel.apt_zone == ewcfg.location_id_empty:
 		response = "You don't have an apartment."
@@ -1994,7 +1994,7 @@ async def releasefish(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
 	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if cmd.message.channel.name != ewcfg.channel_bazaar:
+	if user_data.poi != ewcfg.poi_id_bazaar:
 		response = "You need to see a specialist at The Bazaar to do that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2026,9 +2026,9 @@ async def releasefish(cmd):
 
 async def releaseprop(cmd):
 	playermodel = EwPlayer(id_user=cmd.message.author.id)
-	usermodel = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
+	user_data = EwUser(id_user=cmd.message.author.id, id_server=playermodel.id_server)
 
-	if cmd.message.channel.name != ewcfg.channel_bazaar:
+	if user_data.poi != ewcfg.poi_id_bazaar:
 		response = "You need to see a specialist at The Bazaar to do that."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 

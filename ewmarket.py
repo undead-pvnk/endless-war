@@ -528,7 +528,7 @@ async def donate(cmd):
 
 	time_now = round(time.time())
 
-	if cmd.message.channel.name == ewcfg.channel_slimecorphq:
+	if user_data.poi == ewcfg.poi_id_slimecorphq:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
@@ -580,7 +580,7 @@ async def donate(cmd):
 		else:
 			response = ewcfg.str_exchange_specify.format(currency = "slime", action = "donate")
 
-	elif cmd.message.channel.name == ewcfg.channel_slimeoidlab:
+	elif user_data.poi == ewcfg.poi_id_slimeoidlab:
 		poi = ewcfg.id_to_poi.get(user_data.poi)
 		district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 

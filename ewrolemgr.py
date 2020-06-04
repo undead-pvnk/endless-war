@@ -141,7 +141,8 @@ async def restoreRoleNames(cmd):
 async def updateRoles(
 	client = None,
 	member = None,
-	server_default = None
+	server_default = None,
+	refresh_perms = False,
 ):
 	time_now = int(time.time())
 
@@ -354,8 +355,8 @@ async def updateRoles(
 	except:
 		ewutils.logMsg('error: failed to replace roles for {}'.format(member.display_name))
 
-	
-	await refresh_user_perms(client = client, id_server = id_server, used_member = member)
+	if refresh_perms:
+		await refresh_user_perms(client = client, id_server = id_server, used_member = member)
 
 	#try:
 	#	await client.replace_roles(member, *replacement_roles)
@@ -392,8 +393,6 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 				user_data = EwUser(member=member)
 				
 				if user_data.poi != poi.id_poi:
-					
-					
 					
 					# Incorrect overwrite found for user
 
