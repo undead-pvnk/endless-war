@@ -574,6 +574,41 @@ async def flag_outskirts(id_server = None):
 			databaseClose(conn_info)
 
 """
+	Flag all users in vulnerable territory, defined as capturable territory (streets) and outskirts.
+"""
+async def flag_vulnerable_districts(id_server = None):
+	if id_server != None:
+		try:
+			client = get_client()
+			server = client.get_server(id_server)
+			conn_info = databaseConnect()
+			conn = conn_info.get('conn')
+			cursor = conn.cursor();
+
+			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
+			), (
+				id_server,
+				tuple(ewcfg.vulnerable_districts)
+
+			))
+
+			users = cursor.fetchall()
+
+			for user in users:
+				user_data = EwUser(id_user = user[0], id_server = id_server)
+				# Flag the user for PvP
+				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
+				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
+				user_data.persist()
+				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+
+			conn.commit()
+		finally:
+			# Clean up the database handles.
+			cursor.close()
+			databaseClose(conn_info)
+
+"""
 	Coroutine that continually calls bleedSlimes; is called once per server, and not just once globally
 """
 async def bleed_tick_loop(id_server):
@@ -2099,7 +2134,8 @@ def return_server_role(server, role_name):
 """ Returns the latest value, so that short PvP timer actions don't shorten remaining PvP time. """
 def calculatePvpTimer(current_time_expirpvp, timer, enlisted = False):
 	if enlisted:
-		timer *= 4
+		timer *= 1
+		#timer *= 4
 
 	desired_time_expirpvp = int(time.time()) + timer
 

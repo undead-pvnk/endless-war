@@ -13002,6 +13002,7 @@ coord_to_poi = {}
 chname_to_poi = {}
 alias_to_coord = {}
 capturable_districts = []
+outskirts_districts = []
 transports = []
 transport_stops = []
 transport_stops_ch = []
@@ -13048,6 +13049,9 @@ for poi in poi_list:
 	# if it's a district and not RR, CK, or JR, add it to a list of capturable districts
 	if poi.is_capturable:
 		capturable_districts.append(poi.id_poi)
+		
+	if poi.is_outskirts:
+		outskirts_districts.append(poi.id_poi)
 
 	if poi.is_transport:
 		transports.append(poi.id_poi)
@@ -13077,6 +13081,9 @@ landmark_pois = [
 	poi_id_assaultflatsbeach,
 	poi_id_wreckington,
 ]
+
+# Places on the map that should result in a user being flagged for PVP
+vulnerable_districts = capturable_districts + outskirts_districts
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}
@@ -18335,16 +18342,6 @@ coward_responses_hurt = [
 	"\nThe {} cries out in pain!: *Just wait until the Juvenile Enrichment Center hears about this!!*",
 	"\nThe {} cries out in pain!: *You MONSTER!*",
 	"\nThe {} cries out in pain!: *What the H-E-double-hockey-sticks is your problem?*",
-]
-
-# List of outskirt districts for spawning purposes
-outskirts_districts = [
-	poi_id_south_outskirts,
-	poi_id_southwest_outskirts,
-	poi_id_west_outskirts,
-	poi_id_northwest_outskirts,
-	poi_id_north_outskirts,
-	poi_id_nuclear_beach
 ]
 
 # Letters that an enemy can identify themselves with

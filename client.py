@@ -977,7 +977,7 @@ async def on_ready():
 				traceback.print_exc(file = sys.stdout)
 
 		# Flag all users in the Outskirts for PvP
-		await ewutils.flag_outskirts(id_server = server.id)
+		await ewutils.flag_vulnerable_districts(id_server = server.id)
 
 		# Clear PvP roles from players who are no longer flagged.
 		if (time_now - time_last_pvp) >= ewcfg.update_pvp:
