@@ -289,10 +289,7 @@ async def begin_manuscript(cmd = None, dm = False):
 
 	cost = 20000
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -337,10 +334,7 @@ async def set_pen_name(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -375,10 +369,7 @@ async def set_genre(cmd = None, dm = False):
 
 	genre = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -413,11 +404,7 @@ async def set_length(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -507,10 +494,7 @@ async def set_title(cmd = None, dm = False):
 
 	title = cmd.message.content[(len(cmd.tokens[0])):].strip()
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -548,10 +532,7 @@ async def edit_page(cmd = None, dm = False):
 
 	response = ""
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -630,11 +611,7 @@ async def view_page(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -678,11 +655,7 @@ async def check_manuscript(cmd = None, dm = False):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -723,10 +696,7 @@ async def publish_manuscript(cmd = None, dm = False):
 
 	market_data = EwMarket(id_server = user_data.id_server)
 
-	if not dm:
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript and not dm:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
@@ -1020,7 +990,8 @@ async def browse_zines(cmd):
 	else:
 		sort_token = "null"
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	user_data = EwUser(member=cmd.message.author)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript:
 		response = "You can't browse for zines here! Try going to the cafe. If you're looking for educational zines, try the colleges. If you can't read, then you might want to try the comic shop."
@@ -1217,7 +1188,7 @@ async def order_zine(cmd):
 		response = "You lack the higher brain functions required to {}.".format(cmd.tokens[0])
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	if not poi.write_manuscript:
 		response = "You can't buy zines here! Try going to the cafe. If you're looking for educational books, try the colleges. If you can't read, then you might want to try the comic shop."

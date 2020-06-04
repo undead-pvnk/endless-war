@@ -393,7 +393,7 @@ async def shambleball(cmd):
 		response = "You have to go into the city to play Shambleball."
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi_data = ewcfg.id_to_poi.get(user_data.poi)
 
 	if poi_data.is_subzone or poi_data.is_transport:
 		response = "This place is too cramped for playing Shambleball. Go outside!"
@@ -470,7 +470,7 @@ async def shamblego(cmd):
 	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 
 	if poi_data.id_poi != game_data.poi:
-		game_poi = ewcfg.id_to_poi.get(game_data.poi)
+		game_poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
 		response = "Your Shambleball game is happening in the #{} channel.".format(game_poi.channel)
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -509,7 +509,7 @@ async def shamblestop(cmd):
 	global sb_games
 	game_data = sb_games.get(shamble_player.id_game)
 
-	poi_data = ewcfg.chname_to_poi.get(cmd.message.channel.name)
+	poi_data = ewcfg.chname_to_poi(cmd.message.channel.name)
 
 	if poi_data.id_poi != game_data.poi:
 		game_poi = ewcfg.id_to_poi.get(game_data.poi)

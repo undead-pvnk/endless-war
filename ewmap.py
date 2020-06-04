@@ -1364,10 +1364,7 @@ async def teleport_player(cmd):
 async def look(cmd):
 	user_data = EwUser(member = cmd.message.author)
 
-	if ewutils.channel_name_is_poi(cmd.message.channel.name):
-		poi = ewcfg.chname_to_poi.get(cmd.message.channel.name)
-	else:
-		poi = ewcfg.id_to_poi.get(user_data.poi)
+	poi = ewcfg.id_to_poi.get(user_data.poi)
 
 	district_data = EwDistrict(district = poi.id_poi, id_server = user_data.id_server)
 
