@@ -13721,10 +13721,9 @@ smelting_recipe_list = [
 			"fishskinhat"
 		],
 		ingredients = {
-			'dragonsoul' : 1,
-			item_id_slimepoudrin : 5,
-			'ironingot':1,
-			'leather':1
+			'plebefish' : 1,
+			'plebefish': 1,
+			'plebefish': 1,
 		},
 		products = ['dclaw']
     ),
