@@ -776,7 +776,7 @@ async def on_ready():
 		neighbors = []
 		neighbor_ids = []
 		if poi.coord != None:
-			neighbors = ewmap.path_to(coord_start = poi.coord, user_data = fake_observer)
+			neighbors = ewmap.path_to(poi_start = poi.id_poi, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
 
@@ -790,9 +790,8 @@ async def on_ready():
 
 	for id_poi in ewcfg.landmark_pois:
 		ewutils.logMsg("beginning landmark precomputation for " + id_poi)
-		poi = ewcfg.id_to_poi.get(id_poi)
 		ewmap.landmarks[id_poi] = ewmap.score_map_from(
-			coord_start = poi.coord,
+			poi_start = id_poi,
 			user_data = fake_observer,
 			landmark_mode = True
 		)

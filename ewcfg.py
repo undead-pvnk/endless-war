@@ -541,7 +541,7 @@ hideout_by_faction = {
 }
 
 # Commands
-cmd_prefix = '!'
+cmd_prefix = '+'
 cmd_enlist = cmd_prefix + 'enlist'
 cmd_renounce = cmd_prefix + 'renounce'
 cmd_revive = cmd_prefix + 'revive'
@@ -9429,7 +9429,11 @@ poi_list = [
 		channel = "downtown",
 		role = "Downtown",
 		property_class = property_class_s,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			poi_id_smogsburg : 60,
+			poi_id_krakbay : 60,
+		},
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -9444,7 +9448,10 @@ poi_list = [
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			poi_id_downtown : 60,
+		},
 	),
 	EwPoi( # 3
 		id_poi = poi_id_copkilltown,
@@ -9484,7 +9491,10 @@ poi_list = [
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			poi_id_downtown : 60,
+		},
 	),
 	EwPoi( # 5
 		id_poi = poi_id_poudrinalley,
