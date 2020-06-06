@@ -596,11 +596,26 @@ async def flag_vulnerable_districts(id_server = None):
 
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
+				member = server.get_member(user_data.id_user)
+				
 				# Flag the user for PvP
 				enlisted = True if user_data.life_state == ewcfg.life_state_enlisted else False
 				user_data.time_expirpvp = calculatePvpTimer(user_data.time_expirpvp, ewcfg.time_pvp_mine, enlisted)
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				await ewrolemgr.updateRoles(client = client, member = member)
+
+				# Make sure to kill players who may have left while the bot was offline.
+				if member not in server.members:
+					try:
+						user_data = EwUser(id_user = user_data.id_user, id_server = user_data.id_server)
+	
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+	
+						logMsg('Player killed for leaving the server.')
+					except:
+						logMsg('Failed to kill member who left the server.')
 
 			conn.commit()
 		finally:
@@ -643,6 +658,8 @@ async def bleedSlimes(id_server = None):
 			resp_cont = EwResponseContainer(id_server = id_server)
 			for user in users:
 				user_data = EwUser(id_user = user[0], id_server = id_server)
+				member = server.get_member(user_data.id_user)
+				
 				slimes_to_bleed = user_data.bleed_storage * (1 - .5 ** (ewcfg.bleed_tick_length / ewcfg.bleed_half_life))
 				slimes_to_bleed = max(slimes_to_bleed, ewcfg.bleed_tick_length * 1000)
 				slimes_dropped = user_data.totaldamage + user_data.slimes
@@ -681,7 +698,19 @@ async def bleedSlimes(id_server = None):
 
 					total_bled += real_bleed
 
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				await ewrolemgr.updateRoles(client = client, member = member)
+				
+				# Make sure to kill players who may have left while the bot was offline.
+				if member not in server.members:
+					try:
+						user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+						user_data.trauma = ewcfg.trauma_id_suicide
+						user_data.die(cause=ewcfg.cause_leftserver)
+						user_data.persist()
+
+						logMsg('Player killed for leaving the server.')
+					except:
+						logMsg('Failed to kill member who left the server.')
 
 			await resp_cont.post()
 
@@ -824,6 +853,7 @@ async def burnSlimes(id_server = None):
 		resp_cont = EwResponseContainer(id_server = id_server)
 		for result in data:
 			user_data = EwUser(id_user = result[0], id_server = id_server)
+			member = server.get_member(user_data.id_user)
 
 			slimes_dropped = user_data.totaldamage + user_data.slimes
 
@@ -872,10 +902,22 @@ async def burnSlimes(id_server = None):
 				user_data.trauma = weapon.id_weapon
 
 				user_data.persist()
-				await ewrolemgr.updateRoles(client = client, member = server.get_member(user_data.id_user))
+				await ewrolemgr.updateRoles(client = client, member = member)
 			else:
 				user_data.change_slimes(n = -slimes_to_burn, source = ewcfg.source_damage)
 				user_data.persist()
+
+			# Make sure to kill players who may have left while the bot was offline.
+			if member not in server.members:
+				try:
+					user_data = EwUser(id_user=user_data.id_user, id_server=user_data.id_server)
+					user_data.trauma = ewcfg.trauma_id_suicide
+					user_data.die(cause=ewcfg.cause_leftserver)
+					user_data.persist()
+
+					logMsg('Player killed for leaving the server.')
+				except:
+					logMsg('Failed to kill member who left the server.')
 				
 
 		await resp_cont.post()	
@@ -1478,7 +1520,7 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 		
-	move_speed *= 6
+	move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 

@@ -142,7 +142,8 @@ async def updateRoles(
 	client = None,
 	member = None,
 	server_default = None,
-	refresh_perms = False,
+	#refresh_perms = False,
+	refresh_perms = True,
 ):
 	time_now = int(time.time())
 
@@ -405,6 +406,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					correct_poi = ewcfg.id_to_poi.get(user_data.poi)
 					
 					correct_channel = ewutils.get_channel(server, correct_poi.channel)
+					#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 					
 					permissions_dict = correct_poi.permissions
 					overwrite = discord.PermissionOverwrite()
@@ -415,6 +417,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 					for i in range(ewcfg.permissions_tries):
 						await client.edit_channel_permissions(correct_channel, member, overwrite)
+						#await client.edit_channel_permissions(correct_lan_channel, member, overwrite)
 
 					#print('corrected overwrite in {} for {}'.format(correct_channel, member))
 					print('\nupdated permissions for {} in {}\n'.format(member, user_data.poi))
@@ -438,7 +441,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 			#print(user_data.poi)
 			
 			correct_channel = ewutils.get_channel(server, correct_poi.channel)
-	
+			#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 	
 			permissions_dict = correct_poi.permissions
 			overwrite = discord.PermissionOverwrite()
@@ -447,6 +450,7 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 	
 			for i in range(ewcfg.permissions_tries):
 				await client.edit_channel_permissions(correct_channel, used_member, overwrite)
+				#await client.edit_channel_permissions(correct_lan_channel, used_member, overwrite)
 
 			# print('corrected overwrite in {} for {}'.format(correct_channel, member))
 			print('\ngenerated permissions for {} in {}\n'.format(used_member, user_data.poi))
@@ -477,24 +481,60 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 
 		for user in users:
 
-			member = server.get_member(user[0])
+			current_member = server.get_member(user[0])
 			
 			#print(member)
 			#print('member list: {}'.format(member_list))
 			
 			user_poi = ewcfg.id_to_poi.get(user[1])
 
-			if member == None:
+			if current_member == None:
 				# Second try.
-				member = server.get_member(user[0])
-				if member == None:
+				current_member = server.get_member(user[0])
+				if current_member == None:
 					continue
+					
+			if current_member in member_list:
+				# Member might have the wrong overwrite if the bot shut down/crashed right after persisting user data
+				#user_data = EwUser(member=current_member)
+
+				for poi in ewcfg.poi_list:
+
+					channel = ewutils.get_channel(server, poi.channel)
+					if channel == None:
+						# Second try
+						channel = ewutils.get_channel(server, poi.channel)
+						if channel == None:
+							continue
+
+					# print('{} overwrites: {}'.format(poi.id_poi, channel.overwrites))
+					for tuple in channel.overwrites:
+						# print('tuplevar: {}'.format(tuple[0]) + '\n\n')
+						if tuple[0] not in server.roles:
+							member = tuple[0]
+
+							# If we dont have the right member in the member list, skip it.
+							if member != current_member:
+								continue
+
+							user_data = EwUser(member=member)
+
+							if user_data.poi != poi.id_poi:
+
+								# Incorrect overwrite found for user
+
+								for i in range(ewcfg.permissions_tries):
+									await client.delete_channel_permissions(channel, current_member)
+
+								print('\ndeleted overwrite in {} for {}\n'.format(channel, current_member))
+								
+								# Only remove the current member once before moving on to the next code block.
+								if current_member in member_list:
+									member_list.remove(current_member)
 				
-			if member not in member_list:
-				
-				
+			if current_member not in member_list:
 				# Member has no overwrite -- fix this:
-				user_data = EwUser(member=member)
+				user_data = EwUser(member=current_member)
 				correct_poi = ewcfg.id_to_poi.get(user_data.poi)
 
 				if correct_poi != None:
@@ -503,18 +543,21 @@ async def refresh_user_perms(client, id_server, used_member = None, startup = Fa
 					continue
 				
 				correct_channel = ewutils.get_channel(server, correct_poi.channel)
+				#correct_lan_channel = "{}-LAN-connection".format(correct_channel)
 
 				#print(user_data.poi)
 				
 				overwrite = discord.PermissionOverwrite()
 				overwrite.read_messages = True if ewcfg.permission_read_messages in permissions_dict[user_data.poi] else False
 				overwrite.send_messages = True if ewcfg.permission_send_messages in permissions_dict[user_data.poi] else False
+				overwrite.connect = True
 
 				for i in range(ewcfg.permissions_tries):
-					await client.edit_channel_permissions(correct_channel, member, overwrite)
+					await client.edit_channel_permissions(correct_channel, current_member, overwrite)
+					#await client.edit_channel_permissions(correct_lan_channel, current_member, overwrite)
 
 				# print('corrected overwrite in {} for {}'.format(correct_channel, member))
-				print('added permissions for {} in {}'.format(member, user_data.poi))
+				print('\nadded permissions for {} in {}\n'.format(current_member, user_data.poi))
 
 	#except:
 		#ewutils.logMsg('caught exception while refreshing permissions')

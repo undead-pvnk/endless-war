@@ -44,7 +44,7 @@ update_pvp = 60
 update_market = 900 #15 min
 
 # Number of times the bot should try a permissions-related API call. This is done purely for safety measures.
-permissions_tries = 2
+permissions_tries = 1
 
 # Time saved moving through friendly territory (or lost in hostile territory).
 territory_time_gain = 10
@@ -9428,7 +9428,8 @@ poi_list = [
 		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
 		coord = (57, 40),
 		channel = channel_endlesswar,
-		role = "Endless War"
+		role = "Endless War",
+		max_degradation=10000000,
 	),
 	EwPoi( # slimecorp HQ
 		id_poi = poi_id_slimecorphq,
@@ -10694,39 +10695,6 @@ poi_list = [
 		],
 		role = "Sewers",
 		community_chest = chest_id_thesewers
-	),
-	EwPoi(  # ENDLESS WAR
-		id_poi = poi_id_endlesswar,
-		alias = [
-			"obelisk",
-			"war",
-			"ew"
-		],
-		str_in = "at the base of",
-		str_enter = "arrive at",
-		str_name = "ENDLESS WAR",
-		str_desc = "Its bright, neon green color nearly blinds you when observed from this close. You are overwhelmed by an acute, menacing aura as you crane your neck to observe the obelisk in its entirety. You almost thought you saw it looking back down at you, but it was probably just your imagination. You shouldn’t stay here any longer than you have to, you always get a weird feeling in the pit of your stomach when you stick around for too long.",
-		channel = channel_endlesswar,
-		role = "Endless War",
-		is_subzone = True,
-		mother_district = poi_id_downtown,
-		max_degradation = 10000000,
-	),
-	EwPoi(  # slimecorp HQ
-		id_poi = poi_id_slimecorphq,
-		alias = [
-			"slimecorp",
-			"hq",
-			"corp"
-		],
-		str_in = "in the lobby of",
-		str_name = "SlimeCorp HQ",
-		str_desc = "Here, businessmen carrying briefcases dripping with slime powerwalk from every direction to every other direction. They barely acknowledge your existence outside of muttering under their breath when they’re forced to sidestep around you and the other clueless juveniles loitering in their lobby. Above the first few floors begins the endless labyrinths of cubicles and office spaces that comprised the majority of the building. This corporate nightmare repeats itself for nearly every floor of the towering skyscraper. With its sleek, modern architecture and high-tech amenities, SlimeCorp HQ looks nothing like the rest of the city.\nPast countless receptionists' desks, waiting rooms, legal waivers, and at least one or two stainless steel vault doors, lay several slime donation rooms. All that wait for you in these secluded rooms is a reclined medical chair with an attached IV bag and the blinding light of a fluorescent light bulb. If you choose to !donate some of your slime, a SlimeCorp employee will take you to one of these rooms and inform you of the vast and varied uses of SlimeCoin, SlimeCorp’s hot new cryptocurrency.",
-		channel = channel_slimecorphq,
-		role = "SlimeCorp HQ",
-		pvp = False,
-		is_subzone = True,
-		mother_district = poi_id_downtown
 	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
