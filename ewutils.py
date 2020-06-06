@@ -7,6 +7,7 @@ import datetime
 import time
 import re
 import random
+import string
 import asyncio
 import math
 
@@ -1598,17 +1599,19 @@ def end_trade(id_user):
 		trading_offers[trader] = []
 		trading_offers[id_user] = []
 
-def generate_captcha_random(n = 4):
-	captcha = ""
-	for i in range(n):
-		captcha += random.choice(ewcfg.alphabet)
-	return captcha.upper()
+def text_to_regional_indicator(text):
+	# note that inside the quotes below is a zero-width space, 
+	# used to prevent the regional indicators from turning into flags
+	return "‎".join([chr(0x1F1E6 + string.ascii_uppercase.index(c)) for c in text.upper()])
 
-def generate_captcha(n = 4):
+def generate_captcha_random(length = 4):
+	return "".join([random.choice(ewcfg.alphabet) for _ in range(length)]).upper()
+
+def generate_captcha(length = 4):
 	try:
-		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == n])
+		return random.choice([captcha for captcha in ewcfg.captcha_dict if len(captcha) == length])
 	except:
-		return generate_captcha_random(n)
+		return generate_captcha_random(length)
 
 async def sap_tick_loop(id_server):
 	interval = ewcfg.sap_tick_length

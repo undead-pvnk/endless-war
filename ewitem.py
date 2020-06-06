@@ -1103,7 +1103,7 @@ async def item_look(cmd):
 				if ewcfg.weapon_class_captcha in weapon.classes:
 					captcha = item.item_props.get("captcha")
 					if captcha not in [None, ""]:
-						response += "Security Code: **{}**".format(captcha) + "\n"
+						response += "Security Code: **{}**".format(ewutils.text_to_regional_indicator(captcha)) + "\n"
 
 				totalkills = int(item.item_props.get("totalkills")) if item.item_props.get("totalkills") != None else 0
 
@@ -1623,7 +1623,7 @@ def gen_item_props(item):
 	elif item.item_type == ewcfg.it_weapon:
 		captcha = ""
 		if ewcfg.weapon_class_captcha in item.classes:
-			captcha = ewutils.generate_captcha(n = item.captcha_length)
+			captcha = ewutils.generate_captcha(length = item.captcha_length)
 
 		item_props = {
 			"weapon_type": item.id_weapon,
