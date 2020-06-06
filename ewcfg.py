@@ -4038,8 +4038,11 @@ def wef_staff(ctn = None):
 			lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
 		}
 		for condition in conditions:
-			if condition(ctn):
-				conditions_met += 1
+			try:
+				if condition(ctn):
+					conditions_met += 1
+			except:
+				pass
 
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
 		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
