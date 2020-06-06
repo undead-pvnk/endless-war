@@ -1595,7 +1595,7 @@ def gen_item_props(item):
 			'context': item.context,
 			'item_name': item.str_name,
 			'item_desc': item.str_desc,
-			'ingredients': item.ingredients,
+			'ingredients': item.ingredients if type(item.ingredients) == str else item.ingredients[0],
 			'acquisition': item.acquisition,
 		}
 		if item.context == ewcfg.context_slimeoidfood:

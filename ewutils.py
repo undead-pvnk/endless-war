@@ -2177,44 +2177,44 @@ def get_outfit_info(id_user, id_server, wanted_info = None):
 			adorned_ids.append(c.item_props['id_cosmetic'])
 			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
-	if len(adorned_cosmetics) != 0:
-		# Assess if there's a cohesive style
-		if len(adorned_styles) != 0:
-			counted_styles = collections.Counter(adorned_styles)
-			dominant_style = max(counted_styles, key = counted_styles.get)
-
-			relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
-			# If the outfit has a dominant style
-			if relative_style_amount >= 60:
-				total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
-
-		#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
-		if len(adorned_hues) != 0:
-			counted_hues = collections.Counter(adorned_hues)
-			dominant_hue = max(counted_hues, key = counted_hues.get)
-
-			relative_hue_amount = round(int(counted_hues.get(dominant_hue) / len(adorned_hues) * 100))
-
-			# If the outfit has a dominant hue
-			if dominant_hue != '' and relative_hue_amount >= 60:
-				color_design = False
-
-				neutrals = [ewcfg.hue_id_white, ewcfg.hue_id_grey, ewcfg.hue_id_black, ewcfg.hue_id_brown]
-				complementaries = []
-
-				for hue in ewcfg.hue_list:
-					if hue.id_hue == dominant_hue:
-						complementaries = list(hue.effectiveness.keys()) # Add that hue's complimentary, analogus complementaries, and analogus hues to it's complementaries list
-
-				for hue in adorned_hues:
-					if hue == dominant_hue or hue in complementaries or hue in neutrals:
-						color_design = True
-					else:
-						color_design = False
-						break
-
-				if color_design:
-					total_freshness *= 5
+	# if len(adorned_cosmetics) != 0:
+	# 	# Assess if there's a cohesive style
+	# 	if len(adorned_styles) != 0:
+	# 		counted_styles = collections.Counter(adorned_styles)
+	# 		dominant_style = max(counted_styles, key = counted_styles.get)
+	#
+	# 		relative_style_amount = round(int(counted_styles.get(dominant_style) / len(adorned_cosmetics) * 100))
+	# 		# If the outfit has a dominant style
+	# 		if relative_style_amount >= 60:
+	# 			total_freshness *= (relative_style_amount ** 2) / 1000 # If the entire outfit has a cohesive style, multiply by 10
+	#
+	# 	#Assess if there's a cohesive color palette, meaning if there's only three hues or less for the entire outfit (entire outfit must be dyed)
+	# 	if len(adorned_hues) != 0:
+	# 		counted_hues = collections.Counter(adorned_hues)
+	# 		dominant_hue = max(counted_hues, key = counted_hues.get)
+	#
+	# 		relative_hue_amount = round(int(counted_hues.get(dominant_hue) / len(adorned_hues) * 100))
+	#
+	# 		# If the outfit has a dominant hue
+	# 		if dominant_hue != '' and relative_hue_amount >= 60:
+	# 			color_design = False
+	#
+	# 			neutrals = [ewcfg.hue_id_white, ewcfg.hue_id_grey, ewcfg.hue_id_black, ewcfg.hue_id_brown]
+	# 			complementaries = []
+	#
+	# 			for hue in ewcfg.hue_list:
+	# 				if hue.id_hue == dominant_hue:
+	# 					complementaries = list(hue.effectiveness.keys()) # Add that hue's complimentary, analogus complementaries, and analogus hues to it's complementaries list
+	#
+	# 			for hue in adorned_hues:
+	# 				if hue == dominant_hue or hue in complementaries or hue in neutrals:
+	# 					color_design = True
+	# 				else:
+	# 					color_design = False
+	# 					break
+	#
+	# 			if color_design:
+	# 				total_freshness *= 5
 
 	if wanted_info is not None and wanted_info == "dominant_style" and dominant_style is not None:
 		return dominant_style
