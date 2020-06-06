@@ -829,7 +829,7 @@ class EwUser:
 		return int(res)
 
 	""" Create a new EwUser and optionally retrieve it from the database. """
-	def __init__(self, member = None, id_user = None, id_server = None):
+	def __init__(self, member = None, id_user = None, id_server = None, data_level = 0):
 
 		self.combatant_type = ewcfg.combatant_type_player
 
@@ -851,7 +851,7 @@ class EwUser:
 				# Retrieve object
 
 
-				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
+				cursor.execute("SELECT {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} FROM users WHERE id_user = %s AND id_server = %s".format(
 
 					ewcfg.col_slimes,
 					ewcfg.col_slimelevel,
@@ -902,10 +902,6 @@ class EwUser:
 					ewcfg.col_gambit,
 					ewcfg.col_credence,
 					ewcfg.col_credence_used,
-					ewcfg.col_attack,
-					ewcfg.col_defense,
-					ewcfg.col_speed,
-					ewcfg.col_freshness,
 					ewcfg.col_race,
 					ewcfg.col_time_racialability,
 				), (
@@ -965,12 +961,8 @@ class EwUser:
 					self.gambit = result[46]
 					self.credence = result[47]
 					self.credence_used = result[48]
-					self.attack = result[49]
-					self.defense = result[50]
-					self.speed = result[51]
-					self.freshness = result[52]
-					self.race = result[53]
-					self.time_racialability = result[54]
+					self.race = result[49]
+					self.time_racialability = result[50]
 				else:
 					self.poi = ewcfg.poi_id_downtown
 					self.life_state = ewcfg.life_state_juvenile
@@ -1007,8 +999,38 @@ class EwUser:
 				else:
 					self.weaponskill = 0
 
-				self.move_speed = ewutils.get_move_speed(self)
-				self.limit_fix();
+				if data_level > 0:
+					cursor.execute("SELECT {}, {}, {} FROM fashion_stats WHERE id_user = %s AND id_server = %s".format(
+						ewcfg.col_attack,
+						ewcfg.col_defense,
+						ewcfg.col_speed,
+					), (
+
+						id_user,
+						id_server,
+					))
+					result = cursor.fetchone()
+
+					if result != None:
+						self.attack = result[0]
+						self.defense = result[1]
+						self.speed = result[2]
+	
+					cursor.execute("SELECT {} FROM freshness WHERE id_user = %s AND id_server = %s".format(
+						ewcfg.col_freshness,
+					),(
+						id_user,
+						id_server
+					))
+
+					result = cursor.fetchone()
+
+					if result != None:
+						self.freshness = result[0]
+
+					self.move_speed = ewutils.get_move_speed(self)
+
+				self.limit_fix()
 			finally:
 				# Clean up the database handles.
 				cursor.close()
@@ -1026,7 +1048,7 @@ class EwUser:
 			self.limit_fix();
 
 			# Save the object.
-			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
+			cursor.execute("REPLACE INTO users({}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}) VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)".format(
 				ewcfg.col_id_user,
 				ewcfg.col_id_server,
 				ewcfg.col_slimes,
@@ -1079,10 +1101,6 @@ class EwUser:
 				ewcfg.col_gambit,
 				ewcfg.col_credence,
 				ewcfg.col_credence_used,
-				ewcfg.col_attack,
-				ewcfg.col_defense,
-				ewcfg.col_speed,
-				ewcfg.col_freshness,
 				ewcfg.col_race,
 				ewcfg.col_time_racialability,
 			), (
@@ -1138,10 +1156,6 @@ class EwUser:
 				self.gambit,
 				self.credence,
 				self.credence_used,
-				self.attack,
-				self.defense,
-				self.speed,
-				self.freshness,
 				self.race,
 				self.time_racialability
 			))

@@ -427,7 +427,7 @@ async def attack(cmd):
 	resp_cont = ewutils.EwResponseContainer(id_server = cmd.message.server.id)
 	market_data = EwMarket(id_server = cmd.message.server.id)
 
-	user_data = EwUser(member = cmd.message.author)
+	user_data = EwUser(member = cmd.message.author, data_level = 1)
 	slimeoid = EwSlimeoid(member = cmd.message.author)
 	weapon = None
 	weapon_item = None
@@ -450,7 +450,7 @@ async def attack(cmd):
 			resp_cont.add_channel_response(cmd.message.channel.name, response)
 			return await resp_cont.post()
 		else:
-			shootee_data = EwUser(member = member)
+			shootee_data = EwUser(member = member, data_level = 1)
 		shootee_slimeoid = EwSlimeoid(member = member)
 		shootee_name = member.display_name
 
@@ -614,8 +614,8 @@ async def attack(cmd):
 					await resp_cont.post()
 					msg = await cmd.client.wait_for_message(timeout = 5, author = member)
 
-					user_data = EwUser(member = cmd.message.author)
-					shootee_data = EwUser(member = member)
+					user_data = EwUser(member = cmd.message.author, data_level = 1)
+					shootee_data = EwUser(member = member, data_level = 1)
 
 					# One of the players died in the meantime
 					if user_data.life_state == ewcfg.life_state_corpse or shootee_data.life_state == ewcfg.life_state_corpse:
@@ -767,20 +767,16 @@ async def attack(cmd):
 						# Damage it if the cosmetic is adorned and it has a durability limit
 						if c.item_props.get("adorned") == 'true' and c.item_props['durability'] is not None:
 
-							print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
+							#print("{} current durability: {}:".format(c.item_props.get("cosmetic_name"), c.item_props['durability']))
 
 							durability_afterhit = int(c.item_props['durability']) - slimes_damage
 
-							print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
+							#print("{} durability after next hit: {}:".format(c.item_props.get("cosmetic_name"), durability_afterhit))
 
 							if durability_afterhit <= 0: # If it breaks
 								c.item_props['durability'] = durability_afterhit
 								c.persist()
 
-								shootee_data.attack -= int(c.item_props[ewcfg.stat_attack])
-								shootee_data.defense -= int(c.item_props[ewcfg.stat_defense])
-								shootee_data.speed -= int(c.item_props[ewcfg.stat_speed])
-								shootee_data.freshness = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id, wanted_info = "total_freshness")
 
 								shootee_data.persist()
 
@@ -864,8 +860,8 @@ async def attack(cmd):
 								'defense': 0,
 								'speed': 0,
 								'ability': None,
-								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 4,
-								'original_durability': int(ewutils.slime_bylevel(shootee_data.slimelevel)) / 4,
+								'durability': int(ewutils.slime_bylevel(shootee_data.slimelevel) / 4),
+								'original_durability': int(ewutils.slime_bylevel(shootee_data.slimelevel) / 4),
 								'size': 1,
 								'fashion_style': ewcfg.style_cool,
 								'freshness': 10,
@@ -897,7 +893,7 @@ async def attack(cmd):
 					die_resp = shootee_data.die(cause = ewcfg.cause_killing)
 					#shootee_data.change_slimes(n = -slimes_dropped / 10, source = ewcfg.source_ghostification)
 
-					user_data = EwUser(member = cmd.message.author)
+					user_data = EwUser(member = cmd.message.author, data_level = 1)
 					district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
 
 					kill_descriptor = "beaten to death"
@@ -997,7 +993,7 @@ async def attack(cmd):
 								user_data.trauma = ewcfg.trauma_id_environment
 								die_resp = user_data.die(cause = ewcfg.cause_backfire)
 								district_data = EwDistrict(district = district_data.name, id_server = district_data.id_server)
-								shootee_data = EwUser(member = member)
+								shootee_data = EwUser(member = member, data_level = 1)
 								resp_cont.add_member_to_update(cmd.message.author)
 								resp_cont.add_response_container(die_resp)
 							else:
@@ -1238,7 +1234,7 @@ def weapon_explosion(user_data = None, shootee_data = None, district_data = None
 			if bystander != user_data.id_user and bystander != checked_id:
 				response = ""
 
-				target_data = EwUser(id_user=bystander, id_server=user_data.id_server)
+				target_data = EwUser(id_user=bystander, id_server=user_data.id_server, data_level = 1)
 				target_player = EwPlayer(id_user=bystander, id_server=user_data.id_server)
 
 				target_iskillers = target_data.life_state == ewcfg.life_state_enlisted and target_data.faction == ewcfg.faction_killers
@@ -2774,34 +2770,8 @@ def damage_mod_attack(user_data, market_data, user_mutations, district_data):
 				
 	# Dressed to kill
 	if ewcfg.mutation_id_dressedtokill in user_mutations:
-		cosmetic_items = ewitem.inventory(
-			id_user = user_data.id_user,
-			id_server = user_data.id_server,
-			item_type_filter = ewcfg.it_cosmetic
-		)
-
-		adorned_cosmetics = []
-
-		adorned_styles = []
-
-		total_freshness = 0
-
-		for cosmetic in cosmetic_items:
-			c = EwItem(id_item = cosmetic.get('id_item'))
-
-			if c.item_props['adorned'] == 'true':
-				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
-				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
-				adorned_styles.append(c.item_props.get('fashion_style'))
-				total_freshness += int(c.item_props.get('freshness'))
-
-
-		outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
-
-		if outfit_map != None:
-			if "total_freshness" in outfit_map.keys():
-				if int(outfit_map['total_freshness']) >= 100:
-					damage_mod *= 4
+		if user_data.freshness >= 100:
+			damage_mod *= 4
 
 	return damage_mod
 

@@ -803,6 +803,8 @@ async def on_ready():
 			landmark_mode = True
 		)
 
+	ewcosmeticitem.update_hues()
+
 	ewutils.logMsg("finished landmark precomputation")
 
 	try:
@@ -1517,7 +1519,7 @@ async def on_message(message):
 
 		# Shows damage
 		elif debug == True and cmd == (ewcfg.cmd_prefix + 'damage'):
-			user_data = EwUser(member = message.author)
+			user_data = EwUser(member = message.author, data_level = 1)
 			slimes_spent = int(ewutils.slime_bylevel(user_data.slimelevel) / 60)
 			slimes_damage = int((slimes_spent * (10 + user_data.attack)) * (100 + (user_data.weaponskill * 5)) / 100.0)
 			await ewutils.send_message(client, message.channel, ewutils.formatMessage(message.author, "{}".format(slimes_damage)))

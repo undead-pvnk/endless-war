@@ -161,7 +161,8 @@ def gen_data_text(
 ):
 	user_data = EwUser(
 		id_user=id_user,
-		id_server=id_server
+		id_server=id_server,
+		data_level = 1
 	)
 	slimeoid = EwSlimeoid(id_user=id_user, id_server=id_server)
 
@@ -245,7 +246,6 @@ def gen_data_text(
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 			outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
-			user_data.freshness = int(outfit_map['total_freshness'])
 			user_data.persist()
 
 			if user_data.freshness < 1000:
@@ -466,7 +466,6 @@ async def data(cmd):
 			response_block += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-			user_data.freshness = int(outfit_map['total_freshness'])
 			user_data.persist()
 
 			if outfit_map is not None:
@@ -619,7 +618,7 @@ async def hunger(cmd):
 
 """ Check your outfit. """
 async def fashion(cmd):
-	user_data = EwUser(member=cmd.message.author)
+	user_data = EwUser(member=cmd.message.author, data_level = 1)
 
 	cosmetic_items = ewitem.inventory(
 		id_user = cmd.message.author.id,
@@ -658,7 +657,6 @@ async def fashion(cmd):
 			response += "\n\n"
 
 			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-			user_data.freshness = int(outfit_map['total_freshness'])
 			user_data.persist()
 
 			if outfit_map is not None:
@@ -672,6 +670,12 @@ async def fashion(cmd):
 		response += "All told, your outfit "
 
 		stat_responses = []
+
+
+
+		stats_breakdown["attack"] = user_data.attack
+		stats_breakdown["defense"] = user_data.defense
+		stats_breakdown["speed"] = user_data.speed
 
 		for stat in ewcfg.playerstats_list:
 

@@ -397,10 +397,18 @@ async def mill(cmd):
 		vegetable = EwItem(id_item = item_sought.get('id_item'))
 
 		for result in ewcfg.mill_results:
-			if result.ingredients != vegetable.item_props.get('id_food'):
-				pass
-			else:
-				items.append(result)
+			if type(result.ingredients) == str:
+				if vegetable.item_props.get('id_food') != result.ingredients:
+					pass
+				else:
+					items.append(result)
+			elif type(result.ingredients) == list:
+				if vegetable.item_props.get('id_food') not in result.ingredients:
+					pass
+				else:
+					items.append(result)
+
+
 
 		if len(items) > 0:
 			item = random.choice(items)
