@@ -277,6 +277,9 @@ cmd_map = {
 
 	# ghosts can empower the weapon of the player they're inhabiting
 	ewcfg.cmd_possess_weapon: ewspooky.possess_weapon,
+
+	# ghosts can turn their negaslime into negapoudrins
+	ewcfg.cmd_crystalize_negapoudrin: ewspooky.crystalize_negapoudrin,
 	
 	# Play slime pachinko!
 	ewcfg.cmd_slimepachinko: ewcasino.pachinko,
