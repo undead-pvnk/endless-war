@@ -2075,6 +2075,11 @@ item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 item_id_royaltypoudrin = "royaltypoudrin"
 item_id_prankcapsule = "prankcapsule"
+item_id_cool_material = "coolbeans"
+item_id_tough_material = "toughnails"
+item_id_smart_material = "smartcookies"
+item_id_beautiful_material = "beautyspots"
+item_id_cute_material = "cutebuttons"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -3366,7 +3371,43 @@ item_list = [
 		price = 20000,
 		vendors = [vendor_vendingmachine],
 		context = "prankcapsule"
-	)
+	),
+	EwGeneralItem(
+		id_item = item_id_cool_material,
+		str_name = "Cool Beans",
+		str_desc = "A couple of cool beans! Far out, man. Well, they aren’t really beans per se, more like little condensed nuggets of your crop. Whatever they are, they’re undeniably cool.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_direapples, item_id_brightshade, item_id_razornuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_tough_material,
+		str_name = "Tough Nails",
+		str_desc = "A handful of rusty nails caked in dried blood that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds],
+	),
+
+	EwGeneralItem(
+		id_item = item_id_smart_material,
+		str_name = "Smart Cookies",
+		str_desc = "A farmer’s dozen of smart cookies. Well, they aren’t really cookies per se, more like little bland condensed patties of your crop. Whatever they are, they’re undeniably smart.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries],
+	),
+	EwGeneralItem(
+		id_item = item_id_beautiful_material,
+		str_name = "Beauty Spots",
+		str_desc = "A small collection of severed beauty spots, mostly freckles and moles, that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_poketubers, item_id_dankwheat, item_id_blacklimes],
+	),
+	EwGeneralItem(
+		id_item = item_id_cute_material,
+		str_name = "Cute Buttons",
+		str_desc = "A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower],
+	),
 ]
 #item_list += ewdebug.debugitem_set
 
@@ -14046,18 +14087,75 @@ cosmetic_items_list = [
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
 
+
 # A list of cosmetic names.
 cosmetic_names = []
 
 smelting_recipe_list = [
 	EwSmeltingRecipe(
-		id_recipe = "cosmetic",
-		str_name = "a cosmetic",
+		id_recipe = "coolcosmetic",
+		str_name = "a cool cosmetic",
 		alias = [
-			"hat",
+			"cool",
+			"coolhat",
 		],
 		ingredients = {
-			item_id_slimepoudrin : 16
+			item_id_slimepoudrin : 4,
+			item_id_cool_material: 1
+
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "toughcosmetic",
+		str_name = "a tough cosmetic",
+		alias = [
+			"tough",
+			"toughhat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_tough_material: 1
+
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "smartcosmetic",
+		str_name = "a smart cosmetic",
+		alias = [
+			"smart",
+			"smarthat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_smart_material: 1
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "beautifulcosmetic",
+		str_name = "a beautiful cosmetic",
+		alias = [
+			"beautiful",
+			"beautifulhat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_beautiful_material: 1
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "cutecosmetic",
+		str_name = "a cute cosmetic",
+		alias = [
+			"cute",
+			"cutehat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_cute_material: 1
 		},
 		products = cosmetic_names
 	),
@@ -16691,7 +16789,7 @@ for cosmetic in cosmetic_items_list:
 	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
 	cosmetic_names.append(cosmetic.id_cosmetic)
 
-	# Add food to its vendors' lists.
+	# Add cosmetics to its vendors' lists.
 	for vendor in cosmetic.vendors:
 		vendor_list = vendor_inv.get(vendor)
 
