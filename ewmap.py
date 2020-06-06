@@ -99,6 +99,12 @@ class EwPoi:
 	# Discord role associated with this zone (control channel visibility).
 	role = None
 	
+	# Role that controls LAN voice/text channel visibility for any street/subzone/district - 6/6/20
+	major_role = None
+	
+	# Role that controls subzone visibility for streets/districts - 6/6/20
+	minor_role = None
+	
 	# Discord permissions associated with this zone (control channel visibility) - 5/28/20
 	permissions = None
 
@@ -189,6 +195,8 @@ class EwPoi:
 		coord_alias = [],
 		channel = "",
 		role = None,
+		major_role = None,
+		minor_role = None,
 		permissions = None,
 		pvp = True,
 		factions = [],
@@ -226,6 +234,8 @@ class EwPoi:
 		self.coord_alias = coord_alias
 		self.channel = channel
 		self.role = role
+		self.major_role = major_role
+		self.minor_role = minor_role
 		self.permissions = permissions
 		self.pvp = pvp
 		self.factions = factions

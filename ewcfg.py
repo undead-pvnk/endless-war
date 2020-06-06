@@ -358,6 +358,8 @@ role_donor = "terezigang"
 role_tutorial = "newintown"
 role_slimernalia = "kingpinofslimernalia"
 role_gellphone = "gellphone"
+role_null_major_role = "nullmajorrole"
+role_null_minor_role = "nullminorrole"
 
 permission_read_messages = "read"
 permission_send_messages = "send"
@@ -13109,21 +13111,22 @@ outskirts = []
 tutorial_pois = []
 zine_mother_districts = []
 
-new_coords_map = {
-		poi_id_assaultflatsbeach: (102, 26)
-}
-
 for poi in poi_list:
 
-	# A map of poi IDs to their new set of coordinates. For temporary expermentation purposes ONLY.
-	
+	# Assign permissions for all locations in the poi list.
 	if poi.permissions == None:
 		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
-
-	#if poi.id_poi in new_coords_map.keys():
-		#poi.coord = new_coords_map[poi.id_poi]
-	#else:
-		#poi.coord = None
+		
+	# Assign all the correct major and minor roles that aren't explicity defined for streets/districts in the poi list.
+	if poi.is_outskirts or poi.is_transport or poi.is_apartment or poi.is_subzone:
+		poi.minor_role = role_null_minor_role
+		
+		if poi.is_subzone:
+			for mother_poi in poi_list:
+				if mother_poi.id_poi == poi.mother_district:
+					poi.major_role = mother_poi.major_role
+		else:
+			poi.major_role = role_null_major_role
 
 	
 	if poi.coord != None:
