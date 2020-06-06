@@ -520,3 +520,28 @@ async def possess_weapon(cmd):
 	
 	if response:
 		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+async def crystalize_negapoudrin(cmd):
+	user_data = EwUser(member = cmd.message.author)
+	response = ""
+	if user_data.life_state != ewcfg.life_state_corpse:
+		response = "What the fuck do you think you're doing, you corporeal bitch?"
+	elif user_data.slimes >= (ewcfg.slimes_tomanifest + ewcfg.slimes_to_crystalize_negapoudrin):
+		# prevent ghosts from using so much antislime they can't manifest afterwards
+		response = "Crystalizing a negapoudrin requires a lot of negaslime, and you're not quite there yet."
+	else:
+		negapoudrin_data = next(i for i in ewcfg.item_list if i.id_item == ewcfg.item_id_negapoudrin)
+		ewitem.item_create(
+			item_type = ewcfg.it_item,
+			id_user = user_data.id_user,
+			id_server = cmd.message.server.id,
+			item_props={
+				'id_item': negapoudrin_data.id_item,
+				'item_name': negapoudrin_data.str_name,
+				'item_desc': negapoudrin_data.str_desc,
+			}
+		)
+		user_data.change_slimes(n = -ewcfg.slimes_to_crystalize_negapoudrin, source = ewcfg.source_spending)
+		user_data.persist()
+		response = "The cathedral's bells toll in the distance, and a rumbling {} can be heard echoing from deep within the sewers. A negapoudrin has formed.".format(ewcfg.cmd_boo)
+	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))

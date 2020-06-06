@@ -24,6 +24,8 @@ from ewworldevent import EwEventDef
 from ewdungeons import EwDungeonScene
 from ewtrauma import EwTrauma, EwHitzone
 from ewprank import EwPrankItem
+from ewmarket import EwMarket
+
 import ewdebug
 
 # Global configuration options.
@@ -592,6 +594,7 @@ cmd_manifest = cmd_prefix + 'manifest'
 cmd_inhabit = cmd_prefix + 'inhabit'
 cmd_letgo = cmd_prefix + 'letgo'
 cmd_possess_weapon = cmd_prefix + 'possessweapon'
+cmd_crystalize_negapoudrin = cmd_prefix + 'crystalizenegapoudrin'
 cmd_summonnegaslimeoid = cmd_prefix + 'summonnegaslimeoid'
 cmd_summonnegaslimeoid_alt1 = cmd_prefix + 'summonnega'
 cmd_summonnegaslimeoid_alt2 = cmd_prefix + 'summon'
@@ -1025,6 +1028,7 @@ slimes_invein = 4000
 slimes_pertile = 50
 slimes_tomanifest = -100000
 slimes_to_possess_weapon = -100000
+slimes_to_crystalize_negapoudrin = -1000000
 slimes_cliffdrop = 200000
 slimes_item_drop = 10000
 slimes_shambler = 1000000
@@ -1960,6 +1964,7 @@ stat_bass_kills = 'bass_kills'
 stat_bow_kills = 'bow_kills'
 stat_umbrella_kills = 'umbrella_kills'
 stat_dclaw_kills = 'dclaw_kills'
+stat_staff_kills = 'staff_kills'
 
 # Categories of events that change your slime total, for statistics tracking
 source_mining = 0
@@ -2051,6 +2056,7 @@ vendor_bodega = "Bodega" # Clothing store in Krak Bay
 vendor_secretbodega = "Secret Bodega" # The secret clothing store in Krak Bay
 
 item_id_slimepoudrin = 'slimepoudrin'
+item_id_negapoudrin = 'negapoudrin'
 item_id_monstersoup = 'monstersoup'
 item_id_doublestuffedcrust = 'doublestuffedcrust'
 item_id_quadruplestuffedcrust = 'quadruplestuffedcrust'
@@ -2234,6 +2240,7 @@ weapon_id_bass = 'bass'
 weapon_id_umbrella = 'umbrella'
 weapon_id_bow = 'bow'
 weapon_id_dclaw = 'dclaw'
+weapon_id_staff = 'staff'
 theforbiddenoneoneone_desc = "This card that you hold in your hands contains an indescribably powerful being known simply " \
 	"as The Forbidden {emote_111}. It is an unimaginable horror, a beast of such supreme might that wields " \
 	"destructive capabilities that is beyond any human’s true understanding. And for its power, " \
@@ -2417,6 +2424,11 @@ item_list = [
 		str_name = "Bone",
 		str_desc = "A small nondescript bone. Traces of fresh slime in it indicate it must've belonged to one of the city's recidents.",
 		context = 'player_bone',
+	),
+	EwGeneralItem(
+		id_item = item_id_negapoudrin,
+		str_name = "negapoudrin",
+		str_desc = "A dense, crystalized slab of unholy negaslime.",
 	),
 	EwGeneralItem(
 		id_item = item_id_tradingcardpack,
@@ -4067,6 +4079,43 @@ def wef_dclaw(ctn = None):
 		ctn.crit = True
 		ctn.slimes_damage = int(dmg * 4)
 
+# weapon effect function for "Eldritch Staff"
+
+def wef_staff(ctn = None):
+	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
+
+	consecutive_hits = int(ctn.weapon_item.item_props["consecutive_hits"])
+	if time_lastattack < 5 and consecutive_hits == 0:
+		# consecutive_hits used counterintuitively to track whether the user has "charged up"
+		market_data = EwMarket(id_server = ctn.user_data.id_server)
+		conditions_met = 0
+		conditions = {
+			lambda _: 3 <= market_data.clock < 4, # witching hour
+			lambda _: weather_map.get(market_data.weather) == weather_foggy,
+			lambda _: (market_data.day % 31 == 15 and market_data.clock >= 20) or (market_data.day % 31 == 16 and market_data.clock <= 6), # moonless night
+			lambda ctn: not ctn.user_data.has_soul,
+			lambda ctn: ctn.user_data.get_weapon_possession(),
+			lambda ctn: ctn.shootee_data.slimes > ctn.user_data.slimes,
+			lambda ctn: (ctn.user_data.swear_jar >= 500) or (ctn.shootee_data.swear_jar == 0),
+			lambda ctn: (ctn.user_data.poi_death == ctn.user_data.poi) or (ctn.shootee_data.poi_death == ctn.shootee_data.poi),
+			lambda ctn: (ctn.user_data.id_killer == ctn.shootee_data.id_user) or (ctn.user_data.id_user == ctn.shootee_data.id_killer),
+			lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
+		}
+		for condition in conditions:
+			if condition(ctn):
+				conditions_met += 1
+
+		ctn.slimes_spent = int(ctn.slimes_spent * 3)
+		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
+		ctn.sap_ignored = 15 + (5 * conditions_met) # 5 per condition met
+		if conditions_met >= random.randrange(1, 41): # 2.5% per condition met
+			ctn.crit = True
+			ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
+
+		ctn.weapon_item.item_props["consecutive_hits"] = 1 # reset this so misses and hits are intermittent
+	else:
+		ctn.miss = True
+
 
 vendor_dojo = "Dojo"
 
@@ -4759,7 +4808,7 @@ weapon_list = [
 		sap_cost = 2,
 		captcha_length = 2
 	),
-		EwWeapon(  # 23
+	EwWeapon(  # 23
 		id_weapon = weapon_id_dclaw,
 		alias = [
 			"dragon claw",
@@ -4784,7 +4833,37 @@ weapon_list = [
 		stat = stat_dclaw_kills,
 		classes = [weapon_class_burning],
 		sap_cost = 5,
-		captcha_length = 2)
+		captcha_length = 2
+	),
+	EwWeapon( # 24
+		id_weapon = weapon_id_staff,
+		alias = [
+			"eldritchstaff",
+			"spookystaff",
+			"reprehensiblerod",
+			"wickedwand",
+			"frighteningfaggot"
+		],
+		str_miss = "You burn away a portion of your strength as you begin your incantations.",
+		str_damage = "{name_player} concludes their incantations. A minor horror forms around {name_target}'s {hitzone} and bites into it.",
+		str_crit = "An incomprehensible shriek pierces {name_target}'s ears as a true abomination appears before them. It strikes {name_target}'s {hitzone} with a terrible foce, but the real damage is psychological. **Critical hit!!**",
+		str_kill = "{name_player} goes limp for an instant as pitch black tendrils emerge from below {name_target}, gabbing on to their body and violently pulling them through the ground and into the sewers.",
+		str_equip = "You equip the eldritch staff.",
+		str_name = "eldritch staff",
+		str_weapon = "an eldritch staff",
+		str_weaponmaster_self = "You are a rank {rank} conduit of the ones below.",
+		str_weaponmaster = "They are a rank {rank} conduit of the ones below.",
+		str_killdescriptor = "cast down",
+		str_duel = "{name_player} and {name_target} look each other in the eye, showing a sorrowful sympathy for one another. Are they about to cry?.",
+		str_description = "It's an intricate wooden staff with an strange cloudy crystal on its handle. It has an attractive quality to it, but it also gives you the creeps.",
+		str_scalp = " It's covered in a strange black substance.",
+		fn_effect = wef_staff,
+		acquisition = acquisition_smelting,
+		classes= [weapon_class_captcha],
+		stat = stat_staff_kills,
+		sap_cost = 4,
+		captcha_length = 10
+	),
 ]
 
 
@@ -15088,6 +15167,22 @@ smelting_recipe_list = [
 		},
 		products = ['dclaw']
     ),
+	EwSmeltingRecipe(
+		id_recipe = weapon_id_staff,
+		str_name = "an eldritch staff",
+		alias = [
+			"eldritchstaff",
+			"spookystaff",
+			"reprehensiblerod",
+			"wickedwand",
+			"frighteningfaggot"
+		],
+		ingredients = {
+			item_id_doublefaggot : 1,
+			item_id_negapoudrin : 1,
+		},
+		products = ['staff']
+    ),
 
 	EwSmeltingRecipe(
 		id_recipe = "leathercouch",
@@ -18019,6 +18114,12 @@ trauma_list = [
 		str_trauma = "Three smoldering claw marks are burned into their flesh, the flames won't seem to extinguish.",
 		trauma_class = trauma_class_sapregeneration,
 	),
+	EwTrauma(  # 24
+		id_trauma = weapon_id_staff,
+		str_trauma_self = "Parts of your skin look necrotic, and you look like you haven't slept in days.",
+		str_trauma = "Parts of their skin look necrotic, and they look like they haven't slept in days.",
+		trauma_class = trauma_class_hunger,
+	),
 	EwTrauma( # 1
 		id_trauma = "fangs",
 		str_trauma_self = "You have bite marks littered throughout your body.",
@@ -18188,6 +18289,7 @@ help_responses = {
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
 	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. By default, it has a damage and attack cost mod of 3, sap piercing 15, and a 0% change to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }
@@ -18464,7 +18566,7 @@ world_events = [
 	),
 	EwEventDef(
 		event_type = event_type_minecollapse,
-		str_event_start = "The mineshaft starts collapsing around you. Get out of there quickly! ({cmd} {captcha})",
+		str_event_start = "The mineshaft starts collapsing around you.\nGet out of there quickly! ({cmd} {captcha})",
 	),
 	EwEventDef(
 		event_type = event_type_minesweeper,
