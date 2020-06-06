@@ -2075,6 +2075,11 @@ item_id_benwrappingpaper = "benwrappingpaper"
 item_id_gellphone = "gellphone"
 item_id_royaltypoudrin = "royaltypoudrin"
 item_id_prankcapsule = "prankcapsule"
+item_id_cool_material = "coolbeans"
+item_id_tough_material = "toughnails"
+item_id_smart_material = "smartcookies"
+item_id_beautiful_material = "beautyspots"
+item_id_cute_material = "cutebuttons"
 
 item_id_faggot = "faggot"
 item_id_doublefaggot = "doublefaggot"
@@ -3366,7 +3371,43 @@ item_list = [
 		price = 20000,
 		vendors = [vendor_vendingmachine],
 		context = "prankcapsule"
-	)
+	),
+	EwGeneralItem(
+		id_item = item_id_cool_material,
+		str_name = "Cool Beans",
+		str_desc = "A couple of cool beans! Far out, man. Well, they aren’t really beans per se, more like little condensed nuggets of your crop. Whatever they are, they’re undeniably cool.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_direapples, item_id_brightshade, item_id_razornuts],
+	),
+	EwGeneralItem(
+		id_item = item_id_tough_material,
+		str_name = "Tough Nails",
+		str_desc = "A handful of rusty nails caked in dried blood that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_sourpotatoes, item_id_bloodcabbages, item_id_pulpgourds],
+	),
+
+	EwGeneralItem(
+		id_item = item_id_smart_material,
+		str_name = "Smart Cookies",
+		str_desc = "A farmer’s dozen of smart cookies. Well, they aren’t really cookies per se, more like little bland condensed patties of your crop. Whatever they are, they’re undeniably smart.",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_phosphorpoppies, item_id_pawpaw, item_id_sludgeberries],
+	),
+	EwGeneralItem(
+		id_item = item_id_beautiful_material,
+		str_name = "Beauty Spots",
+		str_desc = "A small collection of severed beauty spots, mostly freckles and moles, that were presumably waiting for you if you had eaten your crops instead of milling them. Damn, what a missed opportunity!",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_poketubers, item_id_dankwheat, item_id_blacklimes],
+	),
+	EwGeneralItem(
+		id_item = item_id_cute_material,
+		str_name = "Cute Buttons",
+		str_desc = "A wardrobe of cute buttons. You know you should probably be concerned that these lil’ guys were hiding in your crops, but honestly you’re overcome with emotion and feel utterly blessed. Lookit ‘em! They’re adorable! D’awww...",
+		acquisition = acquisition_milling,
+		ingredients = [item_id_pinkrowddishes, item_id_joybeans, item_id_purplekilliflower],
+	),
 ]
 #item_list += ewdebug.debugitem_set
 
@@ -14046,18 +14087,75 @@ cosmetic_items_list = [
 # A map of id_cosmetic to EwCosmeticItem objects.
 cosmetic_map = {}
 
+
 # A list of cosmetic names.
 cosmetic_names = []
 
 smelting_recipe_list = [
 	EwSmeltingRecipe(
-		id_recipe = "cosmetic",
-		str_name = "a cosmetic",
+		id_recipe = "coolcosmetic",
+		str_name = "a cool cosmetic",
 		alias = [
-			"hat",
+			"cool",
+			"coolhat",
 		],
 		ingredients = {
-			item_id_slimepoudrin : 16
+			item_id_slimepoudrin : 4,
+			item_id_cool_material: 1
+
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "toughcosmetic",
+		str_name = "a tough cosmetic",
+		alias = [
+			"tough",
+			"toughhat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_tough_material: 1
+
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "smartcosmetic",
+		str_name = "a smart cosmetic",
+		alias = [
+			"smart",
+			"smarthat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_smart_material: 1
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "beautifulcosmetic",
+		str_name = "a beautiful cosmetic",
+		alias = [
+			"beautiful",
+			"beautifulhat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_beautiful_material: 1
+		},
+		products = cosmetic_names
+	),
+	EwSmeltingRecipe(
+		id_recipe = "cutecosmetic",
+		str_name = "a cute cosmetic",
+		alias = [
+			"cute",
+			"cutehat",
+		],
+		ingredients = {
+			item_id_slimepoudrin : 4,
+			item_id_cute_material: 1
 		},
 		products = cosmetic_names
 	),
@@ -16691,7 +16789,7 @@ for cosmetic in cosmetic_items_list:
 	cosmetic_map[cosmetic.id_cosmetic] = cosmetic
 	cosmetic_names.append(cosmetic.id_cosmetic)
 
-	# Add food to its vendors' lists.
+	# Add cosmetics to its vendors' lists.
 	for vendor in cosmetic.vendors:
 		vendor_list = vendor_inv.get(vendor)
 
@@ -17458,7 +17556,7 @@ help_responses = {
 	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
 	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 4 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
 	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.5 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
 	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 0.75. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
@@ -17470,7 +17568,7 @@ help_responses = {
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
 	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. By default, it has a damage and attack cost mod of 3, sap piercing 15, and a 0% change to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 3, sap piercing 15, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }
