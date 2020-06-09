@@ -625,6 +625,7 @@ async def fashion(cmd):
 		)
 
 		adorned_cosmetics = []
+		adorned_ids = []
 
 		adorned_styles = []
 
@@ -639,16 +640,18 @@ async def fashion(cmd):
 
 				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
 
-				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
-
 				adorned_styles.append(c.item_props.get('fashion_style'))
 
-				if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
-					for stat in ewcfg.playerstats_list:
-						if abs(int(c.item_props[stat])) > 0:
-							stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
+				if c.item_props['id_cosmetic'] not in adorned_ids:
+					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+						for stat in ewcfg.playerstats_list:
+							if abs(int(c.item_props[stat])) > 0:
+								stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
 
 				space_adorned += int(c.item_props['size'])
+
+				adorned_ids.append(c.item_props['id_cosmetic'])
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 		# show all the cosmetics that you have adorned.
 		if len(adorned_cosmetics) > 0:
@@ -718,6 +721,7 @@ async def fashion(cmd):
 		)
 
 		adorned_cosmetics = []
+		adorned_ids = []
 
 		adorned_styles = []
 
@@ -732,16 +736,18 @@ async def fashion(cmd):
 
 				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
 
-				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
-
 				adorned_styles.append(c.item_props.get('fashion_style'))
 
-				if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
-					for stat in ewcfg.playerstats_list:
-						if abs(int(c.item_props[stat])) > 0:
-							stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
+				if c.item_props['id_cosmetic'] not in adorned_ids:
+					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+						for stat in ewcfg.playerstats_list:
+							if abs(int(c.item_props[stat])) > 0:
+								stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
 
 				space_adorned += int(c.item_props['size'])
+
+				adorned_ids.append(c.item_props['id_cosmetic'])
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 		# show all the cosmetics that you have adorned.
 		if len(adorned_cosmetics) > 0:
