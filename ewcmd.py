@@ -712,7 +712,7 @@ async def fashion(cmd):
 		user_data = EwUser(member = member, data_level = 1)
 
 		cosmetic_items = ewitem.inventory(
-			id_user = cmd.message.author.id,
+			id_user = member.id,
 			id_server = cmd.message.server.id,
 			item_type_filter = ewcfg.it_cosmetic
 		)
