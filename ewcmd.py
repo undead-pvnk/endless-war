@@ -245,19 +245,16 @@ def gen_data_text(
 		if len(adorned_cosmetics) > 0:
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
-			outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
-			user_data.persist()
-
 			if user_data.freshness < ewcfg.freshnesslevel_1:
-				response_block += "Their outfit is starting to look pretty fresh. "
+				response = "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
 			elif user_data.freshness < ewcfg.freshnesslevel_2:
-				response_block += "Their outfit is low-key on point, not gonna lie. "
+				response = "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
 			elif user_data.freshness < ewcfg.freshnesslevel_3:
-				response_block += "Their outfit is lookin’ fresh as hell, goddamn! "
+				response = "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
 			elif user_data.freshness < ewcfg.freshnesslevel_4:
-				response_block += "Their outfit is straight up **GOALS!** "
+				response = "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
 			else:
-				response_block += "Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** "
+				response = "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
 
 		statuses = user_data.getStatusEffects()
 
@@ -755,11 +752,16 @@ async def fashion(cmd):
 			if len(adorned_cosmetics) >= 2:
 				response += "\n\n"
 
-				outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-				user_data.persist()
-
-				if outfit_map is not None:
-					response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
+				if user_data.freshness < ewcfg.freshnesslevel_1:
+					response = "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
+				elif user_data.freshness < ewcfg.freshnesslevel_2:
+					response = "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
+				elif user_data.freshness < ewcfg.freshnesslevel_3:
+					response = "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
+				elif user_data.freshness < ewcfg.freshnesslevel_4:
+					response = "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
+				else:
+					response = "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
 
 			response += " Their total freshness rating is {}.\n\n".format(user_data.freshness)
 
