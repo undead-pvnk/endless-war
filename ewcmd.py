@@ -246,15 +246,15 @@ def gen_data_text(
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
 			if user_data.freshness < ewcfg.freshnesslevel_1:
-				response = "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
+				response_block += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model. "
 			elif user_data.freshness < ewcfg.freshnesslevel_2:
-				response = "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
+				response_block += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid. "
 			elif user_data.freshness < ewcfg.freshnesslevel_3:
-				response = "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
+				response_block += "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian. "
 			elif user_data.freshness < ewcfg.freshnesslevel_4:
-				response = "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
+				response_block += "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following. "
 			else:
-				response = "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
+				response_block += "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city. "
 
 		statuses = user_data.getStatusEffects()
 
@@ -753,15 +753,15 @@ async def fashion(cmd):
 				response += "\n\n"
 
 				if user_data.freshness < ewcfg.freshnesslevel_1:
-					response = "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
+					response += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
 				elif user_data.freshness < ewcfg.freshnesslevel_2:
-					response = "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
+					response += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
 				elif user_data.freshness < ewcfg.freshnesslevel_3:
-					response = "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
+					response += "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
 				elif user_data.freshness < ewcfg.freshnesslevel_4:
-					response = "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
+					response += "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
 				else:
-					response = "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
+					response += "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
 
 			response += " Their total freshness rating is {}.\n\n".format(user_data.freshness)
 
