@@ -747,6 +747,7 @@ async def fashion(cmd):
 				space_adorned += int(c.item_props['size'])
 
 				adorned_ids.append(c.item_props['id_cosmetic'])
+				print(adorned_ids)
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 		# show all the cosmetics that you have adorned.
