@@ -245,19 +245,16 @@ def gen_data_text(
 		if len(adorned_cosmetics) > 0:
 			response_block += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
 
-			outfit_map = ewutils.get_outfit_info(id_user = user_data.id_user, id_server = user_data.id_server)
-			user_data.persist()
-
-			if user_data.freshness < 1000:
-				response_block += "Their outfit is starting to look pretty fresh. "
-			elif user_data.freshness < 3000:
-				response_block += "Their outfit is low-key on point, not gonna lie. "
-			elif user_data.freshness < 4000:
-				response_block += "Their outfit is lookin’ fresh as hell, goddamn! "
-			elif user_data.freshness < 5000:
-				response_block += "Their outfit is straight up **GOALS!** "
+			if user_data.freshness < ewcfg.freshnesslevel_1:
+				response_block += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model. "
+			elif user_data.freshness < ewcfg.freshnesslevel_2:
+				response_block += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid. "
+			elif user_data.freshness < ewcfg.freshnesslevel_3:
+				response_block += "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian. "
+			elif user_data.freshness < ewcfg.freshnesslevel_4:
+				response_block += "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following. "
 			else:
-				response_block += "Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** "
+				response_block += "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city. "
 
 		statuses = user_data.getStatusEffects()
 
@@ -618,93 +615,192 @@ async def hunger(cmd):
 
 """ Check your outfit. """
 async def fashion(cmd):
-	user_data = EwUser(member=cmd.message.author, data_level = 1)
+	if cmd.mentions_count == 0:
+		user_data = EwUser(member=cmd.message.author, data_level = 1)
 
-	cosmetic_items = ewitem.inventory(
-		id_user = cmd.message.author.id,
-		id_server = cmd.message.server.id,
-		item_type_filter = ewcfg.it_cosmetic
-	)
+		cosmetic_items = ewitem.inventory(
+			id_user = cmd.message.author.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
 
-	adorned_cosmetics = []
+		adorned_cosmetics = []
+		adorned_ids = []
 
-	adorned_styles = []
+		adorned_styles = []
 
-	stats_breakdown = {}
+		stats_breakdown = {}
 
-	space_adorned = 0
+		space_adorned = 0
 
-	for cosmetic in cosmetic_items:
-		c = EwItem(id_item = cosmetic.get('id_item'))
+		for cosmetic in cosmetic_items:
+			c = EwItem(id_item = cosmetic.get('id_item'))
 
-		if c.item_props['adorned'] == 'true':
-			hue = ewcfg.hue_map.get(c.item_props.get('hue'))
-			adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
-			adorned_styles.append(c.item_props.get('fashion_style'))
-			if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
-				for stat in ewcfg.playerstats_list:
-					if abs(int(c.item_props[stat])) > 0:
-						stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
-			space_adorned += int(c.item_props['size'])
+			if c.item_props['adorned'] == 'true':
 
-	# show all the cosmetics that you have adorned.
-	if len(adorned_cosmetics) > 0:
-		response = "You whip out your smartphone and reverse your camera around to thoroughly analyze yourself.\n\n"
-		response += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
 
-		# fashion outfit, freshness rating.
-		if len(adorned_cosmetics) >= 2:
-			response += "\n\n"
+				adorned_styles.append(c.item_props.get('fashion_style'))
 
-			outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
-			user_data.persist()
+				if c.item_props['id_cosmetic'] not in adorned_ids:
+					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+						for stat in ewcfg.playerstats_list:
+							if abs(int(c.item_props[stat])) > 0:
+								stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
 
-			if outfit_map is not None:
-				response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
+				space_adorned += int(c.item_props['size'])
+
+				adorned_ids.append(c.item_props['id_cosmetic'])
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+
+		# show all the cosmetics that you have adorned.
+		if len(adorned_cosmetics) > 0:
+			response = "You whip out your smartphone and reverse your camera around to thoroughly analyze yourself.\n\n"
+			response += "You have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			# fashion outfit, freshness rating.
+			if len(adorned_cosmetics) >= 2:
+				response += "\n\n"
+
+				outfit_map = ewutils.get_outfit_info(id_user = cmd.message.author.id, id_server = cmd.message.server.id)
+				user_data.persist()
+
+				if outfit_map is not None:
+					response += ewutils.get_style_freshness_rating(user_data = user_data, dominant_style = outfit_map['dominant_style'])
 
 			response += " Your total freshness rating is {}.\n\n".format(user_data.freshness)
 
 
-		#gameplay relvant stuff, inspect order
+			#gameplay relvant stuff, inspect order
 
-		response += "All told, your outfit "
+			response += "All told, your outfit "
 
-		stat_responses = []
+			stat_responses = []
 
+			for stat in ewcfg.playerstats_list:
 
+				if stat in stats_breakdown.keys():
+					if abs(int(stats_breakdown[stat])) > 0:
 
-		stats_breakdown["attack"] = user_data.attack
-		stats_breakdown["defense"] = user_data.defense
-		stats_breakdown["speed"] = user_data.speed
+						if int(stats_breakdown[stat]) > 0:
+							stat_response = "increases your "
+						else:
+							stat_response = "decreases your "
 
-		for stat in ewcfg.playerstats_list:
+						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
 
-			if stat in stats_breakdown.keys():
-				if abs(int(stats_breakdown[stat])) > 0:
+						stat_responses.append(stat_response)
 
-					if int(stats_breakdown[stat]) > 0:
-						stat_response = "increases your "
-					else:
-						stat_response = "decreases your "
+			if len(stat_responses) == 0:
+				response += "doesn't affect your stats at all."
+			else:
+				response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
 
-					stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
+			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
 
-					stat_responses.append(stat_response)
+			if space_remaining == 0:
+				response += "You don't have cosmetic space left."
+			else:
+				response += "You have about {amount} adornable space.\n".format(amount = space_remaining)
 
-		if len(stat_responses) == 0:
-			response += "doesn't affect your stats at all."
 		else:
-			response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
-
-		space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
-
-		if space_remaining == 0:
-			response += "You don't have cosmetic space left."
-		else:
-			response += "You have about {amount} adornable space.\n".format(amount = space_remaining)
+			response = "You aren't wearing anything!"
 
 	else:
-		response = "You aren't wearing anything!"
+		member = cmd.mentions[0]
+		user_data = EwUser(member = member, data_level = 1)
+
+		cosmetic_items = ewitem.inventory(
+			id_user = member.id,
+			id_server = cmd.message.server.id,
+			item_type_filter = ewcfg.it_cosmetic
+		)
+
+		adorned_cosmetics = []
+		adorned_ids = []
+
+		adorned_styles = []
+
+		stats_breakdown = {}
+
+		space_adorned = 0
+
+		for cosmetic in cosmetic_items:
+			c = EwItem(id_item = cosmetic.get('id_item'))
+
+			if c.item_props['adorned'] == 'true':
+
+				hue = ewcfg.hue_map.get(c.item_props.get('hue'))
+
+				adorned_styles.append(c.item_props.get('fashion_style'))
+
+				if c.item_props['id_cosmetic'] not in adorned_ids:
+					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
+						for stat in ewcfg.playerstats_list:
+							if abs(int(c.item_props[stat])) > 0:
+								stats_breakdown[stat] = stats_breakdown.get(stat, 0) + int(c.item_props[stat])
+
+				space_adorned += int(c.item_props['size'])
+
+				adorned_ids.append(c.item_props['id_cosmetic'])
+				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
+
+		# show all the cosmetics that you have adorned.
+		if len(adorned_cosmetics) > 0:
+			response = "You take out your smartphone and tab back over to {}'s Instagrime account to obsessively analyze their latest outfit with a mixture of unearned superiority and unbridled jealousy.\n\n".format(member.display_name)
+			response += "They have a {} adorned. ".format(ewutils.formatNiceList(adorned_cosmetics, 'and'))
+
+			# fashion outfit, freshness rating.
+			if len(adorned_cosmetics) >= 2:
+				response += "\n\n"
+
+				if user_data.freshness < ewcfg.freshnesslevel_1:
+					response += "Their outfit is starting to look pretty fresh, but They’ve got a long way to go if they wanna be NLACakaNM’s next top model."
+				elif user_data.freshness < ewcfg.freshnesslevel_2:
+					response += "Their outfit is low-key on point, not gonna lie. They’re goin’ places, kid."
+				elif user_data.freshness < ewcfg.freshnesslevel_3:
+					response += "Their outfit is lookin’ fresh as hell, goddamn! They shop so much they can probably speak Italian."
+				elif user_data.freshness < ewcfg.freshnesslevel_4:
+					response += "Their outfit is straight up **GOALS!** Like, honestly. I’m being, like, totally sincere right now. Their Instragrime has attracted a small following."
+				else:
+					response += "Holy shit! Their outfit is downright, positively, without a doubt, 100% **ON FLEEK!!** They’ve blown up on Instragrime, and they’ve got modeling gigs with fashion labels all across the city."
+
+			response += " Their total freshness rating is {}.\n\n".format(user_data.freshness)
+
+			# gameplay relvant stuff, inspect order
+
+			response += "All told, their outfit "
+
+			stat_responses = []
+
+			for stat in ewcfg.playerstats_list:
+
+				if stat in stats_breakdown.keys():
+					if abs(int(stats_breakdown[stat])) > 0:
+
+						if int(stats_breakdown[stat]) > 0:
+							stat_response = "increases your "
+						else:
+							stat_response = "decreases your "
+
+						stat_response += "{stat} by {amount}".format(stat = stat, amount = int(stats_breakdown[stat]))
+
+						stat_responses.append(stat_response)
+
+			if len(stat_responses) == 0:
+				response += "doesn't affect their stats at all."
+			else:
+				response += ewutils.formatNiceList(names = stat_responses, conjunction = "and") + ". \n\n"
+
+			space_remaining = ewutils.max_adornspace_bylevel(user_data.slimelevel) - space_adorned
+
+			if space_remaining == 0:
+				response += "They don't have cosmetic space left."
+			else:
+				response += "They have about {amount} adornable space.\n".format(amount = space_remaining)
+
+		else:
+			response = "...But they aren't wearing anything!"
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -2256,6 +2352,26 @@ async def set_slime(cmd):
 		return
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+# Debug
+async def check_stats(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	response = ""
+
+	if cmd.mentions_count != 1:
+		response = "Invalid use of command. Example: !checkstats @player "
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		target = cmd.mentions[0]
+
+	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 1)
+
+	if target_user_data != None:
+		response = "They have {} attack, {}  defense, and {} speed.".format(target_user_data.attack, target_user_data.defense, target_user_data.speed)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def prank(cmd):

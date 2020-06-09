@@ -729,6 +729,7 @@ cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -12801,6 +12802,11 @@ style_tough = "tough"
 style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
+
+freshnesslevel_1 = 500
+freshnesslevel_2 = 100
+freshnesslevel_3 = 2000
+freshnesslevel_4 = 3000
 
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
 base_durability = 250000 # 1 mega
