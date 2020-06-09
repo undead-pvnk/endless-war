@@ -739,6 +739,8 @@ async def fashion(cmd):
 				adorned_styles.append(c.item_props.get('fashion_style'))
 
 				if c.item_props['id_cosmetic'] not in adorned_ids:
+					print(c.item_props['id_cosmetic'])
+					print("1")
 					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
 						for stat in ewcfg.playerstats_list:
 							if abs(int(c.item_props[stat])) > 0:
