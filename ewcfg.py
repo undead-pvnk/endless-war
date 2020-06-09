@@ -12799,6 +12799,11 @@ style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
 
+freshnesslevel_1 = 500
+freshnesslevel_2 = 100
+freshnesslevel_3 = 2000
+freshnesslevel_4 = 3000
+
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
 base_durability = 250000 # 1 mega
 
