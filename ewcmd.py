@@ -677,10 +677,6 @@ async def fashion(cmd):
 
 			stat_responses = []
 
-			stats_breakdown["attack"] = user_data.attack
-			stats_breakdown["defense"] = user_data.defense
-			stats_breakdown["speed"] = user_data.speed
-
 			for stat in ewcfg.playerstats_list:
 
 				if stat in stats_breakdown.keys():
@@ -739,8 +735,6 @@ async def fashion(cmd):
 				adorned_styles.append(c.item_props.get('fashion_style'))
 
 				if c.item_props['id_cosmetic'] not in adorned_ids:
-					print(c.item_props['id_cosmetic'])
-					print("1")
 					if any(stat in c.item_props.keys() for stat in ewcfg.playerstats_list):
 						for stat in ewcfg.playerstats_list:
 							if abs(int(c.item_props[stat])) > 0:
@@ -749,7 +743,6 @@ async def fashion(cmd):
 				space_adorned += int(c.item_props['size'])
 
 				adorned_ids.append(c.item_props['id_cosmetic'])
-				print(adorned_ids)
 				adorned_cosmetics.append((hue.str_name + " " if hue != None else "") + cosmetic.get('name'))
 
 		# show all the cosmetics that you have adorned.
@@ -779,10 +772,6 @@ async def fashion(cmd):
 			response += "All told, their outfit "
 
 			stat_responses = []
-
-			stats_breakdown["attack"] = user_data.attack
-			stats_breakdown["defense"] = user_data.defense
-			stats_breakdown["speed"] = user_data.speed
 
 			for stat in ewcfg.playerstats_list:
 
@@ -2363,6 +2352,26 @@ async def set_slime(cmd):
 		return
 
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+
+
+# Debug
+async def check_stats(cmd):
+	if not cmd.message.author.server_permissions.administrator:
+		return
+
+	response = ""
+
+	if cmd.mentions_count != 1:
+		response = "Invalid use of command. Example: !checkstats @player "
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
+	else:
+		target = cmd.mentions[0]
+
+	target_user_data = EwUser(id_user = target.id, id_server = cmd.message.server.id, data_level = 1)
+
+	if target_user_data != None:
+		response = "They have {} attack, {}  defense, and {} speed.".format(target_user_data.attack, target_user_data.defense, target_user_data.speed)
+		return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 
 async def prank(cmd):
