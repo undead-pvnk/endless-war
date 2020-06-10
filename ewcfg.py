@@ -977,6 +977,7 @@ cmd_hiss = cmd_prefix + 'hiss'
 cmd_jiggle = cmd_prefix + 'jiggle'
 cmd_request_petting = cmd_prefix + 'requestpetting'
 cmd_rampage = cmd_prefix + 'rampage'
+cmd_flutter = cmd_prefix + 'flutter'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -18403,6 +18404,7 @@ races = {
 	'slime-derived': 'slime-derived',
 	'monster': 'monster',
 	'critter': 'critter',
+	'avian': 'avian',
 	'other': 'other',
 }
 

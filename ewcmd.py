@@ -404,6 +404,8 @@ async def data(cmd):
 			race_prefix = "small "
 		elif user_data.race == ewcfg.races["monster"]:
 			race_prefix = "monstrous "
+		elif user_data.race == ewcfg.races["avian"]:
+			race_prefix = "feathery "
 		elif user_data.race == ewcfg.races["other"]:
 			race_prefix = "peculiar "
 		elif user_data.race != "":

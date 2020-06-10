@@ -707,7 +707,7 @@ cmd_map = {
 	ewcfg.cmd_yiff: ewrace.yiff,
 	ewcfg.cmd_hiss: ewrace.hiss,
 	ewcfg.cmd_jiggle: ewrace.jiggle,
-	ewcfg.cmd_jiggle: ewrace.jiggle,
+	ewcfg.cmd_flutter: ewrace.flutter,
 	ewcfg.cmd_request_petting: ewrace.request_petting,
 	ewcfg.cmd_rampage: ewrace.rampage,
 	ewcfg.cmd_confuse: ewrace.confuse,
