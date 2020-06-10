@@ -634,6 +634,12 @@ cmd_map = {
 	# restores poi roles to their proper names, only usable by admins
 	ewcfg.cmd_restoreroles: ewrolemgr.restoreRoleNames,
 	
+	# hides all poi role names, only usable by admins
+	ewcfg.cmd_hiderolenames: ewrolemgr.hideRoleNames,
+	
+	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
+	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
+	
 	# sets permissions for all poi channels in the server
 	ewcfg.cmd_changepermissions: ewrolemgr.change_perms,
 	
@@ -779,8 +785,8 @@ async def on_ready():
 	fake_observer = EwUser()
 	fake_observer.life_state = ewcfg.life_state_observer
 	for poi in ewcfg.poi_list:
-		# if poi.role != None:
-		# 	poi.role = ewutils.mapRoleName(poi.role)
+		if poi.role != None:
+			poi.role = ewutils.mapRoleName(poi.role)
 
 		neighbors = []
 		neighbor_ids = []
@@ -848,9 +854,6 @@ async def on_ready():
 		
 		# Refresh the permissions of all users
 		await ewrolemgr.refresh_user_perms(client = client, id_server = server.id, startup = True)
-
-		# hides the names of poi roles
-		# await ewrolemgr.hideRoleNames(client = client, id_server = server.id)
 
 		# Grep around for channels
 		ewutils.logMsg("connected to server: {}".format(server.name))

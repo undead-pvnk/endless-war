@@ -72,14 +72,15 @@ class EwRole:
 def setupRoles(client = None, id_server = ""):
 	
 	roles_map = ewutils.getRoleMap(client.get_server(id_server).roles)
-	# for poi in ewcfg.poi_list:
-	# 	if poi.role in roles_map:
-	# 		try:
-	# 			role_data = EwRole(id_server = id_server, name = poi.role)
-	# 			role_data.id_role = roles_map[poi.role].id
-	# 			role_data.persist()
-	# 		except:
-	# 			ewutils.logMsg('Failed to set up role {}'.format(poi.role))
+	print('roles map: {}'.format(roles_map))
+	for poi in ewcfg.poi_list:
+		if poi.role in roles_map:
+			try:
+				role_data = EwRole(id_server = id_server, name = poi.role)
+				role_data.id_role = roles_map[poi.role].id
+				role_data.persist()
+			except:
+				ewutils.logMsg('Failed to set up role {}'.format(poi.role))
 
 	for faction_role in ewcfg.faction_roles:
 		if faction_role in roles_map:
@@ -102,7 +103,9 @@ def setupRoles(client = None, id_server = ""):
 """
 	Hide the names of poi roles behind a uniform alias
 """
-async def hideRoleNames(client = None, id_server = ""):
+async def hideRoleNames(cmd):
+	id_server = cmd.message.server.id
+	client = ewutils.get_client()
 	
 	server = client.get_server(id_server)
 	roles_map = ewutils.getRoleMap(server.roles)
@@ -134,6 +137,51 @@ async def restoreRoleNames(cmd):
 					await client.edit_role(server = server, role = role, name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
+			
+"""
+	Creates all POI roles from scratch. Ideally, this is only used in test servers.
+"""
+async def recreateRoles(cmd):
+	member = cmd.message.author
+	
+	if not member.server_permissions.administrator:
+		return
+	
+	client = cmd.client
+	server = client.get_server(cmd.message.server.id)
+	
+	server_role_names = []
+	
+	for role in server.roles:
+		server_role_names.append(role.name)	
+	
+	for poi in ewcfg.poi_list:
+		# Skip over roles that have already been created when applicable
+
+		if poi.role != None:
+
+			if poi.role in server_role_names:
+				continue
+			
+			await client.create_role(server = server, name = poi.role)
+			ewutils.logMsg('created role {} for poi {}'.format(poi.role, poi.id_poi))
+
+		if poi.major_role != None and poi.major_role != ewcfg.role_null_major_role:
+			
+			if poi.major_role in server_role_names:
+				continue
+				
+			await client.create_role(server = server, name = poi.major_role)
+			ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
+
+		if poi.minor_role != None and poi.minor_role != ewcfg.role_null_minor_role:
+			
+			if poi.minor_role in server_role_names:
+				continue
+			
+			await client.create_role(server = server, name = poi.minor_role)
+			ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
+
 
 """
 	Fix the Discord roles assigned to this member.
@@ -213,25 +261,25 @@ async def updateRoles(
 		faction_roles_remove.remove(tutorial_role)
 
 	# Manage location roles.
-	# user_poi = ewcfg.id_to_poi.get(user_data.poi)
-	# print(user_poi.id_poi)
-	# if user_poi != None:
-	# 	poi_role = user_poi.role
-	# 	poi_permissions = user_poi.permissions
-	# else:
-	# 	poi_role = None
-	# 	poi_permissions = None
-		
-		
-	poi_permissions_remove = []
-	# for poi in ewcfg.poi_list:
-	# 	if poi.permissions != None and poi.permissions != poi_permissions:
-	# 		poi_permissions_remove.append(poi.id_poi)
+	user_poi = ewcfg.id_to_poi.get(user_data.poi)
+	#print(user_poi.id_poi)
+	if user_poi != None:
+		poi_role = user_poi.role
+		poi_permissions = user_poi.permissions
+	else:
+		poi_role = None
+		poi_permissions = None
 
-	# poi_roles_remove = []
-	# for poi in ewcfg.poi_list:
-	# 	if poi.role != None and poi.role != poi_role:
-	# 		poi_roles_remove.append(poi.role)
+
+	poi_permissions_remove = []
+	for poi in ewcfg.poi_list:
+		if poi.permissions != None and poi.permissions != poi_permissions:
+			poi_permissions_remove.append(poi.id_poi)
+
+	poi_roles_remove = []
+	for poi in ewcfg.poi_list:
+		if poi.role != None and poi.role != poi_role:
+			poi_roles_remove.append(poi.role)
 
 	misc_roles_remove = [
 		ewcfg.role_gellphone,
@@ -303,13 +351,13 @@ async def updateRoles(
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(tutorial_role))
 
-	# try:
-	# 	role_data = EwRole(id_server = id_server, name = poi_role)
-	# 	if not role_data.id_role in role_ids:
-	# 		role_ids.append(role_data.id_role)
-	# 		#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
-	# except:
-	# 	ewutils.logMsg('error: couldn\'t find role {}'.format(poi_role))
+	try:
+		role_data = EwRole(id_server = id_server, name = poi_role)
+		if not role_data.id_role in role_ids:
+			role_ids.append(role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = role_gellphone)
@@ -327,10 +375,10 @@ async def updateRoles(
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(role_slimernalia))
 
-	#if faction_role not in role_names:
-	#	role_names.append(faction_role)
-	#if poi_role != None and poi_role not in role_names:
-	#	role_names.append(poi_role)
+	# if faction_role not in role_names:
+	# 	role_names.append(faction_role)
+	# if poi_role != None and poi_role not in role_names:
+	# 	role_names.append(poi_role)
 
 	#replacement_roles = []
 	#for name in role_names:

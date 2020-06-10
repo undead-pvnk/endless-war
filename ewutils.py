@@ -388,6 +388,7 @@ def getRoleMap(roles):
 	roles_map = {}
 
 	for role in roles:
+		print('rolename: {}'.format(role.name))
 		roles_map[mapRoleName(role.name)] = role
 
 	return roles_map

@@ -1870,6 +1870,8 @@ async def boot(cmd):
 				moved_user_data = EwUser(id_user = user, id_server = user_data.id_server)
 				moved_user_data.poi = new_poi.id_poi
 				moved_user_data.persist()
+				
+				
 		response = "@everyone has been moved to {}".format(new_poi.id_poi)
 
 	else:
