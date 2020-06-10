@@ -53,6 +53,7 @@ import ewdungeons
 import ewads
 import ewbook
 import ewsports
+import ewrace
 import ewdebug
 
 from ewitem import EwItem
@@ -696,18 +697,20 @@ cmd_map = {
 	ewcfg.cmd_prank: ewcmd.prank,
 
 	# race
-	ewcfg.cmd_set_race: ewcmd.set_race,
-	ewcfg.cmd_set_race_alt1: ewcmd.set_race,
-	ewcfg.cmd_reset_race: ewcmd.reset_race,
-	ewcfg.cmd_exist: ewcmd.exist,
-	ewcfg.cmd_ree: ewcmd.ree,
-	ewcfg.cmd_autocannibalize: ewcmd.autocannibalize,
-	ewcfg.cmd_rattle: ewcmd.rattle,
-	ewcfg.cmd_beep: ewcmd.beep,
-	ewcfg.cmd_yiff: ewcmd.yiff,
-	ewcfg.cmd_hiss: ewcmd.hiss,
-	ewcfg.cmd_jiggle: ewcmd.jiggle,
-	ewcfg.cmd_confuse: ewcmd.confuse,
+	ewcfg.cmd_set_race: ewrace.set_race,
+	ewcfg.cmd_set_race_alt1: ewrace.set_race,
+	ewcfg.cmd_exist: ewrace.exist,
+	ewcfg.cmd_ree: ewrace.ree,
+	ewcfg.cmd_autocannibalize: ewrace.autocannibalize,
+	ewcfg.cmd_rattle: ewrace.rattle,
+	ewcfg.cmd_beep: ewrace.beep,
+	ewcfg.cmd_yiff: ewrace.yiff,
+	ewcfg.cmd_hiss: ewrace.hiss,
+	ewcfg.cmd_jiggle: ewrace.jiggle,
+	ewcfg.cmd_jiggle: ewrace.jiggle,
+	ewcfg.cmd_request_petting: ewrace.request_petting,
+	ewcfg.cmd_rampage: ewrace.rampage,
+	ewcfg.cmd_confuse: ewrace.confuse,
 }
 
 debug = False

@@ -967,7 +967,6 @@ cmd_canceltrade = cmd_prefix + 'canceltrade'
 # race
 cmd_set_race = cmd_prefix + 'setrace'
 cmd_set_race_alt1 = cmd_prefix + 'identifyas'
-cmd_reset_race = cmd_prefix + 'resetrace'
 cmd_exist = cmd_prefix + 'exist'
 cmd_ree = cmd_prefix + 'ree'
 cmd_autocannibalize = cmd_prefix + 'autocannibalize'
@@ -976,6 +975,8 @@ cmd_beep = cmd_prefix + 'beep'
 cmd_yiff = cmd_prefix + 'yiff'
 cmd_hiss = cmd_prefix + 'hiss'
 cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_request_petting = cmd_prefix + 'requestpetting'
+cmd_rampage = cmd_prefix + 'rampage'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -18400,7 +18401,9 @@ races = {
 	'furry': 'furry',
 	'scalie': 'scalie',
 	'slime-derived': 'slime-derived',
-	'other': 'other'
+	'monster': 'monster',
+	'critter': 'critter',
+	'other': 'other',
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
