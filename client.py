@@ -1256,7 +1256,7 @@ async def on_message(message):
 		)
 
 	content_tolower = message.content.lower()
-	content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
+	# content_tolower_string = ewutils.flattenTokenListToString(content_tolower.split(" "))
 	re_awoo = re.compile('.*![a]+[w]+o[o]+.*')
 	re_moan = re.compile('.*![b]+[r]+[a]+[i]+[n]+[z]+.*')
 
@@ -1295,7 +1295,7 @@ async def on_message(message):
 			response = "ENDLESS WAR completely and utterly obliterates {} with a bone-hurting beam.".format(message.author.display_name).replace("@", "\{at\}")
 			return await ewutils.send_message(client, message.channel, response)
 	
-	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
+	if message.content.startswith(ewcfg.cmd_prefix) or message.server == None or len(message.author.roles) < 2 or (any(swear in content_tolower for swear in {**ewcfg.curse_words, **ewcfg.racial_slurs}.keys())):
 		"""
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
@@ -1334,8 +1334,7 @@ async def on_message(message):
 		"""
 			Punish the user for swearing.
 		"""
-		if (any(swear in content_tolower_string for swear in ewcfg.curse_words.keys())):
-			
+		if (any(swear in content_tolower for swear in {**ewcfg.curse_words, **ewcfg.racial_slurs}.keys())):
 			swear_multiplier = 0
 			
 			#print(content_tolower_string)
@@ -1354,13 +1353,13 @@ async def on_message(message):
 					if swear == "kraker" and usermodel.faction == ewcfg.faction_killers:
 						continue
 
-					swear_count = content_tolower_string.count(swear)
+					swear_count = content_tolower.count(swear)
 
 					# Niche scenarios. If certain words are used, don't count their components as swears.
-					if swear == "fuck" and (content_tolower_string.count('<rowdyfucker431275088076079105>') > 0 or content_tolower_string.count('<fucker431424220837183489>') > 0):
+					if swear == "fuck" and (content_tolower.count('<rowdyfucker431275088076079105>') > 0 or content_tolower.count('<fucker431424220837183489>') > 0):
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
-					elif swear == "mick" and (content_tolower_string.count('gimmick') > 0):
+					elif swear == "mick" and (content_tolower.count('gimmick') > 0):
 						#print('swear detection turned off for {}.'.format(swear))
 						continue
 					elif swear == "shit" and "shit" not in content_tolower:
@@ -1377,8 +1376,17 @@ async def on_message(message):
 
 						usermodel.swear_jar += 1
 
+				# and all the racial slurs
+				for slur in ewcfg.racial_slurs.keys():
+					if usermodel.race != ewcfg.racial_slurs[slur]:
+						slur_count = content_tolower.count(slur)
+
+						swear_multiplier += 51 * slur_count # just enough for the message to show
+						market_data.global_swear_jar += slur_count
+						usermodel.swear_jar += slur_count
+
 				# don't fine the user or send out the message if there weren't enough curse words
-				if swear_multiplier > 20:
+				if swear_multiplier > 50:
 
 					# fine the user for swearing, based on how much they've sworn right now, as well as in the past
 					swear_jar_fee = usermodel.swear_jar * swear_multiplier * 10000
