@@ -13171,6 +13171,7 @@ for poi in poi_list:
 		for mother_poi in poi_list:
 			if mother_poi.id_poi in poi.mother_districts:
 				poi.major_role = mother_poi.major_role
+				break
 	
 	if poi.is_street:
 		for father_poi in poi_list:

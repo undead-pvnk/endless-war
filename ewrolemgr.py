@@ -80,6 +80,22 @@ def setupRoles(client = None, id_server = ""):
 				role_data.persist()
 			except:
 				ewutils.logMsg('Failed to set up role {}'.format(poi.role))
+		
+		if poi.major_role in roles_map:
+			try:
+				role_data = EwRole(id_server = id_server, name = poi.major_role)
+				role_data.id_role = roles_map[poi.major_role].id
+				role_data.persist()
+			except:
+				ewutils.logMsg('Failed to set up major role {}'.format(poi.major_role))
+				
+		if poi.minor_role in roles_map:
+			try:
+				role_data = EwRole(id_server = id_server, name = poi.minor_role)
+				role_data.id_role = roles_map[poi.minor_role].id
+				role_data.persist()
+			except:
+				ewutils.logMsg('Failed to set up minor role {}'.format(poi.minor_role))
 
 	for faction_role in ewcfg.faction_roles:
 		if faction_role in roles_map:
@@ -115,6 +131,20 @@ async def hideRoleNames(cmd):
 				await client.edit_role(server = server, role = role, name = ewcfg.generic_role_name)
 		except:
 			ewutils.logMsg('Failed to hide role name for {}'.format(poi.role))
+			
+		try:
+			if poi.major_role in roles_map:
+				major_role = roles_map[poi.major_role]
+				await client.edit_role(server = server, role = major_role, name = ewcfg.generic_role_name)
+		except:
+			ewutils.logMsg('Failed to hide role name for {}'.format(poi.major_role))
+			
+		try:
+			if poi.minor_role in roles_map:
+				minor_role = roles_map[poi.minor_role]
+				await client.edit_role(server = server, role = minor_role, name = ewcfg.generic_role_name)
+		except:
+			ewutils.logMsg('Failed to hide role name for {}'.format(poi.minor_role))
 
 """
 	Restore poi roles to their original names
@@ -136,6 +166,22 @@ async def restoreRoleNames(cmd):
 					await client.edit_role(server = server, role = role, name = role_data.name)
 		except:
 			ewutils.logMsg('Failed to restore role name for {}'.format(poi.role))
+			
+		try:
+			major_role_data = EwRole(id_server = server.id, name = poi.major_role)
+			for role in server.roles:
+				if role.id == major_role_data.id_role:
+					await client.edit_role(server = server, role = role, name = major_role_data.name)
+		except:
+			ewutils.logMsg('Failed to restore role name for {}'.format(poi.major_role))
+			
+		try:
+			minor_role_data = EwRole(id_server = server.id, name = poi.minor_role)
+			for role in server.roles:
+				if role.id == minor_role_data.id_role:
+					await client.edit_role(server = server, role = role, name = minor_role_data.name)
+		except:
+			ewutils.logMsg('Failed to restore role name for {}'.format(poi.minor_role))
 			
 """
 	Creates all POI roles from scratch. Ideally, this is only used in test servers.
@@ -164,7 +210,7 @@ async def recreateRoles(cmd):
 		# 	if poi.role not in server_role_names:
 		# 		await client.create_role(server=server, name=poi.role)
 		# 		ewutils.logMsg('created role {} for poi {}'.format(poi.role, poi.id_poi))
-		# 		
+		# 
 		# 		roles_created += 1
 
 		if poi.major_role != None and poi.major_role != ewcfg.role_null_major_role:
@@ -330,10 +376,14 @@ async def updateRoles(
 	user_poi = ewcfg.id_to_poi.get(user_data.poi)
 	#print(user_poi.id_poi)
 	if user_poi != None:
-		poi_role = user_poi.role
+		# poi_role = user_poi.role
+		poi_major_role = user_poi.major_role
+		poi_minor_role = user_poi.minor_role
 		poi_permissions = user_poi.permissions
 	else:
-		poi_role = None
+		# poi_role = None
+		poi_major_role = None
+		poi_minor_role = None
 		poi_permissions = None
 
 
@@ -344,8 +394,10 @@ async def updateRoles(
 
 	poi_roles_remove = []
 	for poi in ewcfg.poi_list:
-		if poi.role != None and poi.role != poi_role:
-			poi_roles_remove.append(poi.role)
+		if poi.major_role != None and poi.major_role != poi_major_role:
+			poi_roles_remove.append(poi.major_role)
+		if poi.minor_role != None and poi.minor_role != poi_minor_role:
+			poi_roles_remove.append(poi.minor_role)
 
 	misc_roles_remove = [
 		ewcfg.role_gellphone,

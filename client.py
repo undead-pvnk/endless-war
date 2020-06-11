@@ -790,6 +790,10 @@ async def on_ready():
 	for poi in ewcfg.poi_list:
 		if poi.role != None:
 			poi.role = ewutils.mapRoleName(poi.role)
+		if poi.major_role != None:
+			poi.major_role = ewutils.mapRoleName(poi.major_role)
+		if poi.minor_role != None:
+			poi.minor_role = ewutils.mapRoleName(poi.minor_role)
 
 		neighbors = []
 		neighbor_ids = []
