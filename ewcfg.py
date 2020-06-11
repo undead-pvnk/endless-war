@@ -9623,7 +9623,11 @@ poi_list = [
 		#permissions = {poi_id_downtown:permissions_general},
 		property_class = property_class_s,
 		is_district = True,
-		is_capturable = True
+		is_capturable = True,
+		neighbors = {
+			poi_id_smogsburg : 60,
+			poi_id_krakbay : 60,
+		},
 	),
 	EwPoi( # 2
 		id_poi = poi_id_smogsburg,
@@ -9660,6 +9664,9 @@ poi_list = [
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
+		neighbors = {
+			poi_id_downtown : 60,
+		},
 		is_district = True,
 		is_capturable = True
 	),
@@ -9747,6 +9754,9 @@ poi_list = [
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
+		neighbors = {
+			poi_id_downtown : 60,
+		},
 		is_district = True,
 		is_capturable = True
 	),
