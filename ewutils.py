@@ -388,7 +388,6 @@ def getRoleMap(roles):
 	roles_map = {}
 
 	for role in roles:
-		print('rolename: {}'.format(role.name))
 		roles_map[mapRoleName(role.name)] = role
 
 	return roles_map
@@ -2355,3 +2354,34 @@ def get_style_freshness_rating(user_data, dominant_style = None):
 
 	return response
 
+
+def get_subzone_controlling_faction(subzone_id, id_server):
+	
+	subzone = ewcfg.id_to_poi.get(subzone_id)
+	
+	if subzone == None:
+		return
+	else:
+		if not subzone.is_subzone:
+			return
+	
+	mother_pois = subzone.mother_districts
+
+	# Get all the mother pois of a subzone in order to find the father poi, which is either one of the mother pois or the father poi of the mother poi
+	# Subzones such as the food court will have both a district poi and a street poi as one of their mother pois
+	district_data = None
+
+	for mother_poi in mother_pois:
+		if mother_poi.is_district:
+			# One of the mother pois was a district, get its controlling faction
+			district_data = EwDistrict(district=mother_poi, id_server=id_server)
+			break
+		else:
+			# One of the mother pois was a street, get the father district of that street and its controlling faction
+			father_poi = mother_poi.father_poi
+			district_data = EwDistrict(district=father_poi, id_server=id_server)
+			break
+
+	if district_data != None:
+		faction = district_data.controlling_faction
+		return faction

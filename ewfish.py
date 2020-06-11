@@ -482,7 +482,7 @@ async def cast(cmd):
 
 				user_data = EwUser(member=cmd.message.author)
 
-				if fisher.pier == "" or user_data.poi != (fisher.pier.mother_district if fisher.pier.is_subzone else fisher.pier.id_poi):
+				if fisher.pier == "" or user_data.poi != fisher.pier.id_poi:
 					fisher.stop()
 					return
 				if user_data.life_state == ewcfg.life_state_corpse:
@@ -659,12 +659,10 @@ async def reel(cmd):
 				if fisher.current_fish == "plebefish":
 					slime_gain = ewcfg.fish_gain * .5
 					value = 10
-				if poi.is_subzone:
-					district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-				else:
-					district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+					
+				controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-				if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+				if controlling_faction != "" and controlling_faction == user_data.faction:
 					slime_gain *= 2
 
 

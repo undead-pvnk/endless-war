@@ -115,11 +115,11 @@ class EwTransport:
 				stop_data = ewcfg.id_to_poi.get(self.current_stop)
 
 				# announce new stop inside the transport
-				if stop_data.is_subzone:
-					stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
-					response = "We have reached {}.".format(stop_mother.str_name)
-				else:
-					response = "We have reached {}.".format(stop_data.str_name)
+				# if stop_data.is_subzone:
+				# 	stop_mother = ewcfg.id_to_poi.get(stop_data.mother_district)
+				# 	response = "We have reached {}.".format(stop_mother.str_name)
+				# else:
+				response = "We have reached {}.".format(stop_data.str_name)
 
 				next_line = transport_line
 
@@ -132,11 +132,11 @@ class EwTransport:
 				else:
 					next_stop = ewcfg.id_to_poi.get(transport_line.schedule.get(stop_data.id_poi)[1])
 					if next_stop.is_transport_stop:
-						if next_stop.is_subzone:
-							stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
-							response += " The next stop is {}.".format(stop_mother.str_name)
-						else:
-							response += " The next stop is {}.".format(next_stop.str_name)
+						# if next_stop.is_subzone:
+						# 	stop_mother = ewcfg.id_to_poi.get(next_stop.mother_district)
+						# 	response += " The next stop is {}.".format(stop_mother.str_name)
+						# else:
+						response += " The next stop is {}.".format(next_stop.str_name)
 				resp_cont.add_channel_response(poi_data.channel, response)
 
 				# announce transport has arrived at the stop
@@ -345,8 +345,8 @@ async def disembark(cmd):
 		response = "{}ing.".format(cmd.tokens[0][1:].lower()).capitalize()
 
 		stop_poi = ewcfg.id_to_poi.get(transport_data.current_stop)
-		if stop_poi.is_subzone:
-			stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
+		# if stop_poi.is_subzone:
+		# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
 		if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))
@@ -427,9 +427,8 @@ async def disembark(cmd):
 
 		# update user location, if move successful
 		else:
-			if stop_poi.is_subzone:
-				stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
-
+			# if stop_poi.is_subzone:
+			# 	stop_poi = ewcfg.id_to_poi.get(stop_poi.mother_district)
 
 			if ewmap.inaccessible(user_data = user_data, poi = stop_poi):
 				return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, "You're not allowed to go there (bitch)."))

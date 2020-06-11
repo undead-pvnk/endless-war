@@ -72,7 +72,6 @@ class EwRole:
 def setupRoles(client = None, id_server = ""):
 	
 	roles_map = ewutils.getRoleMap(client.get_server(id_server).roles)
-	print('roles map: {}'.format(roles_map))
 	for poi in ewcfg.poi_list:
 		if poi.role in roles_map:
 			try:
@@ -153,34 +152,101 @@ async def recreateRoles(cmd):
 	server_role_names = []
 	
 	for role in server.roles:
-		server_role_names.append(role.name)	
+		server_role_names.append(role.name)
+		
+	# print(server_role_names)
+	roles_created = 0
 	
 	for poi in ewcfg.poi_list:
-		# Skip over roles that have already been created when applicable
 
-		if poi.role != None:
-
-			if poi.role in server_role_names:
-				continue
-			
-			await client.create_role(server = server, name = poi.role)
-			ewutils.logMsg('created role {} for poi {}'.format(poi.role, poi.id_poi))
+		# if poi.role != None:
+		# 
+		# 	if poi.role not in server_role_names:
+		# 		await client.create_role(server=server, name=poi.role)
+		# 		ewutils.logMsg('created role {} for poi {}'.format(poi.role, poi.id_poi))
+		# 		
+		# 		roles_created += 1
 
 		if poi.major_role != None and poi.major_role != ewcfg.role_null_major_role:
-			
-			if poi.major_role in server_role_names:
-				continue
-				
-			await client.create_role(server = server, name = poi.major_role)
-			ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
+
+			if poi.major_role not in server_role_names:
+				await client.create_role(server=server, name=poi.major_role)
+				ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
+
+				roles_created += 1
 
 		if poi.minor_role != None and poi.minor_role != ewcfg.role_null_minor_role:
+
+			if poi.minor_role not in server_role_names:
+				await client.create_role(server=server, name=poi.minor_role)
+				ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
+
+				roles_created += 1
+				
+	print('{} roles were created in recreateRoles.'.format(roles_created))
+		
+"""
+	Deletes all POI roles of a desired type. Ideally, this is only used in test servers.
+"""
+async def deleteRoles(cmd):
+	member = cmd.message.author
+
+	if not member.server_permissions.administrator:
+		return
+
+	client = cmd.client
+	server = client.get_server(cmd.message.server.id)
+	
+	delete_target = ""
+	
+	if cmd.tokens_count > 1:
+		if cmd.tokens[1].lower() == 'roles':
+			delete_target = 'roles'
+		elif cmd.tokens[1].lower() == 'minorroles':
+			delete_target = 'minorroles'
+		elif cmd.tokens[1].lower() == 'majorroles':
+			delete_target = 'majorroles'
+		elif cmd.tokens[1].lower() == 'hiddrenroles':
+			delete_target = 'hiddenroles'
+		else:
+			return
+	else:
+		return
+		
+	roles_map = ewutils.getRoleMap(server.roles)
+
+	server_role_names = []
+
+	for role in server.roles:
+		server_role_names.append(role.name)
+		
+	roles_deleted = 0
+
+	if delete_target == 'roles':
+		for poi in ewcfg.poi_list:
+			if poi.role in server_role_names:
+				await client.delete_role(server=server, role=roles_map[poi.role])
+				roles_deleted += 1
 			
+	elif delete_target == 'majorroles':
+		for poi in ewcfg.poi_list:
+			if poi.major_role in server_role_names:
+				await client.delete_role(server=server, role=roles_map[poi.major_role])
+				roles_deleted += 1
+		
+	elif delete_target == 'minorroles':
+		for poi in ewcfg.poi_list:
 			if poi.minor_role in server_role_names:
-				continue
-			
-			await client.create_role(server = server, name = poi.minor_role)
-			ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
+				await client.delete_role(server=server, role=roles_map[poi.minor_role])
+				roles_deleted += 1
+				
+	elif delete_target == 'hiddenroles':
+		for generic_role in server.roles:
+			if generic_role.name == ewcfg.generic_role_name:
+				await client.delete_role(server=server, role=generic_role)
+				roles_deleted += 1
+
+	print('{} roles were deleted in deleteRoles.'.format(roles_deleted))
 
 
 """

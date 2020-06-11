@@ -383,12 +383,9 @@ async def mine(cmd):
 
 			#mining_yield = min(mining_yield, alternate_yield)
 
-			if poi.is_subzone:
-				district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-			else:
-				district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
-
-			if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+			controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
+			
+			if controlling_faction != "" and controlling_faction == user_data.faction:
 				mining_yield *= 2
 
 			if has_pickaxe == True:

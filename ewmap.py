@@ -128,6 +128,12 @@ class EwPoi:
 
 	# The value of the district
 	property_class = ""
+	
+	# If the zone is a district
+	is_district = False
+	
+	# If the zone is a gang base (Juvie's Row included)
+	is_gangbase = False
 
 	# If true, the zone is a district that can be controlled/captured
 	is_capturable = False
@@ -137,9 +143,15 @@ class EwPoi:
 
 	#If it's an apartment
 	is_apartment = False
+	
+	# if this zone is a street within a district
+	is_street = False
 
-	# What District each subzone is in
-	mother_district = ""
+	# What District/street each subzone is in. Subzones could potentially have multiple mother districts if they are between streets/districts.
+	mother_districts = []
+	
+	# What District each street is attatched to
+	father_district = ""
 
 	# If it's a mobile zone
 	is_transport = False
@@ -205,10 +217,14 @@ class EwPoi:
 		str_closed = None,
 		vendors = [],
 		property_class = "",
+		is_district = False,
+		is_gangbase = False,
 		is_capturable = False,
 		is_subzone = False,
 		is_apartment = False,
-		mother_district = "",
+		is_street = False,
+		mother_districts = [],
+		father_district = "",
 		is_transport = False,
 		transport_type = "",
 		default_line = "",
@@ -244,10 +260,14 @@ class EwPoi:
 		self.str_closed = str_closed
 		self.vendors = vendors
 		self.property_class = property_class
+		self.is_district = is_district
+		self.is_gangbase = is_gangbase
 		self.is_capturable = is_capturable
 		self.is_subzone = is_subzone
 		self.is_apartment = is_apartment
-		self.mother_district = mother_district
+		self.is_street = is_street
+		self.mother_districts = mother_districts
+		self.father_district = father_district
 		self.is_transport = is_transport
 		self.transport_type = transport_type
 		self.default_line = default_line
@@ -1542,11 +1562,11 @@ async def scout(cmd):
 		#is_subzone = poi.is_subzone and poi.mother_district == user_poi.id_poi
 		#is_mother_district = user_poi.is_subzone and user_poi.mother_district == poi.id_poi
 
-		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not poi.mother_district == user_poi.id_poi) and (not user_poi.mother_district == poi.id_poi):
+		if (not is_neighbor) and (not is_current_transport_station) and (not is_transport_at_station) and (not poi.id_poi == user_poi.id_poi) and (not user_data.poi in poi.mother_districts) and (not poi.id_poi in user_poi.mother_districts):
 			response = "You can't scout that far."
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
-		if user_poi.id_poi == poi.mother_district:
+		if user_poi.id_poi in poi.mother_districts:
 			response = "Why scout? Just pop your head in!"
 			return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
@@ -1688,19 +1708,32 @@ async def kick(id_server):
 			user_data = EwUser(id_user = id_user, id_server = id_server)
 
 			# checks if the player should be kicked from the subzone and kicks them if they should.
-			if poi.is_subzone and not inaccessible(user_data = user_data, poi = ewcfg.id_to_poi.get(poi.mother_district)):
-				if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
-					server = ewcfg.server_list[id_server]
-					member_object = server.get_member(id_user)
-
-					user_data.poi = poi.mother_district
-					user_data.time_lastenter = int(time.time())
-					user_data.persist()
-					await ewrolemgr.updateRoles(client = client, member = member_object)
-
-					mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[poi.mother_district].channel)
-					response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
-					await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
+			if poi.is_subzone:
+				
+				# Some subzones could potentially have multiple mother districts.
+				# Make sure to get one that's accessible before attempting a proper kickout.
+				mother_district_chosen = random.choice(poi.mother_districts)
+				
+				if inaccessible(user_data=user_data, poi=ewcfg.id_to_poi.get(mother_district_chosen)):
+					# If the randomly chosen mother district is inaccessible, make one more attempt.
+					mother_district_chosen = random.choice(poi.mother_districts)
+				else:
+					pass
+				
+				if not inaccessible(user_data=user_data, poi=ewcfg.id_to_poi.get(mother_district_chosen)):
+				
+					if user_data.life_state not in [ewcfg.life_state_kingpin, ewcfg.life_state_lucky, ewcfg.life_state_executive]:
+						server = ewcfg.server_list[id_server]
+						member_object = server.get_member(id_user)
+	
+						user_data.poi = mother_district_chosen
+						user_data.time_lastenter = int(time.time())
+						user_data.persist()
+						await ewrolemgr.updateRoles(client = client, member = member_object)
+	
+						mother_district_channel = ewutils.get_channel(server, ewcfg.id_to_poi[mother_district_chosen].channel)
+						response = "You have been kicked out for loitering! You can only stay in a sub-zone and twiddle your thumbs for 1 hour at a time."
+						await ewutils.send_message(client, mother_district_channel, ewutils.formatMessage(member_object, response))
 		except:
 			ewutils.logMsg('failed to move inactive player out of subzone: {}'.format(id_user))
 

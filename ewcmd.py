@@ -1907,27 +1907,29 @@ async def flush_subzones(cmd):
 	if not member.server_permissions.administrator:
 		return
 	
-	subzone_to_mother_district = {}
+	subzone_to_mother_districts = {}
 
 	for poi in ewcfg.poi_list:
 		if poi.is_subzone:
-			subzone_to_mother_district[poi.id_poi] = poi.mother_district
+			subzone_to_mother_districts[poi.id_poi] = poi.mother_districts
 
 
-	for subzone in subzone_to_mother_district:
-		mother_district = subzone_to_mother_district.get(subzone)
+	for subzone in subzone_to_mother_districts:
+		mother_districts = subzone_to_mother_districts.get(subzone)
+		
+		used_mother_district = mother_districts[0]
 		
 		ewutils.execute_sql_query("UPDATE items SET {id_owner} = %s WHERE {id_owner} = %s AND {id_server} = %s".format(
 			id_owner = ewcfg.col_id_user,
 			id_server = ewcfg.col_id_server
 		), (
-			mother_district,
+			used_mother_district,
 			subzone,
 			cmd.message.server.id
 		))
 
 		subzone_data = EwDistrict(district = subzone, id_server = cmd.message.server.id)
-		district_data = EwDistrict(district = mother_district, id_server = cmd.message.server.id)
+		district_data = EwDistrict(district = used_mother_district, id_server = cmd.message.server.id)
 
 		district_data.change_slimes(n = subzone_data.slimes)
 		subzone_data.change_slimes(n = -subzone_data.slimes)

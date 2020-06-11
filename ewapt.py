@@ -406,7 +406,7 @@ async def depart(cmd=None, isGoto = False, movecurrent=None):
 	player = EwPlayer(id_user = cmd.message.author.id)
 	user_data = EwUser(id_user = player.id_user, id_server = player.id_server)
 	poi_source = ewcfg.id_to_poi.get(user_data.poi)
-	poi_dest = ewcfg.id_to_poi.get(poi_source.mother_district)
+	poi_dest = ewcfg.id_to_poi.get(poi_source.mother_districts[0])
 
 	#isgoto checks if this is part of a goto command.
 
@@ -991,7 +991,7 @@ async def watch(cmd):
 
 
 		poi = ewcfg.id_to_poi.get(user_model.poi)
-		token_array = ["!summonenemy" ,"megaslime", poi.mother_district, ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
+		token_array = ["!summonenemy" ,"megaslime", poi.mother_districts[0], ewcfg.tv_set_slime, ewcfg.tv_set_level, "The", "Slime"]
 
 		cmd.tokens = token_array
 

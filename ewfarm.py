@@ -181,12 +181,9 @@ async def reap(cmd):
 
 					slime_gain = farm.slimes_onreap
 
-					if poi.is_subzone:
-						district_data = EwDistrict(district = poi.mother_district, id_server = cmd.message.server.id)
-					else:
-						district_data = EwDistrict(district = poi.id_poi, id_server = cmd.message.server.id)
+					controlling_faction = ewutils.get_subzone_controlling_faction(user_data.poi, user_data.id_server)
 
-					if district_data.controlling_faction != "" and district_data.controlling_faction == user_data.faction:
+					if controlling_faction != "" and controlling_faction == user_data.faction:
 						slime_gain *= 2
 
 					if user_data.poi == ewcfg.poi_id_jr_farms:

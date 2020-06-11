@@ -911,6 +911,7 @@ cmd_release_alt1 = cmd_prefix + 'unarrest'
 cmd_restoreroles = cmd_prefix + 'restoreroles'
 cmd_hiderolenames = cmd_prefix + 'hiderolenames'
 cmd_recreateroles = cmd_prefix + 'recreateroles'
+cmd_deleteroles = cmd_prefix + 'deleteroles'
 cmd_changepermissions = cmd_prefix + 'changeperms'
 cmd_removeuseroverwrites = cmd_prefix + 'removeuseroverwrites'
 cmd_debug1 = cmd_prefix + ewdebug.cmd_debug1
@@ -9580,7 +9581,7 @@ poi_list = [
 		role = "SlimeCorp HQ",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_districts = [poi_id_downtown]
 	),
 	EwPoi( # 1
 		id_poi = poi_id_downtown,
@@ -9621,6 +9622,7 @@ poi_list = [
 		role = "Downtown",
 		#permissions = {poi_id_downtown:permissions_general},
 		property_class = property_class_s,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 2
@@ -9658,6 +9660,7 @@ poi_list = [
 		channel = "smogsburg",
 		role = "Smogsburg",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 3
@@ -9706,7 +9709,9 @@ poi_list = [
 		],
 		pvp = False,
 		property_class = property_class_a,
-		community_chest = chest_id_copkilltown
+		is_district = True,
+		community_chest = chest_id_copkilltown,
+		is_gangbase = True
 	),
 	EwPoi( # 4
 		id_poi = poi_id_krakbay,
@@ -9742,6 +9747,7 @@ poi_list = [
 		channel = "krak-bay",
 		role = "Krak Bay",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 5
@@ -9778,6 +9784,7 @@ poi_list = [
 		channel = "poudrin-alley",
 		role = "Poudrin Alley",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 6
@@ -9823,7 +9830,9 @@ poi_list = [
 		],
 		pvp = False,
 		property_class = property_class_c,
-		community_chest = chest_id_rowdyroughhouse
+		is_district = True,
+		community_chest = chest_id_rowdyroughhouse,
+		is_gangbase = True
 	),
 	EwPoi( # 7
 		id_poi = poi_id_greenlightdistrict,
@@ -9859,6 +9868,7 @@ poi_list = [
 		channel = "green-light-district",
 		role = "Green Light District",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True,
 		has_ads = True
 	),
@@ -9895,6 +9905,7 @@ poi_list = [
 		channel = "old-new-yonkers",
 		role = "Old New Yonkers",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 9
@@ -9933,6 +9944,7 @@ poi_list = [
 		channel = "little-chernobyl",
 		role = "Little Chernobyl",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 10
@@ -9969,6 +9981,7 @@ poi_list = [
 		channel = "arsonbrook",
 		role = "Arsonbrook",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 11
@@ -10006,6 +10019,7 @@ poi_list = [
 		channel = "astatine-heights",
 		role = "Astatine Heights",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 12
@@ -10043,6 +10057,7 @@ poi_list = [
 		channel = "gatlingsdale",
 		role = "Gatlingsdale",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 13
@@ -10080,6 +10095,7 @@ poi_list = [
 		channel = "vandal-park",
 		role = "Vandal Park",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 14
@@ -10117,6 +10133,7 @@ poi_list = [
 		channel = "glocksbury",
 		role = "Glocksbury",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 15
@@ -10158,6 +10175,7 @@ poi_list = [
 		channel = "north-sleezeborough",
 		role = "North Sleezeborough",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 16
@@ -10199,6 +10217,7 @@ poi_list = [
 		channel = "south-sleezeborough",
 		role = "South Sleezeborough",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 17
@@ -10236,6 +10255,7 @@ poi_list = [
 		channel = "ooze-gardens",
 		role = "Ooze Gardens",
 		property_class = property_class_a,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 18
@@ -10273,6 +10293,7 @@ poi_list = [
 		channel = "cratersville",
 		role = "Cratersville",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 19
@@ -10311,6 +10332,7 @@ poi_list = [
 		channel = "wreckington",
 		role = "Wreckington",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 20
@@ -10349,7 +10371,9 @@ poi_list = [
 		role = "Juvie's Row",
 		pvp = False,
 		property_class = property_class_b,
-		community_chest = chest_id_juviesrow
+		is_district = True,
+		community_chest = chest_id_juviesrow,
+		is_gangbase = True
 	),
 	EwPoi( # 21
 		id_poi = poi_id_slimesend,
@@ -10387,6 +10411,7 @@ poi_list = [
 		channel = "slimes-end",
 		role = "Slime's End",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 22
@@ -10424,6 +10449,7 @@ poi_list = [
 		channel = "vagrants-corner",
 		role = "Vagrant's Corner",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 23
@@ -10464,6 +10490,7 @@ poi_list = [
 		channel = "assault-flats-beach",
 		role = "Assault Flats Beach",
 		property_class = property_class_s,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 24
@@ -10501,6 +10528,7 @@ poi_list = [
 		channel = "new-new-yonkers",
 		role = "New New Yonkers",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 25
@@ -10537,6 +10565,7 @@ poi_list = [
 		channel = "brawlden",
 		role = "Brawlden",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 26
@@ -10576,6 +10605,7 @@ poi_list = [
 		channel = "toxington",
 		role = "Toxington",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 27
@@ -10616,6 +10646,7 @@ poi_list = [
 		channel = "charcoal-park",
 		role = "Charcoal Park",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 28
@@ -10654,6 +10685,7 @@ poi_list = [
 		channel = "polonium-hill",
 		role = "Polonium Hill",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # 29
@@ -10694,6 +10726,7 @@ poi_list = [
 		channel = "west-glocksbury",
 		role = "West Glocksbury",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi(  # 30
@@ -10733,6 +10766,7 @@ poi_list = [
 		channel = "jaywalker-plain",
 		role = "Jaywalker Plain",
 		property_class = property_class_c,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi(  # 31
@@ -10770,6 +10804,7 @@ poi_list = [
 		channel = "crookline",
 		role = "Crookline",
 		property_class = property_class_b,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi(  # 32
@@ -10807,6 +10842,7 @@ poi_list = [
 		channel = "dreadford",
 		role = "Dreadford",
 		property_class = property_class_s,
+		is_district = True,
 		is_capturable = True
 	),
 	EwPoi( # the-sewers
@@ -10828,7 +10864,8 @@ poi_list = [
 			life_state_corpse
 		],
 		role = "Sewers",
-		community_chest = chest_id_thesewers
+		community_chest = chest_id_thesewers,
+		is_gangbase = True
 	),
 	EwPoi( # stock-exchange
 		id_poi = poi_id_stockexchange,
@@ -10852,7 +10889,7 @@ poi_list = [
 		coord = (63, 40),
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_downtown
+		mother_districts = [poi_id_downtown]
 	),
 	EwPoi( # the-bazaar
 		id_poi = poi_id_bazaar,
@@ -10872,7 +10909,7 @@ poi_list = [
 			vendor_bazaar
 		],
 		is_subzone = True,
-		mother_district = poi_id_smogsburg
+		mother_districts = [poi_id_smogsburg]
 	),
 	EwPoi( # the-cinema
 		id_poi = poi_id_cinema,
@@ -10892,7 +10929,7 @@ poi_list = [
 		coord = (48, 16),
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_astatineheights
+		mother_districts = [poi_id_astatineheights]
 	),
 	EwPoi( # food-court
 		id_poi = poi_id_foodcourt,
@@ -10926,7 +10963,7 @@ poi_list = [
 			vendor_mtndew,
 		],
 		is_subzone = True,
-		mother_district = poi_id_krakbay
+		mother_districts = [poi_id_krakbay]
 	),
 	EwPoi( # nlac-u
 		id_poi = poi_id_nlacu,
@@ -10949,7 +10986,7 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		write_manuscript = True,
 	),
 	EwPoi( # battle-arena
@@ -10968,7 +11005,7 @@ poi_list = [
 		coord = (24, 28),
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_vandalpark
+		mother_districts = [poi_id_vandalpark]
 	),
 	EwPoi( # the-dojo
 		id_poi = poi_id_dojo,
@@ -10987,7 +11024,7 @@ poi_list = [
 		coord = (29, 59),
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough],
 		vendors = [
 			vendor_dojo
 		]
@@ -11016,7 +11053,7 @@ poi_list = [
 			vendor_bar
 		],
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner
+		mother_districts = [poi_id_vagrantscorner]
 	),
 	EwPoi( # 7-11
 		id_poi = poi_id_711,
@@ -11039,7 +11076,7 @@ poi_list = [
 			vendor_vendingmachine
 		],
 		is_subzone = True,
-		mother_district = poi_id_poudrinalley
+		mother_districts = [poi_id_poudrinalley]
 	),
 	EwPoi( # the-labs
 		id_poi = poi_id_slimeoidlab,
@@ -11065,7 +11102,7 @@ poi_list = [
 		coord = (67, 8),
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_brawlden
+		mother_districts = [poi_id_brawlden]
 	),
 	EwPoi( # the-mines
 		id_poi = poi_id_mine,
@@ -11083,7 +11120,7 @@ poi_list = [
 		role = "Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow
+		mother_districts = [poi_id_juviesrow]
 	),
 	EwPoi( # the-casino
 		id_poi = poi_id_thecasino,
@@ -11103,7 +11140,7 @@ poi_list = [
 		role = "Casino",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_greenlightdistrict
+		mother_districts = [poi_id_greenlightdistrict]
 	),
 	EwPoi(  # cratersville mines
 		id_poi = poi_id_cv_mines,
@@ -11123,7 +11160,7 @@ poi_list = [
 		role = "Cratersville Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_cratersville
+		mother_districts = [poi_id_cratersville]
 	),
 	EwPoi(  # toxington mines
 		id_poi = poi_id_tt_mines,
@@ -11142,7 +11179,7 @@ poi_list = [
 		role = "Toxington Mines",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington
+		mother_districts = [poi_id_toxington]
 	),
 	EwPoi( # smokers-cough
 		id_poi = poi_id_diner,
@@ -11166,7 +11203,7 @@ poi_list = [
 			vendor_diner
 		],
 		is_subzone = True,
-		mother_district = poi_id_wreckington
+		mother_districts = [poi_id_wreckington]
 	),
 	EwPoi( # Red Mobster
 		id_poi = poi_id_seafood,
@@ -11189,7 +11226,7 @@ poi_list = [
 			vendor_seafood
 		],
 		is_subzone = True,
-		mother_district = poi_id_astatineheights
+		mother_districts = [poi_id_astatineheights]
 	),
 	EwPoi( # JR Farm
 		id_poi = poi_id_jr_farms,
@@ -11210,7 +11247,7 @@ poi_list = [
 		role = "Juvie's Row Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow
+		mother_districts = [poi_id_juviesrow]
 	),
 	EwPoi( # OG Farm
 		id_poi = poi_id_og_farms,
@@ -11233,7 +11270,7 @@ poi_list = [
 		role = "Ooze Gardens Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_oozegardens
+		mother_districts = [poi_id_oozegardens]
 	),
 	EwPoi( # AB Farm
 		id_poi = poi_id_ab_farms,
@@ -11254,7 +11291,7 @@ poi_list = [
 		role = "Arsonbrook Farms",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_arsonbrook
+		mother_districts = [poi_id_arsonbrook]
 	),
 	EwPoi(  # Neo Milwaukee State
 		id_poi = poi_id_neomilwaukeestate,
@@ -11274,7 +11311,7 @@ poi_list = [
 			vendor_college
 		],
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		write_manuscript = True,
 	),
 	EwPoi(  # Assault Flats Beach Resort
@@ -11294,7 +11331,7 @@ poi_list = [
 			vendor_beachresort
 		],
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach
+		mother_districts = [poi_id_assaultflatsbeach]
 	),
 	EwPoi(  # Dreadford Country Club
 		id_poi = poi_id_countryclub,
@@ -11313,7 +11350,7 @@ poi_list = [
 			vendor_countryclub
 		],
 		is_subzone = True,
-		mother_district = poi_id_dreadford
+		mother_districts = [poi_id_dreadford]
 	),
 	EwPoi(  # SlimeCorp Recycling Plant
 		id_poi = poi_id_recyclingplant,
@@ -11332,7 +11369,7 @@ poi_list = [
 		role = "Recycling Plant",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_smogsburg
+		mother_districts = [poi_id_smogsburg]
 	),
 	EwPoi(  # Toxington Pier
 		id_poi = poi_id_toxington_pier,
@@ -11347,7 +11384,7 @@ poi_list = [
 		role = "Toxington Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington],
 		is_pier = True,
 		pier_type = fish_slime_freshwater
 	),
@@ -11364,7 +11401,7 @@ poi_list = [
 		role = "Jaywalker Plain Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain],
 		is_pier = True,
 		pier_type = fish_slime_freshwater
 
@@ -11382,7 +11419,7 @@ poi_list = [
 		role = "Crookline Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_crookline,
+		mother_districts = [poi_id_crookline],
 		is_pier = True,
 		pier_type = fish_slime_freshwater
 
@@ -11400,7 +11437,7 @@ poi_list = [
 		role = "Assault Flats Beach Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 
@@ -11436,7 +11473,7 @@ poi_list = [
 		role = "Juvie's Row Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
+		mother_districts = [poi_id_juviesrow],
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 
@@ -11454,7 +11491,7 @@ poi_list = [
 		role = "Slime's End Pier",
 		pvp = False,
 		is_subzone = True,
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		is_pier = True,
 		pier_type = fish_slime_saltwater
 
@@ -11485,7 +11522,7 @@ poi_list = [
 		role = "Wreckington Port",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11508,7 +11545,7 @@ poi_list = [
 		role = "Vagrant's Corner Port",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11536,7 +11573,7 @@ poi_list = [
 		role = "Toxington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11564,7 +11601,7 @@ poi_list = [
 		role = "Astatine Heights Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_astatineheights,
+		mother_districts = [poi_id_astatineheights],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11592,7 +11629,7 @@ poi_list = [
 		role = "Gatlingsdale Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11620,7 +11657,7 @@ poi_list = [
 		role = "Arsonbrook Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_arsonbrook,
+		mother_districts = [poi_id_arsonbrook],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11649,7 +11686,7 @@ poi_list = [
 		role = "Cop Killtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_copkilltown,
+		mother_districts = [poi_id_copkilltown],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11680,7 +11717,7 @@ poi_list = [
 		role = "Smogsburg Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_smogsburg,
+		mother_districts = [poi_id_smogsburg],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11703,7 +11740,7 @@ poi_list = [
 		role = "Downtown Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11734,7 +11771,7 @@ poi_list = [
 		role = "Krak Bay Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11762,7 +11799,7 @@ poi_list = [
 		role = "Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11790,7 +11827,7 @@ poi_list = [
 		role = "West Glocksbury Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11818,7 +11855,7 @@ poi_list = [
 		role = "Jaywalker Plain Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11847,7 +11884,7 @@ poi_list = [
 		role = "North Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11876,7 +11913,7 @@ poi_list = [
 		role = "South Sleezeborough Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11904,7 +11941,7 @@ poi_list = [
 		role = "Cratersville Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_cratersville,
+		mother_districts = [poi_id_cratersville],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11932,7 +11969,7 @@ poi_list = [
 		role = "Wreckington Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11959,7 +11996,7 @@ poi_list = [
 		role = "Rowdy Roughhouse Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_rowdyroughhouse,
+		mother_districts = [poi_id_rowdyroughhouse],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -11988,7 +12025,7 @@ poi_list = [
 		role = "Green Light District Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_greenlightdistrict,
+		mother_districts = [poi_id_greenlightdistrict],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -12016,7 +12053,7 @@ poi_list = [
 		role = "Juvie's Row Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_juviesrow,
+		mother_districts = [poi_id_juviesrow],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -12044,7 +12081,7 @@ poi_list = [
 		role = "Vagrant's Corner Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -12077,7 +12114,7 @@ poi_list = [
 		role = "Assault Flats Beach Subway Station",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -12101,7 +12138,7 @@ poi_list = [
 		role = "Dreadford Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_dreadford,
+		mother_districts = [poi_id_dreadford],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -12128,7 +12165,7 @@ poi_list = [
 		role = "Assault Flats Beach Blimp Tower",
 		pvp = True,
 		is_subzone = True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		is_transport_stop = True,
 		transport_lines = set()
 	),
@@ -12148,7 +12185,7 @@ poi_list = [
 		pvp = False,
 		channel = channel_realestateagency,
 		role = "Real Estate Agency",
-		mother_district = poi_id_oldnewyonkers,
+		mother_districts = [poi_id_oldnewyonkers],
 		is_subzone = True
 	),
 	EwPoi( # Glocksbury Comics
@@ -12168,7 +12205,7 @@ poi_list = [
 		vendors = [vendor_glocksburycomics],
 		channel = "glocksbury-comics",
 		role = "Glocksbury Comics",
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		is_subzone = True,
 		write_manuscript = True,
 	),
@@ -12189,7 +12226,7 @@ poi_list = [
 		vendors=[vendor_slimypersuits],
 		channel="slimy-persuits",
 		role="Slimy Persuits",
-		mother_district=poi_id_newnewyonkers,
+		mother_districts  = [poi_id_newnewyonkers],
 		is_subzone=True
 	),
 	EwPoi(  # Green Cake Cafe
@@ -12207,7 +12244,7 @@ poi_list = [
 		vendors=[vendor_greencakecafe],
 		channel="green-cake-cafe",
 		role="Green Cake Cafe",
-		mother_district=poi_id_littlechernobyl,
+		mother_districts = [poi_id_littlechernobyl],
 		is_subzone=True,
 		write_manuscript=True,
 	),
@@ -12225,7 +12262,7 @@ poi_list = [
 		pvp=False,
 		channel=channel_sodafountain,
 		role="The Bicarbonate Soda Fountain",
-		mother_district=poi_id_krakbay,
+		mother_districts  = [poi_id_krakbay],
 		is_subzone=True
 	),
 	EwPoi(  # Ferry
@@ -12392,7 +12429,7 @@ poi_list = [
 		channel = channel_apt_downtown,
 		role = "Downtown Apartments",
 		is_apartment = True,
-		mother_district = poi_id_downtown,
+		mother_districts = [poi_id_downtown],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12406,7 +12443,7 @@ poi_list = [
 		channel = channel_apt_smogsburg,
 		role = "Smogsburg Apartments",
 		is_apartment = True,
-		mother_district = poi_id_smogsburg,
+		mother_districts = [poi_id_smogsburg],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12420,7 +12457,7 @@ poi_list = [
 		channel = channel_apt_krakbay,
 		role = "Krak Bay Apartments",
 		is_apartment = True,
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12434,7 +12471,7 @@ poi_list = [
 		channel = channel_apt_poudrinalley,
 		role = "Poudrin Alley Apartments",
 		is_apartment = True,
-		mother_district = poi_id_poudrinalley,
+		mother_districts = [poi_id_poudrinalley],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12448,7 +12485,7 @@ poi_list = [
 		channel = channel_apt_greenlightdistrict,
 		role = "Green Light District Apartments",
 		is_apartment = True,
-		mother_district = poi_id_greenlightdistrict,
+		mother_districts = [poi_id_greenlightdistrict],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12462,7 +12499,7 @@ poi_list = [
 		channel = channel_apt_oldnewyonkers,
 		role = "Old New Yonkers Apartments",
 		is_apartment = True,
-		mother_district = poi_id_oldnewyonkers,
+		mother_districts = [poi_id_oldnewyonkers],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12476,7 +12513,7 @@ poi_list = [
 		channel = channel_apt_littlechernobyl,
 		role = "Little Chernobyl Apartments",
 		is_apartment = True,
-		mother_district = poi_id_littlechernobyl,
+		mother_districts = [poi_id_littlechernobyl],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12490,7 +12527,7 @@ poi_list = [
 		channel = channel_apt_arsonbrook,
 		role = "Arsonbrook Apartments",
 		is_apartment = True,
-		mother_district = poi_id_arsonbrook,
+		mother_districts = [poi_id_arsonbrook],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12504,7 +12541,7 @@ poi_list = [
 		channel = channel_apt_astatineheights,
 		role = "Astatine Heights Apartments",
 		is_apartment = True,
-		mother_district = poi_id_astatineheights,
+		mother_districts = [poi_id_astatineheights],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12518,7 +12555,7 @@ poi_list = [
 		channel = channel_apt_gatlingsdale,
 		role = "Gatlingsdale Apartments",
 		is_apartment = True,
-		mother_district = poi_id_gatlingsdale,
+		mother_districts = [poi_id_gatlingsdale],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12532,7 +12569,7 @@ poi_list = [
 		channel = channel_apt_vandalpark,
 		role = "Vandal Park Apartments",
 		is_apartment = True,
-		mother_district = poi_id_vandalpark,
+		mother_districts = [poi_id_vandalpark],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12546,7 +12583,7 @@ poi_list = [
 		channel=channel_apt_glocksbury,
 		role="Glocksbury Apartments",
 		is_apartment = True,
-		mother_district = poi_id_glocksbury,
+		mother_districts = [poi_id_glocksbury],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12560,7 +12597,7 @@ poi_list = [
 		channel=channel_apt_northsleezeborough,
 		role="North Sleezeborough Apartments",
 		is_apartment=True,
-		mother_district = poi_id_northsleezeborough,
+		mother_districts = [poi_id_northsleezeborough],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12574,7 +12611,7 @@ poi_list = [
 		channel = channel_apt_southsleezeborough,
 		role = "South Sleezeborough Apartments",
 		is_apartment=True,
-		mother_district = poi_id_southsleezeborough,
+		mother_districts = [poi_id_southsleezeborough],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12588,7 +12625,7 @@ poi_list = [
 		channel = channel_apt_oozegardens,
 		role = "Ooze Gardens Apartments",
 		is_apartment=True,
-		mother_district = poi_id_oozegardens,
+		mother_districts = [poi_id_oozegardens],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12602,7 +12639,7 @@ poi_list = [
 		channel = channel_apt_cratersville,
 		role = "Cratersville Apartments",
 		is_apartment=True,
-		mother_district = poi_id_cratersville,
+		mother_districts = [poi_id_cratersville],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12616,7 +12653,7 @@ poi_list = [
 		channel=channel_apt_wreckington,
 		role="Wreckington Apartments",
 		is_apartment=True,
-		mother_district = poi_id_wreckington,
+		mother_districts = [poi_id_wreckington],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12630,7 +12667,7 @@ poi_list = [
 		channel = channel_apt_slimesend,
 		role = "Slime's End Apartments",
 		is_apartment=True,
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12644,7 +12681,7 @@ poi_list = [
 		channel = channel_apt_vagrantscorner,
 		role = "Vagrant's Corner Apartments",
 		is_apartment=True,
-		mother_district = poi_id_vagrantscorner,
+		mother_districts = [poi_id_vagrantscorner],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12658,7 +12695,7 @@ poi_list = [
 		channel=channel_apt_assaultflatsbeach,
 		role="Assault Flats Beach Apartments",
 		is_apartment=True,
-		mother_district = poi_id_assaultflatsbeach,
+		mother_districts = [poi_id_assaultflatsbeach],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12672,7 +12709,7 @@ poi_list = [
 		channel=channel_apt_newnewyonkers,
 		role="New New Yonkers Apartments",
 		is_apartment=True,
-		mother_district = poi_id_newnewyonkers,
+		mother_districts = [poi_id_newnewyonkers],
 		pvp=False,
 		is_subzone=False,
 	),
@@ -12686,7 +12723,7 @@ poi_list = [
 		channel = channel_apt_brawlden,
 		role = "Brawlden Apartments",
 		is_apartment=True,
-		mother_district = poi_id_brawlden,
+		mother_districts = [poi_id_brawlden],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12700,7 +12737,7 @@ poi_list = [
 		channel = channel_apt_toxington,
 		role = "Toxington Apartments",
 		is_apartment=True,
-		mother_district = poi_id_toxington,
+		mother_districts = [poi_id_toxington],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12714,7 +12751,7 @@ poi_list = [
 		channel = channel_apt_charcoalpark,
 		role = "Charcoal Park Apartments",
 		is_apartment=True,
-		mother_district = poi_id_charcoalpark,
+		mother_districts = [poi_id_charcoalpark],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12728,7 +12765,7 @@ poi_list = [
 		channel = channel_apt_poloniumhill,
 		role = "Polonium Hill Apartments",
 		is_apartment=True,
-		mother_district = poi_id_poloniumhill,
+		mother_districts = [poi_id_poloniumhill],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12742,7 +12779,7 @@ poi_list = [
 		channel = channel_apt_westglocksbury,
 		role = "West Glocksbury Apartments",
 		is_apartment=True,
-		mother_district = poi_id_westglocksbury,
+		mother_districts = [poi_id_westglocksbury],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12756,7 +12793,7 @@ poi_list = [
 		channel = channel_apt_jaywalkerplain,
 		role = "Jaywalker Plain Apartments",
 		is_apartment=True,
-		mother_district = poi_id_jaywalkerplain,
+		mother_districts = [poi_id_jaywalkerplain],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12770,7 +12807,7 @@ poi_list = [
 		channel = channel_apt_crookline,
 		role = "Crookline Apartments",
 		is_apartment=True,
-		mother_district = poi_id_crookline,
+		mother_districts = [poi_id_crookline],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12784,7 +12821,7 @@ poi_list = [
 		channel = channel_apt_dreadford,
 		role = "Dreadford Apartments",
 		is_apartment=True,
-		mother_district = poi_id_dreadford,
+		mother_districts = [poi_id_dreadford],
 		pvp = False,
 		is_subzone = False,
 	),
@@ -12800,7 +12837,7 @@ poi_list = [
 		str_desc = "Grassy, windswept fields overlook a harrowing drop into the vast Slime Sea. Even from this height you faintly hear its crashing waves. Countless people have used the isolation of this place to rid themselves of personal baggage and bagged persons. Keep that in mind when you stop for a picnic or a leisurely cig. Someone's got their eyes on you. Exits into Slime's End.",
 		channel = channel_slimesendcliffs,
 		role = "Slime's End Cliffs",
-		mother_district = poi_id_slimesend,
+		mother_districts = [poi_id_slimesend],
 		pvp = True,
 		is_subzone = True,
 	),
@@ -12814,7 +12851,7 @@ poi_list = [
 		str_desc = "Located behind a secret door in a seemingly innocuous corner store, Bodega is a high end clothing store for the freshest kids in the city.\n\nFrom the outside, Bodega appears to be simply another of the interchangeable convenience stores found on nearly every block of every major city. The windows are completely packed by dusty non-perishables, and the interior is not much better with every  inch of space selling snacks or household basics in a visually deafening assault of brand names. However, those in the know simply stroll past all this noise and head for the old Snapple machine in the back of the shop. The machine is not that at all but a door that slides open to reveal a whole other store on the other side, this is the real Bodega. Neatly appointed, lacquered shelves hold the latest in street and skate fashion from shoes to shirts to jackets. The whole space is clean and orderly in a far cry from the cramped store front.\n\n(This description was literally just stolen and lightly edited from Atlas Obsurca. This is a real place in Boston, look it up. Pretty sick, huh?)\n\nThe well-trimmed, over-cologned four-eyed hipster behind the counter looks upon you with what can only be described as the freakish offspring of utter disdain and mindlessly sycophantic puppy-dog eyes that hope to lure you into an ill-advised purchase of high end socks that forces you to take out a second mortgage on your house. *SHARP INHALE*. He’ll !sew the dirty, unwashed rags you dare call clothing back together if it gets shredded in combat, for a price. You can also get your old outfits !retrofit'd with added combat functionalities here, also for a price.\n\nExits into Krak Bay.",
 		channel = channel_bodega,
 		role = "Bodega",
-		mother_district = poi_id_krakbay,
+		mother_districts = [poi_id_krakbay],
 		pvp = False,
 		vendors = [
 			vendor_bodega,
@@ -13118,18 +13155,32 @@ for poi in poi_list:
 	# Assign permissions for all locations in the poi list.
 	if poi.permissions == None:
 		poi.permissions = {('{}'.format(poi.id_poi)): permissions_general}
-		
-	# Assign all the correct major and minor roles that aren't explicity defined for streets/districts in the poi list.
-	if poi.is_outskirts or poi.is_transport or poi.is_apartment or poi.is_subzone:
-		poi.minor_role = role_null_minor_role
-		
-		if poi.is_subzone:
-			for mother_poi in poi_list:
-				if mother_poi.id_poi == poi.mother_district:
-					poi.major_role = mother_poi.major_role
-		else:
-			poi.major_role = role_null_major_role
 
+	# Assign all the correct major and minor roles.
+	
+	# Districts and streets need their minor roles to see (read-only) all of their subzones.
+	if poi.is_district or poi.is_street:
+		poi.minor_role = '{}_minor'.format(poi.id_poi)
+
+	# Districts need their major roles for their specific LAN (voice/text) channels.
+	if poi.is_district:
+		poi.major_role = '{}_major'.format(poi.id_poi)
+	
+	# Subzones and streets need the same major roles as their mother/father districts.
+	if poi.is_subzone:
+		for mother_poi in poi_list:
+			if mother_poi.id_poi in poi.mother_districts:
+				poi.major_role = mother_poi.major_role
+	
+	if poi.is_street:
+		for father_poi in poi_list:
+			if father_poi.id_poi == poi.father_district:
+				poi.major_role = father_poi.major_role
+		
+	if poi.major_role == None:
+		poi.major_role = role_null_major_role
+	if poi.minor_role == None:
+		poi.minor_role = role_null_major_role
 	
 	if poi.coord != None:
 		# Populate the map of coordinates to their point of interest, for looking up from the map.
@@ -13173,9 +13224,11 @@ for poi in poi_list:
 		tutorial_pois.append(poi.id_poi)
 
 	if poi.write_manuscript:
-		zine_mother_districts.append(id_to_poi.get(poi.mother_district))
+		for mother_poi in poi.mother_districts:
+			zine_mother_districts.append(id_to_poi.get(mother_poi))
 
 	chname_to_poi[poi.channel] = poi
+
 
 landmark_pois = [
 	poi_id_dreadford,

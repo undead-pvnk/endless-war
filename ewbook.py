@@ -291,11 +291,8 @@ async def begin_manuscript(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.slimes < cost:
 		 response = "You don't have enough slime to create a manuscript. ({:,}/{:,})".format(user_data.slimes, cost)
@@ -336,11 +333,8 @@ async def set_pen_name(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the pen name of your masterpiece!"
@@ -371,11 +365,8 @@ async def set_genre(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the title of your masterpiece!"
@@ -406,11 +397,8 @@ async def set_length(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the length of your masterpiece!"
@@ -496,11 +484,8 @@ async def set_title(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.hunger >= user_data.get_hunger_max() and user_data.life_state != ewcfg.life_state_corpse:
 		response = "You are just too hungry to alter the title of your masterpiece!"
@@ -534,11 +519,8 @@ async def edit_page(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -613,11 +595,8 @@ async def view_page(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -657,11 +636,8 @@ async def check_manuscript(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"
@@ -698,11 +674,8 @@ async def publish_manuscript(cmd = None, dm = False):
 
 	poi = ewcfg.id_to_poi.get(user_data.poi)
 
-	if not poi.write_manuscript and not dm:
+	if not poi.write_manuscript:
 		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS)."
-
-	elif poi not in ewcfg.zine_mother_districts and dm:
-		response = "You'd love to work on your zine, however your current location doesn't strike you as a particularly good place to write. Try heading over the the Cafe, the Comic Shop, or one of the colleges (NLACU/NMS). Keep in mind, once you're there you can work on your manuscript in DMs."
 
 	elif user_data.manuscript == -1:
 		response = "You have yet to create a manuscript. Try !createmanuscript"

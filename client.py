@@ -640,6 +640,9 @@ cmd_map = {
 	# recreates all hidden poi roles in the server in case restoreRoleNames doesnt work, only usable by admins
 	ewcfg.cmd_recreateroles: ewrolemgr.recreateRoles,
 	
+	# deletes all roles in the server of a particular type
+	ewcfg.cmd_deleteroles: ewrolemgr.deleteRoles,
+	
 	# sets permissions for all poi channels in the server
 	ewcfg.cmd_changepermissions: ewrolemgr.change_perms,
 	
@@ -1436,7 +1439,7 @@ async def on_message(message):
 			# Nothing else to do in a DM.
 			return
 
-		# assign the appropriate roles to a user with less than @everyone, faction
+		# assign the appropriate roles to a user with less than @everyone, faction, both location roles
 		if len(message.author.roles) < 2:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
