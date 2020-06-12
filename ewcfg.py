@@ -262,6 +262,160 @@ poi_id_apt_jaywalkerplain = "aptjaywalkerplain"
 poi_id_apt_crookline = "aptcrookline"
 poi_id_apt_dreadford = "aptdreadford"
 
+# The streets -- There are 122 of them, to be exact
+poi_id_copkilltown_street_a = ""
+poi_id_rowdyroughhouse_street_a = ""
+poi_id_juviesrow_street_a = ""
+
+poi_id_downtown_street_a = "downtownstreeta"
+poi_id_downtown_street_b = ""
+poi_id_downtown_street_c = ""
+poi_id_downtown_street_d = ""
+poi_id_downtown_street_e = ""
+poi_id_downtown_street_f = ""
+
+poi_id_krakbay_street_a = ""
+poi_id_krakbay_street_b = ""
+poi_id_krakbay_street_c = ""
+poi_id_krakbay_street_d = ""
+poi_id_krakbay_street_e = ""
+poi_id_krakbay_street_f = ""
+
+poi_id_poudrinalley_street_a = "" 
+poi_id_poudrinalley_street_b = ""
+poi_id_poudrinalley_street_c = ""
+poi_id_poudrinalley_street_d = ""
+poi_id_poudrinalley_street_e = ""
+
+poi_id_cratersville_street_a = ""
+poi_id_cratersville_street_b = ""
+poi_id_cratersville_street_c = ""
+
+poi_id_wreckington_street_a = ""
+poi_id_wreckington_street_b = ""
+
+poi_id_oozegardens_street_a = ""
+poi_id_oozegardens_street_b = ""
+poi_id_oozegardens_street_c = ""
+poi_id_oozegardens_street_d = ""
+
+poi_id_southsleezeborough_street_a = "" 
+poi_id_southsleezeborough_street_b = ""
+poi_id_southsleezeborough_street_c = ""
+poi_id_southsleezeborough_street_d = ""
+
+poi_id_northsleezeborough_street_a = ""
+poi_id_northsleezeborough_street_b = ""
+poi_id_northsleezeborough_street_c = ""
+poi_id_northsleezeborough_street_d = ""
+poi_id_northsleezeborough_street_e = ""
+
+poi_id_glocksbury_street_a = ""
+poi_id_glocksbury_street_b = ""
+poi_id_glocksbury_street_c = ""
+poi_id_glocksbury_street_d = ""
+poi_id_glocksbury_street_e = ""
+
+poi_id_westglocksbury_street_a = "" 
+poi_id_westglocksbury_street_b = ""
+poi_id_westglocksbury_street_c = ""
+poi_id_westglocksbury_street_d = ""
+
+poi_id_jaywalkerplain_street_a = ""
+poi_id_jaywalkerplain_street_b = ""
+poi_id_jaywalkerplain_street_c = ""
+poi_id_jaywalkerplain_street_d = ""
+poi_id_jaywalkerplain_street_e = ""
+
+poi_id_crookline_street_a = "" 
+poi_id_crookline_street_b = ""
+poi_id_crookline_street_c = ""
+poi_id_crookline_street_d = ""
+
+poi_id_dreadford_street_a = ""
+poi_id_dreadford_street_b = ""
+
+poi_id_vandalpark_street_a = ""
+poi_id_vandalpark_street_b = ""
+poi_id_vandalpark_street_c = ""
+poi_id_vandalpark_street_d = ""
+
+poi_id_poloniumhill_street_a = ""
+poi_id_poloniumhill_street_b = ""
+poi_id_poloniumhill_street_c = ""
+poi_id_poloniumhill_street_d = ""
+poi_id_poloniumhill_street_e = ""
+
+poi_id_charcoalpark_street_a = "" 
+poi_id_charcoalpark_street_b = ""
+
+poi_id_toxington_street_a = ""
+poi_id_toxington_street_b = ""
+poi_id_toxington_street_c = ""
+poi_id_toxington_street_d = ""
+poi_id_toxington_street_e = ""
+
+poi_id_gatlingsdale_street_a = "" 
+poi_id_gatlingsdale_street_b = ""
+poi_id_gatlingsdale_street_c = ""
+poi_id_gatlingsdale_street_d = ""
+poi_id_gatlingsdale_street_e = ""
+
+poi_id_astatineheights_street_a = ""
+poi_id_astatineheights_street_b = ""
+poi_id_astatineheights_street_c = ""
+poi_id_astatineheights_street_d = ""
+poi_id_astatineheights_street_e = ""
+poi_id_astatineheights_street_f = ""
+
+poi_id_smogsburg_street_a = "" 
+poi_id_smogsburg_street_b = ""
+poi_id_smogsburg_street_c = ""
+poi_id_smogsburg_street_d = ""
+
+poi_id_arsonbrook_street_a = ""
+poi_id_arsonbrook_street_b = ""
+poi_id_arsonbrook_street_c = ""
+poi_id_arsonbrook_street_d = ""
+
+poi_id_maimridge_street_a = ""
+poi_id_maimridge_street_b = ""
+poi_id_maimridge_street_c = ""
+
+poi_id_brawlden_street_a = "" 
+poi_id_brawlden_street_b = ""
+poi_id_brawlden_street_c = ""
+poi_id_brawlden_street_d = ""
+
+poi_id_littlechernobyl_street_a = ""
+poi_id_littlechernobyl_street_b = ""
+
+poi_id_oldnewyonkers_street_a = ""
+poi_id_oldnewyonkers_street_b = ""
+poi_id_oldnewyonkers_street_c = ""
+poi_id_oldnewyonkers_street_d = ""
+
+poi_id_newnewyonkers_street_a = ""
+poi_id_newnewyonkers_street_b = ""
+poi_id_newnewyonkers_street_c = ""
+poi_id_newnewyonkers_street_d = ""
+
+poi_id_assaultflatsbeach_street_a = ""
+poi_id_assaultflatsbeach_street_b = ""
+
+poi_id_vagrantscorner_street_a = "" 
+poi_id_vagrantscorner_street_b = ""
+poi_id_vagrantscorner_street_c = ""
+poi_id_vagrantscorner_street_d = ""
+poi_id_vagrantscorner_street_e = ""
+poi_id_vagrantscorner_street_f = ""
+
+poi_id_greenlightdistrict_street_a = ""
+poi_id_greenlightdistrict_street_b = ""
+poi_id_greenlightdistrict_street_c = ""
+
+poi_id_slimesend_street_a = ""
+
 # Tutorial zones
 poi_id_tutorial_classroom = "classroom"
 poi_id_tutorial_ghostcontainment = "ghostcontainment"
@@ -762,6 +916,7 @@ cmd_capture_progress = cmd_prefix + 'progress'
 cmd_teleport = cmd_prefix + 'tp'
 cmd_teleport_alt1 = cmd_prefix + 'blj'
 cmd_teleport_player = cmd_prefix + 'tpp'
+cmd_print_map_data = cmd_prefix + 'printmapdata'
 cmd_boot = cmd_prefix + 'boot'
 cmd_bootall = cmd_prefix + 'bootall'
 cmd_quarterlyreport = cmd_prefix + 'quarterlyreport'
@@ -1049,6 +1204,12 @@ hunger_perfish = 15
 hunger_perscavenge = 2
 hunger_pertick = 3
 hunger_pertrickortreat = 6
+
+# Time it takes to move between various parts of the map
+travel_time_subzone = 20
+travel_time_district = 60
+travel_time_street = 30
+travel_time_outskirt = 60
 
 # ads
 slimecoin_toadvertise = 1000000
@@ -1549,8 +1710,10 @@ str_yellow_subway_description = "If there's one word to describe the Yellow Line
 str_yellow_subway_station_description = "It's absolutely fucking disgusting. By far the worst subway line, the Yellow Line can't keep it's terrible interior design choices contained to its actual trains. Even in its terminals, the faux wood paneling clashes with every other aesthetic element present. It's ghastly ceilings have turned a delightful piss-soaked shade of faded white. It's bizarre mixture of homely decorations and completely dilapidated state makes you oddly beguiled in a way. How did they fuck up the Yellow Line so bad? The world may never know."
 str_subway_connecting_sentence = "Below it, on a lower level of the station, is a {} line terminal."
 
-# TODO: Add descriptions for each outskirts district.
+# TODO: Add descriptions for each outskirt/street.
 str_generic_outskirts_description = "It's a wasteland, devoid of all life except for slime beasts."
+
+str_generic_streets_description = "It's a street. Not much more to be said."
 
 # Common database columns
 col_id_server = 'id_server'
@@ -9571,8 +9734,10 @@ poi_list = [
 		is_district = True,
 		is_capturable = True,
 		neighbors = {
-			poi_id_smogsburg : 60,
-			poi_id_krakbay : 60,
+			poi_id_smogsburg : travel_time_district,
+			poi_id_krakbay : travel_time_district,
+			poi_id_downtown_street_a : travel_time_street,
+			poi_id_stockexchange : travel_time_subzone,
 		},
 	),
 	EwPoi( # 2
@@ -9589,7 +9754,7 @@ poi_list = [
 		role = "Smogsburg",
 		property_class = property_class_b,
 		neighbors = {
-			poi_id_downtown : 60,
+			poi_id_downtown : travel_time_district,
 		},
 		is_district = True,
 		is_capturable = True
@@ -9635,7 +9800,7 @@ poi_list = [
 		role = "Krak Bay",
 		property_class = property_class_a,
 		neighbors = {
-			poi_id_downtown : 60,
+			poi_id_downtown : travel_time_district,
 		},
 		is_district = True,
 		is_capturable = True
@@ -10141,6 +10306,25 @@ poi_list = [
 		community_chest = chest_id_thesewers,
 		is_gangbase = True
 	),
+	# Streets start here
+	EwPoi(
+		id_poi = poi_id_downtown_street_a,
+		alias = [
+			"dtsa",
+			"downtownstreeta",
+			"dtstreeta"
+		],
+		str_name = "Downtown Street A",
+		str_desc = str_generic_streets_description,
+		channel = 'downtown-street-a',
+		is_street = True,
+		father_district = poi_id_downtown,
+		neighbors = {
+			poi_id_downtown : travel_time_street,
+			poi_id_stockexchange : travel_time_subzone,
+		}
+	),
+	# Subzones start here
 	EwPoi(  # ENDLESS WAR
 		id_poi = poi_id_endlesswar,
 		alias = [
@@ -10195,7 +10379,11 @@ poi_list = [
 		role = "Stock Exchange",
 		pvp = False,
 		is_subzone = True,
-		mother_districts = [poi_id_downtown]
+		mother_districts = [poi_id_downtown],
+		neighbors = {
+			poi_id_downtown : travel_time_subzone,
+			poi_id_downtown_street_a : travel_time_subzone,
+		}
 	),
 	EwPoi( # the-bazaar
 		id_poi = poi_id_bazaar,
@@ -12291,7 +12479,8 @@ poi_list = [
 		channel="wreckington-outskirts",
 		role="Wreckington Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 2
 		id_poi=poi_id_cratersville_outskirts,
@@ -12306,7 +12495,8 @@ poi_list = [
 		channel="cratersville-outskirts",
 		role="Cratersville Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 3
 		id_poi=poi_id_oozegardens_outskirts,
@@ -12321,7 +12511,8 @@ poi_list = [
 		channel="ooze-gardens-outskirts",
 		role="Ooze Gardens Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 4
 		id_poi=poi_id_southsleezeborough_outskirts,
@@ -12336,7 +12527,8 @@ poi_list = [
 		channel="south-sleezeborough-outskirts",
 		role="South Sleezeborough Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 5
 		id_poi=poi_id_crookline_outskirts,
@@ -12351,7 +12543,8 @@ poi_list = [
 		channel="crookline-outskirts",
 		role="Crookline Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 6
 		id_poi=poi_id_dreadford_outskirts,
@@ -12366,7 +12559,8 @@ poi_list = [
 		channel="dreadford-outskirts",
 		role="Dreadford Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 7
 		id_poi=poi_id_jaywalkerplain_outskirts,
@@ -12381,7 +12575,8 @@ poi_list = [
 		channel="jaywalker-plain-outskirts",
 		role="Jaywalker Plain Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 8
 		id_poi=poi_id_westglocksbury_outskirts,
@@ -12396,7 +12591,8 @@ poi_list = [
 		channel="west-glocksbury-outskirts",
 		role="West Glocksbury Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 9
 		id_poi=poi_id_poloniumhill_outskirts,
@@ -12411,7 +12607,8 @@ poi_list = [
 		channel="polonium-hill-outskirts",
 		role="Polonium Hill Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 10
 		id_poi=poi_id_charcoalpark_outskirts,
@@ -12426,7 +12623,8 @@ poi_list = [
 		channel="charcoal-park-outskirts",
 		role="Charcoal Park Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 11
 		id_poi=poi_id_toxington_outskirts,
@@ -12441,7 +12639,8 @@ poi_list = [
 		channel="toxington-outskirts",
 		role="Toxington Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 12
 		id_poi=poi_id_astatineheights_outskirts,
@@ -12456,7 +12655,8 @@ poi_list = [
 		channel="astatine-heights-outskirts",
 		role="Astatine Heights Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 13
 		id_poi=poi_id_arsonbrook_outskirts,
@@ -12471,7 +12671,8 @@ poi_list = [
 		channel="arsonbrook-outskirts",
 		role="Arsonbrook Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 14
 		id_poi=poi_id_brawlden_outskirts,
@@ -12486,7 +12687,8 @@ poi_list = [
 		channel="brawlden-outskirts",
 		role="Brawlden Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 15
 		id_poi=poi_id_newnewyonkers_outskirts,
@@ -12501,7 +12703,8 @@ poi_list = [
 		channel="new-new-yonkers-outskirts",
 		role="New New Yonkers Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	),
 	EwPoi(  # Outskirts - 16
 		id_poi=poi_id_assaultflatsbeach_outskirts,
@@ -12516,7 +12719,8 @@ poi_list = [
 		channel="assault-flats-beach-outskirts",
 		role="Assault Flats Beach Outskirts",
 		pvp=True,
-		is_capturable=False
+		is_capturable=False,
+		is_outskirts = True
 	)
 ]
 	
@@ -12538,6 +12742,7 @@ transport_stops = []
 transport_stops_ch = []
 piers = []
 outskirts = []
+streets = []
 tutorial_pois = []
 zine_mother_districts = []
 
@@ -12572,7 +12777,7 @@ for poi in poi_list:
 	if poi.major_role == None:
 		poi.major_role = role_null_major_role
 	if poi.minor_role == None:
-		poi.minor_role = role_null_major_role
+		poi.minor_role = role_null_minor_role
 	
 	if poi.coord != None:
 		# Populate the map of coordinates to their point of interest, for looking up from the map.
@@ -12595,9 +12800,6 @@ for poi in poi_list:
 	# if it's a district and not RR, CK, or JR, add it to a list of capturable districts
 	if poi.is_capturable:
 		capturable_districts.append(poi.id_poi)
-		
-	if poi.is_outskirts:
-		outskirts_districts.append(poi.id_poi)
 
 	if poi.is_transport:
 		transports.append(poi.id_poi)
@@ -12611,6 +12813,9 @@ for poi in poi_list:
 
 	if poi.is_outskirts:
 		outskirts.append(poi.id_poi)
+		
+	if poi.is_street:
+		streets.append(poi.id_poi)
 
 	if poi.is_tutorial:
 		tutorial_pois.append(poi.id_poi)
@@ -12631,7 +12836,7 @@ landmark_pois = [
 ]
 
 # Places on the map that should result in a user being flagged for PVP
-vulnerable_districts = capturable_districts + outskirts_districts
+vulnerable_districts = outskirts + streets
 
 # maps districts to their immediate neighbors
 poi_neighbors = {}

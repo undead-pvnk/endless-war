@@ -554,7 +554,7 @@ async def flag_outskirts(id_server = None):
 			cursor.execute("SELECT id_user FROM users WHERE id_server = %s AND poi IN %s".format(
 			), (
 				id_server,
-				tuple(ewcfg.outskirts_districts)
+				tuple(ewcfg.outskirts)
 
 			))
 
@@ -1521,7 +1521,7 @@ def get_move_speed(user_data):
 	if ewcfg.mutation_id_fastmetabolism in mutations and user_data.hunger / user_data.get_hunger_max() < 0.4:
 		move_speed *= 1.33
 		
-	move_speed *= 2
+	#move_speed *= 2
 
 	move_speed = max(0.1, move_speed)
 

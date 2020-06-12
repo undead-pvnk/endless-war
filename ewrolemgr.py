@@ -216,18 +216,23 @@ async def recreateRoles(cmd):
 		if poi.major_role != None and poi.major_role != ewcfg.role_null_major_role:
 
 			if poi.major_role not in server_role_names:
-				await client.create_role(server=server, name=poi.major_role)
-				ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
-
-				roles_created += 1
+				
+				if poi.is_district:
+					#print(poi.major_role)
+					await client.create_role(server=server, name=poi.major_role)
+					ewutils.logMsg('created major role {} for poi {}'.format(poi.major_role, poi.id_poi))
+	
+					roles_created += 1
 
 		if poi.minor_role != None and poi.minor_role != ewcfg.role_null_minor_role:
 
 			if poi.minor_role not in server_role_names:
-				await client.create_role(server=server, name=poi.minor_role)
-				ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
-
-				roles_created += 1
+				
+				if poi.is_district or poi.is_street:
+					await client.create_role(server=server, name=poi.minor_role)
+					ewutils.logMsg('created minor role {} for poi {}'.format(poi.minor_role, poi.id_poi))
+	
+					roles_created += 1
 				
 	print('{} roles were created in recreateRoles.'.format(roles_created))
 		
@@ -276,15 +281,17 @@ async def deleteRoles(cmd):
 			
 	elif delete_target == 'majorroles':
 		for poi in ewcfg.poi_list:
-			if poi.major_role in server_role_names:
-				await client.delete_role(server=server, role=roles_map[poi.major_role])
-				roles_deleted += 1
+			if poi.is_district:
+				if poi.major_role in server_role_names:
+					await client.delete_role(server=server, role=roles_map[poi.major_role])
+					roles_deleted += 1
 		
 	elif delete_target == 'minorroles':
 		for poi in ewcfg.poi_list:
-			if poi.minor_role in server_role_names:
-				await client.delete_role(server=server, role=roles_map[poi.minor_role])
-				roles_deleted += 1
+			if poi.is_district or poi.is_street:
+				if poi.minor_role in server_role_names:
+					await client.delete_role(server=server, role=roles_map[poi.minor_role])
+					roles_deleted += 1
 				
 	elif delete_target == 'hiddenroles':
 		for generic_role in server.roles:
@@ -431,7 +438,7 @@ async def updateRoles(
 		try:
 			role_data = EwRole(id_server = id_server, id_role = role_id)
 			roleName = role_data.name
-			if roleName != None and roleName not in faction_roles_remove and roleName not in misc_roles_remove: #  and roleName not in poi_roles_remove
+			if roleName != None and roleName not in faction_roles_remove and roleName not in misc_roles_remove and roleName not in poi_roles_remove:
 				role_ids.append(role_data.id_role)
 		except:
 			ewutils.logMsg('error: couldn\'t find role with id {}'.format(role_id))
@@ -468,14 +475,22 @@ async def updateRoles(
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
 		ewutils.logMsg('error: couldn\'t find role {}'.format(tutorial_role))
-
+		
 	try:
-		role_data = EwRole(id_server = id_server, name = poi_role)
-		if not role_data.id_role in role_ids:
-			role_ids.append(role_data.id_role)
+		major_role_data = EwRole(id_server = id_server, name = poi_major_role)
+		if not major_role_data.id_role in role_ids:
+			role_ids.append(major_role_data.id_role)
 			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
 	except:
-		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_role))
+		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_major_role))
+
+	try:
+		minor_role_data = EwRole(id_server = id_server, name = poi_minor_role)
+		if not minor_role_data.id_role in role_ids:
+			role_ids.append(minor_role_data.id_role)
+			#ewutils.logMsg('found role {} with id {}'.format(role_data.name, role_data.id_role))
+	except:
+		ewutils.logMsg('error: couldn\'t find role {}'.format(poi_minor_role))
 
 	try:
 		role_data = EwRole(id_server = id_server, name = role_gellphone)

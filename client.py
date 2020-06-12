@@ -587,6 +587,7 @@ cmd_map = {
 	ewcfg.cmd_teleport: ewmap.teleport,
 	ewcfg.cmd_teleport_alt1: ewmap.teleport,
 	ewcfg.cmd_teleport_player: ewmap.teleport_player,
+	ewcfg.cmd_print_map_data: ewmap.print_map_data,
 	ewcfg.cmd_boot: ewmap.boot,
 	ewcfg.cmd_bootall:ewapt.lobbywarning,
 
@@ -797,12 +798,14 @@ async def on_ready():
 
 		neighbors = []
 		neighbor_ids = []
-		if poi.coord != None:
+		#if poi.coord != None:
+		if len(poi.neighbors.keys()) > 0:
 			neighbors = ewmap.path_to(poi_start = poi.id_poi, user_data = fake_observer)
 		#elif poi.id_poi == ewcfg.poi_id_thesewers:
 		#	neighbors = ewcfg.poi_list
 
 		if neighbors != None:
+			
 			for neighbor in neighbors:
 				neighbor_ids.append(neighbor.id_poi)
 
@@ -1314,7 +1317,7 @@ async def on_message(message):
 			Wake up if we need to respond to messages. Could be:
 				message starts with !
 				direct message (server == None)
-				user is new/has no roles (len(roles) < 2)
+				user is new/has no roles (len(roles) < 4)
 				user is swearing
 		"""
 
@@ -1443,7 +1446,7 @@ async def on_message(message):
 			return
 
 		# assign the appropriate roles to a user with less than @everyone, faction, both location roles
-		if len(message.author.roles) < 2:
+		if len(message.author.roles) < 4:
 			await ewrolemgr.updateRoles(client = client, member = message.author)
 
 		user_data = EwUser(member = message.author)

@@ -819,7 +819,8 @@ async def move(cmd = None, isApt = False):
 	if isApt:
 		poi_current = ewcfg.id_to_poi.get(user_data.poi[3:])
 
-	if poi.coord == None or poi_current == None or poi_current.coord == None:
+	#if poi.coord == None or poi_current == None or poi_current.coord == None:
+	if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
 		if user_data.life_state == ewcfg.life_state_corpse and poi.id_poi == ewcfg.poi_id_thesewers:
 			path = EwPath(cost = 60)
 		else:
@@ -865,7 +866,7 @@ async def move(cmd = None, isApt = False):
 				minutes,
 				("s" if minutes != 1 else ""),
 				(" and {} seconds".format(seconds) if seconds > 4 else "")
-			) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 30 else ""))
+			) if minutes > 0 else (" It's {} seconds away.".format(seconds) if seconds > 4 else ""))
 		)))
 		if isApt:
 			await ewapt.depart(cmd=cmd, isGoto=True, movecurrent = move_current)
@@ -879,7 +880,8 @@ async def move(cmd = None, isApt = False):
 	faction = user_data.faction
 
 	# Moving to or from a place not on the map (e.g. the sewers)
-	if poi.coord == None or poi_current == None or poi_current.coord == None:
+	#if poi.coord == None or poi_current == None or poi_current.coord == None:
+	if len(poi.neighbors.keys()) == 0 or poi_current == None or len(poi_current.neighbors.keys()) == 0:
 		if path.cost > 0:
 			await asyncio.sleep(path.cost)
 
@@ -1797,3 +1799,44 @@ def get_random_prank_item(user_data, district_data):
 	
 	return response
 
+"""
+	Get information about all the pois in the poi list
+"""
+async def print_map_data(cmd):
+	
+	if not cmd.message.author.server_permissions.administrator:
+		return
+	
+	districts_count = 0
+	subzones_count = 0
+	apartments_count = 0
+	outskirts_count = 0
+	streets_count = 0
+	transports_count = 0
+	
+	for poi in ewcfg.poi_list:
+		
+		if poi.is_district:
+			districts_count += 1
+			
+			print(poi.major_role)
+			print(poi.minor_role)
+			
+		if poi.is_subzone:
+			subzones_count += 1
+		if poi.is_apartment:
+			apartments_count += 1
+		if poi.is_outskirts:
+			outskirts_count += 1
+		if poi.is_street:
+			streets_count += 1
+			
+			print(poi.minor_role)
+			
+		if poi.is_transport:
+			transports_count += 1
+		
+	
+	print("\n\nPOI LIST STATISTICS:\n{} districts\n{} subzones\n{} apartments\n{} outskirts\n{} streets\n{} transports\n\n".format(districts_count, subzones_count, apartments_count, outskirts_count, streets_count, transports_count))
+	
+	

@@ -1030,7 +1030,7 @@ async def help(cmd):
 		]:
 			# fishing help
 			response = ewcfg.help_responses['fishing']
-		elif user_data.poi in ewcfg.outskirts_districts:
+		elif user_data.poi in ewcfg.outskirts:
 			# hunting help
 			response = ewcfg.help_responses['hunting']
 		else:

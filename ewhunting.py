@@ -1253,7 +1253,7 @@ def spawn_enemy(id_server, pre_chosen_type = None, pre_chosen_poi = None, weathe
 		if enemytype == ewcfg.enemy_type_sandbag:
 			potential_chosen_poi = ewcfg.poi_id_southsleezeborough
 		else:
-			potential_chosen_poi = random.choice(ewcfg.outskirts_districts)
+			potential_chosen_poi = random.choice(ewcfg.outskirts)
 			
 		if pre_chosen_poi is not None:
 			potential_chosen_poi = pre_chosen_poi
