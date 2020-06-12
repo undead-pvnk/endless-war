@@ -110,7 +110,7 @@ async def smelt(cmd):
 						style = ewcfg.style_tough
 					elif found_recipe.id_recipe == "smartcosmetic":
 						style = ewcfg.style_smart
-					elif found_recipe.id_recipe == "beautifulcoolcosmetic":
+					elif found_recipe.id_recipe == "beautifulcosmetic":
 						style = ewcfg.style_beautiful
 					elif found_recipe.id_recipe == "cutecosmetic":
 						style = ewcfg.style_cute
