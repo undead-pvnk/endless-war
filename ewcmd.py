@@ -2392,6 +2392,9 @@ async def set_race(cmd):
 	return await ewutils.send_message(cmd.client, cmd.message.channel, ewutils.formatMessage(cmd.message.author, response))
 
 async def reset_race(cmd):
+	author = cmd.message.author
+	user_data = EwUser(member=author)
+	
 	if ewutils.DEBUG or author.server_permissions.administrator or user_data.life_state == ewcfg.life_state_kingpin:
 		if cmd.mentions_count == 1:
 			member = cmd.mentions[0]
