@@ -298,7 +298,7 @@ async def request_petting(cmd):
 				if msg != None:
 					if msg.content.lower() == ewcfg.cmd_accept:
 						accepted = True
-					elif message.content.lower() == ewcfg.cmd_refuse:
+					elif msg.content.lower() == ewcfg.cmd_refuse:
 						accepted = False
 			except:
 				accepted = False
