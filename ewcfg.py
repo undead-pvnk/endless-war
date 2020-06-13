@@ -18418,7 +18418,7 @@ racial_slurs = {
 	'furfag': 'furry', 
 	'peeler': 'scalie', 
 	'booger': 'slime-derived',
-	'spook': 'monster',
+	'creeper': 'monster',
 	'fleabag': 'critter', 
 	'nuggie': 'avian'
 }
