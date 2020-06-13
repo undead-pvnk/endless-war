@@ -480,7 +480,6 @@ CREATE TABLE hues (
 	PRIMARY KEY(id_hue)
 );
 
-
 CREATE OR REPLACE VIEW cosmetics AS SELECT
 	i.id_user AS id_user,
 	i.id_server AS id_server,
@@ -511,10 +510,11 @@ CREATE OR REPLACE VIEW cosmetics AS SELECT
 CREATE OR REPLACE VIEW fashion_stats AS SELECT
 	c.id_user AS id_user,
 	c.id_server AS id_server,
-	IFNULL(SUM(c.attack), 0) AS attack,
-	IFNULL(SUM(c.defense), 0) AS defense,
-	IFNULL(SUM(c.speed), 0) AS speed
-	FROM cosmetics c
+	IFNULL(CAST(SUM(c.attack / cc.cosmetics_count) AS int), 0) AS attack,
+	IFNULL(CAST(SUM(c.defense / cc.cosmetics_count) AS int), 0) AS defense,
+	IFNULL(CAST(SUM(c.speed / cc.cosmetics_count) AS int), 0) AS speed
+    FROM cosmetics c
+	LEFT JOIN cosmetics_count cc ON c.id_user = cc.id_user AND c.id_server = cc.id_server AND c.id_cosmetic = cc.id_cosmetic
 	WHERE c.adorned = 'true'
 	GROUP BY c.id_user, c.id_server
 ;
@@ -620,7 +620,7 @@ CREATE OR REPLACE VIEW max_style AS SELECT
 CREATE OR REPLACE VIEW style_mod AS SELECT
 	ms.id_user AS id_user,
 	ms.id_server AS id_server,
-	IF(((ms.style_count / fb.cosmetics_count) >= 0.6), (POW(ms.style_count/fb.cosmetics_count, 2) * 10), 1) AS style_mod
+	IF(((ms.style_count / fb.cosmetics_count) >= 0.6), ((ms.style_count / fb.cosmetics_count) * 10), 1) AS style_mod
 	FROM max_style ms
 	JOIN freshness_base fb ON ms.id_user = fb.id_user AND ms.id_server = fb.id_server
 ;

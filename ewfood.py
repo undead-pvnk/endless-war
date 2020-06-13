@@ -122,7 +122,7 @@ async def menu(cmd):
 
 		for vendor in vendors_list:
 			if vendor == ewcfg.vendor_secretbodega:
-				if user_data.freshness < 5000:
+				if user_data.freshness < ewcfg.freshnesslevel_4:
 					continue
 				else:
 					response += '\nThe hipster behind the counter nearly falls out of his chair after laying eyes on the sheer, unadulterated freshness before him.\n"S-Sir! Your outfit... i-it is positively ***on fleek!!*** As I see you are a fashion enthusiast like myself, let me show you the good stuff…"\n'
@@ -183,7 +183,7 @@ async def menu(cmd):
 			response += "**{}**: *{}*\n".format(vendor, ewutils.formatNiceList(names = items))
 
 			if vendor == ewcfg.vendor_bodega:
-				if user_data.freshness < 100:
+				if user_data.freshness < ewcfg.freshnesslevel_1:
 					response += "\nThe hipster behind the counter is utterly repulsed by the fashion disaster in front of him. Looks like you just aren’t fresh enough for him."
 			if user_data.has_soul == 0:
 				if vendor == ewcfg.vendor_dojo:
@@ -199,7 +199,7 @@ async def menu(cmd):
 				elif vendor == ewcfg.vendor_beachresort or vendor == ewcfg.vendor_countryclub:
 					response += "\n\nEverything looks so fancy here, but it doesn't really appeal to you since you don't have a soul."
 				elif vendor == ewcfg.vendor_bodega:
-					if user_data.freshness < 100:
+					if user_data.freshness < ewcfg.freshnesslevel_1:
 						response += ".. and you probably never will be."
 
 

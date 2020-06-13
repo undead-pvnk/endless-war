@@ -30,7 +30,7 @@ import ewdebug
 
 # Global configuration options.
 
-version = "v3.23"
+version = "v3.24a"
 
 
 dir_msgqueue = 'msgqueue'
@@ -888,6 +888,7 @@ cmd_barter = cmd_prefix + 'barter'
 cmd_embiggen = cmd_prefix + 'embiggen'
 cmd_adorn = cmd_prefix + 'adorn'
 cmd_dedorn = cmd_prefix + 'dedorn'
+cmd_dedorn_alt1 = cmd_prefix + 'unadorn'
 cmd_dyecosmetic = cmd_prefix + 'dyecosmetic'
 cmd_dyecosmetic_alt1 = cmd_prefix + 'dyehat'
 cmd_dyecosmetic_alt2 = cmd_prefix + 'saturatecosmetic'
@@ -897,6 +898,7 @@ cmd_forgemasterpoudrin = cmd_prefix + 'forgemasterpoudrin'
 cmd_createitem = cmd_prefix + 'createitem'
 cmd_manualsoulbind = cmd_prefix + 'soulbind'
 cmd_setslime = cmd_prefix + 'setslime'
+cmd_checkstats = cmd_prefix + 'checkstats'
 cmd_exalt = cmd_prefix + 'exalt'
 cmd_give = cmd_prefix + 'give'
 cmd_discard = cmd_prefix + 'discard'
@@ -1140,7 +1142,6 @@ cmd_canceltrade = cmd_prefix + 'canceltrade'
 # race
 cmd_set_race = cmd_prefix + 'setrace'
 cmd_set_race_alt1 = cmd_prefix + 'identifyas'
-cmd_reset_race = cmd_prefix + 'resetrace'
 cmd_exist = cmd_prefix + 'exist'
 cmd_ree = cmd_prefix + 'ree'
 cmd_autocannibalize = cmd_prefix + 'autocannibalize'
@@ -1149,6 +1150,9 @@ cmd_beep = cmd_prefix + 'beep'
 cmd_yiff = cmd_prefix + 'yiff'
 cmd_hiss = cmd_prefix + 'hiss'
 cmd_jiggle = cmd_prefix + 'jiggle'
+cmd_request_petting = cmd_prefix + 'requestpetting'
+cmd_rampage = cmd_prefix + 'rampage'
+cmd_flutter = cmd_prefix + 'flutter'
 cmd_confuse = cmd_prefix + 'confuse'
 
 #SLIMERNALIA
@@ -4270,8 +4274,11 @@ def wef_staff(ctn = None):
 			lambda ctn: (ctn.shootee_data.life_state == life_state_juvenile) or (ctn.shootee_data.life_state == life_state_enlisted and ctn.shootee_data.faction == ctn.user_data.faction),
 		}
 		for condition in conditions:
-			if condition(ctn):
-				conditions_met += 1
+			try:
+				if condition(ctn):
+					conditions_met += 1
+			except:
+				pass
 
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
 		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
@@ -13178,6 +13185,11 @@ style_smart = "smart"
 style_beautiful = "beautiful"
 style_cute = "cute"
 
+freshnesslevel_1 = 500
+freshnesslevel_2 = 100
+freshnesslevel_3 = 2000
+freshnesslevel_4 = 3000
+
 # Base durability for cosmetic items (These are for if/when we need easy sweeping balance changes)
 base_durability = 250000 # 1 mega
 
@@ -17932,7 +17944,7 @@ help_responses = {
 	weapon_id_bat: "**The nailbat** is a weapon for sale at the Dojo. Attacking with the bat costs 2 sap. It has a random damage mod between 0.5 and 2.5 and an attack cost mod of 1. It has a captcha length of 2, a miss chance of 1/13, a 1/13 chance for a crit, which increases the damage mod to 4, and a 1/13 chance to backfire and damage the wielder instead. The bat has sap crushing 2. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_brassknuckles: "**The brass knuckles** are a weapon for sale at the Dojo. Attacking with the brass knuckles costs 1 sap. They have a damage mod of 1 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 2 punches. Every punch has a 20% miss chance. If you land 3 successful attacks (not punches) in succession with perfect timing, the third attack will throw an extra punch, which deals 3x damage and has 5 sap crushing. If you takes less than 2 seconds between attacks, your damage will decrease. For perfect timing you need to take 2 seconds between attacks exactly.",
 	weapon_id_katana: "**The katana** is a weapon for sale at the Dojo. Attacking with the katana costs 3 sap. It has a damage mod of 1.3 and an attack cost mod of 1.3. It has a captcha length of 8. The katana never misses. If the katana is the only weapon in your inventory, it crits for 2x damage on every hit. If you takes less than 5 seconds between attacks, your damage will decrease. If you take exactly 5 seconds between attacks, the katana gains sap piercing 10 (sap piercing 15 on a crit).",
-	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 4 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
+	weapon_id_broadsword: "**The broadsword** is a heavy weapon for sale at the Dojo. Attacking with the broadsword costs 12 sap. It has a damage mod of 3 and an attack cost mod of 5. It has a captcha length of 4, a miss chance of 10%, a 10% chance for a crit, which does 2x damage, and a 20% chance to backfire and damage the wielder instead. The broadsword has sap crushing 5 and sap piercing 20. After every !kill you will need to **!reload**, to hoist it back over your head. The broadsword's damage mod increases by 1.5 for every kill you get with it in a single life, up to a maximum damage mod of 5.",
 	weapon_id_nunchucks: "**The nunchucks** are a weapon for sale at the Dojo. Attacking with the nunchucks costs 4 sap. They have a damage mod of 0.5 and an attack cost mod of 1. They have a captcha length of 2. For every !kill they throw 4 blows. Every blow has a 25% miss chance and 1 sap crushing. If all 4 blows hit, you deal an additional blow that does 4x damage. If all shots miss, the nunchucks will backfire for 2x damage. If you takes less than 3 seconds between attacks, your miss chance will increase.",
 	weapon_id_scythe: "**The scythe** is a weapon for sale at the Dojo. Attacking with the scythe costs 6 sap. It has a damage mod of 0.5 and an attack cost mod of 3. It has a captcha length of 4, a miss chance of 10% and a 10% chance for a crit, which does 3x damage. The scythe has sap piercing 3 for every kill your opponent got this life, up to sap piercing 30. The scythe's damage mod also increases by 0.5 for every kill your opponent got this life, up to a maximum damage mod of 5. If you take less than 3 seconds between attacks, your damage will decrease.",
 	weapon_id_yoyo: "**The yo-yo** is a weapon for sale at the Dojo. Attacking with the yo-yo costs 1 sap. It has a damage mod of 0.5 and an attack cost mod of 0.75. It has a captcha length of 2, a miss chance of 18.75% and a 10% chance for a crit, which does 2x damage. The yo-yo's damage mod increases by 0.25 for every successful consecutive hit, without getting hit yourself.",
@@ -17944,7 +17956,7 @@ help_responses = {
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
 	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. By default, it has a damage and attack cost mod of 3, sap piercing 15, and a 0% change to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 3, sap piercing 15, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }
@@ -18760,7 +18772,24 @@ races = {
 	'furry': 'furry',
 	'scalie': 'scalie',
 	'slime-derived': 'slime-derived',
-	'other': 'other'
+	'monster': 'monster',
+	'critter': 'critter',
+	'avian': 'avian',
+	'other': 'other',
+}
+
+racial_slurs = {
+	'normie': 'humanoid',
+	'croaker': 'amphibian',
+	'snacc': 'food',
+	'boner': 'skeleton', 
+	'toaster': 'robot',
+	'furfag': 'furry', 
+	'peeler': 'scalie', 
+	'booger': 'slime-derived',
+	'spook': 'monster',
+	'fleabag': 'critter', 
+	'nuggie': 'avian'
 }
 
 # lists of all the discord server objects served by bot, identified by the server id
