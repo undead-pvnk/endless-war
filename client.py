@@ -1610,7 +1610,7 @@ async def on_message(message):
 
 			item_props = ewitem.gen_item_props(item)
 
-			ewitem.item_create(
+			item_id = ewitem.item_create(
 				item_type = item.item_type,
 				id_user = message.author.id,
 				id_server = message.server.id,
