@@ -4075,7 +4075,7 @@ def wef_staff(ctn = None):
 	time_lastattack = ctn.time_now - (float(ctn.weapon_item.item_props.get("time_lastattack")) if ctn.weapon_item.item_props.get("time_lastattack") != None else ctn.time_now)
 
 	consecutive_hits = int(ctn.weapon_item.item_props["consecutive_hits"])
-	if time_lastattack < 5 and consecutive_hits == 0:
+	if time_lastattack < 15 and consecutive_hits == 0:
 		# consecutive_hits used counterintuitively to track whether the user has "charged up"
 		market_data = EwMarket(id_server = ctn.user_data.id_server)
 		conditions_met = 0
@@ -4099,9 +4099,9 @@ def wef_staff(ctn = None):
 				pass
 
 		ctn.slimes_spent = int(ctn.slimes_spent * 3)
-		ctn.slimes_damage = int(ctn.slimes_damage * (3 + conditions_met * 0.5)) # 0.5 per condition met
-		ctn.sap_ignored = 15 + (5 * conditions_met) # 5 per condition met
-		if conditions_met >= random.randrange(1, 41): # 2.5% per condition met
+		ctn.slimes_damage = int(ctn.slimes_damage * (0.6 + conditions_met * 2.4))
+		ctn.sap_ignored = 6 * conditions_met
+		if conditions_met >= (random.randrange(15) + 1): # 6.66% per condition met
 			ctn.crit = True
 			ctn.slimes_damage = int(ctn.slimes_damage * 1.5)
 
@@ -17577,7 +17577,7 @@ help_responses = {
 	weapon_id_garrote: "**The garrote wire** is a weapon for sale at the Dojo. Attacking with the garrote costs 5 sap. It has a damage mod of 15 and an attack cost mod of 1. It doesn't require a captcha and it pierces all enemy hardened sap. It has a 0% miss chance and a 1% chance for a crit, which does 10x damage. When you attack with a garrote, the target has 5 seconds to send any message before the damage is done. If they do, the attack fails.",
 	weapon_id_bow: "**The minecraft bow** is a weapon not for sale at the Dojo. Attacking with the bow costs 2 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 3. The minecraft bow does not require a captcha to use. The minecraft bow has sap crushing 1 and sap piercing 8. If you take less than 10 seconds between attacks, your miss chance will increase.",
 	weapon_id_dclaw: "**The Dragon Claw** is a weapon not for sale at the Dojo. Attacking with the dragon claw costs 5 sap. It has a damage mod of 1 and an attack cost mod of 1. It has a miss chance of 1/13 and a 2/13 chance for a crit, which increases the damage mod to 4. It has a captcha length of 2. It has sap crushing 5 and sap piercing 10. It you take less than 5 seconds between attacks, your miss chance will increase. Half of its damage will be sent to all bystanders in the district, dealing burn damage.",
-	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 5-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 3, sap piercing 15, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 0.5, sap piercing by 5, and crit chance by 2.5%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
+	weapon_id_staff: "**The eldritch staff** is a weapon not for sale at the Dojo. Attacking with the eldritch staff costs 4 sap. It has a captcha length of 10. Dealing damage with the staff requires attacking twice in a 15-second window, with the first !kill command only being preparetion for the second. The attack cost multiplier is 1 for attacks that only act as preparation, and 3 for attacks that deal damage. By default, it has a damage mod of 0.6, sap piercing 0, and a 0% chance to crit, which deals 1.5x damage. A number of conditions may be met to increase the damage multiplier by 2.4, sap piercing by 6, and crit chance by 6.66%: tenebrous weather and locations, grudges between the user and its target, the time of day, and the user's general degeneracy will all contribute to the weapon's effectiveness.",
 	
 	# "otp":"If you find that you have a role with 'OTP' in the name, don't be alarmed. This just means that you're outside a safe place, such as your apartment, or your gang base / juvie's row. It's essentially a signal to other players that you're actively participating in the game.",
 }
