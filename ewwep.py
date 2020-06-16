@@ -604,9 +604,9 @@ async def attack(cmd):
 
 				user_data.sap -= weapon.sap_cost
 				user_data.limit_fix()
+				user_data.persist()
 
 				if weapon.id_weapon == ewcfg.weapon_id_garrote:
-					user_data.persist()
 					shootee_data.persist()
 					response = "You wrap your wire around {}'s neck...".format(member.display_name)
 					resp_cont.add_channel_response(cmd.message.channel.name, response)
@@ -2120,9 +2120,9 @@ async def attackEnemy(cmd, user_data, weapon, resp_cont, weapon_item, slimeoid, 
 		# Spend sap
 		user_data.sap -= weapon.sap_cost
 		user_data.limit_fix()
+		user_data.persist()
 
 		if weapon.id_weapon == ewcfg.weapon_id_garrote:
-			user_data.persist()
 			enemy_data.persist()
 			response = "You wrap your wire around {}'s neck...\n**...to no avail! {} breaks free with ease!**".format(
 				enemy_data.display_name, enemy_data.display_name)
