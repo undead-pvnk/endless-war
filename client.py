@@ -1403,7 +1403,7 @@ async def on_message(message):
 					if usermodel.race != ewcfg.racial_slurs[slur]:
 						slur_count = content_tolower.count(slur)
 
-						swear_multiplier += 51 * slur_count # just enough for the message to show
+						swear_multiplier += 50 * slur_count # just enough for the message to show
 						market_data.global_swear_jar += slur_count
 						usermodel.swear_jar += slur_count
 
