@@ -320,11 +320,9 @@ async def data(cmd):
 		enemy = find_enemy(soughtenemy, user_data)
 		if enemy != None:
 			if enemy.attacktype != ewcfg.enemy_attacktype_unarmed:
-				response = "{} is a level {} enemy. They have {:,} slime, and attack with their {}. ".format(
-					enemy.display_name, enemy.level, enemy.slimes, enemy.attacktype)
+				response = "{} is a level {} enemy. They have {:,} slime, {:,} hardened sap, and attack with their {}. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.hardened_sap, enemy.attacktype)
 			else:
-				response = "{} is a level {} enemy. They have {:,} slime. ".format(enemy.display_name, enemy.level,
-																				enemy.slimes)
+				response = "{} is a level {} enemy. They have {:,} slime, and {:,} hardened sap. ".format(enemy.display_name, enemy.level, enemy.slimes, enemy.hardened_sap)
 		
 			statuses = enemy.getStatusEffects()
 
